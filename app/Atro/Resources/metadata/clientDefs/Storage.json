@@ -1,4 +1,32 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-box"
+  "iconClass": "fas fa-warehouse",
+  "dynamicLogic": {
+    "fields": {
+      "path": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "fileSystem"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "fileSystem"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
 }
