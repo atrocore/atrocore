@@ -2,39 +2,36 @@
   "fields": {
     "name": {
       "type": "varchar",
+      "notNull": true,
       "required": true,
       "trim": true
     },
     "mimeType": {
       "type": "varchar",
-      "importDisabled": true,
-      "exportDisabled": true
+      "readOnly": true
     },
     "private": {
       "type": "bool",
-      "default": false,
-      "importDisabled": true,
-      "exportDisabled": true
+      "default": false
     },
     "size": {
       "type": "float",
+      "readOnly": true,
       "min": 0
     },
     "storage": {
       "type": "varchar",
       "maxLength": 24
     },
-    "storageFilePath": {
+    "path": {
       "type": "varchar",
-      "maxLength": 260
+      "maxLength": 260,
+      "default": null
     },
     "hash": {
       "type": "varchar",
+      "readOnly": true,
       "index": true
-    },
-    "uniqueHash": {
-      "type": "varchar",
-      "unique": true
     },
     "createdAt": {
       "type": "datetime",
@@ -54,5 +51,12 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": false
+  },
+  "uniqueIndexes": {
+    "unique_file": [
+      "deleted",
+      "name",
+      "path"
+    ]
   }
 }

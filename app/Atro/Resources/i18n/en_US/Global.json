@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "File": "File",
     "Asset": "Asset",
     "Rendition": "Rendition",
     "Library": "Library",
@@ -60,6 +61,7 @@
     "AuthFailLogRecord": "Auth Fail Log Record"
   },
   "scopeNamesPlural": {
+    "File": "Files",
     "Library": "Libraries",
     "Asset": "Assets",
     "AssetVersion": "Asset Versions",

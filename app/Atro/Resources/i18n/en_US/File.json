@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "hash": "Hash",
+    "mimeType": "MIME Type",
+    "storage": "Storage",
+    "path": "Path",
+    "size": "Size (bytes)"
+  },
+  "labels": {
+    "Create Attachment": "Create Attachment",
+    "createThumbnailsNotification": "Create thumbnails for %s"
+  },
+  "links": {
+    "related": "Related"
+  },
+  "insertFromSourceLabels": {
+    "Document": "Insert Document"
+  },
+  "presetFilters": {
+    "orphan": "Orphan"
+  },
+  "exceptions": {
+    "fileUploadingFailed": "File uploading failed.",
+    "chunkUploadFailed": "Error occurred, please re-upload.",
+    "invalidFileExtension": "Upload of files with the extension '.%s' is prohibited. Please contact your admin to enable it."
+  }
+}
