@@ -1,7 +1,12 @@
 {
   "fields": {
     "type": "Type",
-    "path": "Path"
+    "path": "Path",
+    "files": "Files",
+    "isDefault": "Default"
+  },
+  "links": {
+    "files": "Files"
   },
   "options": {
     "type": {

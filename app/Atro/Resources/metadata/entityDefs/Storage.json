@@ -23,6 +23,14 @@
       "unique": true,
       "default": "upload/files"
     },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
+    "isDefault": {
+      "type": "bool",
+      "notNull": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -33,6 +41,11 @@
     }
   },
   "links": {
+    "files": {
+      "type": "hasMany",
+      "foreign": "storage",
+      "entity": "File"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

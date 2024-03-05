@@ -1,15 +1,13 @@
 {
   "fields": {
-    "hash": "Hash",
-    "mimeType": "MIME Type",
     "storage": "Storage",
+    "mimeType": "MIME Type",
     "path": "Path",
-    "size": "Size (bytes)"
+    "size": "Size (bytes)",
+    "hash": "Hash"
   },
-  "options": {
-    "storage": {
-      "fileSystem": "File System"
-    }
+  "links": {
+    "storage": "Storage"
   },
   "labels": {
     "Create File": "Create File"

@@ -20,15 +20,8 @@
       "min": 0
     },
     "storage": {
-      "type": "enum",
-      "required": true,
-      "default": "fileSystem",
-      "optionsIds": [
-        "fileSystem"
-      ],
-      "options": [
-        "fileSystem"
-      ]
+      "type": "link",
+      "required": true
     },
     "path": {
       "type": "varchar",
@@ -50,6 +43,11 @@
     }
   },
   "links": {
+    "storage": {
+      "type": "belongsTo",
+      "foreign": "files",
+      "entity": "Storage"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
