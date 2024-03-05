@@ -51,30 +51,30 @@ class RegenerateExtensibleEnums extends AbstractConsole
             }
         }
 
-        foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions'], []) as $extensibleEnumOptionData) {
+        foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions'], []) as  $extensibleEnumOptionData) {
             $extensibleEnumOption = $em->getRepository('ExtensibleEnumOption')->get($extensibleEnumOptionData['id']);
-            if (!empty($extensibleEnumOption)) {
-                continue;
-            }
-            $extensibleEnumOption = $em->getRepository('ExtensibleEnumOption')->get();
-            $extensibleEnumOption->id = $extensibleEnumOptionData['id'];
 
-            $extensibleEnumOption->set($extensibleEnumOptionData);
+            if (empty($extensibleEnumOption)) {
+                $extensibleEnumOption = $em->getRepository('ExtensibleEnumOption')->get();
+                $extensibleEnumOption->id = $extensibleEnumOptionData['id'];
+                $extensibleEnumOption->set($extensibleEnumOptionData);
+
+                try {
+                    $em->saveEntity($extensibleEnumOption);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("ExtensibleEnumOption generation sdfsdfsd failed: {$e->getMessage()}");
+                }
+            }
 
             $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
             $eeeeo->set('extensibleEnumId', $extensibleEnumOptionData['extensibleEnumId']);
             $eeeeo->set('extensibleEnumOptionId', $extensibleEnumOptionData['id']);
-
-            try {
-                $em->saveEntity($extensibleEnumOption);
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error("ExtensibleEnumOption generation failed: {$e->getMessage()}");
-            }
+            $eeeeo->set('sorting', $extensibleEnumOptionData['sortOrder']);
 
             try {
                 $em->saveEntity($eeeeo);
             } catch (\Throwable $e) {
-                $GLOBALS['log']->error("ExtensibleEnumOption generation failed: {$e->getMessage()}");
+                $GLOBALS['log']->error("ExtensibleEnumExtensibleEnumOption generation failed: {$e->getMessage()}");
             }
         }
     }
