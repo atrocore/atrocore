@@ -15,7 +15,7 @@ use Atro\Entities\File;
 
 interface FileStorageInterface
 {
-    public function delete(File $file): string;
+    public function delete(File $file): void;
 
     public function getLocalPath(File $file): string;
 

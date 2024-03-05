@@ -20,8 +20,15 @@
       "min": 0
     },
     "storage": {
-      "type": "varchar",
-      "maxLength": 24
+      "type": "enum",
+      "required": true,
+      "default": "fileSystem",
+      "optionsIds": [
+        "fileSystem"
+      ],
+      "options": [
+        "fileSystem"
+      ]
     },
     "path": {
       "type": "varchar",
