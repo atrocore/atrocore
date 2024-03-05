@@ -60,6 +60,10 @@ Espo.define('views/admin/field-manager/fields/default-unit', 'views/fields/enum'
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            if(this.mode === 'list'){
+                return;
+            }
+
             this.$el.parent().hide();
             if (this.model.get('measureId')) {
                 this.$el.parent().show();
