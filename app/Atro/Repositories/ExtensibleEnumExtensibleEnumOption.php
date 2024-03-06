@@ -62,7 +62,7 @@ class ExtensibleEnumExtensibleEnumOption extends Relation
     public function validateSystemOptions(Entity $entity): void
     {
         foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions']) as $v) {
-            if ($entity->get('extensibleEnumOptionId') === $v['id']) {
+            if ($entity->get('extensibleEnumOptionId') === $v['id'] && $entity->get('extensibleEnumId') === $v['extensibleEnumId']) {
                 throw new BadRequest(
                     sprintf(
                         $this->getLanguage()
