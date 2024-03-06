@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Relation;
+use Doctrine\DBAL\ParameterType;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class ExtensibleEnumExtensibleEnumOption extends Relation
@@ -47,5 +50,87 @@ class ExtensibleEnumExtensibleEnumOption extends Relation
             }
         }
     }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        $this->validateSystemOptions($entity);
+        $this->validateOptionsBeforeUnlink($entity);
+        parent::beforeRemove($entity, $options);
+    }
+
+
+    public function validateSystemOptions(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions']) as $v) {
+            if ($entity->get('extensibleEnumOptionId') === $v['id']) {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()
+                            ->translate(
+                                'extensibleEnumOptionIsSystem',
+                                'exceptions',
+                                'ExtensibleEnumOption'
+                            ),
+                        $entity->get('name')
+                    )
+                );
+            }
+        }
+    }
+
+    public function validateOptionsBeforeUnlink(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs']) as $entityName => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDef) {
+                if (
+                    empty($fieldDef['notStorable'])
+                    && !empty($fieldDef['extensibleEnumId'])
+                    && $fieldDef['extensibleEnumId'] === $entity->get('extensibleEnumId')
+                ) {
+                    $column = Util::toUnderScore($field);
+
+                    $qb = $this->getConnection()
+                        ->createQueryBuilder()
+                        ->select('t.*')
+                        ->from(
+                            $this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))),
+                            't'
+                        );
+                    if ($fieldDef['type'] === 'extensibleEnum') {
+                        $qb->where("t.$column = :itemId")
+                            ->setParameter('itemId', $entity->get('extensibleEnumOptionId'));
+                    } else {
+                        $qb->where("t.$column LIKE :itemId")
+                            ->setParameter('itemId', "%\"{$entity->get('extensibleEnumOptionId')}\"%");
+                    }
+                    $qb->andWhere('t.deleted = :false')
+                        ->setParameter('false', false, ParameterType::BOOLEAN);
+
+                    $record = $qb->fetchAssociative();
+
+                    if (!empty($record)) {
+                        $extensibleEnumOption = $this->getEntityManager()
+                            ->getRepository('ExtensibleEnumOption')
+                            ->get($entity->get('extensibleEnumOptionId'));
+
+                        throw new BadRequest(
+                            sprintf(
+                                $this->getLanguage()->translate('extensibleEnumOptionIsUsed', 'exceptions', 'ExtensibleEnumOption'),
+                                $extensibleEnumOption->get('name'),
+                                $this->getLanguage()->translate($field, 'fields', $extensibleEnumOption->getEntityType()),
+                                $entityName,
+                                $record['name'] ?? ''
+                            )
+                        );
+                    }
+                }
+
+            }
+        }
+    }
+
 
 }
