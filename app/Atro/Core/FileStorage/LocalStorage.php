@@ -13,6 +13,7 @@ namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
 use Atro\Entities\Storage;
 use Doctrine\DBAL\Connection;
@@ -32,38 +33,22 @@ class LocalStorage implements FileStorageInterface
 
     public function scan(Storage $storage): void
     {
-        $collection = new EntityCollection([], 'File');
+        $xattr = new Xattr();
+
+        /** @var Connection $conn */
+        $conn = $this->container->get('connection');
+
+        $ids = [];
 
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
         foreach ($files as $fileName) {
-            $id = 'qq1122ww33';
-
-//            xattr_set($fileName, 'foo', '123');
-//            xattr_get($fileName, 'foo');
-
-            exec(sprintf(
-                'attr -qs %s -V %s %s 2>/dev/null',
-                escapeshellarg('id'),
-                escapeshellarg($id),
-                escapeshellarg($fileName)
-            ));
-
-            $out = [];
-            exec(sprintf('attr -qg %s %s 2>/dev/null', escapeshellarg('id'), escapeshellarg($fileName)), $out);
-            $out = trim(implode("\n", $out));
-
-
-
-
-            echo '<pre>';
-            print_r($out);
-            die();
-
             $fileInfo = pathinfo($fileName);
 
             if ($fileInfo['basename'] === 'lastCreated') {
                 continue;
             }
+
+            $id = $xattr->get($fileName, 'atroId');
 
             $entity = $this->getEntityManager()->getRepository('File')->get();
             $entity->set([
@@ -75,33 +60,30 @@ class LocalStorage implements FileStorageInterface
                 'storageId' => $storage->get('id')
             ]);
 
-            $collection->append($entity);
-        }
-
-        $hashArray = array_column($collection->toArray(), 'hash');
-
-        /** @var Connection $conn */
-        $conn = $this->container->get('connection');
-
-        $stored = $conn->createQueryBuilder()
-            ->select('hash')
-            ->from('file')
-            ->where('storage_id = :storageId')
-            ->andWhere('hash IN (:hash)')
-            ->andWhere('deleted = :false')
-            ->setParameter('storageId', $storage->get('id'))
-            ->setParameter('hash', $hashArray, $conn::PARAM_STR_ARRAY)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchFirstColumn();
-
-        foreach ($collection as $entity) {
-            if (!in_array($entity->get('hash'), $stored)) {
-                try {
-                    $this->getEntityManager()->saveEntity($entity);
-                } catch (UniqueConstraintViolationException $e) {
-                } catch (NotUnique $e) {
-                }
+            if (empty($id)) {
+                $this->getEntityManager()->saveEntity($entity);
+                $id = $entity->get('id');
+                $xattr->set($fileName, 'atroId', $id);
+            } else {
+                $conn->createQueryBuilder()
+                    ->update('file')
+                    ->set('name', ':name')
+                    ->set('path', ':path')
+                    ->set('size', ':size')
+                    ->set('hash', ':hash')
+                    ->set('mime_type', ':mimeType')
+                    ->set('storage_id', ':storageId')
+                    ->where('id=:id')
+                    ->setParameter('name', $entity->get('name'))
+                    ->setParameter('path', $entity->get('path'))
+                    ->setParameter('size', $entity->get('size'))
+                    ->setParameter('hash', $entity->get('hash'))
+                    ->setParameter('mimeType', $entity->get('mimeType'))
+                    ->setParameter('storageId', $entity->get('storageId'))
+                    ->setParameter('id', $id)
+                    ->executeQuery();
             }
+            $ids[] = $id;
         }
 
         // delete trash data
@@ -109,11 +91,11 @@ class LocalStorage implements FileStorageInterface
             ->update('file')
             ->set('deleted', ':true')
             ->where('storage_id = :storageId')
-            ->andWhere('hash NOT IN (:hash)')
+            ->andWhere('id NOT IN (:ids)')
             ->andWhere('deleted = :false')
             ->setParameter('storageId', $storage->get('id'))
             ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('hash', $hashArray, $conn::PARAM_STR_ARRAY)
+            ->setParameter('hash', $ids, $conn::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
     }

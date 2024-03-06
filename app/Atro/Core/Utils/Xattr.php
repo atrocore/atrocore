@@ -18,7 +18,7 @@ class Xattr
     public function __construct()
     {
         if (!function_exists('xattr_get') && !boolval(exec('which attr 2>/dev/null'))) {
-            throw new \Error("Xattr extension is not installed and the attr command is not available.");
+            throw new \Error("Xattr extension is not installed and the attr command is not available. See documentation for details.");
         }
     }
 
