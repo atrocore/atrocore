@@ -38,52 +38,70 @@ class LocalStorage implements FileStorageInterface
         /** @var Connection $conn */
         $conn = $this->container->get('connection');
 
-        $toCreate = [];
+        /** @var \Atro\Repositories\File $fileRepo */
+        $fileRepo = $this->getEntityManager()->getRepository('File');
 
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
-        foreach ($files as $fileName) {
-            $fileInfo = pathinfo($fileName);
 
-            if ($fileInfo['basename'] === 'lastCreated') {
-                continue;
+        foreach (array_chunk($files, 20000) as $chunk) {
+            $toCreate = [];
+            $toUpdate = [];
+            $toUpdateByFile = [];
+
+            foreach ($chunk as $fileName) {
+                $fileInfo = pathinfo($fileName);
+
+                if ($fileInfo['basename'] === 'lastCreated') {
+                    continue;
+                }
+
+                $entity = $fileRepo->get();
+                $entity->set([
+                    'name'      => $fileInfo['basename'],
+                    'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
+                    'size'      => filesize($fileName),
+                    'hash'      => md5_file($fileName),
+                    'mimeType'  => mime_content_type($fileName),
+                    'storageId' => $storage->get('id')
+                ]);
+                $entity->_fileName = $fileName;
+
+                $id = $xattr->get($fileName, 'atroId');
+                if (empty($id)) {
+                    $toCreate[] = $entity;
+                } else {
+                    $toUpdateByFile[$id] = $entity;
+                }
             }
 
-            $id = $xattr->get($fileName, 'atroId');
+            if (!empty($toUpdateByFile)) {
+                $exists = [];
+                foreach ($fileRepo->where(['id' => array_keys($toUpdateByFile)])->find() as $v) {
+                    $exists[$v->get('id')] = $v;
+                }
+                foreach ($toUpdateByFile as $k => $v) {
+                    if (isset($exists[$k])) {
+                        $toUpdate[$k] = $exists[$k];
+                        $toUpdate[$k]->set($v->toArray());
+                        $toUpdate[$k]->_fileName = $v->_fileName;
+                    } else {
+                        $toCreate[] = $v;
+                    }
+                }
+            }
 
-            $entity = $this->getEntityManager()->getRepository('File')->get();
-            $entity->set([
-                'name'       => $fileInfo['basename'],
-                'path'       => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
-                'size'       => filesize($fileName),
-                'hash'       => md5_file($fileName),
-                'mimeType'   => mime_content_type($fileName),
-                'storageId'  => $storage->get('id'),
-                'createdAt'  => gmdate("Y-m-d H:i:s", $entity->_stat['ctime']),
-                'modifiedAt' => gmdate("Y-m-d H:i:s", $entity->_stat['mtime']),
-            ]);
-            $entity->_fileName = $fileName;
+            foreach ($toCreate as $entity) {
+                $stat = stat($entity->_fileName);
+                $entity->set('fileCreatedAt', gmdate("Y-m-d H:i:s", $stat['mtime']));
+                $entity->set('fileModifiedAt', $entity->get('fileCreatedAt'));
+                $this->getEntityManager()->saveEntity($entity);
+                $xattr->set($entity->_fileName, 'atroId', $entity->get('id'));
+            }
 
-            if (empty($id)) {
-                $toCreate[] = $entity;
-            } else {
-                // update records for existing files
-                $conn->createQueryBuilder()
-                    ->update('file')
-                    ->set('name', ':name')
-                    ->set('path', ':path')
-                    ->set('size', ':size')
-                    ->set('hash', ':hash')
-                    ->set('mime_type', ':mimeType')
-                    ->set('modified_at', ':modifiedAt')
-                    ->where('id=:id')
-                    ->setParameter('name', $entity->get('name'))
-                    ->setParameter('path', $entity->get('path'))
-                    ->setParameter('size', $entity->get('size'))
-                    ->setParameter('hash', $entity->get('hash'))
-                    ->setParameter('mimeType', $entity->get('mimeType'))
-                    ->setParameter('modifiedAt', $entity->get('modifiedAt'))
-                    ->setParameter('id', $id)
-                    ->executeQuery();
+            foreach ($toUpdate as $entity) {
+                $stat = stat($entity->_fileName);
+                $entity->set('fileModifiedAt', gmdate("Y-m-d H:i:s", $stat['mtime']));
+                $this->getEntityManager()->saveEntity($entity);
             }
         }
 
@@ -108,12 +126,6 @@ class LocalStorage implements FileStorageInterface
 //            ->setParameter('ids', $existedIds, $conn::PARAM_STR_ARRAY)
 //            ->setParameter('false', false, ParameterType::BOOLEAN)
 //            ->executeQuery();
-
-        // create records for new files
-        foreach ($toCreate as $entity) {
-            $this->getEntityManager()->saveEntity($entity);
-            $xattr->set($entity->_fileName, 'atroId', $entity->get('id'));
-        }
     }
 
     public function getDirFiles(string $dir, &$results = []): array
