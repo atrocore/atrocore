@@ -7,7 +7,7 @@
     "name": "mimeType"
   },
   {
-    "name": "size"
+    "name": "fileSize"
   },
   {
     "name": "fileMtime"
