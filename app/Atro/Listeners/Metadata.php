@@ -657,7 +657,7 @@ class Metadata extends AbstractListener
             $data['scopes'][$entityName] = empty($current) ? $defaultScopes : Util::merge($defaultScopes, $current);
 
             if (!empty($data['scopes'][$entityName]['isHierarchyEntity'])) {
-                $data['scopes'][$entityName]['acl'] = true;
+                $data['scopes'][$entityName]['acl'] = false;
             }
 
             $data['scopes'][$entityName]['tab'] = false;
