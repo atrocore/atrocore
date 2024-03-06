@@ -30,6 +30,5 @@ class V1Dot9Dot3 extends Base
 
     public function down(): void
     {
-        throw new \Error('Downgrade is prohibited!');
     }
 }
