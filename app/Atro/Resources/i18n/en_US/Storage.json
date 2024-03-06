@@ -10,7 +10,7 @@
   },
   "options": {
     "type": {
-      "fileSystem": "File System"
+      "local": "Local (Linux)"
     }
   },
   "labels": {

@@ -4,7 +4,7 @@
   "tab": true,
   "acl": false,
   "customizable": false,
-  "stream": true,
+  "stream": false,
   "disabled": false,
   "type": "Base",
   "object": true

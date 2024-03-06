@@ -11,10 +11,10 @@
       "required": true,
       "default": "fileSystem",
       "optionsIds": [
-        "fileSystem"
+        "local"
       ],
       "options": [
-        "fileSystem"
+        "local"
       ]
     },
     "path": {

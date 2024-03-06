@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-warehouse",
+  "iconClass": "fas fa-hdd",
   "relationshipPanels": {
     "files": {
       "create": false,

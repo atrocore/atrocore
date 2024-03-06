@@ -21,7 +21,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 
-class FileSystem implements FileStorageInterface
+class LocalStorage implements FileStorageInterface
 {
     protected Container $container;
 
@@ -36,6 +36,29 @@ class FileSystem implements FileStorageInterface
 
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
         foreach ($files as $fileName) {
+            $id = 'qq1122ww33';
+
+//            xattr_set($fileName, 'foo', '123');
+//            xattr_get($fileName, 'foo');
+
+            exec(sprintf(
+                'attr -qs %s -V %s %s 2>/dev/null',
+                escapeshellarg('id'),
+                escapeshellarg($id),
+                escapeshellarg($fileName)
+            ));
+
+            $out = [];
+            exec(sprintf('attr -qg %s %s 2>/dev/null', escapeshellarg('id'), escapeshellarg($fileName)), $out);
+            $out = trim(implode("\n", $out));
+
+
+
+
+            echo '<pre>';
+            print_r($out);
+            die();
+
             $fileInfo = pathinfo($fileName);
 
             if ($fileInfo['basename'] === 'lastCreated') {
@@ -52,18 +75,36 @@ class FileSystem implements FileStorageInterface
                 'storageId' => $storage->get('id')
             ]);
 
-            try {
-                $this->getEntityManager()->saveEntity($entity);
-            } catch (UniqueConstraintViolationException $e) {
-            } catch (NotUnique $e) {
-            }
-
             $collection->append($entity);
         }
+
+        $hashArray = array_column($collection->toArray(), 'hash');
 
         /** @var Connection $conn */
         $conn = $this->container->get('connection');
 
+        $stored = $conn->createQueryBuilder()
+            ->select('hash')
+            ->from('file')
+            ->where('storage_id = :storageId')
+            ->andWhere('hash IN (:hash)')
+            ->andWhere('deleted = :false')
+            ->setParameter('storageId', $storage->get('id'))
+            ->setParameter('hash', $hashArray, $conn::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+
+        foreach ($collection as $entity) {
+            if (!in_array($entity->get('hash'), $stored)) {
+                try {
+                    $this->getEntityManager()->saveEntity($entity);
+                } catch (UniqueConstraintViolationException $e) {
+                } catch (NotUnique $e) {
+                }
+            }
+        }
+
+        // delete trash data
         $conn->createQueryBuilder()
             ->update('file')
             ->set('deleted', ':true')
@@ -72,7 +113,7 @@ class FileSystem implements FileStorageInterface
             ->andWhere('deleted = :false')
             ->setParameter('storageId', $storage->get('id'))
             ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('hash', array_column($collection->toArray(), 'hash'), $conn::PARAM_STR_ARRAY)
+            ->setParameter('hash', $hashArray, $conn::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
     }

@@ -28,7 +28,7 @@ class Container
 
     protected array $classAliases
         = [
-            'fileSystemStorage'        => \Atro\Core\FileStorage\FileSystem::class,
+            'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'thumbnail'                => \Atro\Core\Thumbnail\Image::class,
             'validator'                => \Atro\Core\AssetValidation\Validator::class,
