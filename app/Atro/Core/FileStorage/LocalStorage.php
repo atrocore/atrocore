@@ -81,9 +81,26 @@ class LocalStorage implements FileStorageInterface
                 }
                 foreach ($toUpdateByFile as $k => $v) {
                     if (isset($exists[$k])) {
-                        $toUpdate[$k] = $exists[$k];
-                        $toUpdate[$k]->set($v->toArray());
-                        $toUpdate[$k]->_fileName = $v->_fileName;
+                        $skip = true;
+                        foreach ($v->toArray() as $field => $val) {
+                            if ($exists[$k]->get($field) !== $val) {
+                                $skip = false;
+                            }
+                        }
+
+                        $stat = stat($v->_fileName);
+                        $modifiedAt = gmdate("Y-m-d H:i:s", $stat['mtime']);
+
+                        if ($exists[$k]->get('modifiedAt') < $modifiedAt) {
+                            $exists[$k]->set('modifiedAt', $modifiedAt);
+                            $skip = false;
+                        }
+
+                        if (!$skip) {
+                            $toUpdate[$k] = $exists[$k];
+                            $toUpdate[$k]->set($v->toArray());
+                            $toUpdate[$k]->_fileName = $v->_fileName;
+                        }
                     } else {
                         $toCreate[] = $v;
                     }
@@ -93,17 +110,12 @@ class LocalStorage implements FileStorageInterface
             foreach ($toCreate as $entity) {
                 $stat = stat($entity->_fileName);
                 $entity->set('createdAt', gmdate("Y-m-d H:i:s", $stat['mtime']));
-                $entity->set('modifiedAt', $entity->get('fileCreatedAt'));
+                $entity->set('modifiedAt', $entity->get('createdAt'));
                 $this->getEntityManager()->saveEntity($entity);
                 $xattr->set($entity->_fileName, 'atroId', $entity->get('id'));
             }
 
             foreach ($toUpdate as $entity) {
-                $stat = stat($entity->_fileName);
-                $modifiedAt = gmdate("Y-m-d H:i:s", $stat['mtime']);
-                if ($entity->get('modifiedAt') < $modifiedAt) {
-                    $entity->set('modifiedAt', $modifiedAt);
-                }
                 $this->getEntityManager()->saveEntity($entity);
             }
         }
