@@ -3,6 +3,7 @@
     "storage": "Storage",
     "mimeType": "MIME Type",
     "path": "Path",
+    "preview": "Preview",
     "hash": "Hash",
     "fileSize": "File Size (bytes)",
     "fileMtime": "File Modification Date"
