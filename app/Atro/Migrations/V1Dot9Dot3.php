@@ -14,7 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 
-class V1Dot9Dot2 extends Base
+class V1Dot9Dot3 extends Base
 {
     public function up(): void
     {
