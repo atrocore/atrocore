@@ -104,6 +104,12 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             return extensibleEnumId;
         },
 
+        getCreateAttributes: function () {
+            return {
+                "extensibleEnumsIds": [this.getExtensibleEnumId()]
+            }
+        },
+
         getOptionsData() {
             let res = [];
 
@@ -120,6 +126,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
 
             return res;
         },
+
 
         fetchSearch: function () {
             let type = this.$el.find('select.search-type').val();

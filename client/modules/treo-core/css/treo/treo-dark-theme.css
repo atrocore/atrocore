@@ -15481,7 +15481,7 @@ table.table > thead th > div > a {
 
 #main > .list-container > .list {
     overflow: auto;
-    min-height: 400px;
+    min-height: 800px;
 }
 
 @media screen and (min-width: 768px) {

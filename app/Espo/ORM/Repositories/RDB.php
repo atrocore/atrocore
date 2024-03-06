@@ -648,7 +648,6 @@ class RDB extends \Espo\ORM\Repository
                 $relationEntityName = ucfirst($linkDefs['relationName']);
                 $where = [$keySet['nearKey'] => $entity->get('id'), $keySet['distantKey'] => $foreignId];
                 $relEntity = $this->getEntityManager()->getRepository($relationEntityName)
-                    ->select(['id'])
                     ->where($where)
                     ->findOne();
 
