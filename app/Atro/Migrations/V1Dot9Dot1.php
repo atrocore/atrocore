@@ -146,27 +146,23 @@ class V1Dot9Dot1 extends Base
             ->fetchAllAssociative();
 
         foreach ($duplicatedOptions as $duplicatedOption) {
-            $qb =  $this->getConnection()
+            if($duplicatedOption['code'] === null) {
+                continue;
+            }
+
+            $duplicatedOptionsForCode =  $this->getConnection()
                 ->createQueryBuilder()
                 ->from('extensible_enum_option')
-                ->select("id");
-            if(is_null($duplicatedOption['code'])){
-                $qb = $qb->where('code IS NULL');
-            }else{
-                $qb = $qb->where('code=:code')
-                    ->setParameter('code', $duplicatedOption['code'], Mapper::getParameterType($duplicatedOption['code']));
-            }
-            $duplicatedOptionsForCode = $qb->fetchAllAssociative();
+                ->select("id")
+                ->where('code=:code')
+                ->setParameter('code', $duplicatedOption['code'], Mapper::getParameterType($duplicatedOption['code']))
+                ->fetchAllAssociative();
 
             array_shift($duplicatedOptionsForCode);
 
             foreach ($duplicatedOptionsForCode as $key => $option) {
                 $index = $key + 1;
                 $code = $duplicatedOption['code'];
-
-                if(is_null($code)){
-                    $code = "null";
-                }
 
                 if(empty($code)){
                     $code = "empty";
