@@ -40,8 +40,6 @@ class LocalStorage implements FileStorageInterface
 
         $toCreate = [];
 
-        $existedIds = ['no-such-id'];
-
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
         foreach ($files as $fileName) {
             $fileInfo = pathinfo($fileName);
@@ -61,6 +59,7 @@ class LocalStorage implements FileStorageInterface
                 'mimeType'  => mime_content_type($fileName),
                 'storageId' => $storage->get('id')
             ]);
+            $entity->_fileName = $fileName;
 
             if (empty($id)) {
                 $toCreate[] = $entity;
@@ -83,27 +82,35 @@ class LocalStorage implements FileStorageInterface
                     ->setParameter('storageId', $entity->get('storageId'))
                     ->setParameter('id', $id)
                     ->executeQuery();
-                $existedIds[] = $id;
             }
         }
 
-        // delete records for removed files
+        // delete forever
         $conn->createQueryBuilder()
-            ->update('file')
-            ->set('deleted', ':true')
+            ->delete('file')
             ->where('storage_id = :storageId')
-            ->andWhere('id NOT IN (:ids)')
-            ->andWhere('deleted = :false')
+            ->andWhere('deleted = :true')
             ->setParameter('storageId', $storage->get('id'))
             ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('ids', $existedIds, $conn::PARAM_STR_ARRAY)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
+
+//        // delete records for removed files
+//        $conn->createQueryBuilder()
+//            ->update('file')
+//            ->set('deleted', ':true')
+//            ->where('storage_id = :storageId')
+//            ->andWhere('id NOT IN (:ids)')
+//            ->andWhere('deleted = :false')
+//            ->setParameter('storageId', $storage->get('id'))
+//            ->setParameter('true', true, ParameterType::BOOLEAN)
+//            ->setParameter('ids', $existedIds, $conn::PARAM_STR_ARRAY)
+//            ->setParameter('false', false, ParameterType::BOOLEAN)
+//            ->executeQuery();
 
         // create records for new files
         foreach ($toCreate as $entity) {
             $this->getEntityManager()->saveEntity($entity);
-            $xattr->set($entity->get('path') . DIRECTORY_SEPARATOR . $entity->get('name'), 'atroId', $entity->get('id'));
+            $xattr->set($entity->_fileName, 'atroId', $entity->get('id'));
         }
     }
 
