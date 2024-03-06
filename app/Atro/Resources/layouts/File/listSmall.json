@@ -1,0 +1,15 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "mimeType"
+  },
+  {
+    "name": "size"
+  },
+  {
+    "name": "fileMtime"
+  }
+]
