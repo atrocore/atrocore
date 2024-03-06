@@ -33,14 +33,6 @@
       "readOnly": true,
       "index": true
     },
-    "fileCreatedAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "fileModifiedAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

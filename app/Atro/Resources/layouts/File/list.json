@@ -10,9 +10,9 @@
     "name": "size"
   },
   {
-    "name": "fileCreatedAt"
+    "name": "createdAt"
   },
   {
-    "name": "fileModifiedAt"
+    "name": "modifiedAt"
   }
 ]

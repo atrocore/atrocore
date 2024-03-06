@@ -92,15 +92,18 @@ class LocalStorage implements FileStorageInterface
 
             foreach ($toCreate as $entity) {
                 $stat = stat($entity->_fileName);
-                $entity->set('fileCreatedAt', gmdate("Y-m-d H:i:s", $stat['mtime']));
-                $entity->set('fileModifiedAt', $entity->get('fileCreatedAt'));
+                $entity->set('createdAt', gmdate("Y-m-d H:i:s", $stat['mtime']));
+                $entity->set('modifiedAt', $entity->get('fileCreatedAt'));
                 $this->getEntityManager()->saveEntity($entity);
                 $xattr->set($entity->_fileName, 'atroId', $entity->get('id'));
             }
 
             foreach ($toUpdate as $entity) {
                 $stat = stat($entity->_fileName);
-                $entity->set('fileModifiedAt', gmdate("Y-m-d H:i:s", $stat['mtime']));
+                $modifiedAt = gmdate("Y-m-d H:i:s", $stat['mtime']);
+                if ($entity->get('modifiedAt') < $modifiedAt) {
+                    $entity->set('modifiedAt', $modifiedAt);
+                }
                 $this->getEntityManager()->saveEntity($entity);
             }
         }
