@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
 class ExtensibleEnum extends Base
@@ -82,12 +82,6 @@ class ExtensibleEnum extends Base
         }
     }
 
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $this->getEntityManager()->getRepository('ExtensibleEnumOption')->where(['extensibleEnumId' => $entity->get('id')])->removeCollection();
-
-        parent::afterRemove($entity, $options);
-    }
 
     public function clearLingualOptions(Entity $entity): void
     {
