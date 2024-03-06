@@ -38,7 +38,9 @@ class LocalStorage implements FileStorageInterface
         /** @var Connection $conn */
         $conn = $this->container->get('connection');
 
-        $ids = [];
+        $toCreate = [];
+
+        $existedIds = ['no-such-id'];
 
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
         foreach ($files as $fileName) {
@@ -61,10 +63,9 @@ class LocalStorage implements FileStorageInterface
             ]);
 
             if (empty($id)) {
-                $this->getEntityManager()->saveEntity($entity);
-                $id = $entity->get('id');
-                $xattr->set($fileName, 'atroId', $id);
+                $toCreate[] = $entity;
             } else {
+                // update records for existing files
                 $conn->createQueryBuilder()
                     ->update('file')
                     ->set('name', ':name')
@@ -82,11 +83,11 @@ class LocalStorage implements FileStorageInterface
                     ->setParameter('storageId', $entity->get('storageId'))
                     ->setParameter('id', $id)
                     ->executeQuery();
+                $existedIds[] = $id;
             }
-            $ids[] = $id;
         }
 
-        // delete trash data
+        // delete records for removed files
         $conn->createQueryBuilder()
             ->update('file')
             ->set('deleted', ':true')
@@ -95,9 +96,15 @@ class LocalStorage implements FileStorageInterface
             ->andWhere('deleted = :false')
             ->setParameter('storageId', $storage->get('id'))
             ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('hash', $ids, $conn::PARAM_STR_ARRAY)
+            ->setParameter('ids', $existedIds, $conn::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
+
+        // create records for new files
+        foreach ($toCreate as $entity) {
+            $this->getEntityManager()->saveEntity($entity);
+            $xattr->set($entity->get('path') . DIRECTORY_SEPARATOR . $entity->get('name'), 'atroId', $entity->get('id'));
+        }
     }
 
     public function getDirFiles(string $dir, &$results = []): array
