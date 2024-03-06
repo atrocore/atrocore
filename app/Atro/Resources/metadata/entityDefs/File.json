@@ -6,18 +6,27 @@
       "required": true,
       "trim": true
     },
-    "mimeType": {
-      "type": "varchar",
-      "readOnly": true
-    },
     "private": {
       "type": "bool",
       "default": false
     },
-    "size": {
+    "mimeType": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "fileSize": {
       "type": "float",
       "readOnly": true,
       "min": 0
+    },
+    "fileMtime": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "hash": {
+      "type": "varchar",
+      "readOnly": true,
+      "index": true
     },
     "storage": {
       "type": "link",
@@ -27,11 +36,6 @@
       "type": "varchar",
       "maxLength": 260,
       "default": null
-    },
-    "hash": {
-      "type": "varchar",
-      "readOnly": true,
-      "index": true
     },
     "createdAt": {
       "type": "datetime",

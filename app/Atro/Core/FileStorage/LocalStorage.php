@@ -35,13 +35,12 @@ class LocalStorage implements FileStorageInterface
     {
         $xattr = new Xattr();
 
-        /** @var Connection $conn */
-        $conn = $this->container->get('connection');
-
         /** @var \Atro\Repositories\File $fileRepo */
         $fileRepo = $this->getEntityManager()->getRepository('File');
 
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
+
+        $ids = [];
 
         foreach (array_chunk($files, 20000) as $chunk) {
             $toCreate = [];
@@ -50,7 +49,6 @@ class LocalStorage implements FileStorageInterface
 
             foreach ($chunk as $fileName) {
                 $fileInfo = pathinfo($fileName);
-
                 if ($fileInfo['basename'] === 'lastCreated') {
                     continue;
                 }
@@ -59,7 +57,8 @@ class LocalStorage implements FileStorageInterface
                 $entity->set([
                     'name'      => $fileInfo['basename'],
                     'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
-                    'size'      => filesize($fileName),
+                    'fileSize'  => filesize($fileName),
+                    'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
                     'hash'      => md5_file($fileName),
                     'mimeType'  => mime_content_type($fileName),
                     'storageId' => $storage->get('id')
@@ -88,13 +87,7 @@ class LocalStorage implements FileStorageInterface
                             }
                         }
 
-                        $stat = stat($v->_fileName);
-                        $modifiedAt = gmdate("Y-m-d H:i:s", $stat['mtime']);
-
-                        if ($exists[$k]->get('modifiedAt') < $modifiedAt) {
-                            $exists[$k]->set('modifiedAt', $modifiedAt);
-                            $skip = false;
-                        }
+                        $ids[] = $k;
 
                         if (!$skip) {
                             $toUpdate[$k] = $exists[$k];
@@ -108,11 +101,9 @@ class LocalStorage implements FileStorageInterface
             }
 
             foreach ($toCreate as $entity) {
-                $stat = stat($entity->_fileName);
-                $entity->set('createdAt', gmdate("Y-m-d H:i:s", $stat['mtime']));
-                $entity->set('modifiedAt', $entity->get('createdAt'));
                 $this->getEntityManager()->saveEntity($entity);
                 $xattr->set($entity->_fileName, 'atroId', $entity->get('id'));
+                $ids[] = $entity->get('id');
             }
 
             foreach ($toUpdate as $entity) {
@@ -120,27 +111,38 @@ class LocalStorage implements FileStorageInterface
             }
         }
 
-        // delete forever
-        $conn->createQueryBuilder()
-            ->delete('file')
-            ->where('storage_id = :storageId')
-            ->andWhere('deleted = :true')
-            ->setParameter('storageId', $storage->get('id'))
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->executeQuery();
-
-//        // delete records for removed files
-//        $conn->createQueryBuilder()
-//            ->update('file')
-//            ->set('deleted', ':true')
-//            ->where('storage_id = :storageId')
-//            ->andWhere('id NOT IN (:ids)')
-//            ->andWhere('deleted = :false')
-//            ->setParameter('storageId', $storage->get('id'))
-//            ->setParameter('true', true, ParameterType::BOOLEAN)
-//            ->setParameter('ids', $existedIds, $conn::PARAM_STR_ARRAY)
-//            ->setParameter('false', false, ParameterType::BOOLEAN)
-//            ->executeQuery();
+//        $offset = 0;
+//        $limit = 30000;
+//        while (true) {
+//            $res = $fileRepo
+//                ->select(['id'])
+//                ->limit($offset, $limit)
+//                ->order('createdAt')
+//                ->find();
+//
+//            if (empty($res[0])) {
+//                break;
+//            }
+//
+//            $offset = $offset + $limit;
+//
+//            $diff = array_diff(array_column($res->toArray(), 'id'), $ids);
+//            if (!empty($diff)) {
+//                $conn = $this->getEntityManager()->getConnection();
+//                foreach (array_chunk($diff, 20000) as $chunk) {
+//                    $conn->createQueryBuilder()
+//                        ->delete('file')
+//                        ->where('storage_id = :storageId')
+//                        ->andWhere('id IN (:ids)')
+//                        ->andWhere('deleted = :false')
+//                        ->setParameter('storageId', $storage->get('id'))
+//                        ->setParameter('true', true, ParameterType::BOOLEAN)
+//                        ->setParameter('ids', array_values($chunk), $conn::PARAM_STR_ARRAY)
+//                        ->setParameter('false', false, ParameterType::BOOLEAN)
+//                        ->executeQuery();
+//                }
+//            }
+//        }
     }
 
     public function getDirFiles(string $dir, &$results = []): array

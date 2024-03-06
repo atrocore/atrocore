@@ -21,8 +21,14 @@
         {
           "name": "mimeType"
         },
+        false
+      ],
+      [
         {
-          "name": "size"
+          "name": "fileSize"
+        },
+        {
+          "name": "fileMtime"
         }
       ]
     ]

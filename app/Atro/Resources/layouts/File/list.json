@@ -10,7 +10,7 @@
     "name": "size"
   },
   {
-    "name": "createdAt"
+    "name": "fileMtime"
   },
   {
     "name": "modifiedAt"

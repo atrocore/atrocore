@@ -3,8 +3,9 @@
     "storage": "Storage",
     "mimeType": "MIME Type",
     "path": "Path",
-    "size": "Size (bytes)",
-    "hash": "Hash"
+    "hash": "Hash",
+    "fileSize": "File Size (bytes)",
+    "fileMtime": "File Modification Date"
   },
   "links": {
     "storage": "Storage"
