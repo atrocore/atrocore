@@ -52,12 +52,14 @@ class LocalStorage implements FileStorageInterface
 
             $entity = $this->getEntityManager()->getRepository('File')->get();
             $entity->set([
-                'name'      => $fileInfo['basename'],
-                'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
-                'size'      => filesize($fileName),
-                'hash'      => md5_file($fileName),
-                'mimeType'  => mime_content_type($fileName),
-                'storageId' => $storage->get('id')
+                'name'       => $fileInfo['basename'],
+                'path'       => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
+                'size'       => filesize($fileName),
+                'hash'       => md5_file($fileName),
+                'mimeType'   => mime_content_type($fileName),
+                'storageId'  => $storage->get('id'),
+                'createdAt'  => gmdate("Y-m-d H:i:s", $entity->_stat['ctime']),
+                'modifiedAt' => gmdate("Y-m-d H:i:s", $entity->_stat['mtime']),
             ]);
             $entity->_fileName = $fileName;
 
@@ -72,14 +74,14 @@ class LocalStorage implements FileStorageInterface
                     ->set('size', ':size')
                     ->set('hash', ':hash')
                     ->set('mime_type', ':mimeType')
-                    ->set('storage_id', ':storageId')
+                    ->set('modified_at', ':modifiedAt')
                     ->where('id=:id')
                     ->setParameter('name', $entity->get('name'))
                     ->setParameter('path', $entity->get('path'))
                     ->setParameter('size', $entity->get('size'))
                     ->setParameter('hash', $entity->get('hash'))
                     ->setParameter('mimeType', $entity->get('mimeType'))
-                    ->setParameter('storageId', $entity->get('storageId'))
+                    ->setParameter('modifiedAt', $entity->get('modifiedAt'))
                     ->setParameter('id', $id)
                     ->executeQuery();
             }

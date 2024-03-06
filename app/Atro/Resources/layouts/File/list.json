@@ -8,5 +8,8 @@
   },
   {
     "name": "size"
+  },
+  {
+    "name": "createdAt"
   }
 ]

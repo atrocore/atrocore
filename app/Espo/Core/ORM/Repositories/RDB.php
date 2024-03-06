@@ -646,7 +646,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 } catch (\Throwable $e) {
                 }
             }
-            if ($entity->hasAttribute('createdAt')) {
+            if ($entity->hasAttribute('createdAt') && empty($entity->get('createdAt'))) {
                 $entity->set('createdAt', $nowString);
             }
             if ($entity->hasAttribute('createdById') && $user) {
@@ -654,7 +654,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
         }
 
-        if ($entity->hasAttribute('modifiedAt')) {
+        if ($entity->hasAttribute('modifiedAt') && empty($entity->get('modifiedAt'))) {
             $entity->set('modifiedAt', $nowString);
         }
 
