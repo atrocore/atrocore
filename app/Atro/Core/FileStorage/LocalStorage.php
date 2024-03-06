@@ -111,38 +111,38 @@ class LocalStorage implements FileStorageInterface
             }
         }
 
-//        $offset = 0;
-//        $limit = 30000;
-//        while (true) {
-//            $res = $fileRepo
-//                ->select(['id'])
-//                ->limit($offset, $limit)
-//                ->order('createdAt')
-//                ->find();
-//
-//            if (empty($res[0])) {
-//                break;
-//            }
-//
-//            $offset = $offset + $limit;
-//
-//            $diff = array_diff(array_column($res->toArray(), 'id'), $ids);
-//            if (!empty($diff)) {
-//                $conn = $this->getEntityManager()->getConnection();
-//                foreach (array_chunk($diff, 20000) as $chunk) {
-//                    $conn->createQueryBuilder()
-//                        ->delete('file')
-//                        ->where('storage_id = :storageId')
-//                        ->andWhere('id IN (:ids)')
-//                        ->andWhere('deleted = :false')
-//                        ->setParameter('storageId', $storage->get('id'))
-//                        ->setParameter('true', true, ParameterType::BOOLEAN)
-//                        ->setParameter('ids', array_values($chunk), $conn::PARAM_STR_ARRAY)
-//                        ->setParameter('false', false, ParameterType::BOOLEAN)
-//                        ->executeQuery();
-//                }
-//            }
-//        }
+        $offset = 0;
+        $limit = 30000;
+        while (true) {
+            $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('file')
+                ->where('storage_id=:storageId')
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->orderBy('created_at', 'ASC')
+                ->setParameter('storageId', $storage->get('id'))
+                ->fetchFirstColumn();
+
+            if (empty($res[0])) {
+                break;
+            }
+
+            $offset = $offset + $limit;
+
+            $diff = array_diff($res, $ids);
+            if (!empty($diff)) {
+                foreach (array_chunk($diff, 20000) as $chunk) {
+                    $this->getEntityManager()->getConnection()->createQueryBuilder()
+                        ->delete('file')
+                        ->where('storage_id = :storageId')
+                        ->andWhere('id IN (:ids)')
+                        ->setParameter('storageId', $storage->get('id'))
+                        ->setParameter('ids', $chunk, Connection::PARAM_STR_ARRAY)
+                        ->executeQuery();
+                }
+            }
+        }
     }
 
     public function getDirFiles(string $dir, &$results = []): array

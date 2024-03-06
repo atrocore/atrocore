@@ -72,7 +72,7 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
+    "sortBy": "fileMtime",
     "asc": false
   },
   "uniqueIndexes": {
