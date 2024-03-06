@@ -757,9 +757,29 @@ class Metadata extends AbstractListener
                     $data['scopes'][$scope]['mandatoryUnInheritedFields'][] = $fieldName;
                 }
             }
+
+            $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'parents');
+            $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'children');
         }
 
+
         return $data;
+    }
+
+    private function addScopesToRelationShip(array &$metadata, string $scope, string $relationEntityName, string $relation){
+        if(empty($metadata['clientDefs'][$scope]['relationshipPanels'])){
+            $metadata['clientDefs'][$scope]['relationshipPanels'] = [
+                $relation => []
+            ];
+        }
+        $data =  $metadata['clientDefs'][$scope]['relationshipPanels'][$relation] ;
+        if(empty($data)){
+            $metadata['clientDefs'][$scope]['relationshipPanels'][$relation] = [
+                "aclScopesList" => [$scope, $relationEntityName]
+            ];
+        }else{
+            $metadata['clientDefs'][$scope]['relationshipPanels'][$relation]["aclScopesList"] = array_merge($data['aclScopesList'] ?? [], [$scope, $relationEntityName]) ;
+        }
     }
 
     protected function showConnections(array $data): array
