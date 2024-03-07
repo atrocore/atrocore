@@ -517,7 +517,7 @@ class Hierarchy extends RDB
             $id = $record['id'];
         }
 
-        return array_reverse($route);
+        return array_reverse($route, true);
     }
 
     public function getParentRecord(string $id): array
