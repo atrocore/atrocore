@@ -59,22 +59,110 @@ Espo.define('views/record/compare','view', function (Dep) {
                         e.preventDefault();
                     }
                 }
+            },
+            'click .dropdown-menu .action': function (e) {
+                var $target = $(e.currentTarget);
+                var action = $target.data('action');
+                var data = $target.data();
+                if (action) {
+                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    if (typeof this[method] == 'function') {
+                        this[method].call(this, data, e);
+                        e.preventDefault();
+                    }
+                }
             }
         },
         init(){
-            Dep.prototype.init.call(this)
-            this.id = this.model.get('id')
+            Dep.prototype.init.call(this);
+            this.id = this.model.get('id');
+            this.distantModel = this.options.distantModel;
+            this.scope = this.options.scope
+            this.fields = this.getMetadata().get('entityDefs.'+this.scope+'.fields');
+            this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
         },
         data (){
             return {
                 buttonList: this.buttonList,
+                model: this.model,
+                distantModel: this.distantModel,
+                simpleFields: this.getNonLinkMultipleFields(),
+                linkMultipleFields: this.linkMultipleFields(),
+                scope: this.scope,
                 id: this.id
-            }
+            };
         },
         actionReset(){
             this.confirm(this.translate('confirmation', 'messages'), function () {
 
             }, this);
+        },
+        actionQuickCompare(data){
+            this.getModelFactory().create(data.scope, function (model) {
+                model.id = data.id;
+                this.notify('Loading...');
+                this.listenToOnce(model, 'sync', function () {
+                    this.createView('dialog','views/compare',{
+                        "model": model,
+                        "scope": data.scope,
+                        "hasModal": true
+                    }, function(dialog){
+                        dialog.render();
+                        this.notify(false)
+                        console.log('dialog','dialog')
+                    })
+                }, this);
+                model.fetch({main: true});
+
+                this.listenToOnce(this.baseController, 'action', function () {
+                    model.abortLastFetch();
+                }, this);
+            }.bind(this));
+        },
+        getNonLinkMultipleFields(){
+            let fields = [];
+            for (const [key, value] of Object.entries(this.fields)) {
+                 if(value.type !== 'linkMultiple' && !key.includes('__') ){
+                     if(value.type === "link"){
+                         fields.push({
+                             "fieldName": key,
+                             "isLink": true,
+                             "entity": this.links[key].entity,
+                             "current": {
+                                 "id" :this.model.get(key+'Id'),
+                                 "name": this.model.get(key+'Name')
+                             },
+                             "distant": {
+                                 "id": this.distantModel[key+'Id'],
+                                 "name": this.distantModel[key+'Name']
+                             }
+                         })
+                     }else{
+                         fields.push({
+                             "fieldName": key,
+                             "isLink": false,
+                             "current": this.model.get(key),
+                             "distant": this.distantModel[key],
+                             areEquals: this.model.get(key) === this.distantModel[key]
+                         })
+                     }
+                 }
+            }
+            return fields;
+        },
+        linkMultipleFields() {
+            let fields = [];
+
+            for (const [key, value] of Object.entries(this.fields)) {
+                if(value.type === 'linkMultiple'){
+                    fields.push({
+                        "fieldName": key,
+                        "type": value.type
+                    })
+                }
+            }
+
+            return fields;
         }
     });
 });

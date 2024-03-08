@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/compare', 'views/main', function (Dep) {
+Espo.define('views/compare', ['views/main', 'views/modal'], function (Dep, Modal) {
 
     return Dep.extend({
 
@@ -45,11 +45,19 @@ Espo.define('views/compare', 'views/main', function (Dep) {
         headerView: 'views/header',
         recordView: 'views/record/compare',
 
-
+        init(){
+          if(this.options.hasModal){
+              debugger
+              Modal.prototype.init.call(this)
+          }else{
+              Dep.prototype.init.call(this)
+          }
+        },
         setup: function () {
             this.model = this.options.model;
-
+            this.scope = this.model.urlRoot;
             this.setupHeader();
+            this.updatePageTitle();
             this.setupRecord()
         },
 
@@ -89,13 +97,19 @@ Espo.define('views/compare', 'views/main', function (Dep) {
         },
 
         setupRecord() {
+            this.notify('Loading...');
+            this.ajaxGetRequest(`Connector/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
+                this.notify(false);
 
-            var o = {
-                model: this.model,
-                el: '#main > .record',
-                scope: this.scope ?? 'Product'
-            };
-            this.createView('record', this.recordView, o);
+                var o = {
+                    model: this.model,
+                    distantModel: attr,
+                    el: '#main > .record',
+                    scope: this.scope
+                };
+                this.createView('record', this.recordView, o);
+            })
+
         },
 
         getMenu(){
@@ -112,18 +126,8 @@ Espo.define('views/compare', 'views/main', function (Dep) {
 
 
         updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('compare'));
+            this.setPageTitle(this.getLanguage().translate('Compare')+' '+this.scope+' '+this.model.get('name'));
         },
-        // setupRecord: function () {
-        //     this.ajaxGetRequest(`Compare/${this.scope}`, null, {async: false}).success(attr => {
-        //
-        //         this.createView('body', this.recordView, {
-        //             el: '#main > .body',
-        //             models: this.models,
-        //             collection: this.collection
-        //         });
-        //     });
-        // },
     });
 });
 
