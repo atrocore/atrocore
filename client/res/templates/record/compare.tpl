@@ -1,46 +1,40 @@
-<div class="compare">
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th width="20%"></th>
-            {{#each dataList}}
-            <th width="5%">
-               {{field}}
-            </th>
-            <th width="{{../width}}%">
-                {{name}}
-            </th>
-            {{/each}}
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td align="right">
-                {{translate 'createdAt' scope=../scope category='fields'}}
-            </td>
-            {{#each dataList}}
-            <td></td>
-            <td data-id="{{id}}">
-                <div class="field" data-name="createdAt">
-                    {{{var createdAtViewName ../../this}}}
-                </div>
-            </td>
-            {{/each}}
-        </tr>
-        {{#each rows}}
-        <tr>
-            <td align="right">
-                {{translate name scope=../scope category='fields'}}
-            </td>
-            {{#each columns}}
-            <td data-id="{{id}}">
-                <div class="field" data-name="{{../name}}">
-                    {{{var fieldVariable ../../this}}}
-                </div>
-            </td>
-            {{/each}}
-        </tr>
-        {{/each}}
-        </tbody>
-    </table>
+<div class="detail" id="{{id}}">
+    <div class="detail-button-container button-container record-buttons clearfix">
+        <div class="btn-group pull-left" role="group">
+            {{#each buttonList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
+        </div>
+        <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="row">
+        <div class="overview list col-md-12">
+            <table class="table full-table table-striped table-fixed table-bordered-inside">
+                <thead>
+                   <tr>
+                       <th></th>
+                       <th>
+                           Entity(system)
+                       </th>
+                       <th>
+                           Entity (Connection: atrocore local)
+                       </th>
+                   </tr>
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>Iphone</td>
+                        <td>Iphone 12</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>Iphone</td>
+                        <td>Iphone 12</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

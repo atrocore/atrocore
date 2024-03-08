@@ -43,12 +43,14 @@ Espo.define('views/compare', 'views/main', function (Dep) {
         name: 'Compare',
 
         headerView: 'views/header',
-        recordView: 'views/compare',
+        recordView: 'views/record/compare',
 
 
         setup: function () {
             this.model = this.options.model;
+
             this.setupHeader();
+            this.setupRecord()
         },
 
         setupHeader: function () {
@@ -58,7 +60,6 @@ Espo.define('views/compare', 'views/main', function (Dep) {
             });
         },
         getHeader: function () {
-            var html = '';
 
             var headerIconHtml = this.getHeaderIconHtml();
 
@@ -87,20 +88,42 @@ Espo.define('views/compare', 'views/main', function (Dep) {
             return this.buildHeaderHtml(arr);
         },
 
+        setupRecord() {
+
+            var o = {
+                model: this.model,
+                el: '#main > .record',
+                scope: this.scope ?? 'Product'
+            };
+            this.createView('record', this.recordView, o);
+        },
+
+        getMenu(){
+          return {
+              "buttons": [
+                  {
+                      "label": "MergeEntity",
+                      "name": "MergeEntity",
+                      "type": "mergeEntity"
+                  }
+              ]
+          }
+        },
+
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('compare'));
         },
-        setupRecord: function () {
-            this.ajaxGetRequest(`Compare/${this.scope}`, null, {async: false}).success(attr => {
-
-                this.createView('body', this.recordView, {
-                    el: '#main > .body',
-                    models: this.models,
-                    collection: this.collection
-                });
-            });
-        },
+        // setupRecord: function () {
+        //     this.ajaxGetRequest(`Compare/${this.scope}`, null, {async: false}).success(attr => {
+        //
+        //         this.createView('body', this.recordView, {
+        //             el: '#main > .body',
+        //             models: this.models,
+        //             collection: this.collection
+        //         });
+        //     });
+        // },
     });
 });
 
