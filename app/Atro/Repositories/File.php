@@ -68,7 +68,7 @@ class File extends Base
         }
         $thumbnailDirPath .= DIRECTORY_SEPARATOR . trim($type);
 
-        $name = explode('.', $file->get("name"));
+        $name = explode('.', $file->get('name'));
         array_pop($name);
         $name = implode('.', $name) . '.png';
 
