@@ -87,6 +87,10 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 
 - Please visit our Help Center: https://help.atrocore.com/
 
+### Release Notes
+
+- Please visit our Help Center: https://help.atrocore.com/release-notes/core
+
 ### Requirements
 
 * Dedicated (virtual) Linux-based server with root permissions. 
