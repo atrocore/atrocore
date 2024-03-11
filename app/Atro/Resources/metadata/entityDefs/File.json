@@ -106,8 +106,14 @@
       "required": true
     },
     "path": {
-      "type": "varchar",
-      "maxLength": 260,
+      "type": "text",
+      "view": "views/fields/varchar",
+      "default": null
+    },
+    "thumbnailsPath": {
+      "type": "text",
+      "view": "views/fields/varchar",
+      "readOnly": true,
       "default": null
     },
     "createdAt": {

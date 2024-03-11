@@ -12,15 +12,12 @@
 namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
-use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
 use Atro\Entities\Storage;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\ParameterType;
+use Espo\Core\Utils\Config;
 use Espo\EntryPoints\Image;
-use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 
 class LocalStorage implements FileStorageInterface
@@ -56,13 +53,14 @@ class LocalStorage implements FileStorageInterface
 
                 $entity = $fileRepo->get();
                 $entity->set([
-                    'name'      => $fileInfo['basename'],
-                    'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
-                    'fileSize'  => filesize($fileName),
-                    'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
-                    'hash'      => md5_file($fileName),
-                    'mimeType'  => mime_content_type($fileName),
-                    'storageId' => $storage->get('id')
+                    'name'           => $fileInfo['basename'],
+                    'path'           => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
+                    'thumbnailsPath' => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
+                    'fileSize'       => filesize($fileName),
+                    'fileMtime'      => gmdate("Y-m-d H:i:s", filemtime($fileName)),
+                    'hash'           => md5_file($fileName),
+                    'mimeType'       => mime_content_type($fileName),
+                    'storageId'      => $storage->get('id')
                 ]);
                 $entity->_fileName = $fileName;
 
@@ -173,7 +171,12 @@ class LocalStorage implements FileStorageInterface
 
     public function getLocalPath(File $file): string
     {
-        return trim($file->get('storage')->get('path')) . DIRECTORY_SEPARATOR . trim($file->get('path')) . DIRECTORY_SEPARATOR . $file->get("name");
+        $res = trim($file->get('storage')->get('path'));
+        if (!empty(trim($file->get('path')))) {
+            $res .= DIRECTORY_SEPARATOR . trim($file->get('path'));
+        }
+
+        return $res . DIRECTORY_SEPARATOR . $file->get("name");
     }
 
     public function getUrl(File $file): string
@@ -195,12 +198,21 @@ class LocalStorage implements FileStorageInterface
 
     public function getThumbnailUrl(File $file, string $type): string
     {
-        //@todo
-        return '';
+        $res = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'));
+        if (!empty(trim($file->get('thumbnailsPath')))) {
+            $res .= DIRECTORY_SEPARATOR . trim($file->get('thumbnailsPath'));
+        }
+
+        return $res . DIRECTORY_SEPARATOR . trim($type) . DIRECTORY_SEPARATOR . $file->get("name");
     }
 
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 }

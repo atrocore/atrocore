@@ -18,6 +18,8 @@ use Espo\ORM\Entity;
 
 class File extends Base
 {
+    protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath'];
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);

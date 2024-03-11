@@ -3,6 +3,7 @@
     "storage": "Storage",
     "mimeType": "MIME Type",
     "path": "Path",
+    "thumbnailsPath": "Thumbnails Path",
     "preview": "Preview",
     "hash": "Hash",
     "fileSize": "File Size (bytes)",
