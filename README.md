@@ -35,7 +35,7 @@ Here is a AtroCore package description in detail:
 | Dashboards                  | Use multiple dashboards to control all main activities in the system. |
 | Module Manager              | It allows you to install and/or update any module directly from the administration panel. Just choose the version you want to use. |
 | Entity Manager              | You can configure the data model directly from the administration panel, create new or edit existing entities and set relations of different types. |
-| Dynamic field logic         | You can configure the conditions that make some fields invisible, read-only or editable. |
+| UI Handlers                 | You can configure the conditions that make some fields invisible, read-only or editable etc. |
 | Layout Manager              | Use it to configure any User Interface in the system or to show up the panels for related entities, via drag-and-drop. |
 | Label Manager               | You can edit any label in the system, in all languages you want to use. |
 | Configurable navigation     | Use the drag-and-drop functionality to set up the navigation as you wish, also separately for each user, if needed. |
