@@ -23,6 +23,4 @@ interface FileStorageInterface
     public function getLocalPath(File $file): string;
 
     public function getUrl(File $file): string;
-
-    public function getThumbnailUrl(File $file, string $type): string;
 }
