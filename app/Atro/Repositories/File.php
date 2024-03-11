@@ -16,23 +16,23 @@ namespace Atro\Repositories;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Random;
+use Espo\Core\FilePathBuilder;
 use Espo\ORM\Entity;
 use Gumlet\ImageResize;
 
 class File extends Base
 {
-    public static function generatePath(): string
-    {
-        return Random::getString(rand(5, 12)) . DIRECTORY_SEPARATOR . Random::getString(rand(5, 12)) . DIRECTORY_SEPARATOR . Random::getString(rand(5, 12));
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
         if (empty($entity->get('thumbnailsPath'))) {
-            $entity->set('thumbnailsPath', empty($entity->get('path')) ? self::generatePath() : $entity->get('path'));
+            if (!empty($entity->get('path'))) {
+                $entity->set('thumbnailsPath', $entity->get('path'));
+            } else {
+                $thumbnailsDirPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/');
+                $entity->set('thumbnailsPath', $this->getPathBuilder()->createPath($thumbnailsDirPath . '/'));
+            }
         }
     }
 
@@ -98,10 +98,16 @@ class File extends Base
         return $this->getInjection('container')->get($file->get('storage')->get('type') . 'Storage');
     }
 
+    protected function getPathBuilder(): FilePathBuilder
+    {
+        return $this->getInjection('filePathBuilder');
+    }
+
     protected function init()
     {
         parent::init();
 
         $this->addDependency('container');
+        $this->addDependency('filePathBuilder');
     }
 }

@@ -61,16 +61,14 @@ class FilePathBuilder
         $this->container = $container;
     }
 
-    public function folderPath()
+    public function createPath(string $baseFolder, ?string $route = null): string
     {
-        return [
-            "upload" => $this->container->get('config')->get('filesPath', 'upload/files/'),
-        ];
-    }
+        $type = self::UPLOAD;
 
-    public function createPath(string $type, ?string $route = null): string
-    {
-        $baseFolder = $this->folderPath()[$type];
+        if ($baseFolder === $type) {
+            $baseFolder = $this->container->get('config')->get('filesPath', 'upload/files/');
+        }
+
         $lastPath = $this->getFromFile($baseFolder, $route);
 
         if (!$lastPath) {
@@ -145,9 +143,12 @@ class FilePathBuilder
      * @return array
      * @throws Error
      */
-    protected function buildPath(string $type, string $path, ?string $subType)
+    protected function buildPath(string $basePath, string $path, ?string $subType)
     {
-        $basePath = $this->folderPath()[$type];
+        $type = self::UPLOAD;
+        if ($basePath === $type) {
+            $basePath = $this->container->get('config')->get('filesPath', 'upload/files/');
+        }
         $folderInfo = $this->getMeta()->get(['app', 'fileStorage', $type]);
         $iter = 0;
         $backIter = 0;
