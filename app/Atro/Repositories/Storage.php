@@ -23,7 +23,7 @@ class Storage extends Base
     {
         if ($entity->isAttributeChanged('isDefault') && !$entity->get('isDefault')) {
             if (empty($this->where(['isDefault' => true, 'id!=' => $entity->get('id')])->findOne())) {
-                throw new BadRequest('Please mark another Storage as the default.');
+                throw new BadRequest($this->translate('onlyOneDefaultStorageAllowed', 'exceptions', 'Storage'));
             }
         }
 
@@ -35,7 +35,14 @@ class Storage extends Base
         parent::afterSave($entity, $options);
 
         if ($entity->isAttributeChanged('isDefault') && $entity->get('isDefault')) {
-            foreach ($this->where(['isDefault' => true, 'id!=' => $entity->get('id')])->find() as $e) {
+            $collection = $this
+                ->select(['id'])
+                ->where([
+                    'isDefault' => true,
+                    'id!='      => $entity->get('id')
+                ])
+                ->find();
+            foreach ($collection as $e) {
                 $e->set('isDefault', false);
                 $this->getEntityManager()->saveEntity($e);
             }
@@ -48,8 +55,29 @@ class Storage extends Base
             throw new BadRequest('Default storage can not be deleted.');
         }
 
-        //@todo check if files exists
+        $e = $this->getEntityManager()->getRepository('File')
+            ->select(['id'])
+            ->where([
+                'storageId' => $entity->get('id')
+            ])
+            ->findOne();
+
+        if (!empty($e)) {
+            throw new BadRequest($this->translate('storageWithFilesCannotBeRemoved', 'exceptions', 'Storage'));
+        }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
+    }
+
+    protected function translate(string $key, string $category, string $scope): string
+    {
+        return $this->getInjection('language')->translate($key, $category, $scope);
     }
 }

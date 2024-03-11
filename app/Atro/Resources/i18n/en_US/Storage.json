@@ -15,5 +15,9 @@
   },
   "labels": {
     "Create Storage": "Create Storage"
+  },
+  "exceptions": {
+    "onlyOneDefaultStorageAllowed": "Please mark another Storage as the default.",
+    "storageWithFilesCannotBeRemoved": "Deletion is not allowed. There are files that belong to this Storage."
   }
 }
