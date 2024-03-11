@@ -25,10 +25,9 @@ class File extends Base
         $fileNameParts = explode('.', $entity->get('name'));
 
         $entity->set('extension', strtolower(array_pop($fileNameParts)));
-
-//        $entity->set('downloadUrl', '');
-//        $entity->set('smallThumbnailUrl', '');
-//        $entity->set('mediumThumbnailUrl', '');
-//        $entity->set('largeThumbnailUrl', '');
+        $entity->set('downloadUrl', $entity->getDownloadUrl());
+        $entity->set('smallThumbnailUrl', $entity->getSmallThumbnailUrl());
+        $entity->set('mediumThumbnailUrl', $entity->getMediumThumbnailUrl());
+        $entity->set('largeThumbnailUrl', $entity->getLargeThumbnailUrl());
     }
 }

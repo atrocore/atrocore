@@ -19,6 +19,7 @@ use Atro\Entities\Storage;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
+use Espo\EntryPoints\Image;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 
@@ -172,14 +173,24 @@ class LocalStorage implements FileStorageInterface
 
     public function getLocalPath(File $file): string
     {
-        //@todo
-        return '';
+        return trim($file->get('storage')->get('path')) . DIRECTORY_SEPARATOR . trim($file->get('path')) . DIRECTORY_SEPARATOR . $file->get("name");
     }
 
     public function getUrl(File $file): string
     {
-        //@todo
-        return '';
+        if (!$file->get('private')) {
+            return $this->getLocalPath($file);
+        }
+
+        $url = '?entryPoint=';
+        if (in_array($file->get('mimeType'), Image::TYPES)) {
+            $url .= 'image';
+        } else {
+            $url .= 'download';
+        }
+        $url .= "&id={$file->get('id')}";
+
+        return $url;
     }
 
     public function getThumbnailUrl(File $file, string $type): string
