@@ -21,10 +21,6 @@ class Storage extends Base
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->get('type') !== 'fileSystem') {
-            $entity->set('path', null);
-        }
-
         if ($entity->isAttributeChanged('isDefault') && !$entity->get('isDefault')) {
             if (empty($this->where(['isDefault' => true, 'id!=' => $entity->get('id')])->findOne())) {
                 throw new BadRequest('Please mark another Storage as the default.');
