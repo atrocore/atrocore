@@ -34,7 +34,7 @@ Espo.define('views/file/fields/preview', 'view',
                 "originPath": this.model.get('downloadUrl'),
                 "thumbnailPath": this.model.get('smallThumbnailUrl'),
                 "id": this.model.get('id'),
-                "hasIcon": !["jpg", "jpeg", "gif", "png", "pdf"].includes(this.model.get('extension')),
+                "hasIcon": !(this.getMetadata().get('app.file.image.extensions') || []).includes(this.model.get('extension')),
                 "extension": this.model.get('extension')
             };
         },

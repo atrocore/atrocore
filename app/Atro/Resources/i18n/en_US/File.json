@@ -14,6 +14,7 @@
     "storage": "Storage"
   },
   "labels": {
-    "Create File": "Create File"
+    "Create File": "Create File",
+    "Preview": "Preview"
   }
 }
