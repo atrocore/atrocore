@@ -382,7 +382,13 @@ class Asset extends Hierarchy
 
     protected function isImage(Entity $asset): bool
     {
-        $fileNameParts = explode('.', $asset->get("file")->get('name'));
+        $file = !empty($asset->get('file')) ? $asset->get('file') : $this->getEntityManager()->getEntity('Attachment', $asset->get('fileId'));
+
+        if (empty($file)) {
+            return false;
+        }
+
+        $fileNameParts = explode('.', $file->get('name'));
         $fileExt = strtolower(array_pop($fileNameParts));
 
         return in_array($fileExt, $this->getMetadata()->get('dam.image.extensions', []));
