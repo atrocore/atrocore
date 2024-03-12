@@ -11,11 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Thumbnail;
+namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\PDFLib;
 use Atro\Core\Exceptions\Error;
+use Atro\Entities\File as FileEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
@@ -23,10 +24,7 @@ use Espo\Entities\Attachment;
 use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
 
-/**
- * @todo to delete
- */
-class Image
+class Thumbnail
 {
     protected Container $container;
 
@@ -35,39 +33,68 @@ class Image
         $this->container = $container;
     }
 
-    public function createThumbnailByPath(string $path): ?Attachment
+    public function getPath(FileEntity $file, string $size): ?string
     {
-        $thumbsPath = $this->getConfig()->get('thumbnailsPath', 'upload/thumbnails/');
-        if (strpos($path, $thumbsPath) === false) {
+        if (!in_array($file->get('mimeType'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
             return null;
         }
 
-        $pathParts = explode('/', $path);
+        $thumbnailPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), DIRECTORY_SEPARATOR);
+        if (!empty(trim($file->get('thumbnailsPath'), DIRECTORY_SEPARATOR))) {
+            $thumbnailPath .= DIRECTORY_SEPARATOR . trim($file->get('thumbnailsPath'));
+        }
+        $thumbnailPath .= DIRECTORY_SEPARATOR . trim($size);
 
-        $fileName = array_pop($pathParts);
-        $size = array_pop($pathParts);
-        $storageThumbPath = str_replace([$thumbsPath, '/' . $size, '/' . $fileName], ['', '', ''], $path);
+        $name = explode('.', $file->get('name'));
+        array_pop($name);
+        $name = implode('.', $name) . '.png';
 
-        $attachmentRepository = $this->getEntityManager()->getRepository("Attachment");
+        $thumbnailPath .= DIRECTORY_SEPARATOR . $name;
 
-        $attachment = $attachmentRepository->where(['storageThumbPath' => $storageThumbPath])->findOne();
-        if (empty($attachment)) {
-            $attachment = $attachmentRepository->where(['storageFilePath' => $storageThumbPath])->findOne();
-            if (empty($attachment)) {
+        if (!file_exists($thumbnailPath)) {
+            // create thumbnail if not exist
+            if (!$this->create($file, $size)) {
                 return null;
             }
         }
 
-        if ($this->createThumbnail($attachment, $size)) {
-            return $attachment;
-        }
-
-        return null;
+        return $thumbnailPath;
     }
 
-    public function createThumbnail(Attachment $attachment, string $size): bool
+//    //
+//
+//    public function createThumbnail(string $originalPath, string $type, string $thumbnailPath): bool
+//    {
+//        try {
+//            $image = new ImageResize($originalPath);
+//        } catch (\Throwable $e) {
+//            return false;
+//        }
+//
+//        $thumbnailDirPath = explode(DIRECTORY_SEPARATOR, $thumbnailPath);
+//        array_pop($thumbnailDirPath);
+//        $thumbnailDirPath = implode(DIRECTORY_SEPARATOR, $thumbnailDirPath);
+//
+//        list($w, $h) = $this->getMetadata()->get(['app', 'imageSizes'], [])[$type];
+//        $image->resizeToBestFit($w, $h);
+//        if (!is_dir($thumbnailDirPath)) {
+//            $this->getFileManager()->mkdir($thumbnailDirPath, 0777, true);
+//        }
+//        $this->getFileManager()->putContents($thumbnailPath, $image->getImageAsString());
+//
+//        return true;
+//    }
+
+    public function create(FileEntity $file, string $size): bool
     {
-        if (empty($attachment->getThumbPath($size)) || file_exists($attachment->getThumbPath($size)) || empty($attachment->getFilePath())) {
+        $origin = $this->getImageFilePath($file);
+        $thumbnailPath = $this->getPath($file, $size);
+
+        echo '<pre>';
+        print_r('123');
+        die();
+
+        if (file_exists($thumbnailPath) || empty($origin)) {
             return false;
         }
 
@@ -90,18 +117,18 @@ class Image
         return $this->getFileManager()->putContents($attachment->getThumbPath($size), $image->getImageAsString());
     }
 
-    protected function getImageFilePath(Attachment $attachment): string
+    protected function getImageFilePath(FileEntity $file): string
     {
-        if ($this->isPdf($attachment)) {
+        if ($this->isPdf($file)) {
             return $this->createImageFromPdf($attachment->getFilePath());
         }
 
         return $attachment->getFilePath();
     }
 
-    protected function isPdf(Attachment $attachment): bool
+    protected function isPdf(FileEntity $file): bool
     {
-        $parts = explode('.', $attachment->get('name'));
+        $parts = explode('.', $file->get('name'));
 
         return strtolower(array_pop($parts)) === 'pdf';
     }
