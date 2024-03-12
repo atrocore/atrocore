@@ -133,6 +133,19 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 }
             });
 
+            (this.getMetadata().get(['clientDefs', scope, 'additionalRecordActions']) || []).forEach((action,index) => {
+                if (!action.acl || this.getAcl().check(action.acl.scope, action.acl.action)) {
+                    list.push({
+                        action: "additionalAction",
+                        label: action.name,
+                        data: {
+                            name: action.name,
+                            entity_id: this.model.id
+                        },
+                    });
+                }
+            });
+
             if (this.options.acl.delete) {
                 list.push({
                     action: 'quickRemove',

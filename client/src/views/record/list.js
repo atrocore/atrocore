@@ -656,7 +656,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         return selectedIds.includes(model.id);
                     })
                     .map(function (model) {
-                        return "'"+model.attributes['name']+"'";
+                        return "'" + model.attributes['name'] + "'";
                     })
                     .join(", ");
                 message = message.replace('{{selectedNames}}', selectedNames);
@@ -676,7 +676,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         return selectedIds.includes(model.id);
                     })
                     .map(function (model) {
-                        return "'"+model.attributes['name']+"'";
+                        return "'" + model.attributes['name'] + "'";
                     })
                     .join(", ");
                 message = message.replace('{{selectedNames}}', selectedNames);
@@ -935,7 +935,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.setupMassActionItems();
 
 
-
             if (this.selectable) {
                 this.events['click .list a.link'] = function (e) {
                     e.preventDefault();
@@ -1168,14 +1167,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }.bind(this), 50)
             }
             const filters = this.getStorage().get('listSearch', this.scope);
-            if(filters && filters.bool['onlyDeleted'] === true && !this.massActionList.includes('restore')){
+            if (filters && filters.bool['onlyDeleted'] === true && !this.massActionList.includes('restore')) {
                 this.massActionListBackup = this.massActionList;
                 this.checkAllResultMassActionListBackup = this.checkAllResultMassActionList;
                 this.massActionList = ['restore'];
-                this.checkAllResultMassActionList = ['restore'];this.reRender();
+                this.checkAllResultMassActionList = ['restore'];
+                this.reRender();
             }
 
-            if(filters && filters.bool['onlyDeleted'] !== true && this.massActionList.includes('restore')){
+            if (filters && filters.bool['onlyDeleted'] !== true && this.massActionList.includes('restore')) {
                 this.massActionList = this.massActionListBackup;
                 this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
                 this.reRender()
@@ -1185,7 +1185,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         isHierarchical() {
 
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
         },
         loadMore(btn) {
             if (btn.length && !btn.hasClass('disabled')) {
@@ -1669,7 +1669,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
-                 if (this.layoutName === 'listSmall' && this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.type`) === 'belongsTo') {
+                if (this.layoutName === 'listSmall' && this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.type`) === 'belongsTo') {
                     if (this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.entity`) !== entityType) {
                         filteredListLayout.push(item);
                     }
@@ -2016,7 +2016,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     model: model,
                     acl: acl,
                     el: this.options.el + ' .list-row[data-id="' + key + '"]',
-                    optionsToPass: ['acl','scope'],
+                    optionsToPass: ['acl', 'scope'],
                     scope: this.scope,
                     noCache: true,
                     _layout: {
@@ -2309,6 +2309,26 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
         },
 
+        actionAdditionalAction: function (data) {
+            const item = (this.getMetadata().get(['clientDefs', this.scope, 'additionalRecordActions']) || []).find(a => a.name === data.name)
+            if (!item) {
+                return
+            }
+            let path = item.actionViewPath;
+            let o = {actionItem: item, entityId: data.entity_id};
+            (item.optionsToPass || []).forEach((option) => {
+                if (option in this) {
+                    o[option] = this[option];
+                }
+            });
+
+            this.createView(item.name, path, o, (view) => {
+                if (typeof view[item.action] === 'function') {
+                    view[item.action]();
+                }
+            });
+        },
+
         getRowSelector: function (id) {
             return 'tr[data-id="' + id + '"]';
         },
@@ -2387,13 +2407,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     url: this.entityType + '/action/massRestore',
                     type: 'POST',
                     data: JSON.stringify({
-                        ids:[id]
+                        ids: [id]
                     })
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
                     }.bind(this)
-                ).fail(function(){
+                ).fail(function () {
                     this.notify('Error occured', 'error');
                     this.collection.push(model);
                 }.bind(this))

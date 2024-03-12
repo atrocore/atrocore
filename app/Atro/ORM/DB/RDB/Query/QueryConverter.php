@@ -407,6 +407,8 @@ class QueryConverter
     {
         $arr = array();
 
+
+
         if (empty($fields)) {
             $attributeList = array_keys($entity->fields);
         } else {
