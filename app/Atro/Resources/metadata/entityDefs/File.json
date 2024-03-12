@@ -112,6 +112,7 @@
     "path": {
       "type": "text",
       "view": "views/fields/varchar",
+      "readOnly": true,
       "default": null
     },
     "thumbnailsPath": {
