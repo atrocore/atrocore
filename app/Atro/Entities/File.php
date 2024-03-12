@@ -19,6 +19,16 @@ class File extends Base
 {
     protected $entityType = "File";
 
+    public function getContents(): string
+    {
+        return $this->getEntityManager()->getRepository($this->entityType)->getContents($this);
+    }
+
+    public function getFilePath(): string
+    {
+        return $this->getEntityManager()->getRepository($this->entityType)->getFilePath($this);
+    }
+
     public function getDownloadUrl(): string
     {
         return $this->getEntityManager()->getRepository($this->entityType)->getDownloadUrl($this);

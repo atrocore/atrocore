@@ -33,14 +33,15 @@
 
 namespace Espo\EntryPoints;
 
+use Atro\Entities\File;
+use Atro\EntryPoints\Image;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Entities\Attachment;
 
 class Avatar extends Image
 {
-    public static $authRequired = true;
+    public static bool $authRequired = true;
 
-    public static $notStrictAuth = true;
+    public static bool $notStrictAuth = true;
 
     protected $systemColor = [212,114,155];
 
@@ -123,7 +124,7 @@ class Avatar extends Image
         }
     }
 
-    protected function checkAttachment(Attachment $attachment): bool
+    protected function checkFile(File $file): bool
     {
         return true;
     }

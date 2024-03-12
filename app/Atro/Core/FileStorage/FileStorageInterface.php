@@ -21,4 +21,6 @@ interface FileStorageInterface
     public function delete(File $file): void;
 
     public function getUrl(File $file): string;
+
+    public function getContents(File $file): string;
 }

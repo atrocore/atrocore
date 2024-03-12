@@ -34,14 +34,15 @@
 namespace Espo\EntryPoints;
 
 use Atro\Core\Download\Custom;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
+use Atro\EntryPoints\AbstractEntryPoint;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Entities\Attachment;
 
 class Download extends AbstractEntryPoint
 {
-    public static $authRequired = true;
+    public static bool $authRequired = true;
 
     protected $fileTypesToShowInline = array(
         'application/pdf',

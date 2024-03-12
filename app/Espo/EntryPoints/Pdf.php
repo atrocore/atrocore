@@ -33,12 +33,13 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\BadRequest;
+use Atro\EntryPoints\AbstractEntryPoint;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
 
 class Pdf extends AbstractEntryPoint
 {
-    public static $authRequired = true;
+    public static bool $authRequired = true;
 
     public function run()
     {

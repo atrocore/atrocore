@@ -33,11 +33,12 @@
 
 namespace Espo\EntryPoints;
 
+use Atro\EntryPoints\AbstractEntryPoint;
 use Espo\Core\Exceptions\NotFound;
 
 class Sharing extends AbstractEntryPoint
 {
-    public static $authRequired = false;
+    public static bool $authRequired = false;
 
     public function run()
     {

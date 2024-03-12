@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\FileStorage\FileStorageInterface;
+use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\FilePathBuilder;
@@ -34,6 +35,22 @@ class File extends Base
                 $entity->set('thumbnailsPath', $this->getPathBuilder()->createPath($thumbnailsDirPath . '/'));
             }
         }
+    }
+
+    public function getContents(FileEntity $file): string
+    {
+        return $this->getStorage($file)->getContents($file);
+    }
+
+    public function getFilePath(FileEntity $file): string
+    {
+        $fileStorage = $this->getStorage($file);
+
+        if ($fileStorage instanceof LocalFileStorageInterface) {
+            return $fileStorage->getLocalPath($file);
+        }
+
+        return $fileStorage->getUrl($file);
     }
 
     public function getDownloadUrl(FileEntity $file): string

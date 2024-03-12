@@ -15,8 +15,8 @@ use Atro\Core\Container;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
 use Atro\Entities\Storage;
+use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
-use Espo\EntryPoints\Image;
 use Espo\ORM\EntityManager;
 
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
@@ -165,6 +165,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     public function delete(File $file): void
     {
         //@todo
+    }
+
+    public function getContents(File $file): string
+    {
+        return file_get_contents($this->getLocalPath($file));
     }
 
     public function getLocalPath(File $file): string

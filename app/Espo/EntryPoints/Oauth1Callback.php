@@ -3,14 +3,14 @@
 namespace Espo\EntryPoints;
 
 use Atro\ConnectionType\ConnectionOauth1;
+use Atro\EntryPoints\AbstractEntryPoint;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Entity;
-use Espo\Services\Connection;
 
 class Oauth1Callback extends AbstractEntryPoint
 {
-    public static $authRequired = false;
-    public static $notStrictAuth = false;
+    public static bool $authRequired = false;
+    public static bool $notStrictAuth = false;
     private $consumerKey;
     private $consumerSecret;
     private $requestTokenUrl;

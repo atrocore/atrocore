@@ -33,11 +33,12 @@
 
 namespace Espo\EntryPoints;
 
+use Atro\EntryPoints\Image;
 use Espo\Core\Exceptions\NotFound;
 
 class LogoImage extends Image
 {
-    public static $authRequired = false;
+    public static bool $authRequired = false;
 
     public function run()
     {

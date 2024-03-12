@@ -11,11 +11,11 @@
 
 namespace Atro\Core\FileStorage\Storages;
 
+use Atro\EntryPoints\Image;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\Attachment;
-use Espo\EntryPoints\Image;
 use Espo\Core\Utils\Util;
+use Espo\Entities\Attachment;
 
 class UploadDir extends Base
 {

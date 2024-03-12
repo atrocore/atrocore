@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
-use Atro\Core\FileStorage\FileStorageInterface;
-use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
@@ -94,20 +92,11 @@ class Thumbnail
 
     protected function getImageFilePath(FileEntity $file): string
     {
-        /** @var FileStorageInterface $fileStorage */
-        $fileStorage = $this->container->get($file->get('storage')->get('type') . 'Storage');
-
-        if ($fileStorage instanceof LocalFileStorageInterface) {
-            $filePath = $fileStorage->getLocalPath($file);
-        } else {
-            $filePath = $fileStorage->getUrl($file);
-        }
-
         if ($this->isPdf($file)) {
-            return $this->createImageFromPdf($filePath);
+            return $this->createImageFromPdf($file->getFilePath());
         }
 
-        return $filePath;
+        return $file->getFilePath();
     }
 
     protected function isPdf(FileEntity $file): bool

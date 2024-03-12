@@ -33,12 +33,13 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\BadRequest;
+use Atro\EntryPoints\AbstractEntryPoint;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
 
 class ChangePassword extends AbstractEntryPoint
 {
-    public static $authRequired = false;
+    public static bool $authRequired = false;
 
     public function run()
     {

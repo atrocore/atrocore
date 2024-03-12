@@ -33,11 +33,12 @@
 
 namespace Espo\EntryPoints;
 
+use Atro\EntryPoints\AbstractEntryPoint;
 use Espo\Core\Utils\Util;
 
 class Background extends AbstractEntryPoint
 {
-    public static $authRequired = false;
+    public static bool $authRequired = false;
 
     public static function setBackground(): void
     {
