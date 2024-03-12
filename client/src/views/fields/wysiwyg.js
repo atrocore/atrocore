@@ -357,7 +357,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                                 attachment.set('field', this.name);
 
                                 attachment.once('sync', function () {
-                                    var url = '?entryPoint=attachment&id=' + attachment.id;
+                                    var url = '?entryPoint=download&id=' + attachment.id;
                                     this.$summernote.summernote('insertImage', url);
                                     this.notify(false);
                                 }, this);

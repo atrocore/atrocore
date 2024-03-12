@@ -36,11 +36,11 @@ declare(strict_types=1);
 namespace Espo\Controllers;
 
 use Atro\Core\QueueManager;
+use Espo\Core\Controllers\Base;
 use Espo\Core\DataManager;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Auth;
-use Espo\Core\Controllers\Base;
-use Espo\Core\Exceptions\BadRequest;
 
 /**
  * Class App
@@ -56,7 +56,7 @@ class App extends Base
      */
     public function actionBackground($params, $data, $request)
     {
-        \Espo\EntryPoints\Background::setBackground();
+        \Atro\EntryPoints\Background::setBackground();
 
         return $_SESSION['background'];
     }

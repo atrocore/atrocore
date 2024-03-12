@@ -33,6 +33,11 @@ class Image extends AbstractEntryPoint
             throw new NotFound();
         }
 
+        $this->show($file, $_GET['size'] ?? null);
+    }
+
+    protected function show(File $file, ?string $size = null): void
+    {
         if (!$this->checkFile($file)) {
             throw new Forbidden();
         }
@@ -42,7 +47,6 @@ class Image extends AbstractEntryPoint
             throw new Error();
         }
 
-        $size = $_GET['size'] ?? null;
         if (!empty($size)) {
             if (empty($this->getImageSize($size))) {
                 throw new NotFound();

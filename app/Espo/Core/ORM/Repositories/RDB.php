@@ -701,7 +701,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!empty($defs['type']) && $defs['type'] === 'wysiwyg') {
                 $content = $entity->get($field);
                 if (!$content) continue;
-                if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $content, $matches)) {
+                if (preg_match_all("/\?entryPoint=download&amp;id=([^&=\"']+)/", $content, $matches)) {
                     if (!empty($matches[1]) && is_array($matches[1])) {
                         foreach ($matches[1] as $id) {
                             $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
