@@ -13,64 +13,41 @@ declare(strict_types=1);
 
 namespace Atro\Core\Download;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Injectable;
+use Atro\Core\Container;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Entities\File;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Util;
-use Espo\Entities\Attachment;
+use Espo\ORM\EntityManager;
 use Imagick;
 
-class Custom extends Injectable
+class Custom
 {
-    /**
-     * @var Imagick
-     */
-    protected $imagick;
+    protected File $file;
+    protected Imagick $imagick;
+    protected string $scale;
+    protected int $width;
+    protected int $height;
+    protected int $quality;
+    protected string $format;
+    protected Config $config;
+    protected EntityManager $entityManager;
 
-    /**
-     * @var string
-     */
-    protected $scale;
-
-    /**
-     * @var integer
-     */
-    protected $width;
-
-    /**
-     * @var integer
-     */
-    protected $height;
-
-    /**
-     * @var integer
-     */
-    protected $quality;
-
-    /**
-     * @var string
-     */
-    protected $format;
-
-    /**
-     * @var Attachment
-     */
-    protected $attachment;
-
-    public function __construct()
+    public function __construct(Container $container)
     {
-        $this->addDependency('config');
-        $this->addDependency('entityManager');
+        $this->config = $container->get('config');
+        $this->entityManager = $container->get('entityManager');
     }
 
-    public function setAttachment(Attachment $attachment): Custom
+    public function setFile(File $file): Custom
     {
-        $filePath = $this->getInjection('entityManager')->getRepository('Attachment')->getFilePath($attachment);
+        $filePath = $file->getFilePath();
         if (!file_exists($filePath)) {
             throw new NotFound();
         }
 
-        $this->attachment = $attachment;
+        $this->file = $file;
         $this->imagick = new \Imagick($filePath);
 
         return $this;
@@ -91,11 +68,11 @@ class Custom extends Injectable
 
     public function getDirPath(): string
     {
-        if (empty($this->attachment)) {
+        if (empty($this->file)) {
             throw new Error('Attachment is required for converter.');
         }
 
-        return $this->getInjection('config')->get('renditionPath', 'upload/rendition/') . $this->attachment->get('id') . '/' . $this->createSubDir();
+        return $this->config->get('renditionPath', 'upload/rendition/') . $this->file->get('id') . '/' . $this->createSubDir();
     }
 
     public function getFilePath(): string
@@ -119,7 +96,7 @@ class Custom extends Injectable
 
     public function createSubDir(): string
     {
-        $key = $this->getInjection('config')->get('passwordSalt', '') . '_' . $this->width . '_' . $this->height . '_' . $this->quality . '_' . $this->scale . '_' . $this->format;
+        $key = $this->config->get('passwordSalt', '') . '_' . $this->width . '_' . $this->height . '_' . $this->quality . '_' . $this->scale . '_' . $this->format;
 
         return md5($key);
     }
@@ -136,7 +113,7 @@ class Custom extends Injectable
 
     public function getName(): string
     {
-        $name = explode(".", $this->attachment->get("name"));
+        $name = explode(".", $this->file->get("name"));
         array_pop($name);
         $name[] = $this->format === "png" ? "png" : "jpeg";
 
