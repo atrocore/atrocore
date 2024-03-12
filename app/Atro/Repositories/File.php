@@ -41,7 +41,7 @@ class File extends Base
                 }
 
                 if (!$this->isNameValid($entity)) {
-                    throw new BadRequest(sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $fileNameRegexPattern));
+                    throw new BadRequest(sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $this->getConfig()->get('fileNameRegexPattern')));
                 }
 
                 if (!$this->getStorage($entity)->rename($entity)) {
