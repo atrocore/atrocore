@@ -1,8 +1,6 @@
 [
   {
     "id": "currency",
-    "name": "Currency",
-    "nameDeDe": "Währung",
-    "nameUkUA": "Валюта"
+    "name": "Currency"
   }
 ]
