@@ -50,23 +50,22 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                     continue;
                 }
 
-                $entity = $fileRepo->get();
-                $entity->set([
+                $entityData = [
                     'name'      => $fileInfo['basename'],
                     'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
                     'fileSize'  => filesize($fileName),
                     'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
                     'hash'      => md5_file($fileName),
                     'mimeType'  => mime_content_type($fileName),
-                    'storageId' => $storage->get('id')
-                ]);
-                $entity->_fileName = $fileName;
+                    'storageId' => $storage->get('id'),
+                    '_fileName' => $fileName
+                ];
 
                 $id = $xattr->get($fileName, 'atroId');
                 if (empty($id)) {
-                    $toCreate[] = $entity;
+                    $toCreate[] = $entityData;
                 } else {
-                    $toUpdateByFile[$id] = $entity;
+                    $toUpdateByFile[$id] = $entityData;
                 }
             }
 
@@ -77,9 +76,19 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 }
                 foreach ($toUpdateByFile as $k => $v) {
                     if (isset($exists[$k])) {
+                        $existEntity = $exists[$k];
                         $skip = true;
-                        foreach ($v->toArray() as $field => $val) {
-                            if ($exists[$k]->get($field) !== $val) {
+                        foreach ($v as $field => $val) {
+                            switch ($field) {
+                                case '_fileName';
+                                    continue 2;
+                                    break;
+                                case 'fileSize':
+                                    $existEntity->set($field, (int)$existEntity->get($field));
+                                    $val = (int)$val;
+                                    break;
+                            }
+                            if ($existEntity->get($field) !== $val) {
                                 $skip = false;
                             }
                         }
@@ -88,8 +97,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
                         if (!$skip) {
                             $toUpdate[$k] = $exists[$k];
-                            $toUpdate[$k]->set($v->toArray());
-                            $toUpdate[$k]->_fileName = $v->_fileName;
+                            $toUpdate[$k]->set($v);
+                            $toUpdate[$k]->_fileName = $v['_fileName'];
                         }
                     } else {
                         $toCreate[] = $v;
@@ -97,9 +106,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 }
             }
 
-            foreach ($toCreate as $entity) {
+            foreach ($toCreate as $entityData) {
+                $entity = $fileRepo->get();
+                $entity->set($entityData);
                 $this->getEntityManager()->saveEntity($entity);
-                $xattr->set($entity->_fileName, 'atroId', $entity->get('id'));
+                $xattr->set($entityData['_fileName'], 'atroId', $entity->get('id'));
                 $ids[] = $entity->get('id');
             }
 
