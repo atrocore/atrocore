@@ -24,7 +24,7 @@ use Espo\ORM\EntityManager;
 
 abstract class AbstractEntryPoint
 {
-    private Container $container;
+    protected Container $container;
 
     public static bool $authRequired = true;
     public static bool $notStrictAuth = false;
