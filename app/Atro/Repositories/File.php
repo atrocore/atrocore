@@ -38,7 +38,18 @@ class File extends Base
                     throw new BadRequest($this->getInjection('language')->translate('fileExtensionCannotBeChanged', 'exceptions', 'File'));
                 }
 
-                if (!$this->getStorage($entity)->rename($entity)){
+                $fileNameRegexPattern = $this->getConfig()->get('fileNameRegexPattern');
+                if (!empty($fileNameRegexPattern)) {
+                    $nameWithoutExt = explode('.', (string)$entity->get('name'));
+                    array_pop($nameWithoutExt);
+                    $nameWithoutExt = implode('.', $nameWithoutExt);
+
+                    if (!preg_match($fileNameRegexPattern, $nameWithoutExt)) {
+                        throw new BadRequest(sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $fileNameRegexPattern));
+                    }
+                }
+
+                if (!$this->getStorage($entity)->rename($entity)) {
                     throw new BadRequest($this->getInjection('language')->translate('fileRenameFailed', 'exceptions', 'File'));
                 }
             }
@@ -70,7 +81,7 @@ class File extends Base
         parent::beforeRemove($entity, $options);
 
         // delete origin file
-        if (!$this->getStorage($entity)->delete($entity)){
+        if (!$this->getStorage($entity)->delete($entity)) {
             throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
         }
 
