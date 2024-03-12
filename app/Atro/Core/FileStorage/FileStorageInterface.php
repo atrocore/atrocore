@@ -18,7 +18,9 @@ interface FileStorageInterface
 {
     public function scan(Storage $storage): void;
 
-    public function delete(File $file): void;
+    public function rename(File $file): bool;
+
+    public function delete(File $file): bool;
 
     public function getUrl(File $file): string;
 

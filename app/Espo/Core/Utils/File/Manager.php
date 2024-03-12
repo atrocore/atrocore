@@ -372,6 +372,14 @@ class Manager
         return $fullPath;
     }
 
+    public function getFileDir(string $filePath): string
+    {
+        $dirPath = explode(DIRECTORY_SEPARATOR, $filePath);
+        array_pop($dirPath);
+
+        return implode(DIRECTORY_SEPARATOR, $dirPath);
+    }
+
     /**
      * Create a new dir
      *

@@ -16,5 +16,11 @@
   "labels": {
     "Create File": "Create File",
     "Preview": "Preview"
+  },
+  "exceptions": {
+    "fileExtensionCannotBeChanged": "File extension cannot be changed.",
+    "fileStorageCannotBeChanged": "The Storage cannot be changed.",
+    "fileRenameFailed": "File rename has been failed.",
+    "fileDeleteFailed": "File delete has been failed."
   }
 }

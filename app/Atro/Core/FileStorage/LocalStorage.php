@@ -17,6 +17,7 @@ use Atro\Entities\File;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
+use Espo\Core\Utils\File\Manager;
 use Espo\ORM\EntityManager;
 
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
@@ -164,12 +165,30 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $results;
     }
 
-    public function delete(File $file): void
+    public function rename(File $file): bool
+    {
+        $from = $this->getLocalPath($file, true);
+        $to = $this->getLocalPath($file);
+
+        if (file_exists($from)) {
+            $toDirPath = $this->getFileManager()->getFileDir($to);
+            if (!is_dir($toDirPath)) {
+                $this->getFileManager()->mkdir($toDirPath, 0777, true);
+            }
+            return rename($from, $to);
+        }
+
+        return false;
+    }
+
+    public function delete(File $file): bool
     {
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
-            unlink($path);
+            return unlink($path);
         }
+
+        return false;
     }
 
     public function getContents(File $file): string
@@ -177,14 +196,17 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return file_get_contents($this->getLocalPath($file));
     }
 
-    public function getLocalPath(File $file): string
+    public function getLocalPath(File $file, bool $fetched = false): string
     {
+        $method = $fetched ? 'getFetched' : 'get';
+
         $res = trim($file->get('storage')->get('path'), DIRECTORY_SEPARATOR);
-        if (!empty(trim($file->get('path'), DIRECTORY_SEPARATOR))) {
-            $res .= DIRECTORY_SEPARATOR . trim($file->get('path'));
+
+        if (!empty(trim($file->$method('path'), DIRECTORY_SEPARATOR))) {
+            $res .= DIRECTORY_SEPARATOR . trim($file->$method('path'));
         }
 
-        return $res . DIRECTORY_SEPARATOR . $file->get("name");
+        return $res . DIRECTORY_SEPARATOR . $file->$method("name");
     }
 
     public function getUrl(File $file): string
@@ -207,5 +229,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
+    }
+
+    protected function getFileManager(): Manager
+    {
+        return $this->container->get('fileManager');
     }
 }

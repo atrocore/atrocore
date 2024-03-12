@@ -15,5 +15,5 @@ use Atro\Entities\File;
 
 interface LocalFileStorageInterface
 {
-    public function getLocalPath(File $file): string;
+    public function getLocalPath(File $file, bool $fetched = false): string;
 }

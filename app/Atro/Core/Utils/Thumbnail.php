@@ -79,10 +79,7 @@ class Thumbnail
 
         $image->resizeToBestFit($w, $h);
 
-        $thumbnailDirPath = explode(DIRECTORY_SEPARATOR, $thumbnailPath);
-        array_pop($thumbnailDirPath);
-        $thumbnailDirPath = implode(DIRECTORY_SEPARATOR, $thumbnailDirPath);
-
+        $thumbnailDirPath = $this->getFileManager()->getFileDir($thumbnailPath);
         if (!is_dir($thumbnailDirPath)) {
             $this->getFileManager()->mkdir($thumbnailDirPath, 0777, true);
         }

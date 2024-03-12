@@ -28,8 +28,20 @@ class File extends Base
     {
         parent::beforeSave($entity, $options);
 
-        if (!$entity->isNew() && $entity->isAttributeChanged('storageId')) {
-            throw new BadRequest('The Storage cannot be changed.');
+        if (!$entity->isNew()) {
+            if ($entity->isAttributeChanged('storageId')) {
+                throw new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File'));
+            }
+
+            if ($entity->isAttributeChanged('name')) {
+                if ($this->isExtensionChanged($entity)) {
+                    throw new BadRequest($this->getInjection('language')->translate('fileExtensionCannotBeChanged', 'exceptions', 'File'));
+                }
+
+                if (!$this->getStorage($entity)->rename($entity)){
+                    throw new BadRequest($this->getInjection('language')->translate('fileRenameFailed', 'exceptions', 'File'));
+                }
+            }
         }
 
         if (empty($entity->get('thumbnailsPath'))) {
@@ -42,12 +54,25 @@ class File extends Base
         }
     }
 
+    public function isExtensionChanged(FileEntity $file): bool
+    {
+        $fetchedParts = explode('.', (string)$file->getFetched('name'));
+        $fetchedExt = array_pop($fetchedParts);
+
+        $parts = explode('.', (string)$file->get('name'));
+        $ext = array_pop($parts);
+
+        return $fetchedExt !== $ext;
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
 
         // delete origin file
-        $this->getStorage($entity)->delete($entity);
+        if (!$this->getStorage($entity)->delete($entity)){
+            throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
+        }
 
         // delete thumbnails
         foreach (['small', 'medium', 'large'] as $size) {
@@ -114,5 +139,6 @@ class File extends Base
         parent::init();
 
         $this->addDependency('container');
+        $this->addDependency('language');
     }
 }
