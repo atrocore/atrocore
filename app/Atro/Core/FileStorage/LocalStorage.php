@@ -164,7 +164,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function delete(File $file): void
     {
-        //@todo
+        $path = $this->getLocalPath($file);
+        if (file_exists($path)) {
+            unlink($path);
+        }
     }
 
     public function getContents(File $file): string

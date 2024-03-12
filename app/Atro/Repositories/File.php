@@ -37,6 +37,22 @@ class File extends Base
         }
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        parent::beforeRemove($entity, $options);
+
+        // delete origin file
+        $this->getStorage($entity)->delete($entity);
+
+        // delete thumbnails
+        foreach (['small', 'medium', 'large'] as $size) {
+            $thumbnailPath = $this->getThumbnail()->getPath($entity, $size);
+            if (!empty($thumbnailPath) && file_exists($thumbnailPath)) {
+                unlink($thumbnailPath);
+            }
+        }
+    }
+
     public function getContents(FileEntity $file): string
     {
         return $this->getStorage($file)->getContents($file);
