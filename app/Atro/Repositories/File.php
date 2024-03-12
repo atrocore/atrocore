@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Entities\File as FileEntity;
@@ -26,6 +27,10 @@ class File extends Base
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('storageId')) {
+            throw new BadRequest('The Storage cannot be changed.');
+        }
 
         if (empty($entity->get('thumbnailsPath'))) {
             if (!empty($entity->get('path'))) {

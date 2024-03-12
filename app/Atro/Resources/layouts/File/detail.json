@@ -30,6 +30,12 @@
         {
           "name": "fileMtime"
         }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
       ]
     ]
   }

@@ -6,6 +6,9 @@
       "required": true,
       "trim": true
     },
+    "description": {
+      "type": "text"
+    },
     "preview": {
       "type": "varchar",
       "view": "views/file/fields/preview",

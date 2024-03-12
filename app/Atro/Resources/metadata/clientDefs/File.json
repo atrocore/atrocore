@@ -4,5 +4,19 @@
   "iconClass": "fas fa-file",
   "recordViews": {
     "detail": "views/file/record/detail"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "storage": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
   }
 }
