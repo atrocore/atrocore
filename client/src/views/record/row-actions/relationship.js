@@ -77,6 +77,9 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     });
                 }
 
+            }
+
+            if (this.options.acl.unlink) {
                 list.push({
                     action: 'unlinkRelated',
                     label: 'Unlink',

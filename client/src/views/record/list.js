@@ -2008,7 +2008,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 var acl = {
                     edit: this.getAcl().checkModel(model, 'edit'),
-                    delete: this.getAcl().checkModel(model, 'delete')
+                    delete: this.getAcl().checkModel(model, 'delete'),
+                    unlink: this.options.canUnlink
                 };
 
                 this.createView(key, 'views/base', {

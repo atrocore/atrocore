@@ -24,7 +24,6 @@ AtroCore is the best fit **for businesses**, who want to:
 
 The following full-fledged software products are already available on the AtroCore basis:
 * [AtroPIM (Product Information Management)](https://github.com/atrocore/atropim)
-* [AtroDAM (Digital Asset Management)](https://github.com/atrocore/atrodam)
 
 
 ### What is on Board?
@@ -36,7 +35,7 @@ Here is a AtroCore package description in detail:
 | Dashboards                  | Use multiple dashboards to control all main activities in the system. |
 | Module Manager              | It allows you to install and/or update any module directly from the administration panel. Just choose the version you want to use. |
 | Entity Manager              | You can configure the data model directly from the administration panel, create new or edit existing entities and set relations of different types. |
-| Dynamic field logic         | You can configure the conditions that make some fields invisible, read-only or editable. |
+| UI Handlers                 | You can configure the conditions that make some fields invisible, read-only or editable etc. |
 | Layout Manager              | Use it to configure any User Interface in the system or to show up the panels for related entities, via drag-and-drop. |
 | Label Manager               | You can edit any label in the system, in all languages you want to use. |
 | Configurable navigation     | Use the drag-and-drop functionality to set up the navigation as you wish, also separately for each user, if needed. |
@@ -87,6 +86,10 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 
 - Please visit our Help Center: https://help.atrocore.com/
 
+### Release Notes
+
+- Please visit our Help Center: https://help.atrocore.com/release-notes/core
+
 ### Requirements
 
 * Dedicated (virtual) Linux-based server with root permissions. 
@@ -98,7 +101,7 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 
 ### Installation
 
-Installation Guide is available [here](https://help.atrocore.com/atrocore/admin-guide/installation/).
+Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 ### Demo
 - URL: https://demo.atropim.com/
