@@ -79,16 +79,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                         $existEntity = $exists[$k];
                         $skip = true;
                         foreach ($v as $field => $val) {
-                            switch ($field) {
-                                case '_fileName';
-                                    continue 2;
-                                    break;
-                                case 'fileSize':
-                                    $existEntity->set($field, (int)$existEntity->get($field));
-                                    $val = (int)$val;
-                                    break;
-                            }
-                            if ($existEntity->get($field) !== $val) {
+                            if ($field !== '_fileName' && $existEntity->get($field) !== $val) {
                                 $skip = false;
                             }
                         }

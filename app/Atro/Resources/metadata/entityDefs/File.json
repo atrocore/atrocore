@@ -88,7 +88,7 @@
       "readOnly": true
     },
     "fileSize": {
-      "type": "float",
+      "type": "int",
       "readOnly": true,
       "min": 0
     },
