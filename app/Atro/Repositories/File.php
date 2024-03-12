@@ -28,6 +28,8 @@ class File extends Base
     {
         parent::beforeSave($entity, $options);
 
+        $this->prepareThumbnailsPath($entity);
+
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('storageId')) {
                 throw new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File'));
@@ -38,15 +40,8 @@ class File extends Base
                     throw new BadRequest($this->getInjection('language')->translate('fileExtensionCannotBeChanged', 'exceptions', 'File'));
                 }
 
-                $fileNameRegexPattern = $this->getConfig()->get('fileNameRegexPattern');
-                if (!empty($fileNameRegexPattern)) {
-                    $nameWithoutExt = explode('.', (string)$entity->get('name'));
-                    array_pop($nameWithoutExt);
-                    $nameWithoutExt = implode('.', $nameWithoutExt);
-
-                    if (!preg_match($fileNameRegexPattern, $nameWithoutExt)) {
-                        throw new BadRequest(sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $fileNameRegexPattern));
-                    }
+                if (!$this->isNameValid($entity)) {
+                    throw new BadRequest(sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $fileNameRegexPattern));
                 }
 
                 if (!$this->getStorage($entity)->rename($entity)) {
@@ -54,15 +49,31 @@ class File extends Base
                 }
             }
         }
+    }
 
-        if (empty($entity->get('thumbnailsPath'))) {
-            if (!empty($entity->get('path'))) {
-                $entity->set('thumbnailsPath', $entity->get('path'));
+    public function prepareThumbnailsPath(FileEntity $file): void
+    {
+        if (empty($file->get('thumbnailsPath'))) {
+            if (!empty($file->get('path'))) {
+                $file->set('thumbnailsPath', $file->get('path'));
             } else {
                 $thumbnailsDirPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/');
-                $entity->set('thumbnailsPath', $this->getPathBuilder()->createPath($thumbnailsDirPath . '/'));
+                $file->set('thumbnailsPath', $this->getPathBuilder()->createPath($thumbnailsDirPath . '/'));
             }
         }
+    }
+
+    public function isNameValid(FileEntity $file): bool
+    {
+        $fileNameRegexPattern = $this->getConfig()->get('fileNameRegexPattern');
+        if (!empty($fileNameRegexPattern)) {
+            $nameWithoutExt = explode('.', (string)$file->get('name'));
+            array_pop($nameWithoutExt);
+            $nameWithoutExt = implode('.', $nameWithoutExt);
+            return preg_match($fileNameRegexPattern, $nameWithoutExt);
+        }
+
+        return true;
     }
 
     public function isExtensionChanged(FileEntity $file): bool
