@@ -12,10 +12,10 @@
 namespace Atro\EntryPoints;
 
 use Atro\Entities\File;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 
 class Image extends AbstractEntryPoint
 {

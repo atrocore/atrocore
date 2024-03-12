@@ -11,8 +11,8 @@
 
 namespace Atro\EntryPoints;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 
 class Pdf extends AbstractEntryPoint
 {

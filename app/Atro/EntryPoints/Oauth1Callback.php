@@ -12,7 +12,7 @@
 namespace Atro\EntryPoints;
 
 use Atro\ConnectionType\ConnectionOauth1;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Entity;
 
 class Oauth1Callback extends AbstractEntryPoint
