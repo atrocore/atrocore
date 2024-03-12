@@ -19,7 +19,7 @@ use Doctrine\DBAL\Connection;
 use Espo\EntryPoints\Image;
 use Espo\ORM\EntityManager;
 
-class LocalStorage implements FileStorageInterface
+class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 {
     protected Container $container;
 

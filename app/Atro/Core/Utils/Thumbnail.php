@@ -14,15 +14,14 @@ declare(strict_types=1);
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
-use Atro\Core\Utils\PDFLib;
-use Atro\Core\Exceptions\Error;
+use Atro\Core\FileStorage\FileStorageInterface;
+use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\Attachment;
-use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
+use Gumlet\ImageResizeException;
 
 class Thumbnail
 {
@@ -53,7 +52,7 @@ class Thumbnail
 
         if (!file_exists($thumbnailPath)) {
             // create thumbnail if not exist
-            if (!$this->create($file, $size)) {
+            if (!$this->create($this->getImageFilePath($file), $size, $thumbnailPath)) {
                 return null;
             }
         }
@@ -61,69 +60,54 @@ class Thumbnail
         return $thumbnailPath;
     }
 
-//    //
-//
-//    public function createThumbnail(string $originalPath, string $type, string $thumbnailPath): bool
-//    {
-//        try {
-//            $image = new ImageResize($originalPath);
-//        } catch (\Throwable $e) {
-//            return false;
-//        }
-//
-//        $thumbnailDirPath = explode(DIRECTORY_SEPARATOR, $thumbnailPath);
-//        array_pop($thumbnailDirPath);
-//        $thumbnailDirPath = implode(DIRECTORY_SEPARATOR, $thumbnailDirPath);
-//
-//        list($w, $h) = $this->getMetadata()->get(['app', 'imageSizes'], [])[$type];
-//        $image->resizeToBestFit($w, $h);
-//        if (!is_dir($thumbnailDirPath)) {
-//            $this->getFileManager()->mkdir($thumbnailDirPath, 0777, true);
-//        }
-//        $this->getFileManager()->putContents($thumbnailPath, $image->getImageAsString());
-//
-//        return true;
-//    }
-
-    public function create(FileEntity $file, string $size): bool
+    public function create(string $originFilePath, string $size, string $thumbnailPath): bool
     {
-        $origin = $this->getImageFilePath($file);
-        $thumbnailPath = $this->getPath($file, $size);
-
-        echo '<pre>';
-        print_r('123');
-        die();
-
-        if (file_exists($thumbnailPath) || empty($origin)) {
-            return false;
-        }
-
-        try {
-            $image = new ImageResize($this->getImageFilePath($attachment));
-        } catch (\Gumlet\ImageResizeException $e) {
+        if (file_exists($thumbnailPath)) {
             return false;
         }
 
         $imageSizes = $this->getMetadata()->get(['app', 'imageSizes'], []);
-
         if (!$imageSizes[$size]) {
-            throw new Error('Wrong file size');
+            return false;
+        }
+
+        try {
+            $image = new ImageResize($originFilePath);
+        } catch (ImageResizeException $e) {
+            return false;
         }
 
         list($w, $h) = $imageSizes[$size];
 
         $image->resizeToBestFit($w, $h);
 
-        return $this->getFileManager()->putContents($attachment->getThumbPath($size), $image->getImageAsString());
+        $thumbnailDirPath = explode(DIRECTORY_SEPARATOR, $thumbnailPath);
+        array_pop($thumbnailDirPath);
+        $thumbnailDirPath = implode(DIRECTORY_SEPARATOR, $thumbnailDirPath);
+
+        if (!is_dir($thumbnailDirPath)) {
+            $this->getFileManager()->mkdir($thumbnailDirPath, 0777, true);
+        }
+
+        return $this->getFileManager()->putContents($thumbnailPath, $image->getImageAsString());
     }
 
     protected function getImageFilePath(FileEntity $file): string
     {
-        if ($this->isPdf($file)) {
-            return $this->createImageFromPdf($attachment->getFilePath());
+        /** @var FileStorageInterface $fileStorage */
+        $fileStorage = $this->container->get($file->get('storage')->get('type') . 'Storage');
+
+        if ($fileStorage instanceof LocalFileStorageInterface) {
+            $filePath = $fileStorage->getLocalPath($file);
+        } else {
+            $filePath = $fileStorage->getUrl($file);
         }
 
-        return $attachment->getFilePath();
+        if ($this->isPdf($file)) {
+            return $this->createImageFromPdf($filePath);
+        }
+
+        return $filePath;
     }
 
     protected function isPdf(FileEntity $file): bool
@@ -135,9 +119,9 @@ class Thumbnail
 
     protected function createImageFromPdf(string $pdfPath): string
     {
-        $pathParts = explode('/', $pdfPath);
-        $fileName = array_pop($pathParts);
-        $dirPath = implode('/', $pathParts);
+        $dirPath = explode(DIRECTORY_SEPARATOR, $pdfPath);
+        array_pop($dirPath);
+        $dirPath = implode(DIRECTORY_SEPARATOR, $dirPath);
 
         $original = $dirPath . '/page-1.png';
         if (!file_exists($original)) {
@@ -161,11 +145,6 @@ class Thumbnail
     protected function getFileManager(): Manager
     {
         return $this->container->get('fileManager');
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->container->get('entityManager');
     }
 
     protected function getConfig(): Config
