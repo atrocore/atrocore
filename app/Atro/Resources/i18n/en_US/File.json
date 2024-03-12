@@ -7,7 +7,8 @@
     "preview": "Preview",
     "hash": "Hash",
     "fileSize": "File Size (bytes)",
-    "fileMtime": "File Modification Date"
+    "fileMtime": "File Modification Date",
+    "private": "Private"
   },
   "links": {
     "storage": "Storage"
