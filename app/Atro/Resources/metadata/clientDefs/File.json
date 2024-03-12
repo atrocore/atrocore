@@ -2,34 +2,7 @@
   "controller": "controllers/record",
   "createDisabled": true,
   "iconClass": "fas fa-file",
-  "sidePanels": {
-    "edit": [
-      {
-        "name": "preview",
-        "label": "Preview",
-        "view": "views/file/record/panels/side/preview/main"
-      }
-    ],
-    "detail": [
-      {
-        "name": "preview",
-        "label": "Preview",
-        "view": "views/file/record/panels/side/preview/main"
-      }
-    ],
-    "detailSmall": [
-      {
-        "name": "preview",
-        "label": "Preview",
-        "view": "views/file/record/panels/side/preview/main"
-      }
-    ],
-    "editSmall": [
-      {
-        "name": "preview",
-        "label": "Preview",
-        "view": "views/file/record/panels/side/preview/main"
-      }
-    ]
+  "recordViews": {
+    "detail": "views/file/record/detail"
   }
 }
