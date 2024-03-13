@@ -101,7 +101,7 @@
   },
   "labels": {
     "dragAndDropBtnText": "Перетяните",
-    "dragAndDropBtnTextSmall": "Ваши ассеты или",
+    "dragAndDropBtnTextSmall": "Ваши файлы или",
     "upload": "Загрузка",
     "attachFile": "Прикрепить файл",
     "noData": "Нет данных",

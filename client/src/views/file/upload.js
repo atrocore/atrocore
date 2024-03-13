@@ -12,7 +12,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
 
     return Dep.extend({
 
-        editTemplate: 'asset/fields/files/edit',
+        editTemplate: 'file/upload',
 
         showPreviews: false,
 
@@ -29,19 +29,19 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                     let hash = $div.attr('data-unique');
 
                     if (id) {
-                        $.ajax({
-                            type: 'DELETE',
-                            url: `Attachment/${id}?silent=true`,
-                            contentType: "application/json"
-                        });
-
-                        let filesIds = [];
-                        (this.model.get('filesIds') || []).forEach(function (fileId) {
-                            if (fileId !== id) {
-                                filesIds.push(fileId);
-                            }
-                        });
-                        this.model.set('filesIds', filesIds, {silent: true});
+                        // $.ajax({
+                        //     type: 'DELETE',
+                        //     url: `Attachment/${id}?silent=true`,
+                        //     contentType: "application/json"
+                        // });
+                        //
+                        // let filesIds = [];
+                        // (this.model.get('filesIds') || []).forEach(function (fileId) {
+                        //     if (fileId !== id) {
+                        //         filesIds.push(fileId);
+                        //     }
+                        // });
+                        // this.model.set('filesIds', filesIds, {silent: true});
                     }
 
                     let fileList = [];
@@ -55,11 +55,11 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                     delete this.uploadedSize[hash];
                     delete this.filesSize[hash];
 
-                    let assetsForRelate = this.model.get('assetsForRelate') || {};
-                    if (assetsForRelate[hash]) {
-                        delete assetsForRelate[hash];
-                        this.model.set('assetsForRelate', assetsForRelate, {silent: true});
-                    }
+                    // let assetsForRelate = this.model.get('assetsForRelate') || {};
+                    // if (assetsForRelate[hash]) {
+                    //     delete assetsForRelate[hash];
+                    //     this.model.set('assetsForRelate', assetsForRelate, {silent: true});
+                    // }
 
                     this.updateProgress();
 
