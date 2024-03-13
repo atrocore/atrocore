@@ -641,13 +641,21 @@ class Hierarchy extends Record
 
         if (count($collection) > 0 && $collection[0]->hasAttribute('isRoot') && $collection[0]->hasAttribute('hasChildren')) {
             $ids = array_column($collection->toArray(), 'id');
-            $roots = $this->getRepository()->getEntitiesParents($ids);
-            $children = $this->getRepository()->getEntitiesChildren($ids);
 
-            foreach ($collection as $entity) {
-                $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
-                $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
-                $entity->_skipHierarchyRoute = true;
+            if (in_array('isRoot', $selectParams['select'])) {
+                $roots = $this->getRepository()->getEntitiesParents($ids);
+                foreach ($collection as $entity) {
+                    $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
+                    $entity->_skipHierarchyRoute = true;
+                }
+            }
+
+            if (in_array('hasChildren', $selectParams['select'])) {
+                $children = $this->getRepository()->getEntitiesChildren($ids);
+                foreach ($collection as $entity) {
+                    $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
+                    $entity->_skipHierarchyRoute = true;
+                }
             }
         }
     }
@@ -662,11 +670,11 @@ class Hierarchy extends Record
         }
 
         if (empty($this->getMemoryStorage()->get('exportJobId'))) {
-            if (!$entity->has('isRoot')){
+            if (!$entity->has('isRoot')) {
                 $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
             }
 
-            if (!$entity->has('hasChildren')){
+            if (!$entity->has('hasChildren')) {
                 $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id')));
             }
 
