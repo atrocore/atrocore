@@ -653,7 +653,6 @@ class Hierarchy extends Record
                 $children = $this->getRepository()->getEntitiesChildren($ids);
                 foreach ($collection as $entity) {
                     $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
-
                 }
             }
 
