@@ -16,7 +16,8 @@
   },
   "labels": {
     "Create File": "Create File",
-    "Preview": "Preview"
+    "Preview": "Preview",
+    "Upload": "Upload"
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",

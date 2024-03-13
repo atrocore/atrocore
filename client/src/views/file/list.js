@@ -18,8 +18,8 @@ Espo.define('views/file/list', 'views/list',
 
             this.menu.buttons.push({
                 action: 'upload',
-                label: this.translate('Create File', 'labels', 'File'),
-                style: 'primary',
+                label: this.translate('Upload', 'labels', 'File'),
+                style: 'success',
                 acl: 'create',
                 aclScope: 'File'
             });
