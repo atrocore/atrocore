@@ -1,8 +1,8 @@
 /*
  * This file is part of premium software, which is NOT free.
- * Copyright (c) AtroCore UG (haftungsbeschränkt).
+ * Copyright (c) AtroCore GmbH.
  *
- * This Software is the property of AtroCore UG (haftungsbeschränkt) and is
+ * This Software is the property of AtroCore GmbH and is
  * protected by copyright law - it is NOT Freeware and can be used only in one
  * project under a proprietary license, which is delivered along with this program.
  * If not, see <https://atropim.com/eula> or <https://atrodam.com/eula>.
