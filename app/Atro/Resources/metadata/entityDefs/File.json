@@ -121,6 +121,10 @@
       "readOnly": true,
       "default": null
     },
+    "type": {
+      "type": "link",
+      "required": false
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -145,6 +149,11 @@
       "type": "belongsTo",
       "foreign": "files",
       "entity": "Storage"
+    },
+    "type": {
+      "type": "belongsTo",
+      "foreign": "files",
+      "entity": "AssetType"
     },
     "createdBy": {
       "type": "belongsTo",

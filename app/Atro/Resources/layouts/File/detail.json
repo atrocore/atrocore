@@ -13,9 +13,11 @@
       ],
       [
         {
-          "name": "storage"
+          "name": "type"
         },
-        false
+        {
+          "name": "storage"
+        }
       ],
       [
         {

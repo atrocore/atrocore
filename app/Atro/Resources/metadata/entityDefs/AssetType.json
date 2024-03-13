@@ -7,6 +7,10 @@
       "trim": true,
       "isMultilang": true
     },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -46,6 +50,11 @@
     }
   },
   "links": {
+    "files": {
+      "type": "hasMany",
+      "foreign": "type",
+      "entity": "File"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

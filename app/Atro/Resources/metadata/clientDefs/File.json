@@ -2,6 +2,9 @@
   "controller": "controllers/record",
   "createDisabled": true,
   "iconClass": "fas fa-file",
+  "views": {
+    "list": "views/file/list"
+  },
   "recordViews": {
     "detail": "views/file/record/detail"
   },

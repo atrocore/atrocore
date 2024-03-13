@@ -1,5 +1,6 @@
 {
   "fields": {
+    "type": "Type",
     "storage": "Storage",
     "mimeType": "MIME Type",
     "path": "Path",
