@@ -1,6 +1,6 @@
 {
   "AdminNotifications": "\\Espo\\Services\\AdminNotifications",
-  "Installer": "\\Espo\\Services\\Installer",
+  "Installer": "\\Atro\\Services\\Installer",
   "Person": "\\Espo\\Services\\Person",
   "QueueManagerMassDelete": "\\Espo\\Services\\QueueManagerMassDelete",
   "QueueManagerCreateThumbnails": "\\Espo\\Services\\QueueManagerCreateThumbnails",
@@ -10,5 +10,5 @@
   "MassDelete": "\\Espo\\Services\\MassDelete",
   "ScheduledJob": "\\Espo\\Services\\ScheduledJob",
   "Composer": "\\Espo\\Services\\Composer",
-  "TreoStore": "\\Espo\\Services\\TreoStore"
+  "TreoStore": "\\Atro\\Services\\TreoStore"
 }

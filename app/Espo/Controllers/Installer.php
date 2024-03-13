@@ -35,9 +35,9 @@ declare(strict_types=1);
 
 namespace Espo\Controllers;
 
+use Atro\Services\Installer as InstallerService;
 use Espo\Core\Controllers\Base;
 use Espo\Core\Exceptions;
-use Espo\Services\Installer as InstallerService;
 use Slim\Http\Request;
 
 class Installer extends Base
