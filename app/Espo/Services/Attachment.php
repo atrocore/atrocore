@@ -421,7 +421,6 @@ class Attachment extends Record
         $attachment->storageFilePath = $this->getEntityManager()->getRepository('Attachment')->getDestPath(FilePathBuilder::UPLOAD);
         $attachment->storageThumbPath = $this->getEntityManager()->getRepository('Attachment')->getDestPath(FilePathBuilder::UPLOAD);
 
-
         $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $attachment->storageFilePath;
         if (!file_exists($fullPath)) {
             mkdir($fullPath, 0777, true);
