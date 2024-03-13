@@ -7,7 +7,7 @@
  * Website: http://www.espocrm.com
  *
  * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore UG (haftungsbeschränkt).
+ * Copyright (C) 2020 AtroCore GmbH.
  *
  * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,13 +36,11 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Atro\Core\Templates\Services\Base;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\ORM\Entity;
 
 class ExtensibleEnumOption extends Base
 {
-    protected $mandatorySelectAttributeList = ['extensibleEnumId'];
-
-
     public function updateEntity($id, $data)
     {
         if (property_exists($data, '_id') && property_exists($data, '_sortedIds') && property_exists($data, '_scope') && !empty($data->_sortedIds)) {
@@ -57,11 +55,21 @@ class ExtensibleEnumOption extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if (empty($this->getMemoryStorage()->get('exportJobId')) && empty($this->getMemoryStorage()->get('importJobId')) && !empty($entity->get('extensibleEnumId')) && $entity->get('listMultilingual') === null) {
-            $extensibleEnum = $this->getEntityManager()->getRepository('ExtensibleEnum')->get($entity->get('extensibleEnumId'));
-            if (!empty($extensibleEnum)) {
-                $entity->set('listMultilingual', !empty($extensibleEnum->get('multilingual')));
-            }
+        if (empty($this->getMemoryStorage()->get('exportJobId')) && empty($this->getMemoryStorage()->get('importJobId'))  && $entity->get('listMultilingual') === null) {
+           $hasMultilingual = $this->getEntityManager()
+                ->getConnection()
+                ->createQueryBuilder()
+                ->from('extensible_enum','ee')
+                ->join('ee','extensible_enum_extensible_enum_option','eeeeo', 'ee.id=eeeeo.extensible_enum_id')
+                ->select('ee.id')
+                ->where('eeeeo.extensible_enum_option_id=:id')
+                ->where('ee.multilingual=:true')
+                ->setParameter('id', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
+                ->setParameter('true',true, Mapper::getParameterType(true))
+                ->fetchOne();
+
+               $entity->set('listMultilingual', !empty($hasMultilingual));
+
         }
     }
 }

@@ -5,7 +5,7 @@
  * This source file is available under GNU General Public License version 3 (GPLv3).
  * Full copyright and license information is available in LICENSE.txt, located in the root directory.
  *
- * @copyright  Copyright (c) AtroCore UG (https://www.atrocore.com)
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
@@ -382,7 +382,13 @@ class Asset extends Hierarchy
 
     protected function isImage(Entity $asset): bool
     {
-        $fileNameParts = explode('.', $asset->get("file")->get('name'));
+        $file = !empty($asset->get('file')) ? $asset->get('file') : $this->getEntityManager()->getEntity('Attachment', $asset->get('fileId'));
+
+        if (empty($file)) {
+            return false;
+        }
+
+        $fileNameParts = explode('.', $file->get('name'));
         $fileExt = strtolower(array_pop($fileNameParts));
 
         return in_array($fileExt, $this->getMetadata()->get('dam.image.extensions', []));

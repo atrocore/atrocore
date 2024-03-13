@@ -1,58 +1,33 @@
 <?php
-/*
- * This file is part of EspoCRM and/or AtroCore.
+/**
+ * AtroCore Software
  *
- * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
  *
- * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore UG (haftungsbeschränkt).
- *
- * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * AtroCore as well as EspoCRM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
- * and "AtroCore" word.
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
 declare(strict_types=1);
 
-namespace Espo\Services;
+namespace Atro\Services;
 
+use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
+use Atro\Core\ModuleManager\Manager;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions;
+use Atro\Core\Exceptions;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
-use Atro\Core\ModuleManager\Manager;
-use Espo\Jobs\UpdateCurrencyExchangeViaECB;
 
-class Installer extends \Espo\Core\Templates\Services\HasContainer
+class Installer extends HasContainer
 {
-    /**
-     * @var PasswordHash
-     */
-    protected $passwordHash = null;
+    protected ?PasswordHash $passwordHash = null;
 
     /**
      * Get requireds list
@@ -408,8 +383,8 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
     {
         return [
             'requirements' => [
-                'phpVersion'   => '7.1',
-                'phpRequires'  => [
+                'phpVersion'  => '7.1',
+                'phpRequires' => [
                     'json',
                     'openssl',
                     'mbstring',
@@ -419,7 +394,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                     'xml',
                     'exif'
                 ],
-                'phpSettings'  => [
+                'phpSettings' => [
                     'max_execution_time'  => 180,
                     'max_input_time'      => 180,
                     'memory_limit'        => '256M',
@@ -669,7 +644,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         $file = 'data/after_install_script.php';
         if (file_exists($file)) {
             $configFile = 'data/config.php';
-            if (file_exists($configFile)){
+            if (file_exists($configFile)) {
                 $configData = include $configFile;
                 if (!empty($configData['database']['driver']) && $configData['database']['driver'] !== 'pdo_pgsql') {
                     include_once $file;
@@ -802,6 +777,9 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         // set to config
         $this->getConfig()->set('appId', $appId);
         $this->getConfig()->save();
+
+        // for statistics
+        @file_get_contents("https://packagist.atrocore.com/packages.json?id=$appId");
     }
 
     /**

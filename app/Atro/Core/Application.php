@@ -5,7 +5,7 @@
  * This source file is available under GNU General Public License version 3 (GPLv3).
  * Full copyright and license information is available in LICENSE.txt, located in the root directory.
  *
- * @copyright  Copyright (c) AtroCore UG (https://www.atrocore.com)
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Services\Installer;
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
 use Espo\Core\Utils\Auth;
@@ -22,7 +23,6 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\ORM\EntityManager;
 use Espo\Services\Composer;
-use Espo\Services\Installer;
 
 class Application
 {

@@ -7,7 +7,7 @@
  * Website: http://www.espocrm.com
  *
  * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore UG (haftungsbeschränkt).
+ * Copyright (C) 2020 AtroCore GmbH.
  *
  * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -150,9 +150,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         // remove all many-many relation entities
         foreach ($entity->getRelations() as $name => $defs) {
-            if (!empty($defs['relationName'])) {
-                $this->getEntityManager()->getRepository(ucfirst($defs['relationName']))
-                    ->where([$defs['midKeys'][0] => $entity->get($defs['key'])])->removeCollection();
+            if (!empty($defs['relationName']) && !empty($defs['key']) && !empty($defs['midKeys'][0])) {
+                $this->getEntityManager()
+                    ->getRepository(ucfirst($defs['relationName']))
+                    ->where([
+                        $defs['midKeys'][0] => $entity->get($defs['key'])
+                    ])
+                    ->removeCollection();
             }
         }
 

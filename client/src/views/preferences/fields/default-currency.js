@@ -6,7 +6,7 @@
  * Website: http://www.espocrm.com
  *
  * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore UG (haftungsbeschränkt).
+ * Copyright (C) 2020 AtroCore GmbH.
  *
  * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
