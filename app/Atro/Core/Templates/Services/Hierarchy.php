@@ -657,7 +657,7 @@ class Hierarchy extends Record
             }
 
             foreach ($collection as $entity) {
-                if (in_array('hierarchyRoute', $selectParams['select'])) {
+                if (in_array('hierarchyRoute', $selectParams['select']) && $this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
                     $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
                 }
                 $entity->_skipHierarchyRoute = true;
