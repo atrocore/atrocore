@@ -5,6 +5,40 @@
   "recordViews": {
     "detail": "views/file/record/detail"
   },
+  "sidePanels": {
+    "edit": [
+      {
+        "unshift": true,
+        "name": "preview",
+        "label": "Preview",
+        "view": "views/file/record/panels/side/preview/main"
+      }
+    ],
+    "detail": [
+      {
+        "unshift": true,
+        "name": "preview",
+        "label": "Preview",
+        "view": "views/file/record/panels/side/preview/main"
+      }
+    ],
+    "detailSmall": [
+      {
+        "unshift": true,
+        "name": "preview",
+        "label": "Preview",
+        "view": "views/file/record/panels/side/preview/main"
+      }
+    ],
+    "editSmall": [
+      {
+        "unshift": true,
+        "name": "preview",
+        "label": "Preview",
+        "view": "views/file/record/panels/side/preview/main"
+      }
+    ]
+  },
   "dynamicLogic": {
     "fields": {
       "storage": {

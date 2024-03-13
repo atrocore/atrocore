@@ -13,8 +13,6 @@ Espo.define('views/file/record/detail', 'views/record/detail',
 
         duplicateAction: false,
 
-        sideView: "views/file/record/detail-side",
-
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
 
