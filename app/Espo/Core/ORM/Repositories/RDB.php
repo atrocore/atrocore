@@ -150,9 +150,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         // remove all many-many relation entities
         foreach ($entity->getRelations() as $name => $defs) {
-            if (!empty($defs['relationName'])) {
-                $this->getEntityManager()->getRepository(ucfirst($defs['relationName']))
-                    ->where([$defs['midKeys'][0] => $entity->get($defs['key'])])->removeCollection();
+            if (!empty($defs['relationName']) && !empty($defs['key']) && !empty($defs['midKeys'][0])) {
+                $this->getEntityManager()
+                    ->getRepository(ucfirst($defs['relationName']))
+                    ->where([
+                        $defs['midKeys'][0] => $entity->get($defs['key'])
+                    ])
+                    ->removeCollection();
             }
         }
 
