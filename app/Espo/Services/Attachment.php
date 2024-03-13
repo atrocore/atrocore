@@ -65,14 +65,14 @@ class Attachment extends Record
         $repository = $this->getEntityManager()->getRepository('Attachment');
         $attachments = $repository
             ->where([
-                'deleted' => 1,
+                'deleted'     => 1,
                 'createdAt<=' => $date
             ])
             ->limit(0, 3000)
             ->find(["withDeleted" => true]);
 
         $fileManager = $this->getInjection('fileStorageManager');
-        foreach ($attachments as $entity){
+        foreach ($attachments as $entity) {
             $fileManager->unlink($entity);
         }
 
@@ -82,7 +82,7 @@ class Attachment extends Record
             ->where('created_at < :date')
             ->andWhere('deleted = :deleted')
             ->setParameter('date', $date)
-            ->setParameter('deleted', true,  ParameterType::BOOLEAN)
+            ->setParameter('deleted', true, ParameterType::BOOLEAN)
             ->executeStatement();
 
         return true;
@@ -374,6 +374,7 @@ class Attachment extends Record
             // ignore all errors
         }
     }
+
     /**
      * @param Imagick $imagick
      *
@@ -420,6 +421,7 @@ class Attachment extends Record
         $attachment->storageFilePath = $this->getEntityManager()->getRepository('Attachment')->getDestPath(FilePathBuilder::UPLOAD);
         $attachment->storageThumbPath = $this->getEntityManager()->getRepository('Attachment')->getDestPath(FilePathBuilder::UPLOAD);
 
+
         $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $attachment->storageFilePath;
         if (!file_exists($fullPath)) {
             mkdir($fullPath, 0777, true);
@@ -449,6 +451,7 @@ class Attachment extends Record
             throw new Error(sprintf($this->getInjection('language')->translate('urlDownloadFailed', 'exceptions', 'Asset'), $url));
         }
 
+        $attachment->type = mime_content_type($attachment->fileName);
         $entity = parent::createEntity($attachment);
 
         if ($validateAttachment) {
