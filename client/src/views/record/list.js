@@ -2301,6 +2301,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 } else {
                     if (response.success) {
                         this.notify(response.message, 'success');
+                        if (response.redirect) {
+                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, {trigger: false});
+                            this.getRouter().dispatch(response.scope, 'view', {
+                                id: response.entityId,
+                            })
+                            return;
+                        }
                     } else {
                         this.notify(response.message, 'error');
                     }

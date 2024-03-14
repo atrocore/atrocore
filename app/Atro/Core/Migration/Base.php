@@ -34,6 +34,11 @@ class Base
         $this->comparator = new Comparator();
     }
 
+    public function getMigrationDateTime(): ?\DateTime
+    {
+        return null;
+    }
+
     public function up(): void
     {
     }

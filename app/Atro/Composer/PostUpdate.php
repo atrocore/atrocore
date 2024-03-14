@@ -562,20 +562,48 @@ class PostUpdate
             return;
         }
 
-        if (empty($data = self::getComposerDiff()['update'])) {
+        $data = self::getComposerDiff()['update'];
+        if (empty($data)) {
             return;
         }
 
-        $migration = self::$container->get('migration');
-
-        if (isset($data['Atro'])) {
-            $migration->run('Atro', self::prepareVersion($data['Atro']['from']), self::prepareVersion($data['Atro']['to']));
-        }
-
+        $modulesToMigrate = [];
         foreach (self::getModules() as $id) {
             if (isset($data[$id])) {
-                $migration->run($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to']));
+                $modulesToMigrate[] = $id;
             }
+        }
+        if (isset($data['Atro'])) {
+            array_unshift($modulesToMigrate, 'Atro');
+        }
+
+        /** @var \Atro\Core\Migration\Migration $migrationManager */
+        $migrationManager = self::$container->get('migration');
+
+        $res = [];
+        foreach ($modulesToMigrate as $k => $id) {
+            $moduleNumber = $k + 1;
+            foreach ($migrationManager->getMigrationsToExecute($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to'])) as $k1 => $row) {
+                $migrationDate = $row['migration']->getMigrationDateTime();
+                if ($migrationDate === null) {
+                    $sortOrder = (float)"$moduleNumber.$k1";
+                } else {
+                    $sortOrder = $migrationDate->getTimestamp();
+                }
+                $res[] = array_merge(['sortOrder' => $sortOrder], $row);
+            }
+        }
+
+        usort($res, function ($a, $b) {
+            if ($a['sortOrder'] == $b['sortOrder']) {
+                return 0;
+            }
+            return ($a['sortOrder'] < $b['sortOrder']) ? -1 : 1;
+        });
+
+        foreach ($res as $row) {
+            self::renderLine("Run migration {$row['moduleId']} {$row['version']}");
+            $row['migration']->$row['method']();
         }
     }
 
