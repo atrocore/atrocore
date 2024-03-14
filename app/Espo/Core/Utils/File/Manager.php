@@ -60,6 +60,22 @@ class Manager
         return $this->permission;
     }
 
+    public function scanDir(string $dir): array
+    {
+        // prepare result
+        $result = [];
+
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $result[] = $item;
+                }
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * Get a list of files in specified directory
      *
