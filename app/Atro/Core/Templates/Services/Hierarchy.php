@@ -638,18 +638,19 @@ class Hierarchy extends Record
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
+        $attributeList = empty($selectParams['select']) ? [] : $selectParams['select'];
 
         if (count($collection) > 0 && $collection[0]->hasAttribute('isRoot') && $collection[0]->hasAttribute('hasChildren')) {
             $ids = array_column($collection->toArray(), 'id');
 
-            if (in_array('isRoot', $selectParams['select'])) {
+            if (in_array('isRoot', $attributeList)) {
                 $roots = $this->getRepository()->getEntitiesParents($ids);
                 foreach ($collection as $entity) {
                     $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
                 }
             }
 
-            if (in_array('hasChildren', $selectParams['select'])) {
+            if (in_array('hasChildren', $attributeList)) {
                 $children = $this->getRepository()->getEntitiesChildren($ids);
                 foreach ($collection as $entity) {
                     $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
@@ -657,7 +658,7 @@ class Hierarchy extends Record
             }
 
             foreach ($collection as $entity) {
-                if (in_array('hierarchyRoute', $selectParams['select']) && $this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
+                if (in_array('hierarchyRoute', $attributeList) && $this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
                     $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
                 }
                 $entity->_skipHierarchyRoute = true;
