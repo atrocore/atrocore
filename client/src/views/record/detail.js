@@ -195,7 +195,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionInheritAllForChildren: function () {
-            this.confirm({message: this.translate('confirmInheritAllForChildren', 'messages'), confirmText: this.translate('Apply')}, () => {
+            this.confirm({
+                message: this.translate('confirmInheritAllForChildren', 'messages'),
+                confirmText: this.translate('Apply')
+            }, () => {
                 this.notify(this.translate('pleaseWait', 'messages'));
                 this.ajaxPostRequest(this.scope + '/action/InheritAllForChildren', {id: this.model.id}).then(() => {
                     this.notify('Done', 'success');
@@ -205,12 +208,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionDynamicAction: function (data) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id, entityId: this.model.get('id')}).success(response => {
+            this.ajaxPostRequest('Action/action/executeNow', {
+                actionId: data.id,
+                entityId: this.model.get('id')
+            }).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
                     if (response.success) {
                         this.notify(response.message, 'success');
+                        if (response.redirect) {
+                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, {trigger: false});
+                            this.getRouter().dispatch(response.scope, 'view', {
+                                id: response.entityId,
+                            })
+                            return;
+                        }
                     } else {
                         this.notify(response.message, 'error');
                     }
@@ -411,7 +424,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         isHierarchical() {
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
         },
 
         disableActionItems: function () {
@@ -1194,7 +1207,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.getStorage().set(filter.name, 'OverviewFilter', values);
                     this.model.trigger('overview-filters-changed');
 
-                    model.set(filter.name, values, { trigger: false });
+                    model.set(filter.name, values, {trigger: false});
                     view.reRender();
                 });
                 view.render();
@@ -1494,7 +1507,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         isRequiredValue(field) {
-            return this.getMetadata().get(['entityDefs', this.scope, 'fields',  field, 'required']) || false
+            return this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'required']) || false
         },
 
         controlFieldVisibility(field, hide) {
