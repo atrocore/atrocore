@@ -169,17 +169,23 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function create(File $file): bool
     {
+        // create via contents
         if (property_exists($file, '_inputContents')) {
             $file->id = Util::generateId();
             $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path')));
 
             $fileName = $this->getLocalPath($file);
-            $this->getFileManager()->putContents($fileName, $file->_inputContents);
 
-            $xattr = new Xattr();
-            $xattr->set($fileName, 'atroId', $file->id);
+            if ($this->getFileManager()->putContents($fileName, $file->_inputContents)) {
+                $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
+                $file->set('hash', md5_file($fileName));
+                $file->set('mimeType', mime_content_type($fileName));
 
-            return true;
+                $xattr = new Xattr();
+                $xattr->set($fileName, 'atroId', $file->id);
+
+                return true;
+            }
         }
 
         return false;
@@ -191,11 +197,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $to = $this->getLocalPath($file);
 
         if (file_exists($from)) {
-            $toDirPath = $this->getFileManager()->getFileDir($to);
-            if (!is_dir($toDirPath)) {
-                $this->getFileManager()->mkdir($toDirPath, 0777, true);
-            }
-            return rename($from, $to);
+            return $this->getFileManager()->move($from, $to);
         }
 
         return false;

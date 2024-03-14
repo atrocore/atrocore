@@ -217,7 +217,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                         contentType: "application/json",
                         data: JSON.stringify(_.extend(this.model.attributes, {
                             name: file.name,
-                            size: file.size,
+                            fileSize: file.size,
                             file: e.target.result
                         })),
                     }).done(response => {
@@ -314,7 +314,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                         piece: reader.result,
                         piecesCount: this.pieces.length,
                         name: file.name,
-                        size: file.size
+                        fileSize: file.size
                     })),
                 }).done(response => {
                     this.uploadedChunks = response.chunks;
