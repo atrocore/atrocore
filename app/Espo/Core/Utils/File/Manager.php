@@ -553,6 +553,20 @@ class Manager
         return (bool) $result;
     }
 
+    public function removeAllInDir(string $dir): void
+    {
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach ($this->scanDir($dir) as $object) {
+                if (is_dir($dir . "/" . $object)) {
+                    $this->removeAllInDir($dir . "/" . $object);
+                } else {
+                    unlink($dir . "/" . $object);
+                }
+            }
+            rmdir($dir);
+        }
+    }
+
     public function removeDir($dirPaths)
     {
         return $this->rmdir($dirPaths);
