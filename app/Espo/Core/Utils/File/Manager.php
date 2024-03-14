@@ -630,6 +630,14 @@ class Manager
         return (bool) $result;
     }
 
+    public function getFileDir(string $path): string
+    {
+        $dirPath = explode(DIRECTORY_SEPARATOR, $path);
+        array_pop($dirPath);
+
+        return implode(DIRECTORY_SEPARATOR, $dirPath);
+    }
+
     /**
      * Remove items (files or directories)
      *

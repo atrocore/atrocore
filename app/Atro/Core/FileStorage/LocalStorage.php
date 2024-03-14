@@ -24,6 +24,8 @@ use Espo\ORM\EntityManager;
 
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 {
+    public const CHUNKS_DIR = '.chunks';
+
     protected Container $container;
 
     public function __construct(Container $container)
@@ -60,7 +62,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
             foreach ($chunk as $fileName) {
                 $fileInfo = pathinfo($fileName);
+                // ignore system file
                 if ($fileInfo['basename'] === 'lastCreated') {
+                    continue;
+                }
+                // ignore chunks
+                if (strpos($fileInfo['dirname'], self::CHUNKS_DIR) !== false) {
                     continue;
                 }
 
@@ -114,13 +121,13 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             foreach ($toCreate as $entityData) {
                 $entity = $fileRepo->get();
                 $entity->set($entityData);
-                $this->getEntityManager()->saveEntity($entity);
+                $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
                 $xattr->set($entityData['_fileName'], 'atroId', $entity->get('id'));
                 $ids[] = $entity->get('id');
             }
 
             foreach ($toUpdate as $entity) {
-                $this->getEntityManager()->saveEntity($entity);
+                $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
             }
         }
 
@@ -236,7 +243,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
      */
     public function createChunk(\stdClass $input, Storage $storage): array
     {
-        $chunksDir = trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.chunks';
+        $chunksDir = trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
 
         // remove old chunks
         $checkDate = (new \DateTime())->modify('-1 day');
@@ -290,10 +297,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     {
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
-            return unlink($path);
+            return $this->getFileManager()->removeFile($path);
         }
 
-        return false;
+        return true;
     }
 
     public function getContents(File $file): string
