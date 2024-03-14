@@ -24,20 +24,11 @@ class Migration
         $this->container = $container;
     }
 
-    /**
-     * Migrate action
-     *
-     * @param string $module
-     * @param string $from
-     * @param string $to
-     *
-     * @return bool
-     */
-    public function run(string $module, string $from, string $to): bool
+    public function getMigrationsToExecute(string $module, string $from, string $to): array
     {
-        // get module migration versions
-        if (empty($migrations = $this->getModuleMigrationVersions($module))) {
-            return false;
+        $migrations = $this->getModuleMigrationVersions($module);
+        if (empty($migrations)) {
+            return [];
         }
 
         // prepare versions
@@ -60,10 +51,11 @@ class Migration
         $keyTo = array_search($to, $data);
 
         if ($keyFrom == $keyTo) {
-            return false;
+            return [];
         }
 
-        // prepare increment
+        $res = [];
+
         if ($keyFrom < $keyTo) {
             // go UP
             foreach ($data as $k => $className) {
@@ -72,8 +64,12 @@ class Migration
                     && $from != $className
                     && in_array($className, $migrations)
                     && !empty($migration = $this->createMigration($module, $className))) {
-                    self::renderLine("Run migration $module " . str_replace(['V', 'Dot'], ['', '.'], $className));
-                    $migration->up();
+                    $res[] = [
+                        'moduleId'  => $module,
+                        'method'    => 'up',
+                        'version'   => str_replace(['V', 'Dot'], ['', '.'], $className),
+                        'migration' => $migration,
+                    ];
                 }
             }
         } else {
@@ -84,10 +80,25 @@ class Migration
                     && $to != $className
                     && in_array($className, $migrations)
                     && !empty($migration = $this->createMigration($module, $className))) {
-                    self::renderLine("Run migration $module " . str_replace(['V', 'Dot'], ['', '.'], $className));
-                    $migration->down();
+                    $res[] = [
+                        'moduleId'  => $module,
+                        'method'    => 'down',
+                        'version'   => str_replace(['V', 'Dot'], ['', '.'], $className),
+                        'migration' => $migration
+                    ];
                 }
             }
+        }
+
+        return $res;
+    }
+
+    public function run(string $module, string $from, string $to): bool
+    {
+        $res = $this->getMigrationsToExecute($module, $from, $to);
+        foreach ($res as $row) {
+            self::renderLine("Run migration {$row['moduleId']} {$row['version']}");
+            $row['migration']->$row['method']();
         }
 
         return true;
