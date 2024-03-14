@@ -192,7 +192,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         // create via contents
         if (property_exists($input, 'fileContents')) {
             $file->id = Util::generateId();
-            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path')));
+            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
 
             $fileName = $this->getLocalPath($file);
 
@@ -211,7 +211,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         // create via chunks
         if (property_exists($input, 'allChunks')) {
             $file->id = Util::generateId();
-            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path')));
+            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
 
             $fileName = $this->getLocalPath($file);
 

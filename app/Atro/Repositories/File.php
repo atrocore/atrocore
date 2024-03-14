@@ -70,7 +70,7 @@ class File extends Base
                 $file->set('thumbnailsPath', $file->get('path'));
             } else {
                 $thumbnailsDirPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/');
-                $file->set('thumbnailsPath', $this->getPathBuilder()->createPath($thumbnailsDirPath . '/'));
+                $file->set('thumbnailsPath', $this->getPathBuilder()->createPath($thumbnailsDirPath . DIRECTORY_SEPARATOR));
             }
         }
     }
