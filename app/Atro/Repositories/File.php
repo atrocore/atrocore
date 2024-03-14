@@ -41,12 +41,24 @@ class File extends Base
                 }
 
                 if (!$this->isNameValid($entity)) {
-                    throw new BadRequest(sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $this->getConfig()->get('fileNameRegexPattern')));
+                    throw new BadRequest(
+                        sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $this->getConfig()->get('fileNameRegexPattern'))
+                    );
                 }
 
                 if (!$this->getStorage($entity)->rename($entity)) {
                     throw new BadRequest($this->getInjection('language')->translate('fileRenameFailed', 'exceptions', 'File'));
                 }
+            }
+        } else {
+            $fileExtension = pathinfo($entity->get('name'), PATHINFO_EXTENSION);
+            if (!in_array(strtolower($fileExtension), $this->getConfig()->get('whitelistedExtensions'))) {
+                throw new BadRequest(sprintf($this->getInjection('language')->translate('invalidFileExtension', 'exceptions', 'File'), $fileExtension));
+            }
+
+            // create origin file
+            if (!$this->getStorage($entity)->create($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
             }
         }
     }

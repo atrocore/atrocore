@@ -24,6 +24,8 @@ class File extends Base
 {
     protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath'];
 
+    protected const CHUNKS_DIR = 'data/chunks/';
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -37,82 +39,14 @@ class File extends Base
         $entity->set('largeThumbnailUrl', $entity->getLargeThumbnailUrl());
     }
 
-    public function createEntity($attachment)
+    protected function beforeCreateEntity(Entity $entity, $data)
     {
-        echo '<pre>';
-        print_r('createEntity');
-        die();
+        parent::beforeCreateEntity($entity, $data);
 
-        $ext = pathinfo($attachment->name, PATHINFO_EXTENSION);
-
-        if (!in_array(strtolower($ext), $this->getConfig()->get('whitelistedExtensions'))) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('invalidFileExtension', 'exceptions', 'Attachment'), $ext));
+        if (property_exists($data, 'file') && !empty($data->file)) {
+            $entity->_inputContents = $this->parseInputFileContent($data->file);
         }
-
-        $this->clearTrash();
-
-        if (!empty($attachment->file)) {
-            $attachment->contents = $this->parseInputFileContent($attachment->file);
-
-            $relatedEntityType = null;
-            if (property_exists($attachment, 'relatedType')) {
-                $relatedEntityType = $attachment->relatedType;
-            } elseif (property_exists($attachment, 'parentType')) {
-                $relatedEntityType = $attachment->parentType;
-            }
-
-            if (!$relatedEntityType) {
-                throw new BadRequest("Params 'relatedType' not passed along with 'file'.");
-            }
-
-            if (!$this->getAcl()->checkScope($relatedEntityType, 'create') && !$this->getAcl()->checkScope($relatedEntityType, 'edit')) {
-                throw new Forbidden("No access to " . $relatedEntityType . ".");
-            }
-        }
-
-        /**
-         * Create file from content
-         */
-        if (!empty($attachment->contents)) {
-            $this->prepareAttachmentFilePath($attachment);
-            file_put_contents($attachment->fileName, $attachment->contents);
-            unset($attachment->contents);
-        }
-
-        if (empty($attachment->fileName) || !file_exists($attachment->fileName)) {
-            throw new Error('Attachment creating failed.');
-        }
-
-        $attachment->md5 = md5_file($attachment->fileName);
-        $attachment->size = filesize($attachment->fileName);
-
-        if (!property_exists($attachment, 'type')) {
-            $attachment->type = mime_content_type($attachment->fileName);
-        }
-
-        if (empty($entity = $this->findAttachmentDuplicate($attachment))) {
-            $entity = parent::createEntity(clone $attachment);
-
-            if (!empty($attachment->file)) {
-                $entity->clear('contents');
-            }
-
-            // create thumbnails
-            $this->createThumbnails($entity);
-        } else {
-            unlink($attachment->fileName);
-        }
-
-        $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
-
-        if ($this->attachmentHasAsset($attachment)) {
-            $this->validateAttachment($entity, $attachment);
-            $this->createAsset($entity, $attachment);
-        }
-
-        return $entity;
     }
-
 
     public function createChunks(\stdClass $attachment): array
     {
@@ -175,5 +109,35 @@ class File extends Base
         }
 
         return $result;
+    }
+
+    /**
+     * Remove dirs for old chunks
+     */
+    public function clearTrash(): void
+    {
+        $checkDate = (new \DateTime())->modify('-1 day');
+
+        // Remove old chunk dirs
+        foreach (Util::scanDir(self::CHUNKS_DIR) as $chunkId) {
+            $path = self::CHUNKS_DIR . '/' . $chunkId;
+            foreach (Util::scanDir($path) as $timestamp) {
+                if ($timestamp < $checkDate->getTimestamp()) {
+                    Util::removeDir($path);
+                    break;
+                }
+            }
+        }
+    }
+
+    protected function parseInputFileContent(string $fileContent): string
+    {
+        $arr = explode(',', $fileContent);
+        $contents = '';
+        if (count($arr) > 1) {
+            $contents = $arr[1];
+        }
+
+        return base64_decode($contents);
     }
 }

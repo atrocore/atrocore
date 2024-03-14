@@ -22,8 +22,10 @@
   "exceptions": {
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",
     "fileStorageCannotBeChanged": "The Storage cannot be changed.",
+    "fileCreateFailed": "File create has been failed.",
     "fileRenameFailed": "File rename has been failed.",
     "fileDeleteFailed": "File delete has been failed.",
-    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'."
+    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'.",
+    "invalidFileExtension": "Upload of files with the extension '.%s' is prohibited. Please contact your admin to enable it."
   }
 }

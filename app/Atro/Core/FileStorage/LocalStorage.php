@@ -17,7 +17,9 @@ use Atro\Entities\File;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
+use Espo\Core\FilePathBuilder;
 use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
@@ -165,6 +167,24 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $results;
     }
 
+    public function create(File $file): bool
+    {
+        if (property_exists($file, '_inputContents')) {
+            $file->id = Util::generateId();
+            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path')));
+
+            $fileName = $this->getLocalPath($file);
+            $this->getFileManager()->putContents($fileName, $file->_inputContents);
+
+            $xattr = new Xattr();
+            $xattr->set($fileName, 'atroId', $file->id);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function rename(File $file): bool
     {
         $from = $this->getLocalPath($file, true);
@@ -234,5 +254,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     protected function getFileManager(): Manager
     {
         return $this->container->get('fileManager');
+    }
+
+    protected function getPathBuilder(): FilePathBuilder
+    {
+        return $this->container->get('filePathBuilder');
     }
 }

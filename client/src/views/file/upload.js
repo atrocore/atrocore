@@ -34,14 +34,6 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                             url: `File/${id}?silent=true`,
                             contentType: "application/json"
                         });
-
-                        // let filesIds = [];
-                        // (this.model.get('filesIds') || []).forEach(function (fileId) {
-                        //     if (fileId !== id) {
-                        //         filesIds.push(fileId);
-                        //     }
-                        // });
-                        // this.model.set('filesIds', filesIds, {silent: true});
                     }
 
                     let fileList = [];
@@ -54,12 +46,6 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                     this.fileList = fileList;
                     delete this.uploadedSize[hash];
                     delete this.filesSize[hash];
-
-                    // let assetsForRelate = this.model.get('assetsForRelate') || {};
-                    // if (assetsForRelate[hash]) {
-                    //     delete assetsForRelate[hash];
-                    //     this.model.set('assetsForRelate', assetsForRelate, {silent: true});
-                    // }
 
                     this.updateProgress();
 
@@ -229,12 +215,11 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                         type: 'POST',
                         url: 'File?silent=true',
                         contentType: "application/json",
-                        data: JSON.stringify({
+                        data: JSON.stringify(_.extend(this.model.attributes, {
                             name: file.name,
                             size: file.size,
-                            file: e.target.result,
-                            modelAttributes: this.model.attributes
-                        }),
+                            file: e.target.result
+                        })),
                     }).done(response => {
                         this.pushPieceSize(file.uniqueId, file.size);
                         this.finallyUploadedFiles[file.uniqueId] = 0;
@@ -323,15 +308,14 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                     type: 'POST',
                     url: 'File/action/createChunks?silent=true',
                     contentType: "application/json",
-                    data: JSON.stringify({
+                    data: JSON.stringify(_.extend(this.model.attributes, {
                         chunkId: file.uniqueId,
                         start: item.start,
                         piece: reader.result,
                         piecesCount: this.pieces.length,
                         name: file.name,
-                        size: file.size,
-                        modelAttributes: this.model.attributes
-                    }),
+                        size: file.size
+                    })),
                 }).done(response => {
                     this.uploadedChunks = response.chunks;
                     if (response.attachment) {
