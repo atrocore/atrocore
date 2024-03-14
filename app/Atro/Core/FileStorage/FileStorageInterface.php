@@ -18,7 +18,7 @@ interface FileStorageInterface
 {
     public function scan(Storage $storage): void;
 
-    public function create(File $storage): bool;
+    public function create(File $file): bool;
 
     public function rename(File $file): bool;
 
