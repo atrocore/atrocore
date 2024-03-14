@@ -306,10 +306,10 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
 
                 $.ajax({
                     type: 'POST',
-                    url: 'File/action/createChunks?silent=true',
+                    url: 'File?silent=true',
                     contentType: "application/json",
                     data: JSON.stringify(_.extend(this.model.attributes, {
-                        chunkId: file.uniqueId,
+                        fileId: file.uniqueId,
                         start: item.start,
                         piece: reader.result,
                         piecesCount: this.pieces.length,
@@ -359,15 +359,6 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
             if (attachment !== null) {
                 file.attachmentBox.attr('data-id', attachment.id);
             }
-
-            let filesIds = this.model.get('filesIds') || [];
-            filesIds.push(attachment.id);
-
-            let filesNames = this.model.get('filesNames') || {};
-            filesNames[attachment.id] = attachment.name;
-
-            this.model.set('filesIds', filesIds, {silent: true});
-            this.model.set('filesNames', filesNames, {silent: true});
 
             setTimeout(function () {
                 if (this.isDone()) {

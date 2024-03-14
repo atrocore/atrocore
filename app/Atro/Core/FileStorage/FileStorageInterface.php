@@ -20,6 +20,15 @@ interface FileStorageInterface
 
     public function create(File $file): bool;
 
+    /**
+     * Create file chunk on storage and return the list of the file chunks
+     *
+     * @param \stdClass $input
+     *
+     * @return array
+     */
+    public function createChunk(\stdClass $input): array;
+
     public function rename(File $file): bool;
 
     public function delete(File $file): bool;

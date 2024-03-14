@@ -18,7 +18,7 @@ use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
 use Espo\Core\FilePathBuilder;
-use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 
@@ -29,6 +29,17 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    public static function parseInputFileContent(string $fileContent): string
+    {
+        $arr = explode(',', $fileContent);
+        $contents = '';
+        if (count($arr) > 1) {
+            $contents = $arr[1];
+        }
+
+        return base64_decode($contents);
     }
 
     public function scan(Storage $storage): void
@@ -169,14 +180,16 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function create(File $file): bool
     {
+        $input = $file->_input ?? new \stdClass();
+
         // create via contents
-        if (property_exists($file, '_inputContents')) {
+        if (property_exists($input, 'file')) {
             $file->id = Util::generateId();
             $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path')));
 
             $fileName = $this->getLocalPath($file);
 
-            if ($this->getFileManager()->putContents($fileName, $file->_inputContents)) {
+            if ($this->getFileManager()->putContents($fileName, self::parseInputFileContent($input->file))) {
                 $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
                 $file->set('hash', md5_file($fileName));
                 $file->set('mimeType', mime_content_type($fileName));
@@ -189,6 +202,20 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createChunk(\stdClass $input): array
+    {
+        $chunks = [];
+
+        echo '<pre>';
+        print_r($input);
+        die();
+
+        return $chunks;
     }
 
     public function rename(File $file): bool
@@ -253,7 +280,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $this->container->get('entityManager');
     }
 
-    protected function getFileManager(): Manager
+    protected function getFileManager(): FileManager
     {
         return $this->container->get('fileManager');
     }
