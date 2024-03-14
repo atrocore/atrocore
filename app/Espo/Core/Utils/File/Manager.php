@@ -557,10 +557,10 @@ class Manager
     {
         if (file_exists($dir) && is_dir($dir)) {
             foreach ($this->scanDir($dir) as $object) {
-                if (is_dir($dir . "/" . $object)) {
-                    $this->removeAllInDir($dir . "/" . $object);
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
+                    $this->removeAllInDir($dir . DIRECTORY_SEPARATOR . $object);
                 } else {
-                    unlink($dir . "/" . $object);
+                    unlink($dir . DIRECTORY_SEPARATOR . $object);
                 }
             }
             rmdir($dir);
