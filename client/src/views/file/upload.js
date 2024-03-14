@@ -218,7 +218,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                         data: JSON.stringify(_.extend(this.model.attributes, {
                             name: file.name,
                             fileSize: file.size,
-                            file: e.target.result
+                            fileContents: e.target.result
                         })),
                     }).done(response => {
                         this.pushPieceSize(file.uniqueId, file.size);
@@ -316,15 +316,15 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                         name: file.name,
                         fileSize: file.size
                     })),
-                }).done(response => {
-                    this.uploadedChunks = response.chunks;
-                    if (response.attachment) {
+                }).done(entity => {
+                    this.uploadedChunks = entity.chunks;
+                    if (entity.id) {
                         this.pieces = [];
                         this.uploadedSize[file.uniqueId] = [this.filesSize[file.uniqueId]];
                         this.finallyUploadedFiles[file.uniqueId] = 0;
                         this.setProgressMessage(file);
                         this.updateProgress();
-                        this.uploadSuccess(file, response.attachment);
+                        this.uploadSuccess(file, entity);
                         resolve();
                     } else {
                         this.pushPieceSize(file.uniqueId, item.piece.size);

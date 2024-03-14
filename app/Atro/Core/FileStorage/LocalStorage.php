@@ -183,13 +183,13 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $input = $file->_input ?? new \stdClass();
 
         // create via contents
-        if (property_exists($input, 'file')) {
+        if (property_exists($input, 'fileContents')) {
             $file->id = Util::generateId();
             $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path')));
 
             $fileName = $this->getLocalPath($file);
 
-            if ($this->getFileManager()->putContents($fileName, self::parseInputFileContent($input->file))) {
+            if ($this->getFileManager()->putContents($fileName, self::parseInputFileContent($input->fileContents))) {
                 $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
                 $file->set('hash', md5_file($fileName));
                 $file->set('mimeType', mime_content_type($fileName));
@@ -201,19 +201,75 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             }
         }
 
+        // create via chunks
+        if (property_exists($input, 'allChunks')) {
+            $file->id = Util::generateId();
+            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path')));
+
+            $fileName = $this->getLocalPath($file);
+
+            // create file from chunks
+            $this->getFileManager()->putContents($fileName, '');
+            $f = fopen($fileName, 'a+');
+            foreach ($input->allChunks as $chunk) {
+                fwrite($f, $this->getFileManager()->getContents($chunk));
+            }
+
+            $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
+            $file->set('hash', md5_file($fileName));
+            $file->set('mimeType', mime_content_type($fileName));
+
+            $xattr = new Xattr();
+            $xattr->set($fileName, 'atroId', $file->id);
+
+            // remove chunks
+            $this->getFileManager()->remove($input->allChunks);
+
+            return true;
+        }
+
         return false;
     }
 
     /**
      * @inheritDoc
      */
-    public function createChunk(\stdClass $input): array
+    public function createChunk(\stdClass $input, Storage $storage): array
     {
-        $chunks = [];
+        $chunksDir = trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.chunks';
 
-        echo '<pre>';
-        print_r($input);
-        die();
+        // remove old chunks
+        $checkDate = (new \DateTime())->modify('-1 day');
+        foreach ($this->getFileManager()->scanDir($chunksDir) as $chunkId) {
+            $path = $chunksDir . '/' . $chunkId;
+            foreach ($this->getFileManager()->scanDir($path) as $timestamp) {
+                if ($timestamp < $checkDate->getTimestamp()) {
+                    $this->getFileManager()->removeAllInDir($path);
+                    break;
+                }
+            }
+        }
+
+        $path = $chunksDir . DIRECTORY_SEPARATOR . $input->fileId;
+        if (!file_exists($path)) {
+            $path .= '/' . time();
+            $this->getFileManager()->mkdir($path, 0777, true);
+        } else {
+            foreach ($this->getFileManager()->scanDir($path) as $dir) {
+                $path .= '/' . $dir;
+                break;
+            }
+        }
+
+        $this->getFileManager()->putContents($path . DIRECTORY_SEPARATOR . $input->start, self::parseInputFileContent($input->piece));
+
+        $chunkFiles = $this->getFileManager()->scanDir($path);
+        sort($chunkFiles);
+
+        $chunks = [];
+        foreach ($chunkFiles as $chunkFile) {
+            $chunks[] = $path . DIRECTORY_SEPARATOR . $chunkFile;
+        }
 
         return $chunks;
     }

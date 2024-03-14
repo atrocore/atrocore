@@ -24,10 +24,11 @@ interface FileStorageInterface
      * Create file chunk on storage and return the list of the file chunks
      *
      * @param \stdClass $input
+     * @param Storage $storage
      *
      * @return array
      */
-    public function createChunk(\stdClass $input): array;
+    public function createChunk(\stdClass $input, Storage $storage): array;
 
     public function rename(File $file): bool;
 

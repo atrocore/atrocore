@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
@@ -38,8 +37,9 @@ class File extends Base
 
     public function createEntity($attachment)
     {
+        // for single upload
         if (!property_exists($attachment, 'piecesCount')) {
-            return parent::createEntity($attachment);
+            return parent::createEntity($attachment)->toArray();
         }
 
         $storageId = $attachment->storageId ?? null;
@@ -52,13 +52,15 @@ class File extends Base
         /** @var FileStorageInterface $storage */
         $storage = $this->getInjection('container')->get($storageEntity->get('type') . 'Storage');
 
-        $chunks = $storage->createChunk($attachment);
+        $chunks = $storage->createChunk($attachment, $storageEntity);
+
+        $result = [];
         if (count($chunks) === $attachment->piecesCount) {
             $attachment->allChunks = $chunks;
-            return parent::createEntity($attachment);
+            $result = parent::createEntity($attachment)->toArray();
         }
 
-        throw new Error();
+        return array_merge($result, ['chunks' => $chunks]);
     }
 
     protected function init()
