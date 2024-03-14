@@ -222,7 +222,8 @@ return [
         'tex',
         'txt',
         'wpd',
-        'json'
+        'json',
+        'msi'
     ],
 ];
 
