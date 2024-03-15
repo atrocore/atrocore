@@ -194,9 +194,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         // create via contents
         if (property_exists($input, 'fileContents')) {
-            if (!property_exists($input, 'id')) {
-                $file->id = Util::generateId();
-            }
             $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
 
             $fileName = $this->getLocalPath($file);
@@ -219,11 +216,15 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
             $fileName = $this->getLocalPath($file);
 
+            $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
+
+            $chunkDirPath = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
+
             // create file from chunks
             $this->getFileManager()->putContents($fileName, '');
             $f = fopen($fileName, 'a+');
             foreach ($input->allChunks as $chunk) {
-                fwrite($f, file_get_contents($chunk));
+                fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
             }
 
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
@@ -239,12 +240,17 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return false;
     }
 
+    public function getChunksDir(Storage $storage): string
+    {
+        return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
+    }
+
     /**
      * @inheritDoc
      */
     public function createChunk(\stdClass $input, Storage $storage): array
     {
-        $chunksDir = trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
+        $chunksDir = $this->getChunksDir($storage);
 
         // remove old chunks
         $checkDate = (new \DateTime())->modify('-1 day');
@@ -276,7 +282,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $chunks = [];
         foreach ($chunkFiles as $chunkFile) {
-            $chunks[] = $path . DIRECTORY_SEPARATOR . $chunkFile;
+            $chunks[] = $chunkFile;
         }
 
         return $chunks;

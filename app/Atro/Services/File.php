@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class File extends Base
@@ -40,6 +41,9 @@ class File extends Base
     {
         // for single upload
         if (!property_exists($attachment, 'piecesCount')) {
+            if (empty($attachment->id)) {
+                $attachment->id = Util::generateId();
+            }
             return parent::createEntity($attachment)->toArray();
         }
 
