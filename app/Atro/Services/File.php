@@ -44,7 +44,8 @@ class File extends Base
             if (empty($attachment->id)) {
                 $attachment->id = Util::generateId();
             }
-            return parent::createEntity($attachment)->toArray();
+
+            return $this->createFileEntity($attachment);
         }
 
         if (empty($attachment->id)) {
@@ -77,7 +78,7 @@ class File extends Base
         if (count($chunks) === $attachment->piecesCount) {
             $attachment->allChunks = $chunks;
             try {
-                $result = parent::createEntity($attachment)->toArray();
+                $result = $this->createFileEntity($attachment);
             } catch (NotUnique $e) {
                 $result['created'] = true;
             } catch (\Throwable $e) {
@@ -90,6 +91,21 @@ class File extends Base
         }
 
         return array_merge($result, ['chunks' => $chunks]);
+    }
+
+    protected function createFileEntity(\stdClass $attachment): array
+    {
+        $entity = parent::createEntity($attachment);
+        $result = $entity->toArray();
+
+        if (!empty($entity->get('hash'))) {
+            $duplicate = $this->getRepository()->where(['hash' => $entity->get('hash'), 'id!=' => $entity->get('id')])->findOne();
+            if (!empty($duplicate)) {
+                $result['duplicate'] = $duplicate->toArray();
+            }
+        }
+
+        return $result;
     }
 
     protected function init()

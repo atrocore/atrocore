@@ -363,17 +363,23 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
             let total = fileSize + this.finallyUploadedFiles[file.uniqueId];
             let percent = piecesSize / total * 100;
 
-            file.attachmentBox.parent().find('.uploading-message').html(this.translate('Uploading...') + ' <span class="uploading-progress-message">' + percent.toFixed(0) + '%</span>');
+            if (!file.attachmentBox.data('id')) {
+                file.attachmentBox.parent().find('.uploading-message').html(this.translate('Uploading...') + ' <span class="uploading-progress-message">' + percent.toFixed(0) + '%</span>');
+            }
         },
 
         uploadSuccess: function (file, attachment) {
             this.model.trigger('after:file-upload');
+            const $message = file.attachmentBox.parent().find('.uploading-message');
 
-            file.attachmentBox.parent().find('.uploading-message').remove();
+            $message.html('');
 
             if (attachment !== null) {
                 file.attachmentBox.attr('data-id', attachment.id).addClass('file-uploading-success');
-                file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<span class="fas fa-trash"></span>')
+                if (attachment.duplicate) {
+                    let message = this.translate('fileHasDuplicate', 'messages', 'File').replace('{{id}}', attachment.duplicate.id);
+                    $message.html(message);
+                }
             }
 
             setTimeout(function () {
@@ -387,12 +393,6 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
             this.failedFiles[file.uniqueId] = file;
 
             let html = response.getResponseHeader('X-Status-Reason') || this.translate('assetCouldNotBeUploaded', 'messages', 'Asset');
-
-            if (response.getResponseHeader('X-Status-Reason-Data')) {
-                let assetsForRelate = this.model.get('assetsForRelate') || {};
-                assetsForRelate[file.uniqueId] = response.getResponseHeader('X-Status-Reason-Data');
-                this.model.set('assetsForRelate', assetsForRelate, {silent: true});
-            }
 
             if (response.status !== 400) {
                 html += ` <a href="javascript:" class="retry-upload" data-unique="${file.uniqueId}">${this.translate('retry', 'labels', 'Asset')}</a>`;
