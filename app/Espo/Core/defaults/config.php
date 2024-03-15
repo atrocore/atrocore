@@ -102,7 +102,6 @@ return [
     'useCache'                              => true,
     'applicationName'                       => 'AtroPIM',
     'outboundEmailFromName'                 => 'AtroPIM',
-    'attachmentDuplicates'                  => 'notAllowByContentAndName',
     'defaultFileStorage'                    => 'UploadDir',
     'filesPath'                             => 'upload/files/',
     'thumbnailsPath'                        => 'upload/thumbnails/',

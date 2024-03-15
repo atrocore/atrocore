@@ -1,6 +1,5 @@
 {
   "fields": {
-    "attachmentDuplicates": "Дубликаты ресурсов",
     "fileNameRegexPattern": "Шаблон для имени файла",
     "locale": "Локаль",
     "useCache": "Использовать кэш",

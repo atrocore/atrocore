@@ -1,6 +1,5 @@
 {
   "fields": {
-    "attachmentDuplicates": "Asset Duplicates",
     "fileNameRegexPattern": "Filename Regex Pattern",
     "variables": "Variables",
     "locale": "Locale",

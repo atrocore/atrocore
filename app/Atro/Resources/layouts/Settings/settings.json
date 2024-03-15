@@ -46,11 +46,9 @@
       ],
       [
         {
-          "name": "attachmentDuplicates"
-        },
-        {
           "name": "fileNameRegexPattern"
-        }
+        },
+        false
       ]
     ]
   }
