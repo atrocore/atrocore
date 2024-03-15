@@ -20,7 +20,7 @@
     "Upload": "Upload"
   },
   "messages": {
-    "fileHasDuplicate": "There is a <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file."
+    "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",

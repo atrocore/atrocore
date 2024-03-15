@@ -376,6 +376,8 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
 
             if (attachment !== null) {
                 file.attachmentBox.attr('data-id', attachment.id).addClass('file-uploading-success');
+                file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<span class="fas fa-trash"></span>');
+                file.attachmentBox.find('.preview').html(`<a target="_blank" href="/#File/view/${attachment.id}">${attachment.name}</a>`);
                 if (attachment.duplicate) {
                     let message = this.translate('fileHasDuplicate', 'messages', 'File').replace('{{id}}', attachment.duplicate.id);
                     $message.html(message);
