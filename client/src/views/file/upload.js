@@ -314,7 +314,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                     contentType: "application/json",
                     data: JSON.stringify(_.extend(this.model.attributes, {
                         id: id,
-                        fileUniqueId: file.uniqueId,
+                        fileUniqueHash: file.uniqueId,
                         start: item.start,
                         piece: reader.result,
                         piecesCount: this.pieces.length,
@@ -333,11 +333,11 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                         this.uploadSuccess(file, entity);
                         resolve();
                     } else {
-                        if (!entity.unUnique) {
+                        if (!entity.created) {
                             this.pushPieceSize(file.uniqueId, item.piece.size);
                             this.setProgressMessage(file);
                             this.updateProgress();
-                            this.sendChunk(file, pieces, resolve);
+                            this.sendChunk(file, pieces, resolve, id);
                         }
                     }
                 }).error(response => {

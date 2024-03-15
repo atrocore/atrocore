@@ -258,7 +258,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             }
         }
 
-        $path = $chunksDir . DIRECTORY_SEPARATOR . $input->fileUniqueId;
+        $path = $chunksDir . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
         if (!file_exists($path)) {
             $path .= '/' . time();
             $this->getFileManager()->mkdir($path, 0777, true);

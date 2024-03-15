@@ -65,7 +65,7 @@ class File extends Base
             try {
                 $result = parent::createEntity($attachment)->toArray();
             } catch (NotUnique $e) {
-                $result['unUnique'] = true;
+                $result['created'] = true;
             }
         }
 
