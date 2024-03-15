@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
@@ -42,6 +43,10 @@ class File extends Base
             return parent::createEntity($attachment)->toArray();
         }
 
+        if (empty($attachment->id)) {
+            throw new BadRequest("ID is required if create via chunks.");
+        }
+
         $storageId = $attachment->storageId ?? null;
         if (empty($storageId) || empty($storageEntity = $this->getEntityManager()->getRepository('Storage')->get($storageId))) {
             throw new BadRequest(
@@ -57,7 +62,11 @@ class File extends Base
         $result = [];
         if (count($chunks) === $attachment->piecesCount) {
             $attachment->allChunks = $chunks;
-            $result = parent::createEntity($attachment)->toArray();
+            try {
+                $result = parent::createEntity($attachment)->toArray();
+            } catch (NotUnique $e) {
+                $result['unUnique'] = true;
+            }
         }
 
         return array_merge($result, ['chunks' => $chunks]);

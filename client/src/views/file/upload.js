@@ -246,6 +246,8 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
 
             this.setProgressMessage(file);
 
+            const id = 'a' + (MD5('atro_' + (new Date()).getTime())).substring(0, 16);
+
             // create file pieces
             this.pieces = [];
             this.createFilePieces(file, sliceSize, 0, 1);
@@ -266,7 +268,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
 
                 if (pieces.length > 0) {
                     promiseList.push(new Promise(resolve => {
-                        this.sendChunk(file, pieces, resolve);
+                        this.sendChunk(file, pieces, resolve, id);
                     }));
                 }
                 stream++;
@@ -281,7 +283,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
             return $('.attachment-upload').is(':visible');
         },
 
-        sendChunk: function (file, pieces, resolve) {
+        sendChunk: function (file, pieces, resolve, id) {
             if (!this.isModalOpen()) {
                 return;
             }
@@ -302,7 +304,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                     this.pushPieceSize(file.uniqueId, item.piece.size);
                     this.setProgressMessage(file);
                     this.updateProgress();
-                    this.sendChunk(file, pieces, resolve);
+                    this.sendChunk(file, pieces, resolve, id);
                     return;
                 }
 
@@ -311,12 +313,14 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                     url: 'File?silent=true',
                     contentType: "application/json",
                     data: JSON.stringify(_.extend(this.model.attributes, {
-                        fileId: file.uniqueId,
+                        id: id,
+                        fileUniqueId: file.uniqueId,
                         start: item.start,
                         piece: reader.result,
                         piecesCount: this.pieces.length,
                         name: file.name,
-                        fileSize: file.size
+                        fileSize: file.size,
+                        fileContents: undefined
                     })),
                 }).done(entity => {
                     this.uploadedChunks = entity.chunks;
@@ -329,10 +333,12 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                         this.uploadSuccess(file, entity);
                         resolve();
                     } else {
-                        this.pushPieceSize(file.uniqueId, item.piece.size);
-                        this.setProgressMessage(file);
-                        this.updateProgress();
-                        this.sendChunk(file, pieces, resolve);
+                        if (!entity.unUnique) {
+                            this.pushPieceSize(file.uniqueId, item.piece.size);
+                            this.setProgressMessage(file);
+                            this.updateProgress();
+                            this.sendChunk(file, pieces, resolve);
+                        }
                     }
                 }).error(response => {
                     this.uploadFailed(file, response);

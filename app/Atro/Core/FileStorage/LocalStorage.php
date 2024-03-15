@@ -194,7 +194,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         // create via contents
         if (property_exists($input, 'fileContents')) {
-            $file->id = Util::generateId();
+            if (!property_exists($input, 'id')) {
+                $file->id = Util::generateId();
+            }
             $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
 
             $fileName = $this->getLocalPath($file);
@@ -213,7 +215,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         // create via chunks
         if (property_exists($input, 'allChunks')) {
-            $file->id = Util::generateId();
             $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
 
             $fileName = $this->getLocalPath($file);
@@ -222,7 +223,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             $this->getFileManager()->putContents($fileName, '');
             $f = fopen($fileName, 'a+');
             foreach ($input->allChunks as $chunk) {
-                fwrite($f, $this->getFileManager()->getContents($chunk));
+                fwrite($f, file_get_contents($chunk));
             }
 
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
@@ -231,9 +232,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
             $xattr = new Xattr();
             $xattr->set($fileName, 'atroId', $file->id);
-
-            // remove chunks
-            $this->getFileManager()->remove($input->allChunks);
 
             return true;
         }
@@ -260,7 +258,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             }
         }
 
-        $path = $chunksDir . DIRECTORY_SEPARATOR . $input->fileId;
+        $path = $chunksDir . DIRECTORY_SEPARATOR . $input->fileUniqueId;
         if (!file_exists($path)) {
             $path .= '/' . time();
             $this->getFileManager()->mkdir($path, 0777, true);
