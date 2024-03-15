@@ -638,15 +638,29 @@ class Hierarchy extends Record
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
+        $attributeList = empty($selectParams['select']) ? [] : $selectParams['select'];
 
         if (count($collection) > 0 && $collection[0]->hasAttribute('isRoot') && $collection[0]->hasAttribute('hasChildren')) {
             $ids = array_column($collection->toArray(), 'id');
-            $roots = $this->getRepository()->getEntitiesParents($ids);
-            $children = $this->getRepository()->getEntitiesChildren($ids);
+
+            if (in_array('isRoot', $attributeList)) {
+                $roots = $this->getRepository()->getEntitiesParents($ids);
+                foreach ($collection as $entity) {
+                    $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
+                }
+            }
+
+            if (in_array('hasChildren', $attributeList)) {
+                $children = $this->getRepository()->getEntitiesChildren($ids);
+                foreach ($collection as $entity) {
+                    $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
+                }
+            }
 
             foreach ($collection as $entity) {
-                $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
-                $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
+                if (in_array('hierarchyRoute', $attributeList) && $this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
+                    $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
+                }
                 $entity->_skipHierarchyRoute = true;
             }
         }
@@ -662,16 +676,16 @@ class Hierarchy extends Record
         }
 
         if (empty($this->getMemoryStorage()->get('exportJobId'))) {
-            if (!$entity->has('isRoot')){
-                $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
-            }
-
-            if (!$entity->has('hasChildren')){
-                $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id')));
-            }
-
-            if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true && empty($entity->_skipHierarchyRoute)) {
-                $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
+            if (empty($entity->_skipHierarchyRoute)) {
+                if (!$entity->has('isRoot')) {
+                    $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+                }
+                if (!$entity->has('hasChildren')) {
+                    $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id')));
+                }
+                if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
+                    $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
+                }
             }
 
             if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
