@@ -33,6 +33,8 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
                             type: 'DELETE',
                             url: `File/${id}?silent=true`,
                             contentType: "application/json"
+                        }).done(() => {
+                            this.model.trigger('after:file-delete', id);
                         });
                     }
 
@@ -354,6 +356,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
         },
 
         uploadSuccess: function (file, attachment) {
+            this.model.trigger('after:file-upload');
             file.attachmentBox.parent().find('.uploading-message').remove();
 
             if (attachment !== null) {

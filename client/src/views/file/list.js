@@ -40,6 +40,7 @@ Espo.define('views/file/list', 'views/list',
                 });
                 view.listenTo(view.model, 'updating-started', () => view.disableButton('save'));
                 view.listenTo(view.model, 'updating-ended', () => view.enableButton('save'));
+                view.listenTo(view.model, 'after:file-upload after:file-delete', () => this.collection.fetch());
                 view.render();
             });
         },
