@@ -51,8 +51,18 @@ class File extends Base
             throw new BadRequest("ID is required if create via chunks.");
         }
 
-        $storageId = $attachment->storageId ?? null;
-        if (empty($storageId) || empty($storageEntity = $this->getEntityManager()->getRepository('Storage')->get($storageId))) {
+        // create entity for validation
+        $entity = $this->getRepository()->get();
+        $entity->set($attachment);
+
+        // validate required fields
+        $this->checkRequiredFields($entity, $attachment);
+
+        // validate fields by patterns
+        $this->checkFieldsWithPattern($entity);
+
+        $storageEntity = $this->getEntityManager()->getRepository('Storage')->get($entity->get('storageId'));
+        if (empty($storageEntity)) {
             throw new BadRequest(
                 sprintf($this->getInjection('language')->translate('fieldIsRequired', 'exceptions'), $this->getInjection('language')->translate('storage', 'fields', 'File'))
             );

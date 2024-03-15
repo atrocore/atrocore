@@ -42,6 +42,9 @@
     .attachment-upload .progress .progress-bar {
         color: black;
     }
+    .file-uploading-success{
+        background-color: #d2f7d0 !important;
+    }
     .file-uploading-failed{
         background-color: #f2dede !important;
     }

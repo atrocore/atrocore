@@ -41,19 +41,5 @@
         "view": "views/file/record/panels/side/preview/main"
       }
     ]
-  },
-  "dynamicLogic": {
-    "fields": {
-      "storage": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
-    }
   }
 }
