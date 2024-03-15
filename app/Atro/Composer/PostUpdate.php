@@ -603,7 +603,7 @@ class PostUpdate
 
         foreach ($res as $row) {
             self::renderLine("Run migration {$row['moduleId']} {$row['version']}");
-            $row['migration']->$row['method']();
+            $row['migration']->{$row['method']}();
         }
     }
 
