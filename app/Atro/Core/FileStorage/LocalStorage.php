@@ -12,6 +12,7 @@
 namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
 use Atro\Entities\Storage;
@@ -236,6 +237,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             $xattr = new Xattr();
             $xattr->set($fileName, 'atroId', $file->id);
 
+            $this->getMemoryStorage()->set("file_{$file->id}", $file);
+
             return true;
         }
 
@@ -360,5 +363,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     protected function getPathBuilder(): FilePathBuilder
     {
         return $this->container->get('filePathBuilder');
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->container->get('memoryStorage');
     }
 }

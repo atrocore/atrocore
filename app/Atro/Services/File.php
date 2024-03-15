@@ -80,6 +80,12 @@ class File extends Base
                 $result = parent::createEntity($attachment)->toArray();
             } catch (NotUnique $e) {
                 $result['created'] = true;
+            } catch (\Throwable $e) {
+                // try to delete file
+                if (!empty($fileEntity = $this->getMemoryStorage()->get("file_{$attachment->id}"))) {
+                    $storage->delete($fileEntity);
+                }
+                throw $e;
             }
         }
 
