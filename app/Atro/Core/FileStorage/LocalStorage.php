@@ -224,7 +224,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             $this->getFileManager()->putContents($fileName, '');
             $f = fopen($fileName, 'a+');
             foreach ($input->allChunks as $chunk) {
-                fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
+                if (file_exists($chunkDirPath . DIRECTORY_SEPARATOR . $chunk)) {
+                    fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
+                }
             }
 
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
