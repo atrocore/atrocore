@@ -47,6 +47,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     public function scan(Storage $storage): void
     {
         $xattr = new Xattr();
+        if (!$xattr->hasServerExtensions()) {
+            throw new \Error("Xattr extension is not installed and the attr command is not available. See documentation for details.");
+        }
 
         /** @var \Atro\Repositories\File $fileRepo */
         $fileRepo = $this->getEntityManager()->getRepository('File');

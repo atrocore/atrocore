@@ -15,15 +15,17 @@ namespace Atro\Core\Utils;
 
 class Xattr
 {
-    public function __construct()
+    public function hasServerExtensions(): bool
     {
-        if (!function_exists('xattr_get') && !boolval(exec('which attr 2>/dev/null'))) {
-            throw new \Error("Xattr extension is not installed and the attr command is not available. See documentation for details.");
-        }
+        return function_exists('xattr_get') || boolval(exec('which attr 2>/dev/null'));
     }
 
     public function get(string $file, string $key): ?string
     {
+        if (!$this->hasServerExtensions()) {
+            return null;
+        }
+
         if (function_exists('xattr_get')) {
             return xattr_get($file, $key) ?: null;
         }
@@ -37,6 +39,10 @@ class Xattr
 
     public function set(string $file, string $key, string $value): void
     {
+        if (!$this->hasServerExtensions()) {
+            return;
+        }
+
         if (empty($value)) {
             $this->remove($file, $key);
             return;
@@ -59,6 +65,10 @@ class Xattr
 
     public function remove(string $file, string $key): void
     {
+        if (!$this->hasServerExtensions()) {
+            return;
+        }
+
         if (function_exists('xattr_remove')) {
             xattr_remove($file, $key);
             return;
@@ -67,8 +77,12 @@ class Xattr
         exec(sprintf('attr -qr %s %s 2>/dev/null', escapeshellarg($key), escapeshellarg($file)));
     }
 
-    public function list(string $file): array
+    public function list(string $file): ?array
     {
+        if (!$this->hasServerExtensions()) {
+            return null;
+        }
+
         if (function_exists('xattr_list')) {
             return xattr_list($file);
         }
