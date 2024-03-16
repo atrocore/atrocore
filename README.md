@@ -82,12 +82,6 @@ It uses:
 
 AtroCore has a REST API and can be integrated with any third-party system. You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
 
-### Ressources
-
-- Please visit our Help Center: https://help.atrocore.com/
-- Read our Release Notes: https://help.atrocore.com/release-notes/core
-- Please visit our Community: https://community.atrocore.com
-
 ### Requirements
 
 * Dedicated (virtual) Linux-based server with root permissions. 
@@ -113,5 +107,7 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 ### Support
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
-- Ask the Community - https://github.com/atrocore/atrocore/discussions
+- Please visit our Help Center: https://help.atrocore.com/
+- Read our Release Notes: https://help.atrocore.com/release-notes/core
+- Please visit our Community: https://community.atrocore.com
 - Сontact us - https://atrocore.com/contact
