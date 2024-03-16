@@ -82,13 +82,11 @@ It uses:
 
 AtroCore has a REST API and can be integrated with any third-party system. You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
 
-### Documentation
+### Ressources
 
 - Please visit our Help Center: https://help.atrocore.com/
-
-### Release Notes
-
 - Please visit our Help Center: https://help.atrocore.com/release-notes/core
+- Please visit our Community: https://community.atrocore.com
 
 ### Requirements
 
