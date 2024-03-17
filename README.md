@@ -1,4 +1,4 @@
-![logo](_assets/AtroCore_logo_color_248.png)
+![Logo](_assets/atrocore-logo.svg)
 
 ## What Is AtroCore? 
 
