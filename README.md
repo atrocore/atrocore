@@ -38,7 +38,7 @@ The following full-fledged software products are already available on the AtroCo
 * [AtroPIM (Product Information Management)](https://github.com/atrocore/atropim)
 
 
-### What is on Board?
+## What is on Board?
 
 Here is a AtroCore package description in detail:
 
@@ -61,7 +61,18 @@ Here is a AtroCore package description in detail:
 | Permissions and access Management  | Enterprise Level ACL based on Teams and Roles, with access level (own, team, all). You can edit permissions even for each field separately. |
 | REST API                           | Integrate it with any third-party software, fully automated. |
 
-### What Are the Advantages of Using It?
+
+## Technologies
+![image](https://github.com/atrocore/atrocore/assets/33658481/26686fdb-ae04-4664-9230-ed37a6066e3d)
+
+
+### Integrations
+
+AtroCore has a REST API and can be integrated with any third-party system. 
+You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
+We offer automated integrations with a lot of systems as a paid functionality.
+
+## What Are the Advantages of Using It?
 
 * Really quick time-to-market and low implementation costs
 * Configurable (entities, relations, layouts, labels, navigation)
@@ -76,17 +87,7 @@ Here is a AtroCore package description in detail:
 * Easy to maintain and support
 *	Powerful export and import functionality (additional free modules are needed)
 
-### Technologies
-![image](https://github.com/atrocore/atrocore/assets/33658481/26686fdb-ae04-4664-9230-ed37a6066e3d)
-
-
-### Integrations
-
-AtroCore has a REST API and can be integrated with any third-party system. 
-You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
-We offer automated integrations with a lot of systems as a paid functionality.
-
-### Requirements
+## Requirements
 
 * Dedicated (virtual) Linux-based server with root permissions. 
 * Ubuntu as Operating System is recommended but not required.
@@ -95,11 +96,11 @@ We offer automated integrations with a lot of systems as a paid functionality.
 
 > Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
 
-### Installation
+## Installation
 
 Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
-### Demo
+## Demo
 > This is a Demo with PIM module installed.
 - URL: https://demo.atropim.com/
 - Login: admin
@@ -109,7 +110,7 @@ Installation Guide is available [here](https://help.atrocore.com/installation-an
 
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
-### Ressources
+## Ressources
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
 - Please visit our Help Center: https://help.atrocore.com/
