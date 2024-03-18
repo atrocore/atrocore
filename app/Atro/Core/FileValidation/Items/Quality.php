@@ -15,28 +15,22 @@ namespace Atro\Core\FileValidation\Items;
 
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 
 class Quality extends Base
 {
-    /**
-     * @return bool
-     * @throws \ImagickException
-     */
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        $img = new \Imagick($this->getFilePath());
+        $img = new \Imagick($file->getFilePath());
         $quality = $img->getImageCompressionQuality();
 
         if ($img->getImageMimeType() !== "image/jpeg") {
             return true;
         }
 
-        return $quality >= $this->params['min'] && $quality <= $this->params['max'];
+        return $quality >= $this->rule->get('min') && $quality <= $this->rule->get('max');
     }
 
-    /**
-     * @throws BadRequest
-     */
     public function onValidateFail()
     {
         throw new BadRequest(sprintf($this->exception('imageQualityValidationFailed'), $this->params['min'], $this->params['max']));
