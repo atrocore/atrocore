@@ -6,11 +6,6 @@
       "default": false
     },
     {
-      "name": "assetType",
-      "type": "enum",
-      "view": "views/admin/field-manager/fields/asset-types"
-    },
-    {
       "name": "previewSize",
       "type": "enum",
       "default": "small",

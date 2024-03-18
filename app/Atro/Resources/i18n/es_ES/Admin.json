@@ -154,7 +154,6 @@
     "maxFileSize": "Tamaño máximo de archivo (MB)",
     "isMultilang": "Multilingual",
     "fontSize": "Font-Size",
-    "assetType": "Asset Type",
     "currentUserAsDefault": "Set current user as default value",
     "isPersonalData": "Is Personal Data",
     "useIframe": "Use Iframe",

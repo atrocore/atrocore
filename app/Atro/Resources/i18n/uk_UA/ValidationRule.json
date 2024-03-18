@@ -2,7 +2,6 @@
   "fields": {
     "validateBy": "Перевірено",
     "isActive": "Активний",
-    "assetType": "Тип асету",
     "type": "Тип",
     "ratio": "Співвідношення",
     "pattern": "Шаблон",
@@ -14,9 +13,6 @@
     "minHeight": "Висота",
     "extension": "Розширення",
     "mimeList": "Список"
-  },
-  "links": {
-    "assetType": "Тип асету"
   },
   "labels": {
     "Create ValidationRule": "Створити правило перевірки",

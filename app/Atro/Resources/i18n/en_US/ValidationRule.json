@@ -2,7 +2,6 @@
   "fields": {
     "validateBy": "Validate By",
     "isActive": "Active",
-    "assetType": "Asset Type",
     "type": "Type",
     "ratio": "Ratio",
     "pattern": "Pattern",
@@ -14,9 +13,6 @@
     "minHeight": "Height",
     "extension": "Extension",
     "mimeList": "List"
-  },
-  "links": {
-    "assetType": "Asset Type"
   },
   "labels": {
     "Create ValidationRule": "Create Validation Rule",

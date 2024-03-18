@@ -2,7 +2,6 @@
   "fields": {
     "validateBy": "Validieren durch",
     "isActive": "Aktiv",
-    "assetType": "Asset-Typ",
     "type": "Typ",
     "ratio": "Seitenverhältnis",
     "pattern": "Muster",
@@ -14,9 +13,6 @@
     "minHeight": "Höhe",
     "extension": "Erweiterung",
     "mimeList": "Liste"
-  },
-  "links": {
-    "assetType": "Asset-Typ"
   },
   "labels": {
     "Create ValidationRule": "Validierungsregel erstellen",
