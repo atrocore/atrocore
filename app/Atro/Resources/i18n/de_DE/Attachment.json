@@ -25,7 +25,6 @@
   },
   "exceptions": {
     "fileUploadingFailed": "Hochladen der Datei ist fehlgeschlagen.",
-    "chunkUploadFailed": "Fehler aufgetreten, bitte erneut hochladen.",
-    "invalidFileExtension": "Das Hochladen von Dateien mit der Erweiterung '.%s' ist verboten. Bitte wenden Sie sich an Ihren Administrator, um es zu erlauben."
+    "chunkUploadFailed": "Fehler aufgetreten, bitte erneut hochladen."
   }
 }

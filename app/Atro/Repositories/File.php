@@ -52,11 +52,6 @@ class File extends Base
                 }
             }
         } else {
-            $fileExtension = pathinfo($entity->get('name'), PATHINFO_EXTENSION);
-            if (empty($options['scanning']) && !in_array(strtolower($fileExtension), $this->getConfig()->get('whitelistedExtensions'))) {
-                throw new BadRequest(sprintf($this->getInjection('language')->translate('invalidFileExtension', 'exceptions', 'File'), $fileExtension));
-            }
-
             // create origin file
             if (empty($options['scanning']) && !$this->getStorage($entity)->create($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));

@@ -210,18 +210,6 @@
       "tooltip": false,
       "filterDisabled": true
     },
-    "type": {
-      "type": "multiEnum",
-      "required": false,
-      "fontSize": 1,
-      "options": [],
-      "isSorted": false,
-      "audited": false,
-      "readOnly": false,
-      "tooltip": false,
-      "prohibitedEmptyValue": true,
-      "emHidden": true
-    },
     "file": {
       "type": "file",
       "required": true,

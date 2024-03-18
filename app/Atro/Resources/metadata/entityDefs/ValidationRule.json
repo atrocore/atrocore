@@ -29,9 +29,6 @@
       "readOnly": false,
       "tooltip": false
     },
-    "assetType": {
-      "type": "link"
-    },
     "fileType": {
       "type": "link"
     },
@@ -199,12 +196,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "assetType": {
-      "type": "belongsTo",
-      "foreign": "validationRules",
-      "entity": "AssetType",
-      "audited": false
     },
     "fileType": {
       "type": "belongsTo",
