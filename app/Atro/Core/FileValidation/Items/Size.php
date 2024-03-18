@@ -15,13 +15,14 @@ namespace Atro\Core\FileValidation\Items;
 
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 
 class Size extends Base
 {
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        $imageSize = (filesize($this->file->getFilePath()) / 1024);
-        if ($imageSize >= $this->validationRule->get('min') && $imageSize <= $this->validationRule->get('max')) {
+        $imageSize = (filesize($file->getFilePath()) / 1024);
+        if ($imageSize >= $this->rule->get('min') && $imageSize <= $this->rule->get('max')) {
             return true;
         }
 
@@ -30,6 +31,6 @@ class Size extends Base
 
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('imageSizeValidationFailed'), $this->params['min'], $this->params['max']));
+        throw new BadRequest(sprintf($this->exception('imageSizeValidationFailed'), $this->rule->get('min'), $this->rule->get('max')));
     }
 }

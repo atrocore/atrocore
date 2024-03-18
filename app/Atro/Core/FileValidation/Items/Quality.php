@@ -33,6 +33,6 @@ class Quality extends Base
 
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('imageQualityValidationFailed'), $this->params['min'], $this->params['max']));
+        throw new BadRequest(sprintf($this->exception('imageQualityValidationFailed'), $this->rule->get('min'), $this->rule->get('max')));
     }
 }

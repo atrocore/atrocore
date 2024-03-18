@@ -28,6 +28,6 @@ class ColorDepth extends Base
 
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('colorDepthValidationFailed'), implode(", ", $this->params)));
+        throw new BadRequest(sprintf($this->exception('colorDepthValidationFailed'), implode(", ", $this->rule->get('colorDepth'))));
     }
 }

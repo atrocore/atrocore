@@ -45,7 +45,7 @@ class ColorSpace extends Base
 
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('colorSpaceValidationFailed'), implode(", ", $this->params)));
+        throw new BadRequest(sprintf($this->exception('colorSpaceValidationFailed'), implode(", ", $this->rule->get('colorSpace'))));
     }
 
     /**
