@@ -79,7 +79,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                     'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
                     'fileSize'  => filesize($fileName),
                     'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
-                    'hash'      => md5_file($fileName),
+                    'hash'      => $this->getFileManager()->md5File($fileName),
                     'mimeType'  => mime_content_type($fileName),
                     'storageId' => $storage->get('id'),
                     '_fileName' => $fileName
@@ -203,9 +203,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
             if (file_put_contents($fileName, self::parseInputFileContent($input->fileContents))) {
                 $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
-                $file->set('hash', md5_file($fileName));
                 $file->set('mimeType', mime_content_type($fileName));
                 $file->set('fileSize', filesize($fileName));
+                $file->set('hash', $this->getFileManager()->md5File($fileName));
 
                 $xattr = new Xattr();
                 $xattr->set($fileName, 'atroId', $file->id);
@@ -235,9 +235,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             fclose($f);
 
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
-            $file->set('hash', md5_file($fileName));
-            $file->set('mimeType', mime_content_type($fileName));
             $file->set('fileSize', filesize($fileName));
+            $file->set('mimeType', mime_content_type($fileName));
+            $file->set('hash', $this->getFileManager()->md5File($fileName));
 
             $xattr = new Xattr();
             $xattr->set($fileName, 'atroId', $file->id);

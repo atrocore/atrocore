@@ -18,9 +18,42 @@ use Espo\Core\Utils\File\Manager;
 
 class FileManager extends Manager
 {
+    /**
+     * Chunk size in bytes
+     */
+    private int $chunkSize;
+
     public function __construct(Container $container)
     {
         parent::__construct($container->get('config'));
+
+        $this->chunkSize = $container->get('config')->get('md5FileChunkSize', 2 * (1024 * 1024));
+    }
+
+    public function md5File(string $fileName): ?string
+    {
+        if (!file_exists($fileName)) {
+            return null;
+        }
+
+        if (filesize($fileName) < $this->chunkSize) {
+            return md5_file($fileName);
+        }
+
+        $handle = fopen($fileName, 'rb');
+        if (!$handle) {
+            return null;
+        }
+
+        $context = hash_init('md5');
+        while (!feof($handle)) {
+            $chunk = fread($handle, $this->chunkSize);
+            hash_update($context, $chunk);
+        }
+        $result = hash_final($context);
+        fclose($handle);
+
+        return $result;
     }
 
     public function getFileDir(string $path): string

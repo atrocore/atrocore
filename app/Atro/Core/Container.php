@@ -44,6 +44,7 @@ class Container
             Connection::class          => \Atro\Core\Factories\Connection::class,
             'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
             'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
+            'chatgpt'                  => \Atro\Core\ChatGpt\ChatGptClient::class,
             'configManager'            => \Atro\Core\ConfigManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
@@ -85,8 +86,7 @@ class Container
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'config'                   => \Espo\Core\Utils\Config::class,
-            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
-            'chatgpt'                  => \Atro\Core\ChatGpt\ChatGptClient::class
+            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class
         ];
 
     public function __construct()
