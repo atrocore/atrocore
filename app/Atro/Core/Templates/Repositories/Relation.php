@@ -52,15 +52,15 @@ class Relation extends RDB
         }
 
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
-        $qb->delete($this->getEntityManager()->getConnection()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityType())), 't2');
-        $qb->where('t2.deleted = :true');
+        $qb->delete($this->getEntityManager()->getConnection()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityType())));
+        $qb->where('deleted = :true');
         $qb->setParameter("true", true, ParameterType::BOOLEAN);
         foreach ($uniqueColumns as $column) {
             if ($column === 'deleted') {
                 continue;
             }
             $value = $entity->get(Util::toCamelCase($column));
-            $qb->andWhere("t2.{$column} = :{$column}_val");
+            $qb->andWhere("$column = :{$column}_val");
             $qb->setParameter("{$column}_val", $value, Mapper::getParameterType($value));
         }
         $qb->executeQuery();
