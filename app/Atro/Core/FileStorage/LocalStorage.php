@@ -199,10 +199,14 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
             $fileName = $this->getLocalPath($file);
 
-            if ($this->getFileManager()->putContents($fileName, self::parseInputFileContent($input->fileContents))) {
+            // create folders for new file
+            $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
+
+            if (file_put_contents($fileName, self::parseInputFileContent($input->fileContents))) {
                 $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
                 $file->set('hash', md5_file($fileName));
                 $file->set('mimeType', mime_content_type($fileName));
+                $file->set('fileSize', filesize($fileName));
 
                 $xattr = new Xattr();
                 $xattr->set($fileName, 'atroId', $file->id);
@@ -221,18 +225,20 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
             $chunkDirPath = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
 
-            // create file from chunks
-            $this->getFileManager()->putContents($fileName, '');
+            // create folders for new file
+            $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
+
+            // create file via chunks
             $f = fopen($fileName, 'a+');
             foreach ($input->allChunks as $chunk) {
-                if (file_exists($chunkDirPath . DIRECTORY_SEPARATOR . $chunk)) {
-                    fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
-                }
+                fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
             }
+            fclose($f);
 
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
             $file->set('hash', md5_file($fileName));
             $file->set('mimeType', mime_content_type($fileName));
+            $file->set('fileSize', filesize($fileName));
 
             $xattr = new Xattr();
             $xattr->set($fileName, 'atroId', $file->id);
@@ -255,30 +261,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
      */
     public function createChunk(\stdClass $input, Storage $storage): array
     {
-        $chunksDir = $this->getChunksDir($storage);
-
-        // remove old chunks
-        $checkDate = (new \DateTime())->modify('-1 day');
-        foreach ($this->getFileManager()->scanDir($chunksDir) as $chunkId) {
-            $path = $chunksDir . '/' . $chunkId;
-            foreach ($this->getFileManager()->scanDir($path) as $timestamp) {
-                if ($timestamp < $checkDate->getTimestamp()) {
-                    $this->getFileManager()->removeAllInDir($path);
-                    break;
-                }
-            }
-        }
-
-        $path = $chunksDir . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
-        if (!file_exists($path)) {
-            $path .= '/' . time();
-            $this->getFileManager()->mkdir($path, 0777, true);
-        } else {
-            foreach ($this->getFileManager()->scanDir($path) as $dir) {
-                $path .= '/' . $dir;
-                break;
-            }
-        }
+        $path = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
 
         $this->getFileManager()->putContents($path . DIRECTORY_SEPARATOR . $input->start, self::parseInputFileContent($input->piece));
 
