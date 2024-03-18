@@ -66,82 +66,30 @@ class File extends Base
 
         // validate via type
         if ($entity->isAttributeChanged('typeId') && !empty($entity->get('typeId'))) {
-            foreach ($this->getValidators($entity) as $validator) {
-                if (!$validator->validate()) {
-                    $validator->onValidateFail();
-                }
-            }
+            $this->validateFile($entity, true);
         }
     }
 
-    /**
-     * @param File $entity
-     *
-     * @return \Atro\Core\FileValidation\Base[]
-     */
-    public function getValidators(File $entity): array
+    public function validateFile(File $entity, bool $error): bool
     {
-        $result = [];
+        foreach ($entity->get('validationRules') as $rule) {
+            if (empty($rule->get('isActive'))) {
+                continue;
+            }
 
-        $validations = $entity->get('validationRules');
-        if ($validations->count() > 0) {
-            foreach ($validations as $validation) {
-                if (empty($validation->get('isActive'))) {
-                    continue 1;
+            $type = Util::toCamelCase(strtolower(str_replace(' ', '_', $rule->get('type'))));
+            $className = "\\Atro\\Core\\FileValidation\\Items\\" . ucfirst($type);
+
+            $validator = new $className($this->getInjection('container'), $rule);
+            if (!$validator->validate($entity)) {
+                if ($error) {
+                    $validator->onValidateFail();
                 }
-
-                $type = Util::toCamelCase(strtolower(str_replace(' ', '_', $validation->get('type'))));
-
-                $data = [];
-                switch ($type) {
-                    case 'mime':
-                        if ($validation->get('validateBy') == 'List') {
-                            $data['list'] = $validation->get('mimeList');
-                        } elseif ($validation->get('validateBy') == 'Pattern') {
-                            $data['pattern'] = $validation->get('pattern');
-                        }
-                        break;
-                    case 'size':
-                        $data['private'] = [
-                            'min' => $validation->get('min'),
-                            'max' => $validation->get('max'),
-                        ];
-                        $data['public'] = [
-                            'min' => $validation->get('min'),
-                            'max' => $validation->get('max'),
-                        ];
-                        break;
-                    case 'quality':
-                        $data['min'] = $validation->get('min');
-                        $data['max'] = $validation->get('max');
-                        break;
-                    case 'colorDepth':
-                        $data = $validation->get('colorDepth');
-                        break;
-                    case 'colorSpace':
-                        $data = $validation->get('colorSpace');
-                        break;
-                    case 'extension':
-                        $data = $validation->get('extension');
-                        break;
-                    case 'ratio':
-                        $data = $validation->get('ratio');
-                        break;
-                    case 'scale':
-                        $data['min'] = [
-                            'width'  => $validation->get('minWidth'),
-                            'height' => $validation->get('minHeight'),
-                        ];
-                        break;
-                }
-
-                $className = "\\Atro\\Core\\FileValidation\\Items\\" . ucfirst($type);
-
-                $result[] = new $className($this->getInjection('container'), $entity, ($data['private'] ?? $data));
+                return false;
             }
         }
 
-        return $result;
+        return true;
     }
 
     public function prepareThumbnailsPath(FileEntity $file): void
