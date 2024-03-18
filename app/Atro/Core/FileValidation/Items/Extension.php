@@ -26,6 +26,6 @@ class Extension extends Base
 
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('fileExtensionValidationFailed'), implode(", ", $this->params)));
+        throw new BadRequest(sprintf($this->exception('fileExtensionValidationFailed'), implode(", ", $this->rule->get('extension'))));
     }
 }
