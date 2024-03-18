@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Espo\Core\EventManager\Event;
-use  Atro\Core\Exceptions\Error;
-use  Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Relation;
 use Atro\ActionTypes\TypeInterface;
 

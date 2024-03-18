@@ -35,8 +35,8 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
-use  Atro\Core\Exceptions\BadRequest;
-use  Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 

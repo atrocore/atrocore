@@ -36,8 +36,8 @@ declare(strict_types=1);
 namespace Espo\Repositories;
 
 use Doctrine\DBAL\ParameterType;
-use  Atro\Core\Exceptions\BadRequest;
-use  Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Util;
 use Espo\Jobs\UpdateCurrencyExchangeViaECB;

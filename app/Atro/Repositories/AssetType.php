@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use  Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 

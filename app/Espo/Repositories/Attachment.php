@@ -35,10 +35,9 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
-use Atro\Core\AssetValidator;
 use Atro\Core\PseudoTransactionManager;
-use  Atro\Core\Exceptions\BadRequest;
-use  Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\FilePathBuilder;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Config;
@@ -107,14 +106,6 @@ class Attachment extends RDB
             }
 
             $asset->set('type', [$type]);
-            if (!$skipValidation) {
-                try {
-                    $this->getInjection(AssetValidator::class)->validate($asset);
-                } catch (Throwable $exception) {
-                    $this->getEntityManager()->removeEntity($attachment);
-                    throw $exception;
-                }
-            }
         }
 
         $this->getEntityManager()->saveEntity($asset);
@@ -334,7 +325,6 @@ class Attachment extends RDB
         $this->addDependency('filePathBuilder');
         $this->addDependency('fileManager');
         $this->addDependency('thumbnail');
-        $this->addDependency(AssetValidator::class);
         $this->addDependency('pseudoTransactionManager');
     }
 

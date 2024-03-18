@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use  Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
 

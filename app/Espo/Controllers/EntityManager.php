@@ -33,9 +33,9 @@
 
 namespace Espo\Controllers;
 
-use  Atro\Core\Exceptions\BadRequest;
-use  Atro\Core\Exceptions\Forbidden;
-use  Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 

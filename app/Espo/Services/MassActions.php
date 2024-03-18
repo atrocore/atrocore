@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use  Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\HasContainer;
 use Espo\Core\Utils\Metadata;
 

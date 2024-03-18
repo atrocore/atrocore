@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Templates\Controllers\Base;
-use  Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\Forbidden;
 
 /**
  * Class AssetType

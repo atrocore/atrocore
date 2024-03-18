@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\AssetValidator;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\ORM\DB\RDB\Mapper;
-use  Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class Asset extends Hierarchy
@@ -24,14 +23,6 @@ class Asset extends Hierarchy
     public function getPossibleTypes(Entity $attachment): array
     {
         $types = [];
-        foreach ($this->getMetadata()->get(['entityDefs', 'Asset', 'fields', 'type', 'assignAutomatically'], []) as $assetType) {
-            try {
-                $this->getInjection(AssetValidator::class)->validateViaTypes([$assetType], $attachment);
-                $types[] = $assetType;
-            } catch (\Throwable $e) {
-                // ignore validation error
-            }
-        }
 
         return $types;
     }
@@ -190,7 +181,6 @@ class Asset extends Hierarchy
     {
         parent::init();
 
-        $this->addDependency(AssetValidator::class);
         $this->addDependency('serviceFactory');
         $this->addDependency('language');
     }

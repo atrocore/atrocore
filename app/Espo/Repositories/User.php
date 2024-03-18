@@ -35,7 +35,7 @@ namespace Espo\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\AclManager;
-use  Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use \Espo\ORM\Entity;
 
 use \ Atro\Core\Exceptions\Error;

@@ -33,8 +33,8 @@
 
 namespace Espo\Controllers;
 
-use  Atro\Core\Exceptions\BadRequest;
-use  Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Slim\Http\Request;
 
 class ScheduledJob extends \Espo\Core\Controllers\Record

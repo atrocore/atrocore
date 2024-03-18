@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\AssetValidator;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
@@ -21,7 +20,6 @@ use Atro\Core\FileValidator;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\FilePathBuilder;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Atro\Core\Utils\Thumbnail;
 

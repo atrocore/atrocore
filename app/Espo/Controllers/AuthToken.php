@@ -34,7 +34,7 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Controllers\Record;
-use  Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\Forbidden;
 
 class AuthToken extends Record
 {

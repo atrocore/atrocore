@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\AssetValidator;
 use Atro\Core\Templates\Services\Hierarchy;
 use Atro\Core\ConfigManager;
-use  Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Log;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -94,49 +93,6 @@ class Asset extends Hierarchy
         return parent::isEntityUpdated($entity, $data);
     }
 
-    public function recheckAssetTypes(array $data): void
-    {
-        if (empty($data['assetId'])) {
-            return;
-        }
-
-        try {
-            $asset = $this->getEntity($data['assetId']);
-        } catch (\Throwable $e) {
-            return;
-        }
-
-        $attachment = $asset->get('file');
-        if (empty($attachment)) {
-            return;
-        }
-
-        $typesToExclude = [];
-        foreach ($asset->get('type') as $type) {
-            try {
-                $this->getInjection(AssetValidator::class)->validateViaType((string)$type, clone $attachment);
-            } catch (\Throwable $e) {
-                $typesToExclude[] = $type;
-            }
-        }
-
-        if (!empty($typesToExclude)) {
-            $filteredTypes = [];
-            foreach ($asset->get('type') as $type) {
-                if (!in_array($type, $typesToExclude)) {
-                    $filteredTypes[] = $type;
-                }
-            }
-
-            if (empty($filteredTypes)) {
-                $filteredTypes = ['File'];
-            }
-
-            $asset->set('type', $filteredTypes);
-            $this->getEntityManager()->saveEntity($asset, ['skipAll' => true]);
-        }
-    }
-
     /**
      * @inheritDoc
      */
@@ -184,27 +140,6 @@ class Asset extends Hierarchy
         }
 
         return parent::createEntity($data);
-    }
-
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        $this->validateAttachment($entity, $data);
-        parent::beforeCreateEntity($entity, $data);
-    }
-
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        $this->validateAttachment($entity, $data);
-        parent::beforeUpdateEntity($entity, $data);
-    }
-
-    protected function validateAttachment($entity, $data)
-    {
-        if (!empty($entity->get('fileId')) && property_exists($data, 'type')) {
-            $this->getInjection(AssetValidator::class)->validateViaTypes(
-                $this->getTypeValue($data->type), $this->getEntityManager()->getEntity('Attachment', $entity->get('fileId'))
-            );
-        }
     }
 
     public function getTypeValue($type)
@@ -323,7 +258,6 @@ class Asset extends Hierarchy
         $this->addDependency('log');
         $this->addDependency('eventManager');
         $this->addDependency('queueManager');
-        $this->addDependency(AssetValidator::class);
     }
 
     /**

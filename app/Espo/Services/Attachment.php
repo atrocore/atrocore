@@ -33,12 +33,10 @@
 
 namespace Espo\Services;
 
-use Atro\Core\AssetValidator;
-use Atro\Core\Exceptions\SuchAssetAlreadyExists;
 use Doctrine\DBAL\ParameterType;
-use  Atro\Core\Exceptions\BadRequest;
-use  Atro\Core\Exceptions\Error;
-use  Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Core\FilePathBuilder;
@@ -242,7 +240,6 @@ class Attachment extends Record
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
         if ($this->attachmentHasAsset($attachment)) {
-            $this->validateAttachment($entity, $attachment);
             $this->createAsset($entity, $attachment);
         }
 
@@ -434,10 +431,6 @@ class Attachment extends Record
         $attachment->type = mime_content_type($attachment->fileName);
         $entity = parent::createEntity($attachment);
 
-        if ($validateAttachment) {
-            $this->validateAttachment($entity, $attachment);
-        }
-
         return $entity;
     }
 
@@ -464,38 +457,6 @@ class Attachment extends Record
                 $type = $attachment->modelAttributes->attributeAssetType;
             }
             $this->getRepository()->createAsset($entity, false, $type);
-        }
-    }
-
-    public function validateAttachment(Entity $entity, \stdClass $data): void
-    {
-        $parentType = property_exists($data, 'parentType') ? $data->parentType : '';
-        $relatedType = property_exists($data, 'relatedType') ? $data->relatedType : '';
-        $field = property_exists($data, 'field') ? $data->field : '';
-
-        if (($parentType === 'Asset' || $relatedType === 'Asset') && in_array($field, ['file', 'files']) && !empty($asset = $entity->getAsset())) {
-            throw (new SuchAssetAlreadyExists($this->getInjection('language')->translate('suchAssetAlreadyExists', 'exceptions', 'Asset')))->setAsset($asset);
-        }
-
-        $type = $this->getMetadata()->get(['entityDefs', $relatedType, 'fields', $field, 'assetType']);
-        if (!empty($data->modelAttributes->type)) {
-            $type = $data->modelAttributes->type;
-        }
-        if (!empty($data->modelAttributes->attributeAssetType)) {
-            $type = $data->modelAttributes->attributeAssetType;
-        }
-
-        if (!empty($type)) {
-            if (is_string($type)) {
-                $type = [$type];
-            }
-
-            $attachment = clone $entity;
-            if (property_exists($data, 'contents')) {
-                $attachment->set('contents', $data->contents);
-            }
-
-            $this->getInjection(AssetValidator::class)->validateViaTypes($type, $attachment);
         }
     }
 
@@ -596,7 +557,6 @@ class Attachment extends Record
         $this->addDependency('queueManager');
         $this->addDependency('thumbnail');
         $this->addDependency('fileStorageManager');
-        $this->addDependency(AssetValidator::class);
     }
 }
 

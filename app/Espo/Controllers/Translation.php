@@ -35,9 +35,9 @@ namespace Espo\Controllers;
 
 use Atro\Console\AbstractConsole;
 use Atro\Console\RefreshTranslations;
-use  Atro\Core\Exceptions\BadRequest;
-use  Atro\Core\Exceptions\Forbidden;
-use  Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Controllers\Base;
 use Espo\Core\Utils\Language;
 
