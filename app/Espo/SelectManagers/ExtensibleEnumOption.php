@@ -59,7 +59,7 @@ class ExtensibleEnumOption extends Base
         $where =[[
             "type" => "linkedWith",
             "attribute" => "extensibleEnums",
-            "value" => [$this->getBoolFilterParameter('onlyForExtensibleEnum')]
+            "value" => [$extensibleEnumId]
         ]] ;
 
         $this->prepareRelationshipFilterField($where);
