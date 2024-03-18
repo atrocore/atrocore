@@ -12,7 +12,11 @@
     "minWidth": "Width",
     "minHeight": "Height",
     "extension": "Extension",
-    "mimeList": "List"
+    "mimeList": "List",
+    "fileType": "File Type"
+  },
+  "links": {
+    "fileType": "File Type"
   },
   "labels": {
     "Create ValidationRule": "Create Validation Rule",
