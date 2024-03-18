@@ -16,24 +16,21 @@ namespace Atro\Core\FileValidation;
 use Atro\Entities\File;
 use Atro\Core\Container;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Util;
 use Espo\Core\ORM\EntityManager;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
 abstract class Base
 {
-    /**
-     * @var mixed
-     */
-    protected $params;
-
     protected Container $container;
-    protected File $attachment;
+    protected File $file;
+    protected Entity $validationRule;
 
-    public function __construct(Container $container, File $file, $params)
+    public function __construct(Container $container, File $file, Entity $validationRule)
     {
         $this->container = $container;
-        $this->attachment = $file;
-        $this->params = $params;
+        $this->file = $file;
+        $this->validationRule = $validationRule;
     }
 
     abstract public function validate(): bool;
@@ -50,7 +47,7 @@ abstract class Base
         return $this->getEntityManager()->getRepository($name);
     }
 
-    protected function getUser()
+    protected function getUser(): User
     {
         return $this->container->get('user');
     }
@@ -68,10 +65,5 @@ abstract class Base
     protected function exception(string $label): string
     {
         return $this->translate($label, 'exceptions', 'Global');
-    }
-
-    protected function getFilePath(): string
-    {
-        return $this->attachment->getFilePath();
     }
 }
