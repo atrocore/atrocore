@@ -27,10 +27,6 @@
       "type": "linkMultiple",
       "noLoad": true
     },
-    "isDefault": {
-      "type": "bool",
-      "notNull": true
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

@@ -19,42 +19,8 @@ use Espo\ORM\Entity;
 
 class Storage extends Base
 {
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if ($entity->isAttributeChanged('isDefault') && !$entity->get('isDefault')) {
-            if (empty($this->where(['isDefault' => true, 'id!=' => $entity->get('id')])->findOne())) {
-                throw new BadRequest($this->translate('onlyOneDefaultStorageAllowed', 'exceptions', 'Storage'));
-            }
-        }
-
-        parent::beforeSave($entity, $options);
-    }
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        if ($entity->isAttributeChanged('isDefault') && $entity->get('isDefault')) {
-            $collection = $this
-                ->select(['id'])
-                ->where([
-                    'isDefault' => true,
-                    'id!='      => $entity->get('id')
-                ])
-                ->find();
-            foreach ($collection as $e) {
-                $e->set('isDefault', false);
-                $this->getEntityManager()->saveEntity($e);
-            }
-        }
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        if ($entity->get('isDefault')) {
-            throw new BadRequest('Default storage can not be deleted.');
-        }
-
         $e = $this->getEntityManager()->getRepository('File')
             ->select(['id'])
             ->where([

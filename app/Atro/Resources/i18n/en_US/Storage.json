@@ -2,8 +2,7 @@
   "fields": {
     "type": "Type",
     "path": "Path",
-    "files": "Files",
-    "isDefault": "Default"
+    "files": "Files"
   },
   "links": {
     "files": "Files"
@@ -17,7 +16,6 @@
     "Create Storage": "Create Storage"
   },
   "exceptions": {
-    "onlyOneDefaultStorageAllowed": "Please mark another Storage as the default.",
     "storageWithFilesCannotBeRemoved": "Deletion is not allowed. There are files that belong to this Storage."
   }
 }
