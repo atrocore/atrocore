@@ -17,6 +17,7 @@ use Atro\Core\AssetValidator;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
+use Atro\Core\FileValidator;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\FilePathBuilder;
@@ -66,32 +67,8 @@ class File extends Base
 
         // validate via type
         if ($entity->isAttributeChanged('typeId') && !empty($entity->get('typeId'))) {
-            $this->validateFile($entity, true);
+            $this->getInjection('container')->get(FileValidator::class)->validateFile($entity, true);
         }
-    }
-
-    public function validateFile(FileEntity $entity, bool $error): bool
-    {
-        $fileType = $this->getEntityManager()->getRepository('FileType')->get($entity->get('typeId'));
-
-        foreach ($fileType->get('validationRules') as $rule) {
-            if (empty($rule->get('isActive'))) {
-                continue;
-            }
-
-            $type = Util::toCamelCase(strtolower(str_replace(' ', '_', $rule->get('type'))));
-            $className = "\\Atro\\Core\\FileValidation\\Items\\" . ucfirst($type);
-
-            $validator = new $className($this->getInjection('container'), $rule);
-            if (!$validator->validate($entity)) {
-                if ($error) {
-                    $validator->onValidateFail();
-                }
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public function prepareThumbnailsPath(FileEntity $file): void
