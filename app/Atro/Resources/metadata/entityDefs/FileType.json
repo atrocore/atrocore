@@ -5,6 +5,14 @@
       "required": true,
       "trim": true
     },
+    "assignAutomatically": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "sortOrder": {
+      "type": "int"
+    },
     "files": {
       "type": "linkMultiple",
       "noLoad": true

@@ -2,5 +2,11 @@
   {
     "name": "name",
     "link": true
+  },
+  {
+    "name": "assignAutomatically"
+  },
+  {
+    "name": "sortOrder"
   }
 ]

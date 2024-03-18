@@ -1,6 +1,8 @@
 {
   "fields": {
-    "validationRules": "Validation rules"
+    "validationRules": "Validation rules",
+    "sortOrder": "Sort order",
+    "assignAutomatically": "Assign automatically"
   },
   "links": {
     "validationRules": "Validation rules"

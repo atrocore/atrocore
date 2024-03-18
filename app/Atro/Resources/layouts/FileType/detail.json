@@ -6,6 +6,14 @@
           "name": "name"
         },
         false
+      ],
+      [
+        {
+          "name": "assignAutomatically"
+        },
+        {
+          "name": "sortOrder"
+        }
       ]
     ],
     "style": "default",
