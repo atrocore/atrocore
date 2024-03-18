@@ -70,9 +70,11 @@ class File extends Base
         }
     }
 
-    public function validateFile(File $entity, bool $error): bool
+    public function validateFile(FileEntity $entity, bool $error): bool
     {
-        foreach ($entity->get('validationRules') as $rule) {
+        $fileType = $this->getEntityManager()->getRepository('FileType')->get($entity->get('typeId'));
+
+        foreach ($fileType->get('validationRules') as $rule) {
             if (empty($rule->get('isActive'))) {
                 continue;
             }
