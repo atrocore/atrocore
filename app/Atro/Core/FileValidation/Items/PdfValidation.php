@@ -11,22 +11,28 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AssetValidation\Items;
+namespace Atro\Core\FileValidation\Items;
 
-use Atro\Core\AssetValidation\Base;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\FileValidation\Base;
+use Atro\Core\Exceptions\BadRequest;
 
-class ColorDepth extends Base
+/**
+ * Class PdfValidation
+ */
+class PdfValidation extends Base
 {
     /**
      * @return bool
-     * @throws \ImagickException
      */
     public function validate(): bool
     {
-        $img = new \Imagick($this->getFilePath());
+        $content = file_get_contents($this->getFilePath());
 
-        return in_array($img->getImageDepth(), $this->params);
+        if (preg_match("/^%PDF-1./", $content)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -34,6 +40,6 @@ class ColorDepth extends Base
      */
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('colorDepthValidationFailed'), implode(", ", $this->params)));
+        throw new BadRequest($this->exception('pdfValidationFailed'));
     }
 }

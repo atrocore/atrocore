@@ -11,22 +11,21 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AssetValidation\Items;
+namespace Atro\Core\FileValidation\Items;
 
-use Atro\Core\AssetValidation\Base;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\FileValidation\Base;
+use Atro\Core\Exceptions\BadRequest;
 
-/**
- * Class Extension
- */
-class Extension extends Base
+class Scale extends Base
 {
     /**
      * @return bool
      */
     public function validate(): bool
     {
-        return in_array(strtolower(pathinfo($this->attachment->get('name'))['extension']), array_map('strtolower', $this->params));
+        list ($width, $height) = getimagesize($this->getFilePath());
+
+        return $width > $this->params['min']['width'] && $height > $this->params['min']['height'];
     }
 
     /**
@@ -34,6 +33,8 @@ class Extension extends Base
      */
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('fileExtensionValidationFailed'), implode(", ", $this->params)));
+        throw new BadRequest(
+            sprintf($this->exception('imageScaleValidationFailed'), $this->params['min']['width'], $this->params['min']['height'])
+        );
     }
 }

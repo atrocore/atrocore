@@ -11,28 +11,22 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AssetValidation\Items;
+namespace Atro\Core\FileValidation\Items;
 
-use Atro\Core\AssetValidation\Base;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\FileValidation\Base;
+use Atro\Core\Exceptions\BadRequest;
 
 /**
- * Class PdfValidation
+ * Class Extension
  */
-class PdfValidation extends Base
+class Extension extends Base
 {
     /**
      * @return bool
      */
     public function validate(): bool
     {
-        $content = file_get_contents($this->getFilePath());
-
-        if (preg_match("/^%PDF-1./", $content)) {
-            return true;
-        }
-
-        return false;
+        return in_array(strtolower(pathinfo($this->attachment->get('name'))['extension']), array_map('strtolower', $this->params));
     }
 
     /**
@@ -40,6 +34,6 @@ class PdfValidation extends Base
      */
     public function onValidateFail()
     {
-        throw new BadRequest($this->exception('pdfValidationFailed'));
+        throw new BadRequest(sprintf($this->exception('fileExtensionValidationFailed'), implode(", ", $this->params)));
     }
 }

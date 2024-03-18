@@ -11,10 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AssetValidation\Items;
+namespace Atro\Core\FileValidation\Items;
 
-use Atro\Core\AssetValidation\Base;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\FileValidation\Base;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 use ReflectionClass;
 use Espo\Core\Container;
 
@@ -25,14 +26,9 @@ class ColorSpace extends Base
      */
     private $map = [];
 
-    /**
-     * ColorSpace constructor.
-     * @param Container $container
-     * @throws \ReflectionException
-     */
-    public function __construct(Container $container)
+    public function __construct(Container $container, File $file, $params)
     {
-        parent::__construct($container);
+        parent::__construct($container, $file, $params);
         $this->map = $this->createMap();
     }
 
@@ -64,7 +60,7 @@ class ColorSpace extends Base
     private function createMap()
     {
         $imagick = new ReflectionClass(\Imagick::class);
-        $res     = [];
+        $res = [];
         foreach ($imagick->getConstants() as $constantName => $constantValue) {
             if (stripos($constantName, "COLORSPACE_") === false) {
                 continue;

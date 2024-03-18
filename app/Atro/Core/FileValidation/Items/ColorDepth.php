@@ -11,21 +11,22 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\AssetValidation\Items;
+namespace Atro\Core\FileValidation\Items;
 
-use Atro\Core\AssetValidation\Base;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\FileValidation\Base;
+use Atro\Core\Exceptions\BadRequest;
 
-class Scale extends Base
+class ColorDepth extends Base
 {
     /**
      * @return bool
+     * @throws \ImagickException
      */
     public function validate(): bool
     {
-        list ($width, $height) = getimagesize($this->getFilePath());
+        $img = new \Imagick($this->getFilePath());
 
-        return $width > $this->params['min']['width'] && $height > $this->params['min']['height'];
+        return in_array($img->getImageDepth(), $this->params);
     }
 
     /**
@@ -33,8 +34,6 @@ class Scale extends Base
      */
     public function onValidateFail()
     {
-        throw new BadRequest(
-            sprintf($this->exception('imageScaleValidationFailed'), $this->params['min']['width'], $this->params['min']['height'])
-        );
+        throw new BadRequest(sprintf($this->exception('colorDepthValidationFailed'), implode(", ", $this->params)));
     }
 }

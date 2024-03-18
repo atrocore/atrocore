@@ -66,13 +66,20 @@ class File extends Base
 
         // validate via type
         if ($entity->isAttributeChanged('typeId') && !empty($entity->get('typeId'))) {
-            foreach ($this->getValidations($entity) as $type => $value) {
-                $this->getInjection('fileValidator')->validate($type, clone $entity, ($value['private'] ?? $value));
+            foreach ($this->getValidators($entity) as $validator) {
+                if (!$validator->validate()) {
+                    $validator->onValidateFail();
+                }
             }
         }
     }
 
-    public function getValidations(File $entity): array
+    /**
+     * @param File $entity
+     *
+     * @return \Atro\Core\FileValidation\Base[]
+     */
+    public function getValidators(File $entity): array
     {
         $result = [];
 
@@ -128,7 +135,9 @@ class File extends Base
                         break;
                 }
 
-                $result[$type] = $data;
+                $className = "\\Atro\\Core\\FileValidation\\Items\\" . ucfirst($type);
+
+                $result[] = new $className($this->getInjection('container'), $entity, ($data['private'] ?? $data));
             }
         }
 
