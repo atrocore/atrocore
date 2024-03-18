@@ -11,6 +11,7 @@
 
 namespace Atro\Migrations;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 
@@ -23,9 +24,14 @@ class V1Dot10Dot0 extends Base
 
     public function up(): void
     {
+        $this->getConfig()->remove('whitelistedExtensions');
+        $this->getConfig()->save();
+
+        $this->updateComposer('atrocore/core', '^1.10.0');
     }
 
     public function down(): void
     {
+        throw new Error('Downgrade is prohibited.');
     }
 }
