@@ -32,6 +32,9 @@
     "assetType": {
       "type": "link"
     },
+    "fileType": {
+      "type": "link"
+    },
     "type": {
       "type": "enum",
       "required": true,
@@ -202,6 +205,11 @@
       "foreign": "validationRules",
       "entity": "AssetType",
       "audited": false
+    },
+    "fileType": {
+      "type": "belongsTo",
+      "foreign": "validationRules",
+      "entity": "FileType"
     }
   },
   "collection": {

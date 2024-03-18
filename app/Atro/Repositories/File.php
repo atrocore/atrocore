@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\AssetValidator;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
@@ -61,6 +62,11 @@ class File extends Base
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
             }
         }
+
+//        // validate via type
+//        if ($entity->isAttributeChanged('typeId') && !empty($entity->get('typeId'))) {
+//            $this->getInjection(AssetValidator::class)->validateViaType((string)$type, $file);
+//        }
     }
 
     public function prepareThumbnailsPath(FileEntity $file): void

@@ -3,9 +3,15 @@
     "name": {
       "type": "varchar",
       "required": true,
-      "unique": true,
-      "trim": true,
-      "isMultilang": true
+      "trim": true
+    },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
+    "validationRules": {
+      "type": "linkMultiple",
+      "noLoad": true
     },
     "createdAt": {
       "type": "datetime",
@@ -24,28 +30,19 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "validationRules": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "noLoad": true,
-      "importDisabled": true
-    },
-    "sortOrder": {
-      "type": "int"
-    },
-    "assignAutomatically": {
-      "type": "bool",
-      "default": false
-    },
-    "typesToExclude": {
-      "type": "array",
-      "tooltip": true,
-      "view": "views/asset-type/fields/types-to-exclude"
     }
   },
   "links": {
+    "files": {
+      "type": "hasMany",
+      "foreign": "type",
+      "entity": "File"
+    },
+    "validationRules": {
+      "type": "hasMany",
+      "foreign": "fileType",
+      "entity": "ValidationRule"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -53,17 +50,11 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "validationRules": {
-      "type": "hasMany",
-      "foreign": "assetType",
-      "entity": "ValidationRule",
-      "audited": false
     }
   },
   "collection": {
-    "sortBy": "sortOrder",
-    "asc": true
+    "sortBy": "createdAt",
+    "asc": false
   },
   "indexes": {
     "name": {
