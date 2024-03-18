@@ -19,8 +19,7 @@ use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
 use Espo\Core\FilePathBuilder;
-use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\FileManager;
 use Espo\ORM\EntityManager;
 
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface

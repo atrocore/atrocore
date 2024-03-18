@@ -28,6 +28,7 @@ class Container
 
     protected array $classAliases
         = [
+            'fileManager'              => \Atro\Core\Utils\FileManager::class,
             'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'thumbnail'                => \Atro\Core\Thumbnail\Image::class,
@@ -75,7 +76,6 @@ class Container
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
             'themeManager'             => \Espo\Core\Factories\ThemeManager::class,
             'pdo'                      => \Espo\Core\Factories\Pdo::class,
-            'fileManager'              => \Espo\Core\Factories\FileManager::class,
             'log'                      => \Espo\Core\Factories\Log::class,
             'defaultLanguage'          => \Espo\Core\Factories\DefaultLanguage::class,
             'baseLanguage'             => \Espo\Core\Factories\BaseLanguage::class,

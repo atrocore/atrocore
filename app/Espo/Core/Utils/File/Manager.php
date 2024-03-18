@@ -60,22 +60,6 @@ class Manager
         return $this->permission;
     }
 
-    public function scanDir(string $dir): array
-    {
-        // prepare result
-        $result = [];
-
-        if (file_exists($dir) && is_dir($dir)) {
-            foreach (scandir($dir) as $item) {
-                if (!in_array($item, ['.', '..'])) {
-                    $result[] = $item;
-                }
-            }
-        }
-
-        return $result;
-    }
-
     /**
      * Get a list of files in specified directory
      *
@@ -553,20 +537,6 @@ class Manager
         return (bool) $result;
     }
 
-    public function removeAllInDir(string $dir): void
-    {
-        if (file_exists($dir) && is_dir($dir)) {
-            foreach ($this->scanDir($dir) as $object) {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
-                    $this->removeAllInDir($dir . DIRECTORY_SEPARATOR . $object);
-                } else {
-                    unlink($dir . DIRECTORY_SEPARATOR . $object);
-                }
-            }
-            rmdir($dir);
-        }
-    }
-
     public function removeDir($dirPaths)
     {
         return $this->rmdir($dirPaths);
@@ -628,14 +598,6 @@ class Manager
         }
 
         return (bool) $result;
-    }
-
-    public function getFileDir(string $path): string
-    {
-        $dirPath = explode(DIRECTORY_SEPARATOR, $path);
-        array_pop($dirPath);
-
-        return implode(DIRECTORY_SEPARATOR, $dirPath);
     }
 
     /**
