@@ -16,8 +16,9 @@ namespace Atro\Core\FileValidation\Items;
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
+use Espo\ORM\Entity;
 use ReflectionClass;
-use Espo\Core\Container;
+use Atro\Core\Container;
 
 class ColorSpace extends Base
 {
@@ -26,28 +27,22 @@ class ColorSpace extends Base
      */
     private $map = [];
 
-    public function __construct(Container $container, File $file, $params)
+    public function __construct(Container $container, Entity $rule)
     {
-        parent::__construct($container, $file, $params);
+        parent::__construct($container, $rule);
+
         $this->map = $this->createMap();
     }
 
-    /**
-     * @return bool
-     * @throws \ImagickException
-     */
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        $img = new \Imagick($this->getFilePath());
+        $img = new \Imagick($file->getFilePath());
 
         $colorSpace = $img->getImageColorspace();
 
-        return in_array($this->map[$colorSpace], $this->params);
+        return in_array($this->map[$colorSpace], $this->rule->get('colorSpace'));
     }
 
-    /**
-     * @throws BadRequest
-     */
     public function onValidateFail()
     {
         throw new BadRequest(sprintf($this->exception('colorSpaceValidationFailed'), implode(", ", $this->params)));
