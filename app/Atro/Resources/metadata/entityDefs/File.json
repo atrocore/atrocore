@@ -110,7 +110,8 @@
       "required": true
     },
     "path": {
-      "type": "text",
+      "type": "varchar",
+      "maxLength": 300,
       "view": "views/fields/varchar",
       "readOnly": true,
       "default": null

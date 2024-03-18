@@ -19,7 +19,7 @@
     },
     "path": {
       "type": "varchar",
-      "maxLength": 260,
+      "maxLength": 300,
       "unique": true,
       "default": "upload/files"
     },
