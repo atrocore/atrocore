@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "validationRules": "Validation rules"
+  },
+  "links": {
+    "validationRules": "Validation rules"
+  },
+  "labels": {
+    "Create FileType": "Create File Type"
+  }
+}

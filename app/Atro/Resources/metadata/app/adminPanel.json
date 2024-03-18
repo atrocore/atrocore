@@ -78,9 +78,9 @@
         "description": "multiLanguagesSettings"
       },
       {
-        "url": "#AssetType",
-        "label": "AssetTypes",
-        "description": "listOfSupportedAssetsTypes"
+        "url": "#FileType",
+        "label": "FileTypes",
+        "description": "listOfSupportedFilesTypes"
       }
     ],
     "order": 0

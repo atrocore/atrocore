@@ -1,6 +1,6 @@
 {
   "labels": {
-    "AssetTypes": "Asset Types",
+    "FileTypes": "File Types",
     "GeneralSetting": "General Settings",
     "UiHandler": "UI Handlers",
     "multiLanguagesSettings": "Languages",
@@ -203,7 +203,7 @@
   },
   "descriptions": {
     "Storage": "Storage descr...",
-    "listOfSupportedAssetsTypes": "List of supported assets types",
+    "listOfSupportedFilesTypes": "List of supported files types",
     "uiHandler": "Manage the behavior of the user interface based on configurable conditional logic.",
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
     "multiLanguagesSettings": "Configure languages to be used.",
