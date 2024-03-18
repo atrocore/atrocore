@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Controllers\Base;
 use Slim\Http\Request;
 

@@ -33,9 +33,9 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use \ Atro\Core\Exceptions\Error;
+use \ Atro\Core\Exceptions\Forbidden;
+use \ Atro\Core\Exceptions\BadRequest;
 
 class Settings extends \Espo\Core\Controllers\Base
 {

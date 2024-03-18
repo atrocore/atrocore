@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\HasContainer;
 use Espo\Core\Utils\Metadata;
 
@@ -404,7 +404,7 @@ class MassActions extends HasContainer
      * @param string $link
      *
      * @return string
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws \ Atro\Core\Exceptions\Error
      */
     protected function getForeignEntityType(string $entityType, string $link): string
     {

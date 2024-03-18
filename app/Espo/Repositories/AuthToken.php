@@ -34,7 +34,7 @@
 namespace Espo\Repositories;
 
 use Espo\Core\ORM\Repositories\RDB;
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Auth;
 use Espo\ORM\Entity;
 

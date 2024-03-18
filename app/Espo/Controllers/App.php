@@ -38,8 +38,8 @@ namespace Espo\Controllers;
 use Atro\Core\QueueManager;
 use Espo\Core\Controllers\Base;
 use Espo\Core\DataManager;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use  Atro\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Auth;
 
 /**

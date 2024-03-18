@@ -16,7 +16,7 @@ namespace Atro\Services;
 use Atro\Core\AssetValidator;
 use Atro\Core\Templates\Services\Hierarchy;
 use Atro\Core\ConfigManager;
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Log;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;

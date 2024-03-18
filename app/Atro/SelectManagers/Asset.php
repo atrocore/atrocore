@@ -16,7 +16,7 @@ namespace Atro\SelectManagers;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use Espo\Core\SelectManagers\Base;
 use Espo\ORM\IEntity;
 

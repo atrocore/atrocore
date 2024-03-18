@@ -33,8 +33,8 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use \ Atro\Core\Exceptions\Forbidden;
+use \ Atro\Core\Exceptions\NotFound;
 
 class DataPrivacy extends \Espo\Core\Services\Base
 {

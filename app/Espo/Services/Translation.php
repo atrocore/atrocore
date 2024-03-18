@@ -34,7 +34,7 @@
 namespace Espo\Services;
 
 use Atro\ORM\DB\RDB\Mapper;
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 

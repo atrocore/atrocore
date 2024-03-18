@@ -16,7 +16,7 @@ namespace Atro\Repositories;
 use Atro\Core\AssetValidator;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\ORM\DB\RDB\Mapper;
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class Asset extends Hierarchy
@@ -94,48 +94,6 @@ class Asset extends Hierarchy
         $file = $this->getEntityManager()->getEntity('Attachment', $entity->get('fileId'));
         if (empty($file)) {
             throw new BadRequest($this->getInjection('language')->translate('noAttachmentExist', 'exceptions', 'Asset'));
-        }
-
-        if (empty($entity->get('type'))) {
-            $possibleTypes = $this->getPossibleTypes($file);
-            if (empty($possibleTypes)) {
-                throw new BadRequest($this->getInjection('language')->translate('noAssetTypeProvided', 'exceptions', 'Asset'));
-            }
-
-            $options = $this->getMetadata()->get(['entityDefs', 'Asset', 'fields', 'type', 'options'], []);
-            $optionsIds = $this->getMetadata()->get(['entityDefs', 'Asset', 'fields', 'type', 'optionsIds'], []);
-
-            $possibleTypesIds = [];
-            foreach ($possibleTypes as $possibleType) {
-                $key = array_search($possibleType, $options);
-                if ($key !== false && isset($optionsIds[$key])) {
-                    $possibleTypesIds[] = $optionsIds[$key];
-                }
-            }
-
-            $entity->set('type', $possibleTypesIds);
-        }
-
-        // validate asset if type changed
-        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-            $typesToExclude = [];
-            foreach ($entity->get('type') as $type) {
-                $this->getInjection(AssetValidator::class)->validateViaType((string)$type, $file);
-                $typesToExclude = array_merge($typesToExclude, $this->getMetadata()->get(['entityDefs', 'Asset', 'fields', 'type', 'typesToExclude', $type], []));
-            }
-
-            if (!empty($typesToExclude)) {
-                $filteredTypes = [];
-                foreach ($entity->get('type') as $type) {
-                    if (!in_array($type, $typesToExclude)) {
-                        $filteredTypes[] = $type;
-                    }
-                }
-                if (empty($filteredTypes)) {
-                    throw new BadRequest($this->getInjection('language')->translate('noAssetTypeProvided', 'exceptions', 'Asset'));
-                }
-                $entity->set('type', $filteredTypes);
-            }
         }
 
         if ($entity->isAttributeChanged('fileId') && !$entity->isAttributeChanged('name')) {

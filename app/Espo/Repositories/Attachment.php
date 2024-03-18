@@ -37,8 +37,8 @@ namespace Espo\Repositories;
 
 use Atro\Core\AssetValidator;
 use Atro\Core\PseudoTransactionManager;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
+use  Atro\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\Error;
 use Espo\Core\FilePathBuilder;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Config;

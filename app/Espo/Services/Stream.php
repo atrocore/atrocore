@@ -36,8 +36,8 @@ namespace Espo\Services;
 use Atro\ORM\DB\RDB\Mapper;
 use Caxy\HtmlDiff\HtmlDiff;
 use Espo\Core\EventManager\Event;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use \ Atro\Core\Exceptions\Forbidden;
+use \ Atro\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
 

@@ -33,8 +33,8 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error,
-    \Espo\Core\Exceptions\Forbidden;
+use \ Atro\Core\Exceptions\Error,
+    \ Atro\Core\Exceptions\Forbidden;
 
 class GlobalSearch extends \Espo\Core\Controllers\Base
 {

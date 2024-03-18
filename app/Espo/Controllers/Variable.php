@@ -36,8 +36,8 @@ declare(strict_types=1);
 namespace Espo\Controllers;
 
 use Espo\Core\Controllers\Base;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use  Atro\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\Forbidden;
 
 class Variable extends Base
 {

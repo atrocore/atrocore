@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
+use  Atro\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\Error;
 use Imagick;
 
 class ImageResize

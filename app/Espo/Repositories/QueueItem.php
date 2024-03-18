@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Services\QueueManagerServiceInterface;

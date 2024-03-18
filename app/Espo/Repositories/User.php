@@ -35,10 +35,10 @@ namespace Espo\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\AclManager;
-use Espo\Core\Exceptions\BadRequest;
+use  Atro\Core\Exceptions\BadRequest;
 use \Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
+use \ Atro\Core\Exceptions\Error;
 
 class User extends \Espo\Core\ORM\Repositories\RDB
 {
