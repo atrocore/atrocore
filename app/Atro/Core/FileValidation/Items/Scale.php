@@ -15,26 +15,19 @@ namespace Atro\Core\FileValidation\Items;
 
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 
 class Scale extends Base
 {
-    /**
-     * @return bool
-     */
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        list ($width, $height) = getimagesize($this->getFilePath());
+        list ($width, $height) = getimagesize($file->getFilePath());
 
-        return $width > $this->params['min']['width'] && $height > $this->params['min']['height'];
+        return $width > $this->rule->get('minWidth') && $height > $this->rule->get('minHeight');
     }
 
-    /**
-     * @throws BadRequest
-     */
     public function onValidateFail()
     {
-        throw new BadRequest(
-            sprintf($this->exception('imageScaleValidationFailed'), $this->params['min']['width'], $this->params['min']['height'])
-        );
+        throw new BadRequest(sprintf($this->exception('imageScaleValidationFailed'), $this->rule->get('minWidth'), $this->rule->get('minHeight')));
     }
 }
