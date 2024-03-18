@@ -18,23 +18,16 @@ use Atro\Core\Exceptions\BadRequest;
 
 class Size extends Base
 {
-    /**
-     * @return bool
-     */
     public function validate(): bool
     {
-        $imageSize = (filesize($this->getFilePath()) / 1024);
-
-        if ($imageSize >= $this->params['min'] && $imageSize <= $this->params['max']) {
+        $imageSize = (filesize($this->file->getFilePath()) / 1024);
+        if ($imageSize >= $this->validationRule->get('min') && $imageSize <= $this->validationRule->get('max')) {
             return true;
         }
 
         return false;
     }
 
-    /**
-     * @throws BadRequest
-     */
     public function onValidateFail()
     {
         throw new BadRequest(sprintf($this->exception('imageSizeValidationFailed'), $this->params['min'], $this->params['max']));
