@@ -60,7 +60,24 @@ class File extends Base
 
         // validate via type
         if ($entity->isAttributeChanged('typeId') && !empty($entity->get('typeId'))) {
-            $this->getInjection('container')->get(FileValidator::class)->validateFile($entity, true);
+            $fileType = $this->getEntityManager()->getRepository('FileType')->get($entity->get('typeId'));
+            $this->getFileValidator()->validateFile($fileType, $entity, true);
+        }
+
+        if ($entity->isNew()) {
+            // assign the file type automatically
+            if (empty($entity->get('typeId'))) {
+                $fileTypes = $this->getEntityManager()->getRepository('FileType')
+                    ->where(['assignAutomatically' => true])
+                    ->order('sortOrder')
+                    ->find();
+                foreach ($fileTypes as $fileType) {
+                    if ($this->getFileValidator()->validateFile($fileType, $entity)) {
+                        $entity->set('typeId', $fileType->get('id'));
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -167,6 +184,11 @@ class File extends Base
     protected function getThumbnail(): Thumbnail
     {
         return $this->getInjection('container')->get(Thumbnail::class);
+    }
+
+    protected function getFileValidator(): FileValidator
+    {
+        return $this->getInjection('container')->get(FileValidator::class);
     }
 
     protected function init()

@@ -15,6 +15,7 @@ namespace Atro\Core;
 
 use Atro\Entities\File as FileEntity;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 class FileValidator
@@ -26,9 +27,9 @@ class FileValidator
         $this->container = $container;
     }
 
-    public function validateFile(FileEntity $entity, bool $error): bool
+    public function validateFile(Entity $fileType, FileEntity $entity, bool $error = false): bool
     {
-        $fileType = $this->getEntityManager()->getRepository('FileType')->get($entity->get('typeId'));
+
 
         foreach ($fileType->get('validationRules') as $rule) {
             if (empty($rule->get('isActive'))) {
