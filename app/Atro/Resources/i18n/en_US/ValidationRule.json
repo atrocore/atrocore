@@ -22,8 +22,5 @@
     "Create ValidationRule": "Create Validation Rule",
     "minSize": "Min, Kb",
     "maxSize": "Max, Kb"
-  },
-  "confirmations": {
-    "recheckAllAssets": "Are you sure you want to change the validation rules? All the related assets will be rechecked and eventually unlinked."
   }
 }
