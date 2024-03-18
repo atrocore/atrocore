@@ -15,18 +15,13 @@ namespace Atro\Core\FileValidation\Items;
 
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 
-/**
- * Class PdfValidation
- */
 class PdfValidation extends Base
 {
-    /**
-     * @return bool
-     */
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        $content = file_get_contents($this->getFilePath());
+        $content = file_get_contents($file->getFilePath());
 
         if (preg_match("/^%PDF-1./", $content)) {
             return true;
@@ -35,9 +30,6 @@ class PdfValidation extends Base
         return false;
     }
 
-    /**
-     * @throws BadRequest
-     */
     public function onValidateFail()
     {
         throw new BadRequest($this->exception('pdfValidationFailed'));
