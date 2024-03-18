@@ -98,7 +98,7 @@ class Migration
         $res = $this->getMigrationsToExecute($module, $from, $to);
         foreach ($res as $row) {
             self::renderLine("Run migration {$row['moduleId']} {$row['version']}");
-            $row['migration']->$row['method']();
+            $row['migration']->{$row['method']}();
         }
 
         return true;
