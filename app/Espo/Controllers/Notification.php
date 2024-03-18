@@ -33,7 +33,7 @@
 
 namespace Espo\Controllers;
 
-use \ Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 
 class Notification extends \Espo\Core\Controllers\Record
 {

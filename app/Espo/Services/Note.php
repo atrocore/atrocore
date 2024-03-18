@@ -33,9 +33,9 @@
 
 namespace Espo\Services;
 
-use \ Atro\Core\Exceptions\Forbidden;
-use \ Atro\Core\Exceptions\NotFound;
-use \ Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
 
 use Espo\ORM\Entity;
 

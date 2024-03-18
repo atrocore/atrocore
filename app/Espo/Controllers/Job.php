@@ -33,8 +33,8 @@
 
 namespace Espo\Controllers;
 
-use \ Atro\Core\Exceptions\Error;
-use \ Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 
 class Job extends \Espo\Core\Controllers\Record
 {

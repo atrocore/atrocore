@@ -35,8 +35,8 @@ namespace Espo\Services;
 
 use Doctrine\DBAL\ParameterType;
 use \Atro\Core\Exceptions\Forbidden;
-use \ Atro\Core\Exceptions\Error;
-use \ Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
 
 class ActionHistoryRecord extends Record
 {
