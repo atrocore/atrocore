@@ -15,24 +15,19 @@ namespace Atro\Core\FileValidation\Items;
 
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 
 class Ratio extends Base
 {
-    /**
-     * @return bool
-     */
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        $imageParams = getimagesize($this->getFilePath());
+        $imageParams = getimagesize($file->getFilePath());
 
-        return ($imageParams[0] / $imageParams[1]) == $this->params;
+        return ($imageParams[0] / $imageParams[1]) == $this->rule->get('ratio');
     }
 
-    /**
-     * @throws BadRequest
-     */
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('imageRatioValidationFailed'), $this->params));
+        throw new BadRequest(sprintf($this->exception('imageRatioValidationFailed'), $this->rule->get('ratio')));
     }
 }
