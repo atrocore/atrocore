@@ -15,17 +15,18 @@ namespace Atro\Core\FileValidation\Items;
 
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 
 class Mime extends Base
 {
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        $mimeType = (string)mime_content_type($this->file->getFilePath());
+        $mimeType = (string)mime_content_type($file->getFilePath());
 
-        if ($this->validationRule->get('validateBy') == 'List') {
-            return in_array($mimeType, $this->validationRule->get('mimeList'));
-        } elseif ($this->validationRule->get('validateBy') == 'Pattern') {
-            return stripos($mimeType, $this->validationRule->get('pattern')) === false ? false : true;
+        if ($this->rule->get('validateBy') == 'List') {
+            return in_array($mimeType, $this->rule->get('mimeList'));
+        } elseif ($this->rule->get('validateBy') == 'Pattern') {
+            return stripos($mimeType, $this->rule->get('pattern')) === false ? false : true;
         }
 
         return true;
