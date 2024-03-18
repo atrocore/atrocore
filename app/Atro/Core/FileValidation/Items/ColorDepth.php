@@ -15,23 +15,17 @@ namespace Atro\Core\FileValidation\Items;
 
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 
 class ColorDepth extends Base
 {
-    /**
-     * @return bool
-     * @throws \ImagickException
-     */
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        $img = new \Imagick($this->getFilePath());
+        $img = new \Imagick($file->getFilePath());
 
-        return in_array($img->getImageDepth(), $this->params);
+        return in_array($img->getImageDepth(), $this->rule->get('colorDepth'));
     }
 
-    /**
-     * @throws BadRequest
-     */
     public function onValidateFail()
     {
         throw new BadRequest(sprintf($this->exception('colorDepthValidationFailed'), implode(", ", $this->params)));
