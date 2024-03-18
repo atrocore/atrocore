@@ -15,23 +15,15 @@ namespace Atro\Core\FileValidation\Items;
 
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Entities\File;
 
-/**
- * Class Extension
- */
 class Extension extends Base
 {
-    /**
-     * @return bool
-     */
-    public function validate(): bool
+    public function validate(File $file): bool
     {
-        return in_array(strtolower(pathinfo($this->attachment->get('name'))['extension']), array_map('strtolower', $this->params));
+        return in_array(strtolower(pathinfo($file->get('name'))['extension']), array_map('strtolower', $this->rule->get('extension')));
     }
 
-    /**
-     * @throws BadRequest
-     */
     public function onValidateFail()
     {
         throw new BadRequest(sprintf($this->exception('fileExtensionValidationFailed'), implode(", ", $this->params)));
