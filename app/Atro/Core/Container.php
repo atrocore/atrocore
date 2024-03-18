@@ -32,7 +32,8 @@ class Container
             'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'thumbnail'                => \Atro\Core\Thumbnail\Image::class,
-            'validator'                => \Atro\Core\AssetValidation\Validator::class,
+            'fileValidator'            => \Atro\Core\AssetValidation\Validator::class,
+            'validator'                => \Atro\Core\AssetValidation\Validator::class, // @todo to delete
             'migration'                => \Atro\Core\Migration\Migration::class,
             'twig'                     => \Atro\Core\Twig\Twig::class,
             'queueManager'             => \Atro\Core\QueueManager::class,

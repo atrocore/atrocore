@@ -20,6 +20,7 @@ use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\FilePathBuilder;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Atro\Core\Utils\Thumbnail;
 
@@ -63,10 +64,75 @@ class File extends Base
             }
         }
 
-//        // validate via type
-//        if ($entity->isAttributeChanged('typeId') && !empty($entity->get('typeId'))) {
-//            $this->getInjection(AssetValidator::class)->validateViaType((string)$type, $file);
-//        }
+        // validate via type
+        if ($entity->isAttributeChanged('typeId') && !empty($entity->get('typeId'))) {
+            foreach ($this->getValidations($entity) as $type => $value) {
+                $this->getInjection('fileValidator')->validate($type, clone $entity, ($value['private'] ?? $value));
+            }
+        }
+    }
+
+    public function getValidations(File $entity): array
+    {
+        $result = [];
+
+        $validations = $entity->get('validationRules');
+        if ($validations->count() > 0) {
+            foreach ($validations as $validation) {
+                if (empty($validation->get('isActive'))) {
+                    continue 1;
+                }
+
+                $type = Util::toCamelCase(strtolower(str_replace(' ', '_', $validation->get('type'))));
+
+                $data = [];
+                switch ($type) {
+                    case 'mime':
+                        if ($validation->get('validateBy') == 'List') {
+                            $data['list'] = $validation->get('mimeList');
+                        } elseif ($validation->get('validateBy') == 'Pattern') {
+                            $data['pattern'] = $validation->get('pattern');
+                        }
+                        break;
+                    case 'size':
+                        $data['private'] = [
+                            'min' => $validation->get('min'),
+                            'max' => $validation->get('max'),
+                        ];
+                        $data['public'] = [
+                            'min' => $validation->get('min'),
+                            'max' => $validation->get('max'),
+                        ];
+                        break;
+                    case 'quality':
+                        $data['min'] = $validation->get('min');
+                        $data['max'] = $validation->get('max');
+                        break;
+                    case 'colorDepth':
+                        $data = $validation->get('colorDepth');
+                        break;
+                    case 'colorSpace':
+                        $data = $validation->get('colorSpace');
+                        break;
+                    case 'extension':
+                        $data = $validation->get('extension');
+                        break;
+                    case 'ratio':
+                        $data = $validation->get('ratio');
+                        break;
+                    case 'scale':
+                        $data['min'] = [
+                            'width'  => $validation->get('minWidth'),
+                            'height' => $validation->get('minHeight'),
+                        ];
+                        break;
+                }
+
+                $result[$type] = $data;
+            }
+        }
+
+        return $result;
     }
 
     public function prepareThumbnailsPath(FileEntity $file): void
@@ -180,5 +246,6 @@ class File extends Base
 
         $this->addDependency('container');
         $this->addDependency('language');
+        $this->addDependency('fileValidator');
     }
 }

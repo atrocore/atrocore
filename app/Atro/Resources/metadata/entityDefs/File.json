@@ -153,7 +153,7 @@
     "type": {
       "type": "belongsTo",
       "foreign": "files",
-      "entity": "AssetType"
+      "entity": "FileType"
     },
     "createdBy": {
       "type": "belongsTo",
