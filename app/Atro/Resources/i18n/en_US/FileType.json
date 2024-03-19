@@ -2,10 +2,12 @@
   "fields": {
     "validationRules": "Validation rules",
     "sortOrder": "Sort order",
-    "assignAutomatically": "Assign automatically"
+    "assignAutomatically": "Assign automatically",
+    "files": "Files"
   },
   "links": {
-    "validationRules": "Validation rules"
+    "validationRules": "Validation rules",
+    "files": "Files"
   },
   "labels": {
     "Create FileType": "Create File Type"

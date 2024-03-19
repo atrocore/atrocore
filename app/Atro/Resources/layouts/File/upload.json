@@ -5,7 +5,9 @@
         {
           "name": "type"
         },
-        false
+        {
+          "name": "private"
+        }
       ],
       [
         {
