@@ -48,6 +48,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
         nameHashName: null,
 
+        pathsDatasName: null,
+
         idsName: null,
 
         nameHash: null,
@@ -55,6 +57,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         foreignScope: null,
 
         showPreviews: true,
+
+        pathsDatas: {},
 
         previewTypeList: [
             'image/jpeg',
@@ -121,7 +125,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 imageIdList.forEach(function (cId) {
                     imageList.push({
                         id: cId,
-                        name: this.nameHash[cId]
+                        name: this.nameHash[cId],
+                        pathsData: this.pathsDatas[cId]
                     });
                 }, this);
 
@@ -129,6 +134,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     id: id,
                     model: this.model,
                     name: this.nameHash[id],
+                    pathsData: this.pathsDatas[id],
                     imageList: imageList
                 }, function (view) {
                     view.render();
@@ -158,6 +164,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.typeHashName = this.name + 'Types';
+            this.pathsDatasName = this.name +  'PathsDatas'
             this.idsName = this.name + 'Ids';
             this.foreignScope = 'Attachment';
 
@@ -166,6 +173,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             var self = this;
 
             this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
+
+            this.pathsDatas = _.clone(this.model.get(this.pathsDatasName)) || {};
 
             if ('showPreviews' in this.params) {
                 this.showPreviews = this.params.showPreviews;
