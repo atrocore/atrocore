@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/file/list', 'views/list',
+Espo.define('views/file/list', 'views/list-tree',
     Dep => Dep.extend({
 
         createButton: false,

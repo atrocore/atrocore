@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
@@ -106,6 +107,59 @@ class File extends Base
         }
 
         return $result;
+    }
+
+    public function getChildren(string $parentId, array $params): array
+    {
+//        $result = [];
+//        $selectParams = $this->getSelectParams($params);
+//        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize'], $selectParams);
+//        if (empty($records)) {
+//            return $result;
+//        }
+//
+//        $offset = $params['offset'];
+//        $total = $this->getRepository()->getChildrenCount($parentId, $selectParams);
+//        $ids = [];
+//        foreach ($this->getRepository()->where(['id' => array_column($records, 'id')])->find() as $entity) {
+//            if ($this->getAcl()->check($entity, 'read')) {
+//                $ids[] = $entity->get('id');
+//            }
+//        }
+//
+//        foreach ($records as $k => $record) {
+//            $result[] = [
+//                'id'             => $record['id'],
+//                'name'           => $record['name'],
+//                'offset'         => $offset + $k,
+//                'total'          => $total,
+//                'disabled'       => !in_array($record['id'], $ids),
+//                'load_on_demand' => !empty($record['childrenCount']) && $record['childrenCount'] > 0
+//            ];
+//        }
+
+        return [
+            'list'  => [],
+            'total' => 0
+        ];
+    }
+
+    public function getTreeDataForSelectedNode(string $id): array
+    {
+//        $treeBranches = [];
+//        $this->createTreeBranches($this->getEntity($id), $treeBranches);
+//
+//        if (empty($entity = $treeBranches[0])) {
+//            throw new NotFound();
+//        }
+//
+//        $tree = [];
+//        $this->prepareTreeForSelectedNode($entity, $tree);
+//        $this->prepareTreeData($tree);
+
+//        $total = empty($tree[0]['total']) ? 0 : $tree[0]['total'];
+
+        return ['total' => 0, 'list' => []];
     }
 
     protected function init()

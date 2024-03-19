@@ -31,4 +31,30 @@ class File extends Base
 
         return $this->getRecordService()->createEntity($data);
     }
+
+    public function actionTree($params, $data, $request): array
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        if (empty($request->get('node')) && !empty($request->get('selectedId'))) {
+            return $this->getRecordService()->getTreeDataForSelectedNode((string)$request->get('selectedId'));
+        }
+
+        $params = [
+            'where'       => $this->prepareWhereQuery($request->get('where')),
+            'asc'         => $request->get('asc', 'true') === 'true',
+            'sortBy'      => $request->get('sortBy'),
+            'isTreePanel' => !empty($request->get('isTreePanel')),
+            'offset'      => (int)$request->get('offset'),
+            'maxSize'     => empty($request->get('maxSize')) ? $this->getConfig()->get('recordsPerPageSmall', 20) : (int)$request->get('maxSize')
+        ];
+
+        return $this->getRecordService()->getChildren((string)$request->get('node'), $params);
+    }
 }
