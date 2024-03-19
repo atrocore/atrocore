@@ -27,6 +27,11 @@
         "name": "preview",
         "label": "Preview",
         "view": "views/file/record/panels/side/preview/main"
+      },
+      {
+        "name": "sharing",
+        "label": "Sharing",
+        "view": "views/record/panels/sharing"
       }
     ],
     "detailSmall": [
@@ -35,6 +40,11 @@
         "name": "preview",
         "label": "Preview",
         "view": "views/file/record/panels/side/preview/main"
+      },
+      {
+        "name": "sharing",
+        "label": "Sharing",
+        "view": "views/record/panels/sharing"
       }
     ],
     "editSmall": [

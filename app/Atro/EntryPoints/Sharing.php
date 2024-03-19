@@ -12,6 +12,7 @@
 namespace Atro\EntryPoints;
 
 use Atro\Core\Exceptions\NotFound;
+use Atro\Entities\File;
 
 class Sharing extends AbstractEntryPoint
 {
@@ -52,20 +53,14 @@ class Sharing extends AbstractEntryPoint
 
         switch ($sharing->get('type')) {
             case 'download':
-                if ($entity->getEntityType() === 'Asset') {
-                    $attachment = $entity->get('file');
-                    $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
-                    if (!file_exists($fileName)) {
-                        throw new NotFound();
-                    }
-
+                if ($entity instanceof File) {
                     header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
                     header("Cache-Control: public");
-                    header('Content-Type: ' . $attachment->get('type'));
+                    header('Content-Type: ' . $entity->get('mimeType'));
                     header("Content-Transfer-Encoding: Binary");
-                    header('Content-Length: ' . filesize($fileName));
-                    header("Content-Disposition: attachment; filename={$attachment->get('name')}");
-                    readfile($fileName);
+                    header('Content-Length: ' . $entity->get('fileSize'));
+                    header("Content-Disposition: attachment; filename={$entity->get('name')}");
+                    readfile($entity->getFilePath());
                     exit;
                 }
                 break;
