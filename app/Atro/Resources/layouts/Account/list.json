@@ -1,5 +1,8 @@
 [
   {
+    "name": "number"
+  },
+  {
     "name": "name",
     "link": true
   },

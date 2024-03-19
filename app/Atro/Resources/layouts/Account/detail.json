@@ -4,8 +4,10 @@
     "rows": [
       [
         {
-          "name": "name",
-          "fullWidth": true
+          "name": "number"
+        },
+        {
+          "name": "name"
         }
       ],
       [
