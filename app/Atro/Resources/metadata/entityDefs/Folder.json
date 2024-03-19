@@ -1,0 +1,102 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "children": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "noLoad": true
+    },
+    "parents": {
+      "type": "linkMultiple",
+      "view": "views/fields/hierarchy-parents",
+      "noLoad": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "children": {
+      "type": "hasMany",
+      "relationName": "FolderHierarchy",
+      "foreign": "parents",
+      "entity": "Folder",
+      "audited": false,
+      "midKeys": [
+        "entityId",
+        "parentId"
+      ]
+    },
+    "parents": {
+      "type": "hasMany",
+      "relationName": "FolderHierarchy",
+      "foreign": "children",
+      "entity": "Folder",
+      "audited": false,
+      "midKeys": [
+        "parentId",
+        "entityId"
+      ]
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    }
+  }
+}
