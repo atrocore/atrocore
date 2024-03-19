@@ -22,6 +22,14 @@
             }
           ]
         },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
         "required": {
           "conditionGroup": [
             {
@@ -30,6 +38,16 @@
               "value": [
                 "local"
               ]
+            }
+          ]
+        }
+      },
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }

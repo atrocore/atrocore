@@ -19,6 +19,20 @@ use Espo\ORM\Entity;
 
 class Storage extends Base
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if (!$entity->isNew()) {
+            if ($entity->isAttributeChanged('type')) {
+                throw new BadRequest($this->translate('storageTypeCannotBeChanged', 'exceptions', 'Storage'));
+            }
+            if ($entity->get('type') === 'local' && $entity->isAttributeChanged('path')) {
+                throw new BadRequest($this->translate('storagePathCannotBeChanged', 'exceptions', 'Storage'));
+            }
+        }
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         $e = $this->getEntityManager()->getRepository('File')
