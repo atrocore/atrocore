@@ -23,6 +23,11 @@
       "unique": true,
       "default": "upload/files"
     },
+    "priority": {
+      "type": "int",
+      "notNull": true,
+      "default": 10
+    },
     "files": {
       "type": "linkMultiple",
       "noLoad": true
@@ -58,7 +63,7 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
-    "asc": false
+    "sortBy": "priority",
+    "asc": true
   }
 }

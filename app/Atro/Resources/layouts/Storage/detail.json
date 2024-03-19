@@ -21,7 +21,9 @@
         {
           "name": "path"
         },
-        false
+        {
+          "name": "priority"
+        }
       ]
     ]
   }

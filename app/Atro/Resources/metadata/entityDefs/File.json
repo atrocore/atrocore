@@ -107,10 +107,12 @@
     },
     "storage": {
       "type": "link",
+      "view": "views/file/fields/storage",
       "required": true
     },
     "folder": {
       "type": "link",
+      "view": "views/file/fields/folder",
       "required": false
     },
     "path": {
