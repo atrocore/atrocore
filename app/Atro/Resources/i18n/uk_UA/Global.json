@@ -108,6 +108,7 @@
     "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу."
   },
   "labels": {
+    "typeToSearch": "Введ. і натисн. Enter...",
     "dragAndDropBtnText": "Перетягніть",
     "dragAndDropBtnTextSmall": "Ваші файли або",
     "upload": "Завантаження",

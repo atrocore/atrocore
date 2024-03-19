@@ -24,6 +24,10 @@
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
+    "storages": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -65,6 +69,12 @@
         "parentId",
         "entityId"
       ]
+    },
+    "storages": {
+      "type": "hasMany",
+      "relationName": "FolderStorage",
+      "foreign": "folders",
+      "entity": "Storage"
     },
     "createdBy": {
       "type": "belongsTo",

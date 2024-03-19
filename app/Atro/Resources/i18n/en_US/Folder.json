@@ -1,4 +1,10 @@
 {
+  "fields": {
+    "storages": "Storages"
+  },
+  "links": {
+    "storages": "Storages"
+  },
   "labels": {
     "Create Folder": "Create Folder"
   }

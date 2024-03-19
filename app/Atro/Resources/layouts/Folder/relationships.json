@@ -4,5 +4,8 @@
   },
   {
     "name": "children"
+  },
+  {
+    "name": "storages"
   }
 ]

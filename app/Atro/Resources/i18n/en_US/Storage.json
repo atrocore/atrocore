@@ -2,10 +2,12 @@
   "fields": {
     "type": "Type",
     "path": "Path",
-    "files": "Files"
+    "files": "Files",
+    "folders": "Folders"
   },
   "links": {
-    "files": "Files"
+    "files": "Files",
+    "folders": "Folders"
   },
   "options": {
     "type": {
