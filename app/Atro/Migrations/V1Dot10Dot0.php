@@ -24,6 +24,43 @@ class V1Dot10Dot0 extends Base
 
     public function up(): void
     {
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from('asset_type')
+            ->fetchAllAssociative();
+
+        foreach ($res as $v) {
+            $this->getConnection()->createQueryBuilder()
+                ->delete('asset_type')
+                ->where('id = :id')
+                ->setParameter('id', $v['id'])
+                ->executeQuery();
+
+            $this->getConnection()->createQueryBuilder()
+                ->insert('file_type')
+                ->setValue('id', ':id')
+                ->setValue('name', ':name')
+                ->setValue('assign_automatically', ':assignAutomatically')
+                ->setValue('sort_order', ':sortOrder')
+                ->setValue('created_by_id', ':createdById')
+                ->setValue('modified_by_id', ':modifiedById')
+                ->setValue('sort_order', ':sortOrder')
+                ->setParameter('id', $v['id'])
+                ->setParameter('name', $v['name'])
+                ->setParameter('assignAutomatically', !empty($v['assign_automatically']), ParameterType::BOOLEAN)
+                ->setParameter('sortOrder', $v['sort_order'])
+                ->setParameter('createdById', $v['created_by_id'])
+                ->setParameter('modifiedById', $v['modified_by_id'])
+                ->executeQuery();
+        }
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('validation_rule')
+            ->set('file_type_id', 'asset_type_id')
+            ->where('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+
         $this->getConfig()->remove('whitelistedExtensions');
         $this->getConfig()->save();
 
