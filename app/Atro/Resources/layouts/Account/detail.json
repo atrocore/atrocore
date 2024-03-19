@@ -4,35 +4,39 @@
     "rows": [
       [
         {
+          "name": "name",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
           "name": "number"
         },
         {
-          "name": "name"
+          "name": "type"
         }
       ],
       [
-        {
-          "name": "type"
-        },
         {
           "name": "role"
-        }
-      ],
-      [
+        },
         {
           "name": "emailAddress"
-        },
-        {
-          "name": "phoneNumber"
         }
       ],
       [
         {
-          "name": "channel"
+          "name": "phoneNumber"
         },
         {
-          "name": "language"
+          "name": "channel"
         }
+      ],
+      [
+        {
+          "name": "language"
+        },
+        false
       ],
       [
         {

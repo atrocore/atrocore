@@ -83,6 +83,7 @@
     },
     "account": {
       "type": "belongsTo",
+      "foreign": "addresses",
       "entity": "Account"
     }
   },
