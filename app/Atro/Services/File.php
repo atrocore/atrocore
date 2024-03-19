@@ -22,7 +22,7 @@ use Espo\ORM\Entity;
 
 class File extends Base
 {
-    protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath'];
+    protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName'];
 
     public function prepareEntityForOutput(Entity $entity)
     {

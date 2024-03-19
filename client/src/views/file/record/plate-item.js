@@ -11,7 +11,7 @@
 Espo.define('views/file/record/plate-item', 'view',
     Dep => Dep.extend({
 
-        template: 'asset/record/plate-item',
+        template: 'file/record/plate-item',
 
         setup() {
             Dep.prototype.setup.call(this);
@@ -29,8 +29,12 @@ Espo.define('views/file/record/plate-item', 'view',
         data() {
             return {
                 version: moment(this.model.get('modifiedAt')).format("X"),
-                thumbnailPath: (!this.model.get('filePathsData')) ? null : this.model.get('filePathsData').thumbs.medium,
-                icon: this.model.get('icon')
+                thumbnailPath: this.model.get('mediumThumbnailUrl'),
+                hasIcon: !(this.getMetadata().get('app.file.image.extensions') || []).includes(this.model.get('extension')),
+                extension: this.model.get('extension'),
+                name: this.model.get('name'),
+                type: this.model.get('typeName'),
+                private: this.model.get('private'),
             };
         }
 

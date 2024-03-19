@@ -19,7 +19,8 @@
   "labels": {
     "Create File": "Create File",
     "Preview": "Preview",
-    "Upload": "Upload"
+    "Upload": "Upload",
+    "sort": "Sort"
   },
   "messages": {
     "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file."

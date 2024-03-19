@@ -11,7 +11,7 @@
 Espo.define('views/file/record/plate', 'views/record/list',
     Dep => Dep.extend({
 
-        template: 'asset/record/plate',
+        template: 'file/record/plate',
 
         type: 'plate',
 
