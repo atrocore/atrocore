@@ -26,11 +26,11 @@ class Custom
 {
     protected File $file;
     protected Imagick $imagick;
-    protected string $scale;
-    protected int $width;
-    protected int $height;
-    protected int $quality;
-    protected string $format;
+    protected ?string $scale;
+    protected ?int $width;
+    protected ?int $height;
+    protected ?int $quality;
+    protected ?string $format;
     protected Config $config;
     protected EntityManager $entityManager;
 
@@ -40,7 +40,20 @@ class Custom
         $this->entityManager = $container->get('entityManager');
     }
 
-    public function setFile(File $file): Custom
+    public function convert(File $file, array $params): string
+    {
+        $this->setFile($file);
+        $this->setParams($params);
+
+        Util::createDir($this->getDirPath());
+
+        $this->resize()->quality()->format();
+        $this->imagick->writeImage($this->getFilePath());
+
+        return $this->getDirPath() . '/' . $this->getName();
+    }
+
+    protected function setFile(File $file): Custom
     {
         $filePath = $file->getFilePath();
         if (!file_exists($filePath)) {
@@ -53,20 +66,18 @@ class Custom
         return $this;
     }
 
-    public function setParams(array $params): Custom
+    protected function setParams(array $params): Custom
     {
-        foreach ($params as $propName => $value) {
-            if (!property_exists($this, $propName)) {
-                continue;
-            }
-
-            $this->{$propName} = $value;
-        }
+        $this->width = $params['width'] ? (int)$params['width'] : null;
+        $this->height = $params['height'] ? (int)$params['height'] : null;
+        $this->quality = $params['quality'] ? (int)$params['quality'] : null;
+        $this->format = $params['format'] ?? null;
+        $this->scale = $params['scale'] ?? null;
 
         return $this;
     }
 
-    public function getDirPath(): string
+    protected function getDirPath(): string
     {
         if (empty($this->file)) {
             throw new Error('Attachment is required for converter.');
@@ -75,43 +86,29 @@ class Custom
         return $this->config->get('renditionPath', 'upload/rendition/') . $this->file->get('id') . '/' . $this->createSubDir();
     }
 
-    public function getFilePath(): string
+    protected function getFilePath(): string
     {
         return $this->getDirPath() . '/' . $this->getName();
     }
 
-    public function convert(): Custom
-    {
-        if (file_exists($this->getFilePath())) {
-            return $this;
-        }
-
-        Util::createDir($this->getDirPath());
-
-        $this->resize()->quality()->format();
-        $this->imagick->writeImage($this->getFilePath());
-
-        return $this;
-    }
-
-    public function createSubDir(): string
+    protected function createSubDir(): string
     {
         $key = $this->config->get('passwordSalt', '') . '_' . $this->width . '_' . $this->height . '_' . $this->quality . '_' . $this->scale . '_' . $this->format;
 
         return md5($key);
     }
 
-    public function getImageWidth(): int
+    protected function getImageWidth(): int
     {
         return $this->imagick->getImageWidth();
     }
 
-    public function getImageHeight(): int
+    protected function getImageHeight(): int
     {
         return $this->imagick->getImageHeight();
     }
 
-    public function getName(): string
+    protected function getName(): string
     {
         $name = explode(".", $this->file->get("name"));
         array_pop($name);
@@ -120,7 +117,7 @@ class Custom
         return str_replace("\"", "\\\"", implode(".", $name));
     }
 
-    public function getType(): string
+    protected function getType(): string
     {
         return $this->format === "png" ? "image/png" : "image/jpeg";
     }

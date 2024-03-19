@@ -41,11 +41,7 @@ class Download extends AbstractEntryPoint
         $type = $_GET['type'] ?? null;
 
         if ($type === 'custom') {
-            $path = $this->container->get(Custom::class)
-                ->setFile($file)
-                ->setParams($_GET)
-                ->convert()
-                ->getFilePath();
+            $path = $this->container->get(Custom::class)->convert($file, $_GET);
         } else {
             $path = $file->getDownloadUrl();
         }

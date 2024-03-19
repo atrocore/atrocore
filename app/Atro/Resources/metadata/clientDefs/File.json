@@ -15,7 +15,6 @@
   "sidePanels": {
     "edit": [
       {
-        "unshift": true,
         "name": "preview",
         "label": "Preview",
         "view": "views/file/record/panels/side/preview/main"
@@ -23,7 +22,6 @@
     ],
     "detail": [
       {
-        "unshift": true,
         "name": "preview",
         "label": "Preview",
         "view": "views/file/record/panels/side/preview/main"
@@ -32,11 +30,15 @@
         "name": "sharing",
         "label": "Sharing",
         "view": "views/record/panels/sharing"
+      },
+      {
+        "name": "customDownload",
+        "label": "customDownload",
+        "view": "views/file/record/panels/side/download/main"
       }
     ],
     "detailSmall": [
       {
-        "unshift": true,
         "name": "preview",
         "label": "Preview",
         "view": "views/file/record/panels/side/preview/main"
@@ -49,7 +51,6 @@
     ],
     "editSmall": [
       {
-        "unshift": true,
         "name": "preview",
         "label": "Preview",
         "view": "views/file/record/panels/side/preview/main"
