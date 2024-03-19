@@ -1,14 +1,17 @@
 {
-  "controller": "controllers/record",
+  "controller": "controllers/file",
   "createDisabled": true,
   "iconClass": "fas fa-file",
   "views": {
-    "list": "views/file/list"
+    "list": "views/file/list",
+    "plate": "views/file/plate"
   },
   "recordViews": {
     "detail": "views/file/record/detail"
   },
-  "treeScopes": ["Folder"],
+  "treeScopes": [
+    "Folder"
+  ],
   "sidePanels": {
     "edit": [
       {
@@ -42,5 +45,47 @@
         "view": "views/file/record/panels/side/preview/main"
       }
     ]
+  },
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "acl": "read",
+          "name": "list",
+          "label": "",
+          "link": "#File/list",
+          "title": "List",
+          "iconHtml": "<span class=\"fa fa-list\"></span>"
+        },
+        {
+          "acl": "read",
+          "name": "plate",
+          "label": "",
+          "link": "#File/plate",
+          "title": "Plate",
+          "iconHtml": "<span class=\"fa fa-th\"></span>"
+        }
+      ]
+    },
+    "plate": {
+      "buttons": [
+        {
+          "acl": "read",
+          "name": "list",
+          "label": "",
+          "link": "#File/list",
+          "title": "List",
+          "iconHtml": "<span class=\"fa fa-list\"></span>"
+        },
+        {
+          "acl": "read",
+          "name": "plate",
+          "label": "",
+          "link": "#File/plate",
+          "title": "Plate",
+          "iconHtml": "<span class=\"fa fa-th\"></span>"
+        }
+      ]
+    }
   }
 }

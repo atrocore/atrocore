@@ -21,6 +21,7 @@ Espo.define('views/file/list', 'views/list-tree',
                 label: this.translate('Upload', 'labels', 'File'),
                 style: 'success',
                 acl: 'create',
+                cssStyle: "margin-left: 15px",
                 aclScope: 'File'
             });
         },
