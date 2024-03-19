@@ -65,6 +65,6 @@
   },
   "collection": {
     "sortBy": "priority",
-    "asc": true
+    "asc": false
   }
 }

@@ -21,7 +21,7 @@ class Folder extends Hierarchy
 {
     public function actionDefaultStorage($params, $data, $request)
     {
-        if (!$request->isGet() || empty($request->get('id'))) {
+        if (!$request->isGet()) {
             throw new BadRequest();
         }
 
@@ -29,6 +29,6 @@ class Folder extends Hierarchy
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->getDefaultStorage($request->get('id'));
+        return $this->getRecordService()->getDefaultStorage((string)$request->get('id'));
     }
 }

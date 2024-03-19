@@ -14,18 +14,21 @@ Espo.define('views/file/fields/storage', 'views/fields/link',
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.setDefaultStorage(this.model.get('folderId') || '');
             this.listenTo(this.model, 'change:folderId', () => {
-                if (this.mode === 'edit' && this.model.isNew() && this.model.get('folderId')) {
-                    this.ajaxGetRequest(`Folder/action/defaultStorage?id=${this.model.get('folderId')}`).success(storage => {
-                        if (storage) {
-                            this.model.set('storageId', storage.id);
-                            this.model.set('storageName', storage.name);
-                        }
-                    });
+                if (this.mode === 'edit' && this.model.isNew()) {
+                    this.setDefaultStorage(this.model.get('folderId') || '');
                 }
             });
-
         },
 
+        setDefaultStorage(folderId) {
+            this.ajaxGetRequest(`Folder/action/defaultStorage?id=${folderId}`).success(storage => {
+                if (storage) {
+                    this.model.set('storageId', storage.id);
+                    this.model.set('storageName', storage.name);
+                }
+            });
+        },
     })
 );
