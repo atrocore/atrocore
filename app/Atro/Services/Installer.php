@@ -758,6 +758,9 @@ class Installer extends HasContainer
             }
         }
 
+        // create default file types
+        \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
+
         // refresh translations
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
     }
