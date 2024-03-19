@@ -79,7 +79,8 @@ Espo.define('views/record/panels/sharing', 'views/record/panels/relationship', f
                             },
                             {
                                 "name": "name",
-                                "link": true
+                                "link": true,
+                                "width": 60,
                             },
                             {
                                 "name": "link",
