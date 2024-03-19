@@ -41,11 +41,17 @@ class Folder extends Hierarchy
 
         if (!empty($folderStorages[0])) {
             $storage = $this->getEntityManager()->getRepository('Storage')
-                ->where(['id' => array_column($folderStorages->toArray(), 'storageId')])
+                ->where([
+                    'id'       => array_column($folderStorages->toArray(), 'storageId'),
+                    'isActive' => true,
+                ])
                 ->order('priority', 'DESC')
                 ->findOne();
         } else {
             $storage = $this->getEntityManager()->getRepository('Storage')
+                ->where([
+                    'isActive' => true,
+                ])
                 ->order('priority', 'DESC')
                 ->findOne();
         }

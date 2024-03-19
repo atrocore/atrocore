@@ -11,6 +11,8 @@
 Espo.define('views/file/fields/storage', 'views/fields/link',
     Dep => Dep.extend({
 
+        selectBoolFilterList: ['onlyActive'],
+
         setup() {
             Dep.prototype.setup.call(this);
 
