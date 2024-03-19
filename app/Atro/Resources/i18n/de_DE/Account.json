@@ -4,7 +4,8 @@
     "phoneNumber": "Telefon",
     "description": "Beschreibung",
     "type": "Typ",
-    "role": "Rolle"
+    "role": "Rolle",
+    "number": "Nummer"
   },
   "options": {
     "type": {

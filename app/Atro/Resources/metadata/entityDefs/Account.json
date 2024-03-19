@@ -92,6 +92,10 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "number": {
+      "type": "varchar",
+      "unique": true
     }
   },
   "links": {
