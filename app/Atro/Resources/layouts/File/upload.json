@@ -5,6 +5,12 @@
         {
           "name": "type"
         },
+        false
+      ],
+      [
+        {
+          "name": "folder"
+        },
         {
           "name": "storage"
         }

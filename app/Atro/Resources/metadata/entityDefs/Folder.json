@@ -24,6 +24,10 @@
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
     "storages": {
       "type": "linkMultiple",
       "noLoad": true
@@ -69,6 +73,11 @@
         "parentId",
         "entityId"
       ]
+    },
+    "files": {
+      "type": "hasMany",
+      "foreign": "folder",
+      "entity": "File"
     },
     "storages": {
       "type": "hasMany",

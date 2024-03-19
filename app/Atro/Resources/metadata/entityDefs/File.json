@@ -109,6 +109,10 @@
       "type": "link",
       "required": true
     },
+    "folder": {
+      "type": "link",
+      "required": false
+    },
     "path": {
       "type": "varchar",
       "maxLength": 300,
@@ -150,6 +154,11 @@
       "type": "belongsTo",
       "foreign": "files",
       "entity": "Storage"
+    },
+    "folder": {
+      "type": "belongsTo",
+      "foreign": "files",
+      "entity": "Folder"
     },
     "type": {
       "type": "belongsTo",

@@ -1,6 +1,7 @@
 {
   "fields": {
     "type": "Type",
+    "folder": "Folder",
     "storage": "Storage",
     "mimeType": "MIME Type",
     "path": "Path",
@@ -12,6 +13,7 @@
     "private": "Private"
   },
   "links": {
+    "folder": "Folder",
     "storage": "Storage"
   },
   "labels": {

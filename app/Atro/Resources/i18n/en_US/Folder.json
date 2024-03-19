@@ -1,8 +1,10 @@
 {
   "fields": {
+    "files": "Files",
     "storages": "Storages"
   },
   "links": {
+    "files": "Files",
     "storages": "Storages"
   },
   "labels": {
