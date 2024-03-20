@@ -150,8 +150,18 @@ class CronManager extends Injectable
             $skip = false;
             if ($this->getCronJobUtil()->isJobPending($job->id)) {
                 if ($job->get('scheduledJobId')) {
-                    if ($this->getCronJobUtil()->isScheduledJobRunning($job->get('scheduledJobId'), $job->get('targetId'), $job->get('targetType'))) {
+                    $runningJob = $this->getCronJobUtil()->getRunningScheduledJob($job->get('scheduledJobId'), $job->get('targetId'), $job->get('targetType'));
+                    if (!empty($runningJob)) {
                         $skip = true;
+
+                        // the job cannot be performed too long
+                        $interval = (new \DateTime($runningJob->get('executeTime')))->diff(new \DateTime());
+                        $hours = $interval->h;
+                        $hours += $interval->days * 24;
+                        if ($hours > $this->getConfig()->get('cronJobMaxExecutingHours', 3)) {
+                            $runningJob->set('status', self::FAILED);
+                            $this->getEntityManager()->saveEntity($runningJob);
+                        }
                     }
                 }
             } else {
@@ -181,7 +191,7 @@ class CronManager extends Injectable
                     $job->set('attempts', 0);
                     $skipLog = true;
                 } else {
-                    $GLOBALS['log']->error('CronManager: Failed job running, job ['.$job->id.']. Error Details: '.$e->getMessage());
+                    $GLOBALS['log']->error('CronManager: Failed job running, job [' . $job->id . ']. Error Details: ' . $e->getMessage());
                 }
             }
 

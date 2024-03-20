@@ -55,15 +55,6 @@ class CheckUpdates extends Base
         exec("$php composer.phar update --dry-run >> $log 2>&1");
 
         DataManager::pushPublicData('isNeedToUpdate', self::isUpdatesAvailable());
-
-        $conn = $this->getEntityManager()->getConnection();
-        $conn->createQueryBuilder()
-            ->delete($conn->quoteIdentifier('job'), 't')
-            ->where('t.name = :name')
-            ->andWhere('t.status IN (:statuses)')
-            ->setParameter('name', 'CheckUpdates')
-            ->setParameter('statuses', ['Pending', 'Running'], $conn::PARAM_STR_ARRAY)
-            ->executeQuery();
     }
 
     public static function isUpdatesAvailable(): bool
