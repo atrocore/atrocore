@@ -1,0 +1,67 @@
+{
+  "fields": {
+    "status": "Status",
+    "settingVersion": "Wersja ustawień",
+    "currentVersion": "Aktualna wersja",
+    "latestVersion": "Najnowsza wersja",
+    "availableVersions": "Dostępne wersje"
+  },
+  "options": {
+    "status": {
+      "install": "Instaluj",
+      "update": "Aktualizuj",
+      "delete": "Usuń"
+    }
+  },
+  "exceptions": {
+    "hasRequireds": "Moduł nie spełnia wymagań",
+    "hasRequiredsDelete": "Nie można usunąć wymaganego modułu",
+    "suchModuleIsAlreadyInstalled": "Taki moduł jest już zainstalowany",
+    "suchModuleVersionAlreadyInstalled": "Taka wersja modułu jest już zainstalowana",
+    "noSuchModuleVersion": "Brak takiej wersji modułu",
+    "versionIsInvalid": "Nieprawidłowa wersja"
+  },
+  "labels": {
+    "purchased": "Zakupiony",
+    "rented": "Wynajęty",
+    "purchasedUntil": "Zakupiony, aktualizacje do",
+    "rentUntil": "Wynajęty, aktualizacje do",
+    "available": "dostępny",
+    "Installed": "Zainstalowany",
+    "Store": "Sklep",
+    "removeModule": "Usuń",
+    "cancelModule": "Anuluj",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "anotherActionInProgress": "Inna akcja jest w trakcie. Poczekaj, aż się zakończy",
+    "updating": "Aktualizowanie...",
+    "updateStarted": "Aktualizacja została rozpoczęta",
+    "canceling": "Anulowanie...",
+    "canceled": "Anulowano",
+    "dependencies": "Zależności",
+    "version": "Wersja",
+    "Run Update": "Aktualizuj",
+    "updateFailed": "Aktualizacja nie powiodła się. Nie można połączyć się z serwerem modułów. Spróbuj ponownie",
+    "settingModuleForRemoving": "Ustawianie modułu do usunięcia...",
+    "setModuleForRemoving": "Moduł został ustawiony do usunięcia. Kliknij przycisk „Aktualizuj”, aby zastosować instalację lub usunięcie modułu.",
+    "settingModuleForInstalling": "Ustawianie modułu do instalacji...",
+    "settingModuleForUpdating": "Ustawianie modułu do aktualizacji...",
+    "setModuleForInstalling": "Moduł został ustawiony do instalacji. Kliknij przycisk „Aktualizuj”, aby zastosować instalację lub usunięcie modułu.",
+    "setModuleForUpdating": "Moduł został ustawiony do aktualizacji. Kliknij przycisk „Aktualizuj”, aby zastosować instalację lub usunięcie modułu.",
+    "cancelingModuleInstall": "Anulowanie instalacji modułu...",
+    "canceledModuleInstall": "Instalacja modułu została anulowana",
+    "Log": "Log",
+    "confirmRun": "Po zakończeniu aktualizacji wszyscy użytkownicy zostaną wylogowani z systemu. Czy na pewno chcesz zaktualizować system?",
+    "daemonDisabled": "<b>Demon kompozytora nie jest uruchomiony!</b><br>Prawdopodobnie demon jest teraz przeładowywany i powinieneś poczekać minutę lub crontab nie jest skonfigurowany. Instrukcje dotyczące konfiguracji crontab znajdziesz <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">tutaj</a>.",
+    "queueManagerRunning": "<b>Menedżer kolejek jest uruchomiony!</b><br>Możliwość aktualizacji modułów jest zablokowana. Spróbuj ponownie później."
+  },
+  "notifications": {
+    "Module update": "Moduł {module} został zaktualizowany. Z wersji {from} na {to}",
+    "System update": "System został zaktualizowany. Z wersji {from} na {to}",
+    "Module install": "Moduł {module} v.{version} został zainstalowany",
+    "Module delete": "Moduł {module} został usunięty",
+    "Module downgrade": "Moduł {module} został zdegradowany. Z wersji {from} na {to}",
+    "System downgrade": "System został zdegradowany. Z wersji {from} na {to}",
+    "Composer updated!": "Zaktualizowano zależności menedżera modułów! <a href=\"/#Composer/list\">Zobacz szczegóły</a>"
+  }
+}

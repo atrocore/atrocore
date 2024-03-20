@@ -3382,10 +3382,12 @@ class Record extends Base
                         }
                         if ($fieldDefs['type'] === 'multiEnum') {
                             $preparedValues = [];
-                            foreach ($entityForConditions->get($field) as $v) {
-                                $key = array_search($v, $fieldDefs['optionsIds']);
-                                if ($key !== false) {
-                                    $preparedValues[] = $fieldDefs['options'][$key];
+                            if (!empty($entityForConditions->get($field))) {
+                                foreach ($entityForConditions->get($field) as $v) {
+                                    $key = array_search($v, $fieldDefs['optionsIds']);
+                                    if ($key !== false) {
+                                        $preparedValues[] = $fieldDefs['options'][$key];
+                                    }
                                 }
                             }
                             $entityForConditions->set($field, $preparedValues);

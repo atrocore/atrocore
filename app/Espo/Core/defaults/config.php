@@ -111,8 +111,7 @@ return [
     'smtpPort'                              => 25,
     'languageList'                          => [
         'en_US',
-        'de_DE',
-        'uk_UA'
+        'de_DE'
     ],
     'globalSearchEntityList'                => ['File', 'Folder'],
     'tabList'                               => ['File', 'Folder'],

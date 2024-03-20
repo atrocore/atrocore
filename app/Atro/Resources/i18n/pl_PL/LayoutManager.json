@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "width": "Szerokość (%)",
+    "widthPx": "Szerokość (px)",
+    "link": "Link",
+    "notSortable": "Nie sortowalne",
+    "align": "Wyrównanie",
+    "panelName": "Nazwa panelu",
+    "style": "Styl",
+    "sticked": "Przypięty",
+    "isLarge": "Duża wielkość czcionki",
+    "cssStyle": "Style CSS",
+    "dynamicLogicVisible": "Warunki widoczności panelu"
+  },
+  "options": {
+    "align": {
+      "left": "Lewo",
+      "right": "Prawo"
+    },
+    "style": {
+      "default": "Domyślny",
+      "success": "Sukces",
+      "danger": "Zagrożenie",
+      "info": "Informacja",
+      "warning": "Ostrzeżenie",
+      "primary": "Podstawowy"
+    }
+  },
+  "labels": {
+    "New panel": "Nowy panel",
+    "Layout": "Układ"
+  }
+}

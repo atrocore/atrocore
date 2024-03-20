@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "name": "Nazwa",
+    "status": "Status",
+    "job": "Zadanie",
+    "scheduling": "Harmonogram"
+  },
+  "links": {
+    "log": "Logi"
+  },
+  "labels": {
+    "Create ScheduledJob": "Utwórz Zaplanowane Zadanie",
+    "executeNow": "Wykonaj teraz"
+  },
+  "exceptions": {
+    "wrongCrontabConfiguration": "Błędna konfiguracja crontab"
+  },
+  "messages": {
+    "jobLaunched": "Zadanie zostało utworzone",
+    "jobAlreadyExist": "Zadanie zostało utworzone mniej niż minutę temu"
+  },
+  "options": {
+    "job": {
+      "TreoCleanup": "Czyszczenie starych danych",
+      "ComposerAutoUpdate": "Automatyczna aktualizacja systemu"
+    },
+    "status": {
+      "Active": "Aktywny",
+      "Inactive": "Nieaktywny"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Notacja crontab. Określa częstotliwość uruchamiania zadań.\n\n*/5 * * * * - co 5 minut\n\n0 */2 * * * - co 2 godziny\n\n30 1 * * * - o 01:30 raz dziennie\n\n0 0 1 * * - pierwszego dnia miesiąca"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "labels": {
+    "sort": "Sortowanie",
+    "Image": "Obraz",
+    "File": "Plik",
+    "upload": "Prześlij",
+    "uploaded": "przesłane",
+    "retry": "Ponów próbę?",
+    "withoutAnyCategory": "Bez żadnej kategorii",
+    "availableVideoFormats": "Dostępne formaty dla odtwarzacza wideo: <a>mp4</a>, <a>webm</a> i <a>ogv</a>.",
+    "typeCategoryToSearch": "Wpisz kategorię do wyszukania",
+    "assetPreview": "Podgląd zasobu",
+    "setAsMainImage": "Ustaw jako główny obraz"
+  },
+  "fields": {
+    "url": "URL",
+    "isActive": "Aktywny",
+    "image": "Obraz",
+    "relatedAssets": "Powiązane zasoby",
+    "assetCategories": "Kategorie zasobów",
+    "assetMetadata": "Metadane zasobu",
+    "assetVersions": "Wersje zasobu",
+    "type": "Typy",
+    "library": "Biblioteka",
+    "colorDepth": "Głębia kolorów",
+    "colorSpace": "Przestrzeń kolorów",
+    "file": "Plik",
+    "files": "Pliki",
+    "height": "Wysokość",
+    "metaData": "Dane meta",
+    "orientation": "Orientacja",
+    "renditions": "Wersje",
+    "size": "Rozmiar",
+    "sizeUnit": "Jednostka rozmiaru",
+    "tags": "Tagi",
+    "width": "Szerokość",
+    "private": "Prywatny",
+    "preview": "Podgląd"
+  },
+  "links": {
+    "assetCategories": "Kategorie zasobów",
+    "assetMetadata": "Metadane zasobu",
+    "assetVersions": "Wersje zasobu",
+    "renditions": "Wersje",
+    "relatedAssets": "Powiązane zasoby"
+  },
+  "boolFilters": {
+    "onlyPrivate": "Prywatny",
+    "onlyPublic": "Publiczny"
+  },
+  "messages": {
+    "assetCouldNotBeUploaded": "Nie można było przesłać zasobu.",
+    "notAllAssetsWereUploaded": "XX z YY zasobów nie zostały przesłane.",
+    "assetsAdded": "Zasoby zostały dodane i będą dostępne za kilka chwil."
+  },
+  "exceptions": {
+    "noAssetTypeProvided": "Nie podano typu zasobu.",
+    "assetExistWithOtherType": "Zasób '%s' już istnieje z innym typem zasobu.",
+    "fileExtensionCannotBeChanged": "Nie można zmienić rozszerzenia pliku.",
+    "urlDownloadFailed": "Pobieranie dla '%s' nie powiodło się.",
+    "noAttachmentExist": "Zasób bez załącznika nie może istnieć.",
+    "wrongUrl": "Nieprawidłowy URL '%s'.",
+    "suchAssetAlreadyExists": "Taki zasób już istnieje.",
+    "assetIsAlreadyLinkedWithEntity": "Encja 'Zasób' jest już powiązana z encją '%s'. Nie można ponownie powiązać tych encji.",
+    "fileNameNotValid": "Nazwa pliku jest nieprawidłowa.",
+    "suchFileNameNotValid": "Nazwa pliku '%s' jest nieprawidłowa.",
+    "fileNameNotValidByUserRegex": "Nazwa pliku jest nieprawidłowa. Powinna pasować do wyrażenia regularnego '%s'.",
+    "fileResourceWriteFailed": "Nie można zapisać żadnych danych do pliku %s."
+  }
+}

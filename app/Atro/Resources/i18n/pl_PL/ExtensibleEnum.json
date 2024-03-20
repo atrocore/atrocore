@@ -1,0 +1,15 @@
+{
+    "fields":{
+       "extensibleEnumOptions":"Opcje listy",
+       "multilingual":"Wielojęzyczny"
+    },
+    "links":{
+       "extensibleEnumOptions":"Opcje listy"
+    },
+    "labels":{
+       "Create ExtensibleEnum":"Utwórz listę"
+    },
+    "exceptions":{
+       "extensibleEnumIsUsed":"Lista '%s' jest używana przez pole '%s' w jednostce '%s'."
+    }
+ }

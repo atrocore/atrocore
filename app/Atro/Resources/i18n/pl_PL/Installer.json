@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "host": "Nazwa hosta",
+    "dbname": "Nazwa bazy danych",
+    "user": "Nazwa użytkownika bazy danych",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "confirmPassword": "Potwierdź hasło"
+  },
+  "labels": {
+    "licenseAgreement": "Umowa licencyjna",
+    "databaseConfiguration": "Konfiguracja bazy danych",
+    "administratorSetup": "Konfiguracja administratora",
+    "requiredSettings": "Wymagane ustawienia",
+    "chooseYourLanguage": "Wybierz język",
+    "acceptTheAgreement": "Akceptuję umowę",
+    "dbSystem": "System bazy danych",
+    "hostName": "Nazwa hosta",
+    "databaseName": "Nazwa bazy danych",
+    "databaseUserName": "Nazwa użytkownika bazy danych",
+    "databaseUserPassword": "Hasło użytkownika bazy danych",
+    "port": "Port",
+    "testConnection": "Testuj połączenie",
+    "reCheck": "Sprawdź ponownie",
+    "userName": "Nazwa użytkownika",
+    "password": "Hasło",
+    "confirmYourPassword": "Potwierdź hasło",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "finish": "Zakończ",
+    "required": "Wymagane",
+    "currentVersion": "Aktualna wersja",
+    "status": "Status"
+  },
+  "errors": {
+    "alreadyInstalled": "AtroCore już zainstalowany",
+    "languageNotCorrect": "Nieprawidłowy język wejściowy",
+    "differentPass": "Różne hasła",
+    "notCorrectDatabaseConfig": "Nieprawidłowe ustawienia bazy danych",
+    "filePermissionsError": "Masz niewystarczające uprawnienia do plików. Skonfiguruj uprawnienia zgodnie z instrukcją."
+  },
+  "messages": {
+    "youMustAgreeToTheLicenseAgreement": "Musisz zaakceptować umowę licencyjną",
+    "fieldIsRequired": "{field} jest wymagane",
+    "connectionSuccessful": "Połączenie udane!",
+    "pleaseConfigureYourSystemToStart": "Proszę skonfigurować system, aby rozpocząć"
+  },
+  "requirements": {
+    "phpVersion": "Wersja PHP",
+    "mysqlVersion": "Wersja MySQL"
+  }
+}

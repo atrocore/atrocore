@@ -1,0 +1,39 @@
+{
+	"fields": {
+		"post": "Post",
+		"attachments": "Załączniki",
+		"targetType": "Cel",
+		"teams": "Zespoły",
+		"users": "Użytkownicy",
+		"type": "Typ",
+		"isGlobal": "Globalny",
+		"isInternal": "Wewnętrzny (dla użytkowników wewnętrznych)",
+		"related": "Powiązane",
+		"createdByGender": "Utworzone przez płeć",
+		"data": "Dane",
+		"number": "Numer"
+	},
+	"filters": {
+		"all": "Wszystkie",
+		"posts": "Posty",
+		"updates": "Aktualizacje"
+	},
+	"options": {
+		"targetType": {
+			"self": "do siebie",
+			"users": "do konkretnych użytkowników",
+			"teams": "do konkretnych zespołów",
+			"all": "do wszystkich użytkowników wewnętrznych"
+		},
+		"type": {
+			"Post": "Post"
+		}
+	},
+	"messages": {
+		"writeMessage": "Napisz tutaj swoją wiadomość"
+	},
+	"links": {
+		"superParent": "Nadrzędny",
+		"related": "Powiązane"
+	}
+}
