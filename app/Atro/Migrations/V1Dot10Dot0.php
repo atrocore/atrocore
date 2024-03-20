@@ -25,6 +25,8 @@ class V1Dot10Dot0 extends Base
 
     public function up(): void
     {
+        //@todo  prepare DB schema
+
         $this->migrateAssetCategories();
         $this->migrateAssetTypes();
 

@@ -2,7 +2,6 @@
   "scopeNames": {
     "AssetMetadata": "Asset-Metadaten",
     "Asset": "Asset",
-    "Library": "Bibliothek",
     "Rendition": "Derivat",
     "ValidationRule": "Validierungsregel",
     "UiHandler": "UI-Handler",
@@ -46,7 +45,6 @@
   "scopeNamesPlural": {
     "AssetMetadata": "Asset-Metadaten",
     "Asset": "Assets",
-    "Library": "Bibliotheken",
     "AssetVersion": "Asset Versionen",
     "Rendition": "Derivate",
     "RenditionVersion": "Derivatversionen",

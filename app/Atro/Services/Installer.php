@@ -670,20 +670,6 @@ class Installer extends HasContainer
             ->executeQuery();
 
         $connection->createQueryBuilder()
-            ->insert($connection->quoteIdentifier('library'))
-            ->setValue('id', ':id')
-            ->setValue($connection->quoteIdentifier('name'), ':name')
-            ->setValue('is_active', ':true')
-            ->setValue('created_at', ':date')
-            ->setValue('created_by_id', ':userId')
-            ->setParameter('id', '1')
-            ->setParameter('name', 'Default Library')
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('date', (new \DateTime())->format('Y-m-d H:i:s'))
-            ->setParameter('userId', '1')
-            ->executeQuery();
-
-        $connection->createQueryBuilder()
             ->insert($connection->quoteIdentifier('locale'))
             ->setValue('id', ':id')
             ->setValue($connection->quoteIdentifier('name'), ':name')

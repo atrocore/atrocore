@@ -140,13 +140,6 @@
       "audited": false,
       "readOnly": false
     },
-    "library": {
-      "type": "link",
-      "defaultAttributes": {
-        "libraryId": "1",
-        "libraryName": "Default Library"
-      }
-    },
     "assetMetadata": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
@@ -270,13 +263,6 @@
     }
   },
   "links": {
-    "library": {
-      "type": "belongsTo",
-      "foreign": "assets",
-      "entity": "Library",
-      "audited": false,
-      "entityAsset": false
-    },
     "assetMetadata": {
       "type": "hasMany",
       "foreign": "asset",

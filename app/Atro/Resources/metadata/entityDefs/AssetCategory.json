@@ -31,10 +31,6 @@
       "trim": true,
       "unique": true
     },
-    "libraries": {
-      "type": "linkMultiple",
-      "noLoad": true
-    },
     "assets": {
       "type": "linkMultiple",
       "noLoad": false
@@ -64,12 +60,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "libraries": {
-      "type": "hasMany",
-      "relationName": "libraryAssetCategory",
-      "foreign": "assetCategories",
-      "entity": "Library"
     },
     "assets": {
       "type": "hasMany",

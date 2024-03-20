@@ -3,7 +3,6 @@
     "Asset": "Ассет",
     "Rendition": "Преобразование",
     "RenditionMetaData": "Преобразование мета данные",
-    "Library": "Библиотека",
     "AssetVariant": "Вариант ассета",
     "AssetCategory": "Категория ассета",
     "AssetMetadata": "Метаданные ассета",
@@ -56,7 +55,6 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
-    "Library": "Библиотеки",
     "Asset": "Ассеты",
     "AssetVersion": "Версии ассета",
     "AssetVariant": "Варианты ассета",
