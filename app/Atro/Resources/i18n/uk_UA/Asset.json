@@ -17,7 +17,6 @@
     "isActive": "Активний",
     "image": "Зображення",
     "relatedAssets": "Пов'язані ассети",
-    "assetCategories": "Категорії ассетів",
     "assetMetaDatas": "Метадані ассета",
     "assetVersions": "Версії ассета",
     "type": "Типи",
@@ -37,7 +36,6 @@
     "preview": "Попередній перегляд"
   },
   "links": {
-    "assetCategories": "Категорії ассету",
     "assetMetaDatas": "Метадані асету",
     "assetVersions": "Версії асету",
     "renditions": "Перетворення",

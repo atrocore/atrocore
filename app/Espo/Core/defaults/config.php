@@ -114,10 +114,10 @@ return [
         'de_DE',
         'uk_UA'
     ],
-    'globalSearchEntityList'                => ['Asset', 'AssetCategory'],
-    'tabList'                               => ['Asset', 'AssetCategory'],
-    'twoLevelTabList'                       => ['Asset', 'AssetCategory'],
-    'quickCreateList'                       => ['Asset', 'AssetCategory'],
+    'globalSearchEntityList'                => ['File', 'Folder'],
+    'tabList'                               => ['File', 'Folder'],
+    'twoLevelTabList'                       => ['File', 'Folder'],
+    'quickCreateList'                       => ['File', 'Folder'],
     'theme'                                 => 'TreoDarkTheme',
     'dashboardLayout'                       => [
         (object)[

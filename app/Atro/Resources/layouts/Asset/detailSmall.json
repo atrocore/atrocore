@@ -41,12 +41,6 @@
       ],
       [
         {
-          "name": "assetCategories"
-        },
-        false
-      ],
-      [
-        {
           "name": "files"
         },
         false

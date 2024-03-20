@@ -148,13 +148,6 @@
       "importDisabled": true,
       "exportDisabled": false
     },
-    "assetCategories": {
-      "type": "linkMultiple",
-      "layoutMassUpdateDisabled": true,
-      "importDisabled": false,
-      "exportDisabled": false,
-      "noLoad": false
-    },
     "name": {
       "type": "varchar",
       "required": false,
@@ -286,15 +279,6 @@
       "entity": "Attachment",
       "skipOrmDefs": true,
       "entityAsset": false
-    },
-    "assetCategories": {
-      "type": "hasMany",
-      "relationName": "assetCategoryAsset",
-      "foreign": "assets",
-      "entity": "AssetCategory",
-      "audited": false,
-      "entityAsset": false,
-      "disableMassRelation": false
     },
     "relatedAssets": {
       "type": "hasMany",

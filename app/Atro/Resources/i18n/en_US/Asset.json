@@ -17,7 +17,6 @@
     "isActive": "Active",
     "image": "Image",
     "relatedAssets": "Related Assets",
-    "assetCategories": "Asset Categories",
     "assetMetadata": "Asset Metadata",
     "assetVersions": "Asset Versions",
     "type": "Types",
@@ -37,7 +36,6 @@
     "preview": "Preview"
   },
   "links": {
-    "assetCategories": "Asset Categories",
     "assetMetadata": "Asset Metadata",
     "assetVersions": "Asset Versions",
     "renditions": "Renditions",

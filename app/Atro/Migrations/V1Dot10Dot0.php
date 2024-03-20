@@ -25,7 +25,13 @@ class V1Dot10Dot0 extends Base
 
     public function up(): void
     {
-        //@todo  prepare DB schema
+        //@todo  prepare DB schema CREATE NEW TABLES
+
+        // prepare config
+        //    'globalSearchEntityList'                => ['Asset', 'Folder'],
+        //    'tabList'                               => ['Asset', 'Folder'],
+        //    'twoLevelTabList'                       => ['Asset', 'Folder'],
+        //    'quickCreateList'                       => ['Asset', 'Folder'],
 
         $this->migrateAssetCategories();
         $this->migrateAssetTypes();
@@ -49,6 +55,9 @@ class V1Dot10Dot0 extends Base
 //                ->setParameter('folderId', $v['asset_category_id'])
 //                ->executeQuery();
 //        }
+
+
+        //@todo prepare DB schema DELETE OLD TABLES
 
         $this->getConfig()->remove('whitelistedExtensions');
         $this->getConfig()->save();

@@ -17,7 +17,6 @@
     "isActive": "Активный",
     "image": "Изображение",
     "relatedAssets": "Связанные ассеты",
-    "assetCategories": "Категории ассетов",
     "assetMetaDatas": "Метаданные ассета",
     "assetVersions": "Версии ассета",
     "type": "Типы",
@@ -37,7 +36,6 @@
     "preview": "Предпросмотр"
   },
   "links": {
-    "assetCategories": "Категории ассета",
     "assetMetaDatas": "Метаданные ассета",
     "assetVersions": "Версии ассета",
     "renditions": "Преобразование",

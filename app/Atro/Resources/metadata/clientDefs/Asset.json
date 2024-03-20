@@ -2,20 +2,17 @@
   "controller": "controllers/asset",
   "iconClass": "fas fa-archive",
   "treeScopes": [
-    "AssetCategory",
     "Asset"
   ],
   "boolFilterList": [
     "notParents",
     "notChildren",
     "onlyPrivate",
-    "onlyPublic",
-    "linkedWithAssetCategory"
+    "onlyPublic"
   ],
   "hiddenBoolFilterList": [
     "notParents",
-    "notChildren",
-    "linkedWithAssetCategory"
+    "notChildren"
   ],
   "views": {
     "list": "views/asset/list",

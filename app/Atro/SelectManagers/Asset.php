@@ -22,31 +22,6 @@ use Espo\ORM\IEntity;
 
 class Asset extends Base
 {
-    protected function boolFilterLinkedWithAssetCategory(array &$result): void
-    {
-        $result['callbacks'][] = [$this, 'filterLinkedWithAssetCategory'];
-    }
-
-    public function filterLinkedWithAssetCategory(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
-    {
-        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-        $assetCategoryId = (string)$this->getBoolFilterParameter('linkedWithAssetCategory');
-        if (empty($assetCategoryId)) {
-            return;
-        }
-
-        $assetCategory = $this->getEntityManager()->getEntity('AssetCategory', $assetCategoryId);
-        if (empty($assetCategory)) {
-            throw new BadRequest('No such asset category.');
-        }
-
-        $ids = $this->getEntityManager()->getRepository('AssetCategory')->getChildrenRecursivelyArray($assetCategoryId);
-        $ids = array_merge($ids, [$assetCategoryId]);
-        $qb->andWhere("EXISTS (SELECT asset_id FROM asset_category_asset WHERE asset_id=$tableAlias.id AND deleted=:false AND asset_category_id IN (:categoryIds))");
-        $qb->setParameter('categoryIds', $ids, Mapper::getParameterType($ids));
-        $qb->setParameter('false', false, ParameterType::BOOLEAN);
-    }
-
     protected function boolFilterOnlyPrivate(array &$result): void
     {
         $result['callbacks'][] = [$this, 'filterOnlyPrivate'];

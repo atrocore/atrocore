@@ -13,7 +13,6 @@
   },
   "links": {
     "renditions": "Derivate",
-    "assetCategories": "Asset Kategorien",
     "assetMetaDatas": "Asset Metadaten",
     "assetVersions": "Asset Versionen",
     "collection": "Kollektion",
@@ -28,7 +27,6 @@
     "isActive": "Aktiv",
     "image": "Bild",
     "relatedAssets": "Verwandte Assets",
-    "assetCategories": "Asset Kategorien",
     "assetMetaDatas": "Asset Metadaten",
     "assetVersions": "Asset Versionen",
     "colorDepth": "Farbtiefe",
