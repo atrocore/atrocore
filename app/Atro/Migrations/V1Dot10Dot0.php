@@ -27,12 +27,6 @@ class V1Dot10Dot0 extends Base
     {
         //@todo  prepare DB schema CREATE NEW TABLES
 
-        // prepare config
-        //    'globalSearchEntityList'                => ['Asset', 'Folder'],
-        //    'tabList'                               => ['Asset', 'Folder'],
-        //    'twoLevelTabList'                       => ['Asset', 'Folder'],
-        //    'quickCreateList'                       => ['Asset', 'Folder'],
-
         $this->migrateAssetCategories();
         $this->migrateAssetTypes();
 
@@ -59,6 +53,10 @@ class V1Dot10Dot0 extends Base
 
         //@todo prepare DB schema DELETE OLD TABLES
 
+        $this->getConfig()->set('globalSearchEntityList', array_merge($this->getConfig()->get('globalSearchEntityList', []), ['File', 'Folder']));
+        $this->getConfig()->set('tabList', array_merge($this->getConfig()->get('tabList', []), ['File', 'Folder']));
+        $this->getConfig()->set('twoLevelTabList', array_merge($this->getConfig()->get('twoLevelTabList', []), ['File', 'Folder']));
+        $this->getConfig()->set('quickCreateList', array_merge($this->getConfig()->get('quickCreateList', []), ['File', 'Folder']));
         $this->getConfig()->remove('whitelistedExtensions');
         $this->getConfig()->save();
 
