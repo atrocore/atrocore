@@ -40,12 +40,6 @@
         "isActive": true,
         "sortField": "sortOrder"
       }
-    },
-    "assetMetadata": {
-      "view": "views/asset/record/panels/asset-metadata",
-      "create": false,
-      "select": false,
-      "rowActionsView": "views/record/row-actions/empty"
     }
   },
   "sidePanels": {

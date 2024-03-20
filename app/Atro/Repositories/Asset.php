@@ -27,56 +27,6 @@ class Asset extends Hierarchy
         return $types;
     }
 
-    public function clearAssetMetadata(Entity $asset): void
-    {
-        $this->getEntityManager()->getRepository('AssetMetadata')->where(['assetId' => $asset->get('id')])->removeCollection();
-    }
-
-    public function restoreClearAssetMetadata(Entity $asset): void
-    {
-            $this->getConnection()
-                ->createQueryBuilder()
-                ->update($this->getConnection()->quoteIdentifier('asset_metadata'))
-                ->set('deleted', ":deleted")
-                ->where('asset_id = :assetId')
-                ->setParameter('deleted', false, Mapper::getParameterType(false))
-                ->setParameter('assetId', $asset->get('id'))
-                ->executeQuery();
-    }
-
-    public function updateMetadata(Entity $asset): void
-    {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $asset->get('fileId'));
-        if (empty($attachment)) {
-            throw new BadRequest($this->getInjection('language')->translate('noAttachmentExist', 'exceptions', 'Asset'));
-        }
-
-        $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
-
-        /**
-         * @todo develop metadata readers
-         */
-        if (stripos($attachment->get('type'), "image") !== false) {
-            $imagick = new \Imagick();
-            $imagick->readImage($filePath);
-            $metadata = $imagick->getImageProperties();
-        }
-
-        $this->clearAssetMetadata($asset);
-
-        if (empty($metadata) || !is_array($metadata)) {
-            return;
-        }
-
-        foreach ($metadata as $name => $value) {
-            $item = $this->getEntityManager()->getEntity('AssetMetadata');
-            $item->set('name', $name);
-            $item->set('value', $value);
-            $item->set('assetId', $asset->get('id'));
-            $this->getEntityManager()->saveEntity($item);
-        }
-    }
-
     /**
      * @inheritDoc
      */
@@ -139,11 +89,6 @@ class Asset extends Hierarchy
             }
         }
 
-        // update metadata
-        if ($entity->isAttributeChanged('fileId')) {
-            $this->updateMetadata($entity);
-        }
-
         parent::afterSave($entity, $options);
     }
 
@@ -155,8 +100,6 @@ class Asset extends Hierarchy
                 $this->getEntityManager()->removeEntity($attachment);
             }
         }
-
-        $this->clearAssetMetadata($entity);
 
         parent::afterRemove($entity, $options);
     }
@@ -173,8 +116,6 @@ class Asset extends Hierarchy
                 ->setParameter('attachmentId', $attachmentId)
                 ->executeQuery();
         }
-
-        $this->restoreClearAssetMetadata($entity);
     }
 
     protected function init()

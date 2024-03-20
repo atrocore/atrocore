@@ -17,7 +17,6 @@
     "isActive": "Active",
     "image": "Image",
     "relatedAssets": "Related Assets",
-    "assetMetadata": "Asset Metadata",
     "assetVersions": "Asset Versions",
     "type": "Types",
     "colorDepth": "Color Depth",
@@ -36,7 +35,6 @@
     "preview": "Preview"
   },
   "links": {
-    "assetMetadata": "Asset Metadata",
     "assetVersions": "Asset Versions",
     "renditions": "Renditions",
     "relatedAssets": "Related Assets"

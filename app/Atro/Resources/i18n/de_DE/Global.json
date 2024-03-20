@@ -1,6 +1,5 @@
 {
   "scopeNames": {
-    "AssetMetadata": "Asset-Metadaten",
     "Asset": "Asset",
     "Rendition": "Derivat",
     "ValidationRule": "Validierungsregel",
@@ -43,7 +42,6 @@
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
   },
   "scopeNamesPlural": {
-    "AssetMetadata": "Asset-Metadaten",
     "Asset": "Assets",
     "AssetVersion": "Asset Versionen",
     "Rendition": "Derivate",

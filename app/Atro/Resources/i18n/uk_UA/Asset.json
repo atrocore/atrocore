@@ -17,7 +17,6 @@
     "isActive": "Активний",
     "image": "Зображення",
     "relatedAssets": "Пов'язані ассети",
-    "assetMetaDatas": "Метадані ассета",
     "assetVersions": "Версії ассета",
     "type": "Типи",
     "colorDepth": "Глибина подання кольору",
@@ -36,7 +35,6 @@
     "preview": "Попередній перегляд"
   },
   "links": {
-    "assetMetaDatas": "Метадані асету",
     "assetVersions": "Версії асету",
     "renditions": "Перетворення",
     "relatedAssets": "Пов'язані асети"

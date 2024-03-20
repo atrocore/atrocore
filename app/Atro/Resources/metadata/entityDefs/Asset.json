@@ -140,14 +140,6 @@
       "audited": false,
       "readOnly": false
     },
-    "assetMetadata": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "noLoad": true,
-      "importDisabled": true,
-      "exportDisabled": false
-    },
     "name": {
       "type": "varchar",
       "required": false,
@@ -256,14 +248,6 @@
     }
   },
   "links": {
-    "assetMetadata": {
-      "type": "hasMany",
-      "foreign": "asset",
-      "entity": "AssetMetadata",
-      "audited": false,
-      "entityAsset": false,
-      "disableMassRelation": true
-    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User",

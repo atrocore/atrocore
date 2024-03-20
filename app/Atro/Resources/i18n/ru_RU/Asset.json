@@ -17,7 +17,6 @@
     "isActive": "Активный",
     "image": "Изображение",
     "relatedAssets": "Связанные ассеты",
-    "assetMetaDatas": "Метаданные ассета",
     "assetVersions": "Версии ассета",
     "type": "Типы",
     "colorDepth": "Глубина представления цвета",
@@ -36,7 +35,6 @@
     "preview": "Предпросмотр"
   },
   "links": {
-    "assetMetaDatas": "Метаданные ассета",
     "assetVersions": "Версии ассета",
     "renditions": "Преобразование",
     "relatedAssets": "Связанные ассеты"
