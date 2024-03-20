@@ -54,7 +54,7 @@ class Note extends \Espo\Core\ORM\Entity
         }
 
         $collection = $this->entityManager->getRepository('Attachment')
-            ->select(['id', 'name', 'type'])
+            ->select(['id', 'name', 'type','storageFilePath','storageThumbPath'])
             ->where(['id' => $data->attachmentsIds])
             ->order('createdAt')
             ->find();
@@ -62,16 +62,21 @@ class Note extends \Espo\Core\ORM\Entity
         $attachmentsIds = [];
         $attachmentsNames = new \stdClass();
         $attachmentsTypes = new \stdClass();
+        $attachmentsPathsDatas = new \stdClass();
         foreach ($collection as $e) {
             $id = $e->id;
             $attachmentsIds[] = $id;
             $attachmentsNames->$id = $e->get('name');
             $attachmentsTypes->$id = $e->get('type');
+            $attachmentsPathsDatas->$id = $this->entityManager
+                ->getRepository('Attachment')
+                ->getAttachmentPathsData($e);
         }
 
         $this->set('attachmentsIds', $attachmentsIds);
         $this->set('attachmentsNames', $attachmentsNames);
         $this->set('attachmentsTypes', $attachmentsTypes);
+        $this->set('attachmentsPathsDatas', $attachmentsPathsDatas);
     }
 
     public function addNotifiedUserId($userId)

@@ -90,7 +90,7 @@ class Job
             ->find();
     }
 
-    public function isScheduledJobRunning($scheduledJobId, $targetId = null, $targetType = null)
+    public function getRunningScheduledJob($scheduledJobId, $targetId = null, $targetType = null): ?Entity
     {
         $where = [
             'scheduledJobId' => $scheduledJobId,
@@ -100,7 +100,8 @@ class Job
             $where['targetId'] = $targetId;
             $where['targetType'] = $targetType;
         }
-        return !!$this->getEntityManager()->getRepository('Job')->select(['id'])->where($where)->findOne();
+
+        return $this->getEntityManager()->getRepository('Job')->where($where)->findOne();
     }
 
     public function getRunningScheduledJobIdList()

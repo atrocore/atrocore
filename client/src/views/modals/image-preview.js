@@ -44,9 +44,11 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
         backdrop: true,
 
+        name: null,
+
         data: function () {
             return {
-                name: this.model.get('name'),
+                name:  this.name ?? this.model.get('name'),
                 url: this.getImageUrl(),
                 originalUrl: this.getOriginalImageUrl(),
                 size: this.size,

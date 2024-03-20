@@ -654,11 +654,11 @@ class RDB extends \Espo\ORM\Repository
                 if (!empty($relEntity)) {
                     // delete already deleted
                     $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
-                    $qb->delete($this->getEntityManager()->getConnection()->quoteIdentifier($this->getMapper()->toDb($relationEntityName)), 't2');
-                    $qb->where('t2.deleted = :true');
+                    $qb->delete($this->getEntityManager()->getConnection()->quoteIdentifier($this->getMapper()->toDb($relationEntityName)));
+                    $qb->where('deleted = :true');
                     $qb->setParameter("true", true, ParameterType::BOOLEAN);
                     foreach ($where as $f => $val) {
-                        $qb->andWhere("t2.{$this->getMapper()->toDb($f)} = :{$f}Val");
+                        $qb->andWhere("{$this->getMapper()->toDb($f)} = :{$f}Val");
                         $qb->setParameter("{$f}Val", $val, Mapper::getParameterType($val));
                     }
                     $qb->executeQuery();

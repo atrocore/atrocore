@@ -5,7 +5,8 @@
     "phoneNumber": "Phone",
     "description": "Description",
     "type": "Type",
-    "role": "Role"
+    "role": "Role",
+    "number": "Number"
   },
   "options": {
     "type": {

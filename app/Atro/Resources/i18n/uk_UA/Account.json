@@ -5,7 +5,8 @@
     "phoneNumber": "Телефон",
     "description": "Опис",
     "type": "типовий",
-    "role": "Роль"
+    "role": "Роль",
+    "number": "Номер"
   },
   "options": {
     "type": {
