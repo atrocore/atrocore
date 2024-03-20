@@ -1,11 +1,5 @@
 {
   "scopeNames": {
-    "Asset": "Ассет",
-    "Rendition": "Перетворення",
-    "RenditionMetaData": "Перетворення мета даних",
-    "AssetVariant": "Варіант асета",
-    "AssetVersion": "Версія асету",
-    "AssetType": "Тип асету",
     "ValidationRule": "Правило перевірки",
     "UiHandler": "Обробник інтерфейсу",
     "Action": "Дія",
@@ -58,10 +52,6 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
-    "Asset": "Асети",
-    "AssetVersion": "Версії асету",
-    "AssetVariant": "Варіанти асету",
-    "AssetType": "Типи асету",
     "validationRules": "Правила перевірки",
     "UiHandler": "Обробники інтерфейсу",
     "Action": "Дії",
@@ -777,10 +767,6 @@
       "isNot": "Не",
       "isNotOneOf": "Жоден з",
       "noneOf": "Жоден із"
-    },
-    "assetSearchRanges": {
-      "isEmpty": "Є NULL",
-      "isNotEmpty": "Не є NULL"
     },
     "varcharSearchRanges": {
       "equals": "Дорівнює",

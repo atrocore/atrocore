@@ -1,10 +1,5 @@
 {
   "scopeNames": {
-    "Asset": "Ассет",
-    "Rendition": "Преобразование",
-    "RenditionMetaData": "Преобразование мета данные",
-    "AssetVariant": "Вариант ассета",
-    "AssetVersion": "Версия ассета",
     "ValidationRule": "Правило проверки",
     "Sharing": "Шеринг",
     "Translation": "Надпись",
@@ -53,10 +48,7 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
-    "Asset": "Ассеты",
-    "AssetVersion": "Версии ассета",
-    "AssetVariant": "Варианты ассета",
-    "validationRules": "Правила проверки",
+    "ValidationRule": "Правила проверки",
     "Sharing": "Шеринги",
     "Translation": "Надписи",
     "Locale": "Локали",
@@ -740,10 +732,6 @@
       "isNot": "Не",
       "isNotOneOf": "Ни один из",
       "noneOf": "Ни один из"
-    },
-    "assetSearchRanges": {
-      "isEmpty": "Является NULL",
-      "isNotEmpty": "Не является NULL"
     },
     "varcharSearchRanges": {
       "equals": "Равняется",

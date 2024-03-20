@@ -106,7 +106,6 @@
     "url": "Url",
     "varchar": "String",
     "file": "File",
-    "asset": "Asset",
     "image": "Image",
     "extensibleMultiEnum": "Multi-value list",
     "multiEnum": "Static Multi-value list",

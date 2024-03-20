@@ -107,7 +107,6 @@
     "datetime": "Date-Time",
     "datetimeOptional": "Date/Date-Time",
     "url": "Url",
-    "asset": "Asset",
     "jsonArray": "Json Array",
     "jsonObject": "Json Object"
   },

@@ -98,7 +98,6 @@
     "varchar": "Einzeiliger Text",
     "file": "Datei",
     "image": "Bild",
-    "asset": "Asset",
     "extensibleMultiEnum": "Liste mit Mehrfachauswahl",
     "multiEnum": "Statische Liste mit Mehrfachauswahl",
     "attachmentMultiple": "Anhang mit Mehrfachauswahl",

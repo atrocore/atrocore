@@ -24,7 +24,6 @@
     "Admin": "Administrador",
     "Preferences": "Preferencias",
     "Account": "Cuenta",
-    "DocumentFolder": "Carpeta de documento",
     "KnowledgeBaseCategory": "Categoría de la base de conocimiento",
     "Country": "Country",
     "MeasuringUnit": "Measuring Unit",
@@ -672,10 +671,6 @@
       "isNot": "No es",
       "isNotOneOf": "Ninguno de",
       "noneOf": "Ninguno de"
-    },
-    "assetSearchRanges": {
-      "isEmpty": "Es NULL",
-      "isNotEmpty": "No es NULL"
     },
     "varcharSearchRanges": {
       "equals": "Equivale",
