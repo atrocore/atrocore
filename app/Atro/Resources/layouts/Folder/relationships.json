@@ -7,5 +7,8 @@
   },
   {
     "name": "storages"
+  },
+  {
+    "name": "files"
   }
 ]
