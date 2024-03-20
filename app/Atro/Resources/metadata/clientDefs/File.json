@@ -98,5 +98,19 @@
         }
       ]
     }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "storage": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "hash"
+            }
+          ]
+        }
+      }
+    }
   }
 }
