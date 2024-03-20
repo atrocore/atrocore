@@ -744,7 +744,7 @@ class Installer extends HasContainer
             }
         }
 
-        // create default file types
+        \Atro\Migrations\V1Dot10Dot0::createDefaultStorage($this->getEntityManager()->getConnection());
         \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
 
         // refresh translations
