@@ -24,6 +24,11 @@
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
+    "code": {
+      "type": "varchar",
+      "trim": true,
+      "unique": true
+    },
     "files": {
       "type": "linkMultiple",
       "noLoad": true

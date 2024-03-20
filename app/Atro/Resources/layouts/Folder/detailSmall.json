@@ -7,8 +7,20 @@
           "name": "name"
         },
         {
-          "name": "sortOrder"
+          "name": "code"
         }
+      ],
+      [
+        {
+          "name": "sortOrder"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description"
+        },
+        false
       ]
     ]
   }

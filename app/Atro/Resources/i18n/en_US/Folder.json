@@ -1,5 +1,6 @@
 {
   "fields": {
+    "code": "Code",
     "files": "Files",
     "storages": "Storages"
   },

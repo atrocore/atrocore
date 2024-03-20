@@ -20,15 +20,148 @@ class V1Dot10Dot0 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-03-18');
+        return new \DateTime('2024-03-21');
     }
 
     public function up(): void
+    {
+        $this->migrateAssetCategories();
+        $this->migrateAssetTypes();
+
+//        try {
+//            $res = $this->getConnection()->createQueryBuilder()
+//                ->select('aca.*, a.file_id')
+//                ->from('asset_category_asset', 'aca')
+//                ->join('aca', 'asset', 'a', 'a.id=aca.asset_id')
+//                ->fetchAllAssociative();
+//        } catch (\Throwable $e) {
+//            $res = [];
+//        }
+//
+//        foreach ($res as $v) {
+//            $this->getConnection()->createQueryBuilder()
+//                ->update('file')
+//                ->set('folder_id', ':folderId')
+//                ->where('id = :id')
+//                ->setParameter('id', $v['file_id'])
+//                ->setParameter('folderId', $v['asset_category_id'])
+//                ->executeQuery();
+//        }
+
+        $this->getConfig()->remove('whitelistedExtensions');
+        $this->getConfig()->save();
+
+        $this->updateComposer('atrocore/core', '^1.10.0');
+    }
+
+    public function down(): void
+    {
+        throw new Error('Downgrade is prohibited.');
+    }
+
+    protected function migrateAssetCategories(): void
+    {
+        try {
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('asset_category')
+                ->where('deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $res = [];
+        }
+
+        foreach ($res as $v) {
+            try {
+                $this->getConnection()->createQueryBuilder()
+                    ->delete('asset_category')
+                    ->where('id = :id')
+                    ->setParameter('id', $v['id'])
+                    ->executeQuery();
+            } catch (\Throwable $e) {
+            }
+
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->insert('folder')
+                ->setValue('id', ':id')
+                ->setValue('name', ':name')
+                ->setValue('description', ':description')
+                ->setValue('sort_order', ':sortOrder')
+                ->setValue('code', ':code')
+                ->setValue('created_at', ':createdAt')
+                ->setValue('modified_at', ':modifiedAt')
+                ->setValue('created_by_id', ':createdById')
+                ->setValue('modified_by_id', ':modifiedById')
+                ->setParameter('id', $v['id'])
+                ->setParameter('name', $v['name'])
+                ->setParameter('description', $v['description'])
+                ->setParameter('sortOrder', $v['sort_order'])
+                ->setParameter('code', $v['code'])
+                ->setParameter('createdAt', $v['created_at'])
+                ->setParameter('modifiedAt', $v['modified_at'])
+                ->setParameter('createdById', $v['created_by_id'])
+                ->setParameter('modifiedById', $v['modified_by_id']);
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+            }
+        }
+
+        try {
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('asset_category_hierarchy')
+                ->where('deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $res = [];
+        }
+
+        foreach ($res as $v) {
+            try {
+                $this->getConnection()->createQueryBuilder()
+                    ->delete('asset_category_hierarchy')
+                    ->where('id = :id')
+                    ->setParameter('id', $v['id'])
+                    ->executeQuery();
+            } catch (\Throwable $e) {
+            }
+
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->insert('folder_hierarchy')
+                ->setValue('id', ':id')
+                ->setValue('created_at', ':createdAt')
+                ->setValue('modified_at', ':modifiedAt')
+                ->setValue('created_by_id', ':createdById')
+                ->setValue('modified_by_id', ':modifiedById')
+                ->setValue('hierarchy_sort_order', ':hierarchySortOrder')
+                ->setValue('parent_id', ':parentId')
+                ->setValue('entity_id', ':entityId')
+                ->setParameter('id', $v['id'])
+                ->setParameter('createdAt', $v['created_at'])
+                ->setParameter('modifiedAt', $v['modified_at'])
+                ->setParameter('createdById', $v['created_by_id'])
+                ->setParameter('modifiedById', $v['modified_by_id'])
+                ->setParameter('hierarchySortOrder', $v['hierarchy_sort_order'])
+                ->setParameter('parentId', $v['parent_id'])
+                ->setParameter('entityId', $v['entity_id']);
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+            }
+        }
+    }
+
+    protected function migrateAssetTypes(): void
     {
         try {
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('*')
                 ->from('asset_type')
+                ->where('deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchAllAssociative();
         } catch (\Throwable $e) {
             $res = [];
@@ -44,7 +177,7 @@ class V1Dot10Dot0 extends Base
             } catch (\Throwable $e) {
             }
 
-            $this->getConnection()->createQueryBuilder()
+            $qb = $this->getConnection()->createQueryBuilder()
                 ->insert('file_type')
                 ->setValue('id', ':id')
                 ->setValue('name', ':name')
@@ -57,8 +190,11 @@ class V1Dot10Dot0 extends Base
                 ->setParameter('assignAutomatically', !empty($v['assign_automatically']), ParameterType::BOOLEAN)
                 ->setParameter('sortOrder', $v['sort_order'])
                 ->setParameter('createdById', $v['created_by_id'])
-                ->setParameter('modifiedById', $v['modified_by_id'])
-                ->executeQuery();
+                ->setParameter('modifiedById', $v['modified_by_id']);
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+            }
         }
 
         try {
@@ -72,16 +208,6 @@ class V1Dot10Dot0 extends Base
         }
 
         self::createDefaultFileTypes($this->getConnection());
-
-        $this->getConfig()->remove('whitelistedExtensions');
-        $this->getConfig()->save();
-
-        $this->updateComposer('atrocore/core', '^1.10.0');
-    }
-
-    public function down(): void
-    {
-        throw new Error('Downgrade is prohibited.');
     }
 
     public static function createDefaultFileTypes(Connection $conn): void
