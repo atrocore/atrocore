@@ -33,7 +33,9 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
+/**
+ * @deprecated
+ */
 class Image extends File
 {
-
 }

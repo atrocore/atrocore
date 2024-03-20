@@ -33,30 +33,10 @@
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
+/**
+ * @deprecated
+ */
 class Attachments extends HasChildren
 {
-    protected function load($linkName, $entityName)
-    {
-        $parentRelation = parent::load($linkName, $entityName);
-
-        $relation = [
-            $entityName => [
-                'fields' => [
-                    $linkName.'Types' => [
-                        'type' => 'jsonObject',
-                        'notStorable' => true,
-                    ],
-                    $linkName.'PathsDatas' => [
-                        'type' => 'jsonObject',
-                        'notStorable' => true,
-                    ],
-                ]
-            ]
-        ];
-
-        $relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
-
-        return $relation;
-    }
 }
 

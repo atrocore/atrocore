@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
 /**
- * Class Asset
+ * @deprecated
  */
 class Asset extends File
 {
