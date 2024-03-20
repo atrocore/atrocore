@@ -221,25 +221,6 @@
       "importDisabled": true,
       "massUpdateDisabled": true
     },
-    "relatedAssets": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true,
-      "noLoad": true
-    },
-    "children": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "noLoad": true
-    },
-    "parents": {
-      "type": "linkMultiple",
-      "view": "views/fields/hierarchy-parents",
-      "massUpdateDisabled": true,
-      "noLoad": false
-    },
     "sortOrder": {
       "type": "int",
       "default": null,
@@ -263,55 +244,6 @@
       "entity": "Attachment",
       "skipOrmDefs": true,
       "entityAsset": false
-    },
-    "relatedAssets": {
-      "type": "hasMany",
-      "relationName": "assetAsset",
-      "foreign": "assetsLeft",
-      "entity": "Asset",
-      "audited": false,
-      "midKeys": [
-        "leftId",
-        "rightId"
-      ],
-      "disableMassRelation": true
-    },
-    "assetsLeft": {
-      "type": "hasMany",
-      "relationName": "assetAsset",
-      "foreign": "relatedAssets",
-      "entity": "Asset",
-      "layoutRelationshipsDisabled": true,
-      "audited": false,
-      "midKeys": [
-        "rightId",
-        "leftId"
-      ],
-      "disableMassRelation": true
-    },
-    "children": {
-      "type": "hasMany",
-      "relationName": "AssetHierarchy",
-      "foreign": "parents",
-      "entity": "Asset",
-      "audited": false,
-      "disableMassRelation": true,
-      "midKeys": [
-        "entityId",
-        "parentId"
-      ]
-    },
-    "parents": {
-      "type": "hasMany",
-      "relationName": "AssetHierarchy",
-      "foreign": "children",
-      "entity": "Asset",
-      "audited": false,
-      "disableMassRelation": true,
-      "midKeys": [
-        "parentId",
-        "entityId"
-      ]
     }
   },
   "collection": {
