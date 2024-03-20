@@ -1,8 +1,0 @@
-[
-    {"name":"name", "link": true},
-    {"name": "role", "width": 13},
-    {"name": "parent", "width": 18},
-    {"name": "related", "width": 18},
-    {"name": "createdAt", "width": 11},
-    {"name": "size", "width": 11, "align": "right"}
-]
