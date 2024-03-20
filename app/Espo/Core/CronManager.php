@@ -33,6 +33,7 @@
 
 namespace Espo\Core;
 
+use Atro\Core\Exceptions\Error;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Json;
 use Atro\Core\Exceptions\NotFound;
@@ -216,7 +217,12 @@ class CronManager extends Injectable
             $data = $job->get('data');
         }
 
-        $jobClass->$method($data, $job->get('targetId'), $job->get('targetType'), $job->get('scheduledJobId'));
+        $scheduledJob = $this->getEntityManager()->getRepository('ScheduledJob')->get($job->get('scheduledJobId'));
+        if (!empty($scheduledJob) && $scheduledJob->get('status') === 'Active') {
+            $jobClass->$method($data, $job->get('targetId'), $job->get('targetType'), $scheduledJob->get('id'));
+        } else {
+            throw new Error('ScheduledJob has been deleted or deactivated.');
+        }
     }
 
     /**
