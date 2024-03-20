@@ -27,8 +27,99 @@ class V1Dot10Dot0 extends Base
     {
         //@todo  prepare DB schema CREATE NEW TABLES
 
-        $this->migrateAssetCategories();
-        $this->migrateAssetTypes();
+//        $this->migrateAssetCategories();
+//        $this->migrateAssetTypes();
+        $this->migrateAssets();
+
+
+        //@todo prepare DB schema DELETE OLD TABLES
+
+//        $this->getConfig()->set('globalSearchEntityList', array_merge($this->getConfig()->get('globalSearchEntityList', []), ['File', 'Folder']));
+//        $this->getConfig()->set('tabList', array_merge($this->getConfig()->get('tabList', []), ['File', 'Folder']));
+//        $this->getConfig()->set('twoLevelTabList', array_merge($this->getConfig()->get('twoLevelTabList', []), ['File', 'Folder']));
+//        $this->getConfig()->set('quickCreateList', array_merge($this->getConfig()->get('quickCreateList', []), ['File', 'Folder']));
+//        $this->getConfig()->remove('whitelistedExtensions');
+//        $this->getConfig()->save();
+//
+//        $this->updateComposer('atrocore/core', '^1.10.0');
+    }
+
+    public function down(): void
+    {
+        throw new Error('Downgrade is prohibited.');
+    }
+
+    protected function migrateAssets(): void
+    {
+        try {
+            $res = $this->getConnection()->createQueryBuilder()
+                ->select('a.*, ass.type')
+                ->from($this->getConnection()->quoteIdentifier('attachment'), 'a')
+                ->leftJoin('a', $this->getConnection()->quoteIdentifier('asset'), 'ass', 'ass.file_id=a.id AND ass.deleted=:false')
+                ->where('a.deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+
+            echo '<pre>';
+            print_r($e->getMessage());
+            die();
+            $res = [];
+        }
+
+        echo '<pre>';
+        print_r($res);
+        die();
+
+        foreach ($res as $v) {
+            echo '<pre>';
+            print_r($v);
+            die();
+
+//            try {
+//                $this->getConnection()->createQueryBuilder()
+//                    ->delete('attachment')
+//                    ->where('id = :id')
+//                    ->setParameter('id', $v['id'])
+//                    ->executeQuery();
+//            } catch (\Throwable $e) {
+//            }
+
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->insert('file')
+                ->setValue('id', ':id')
+                ->setValue('name', ':name')
+                ->setValue('mime_type', ':mimeType')
+                ->setValue('sort_order', ':sortOrder')
+                ->setValue('private', ':private')
+                ->setValue('file_size', ':fileSize')
+                ->setValue('file_mtime', ':fileMtime')
+                ->setValue('hash', ':hash')
+                ->setValue('path', ':path')
+                ->setValue('thumbnails_path', ':thumbnailsPath')
+                ->setValue('storage_id', ':storageId')
+                ->setValue('type_id', ':typeId')
+                ->setValue('created_at', ':createdAt')
+                ->setValue('modified_at', ':modifiedAt')
+                ->setValue('created_by_id', ':createdById')
+                ->setValue('modified_by_id', ':modifiedById')
+
+                ->setParameter('id', $v['id'])
+                ->setParameter('name', $v['name'])
+                ->setParameter('description', $v['description'])
+                ->setParameter('sortOrder', $v['sort_order'])
+                ->setParameter('code', $v['code'])
+                ->setParameter('createdAt', $v['created_at'])
+                ->setParameter('modifiedAt', $v['modified_at'])
+                ->setParameter('createdById', $v['created_by_id'])
+                ->setParameter('modifiedById', $v['modified_by_id']);
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+            }
+
+        }
+
 
 //        try {
 //            $res = $this->getConnection()->createQueryBuilder()
@@ -49,23 +140,6 @@ class V1Dot10Dot0 extends Base
 //                ->setParameter('folderId', $v['asset_category_id'])
 //                ->executeQuery();
 //        }
-
-
-        //@todo prepare DB schema DELETE OLD TABLES
-
-        $this->getConfig()->set('globalSearchEntityList', array_merge($this->getConfig()->get('globalSearchEntityList', []), ['File', 'Folder']));
-        $this->getConfig()->set('tabList', array_merge($this->getConfig()->get('tabList', []), ['File', 'Folder']));
-        $this->getConfig()->set('twoLevelTabList', array_merge($this->getConfig()->get('twoLevelTabList', []), ['File', 'Folder']));
-        $this->getConfig()->set('quickCreateList', array_merge($this->getConfig()->get('quickCreateList', []), ['File', 'Folder']));
-        $this->getConfig()->remove('whitelistedExtensions');
-        $this->getConfig()->save();
-
-        $this->updateComposer('atrocore/core', '^1.10.0');
-    }
-
-    public function down(): void
-    {
-        throw new Error('Downgrade is prohibited.');
     }
 
     protected function migrateAssetCategories(): void

@@ -1,5 +1,17 @@
 {
   "fields": {
+    "type": {
+      "type": "multiEnum",
+      "required": false,
+      "fontSize": 1,
+      "options": [],
+      "isSorted": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false,
+      "prohibitedEmptyValue": true,
+      "emHidden": true
+    },
     "preview": {
       "type": "varchar",
       "view": "views/asset/fields/preview",
