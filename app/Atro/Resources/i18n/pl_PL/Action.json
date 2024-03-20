@@ -1,0 +1,35 @@
+{
+	"fields": {
+		"isActive": "Aktywny",
+		"type": "Typ",
+		"sourceEntity": "Źródłowa Jednostka",
+		"inBackground": "Wykonaj w tle",
+		"usage": "Wykorzystanie",
+		"massAction": "Akcja Masowa",
+		"display": "Wyświetlanie"
+	},
+	"labels": {
+		"Create Action": "Utwórz Akcję",
+		"execute": "Wykonaj"
+	},
+	"massActions": {
+		"execute": "Wykonaj"
+	},
+	"messages": {
+		"executeNow": "Czy na pewno chcesz wykonać wybraną akcję?"
+	},
+	"options": {
+		"usage": {
+			"entity": "Jednostka",
+			"record": "Rekord"
+		},
+		"display": {
+			"dropdown": "Rozwijane",
+			"single": "Pojedyncze"
+		}
+	},
+	"tooltips": {
+		"inBackground": "Akcja zostanie wykonana w tle bez bezpośredniej informacji o sukcesie/błędzie. Użyj tej opcji, jeśli wykonanie akcji zajmie więcej niż 30 sekund.",
+		"usage": "Wykorzystanie określa umiejscowienie akcji. Akcja Rekordu wymaga wcześniejszego zaznaczenia dotkniętych rekordów."
+	}
+}

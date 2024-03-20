@@ -1,0 +1,23 @@
+{
+	"fields": {
+		"name": "Nazwa",
+		"description": "Opis",
+		"units": "Jednostki",
+		"displayFormat": "Format wyświetlania"
+	},
+	"links": {
+		"units": "Jednostki"
+	},
+	"labels": {
+		"Create Measure": "Utwórz miarę"
+	},
+	"options": {
+		"displayFormat": {
+			"format1": "10€",
+			"format2": "€10"
+		}
+	},
+	"exceptions": {
+		"measureIsUsed": "Miarę '%s' używa pole '%s' w jednostce '%s'."
+	}
+}

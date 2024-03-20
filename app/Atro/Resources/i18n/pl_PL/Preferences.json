@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "locale": "Lokalizacja",
+    "assignmentNotifications": "Powiadomienia o przypisaniu",
+    "defaultCurrency": "Domyślna waluta",
+    "emailAddress": "Adres e-mail",
+    "receiveAssignmentEmailNotifications": "Powiadomienia o przypisaniu",
+    "receiveMentionEmailNotifications": "Powiadomienia o wspomnieniach w postach",
+    "receiveStreamEmailNotifications": "Powiadomienia o aktualizacjach w Strumieniu",
+    "autoFollowEntityTypeList": "Globalne automatyczne śledzenie",
+    "dashboardTabList": "Lista zakładek",
+    "theme": "Motyw",
+    "useCustomTabList": "Użyj niestandardowej listy zakładek",
+    "tabList": "Menu nawigacyjne",
+    "dashboardLayout": "Układ pulpitu",
+    "followEntityOnStreamPost": "Automatyczne śledzenie rekordu po opublikowaniu w Strumieniu",
+    "followCreatedEntities": "Automatyczne śledzenie utworzonych rekordów",
+    "followCreatedEntityTypeList": "Automatyczne śledzenie utworzonych rekordów określonych typów encji",
+    "scopeColorsDisabled": "Wyłącz kolory zakresu",
+    "tabColorsDisabled": "Wyłącz kolory ikon zakładek"
+  },
+  "links": {},
+  "labels": {
+    "Notifications": "Powiadomienia",
+    "User Interface": "Interfejs użytkownika",
+    "General": "Ogólne",
+    "Locale": "Lokalizacja",
+    "Reset Dashboard to Default": "Resetuj pulpit do domyślnych ustawień"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Automatycznie śledź WSZYSTKIE nowe rekordy (utworzone przez dowolnego użytkownika) wybranych typów encji. Aby móc zobaczyć informacje w strumieniu i otrzymywać powiadomienia o wszystkich rekordach w systemie.",
+    "followCreatedEntities": "Tworząc nowe rekordy, będą one automatycznie śledzone, nawet jeśli są przypisane do innego użytkownika.",
+    "followCreatedEntityTypeList": "Tworząc nowe rekordy określonych typów encji, będą one automatycznie śledzone, nawet jeśli są przypisane do innego użytkownika."
+  }
+}

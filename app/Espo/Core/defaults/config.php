@@ -113,7 +113,8 @@ return [
     'languageList'                          => [
         'en_US',
         'de_DE',
-        'uk_UA'
+        'uk_UA',
+        'pl_PL'
     ],
     'globalSearchEntityList'                => ['Asset', 'AssetCategory', 'Library'],
     'tabList'                               => ['Asset', 'AssetCategory', 'Library'],

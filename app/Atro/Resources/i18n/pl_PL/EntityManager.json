@@ -1,0 +1,92 @@
+{
+"labels": {
+    "Fields": "Pola",
+    "Relationships": "Relacje",
+    "Schedule": "Harmonogram",
+    "Log": "Log",
+    "accessManagement": "Zarządzanie dostępem",
+    "hierarchyManagement": "Zarządzanie hierarchią",
+    "other": "Inne"
+},
+"fields": {
+    "multiParents": "Wielu rodziców",
+    "dragAndDrop": "Przeciągnij i upuść",
+    "fieldValueInheritance": "Dziedziczenie wartości pola",
+    "unInheritedFields": "Niedziedziczone pola",
+    "relationInheritance": "Dziedziczenie relacji",
+    "unInheritedRelations": "Niedziedziczone relacje",
+    "hasAssignedUser": "Przypisany użytkownik",
+    "hasTeam": "Zespoły",
+    "hasAccount": "Konta",
+    "hasOwner": "Właściciel",
+    "hasArchive": "Archiwalny",
+    "hasActive": "Aktywowalny",
+    "name": "Nazwa",
+    "type": "Typ",
+    "labelSingular": "Etykieta pojedyncza",
+    "labelPlural": "Etykieta mnoga",
+    "stream": "Posiada strumień",
+    "label": "Etykieta",
+    "linkType": "Typ łącza",
+    "entityForeign": "Obcy byt",
+    "linkForeign": "Obce łącze",
+    "link": "Łącze",
+    "labelForeign": "Obca etykieta",
+    "sortBy": "Domyślna kolejność (pole)",
+    "sortDirection": "Domyślna kolejność (kierunek)",
+    "relationName": "Nazwa tabeli pośredniczącej",
+    "linkMultipleField": "Wiele pól łącza",
+    "linkMultipleFieldForeign": "Obce wiele pól łącza",
+    "disabled": "Wyłączone",
+    "textFilterFields": "Pola filtra tekstowego",
+    "audited": "Śledzenie zmian",
+    "auditedForeign": "Obce śledzone",
+    "statusField": "Pole statusu",
+    "beforeSaveCustomScript": "Niestandardowy skrypt przed zapisaniem",
+    "color": "Kolor",
+    "kanbanViewMode": "Widok Kanban",
+    "kanbanStatusIgnoreList": "Ignorowane grupy w widoku Kanban",
+    "iconClass": "Ikona",
+    "disableHierarchy": "Wyłącz hierarchię",
+    "modifiedExtendedRelations": "Relacje wpływające na datę/czas modyfikacji",
+    "duplicatableRelations": "Relacje możliwe do zduplikowania"
+},
+"options": {
+    "linkType": {
+    "manyToMany": "Wiele do wielu",
+    "oneToMany": "Jeden do wielu",
+    "manyToOne": "Wiele do jednego",
+    "parentToChildren": "Rodzic do dzieci",
+    "childrenToParent": "Dzieci do rodzica"
+    },
+    "sortDirection": {
+    "asc": "Rosnąco",
+    "desc": "Malejąco"
+    }
+},
+"messages": {
+    "entityCreated": "Encja została utworzona",
+    "linkAlreadyExists": "Konflikt nazw łącza.",
+    "linkConflict": "Konflikt nazw: łącze lub pole o tej samej nazwie już istnieje."
+},
+"exceptions": {
+    "manyToManyIsBlockedForRelationEntity": "Relacja wiele do wielu nie jest możliwa dla encji typu Relacja.",
+    "oneToManyIsBlockedForRelationEntity": "Relacja jeden do wielu nie jest możliwa dla encji typu Relacja"
+},
+"tooltips": {
+    "dragAndDrop": "Ta opcja aktywuje hierarchiczną kolejność sortowania, więc żadne inne sortowanie nie jest możliwe w nawigacji hierarchicznej.",
+    "unInheritedFields": "Wartości dla tych pól nie będą dziedziczone od elementu nadrzędnego.",
+    "unInheritedRelations": "Relacje z tymi encjami nie będą dziedziczone od elementu nadrzędnego.",
+    "hasAssignedUser": "Pokaż Przypisanego Użytkownika w Zarządzaniu dostępem",
+    "hasTeam": "Pokaż Zespoły w Zarządzaniu dostępem",
+    "hasAccount": "Pokaż Konta w Zarządzaniu dostępem",
+    "hasOwner": "Pokaż Właściciela w Zarządzaniu dostępem",
+    "statusField": "Aktualizacje tego pola są rejestrowane w strumieniu.",
+    "textFilterFields": "Pola używane do wyszukiwania tekstowego.",
+    "stream": "Strumień służy do pokazywania historii zmian i dodawania postów z załącznikami.",
+    "disabled": "Zaznacz, jeśli nie potrzebujesz tej encji w swoim systemie.",
+    "linkAudited": "Tworzenie powiązanego rekordu i łączenie go z istniejącym rekordem będzie rejestrowane w Strumieniu.",
+    "linkMultipleField": "Pole Wiele pól łącza zapewnia wygodny sposób edycji relacji. Nie używaj go, jeśli możesz mieć dużą liczbę powiązanych rekordów.",
+    "modifiedExtendedRelations": "Zmiany w tych relacjach spowodują aktualizację daty i czasu w \"Zmodyfikowano o\"."
+}
+}

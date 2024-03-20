@@ -1,0 +1,19 @@
+{
+	"fields": {
+		"user": "Użytkownik",
+		"ipAddress": "Adres IP",
+		"lastAccess": "Data ostatniego dostępu",
+		"createdAt": "Data logowania",
+		"isActive": "Aktywny",
+		"lifetime": "Czas życia",
+		"idleTime": "Czas bezczynności",
+		"authToken": "Token autoryzacyjny"
+	},
+	"links": {
+		"actionHistoryRecords": "Historia akcji"
+	},
+	"tooltips": {
+		"lifetime": "Czas życia powinien być podany w godzinach. Zero oznacza brak wygaśnięcia.",
+		"idleTime": "Czas bezczynności powinien być podany w godzinach. Zero oznacza brak wygaśnięcia."
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"fields": {
+		"isActive": "Aktywny",
+		"type": "Typ",
+		"entityType": "Encja",
+		"fields": "Pola",
+		"relationships": "Panele relacji",
+		"conditionsType": "Typ warunków",
+		"conditions": "Warunki"
+	},
+	"options": {
+		"conditionsType": {
+			"basic": "Podstawowy",
+			"script": "Skrypt"
+		}
+	},
+	"exceptions": {
+		"systemHandler": "Handler '%s' jest wymagany przez system i nie może zostać zmieniony ani usunięty."
+	},
+	"labels": {
+		"Create UiHandler": "Utwórz obsługę interfejsu użytkownika"
+	}
+}
