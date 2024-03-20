@@ -39,16 +39,20 @@ class Attachments extends HasChildren
     {
         $parentRelation = parent::load($linkName, $entityName);
 
-        $relation = array(
-            $entityName => array (
-                'fields' => array(
-                    $linkName.'Types' => array(
+        $relation = [
+            $entityName => [
+                'fields' => [
+                    $linkName.'Types' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                    $linkName.'PathsDatas' => [
+                        'type' => 'jsonObject',
+                        'notStorable' => true,
+                    ],
+                ]
+            ]
+        ];
 
         $relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
 
