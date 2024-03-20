@@ -1,0 +1,13 @@
+{
+	"fields": {
+		"code": "Kod",
+		"isActive": "Aktywny",
+		"assets": "Zasoby"
+	},
+	"links": {
+		"assets": "Zasoby"
+	},
+	"labels": {
+		"Create AssetCategory": "Utwórz kategorię zasobu"
+	}
+}

@@ -1,0 +1,28 @@
+{
+  "labels": {
+    "Field": "Pole"
+  },
+  "options": {
+    "operators": {
+      "equals": "Równa się",
+      "notEquals": "Nie równa się",
+      "greaterThan": "Większe niż",
+      "lessThan": "Mniejsze niż",
+      "greaterThanOrEquals": "Większe lub równe",
+      "lessThanOrEquals": "Mniejsze lub równe",
+      "in": "Zawiera",
+      "notIn": "Nie zawiera",
+      "inPast": "W przeszłości",
+      "inFuture": "W przyszłości",
+      "isToday": "Dzisiaj",
+      "isTrue": "Prawda",
+      "isFalse": "Fałsz",
+      "isEmpty": "Jest puste",
+      "isNotEmpty": "Nie jest puste",
+      "contains": "Zawiera",
+      "notContains": "Nie zawiera",
+      "has": "Zawiera",
+      "notHas": "Nie zawiera"
+    }
+  }
+}

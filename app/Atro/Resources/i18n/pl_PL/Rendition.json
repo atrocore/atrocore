@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "type": "Typ",
+    "image": "Obraz",
+    "file": "Plik",
+    "private": "Prywatny",
+    "width": "Szerokość",
+    "height": "Wysokość",
+    "size": "Rozmiar",
+    "colorDepth": "Głębia koloru",
+    "colorSpace": "Przestrzeń kolorów",
+    "orientation": "Orientacja",
+    "asset": "Zasób",
+    "assetMetaDatas": "Metadane zasobu",
+    "nameOfFile": "Nazwa pliku",
+    "renditionVersions": "Wersje opracowania",
+    "sizeUnit": "Jednostka rozmiaru"
+  },
+  "links": {
+    "asset": "Zasób",
+    "assetMetaDatas": "Metadane zasobu",
+    "renditionVersions": "Wersje opracowania",
+    "renditionMetaDatas": "Metadane opracowania"
+  },
+  "labels": {
+    "Create Rendition": "Utwórz opracowanie"
+  },
+  "options": {
+    "type": {
+      "wlq": "Niska jakość internetowa",
+      "whq": "Wysoka jakość internetowa",
+      "githumb1": "400px x 400px",
+      "githumb2": "800px x 800px",
+      "githumb3": "1280px x 1280px",
+      "githumb4": "1920px x 1920px"
+    }
+  }
+}

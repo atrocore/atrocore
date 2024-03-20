@@ -1,0 +1,15 @@
+{
+	"fields": {
+		"key": "Klucz",
+		"type": "Typ",
+		"value": "Wartość"
+	},
+	"options": {
+		"type": {
+			"text": "Tekst",
+			"float": "Liczba",
+			"bool": "Wartość logiczna",
+			"array": "Tablica"
+		}
+	}
+}

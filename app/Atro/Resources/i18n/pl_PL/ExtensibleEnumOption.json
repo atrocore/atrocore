@@ -1,0 +1,18 @@
+{
+	"fields": {
+		"name": "Wartość opcji",
+		"color": "Kolor",
+		"sortOrder": "Kolejność sortowania",
+		"extensibleEnums": "Listy"
+	},
+	"links": {
+		"extensibleEnums": "Listy"
+	},
+	"labels": {
+		"Create ExtensibleEnumOption": "Utwórz opcję listy"
+	},
+	"exceptions": {
+		"extensibleEnumOptionIsSystem": "Opcja listy '%s' jest wymagana przez system.",
+		"extensibleEnumOptionIsUsed": "Opcja listy '%s' jest używana przez pole '%s' w jednostce '%s' dla rekordu '%s'."
+	}
+}
