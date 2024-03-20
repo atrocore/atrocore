@@ -44,7 +44,6 @@ class Container
             'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
             'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
             'chatgpt'                  => \Atro\Core\ChatGpt\ChatGptClient::class,
-            'configManager'            => \Atro\Core\ConfigManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,

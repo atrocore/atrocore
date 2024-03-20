@@ -29,8 +29,6 @@ class FileValidator
 
     public function validateFile(Entity $fileType, FileEntity $entity, bool $error = false): bool
     {
-
-
         foreach ($fileType->get('validationRules') as $rule) {
             if (empty($rule->get('isActive'))) {
                 continue;
