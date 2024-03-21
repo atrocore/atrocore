@@ -1,0 +1,19 @@
+{
+	"fields": {
+		"language": "Język",
+		"timeZone": "Strefa czasowa",
+		"dateFormat": "Format daty",
+		"weekStart": "Pierwszy dzień tygodnia",
+		"timeFormat": "Format czasu",
+		"thousandSeparator": "Separator tysięcy",
+		"decimalMark": "Znak dziesiętny"
+	},
+	"labels": {
+		"sunday": "Niedziela",
+		"monday": "Poniedziałek",
+		"Create Locale": "Utwórz lokalizację"
+	},
+	"exceptions": {
+		"localeIsUsed": "Lokalizacja w użyciu nie może zostać usunięta."
+	}
+}

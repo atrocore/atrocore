@@ -1,0 +1,91 @@
+{
+	"fields": {
+		"department": "Dział",
+		"name": "Nazwa Wyświetlana",
+		"userName": "Nazwa Użytkownika",
+		"title": "Tytuł",
+		"isAdmin": "Czy Jest Adminem",
+		"defaultTeam": "Domyślny Zespół",
+		"emailAddress": "Email",
+		"phoneNumber": "Telefon",
+		"roles": "Role",
+		"teamRole": "Stanowisko",
+		"password": "Hasło",
+		"currentPassword": "Aktualne Hasło",
+		"passwordConfirm": "Potwierdź Hasło",
+		"newPassword": "Nowe Hasło",
+		"newPasswordConfirm": "Potwierdź Nowe Hasło",
+		"avatar": "Awatar",
+		"isActive": "Czy Jest Aktywny",
+		"account": "Konto",
+		"sendAccessInfo": "Wyślij Email z Informacjami o Dostępie do Użytkownika",
+		"gender": "Płeć",
+		"position": "Pozycja w Zespole",
+		"ipAddress": "Adres IP",
+		"passwordPreview": "Podgląd Hasła",
+		"isSuperAdmin": "Czy Jest Super Adminem",
+		"lastAccess": "Ostatni Dostęp",
+		"type": "Typ"
+	},
+	"links": {
+		"teams": "Zespoły",
+		"roles": "Role",
+		"notes": "Notatki",
+		"account": "Konto",
+		"tasks": "Zadania"
+	},
+	"labels": {
+		"Create User": "Utwórz Użytkownika",
+		"Generate": "Generuj",
+		"Access": "Dostęp",
+		"Preferences": "Preferencje",
+		"Change Password": "Zmień Hasło",
+		"Teams and Access Control": "Zespoły i Kontrola Dostępu",
+		"Forgot Password?": "Zapomniałeś Hasła?",
+		"Password Change Request": "Prośba o Zmianę Hasła",
+		"Email Address": "Adres Email",
+		"External Accounts": "Konta Zewnętrzne",
+		"Email Accounts": "Konta Email"
+	},
+	"tooltips": {
+		"defaultTeam": "Wszystkie rekordy utworzone przez tego użytkownika będą domyślnie powiązane z tym zespołem.",
+		"userName": "Dozwolone są litery a-z, cyfry 0-9, kropki, myślniki, znaki @ i podkreślenia.",
+		"isAdmin": "Użytkownik admin może mieć dostęp do wszystkiego.",
+		"isActive": "Jeśli niezaznaczone, użytkownik nie będzie mógł się zalogować.",
+		"teams": "Zespoły, do których należy ten użytkownik. Poziom kontroli dostępu jest dziedziczony z ról zespołu.",
+		"roles": "Dodatkowe role dostępu. Użyj ich, jeśli użytkownik nie należy do żadnego zespołu lub musisz rozszerzyć poziom kontroli dostępu wyłącznie dla tego użytkownika.",
+		"password": "Pozostaw to pole puste, jeśli chcesz zachować stare hasło.",
+		"passwordConfirm": "Pozostaw to pole puste, jeśli chcesz zachować stare hasło."
+	},
+	"messages": {
+		"accountInfoEmailSubject": "Informacje o Dostępie do Użytkownika AtroCore",
+		"passwordWillBeSent": "Hasło zostanie wysłane na adres email użytkownika.",
+		"accountInfoEmailBody": "Twoje informacje dostępowe:\n\nNazwa Użytkownika: {userName}\nHasło: {password}\n\n{siteUrl}",
+		"passwordChangeLinkEmailSubject": "Prośba o Zmianę Hasła",
+		"passwordChangeLinkEmailBody": "Możesz zmienić swoje hasło, klikając w ten link {link}. Ten unikalny URL wygaśnie wkrótce.",
+		"passwordChanged": "Hasło zostało zmienione",
+		"userCantBeEmpty": "Nazwa Użytkownika nie może być pusta",
+		"wrongUsernamePasword": "Zła nazwa użytkownika/hasło",
+		"emailAddressCantBeEmpty": "Adres Email nie może być pusty",
+		"userNameEmailAddressNotFound": "Nazwa Użytkownika/Adres Email nie znaleziony",
+		"forbidden": "Zabronione, spróbuj ponownie później",
+		"uniqueLinkHasBeenSent": "Unikalny URL został wysłany na podany adres email.",
+		"passwordChangedByRequest": "Hasło zostało zmienione.",
+		"setupSmtpBefore": "Musisz skonfigurować <a href=\"{url}\">ustawienia SMTP</a>, aby system mógł wysyłać hasło emailem.",
+		"userNameExists": "Nazwa Użytkownika już istnieje"
+	},
+	"options": {
+		"gender": {
+			"": "Nieustawione",
+			"Male": "Mężczyzna",
+			"Female": "Kobieta",
+			"Neutral": "Neutralna"
+		}
+	},
+	"boolFilters": {
+		"onlyMyTeam": "Mój Zespół"
+	},
+	"presetFilters": {
+		"active": "Aktywny"
+	}
+}

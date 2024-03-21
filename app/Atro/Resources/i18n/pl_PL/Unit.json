@@ -1,0 +1,24 @@
+{
+	"fields": {
+		"name": "Nazwa",
+		"description": "Opis",
+		"measure": "Miara",
+		"isMain": "Główny",
+		"multiplier": "Mnożnik",
+		"convertTo": "Konwertuj na",
+		"symbol": "Symbol",
+		"isActive": "Aktywny"
+	},
+	"links": {
+		"measure": "Miara",
+		"convertTo": "Konwertuj na"
+	},
+	"labels": {
+		"Create Unit": "Utwórz jednostkę",
+		"unitSetDefault": "Ustaw jako domyślną"
+	},
+	"exceptions": {
+		"defaultIsRequired": "Miara musi mieć domyślną jednostkę.",
+		"unitIsUsed": "Jednostka '%s' jest używana przez pole '%s' w jednostce '%s' dla rekordu '%s'."
+	}
+}

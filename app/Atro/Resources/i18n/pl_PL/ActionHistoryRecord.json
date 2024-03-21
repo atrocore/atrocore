@@ -1,0 +1,29 @@
+{
+	"fields": {
+		"user": "Użytkownik",
+		"action": "Akcja",
+		"createdAt": "Data",
+		"target": "Cel",
+		"targetType": "Typ Celu",
+		"authToken": "Token Autoryzacyjny",
+		"ipAddress": "Adres IP",
+		"authLogRecord": "Rekord Logowania"
+	},
+	"links": {
+		"authToken": "Token Autoryzacyjny",
+		"authLogRecord": "Rekord Logowania",
+		"user": "Użytkownik",
+		"target": "Cel"
+	},
+	"presetFilters": {
+		"onlyMy": "Tylko Moje"
+	},
+	"options": {
+		"action": {
+			"read": "Odczyt",
+			"update": "Aktualizacja",
+			"delete": "Usuwanie",
+			"create": "Tworzenie"
+		}
+	}
+}

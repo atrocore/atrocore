@@ -112,8 +112,7 @@ return [
     'smtpPort'                              => 25,
     'languageList'                          => [
         'en_US',
-        'de_DE',
-        'uk_UA'
+        'de_DE'
     ],
     'globalSearchEntityList'                => ['Asset', 'AssetCategory', 'Library'],
     'tabList'                               => ['Asset', 'AssetCategory', 'Library'],

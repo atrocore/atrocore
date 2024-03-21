@@ -1,0 +1,100 @@
+{
+  "labels": {
+    "Dynamic Logic": "Logika Dynamiczna",
+    "Name": "Nazwa",
+    "Label": "Etykieta",
+    "Type": "Typ"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Brak",
+      "javascript: return this.dateTime.getNow(1);": "Teraz",
+      "javascript: return this.dateTime.getNow(5);": "Teraz (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Teraz (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Teraz (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 godzina",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 godziny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 godziny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 godziny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 godzin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 godzin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 godzin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 godzin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 godzin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 godzin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 godzin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 godzin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 dzień",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dni",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 tydzień"
+    },
+    "dateDefault": {
+      "": "Brak",
+      "javascript: return this.dateTime.getToday();": "Dzisiaj",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 dzień",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dni",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 tydzień",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 tygodnie",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 tygodnie",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 miesiąc",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 miesiące",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 miesiące",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 miesiące",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 miesięcy",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 miesięcy",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 miesięcy",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 miesięcy",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 miesięcy",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 miesięcy",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 miesięcy",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 rok"
+    }
+  },
+  "tooltips": {
+    "isMultilang": "Automatyczne tworzenie pól poprzez klonowanie bieżącego pola tyle razy, ile jest aktywowanych języków w ustawieniach wielojęzycznych.",
+    "fontSize": "Rozmiar czcionki w em (względem bieżącego rozmiaru czcionki).",
+    "isSorted": "Opcje zostaną posortowane po zapisaniu.",
+    "audited": "Aktualizacje będą rejestrowane w strumieniu.",
+    "required": "Pole będzie obowiązkowe. Nie może pozostać puste.",
+    "default": "Wartość zostanie ustawiona domyślnie podczas tworzenia.",
+    "min": "Minimalna dopuszczalna wartość.",
+    "max": "Maksymalna dopuszczalna wartość.",
+    "seeMoreDisabled": "Jeśli nie zaznaczone, długie teksty do wyświetlenia zostaną skrócone.",
+    "lengthOfCut": "Zbyt długie znaki będą ukryte w trybie widoku.",
+    "maxLength": "Maksymalna dopuszczalna długość tekstu.",
+    "before": "Wartość daty powinna być przed wartością daty określonego pola.",
+    "after": "Wartość daty powinna być po wartości daty określonego pola.",
+    "readOnly": "Wartość pola nie może być określana przez użytkownika.",
+    "maxFileSize": "Jeśli puste lub 0, to brak limitu.",
+    "pattern": "Aby umożliwić tylko duże litery o długości 10 znaków, użyj \"/^[A-Z]{1,10}$/\"",
+    "foreignName": "Pole do pokazania w relacji."
+  },
+  "fieldParts": {
+    "unit": {
+      "unit": "(Jednostka)"
+    },
+    "datetimeOptional": {
+      "date": "Data"
+    }
+  },
+  "messages": {
+    "defaultValidationFailed": "Wartość domyślna nie może zawierać znaków specjalnych"
+  },
+  "exceptions": {
+    "regexNotValid": "Ten wzorzec REGEX nie jest prawidłowy.",
+    "someFieldNotUnique": "Niektóre wartości pola nie są unikalne.",
+    "someFieldDontMathToPattern": "Niektóre pola nie pasują do wzorca."
+  }
+}

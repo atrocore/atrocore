@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "status": "Status",
+    "executeTime": "Wykonaj o",
+    "attempts": "Pozostałe próby",
+    "failedAttempts": "Nieudane próby",
+    "serviceName": "Usługa",
+    "method": "Metoda (przestarzała)",
+    "methodName": "Metoda",
+    "scheduledJob": "Zaplanowane zadanie",
+    "scheduledJobJob": "Nazwa zaplanowanego zadania",
+    "data": "Dane"
+  },
+  "labels": {
+    "Pending": "Oczekujący",
+    "Success": "Sukces",
+    "Running": "Uruchomiony",
+    "Failed": "Niepowodzenie"
+  },
+  "options": {
+    "status": {
+      "Pending": "Oczekujący",
+      "Success": "Sukces",
+      "Running": "Uruchomiony",
+      "Failed": "Niepowodzenie"
+    }
+  }
+}
