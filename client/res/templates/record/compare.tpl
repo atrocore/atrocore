@@ -14,39 +14,57 @@
                    <tr>
                        <th></th>
                        <th>
-                           {{translate 'yourSystem'}}
+                           {{translate 'currentModel' category='Connector' scope='labels'}}
                        </th>
                        <th>
-                           Connection: {{distantModel._connection}}
+                           {{translate 'otherFrom' category='Connector' scope='labels'}} {{distantModel._connection}}
                        </th>
+                       <th width="25"></th>
                    </tr>
 
                 </thead>
                 <tbody>
-                {{#each simpleFields}}
-                    <tr class="list-row {{#if isLink}} active {{/if}} ">
-                        <td>{{translate fieldName scope=../../scope category='fields'}}</td>
-                        {{#if isLink}}
-                            <td class="cell"><a href="/#{{entity}}/view/{{current.id}}">{{current.name}}</a></td>
-                            <td class="cell"><a href="{{distantModel._baseUrl}}/#{{entity}}/view/{{distant.id}}">{{distant.name}}</a></td>
-                            <td class="cell" data-name="buttons">
-                                <div class="list-row-buttons btn-group pull-right">
-                                    <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        <span class="fas fa-ellipsis-v"></span>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="#" class="action" data-action="quickCompare" data-scope="{{entity}}" data-id="{{current.id}}">QuickCompare</a></li>
-                                    </ul>
-                                </div>
-                        </td>
-                        {{else}}
-                            <td class="cell">{{current}}</td>
-                            <td class="cell">{{distant}}</td>
-                            <td class="cell"></td>
-                        {{/if}}
+                    {{#each fieldsArr}}
+                       {{#if isField }}
+                        <tr class="list-row {{#if  different}} danger {{/if}}">
+                            <td class="cell">{{translate label scope=../scope category='fields'}}</td>
+                            <td class="cell ">
+                                <div class="field">{{{var current ../this}}}</div>
+                            </td>
+                            <td class="cell">
+                                <div class="field">{{{var other ../this}}}</div>
+                            </td>
+                            {{#if isLink }}
+                                <td class="cell" data-name="buttons">
+                                    <div class="list-row-buttons btn-group pull-right">
+                                        <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="fas fa-ellipsis-v"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right">
+                                            {{#if isLinkMultiple }}
+                                            <li> <a class="disabled panel-title">  {{translate 'QuickCompare' scope='Connector'}}</a></li>
+                                                {{#each values }}
+                                                    <li>
+                                                        <a href="#" class="action" data-action="quickCompare"
+                                                           data-scope="{{../foreignScope}}"
+                                                           data-id="{{id}}">
+                                                           {{ name }}
+                                                        </a>
+                                                    </li>
+                                                {{/each}}
+                                            {{else}}
+                                            <li><a href="#" class="action" data-action="quickCompare" data-scope="{{foreignScope}}" data-id="{{foreignId}}">QuickCompare</a></li>
+                                            {{/if}}
+                                        </ul>
+                                    </div>
+                                </td>
+                            {{else}}
+                             <td></td>
+                            {{/if}}
+                        </tr>
 
-                    </tr>
-                {{/each}}
+                       {{/if}}
+                    {{/each}}
                 </tbody>
             </table>
         </div>

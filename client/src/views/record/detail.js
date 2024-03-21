@@ -303,14 +303,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (this.getAcl().check(this.entityType, 'create')) {
                     let exists = false;
 
-                    for( const item of  (this.additionalButtons || [])){
+                    for( const item of  (this.dropdownItemList || [])){
                         if (item.name === 'compare') {
                            exists = true;
                         }
                     }
 
                     if(!exists){
-                        this.additionalButtons.push({
+                        this.dropdownItemList.push({
                             'label': 'Compare',
                             'name': 'compare',
                             'action': 'compare'

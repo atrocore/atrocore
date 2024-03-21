@@ -327,7 +327,7 @@ class Record extends Base
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
         foreach ($fieldDefs as $field => $defs) {
-            if (isset($defs['type']) && in_array($defs['type'], ['linkMultiple', 'attachmentMultiple']) && empty($defs['noLoad'])) {
+            if (isset($defs['type']) && in_array($defs['type'], ['linkMultiple', 'attachmentMultiple']) /*&& empty($defs['noLoad'])*/) {
                 $columns = null;
                 if (!empty($defs['columns'])) {
                     $columns = $defs['columns'];
@@ -389,7 +389,7 @@ class Record extends Base
         $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', array());
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] === 'link') {
-                if (!empty($defs['noLoad'])) continue;
+//                if (!empty($defs['noLoad'])) continue;
                 if (empty($linkDefs[$field])) continue;
                 if (empty($linkDefs[$field]['type'])) continue;
                 if ($linkDefs[$field]['type'] !== 'hasOne') continue;

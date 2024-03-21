@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('controllers/record', 'controller', function (Dep) {
+Espo.define('controllers/record', ['controller','view'], function (Dep, View) {
 
     return Dep.extend({
 
@@ -307,34 +307,60 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     scope: this.name,
                 });
             }.bind(this);
-            if ('model' in options) {
-                var model = options.model;
+            let select = []
+
+            if('model' in options && '_fullyLoaded' in options.model){
                 createView(model);
+                return;
+            }
 
-                this.listenToOnce(model, 'sync', function () {
-                    this.hideLoadingNotification();
-                }, this);
-                this.showLoadingNotification();
-                model.fetch();
+            let fieldDefs = this.getMetadata().get('entityDefs.'+this.name+'.fields')
+            let nonComparableFields = this.getMetadata().get('scopes.'+this.name+'.nonComparableFields') ?? []
+            Object.entries(fieldDefs).forEach(([field, fieldDef]) =>{
+                if(nonComparableFields.includes(field)){
+                    return;
+                }
 
-                this.listenToOnce(this.baseController, 'action', function () {
-                    model.abortLastFetch();
-                }, this);
-            } else {
+                if(field.includes('__')){
+                    return;
+                }
+
+                if(this.name === 'Product' && field === 'productAttributeValues'){
+                    select.push('productAttributeValues');
+                    return;
+                }
+
+                if(fieldDef.type === 'link'){
+                   select.push(field+'Id');
+                   select.push(field+'Name');
+                    return;
+                }
+
+                if(fieldDef.type === 'linkMultiple'){
+                    select.push(field+'Ids');
+                    select.push(field+'Names');
+                    return;
+                }
+
+                select.push(field)
+            })
+
+            const url = `${this.name}?where[0][type]=equals&where[0][attribute]=id&where[0][value]=${id}&select=${select.join(',')}`;
+            this.showLoadingNotification();
+            View.prototype.ajaxGetRequest(url, {}, {async: false}).success(data => {
+                const modalAttribute = data.list[0];
+                modalAttribute['_fullyLoaded'] = true;
+
                 this.getModel(function (model) {
                     model.id = id;
-                    this.showLoadingNotification();
-                    this.listenToOnce(model, 'sync', function () {
-                        createView(model);
-                        this.hideLoadingNotification();
-                    }, this);
-                    model.fetch({main: true});
+                    model.set(modalAttribute)
+                    createView(model);
+                    this.hideLoadingNotification();
 
-                    this.listenToOnce(this.baseController, 'action', function () {
-                        model.abortLastFetch();
-                    }, this);
-                });
-            }
+                    }.bind(this)
+                );
+            }, this);
+
         },
         /**
          * Get collection for the current controller.

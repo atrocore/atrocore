@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/compare', ['views/main', 'views/modal'], function (Dep, Modal) {
+Espo.define('views/compare', ['views/main'], function (Dep) {
 
     return Dep.extend({
 
@@ -41,24 +41,18 @@ Espo.define('views/compare', ['views/main', 'views/modal'], function (Dep, Modal
         scope: null,
 
         name: 'Compare',
-
         headerView: 'views/header',
         recordView: 'views/record/compare',
-
-        init(){
-          if(this.options.hasModal){
-              debugger
-              Modal.prototype.init.call(this)
-          }else{
-              Dep.prototype.init.call(this)
-          }
-        },
         setup: function () {
+
+            Dep.prototype.setup.call(this);
             this.model = this.options.model;
             this.scope = this.model.urlRoot;
-            this.setupHeader();
+            this.recordView = this.getMetadata().get('clientDefs.'+this.scope+'.compare.record') ?? 'view/record/compare'
             this.updatePageTitle();
+            this.setupHeader();
             this.setupRecord()
+
         },
 
         setupHeader: function () {
@@ -91,23 +85,23 @@ Espo.define('views/compare', ['views/main', 'views/modal'], function (Dep, Modal
             } else {
                 arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
             }
-            arr.push(this.getLanguage().translate('compare'));
+            arr.push(this.getLanguage().translate('Compare'));
+            arr.push(this.model.get('name'));
 
             return this.buildHeaderHtml(arr);
         },
 
-        setupRecord() {
+        setupRecord(name = 'record') {
             this.notify('Loading...');
             this.ajaxGetRequest(`Connector/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
                 this.notify(false);
-
                 var o = {
                     model: this.model,
-                    distantModel: attr,
-                    el: '#main > .record',
+                    distantModelAttribute: attr,
+                    el: '#main > .'+name,
                     scope: this.scope
                 };
-                this.createView('record', this.recordView, o);
+                this.createView(name, this.recordView, o);
             })
 
         },
@@ -115,11 +109,6 @@ Espo.define('views/compare', ['views/main', 'views/modal'], function (Dep, Modal
         getMenu(){
           return {
               "buttons": [
-                  {
-                      "label": "MergeEntity",
-                      "name": "MergeEntity",
-                      "type": "mergeEntity"
-                  }
               ]
           }
         },

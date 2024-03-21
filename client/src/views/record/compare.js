@@ -76,18 +76,116 @@ Espo.define('views/record/compare','view', function (Dep) {
         init(){
             Dep.prototype.init.call(this);
             this.id = this.model.get('id');
-            this.distantModel = this.options.distantModel;
+            this.distantModelAttribute = this.options.distantModelAttribute;
             this.scope = this.options.scope
-            this.fields = this.getMetadata().get('entityDefs.'+this.scope+'.fields');
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
+            this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
+            this.hideQuickMenu = this.options.hideQuickMenu
+        },
+        setup(){
+            this.getModelFactory().create(this.scope, function (model) {
+                var modelCurrent = this.model;
+                var modelOther = model.clone();
+                modelOther.set(this.distantModelAttribute);
+
+                this.fieldsArr = [];
+
+                let fieldDefs =  this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
+
+                Object.entries(fieldDefs).forEach(function ([field, fieldDef]) {
+                    if(field === "data"){
+                        return;
+                    }
+
+                    if(this.nonComparableFields.includes(field)){
+                        return ;
+                    }
+
+                    let type = fieldDef['type'];
+
+                    let fieldId = field;
+                    if (type === 'asset' || type === 'link') {
+                        fieldId = field + 'Id';
+                    } else if (type === 'linkMultiple') {
+                        fieldId = field + 'Ids';
+                    }
+
+
+
+                    if(!this.distantModelAttribute.hasOwnProperty(fieldId)){
+                        return ;
+                    }
+
+                    if (model.getFieldParam(field, 'isMultilang') && !modelCurrent.has(fieldId) && !modelOther.has(fieldId)) {
+                        return;
+                    }
+
+
+                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+                    this.createView(field + 'Current', viewName, {
+                        el: this.options.el + ' .current',
+                        model: modelCurrent,
+                        readOnly: true,
+                        defs: {
+                            name: field,
+                            label: field + ' 11'
+                        },
+                        mode: 'detail',
+                        inlineEditDisabled: true,
+                    });
+
+                    this.createView(field + 'Other', viewName, {
+                        el: this.options.el + ' .other',
+                        model: modelOther,
+                        readOnly: true,
+                        defs: {
+                            name: field
+                        },
+                        mode: 'detail',
+                        inlineEditDisabled: true,
+                    });
+
+                    let htmlTag = 'code';
+
+                    if (type === 'color' || type === 'enum') {
+                        htmlTag = 'span';
+                    }
+
+                    const isLink = type === 'link' || type === 'linkMultiple';
+                    isLinkMultiple = type === 'linkMultiple';
+
+                    const values = (isLinkMultiple && modelCurrent.get(fieldId)) ? modelCurrent.get(fieldId).map(v => {
+                            return {
+                                id:v,
+                                name: modelCurrent.get(field+'Names') ? (modelCurrent.get(field+'Names')[v] ?? v) : v
+                            }
+                        }) : null;
+                    this.fieldsArr.push({
+                        isField: true,
+                        field: field,
+                        label:fieldDef['label'] ?? field,
+                        current: field + 'Current',
+                        htmlTag: htmlTag,
+                        other: field + 'Other',
+                        isLink: isLink && this.hideQuickMenu !== true,
+                        foreignScope: isLink ? this.links[field].entity : null,
+                        foreignId: isLink ? modelCurrent.get(fieldId)?.toString() : null,
+                        isLinkMultiple: isLinkMultiple,
+                        values: values,
+                        different:  !this.areEquals(modelCurrent, modelOther, field, fieldDef)
+                    });
+
+                }, this);
+
+                this.wait(false);
+
+            }, this)
         },
         data (){
             return {
                 buttonList: this.buttonList,
-                model: this.model,
-                distantModel: this.distantModel,
-                simpleFields: this.getNonLinkMultipleFields(),
-                linkMultipleFields: this.linkMultipleFields(),
+                fieldsArr: this.fieldsArr,
+                distantModel: this.distantModelAttribute,
                 scope: this.scope,
                 id: this.id
             };
@@ -102,10 +200,11 @@ Espo.define('views/record/compare','view', function (Dep) {
                 model.id = data.id;
                 this.notify('Loading...');
                 this.listenToOnce(model, 'sync', function () {
-                    this.createView('dialog','views/compare',{
+
+                    this.createView('dialog','views/modals/compare',{
                         "model": model,
                         "scope": data.scope,
-                        "hasModal": true
+                        "mode":"details"
                     }, function(dialog){
                         dialog.render();
                         this.notify(false)
@@ -119,50 +218,30 @@ Espo.define('views/record/compare','view', function (Dep) {
                 }, this);
             }.bind(this));
         },
-        getNonLinkMultipleFields(){
-            let fields = [];
-            for (const [key, value] of Object.entries(this.fields)) {
-                 if(value.type !== 'linkMultiple' && !key.includes('__') ){
-                     if(value.type === "link"){
-                         fields.push({
-                             "fieldName": key,
-                             "isLink": true,
-                             "entity": this.links[key].entity,
-                             "current": {
-                                 "id" :this.model.get(key+'Id'),
-                                 "name": this.model.get(key+'Name')
-                             },
-                             "distant": {
-                                 "id": this.distantModel[key+'Id'],
-                                 "name": this.distantModel[key+'Name']
-                             }
-                         })
-                     }else{
-                         fields.push({
-                             "fieldName": key,
-                             "isLink": false,
-                             "current": this.model.get(key),
-                             "distant": this.distantModel[key],
-                             areEquals: this.model.get(key) === this.distantModel[key]
-                         })
-                     }
-                 }
-            }
-            return fields;
-        },
-        linkMultipleFields() {
-            let fields = [];
+        areEquals(current, other, field, fieldDef){
+            if(fieldDef['type'] === 'linkMultiple'){
+                const fieldId = field+'Ids';
+                const fieldName = field+'Names'
 
-            for (const [key, value] of Object.entries(this.fields)) {
-                if(value.type === 'linkMultiple'){
-                    fields.push({
-                        "fieldName": key,
-                        "type": value.type
-                    })
+                if(current.get(fieldId).length === 0 && other.get(fieldId).length === 0){
+                    return  true;
                 }
+
+                return current.get(fieldId).toString() === other.get(fieldId).toString()
+               && current.get(fieldName)?.toString() === other.get(fieldName)?.toString();
             }
 
-            return fields;
+            if(fieldDef['type'] === 'link'){
+                const fieldId = field+'Id';
+                const fieldName = field+'Name'
+                return current.get(fieldId) === other.get(fieldId) && current.get(fieldName) === other.get(fieldName);
+            }
+
+            return current.get(field)?.toString() === other.get(field)?.toString()
+
+        },
+        afterRender(){
+            this.$el.find('.list-row.different');
         }
     });
 });
