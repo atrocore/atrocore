@@ -151,6 +151,18 @@ class File extends Base
         return $fileStorage->getUrl($file);
     }
 
+    public function getPathsData(FileEntity $file): array
+    {
+        return [
+            'download'   => $this->getDownloadUrl($file),
+            'thumbnails' => [
+                'small'  => $this->getSmallThumbnailUrl($file),
+                'medium' => $this->getMediumThumbnailUrl($file),
+                'large'  => $this->getLargeThumbnailUrl($file)
+            ],
+        ];
+    }
+
     public function getDownloadUrl(FileEntity $file): string
     {
         return $this->getStorage($file)->getUrl($file);
