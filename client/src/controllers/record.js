@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('controllers/record', 'controller', function (Dep) {
+Espo.define('controllers/record', ['controller','view'], function (Dep, View) {
 
     return Dep.extend({
 
@@ -293,7 +293,46 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     current.fetch();
                 }.bind(this));
             }.bind(this));
-        },/**
+        },
+        beforeCompare: function () {
+            this.handleCheckAccess('edit');
+        },
+
+        compare: function (options) {
+            var id = options.id
+
+            var createView = function (model) {
+                this.main('views/compare', {
+                    model: model,
+                    scope: this.name,
+                });
+            }.bind(this);
+
+
+            if('model' in options && '_fullyLoaded' in options.model){
+                createView(model);
+                return;
+            }
+
+
+            this.showLoadingNotification();
+            View.prototype.ajaxGetRequest(View.prototype.generateEntityUrl.call(this, this.name, id), {}, {async: false}).success(data => {
+                const modalAttribute = data.list[0];
+                modalAttribute['_fullyLoaded'] = true;
+
+                this.getModel(function (model) {
+                    model.id = id;
+                    model.set(modalAttribute)
+                    createView(model);
+                    this.hideLoadingNotification();
+
+                    }.bind(this)
+                );
+            }, this);
+
+        },
+
+        /**
          * Get collection for the current controller.
          * @param {collection}.
          */

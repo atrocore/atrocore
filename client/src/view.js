@@ -246,6 +246,42 @@ Espo.define('view', [], function () {
                 cancelText: this.translate('Cancel'),
                 confirmStyle: confirmStyle
             }, callback, context);
+        },
+
+        generateEntityUrl(scope, id){
+            let select = []
+            let fieldDefs = this.getMetadata().get('entityDefs.'+scope+'.fields')
+            let nonComparableFields = this.getMetadata().get('scopes.'+scope+'.nonComparableFields') ?? []
+            Object.entries(fieldDefs).forEach(([field, fieldDef]) =>{
+                if(nonComparableFields.includes(field)){
+                    return;
+                }
+
+                if(field.includes('__')){
+                    return;
+                }
+
+                if(scope === 'Product' && field === 'productAttributeValues'){
+                    select.push('productAttributeValues');
+                    return;
+                }
+
+                if(fieldDef.type === 'link'){
+                    select.push(field+'Id');
+                    select.push(field+'Name');
+                    return;
+                }
+
+                if(fieldDef.type === 'linkMultiple'){
+                    select.push(field+'Ids');
+                    select.push(field+'Names');
+                    return;
+                }
+
+                select.push(field)
+            })
+
+            return `${scope}?where[0][type]=equals&where[0][attribute]=id&where[0][value]=${id}&select=${select.join(',')}`;
         }
     });
 
