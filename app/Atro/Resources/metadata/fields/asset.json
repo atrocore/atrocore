@@ -1,52 +1,9 @@
 {
-  "params": [
-    {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name": "previewSize",
-      "type": "enum",
-      "default": "small",
-      "prohibitedEmptyValue": true,
-      "view": "views/fields/enum",
-      "options": [
-        "small",
-        "medium",
-        "large"
-      ]
-    },
-    {
-      "name": "audited",
-      "type": "bool"
-    },
-    {
-      "name": "index",
-      "type": "bool"
-    }
-  ],
   "actualFields": [
     "id"
   ],
   "notActualFields": [
     "name"
   ],
-  "filter": true,
-  "multilingual": true,
-  "linkDefs": {
-    "type": "belongsTo",
-    "entity": "Attachment",
-    "skipOrmDefs": true
-  },
-  "personalData": true,
-  "types": [
-    "File"
-  ],
-  "hasPreviewExtensions": [
-    "jpg",
-    "jpeg",
-    "gif",
-    "png"
-  ]
+  "notCreatable": true
 }
