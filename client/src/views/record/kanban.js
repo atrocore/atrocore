@@ -305,11 +305,12 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             if (height < 100) {
                 height = 100;
+                this.$listKanban.find('td.group-column > div').css({
+                    minHeight: height + 'px'
+                });
             }
 
-            this.$listKanban.find('td.group-column > div').css({
-                minHeight: height + 'px'
-            });
+
         },
 
         getListLayout: function (callback) {
