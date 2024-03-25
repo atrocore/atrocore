@@ -48,7 +48,6 @@ Espo.define('views/modals/compare', ['views/modal','views/compare'], function (M
         buttons:[],
 
         setup: function () {
-
             this.model = this.options.model;
             this.scope = this.model.urlRoot;
             this.header = this.getLanguage().translate('Compare')+' '+this.scope+' '+this.model.get('name')
@@ -58,7 +57,6 @@ Espo.define('views/modals/compare', ['views/modal','views/compare'], function (M
                 label: 'Full View'
             });
             this.setupRecord()
-
         },
 
         setupRecord() {
@@ -69,20 +67,20 @@ Espo.define('views/modals/compare', ['views/modal','views/compare'], function (M
                     model: this.model,
                     distantModelAttribute: attr,
                     hideQuickMenu: true,
-                    // el: '#main  .modal-record',
                     scope: this.scope
                 };
                 this.createView('modalRecord', this.recordView, o);
             })
 
         },
+
         actionFullView(data){
             if (!this.getAcl().check(this.scope, 'read')) {
                 this.notify('Access denied', 'error');
                 return false;
             }
 
-            var url = '#' + this.scope + '/compare?id=' + this.model.get('id');
+            const url = '#' + this.scope + '/compare?id=' + this.model.get('id');
             this.getRouter().navigate(url, {trigger: false});
             this.getRouter().dispatch(this.scope, 'compare', {
                 id: this.model.get('id'),

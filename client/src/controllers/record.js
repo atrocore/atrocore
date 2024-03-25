@@ -362,6 +362,7 @@ Espo.define('controllers/record', ['controller','view'], function (Dep, View) {
             }, this);
 
         },
+
         /**
          * Get collection for the current controller.
          * @param {collection}.

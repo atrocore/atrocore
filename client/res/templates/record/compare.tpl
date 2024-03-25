@@ -14,10 +14,10 @@
                    <tr>
                        <th></th>
                        <th>
-                           {{translate 'currentModel' category='Connector' scope='labels'}}
+                           {{translate 'currentModel' scope='Connector' category='labels'}}
                        </th>
                        <th>
-                           {{translate 'otherFrom' category='Connector' scope='labels'}} {{distantModel._connection}}
+                           {{translate 'otherFrom' scope='Connector' category='labels'}} {{distantModel._connection}}
                        </th>
                        <th width="25"></th>
                    </tr>
@@ -29,10 +29,10 @@
                         <tr class="list-row {{#if  different}} danger {{/if}}">
                             <td class="cell">{{translate label scope=../scope category='fields'}}</td>
                             <td class="cell ">
-                                <div class="field">{{{var current ../this}}}</div>
+                                <div class="field">{{{var current ../../this}}}</div>
                             </td>
                             <td class="cell">
-                                <div class="field">{{{var other ../this}}}</div>
+                                <div class="field">{{{var other ../../this}}}</div>
                             </td>
                             {{#if isLink }}
                                 <td class="cell" data-name="buttons">
@@ -62,7 +62,57 @@
                              <td></td>
                             {{/if}}
                         </tr>
-
+                       {{else}}
+                           {{#if separator }}
+                              <tr>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                              </tr>
+                              <tr>
+                                  <th>
+                                      {{translate 'attribute' scope='Connector' category='labels'}} ({{translate 'channel' scope='Connector' category='labels'}}, {{translate 'language' scope='Connector' category='labels'}})
+                                  </th>
+                                  <th>{{translate 'currentModel' scope='Connector' category='labels'}}</th>
+                                  <th> {{translate 'otherFrom' scope='Connector' category='labels'}} {{distantModel._connection}}</th>
+                              </tr>
+                            {{else}}
+                                <tr class="list-row  {{#if  different}} danger {{/if}}" data-id="{{attributeId}}">
+                                    <td class="cell"><a href="#Attribute/view/{{attributeId}}"> {{attributeName}} ({{attributeChannel}}, {{language}})</a></td>
+                                    <td class="cell current">
+                                     {{{var current ../../../this}}}
+                                    </td>
+                                    <td class="cell other">
+                                        {{{var other ../../../this}}}
+                                    </td>
+                                    <td class="cell" data-name="buttons">
+                                        <div class="list-row-buttons btn-group pull-right">
+                                            <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <span class="fas fa-ellipsis-v"></span>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li> <a class="disabled panel-title">  {{translate 'QuickCompare' scope='Connector' category='labels'}}</a></li>
+                                                <li>
+                                                    <a href="#" class="action" data-action="quickCompare"
+                                                       data-scope="Attribute"
+                                                       data-id="{{attributeId}}">
+                                                        {{translate 'attribute' scope='Connector' category='labels'}}
+                                                    </a>
+                                                </li>
+                                                {{#if canQuickCompare }}
+                                                    <li>
+                                                        <a href="#" class="action" data-action="quickCompare"
+                                                           data-scope="ProductAttributeValue"
+                                                           data-id="{{productAttributeId}}">
+                                                            {{translate 'Value' scope='Attribute' category='labels'}}
+                                                        </a>
+                                                    </li>
+                                                {{/if}}
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/if}}
                        {{/if}}
                     {{/each}}
                 </tbody>
