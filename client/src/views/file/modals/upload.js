@@ -16,7 +16,13 @@ Espo.define('views/file/modals/upload', 'views/modals/edit',
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.buttonList = [];
+            this.buttonList = [
+                {
+                    name: 'cancel',
+                    label: 'Close'
+                }
+            ];
+
             this.header = this.translate('Upload', 'labels', 'File');
         },
 
