@@ -84,23 +84,15 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                 }
             },
             'click a[data-action="showImagePreview"]': function (e) {
-                var id = $(e.currentTarget).data('id');
-                this.createView('preview', 'views/modals/image-preview', {
-                    id: id,
-                    model: this.model,
-                    name: this.nameHash[id]
-                }, function (view) {
-                    view.render();
-                });
-            },
-            'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
 
                 var id = this.model.get(this.idName);
                 this.createView('preview', 'views/modals/image-preview', {
                     id: id,
                     model: this.model,
-                    name: this.model.get(this.nameName)
+                    name: this.model.get(this.nameName),
+                    downloadUrl: this.getFilePathsData().download,
+                    thumbnailUrl: this.getFilePathsData().thumbnails.large,
                 }, function (view) {
                     view.render();
                 });
@@ -165,7 +157,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             this.namePathsData = this.name + 'PathsData';
             this.idName = this.name + 'Id';
             this.typeName = this.name + 'Type';
-            this.foreignScope = 'Attachment';
+            this.foreignScope = 'File';
             this.streams = this.getConfig().get('fileUploadStreamCount') || 3;
             this.pieces = [];
 
@@ -300,7 +292,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
         },
 
         hasPreview: function (name) {
-            const hasPreviewExtensions = this.getMetadata().get('fields.asset.hasPreviewExtensions') || [];
+            const hasPreviewExtensions = this.getMetadata().get('app.file.image.extensions') || [];
             const fileExt = (name || '').split('.').pop().toLowerCase();
 
             return $.inArray(fileExt, hasPreviewExtensions) !== -1;
@@ -323,7 +315,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             }
         },
 
-        getAttachmentPathsData: function () {
+        getFilePathsData: function () {
             return this.model.get(this.namePathsData);
         },
 
@@ -340,7 +332,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
         },
 
         getImageUrl: function (id, size) {
-            let data = this.getAttachmentPathsData();
+            let data = this.getFilePathsData();
             if (!data) {
                 return '';
             }
@@ -351,14 +343,14 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                     size = 'small';
                 }
 
-                path = data.thumbs[size];
+                path = data.thumbnails[size];
             }
 
             return this.getBasePath() + '/' + path;
         },
 
         getDownloadUrl: function (id) {
-            let data = this.getAttachmentPathsData();
+            let data = this.getFilePathsData();
             if (!data) {
                 return this.getBasePath() + '?entryPoint=download&id=' + id;
             }

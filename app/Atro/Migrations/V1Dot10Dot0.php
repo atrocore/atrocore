@@ -59,6 +59,13 @@ class V1Dot10Dot0 extends Base
         $this->migrateAssetTypes();
         $this->migrateAssets();
 
+        $this->getConfig()->set('globalSearchEntityList', array_values(array_unique(array_merge($this->getConfig()->get('globalSearchEntityList', []), ['File', 'Folder']))));
+        $this->getConfig()->set('tabList', array_values(array_unique(array_merge($this->getConfig()->get('tabList', []), ['File', 'Folder']))));
+        $this->getConfig()->set('twoLevelTabList', array_values(array_unique(array_merge($this->getConfig()->get('twoLevelTabList', []), ['File', 'Folder']))));
+        $this->getConfig()->set('quickCreateList', array_values(array_unique(array_merge($this->getConfig()->get('quickCreateList', []), ['File', 'Folder']))));
+        $this->getConfig()->remove('whitelistedExtensions');
+        $this->getConfig()->save();
+
         if ($this->isPgSQL()) {
             //@todo prepare DB schema DELETE OLD TABLES
         } else {
@@ -74,13 +81,6 @@ class V1Dot10Dot0 extends Base
 //            $this->exec("DROP TABLE asset");
 //            $this->exec("DROP TABLE attachment");
         }
-
-        $this->getConfig()->set('globalSearchEntityList', array_values(array_unique(array_merge($this->getConfig()->get('globalSearchEntityList', []), ['File', 'Folder']))));
-        $this->getConfig()->set('tabList', array_values(array_unique(array_merge($this->getConfig()->get('tabList', []), ['File', 'Folder']))));
-        $this->getConfig()->set('twoLevelTabList', array_values(array_unique(array_merge($this->getConfig()->get('twoLevelTabList', []), ['File', 'Folder']))));
-        $this->getConfig()->set('quickCreateList', array_values(array_unique(array_merge($this->getConfig()->get('quickCreateList', []), ['File', 'Folder']))));
-        $this->getConfig()->remove('whitelistedExtensions');
-        $this->getConfig()->save();
 
         $this->updateComposer('atrocore/core', '^1.10.0');
     }
