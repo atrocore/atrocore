@@ -152,28 +152,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
-                    this.notify('Loading...');
-
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
-
-                    this.createView('dialog', viewName, {
-                        scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode != 'search',
-                        filters: this.getSelectFilters(),
-                        boolFilterList: this.getSelectBoolFilterList(),
-                        boolFilterData: this.getBoolFilterData(),
-                        primaryFilterName: this.getSelectPrimaryFilterName(),
-                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
-                        mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                        forceSelectAllAttributes: this.forceSelectAllAttributes
-                    }, function (view) {
-                        view.render();
-                        this.notify(false);
-                        this.listenToOnce(view, 'select', function (model) {
-                            this.clearView('dialog');
-                            this.select(model);
-                        }, this);
-                    }, this);
+                   this.selectLink();
                 });
                 this.addActionHandler('clearLink', function () {
                     this.clearLink();
@@ -239,6 +218,31 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.searchData.nameValue = model.get('name');
             }
             this.trigger('change');
+        },
+
+        selectLink: function () {
+            this.notify('Loading...');
+
+            var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
+
+            this.createView('dialog', viewName, {
+                scope: this.foreignScope,
+                createButton: !this.createDisabled && this.mode != 'search',
+                filters: this.getSelectFilters(),
+                boolFilterList: this.getSelectBoolFilterList(),
+                boolFilterData: this.getBoolFilterData(),
+                primaryFilterName: this.getSelectPrimaryFilterName(),
+                createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                forceSelectAllAttributes: this.forceSelectAllAttributes
+            }, function (view) {
+                view.render();
+                this.notify(false);
+                this.listenToOnce(view, 'select', function (model) {
+                    this.clearView('dialog');
+                    this.select(model);
+                }, this);
+            }, this);
         },
 
         clearLink: function () {
