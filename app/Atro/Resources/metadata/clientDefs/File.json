@@ -9,6 +9,9 @@
   "recordViews": {
     "detail": "views/file/record/detail"
   },
+  "modalViews": {
+    "select": "views/file/modals/select-records"
+  },
   "treeScopes": [
     "Folder"
   ],

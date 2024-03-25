@@ -28,6 +28,7 @@ Espo.define('views/file/modals/upload', 'views/modals/edit',
             this.createView('files', 'views/file/upload', {
                 name: 'files',
                 model: this.model,
+                multiUpload: this.options.multiUpload ?? true,
                 el: this.getSelector() + ' .field[data-name="files"]',
                 mode: 'edit',
             }, view => {

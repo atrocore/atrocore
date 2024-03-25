@@ -1,19 +1,17 @@
 <div class="attachment-upload">
     <div class="clearfix attachment-control">
-        {{#unless uploadFromFileSystemDisabled}}
         <div class="center-block drag-and-drop-files">
             <label class="attach-file-label" title="{{translate 'attachFile'}}">
-                <span class="btn btn-default">
+                <span id="upload-area" class="btn btn-default">
                     <span class="btn-text">{{translate 'dragAndDropBtnText'}}</span>
                     <span class="btn-text btn-text-small">{{translate 'dragAndDropBtnTextSmall'}}</span>
                     <span class="btn-upload">
-                        <span class="btn btn-primary">{{translate 'upload'}}</span>
+                        <span id="upload-btn" class="btn btn-primary">{{translate 'upload'}}</span>
                     </span>
                 </span>
-                <input type="file" class="file pull-right" multiple>
+                <input id="upload-input" type="file" class="file pull-right" {{#if multiUpload}}multiple{{/if}}>
             </label>
         </div>
-        {{/unless}}
 
         {{#if sourceList.length}}
         <div class="pull-left dropdown">

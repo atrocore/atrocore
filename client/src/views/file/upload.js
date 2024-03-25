@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fields/file', 'lib!MD5'], function (Dep, File, MD5) {
+Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5'], function (Dep, MD5) {
 
     return Dep.extend({
 
@@ -21,6 +21,8 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
         finalPieceSize: 10 * 1024,
 
         toLink: {},
+
+        multiUpload: true,
 
         events: _.extend(Dep.prototype.events, {
                 'click a.remove-attachment': function (e) {
@@ -53,6 +55,10 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
 
                     $div.parent().remove();
 
+                    this.$el.find('#upload-input').removeAttr('disabled');
+                    this.$el.find('#upload-btn').removeClass('disabled');
+                    this.$el.find('#upload-area').removeClass('disabled');
+
                     if (this.isDone()) {
                         this.model.trigger('updating-ended', {hideNotification: true});
                     }
@@ -75,6 +81,10 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
 
         setup() {
             Dep.prototype.setup.call(this);
+
+            if (this.options.multiUpload === false) {
+                this.multiUpload = false;
+            }
 
             this.fileList = [];
             this.uploadedSize = {};
@@ -106,6 +116,12 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
             }.bind(this));
         },
 
+        data() {
+            return {
+                multiUpload: this.multiUpload
+            };
+        },
+
         afterShowNotification: function () {
         },
 
@@ -127,11 +143,29 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
         },
 
         slice: function (file, start, end) {
-            return File.prototype.slice.call(this, file, start, end);
+            let slice = file.mozSlice ? file.mozSlice : file.webkitSlice ? file.webkitSlice : file.slice ? file.slice : noop;
+            return slice.bind(file)(start, end);
         },
 
         createFilePieces: function (file, sliceSize, start, stream) {
-            return File.prototype.createFilePieces.call(this, file, sliceSize, start, stream);
+            let end = start + sliceSize;
+
+            if (file.size - end < 0) {
+                end = file.size;
+            }
+
+            this.pieces.push({stream: stream, start: start, piece: this.slice(file, start, end)});
+
+            if (end < file.size) {
+                start += sliceSize;
+
+                stream++;
+                if (stream > this.streams){
+                    stream = 1;
+                }
+
+                this.createFilePieces(file, sliceSize, start, stream);
+            }
         },
 
         addFileBox: function (file) {
@@ -369,6 +403,12 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
         },
 
         uploadSuccess: function (file, attachment) {
+            if (!this.multiUpload) {
+                this.$el.find('#upload-input').attr('disabled', 'disabled');
+                this.$el.find('#upload-btn').addClass('disabled');
+                this.$el.find('#upload-area').addClass('disabled');
+            }
+
             this.model.trigger('after:file-upload');
             const $message = file.attachmentBox.parent().find('.uploading-message');
 
@@ -450,17 +490,6 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'views/fie
             } else {
                 $progress.parent().hide();
             }
-        },
-
-        findFile: function (uniqueId) {
-            let result = null;
-            this.fileList.forEach(function (item) {
-                if (item.uniqueId === uniqueId) {
-                    result = item;
-                }
-            });
-
-            return result;
         },
 
         pushPieceSize: function (file, size) {
