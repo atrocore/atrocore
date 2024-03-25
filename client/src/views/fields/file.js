@@ -40,7 +40,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
 
         detailTemplate: 'fields/file/detail',
 
-        editTemplate: 'fields/file/edit',
+        // editTemplate: 'fields/file/edit',
 
         showPreview: false,
 
@@ -104,18 +104,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
         },
 
         data: function () {
-            var data =_.extend({
-                id: this.model.get(this.idName),
-                acceptAttribue: this.acceptAttribue
-            }, Dep.prototype.data.call(this));
-
-            if (this.mode == 'edit') {
-                data.sourceList = this.sourceList;
-            }
-
-            data.valueIsSet = this.model.has(this.idName);
-
-            return data;
+            return _.extend({valueIsSet: this.model.has(this.idName)}, Dep.prototype.data.call(this));
         },
 
         showValidationMessage: function (msg, selector) {
@@ -191,6 +180,33 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                 this.acceptAttribue = this.accept.join('|');
             }
 
+            if (this.mode === 'edit') {
+                this.addActionHandler('selectLink', function () {
+                    this.notify('Loading...');
+                    this.createView('dialog', this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView, {
+                        scope: this.foreignScope,
+                        filters: this.getSelectFilters(),
+                        boolFilterList: this.getSelectBoolFilterList(),
+                        boolFilterData: this.getBoolFilterData(),
+                        primaryFilterName: this.getSelectPrimaryFilterName(),
+                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                        forceSelectAllAttributes: this.forceSelectAllAttributes
+                    }, function (view) {
+                        view.render();
+                        this.notify(false);
+                        this.listenToOnce(view, 'select', function (model) {
+                            this.clearView('dialog');
+                            this.select(model);
+                        }, this);
+                    }, this);
+                });
+
+                this.addActionHandler('clearLink', function () {
+                    Dep.prototype.clearLink.call(this);
+                });
+            }
+
             this.once('remove', function () {
                 if (this.resizeIsBeingListened) {
                     $(window).off('resize.' + this.cid);
@@ -207,6 +223,9 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
         afterRender: function () {
             if (this.mode == 'edit') {
                 this.$attachment = this.$el.find('div.attachment');
+
+                this.$elementId = this.$el.find('input[name="' + this.idName + '"]');
+                this.$elementName = this.$el.find('input[name="' + this.nameName + '"]');
 
                 var name = this.model.get(this.nameName);
                 var type = this.model.get(this.typeName) || this.defaultType;
@@ -498,7 +517,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                 start += sliceSize;
 
                 stream++;
-                if (stream > this.streams){
+                if (stream > this.streams) {
                     stream = 1;
                 }
 
@@ -524,7 +543,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                 return;
             }
 
-            if (pieces.length === 0){
+            if (pieces.length === 0) {
                 return;
             }
 
@@ -617,8 +636,8 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             }
 
             var $att = $('<div>').append(removeLink)
-                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
-                                 .addClass('gray-box');
+                .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
+                .addClass('gray-box');
 
             var $container = $('<div>').append($att);
             this.$attachment.append($container);
@@ -702,12 +721,6 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                 }, this);
                 return;
             }
-        },
-
-        fetch: function () {
-            var data = {};
-            data[this.idName] = this.model.get(this.idName);
-            return data;
         },
 
         createFileUniqueHash: function (file) {
