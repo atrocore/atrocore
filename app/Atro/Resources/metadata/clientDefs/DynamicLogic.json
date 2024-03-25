@@ -73,11 +73,11 @@
             "operatorString": "&isin;"
         },
         "contains": {
-            "view": "views/admin/dynamic-logic/conditions-string/item-value-link",
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
             "operatorString": "&niv;"
         },
         "notContains": {
-            "view": "views/admin/dynamic-logic/conditions-string/item-value-link",
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
             "operatorString": "&notni;"
         },
         "has": {
@@ -134,6 +134,10 @@
             "view": "views/admin/dynamic-logic/conditions/field-types/enum",
             "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "in", "notIn"]
         },
+        "extensibleEnum": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/extensible-enum",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
+        },
         "link": {
             "view": "views/admin/dynamic-logic/conditions/field-types/link",
             "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
@@ -157,6 +161,10 @@
         "multiEnum": {
             "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
             "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
+        },
+        "extensibleMultiEnum": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/extensible-multi-enum",
+            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains"]
         },
         "array": {
             "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
