@@ -48,6 +48,13 @@ class Attachment extends Base
         return !empty($this->valuesContainer['storage']) ? $this->valuesContainer['storage'] : "UploadDir";
     }
 
+    public function getValueMap()
+    {
+        $valueMap = parent::getValueMap();
+        $valueMap->isNew = $this->isNew();
+        return $valueMap;
+    }
+
     public function getFilePath(): string
     {
         return $this->entityManager->getRepository($this->getEntityType())->getFilePath($this);

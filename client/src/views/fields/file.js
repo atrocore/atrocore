@@ -68,6 +68,8 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
 
         piecesTotal: 0,
 
+        attachmentIsNew: false,
+
         events: {
             'click a.remove-attachment': function (e) {
                 var $div = $(e.currentTarget).parent();
@@ -376,7 +378,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             this.$attachment.empty();
 
             if (id) {
-                if (this.model.isNew()) {
+                if (this.model.isNew() && this.attachmentIsNew) {
                     this.getModelFactory().create('Attachment', function (attachment) {
                         attachment.id = id;
                         attachment.destroy();
@@ -432,6 +434,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                             if (!isCanceled) {
                                 $attachmentBox.trigger('ready');
                                 this.setAttachment(attachment);
+                                this.attachmentIsNew = response.isNew
                             }
                         }.bind(this)).fail(function () {
                             $attachmentBox.remove();

@@ -29,11 +29,13 @@ Espo.define('views/asset/fields/files', ['views/fields/attachment-multiple', 'vi
                     let hash = $div.attr('data-unique');
 
                     if (id) {
-                        $.ajax({
-                            type: 'DELETE',
-                            url: `Attachment/${id}?silent=true`,
-                            contentType: "application/json"
-                        });
+                        if($div.attr('data-is-new')==='true'){
+                            $.ajax({
+                                type: 'DELETE',
+                                url: `Attachment/${id}?silent=true`,
+                                contentType: "application/json"
+                            });
+                        }
 
                         let filesIds = [];
                         (this.model.get('filesIds') || []).forEach(function (fileId) {
@@ -390,6 +392,7 @@ Espo.define('views/asset/fields/files', ['views/fields/attachment-multiple', 'vi
 
             if (attachment !== null) {
                 file.attachmentBox.attr('data-id', attachment.id);
+                file.attachmentBox.attr('data-is-new', attachment.isNew);
             }
 
             let filesIds = this.model.get('filesIds') || [];
