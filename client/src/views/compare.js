@@ -6,7 +6,7 @@
  * Website: http://www.espocrm.com
  *
  * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore UG (haftungsbeschränkt).
+ * Copyright (C) 2020 AtroCore GmbH (haftungsbeschränkt).
  *
  * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
             Dep.prototype.setup.call(this);
             this.model = this.options.model;
             this.scope = this.model.urlRoot;
-            this.recordView = this.getMetadata().get('clientDefs.'+this.scope+'.compare.record') ?? 'view/record/compare'
+            this.recordView = this.getMetadata().get('clientDefs.'+this.scope+'.compare.record') ?? 'views/record/compare'
             this.updatePageTitle();
             this.setupHeader();
             this.setupRecord()
