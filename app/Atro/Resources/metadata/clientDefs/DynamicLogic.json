@@ -100,15 +100,15 @@
         },
         "email": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isEmpty", "isNotEmpty"]
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
         },
         "phone": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isEmpty", "isNotEmpty"]
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
         },
         "text": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isEmpty", "isNotEmpty"]
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
         },
         "int": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
