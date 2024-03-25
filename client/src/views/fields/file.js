@@ -73,7 +73,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
             if (this.mode === 'edit') {
                 this.addActionHandler('selectLink', function () {
-                    Dep.prototype.selectLink.call(this);
+                    this.selectLink();
                 });
 
                 this.addActionHandler('clearLink', function () {
@@ -172,6 +172,25 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
 
             return this.getBasePath() + data['download'];
+        },
+
+        selectLink: function () {
+            this.notify('Loading...');
+            this.createView('dialog', this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView, {
+                scope: this.foreignScope,
+                filters: this.getSelectFilters(),
+                boolFilterList: this.getSelectBoolFilterList(),
+                boolFilterData: this.getBoolFilterData(),
+                primaryFilterName: this.getSelectPrimaryFilterName(),
+                createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                forceSelectAllAttributes: this.forceSelectAllAttributes
+            }, view => {
+                view.render();
+                this.notify(false);
+                this.listenTo(view, 'select', model => this.select(model));
+                this.listenTo(view, 'unselect', () => this.clearLink());
+            });
         },
 
     });

@@ -32,37 +32,15 @@ Espo.define('views/file/modals/select-records', 'views/modals/select-records',
                 });
                 view.render();
 
-                // this.listenToOnce(view, 'leave', () => {
-                //     view.close();
-                //     this.close();
-                // });
+                view.listenTo(view.model, 'after:file-upload', entity => {
+                    this.getModelFactory().create('File', model => {
+                        model.set(entity);
+                        this.trigger('select', model);
+                    });
+                });
 
-                // this.listenToOnce(view, 'after:save', model => {
-                //     view.close();
-                //     this.trigger('select', model);
-                //     setTimeout(() => {
-                //         this.close();
-                //     }, 10);
-                // });
+                view.listenTo(view.model, 'after:delete-action', () => this.trigger('unselect'));
             });
-
-            // this.notify('Loading...');
-            // this.createView('upload', 'views/file/modals/upload', {
-            //     scope: 'File',
-            //     attributes: _.extend({}, this.getCreateAttributes() || {}),
-            //     fullFormDisabled: true,
-            //     layoutName: 'upload'
-            // }, view => {
-            //     view.notify(false);
-            //     this.listenToOnce(view, 'after:save', () => {
-            //         this.collection.fetch();
-            //         view.close();
-            //     });
-            //     view.listenTo(view.model, 'updating-started', () => view.disableButton('save'));
-            //     view.listenTo(view.model, 'updating-ended', () => view.enableButton('save'));
-            //     view.listenTo(view.model, 'after:file-upload after:file-delete', () => this.collection.fetch());
-            //     view.render();
-            // });
         },
 
         afterRender() {

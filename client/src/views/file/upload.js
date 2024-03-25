@@ -62,6 +62,8 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                     if (this.isDone()) {
                         this.model.trigger('updating-ended', {hideNotification: true});
                     }
+
+                    this.model.trigger('after:delete-action');
                 },
 
                 'click a.retry-upload': function (e) {
@@ -402,24 +404,24 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
             }
         },
 
-        uploadSuccess: function (file, attachment) {
+        uploadSuccess: function (file, entity) {
             if (!this.multiUpload) {
                 this.$el.find('#upload-input').attr('disabled', 'disabled');
                 this.$el.find('#upload-btn').addClass('disabled');
                 this.$el.find('#upload-area').addClass('disabled');
             }
 
-            this.model.trigger('after:file-upload');
+            this.model.trigger('after:file-upload', entity);
             const $message = file.attachmentBox.parent().find('.uploading-message');
 
             $message.html('');
 
-            if (attachment !== null) {
-                file.attachmentBox.attr('data-id', attachment.id).addClass('file-uploading-success');
+            if (entity !== null) {
+                file.attachmentBox.attr('data-id', entity.id).addClass('file-uploading-success');
                 file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<span class="fas fa-trash"></span>');
-                file.attachmentBox.find('.preview').html(`<a target="_blank" href="/#File/view/${attachment.id}">${attachment.name}</a>`);
-                if (attachment.duplicate) {
-                    let message = this.translate('fileHasDuplicate', 'messages', 'File').replace('{{id}}', attachment.duplicate.id);
+                file.attachmentBox.find('.preview').html(`<a target="_blank" href="/#File/view/${entity.id}">${entity.name}</a>`);
+                if (entity.duplicate) {
+                    let message = this.translate('fileHasDuplicate', 'messages', 'File').replace('{{id}}', entity.duplicate.id);
                     $message.html(message);
                 }
             }
