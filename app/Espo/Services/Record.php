@@ -453,99 +453,12 @@ class Record extends Base
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
         $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection, 'service' => $this]));
-
-        if (!empty($this->getMemoryStorage()->get('exportJobId')) || empty($collection[0])) {
-            return;
-        }
-
-        $fields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $data) {
-            if (in_array($data['type'], ['asset', 'image', 'file']) && empty($data['relationVirtualField'])) {
-                $fields[] = $field;
-            }
-        }
-
-        if (empty($fields)) {
-            return;
-        }
-
-        $ids = [];
-        foreach ($fields as $field) {
-            foreach ($collection as $entity) {
-                $id = $entity->get("{$field}Id");
-                if (!empty($id)) {
-                    $ids[] = $id;
-                }
-            }
-        }
-
-        if (empty($ids)) {
-            return;
-        }
-
-        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
-        foreach ($attachmentRepository->where(['id' => $ids])->find(["withDeleted" => true]) as $attachment) {
-            $attachments[$attachment->get('id')] = [
-                'name'      => $attachment->get('name'),
-                'pathsData' => $attachmentRepository->getAttachmentPathsData($attachment),
-            ];
-        }
-
-        foreach ($fields as $field) {
-            foreach ($collection as $entity) {
-                $attachmentId = $entity->get("{$field}Id");
-                if (isset($attachments[$attachmentId])) {
-                    $entity->set("{$field}Id", $attachmentId);
-                    $entity->set("{$field}Name", $attachments[$attachmentId]['name']);
-                    $entity->set("{$field}PathsData", $attachments[$attachmentId]['pathsData']);
-                } else {
-                    $entity->set("{$field}Id", null);
-                    $entity->set("{$field}Name", null);
-                }
-            }
-        }
+        // @todo load thumbnails and download url
     }
 
     public function loadPreview(Entity $entity): void
     {
-        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
-            return;
-        }
-
-        $fields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
-            if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Id"))) {
-                $fields[$field] = $entity->get("{$field}Id");
-            }
-        }
-
-        if (empty($fields)) {
-            return;
-        }
-
-        /** @var \Espo\Repositories\Attachment $attachmentRepository */
-        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
-
-        $attachments = $attachmentRepository
-            ->where(['id' => array_unique(array_values($fields))])
-            ->find();
-
-        foreach (array_keys($fields) as $field) {
-            $entity->set("{$field}Id", null);
-            $entity->set("{$field}Name", null);
-        }
-
-        if (!empty($attachments) && count($attachments) > 0) {
-            foreach ($attachments as $attachment) {
-                foreach ($fields as $field => $attachmentId) {
-                    if ($attachment->id == $attachmentId) {
-                        $entity->set("{$field}Id", $attachment->get('id'));
-                        $entity->set("{$field}Name", $attachment->get('name'));
-                        $entity->set("{$field}PathsData", $attachmentRepository->getAttachmentPathsData($attachment));
-                    }
-                }
-            }
-        }
+        // @todo load thumbnails and download url
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)
