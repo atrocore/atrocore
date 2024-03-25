@@ -48,4 +48,9 @@ class File extends Base
     {
         return $this->getEntityManager()->getRepository($this->entityType)->getLargeThumbnailUrl($this);
     }
+
+    public function getPathsData(): array
+    {
+        return $this->getEntityManager()->getRepository($this->entityType)->getPathsData($this);
+    }
 }
