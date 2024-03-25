@@ -29,7 +29,7 @@ Espo.define('views/asset/fields/files', ['views/fields/attachment-multiple', 'vi
                     let hash = $div.attr('data-unique');
 
                     if (id) {
-                        if($div.attr('data-is-new')==='true'){
+                        if ($div.attr('data-is-new') === 'true') {
                             $.ajax({
                                 type: 'DELETE',
                                 url: `Attachment/${id}?silent=true`,
@@ -392,7 +392,7 @@ Espo.define('views/asset/fields/files', ['views/fields/attachment-multiple', 'vi
 
             if (attachment !== null) {
                 file.attachmentBox.attr('data-id', attachment.id);
-                file.attachmentBox.attr('data-is-new', attachment.isNew);
+                file.attachmentBox.attr('data-is-new', attachment.isNew ? 'true' : 'false');
             }
 
             let filesIds = this.model.get('filesIds') || [];

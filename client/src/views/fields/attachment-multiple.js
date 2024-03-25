@@ -414,12 +414,12 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                                 $attachmentBox.trigger('ready');
                                 this.pushAttachment(attachment);
                                 $attachmentBox.attr('data-id', attachment.id);
-                                $attachmentBox.attr('data-is-new', response.isNew);
                                 uploadedCount++;
                                 if (uploadedCount == totalCount && this.isUploading) {
                                     this.isUploading = false;
                                     this.afterAttachmentsUploaded.call(this);
                                 }
+                                this.$attachments.find(`[data-id="${attachment.id}"]`)?.attr('data-is-new', response.isNew ? 'true' : 'false');
                             }
                         }.bind(this)).fail(function () {
                             $attachmentBox.remove();
@@ -448,7 +448,6 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 this.$attachments = this.$el.find('div.attachments');
 
                 var ids = this.model.get(this.idsName) || [];
-
                 var hameHash = this.model.get(this.nameHashName);
                 var typeHash = this.model.get(this.typeHashName) || {};
 
