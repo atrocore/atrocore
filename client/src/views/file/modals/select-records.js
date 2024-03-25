@@ -40,6 +40,10 @@ Espo.define('views/file/modals/select-records', 'views/modals/select-records',
                 });
 
                 view.listenTo(view.model, 'after:delete-action', () => this.trigger('unselect'));
+
+                this.listenToOnce(view, 'close', () => {
+                    this.close();
+                });
             });
         },
 
