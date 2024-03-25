@@ -42,8 +42,9 @@ class File extends Link
         $data = [
             $entityName => [
                 'fields' => [
-                    $fieldName . 'Id'   => ['type' => 'foreignId', 'index' => false],
-                    $fieldName . 'Name' => ['type' => 'foreign']
+                    $fieldName . 'Id'        => ['type' => 'foreignId', 'index' => false],
+                    $fieldName . 'Name'      => ['type' => 'foreign'],
+                    $fieldName . 'PathsData' => ['type' => 'jsonObject', 'notStorable' => true]
                 ]
             ],
             'unset'     => [
