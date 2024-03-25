@@ -35,6 +35,7 @@ namespace Espo\Core\Utils\Cron;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\CronManager;
+use Espo\Core\ORM\Entity;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\System;
