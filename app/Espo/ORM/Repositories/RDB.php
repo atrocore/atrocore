@@ -599,7 +599,7 @@ class RDB extends \Espo\ORM\Repository
             $relEntity->set($fieldsData);
 
             try {
-                $this->getEntityManager()->saveEntity($relEntity);
+                $this->getEntityManager()->saveEntity($relEntity, $options);
             } catch (UniqueConstraintViolationException $e) {
             }
 
@@ -663,7 +663,7 @@ class RDB extends \Espo\ORM\Repository
                     }
                     $qb->executeQuery();
 
-                    $this->getEntityManager()->removeEntity($relEntity);
+                    $this->getEntityManager()->removeEntity($relEntity, $options);
                     $result = true;
                 }
             }
