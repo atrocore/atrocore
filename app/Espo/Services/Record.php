@@ -453,12 +453,93 @@ class Record extends Base
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
         $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection, 'service' => $this]));
-        // @todo load thumbnails and download url
+
+        if (!empty($this->getMemoryStorage()->get('exportJobId')) || empty($collection[0])) {
+            return;
+        }
+
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $data) {
+            if (in_array($data['type'], ['asset', 'image', 'file']) && empty($data['relationVirtualField'])) {
+                $fields[] = $field;
+            }
+        }
+
+        if (empty($fields)) {
+            return;
+        }
+
+        $ids = [];
+        foreach ($fields as $field) {
+            foreach ($collection as $entity) {
+                $id = $entity->get("{$field}Id");
+                if (!empty($id)) {
+                    $ids[] = $id;
+                }
+            }
+        }
+
+        if (empty($ids)) {
+            return;
+        }
+
+        foreach ($this->getEntityManager()->getRepository('File')->where(['id' => $ids])->find(["withDeleted" => true]) as $file) {
+            $files[$file->get('id')] = [
+                'name'      => $file->get('name'),
+                'pathsData' => $file->getPathsData(),
+            ];
+        }
+
+        foreach ($fields as $field) {
+            foreach ($collection as $entity) {
+                $fileId = $entity->get("{$field}Id");
+                if (isset($files[$fileId])) {
+                    $entity->set("{$field}Id", $fileId);
+                    $entity->set("{$field}Name", $files[$fileId]['name']);
+                    $entity->set("{$field}PathsData", $files[$fileId]['pathsData']);
+                } else {
+                    $entity->set("{$field}Id", null);
+                    $entity->set("{$field}Name", null);
+                }
+            }
+        }
     }
 
     public function loadPreview(Entity $entity): void
     {
-        // @todo load thumbnails and download url
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
+            return;
+        }
+
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
+            if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Id"))) {
+                $fields[$field] = $entity->get("{$field}Id");
+            }
+        }
+
+        if (empty($fields)) {
+            return;
+        }
+
+        $files = $this->getEntityManager()->getRepository('File')
+            ->where(['id' => array_unique(array_values($fields))])
+            ->find();
+
+        foreach (array_keys($fields) as $field) {
+            $entity->set("{$field}Id", null);
+            $entity->set("{$field}Name", null);
+        }
+
+        foreach ($files as $file) {
+            foreach ($fields as $field => $fileId) {
+                if ($file->id == $fileId) {
+                    $entity->set("{$field}Id", $file->get('id'));
+                    $entity->set("{$field}Name", $file->get('name'));
+                    $entity->set("{$field}PathsData", $file->getPathsData());
+                }
+            }
+        }
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)
