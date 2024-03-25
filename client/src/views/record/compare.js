@@ -77,7 +77,7 @@ Espo.define('views/record/compare','view', function (Dep) {
             Dep.prototype.init.call(this);
             this.id = this.model.get('id');
             this.distantModelAttribute = this.options.distantModelAttribute;
-            this.scope = this.options.scope
+            this.scope = this.name =  this.options.scope
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
             this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
             this.hideQuickMenu = this.options.hideQuickMenu
@@ -196,11 +196,16 @@ Espo.define('views/record/compare','view', function (Dep) {
             }, this);
         },
         actionQuickCompare(data){
-            this.getModelFactory().create(data.scope, function (model) {
-                model.id = data.id;
-                this.notify('Loading...');
-                this.listenToOnce(model, 'sync', function () {
 
+            this.notify('Loading...');
+
+            this.ajaxGetRequest(this.generateEntityUrl(data.scope, data.id), {}, {async: false}).success(res => {
+                const modalAttribute = res.list[0];
+                modalAttribute['_fullyLoaded'] = true;
+
+                this.getModelFactory().create(data.scope, function (model) {
+                    model.id = data.id;
+                    model.set(modalAttribute)
                     this.createView('dialog','views/modals/compare',{
                         "model": model,
                         "scope": data.scope,
@@ -211,23 +216,20 @@ Espo.define('views/record/compare','view', function (Dep) {
                         console.log('dialog','dialog')
                     })
                 }, this);
-                model.fetch({main: true});
+            }, this);
 
-                this.listenToOnce(this.baseController, 'action', function () {
-                    model.abortLastFetch();
-                }, this);
-            }.bind(this));
         },
         areEquals(current, other, field, fieldDef){
             if(fieldDef['type'] === 'linkMultiple'){
                 const fieldId = field+'Ids';
                 const fieldName = field+'Names'
 
-                if(current.get(fieldId).length === 0 && other.get(fieldId).length === 0){
+
+                if((current.get(fieldId) && current.get(fieldId).length === 0) && (other.get(fieldId) && other.get(fieldId).length === 0)){
                     return  true;
                 }
 
-                return current.get(fieldId).toString() === other.get(fieldId).toString()
+                return current.get(fieldId)?.toString() === other.get(fieldId)?.toString()
                && current.get(fieldName)?.toString() === other.get(fieldName)?.toString();
             }
 

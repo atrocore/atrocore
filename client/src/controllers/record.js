@@ -307,47 +307,16 @@ Espo.define('controllers/record', ['controller','view'], function (Dep, View) {
                     scope: this.name,
                 });
             }.bind(this);
-            let select = []
+
 
             if('model' in options && '_fullyLoaded' in options.model){
                 createView(model);
                 return;
             }
 
-            let fieldDefs = this.getMetadata().get('entityDefs.'+this.name+'.fields')
-            let nonComparableFields = this.getMetadata().get('scopes.'+this.name+'.nonComparableFields') ?? []
-            Object.entries(fieldDefs).forEach(([field, fieldDef]) =>{
-                if(nonComparableFields.includes(field)){
-                    return;
-                }
 
-                if(field.includes('__')){
-                    return;
-                }
-
-                if(this.name === 'Product' && field === 'productAttributeValues'){
-                    select.push('productAttributeValues');
-                    return;
-                }
-
-                if(fieldDef.type === 'link'){
-                   select.push(field+'Id');
-                   select.push(field+'Name');
-                    return;
-                }
-
-                if(fieldDef.type === 'linkMultiple'){
-                    select.push(field+'Ids');
-                    select.push(field+'Names');
-                    return;
-                }
-
-                select.push(field)
-            })
-
-            const url = `${this.name}?where[0][type]=equals&where[0][attribute]=id&where[0][value]=${id}&select=${select.join(',')}`;
             this.showLoadingNotification();
-            View.prototype.ajaxGetRequest(url, {}, {async: false}).success(data => {
+            View.prototype.ajaxGetRequest(View.prototype.generateEntityUrl.call(this, this.name, id), {}, {async: false}).success(data => {
                 const modalAttribute = data.list[0];
                 modalAttribute['_fullyLoaded'] = true;
 

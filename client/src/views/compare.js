@@ -113,10 +113,10 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
           }
         },
 
-
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Compare')+' '+this.scope+' '+this.model.get('name'));
         },
+
     });
 });
 
