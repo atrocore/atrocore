@@ -16,9 +16,11 @@
                        <th>
                            {{translate 'currentModel' scope='Connector' category='labels'}}
                        </th>
-                       <th>
-                           {{translate 'otherFrom' scope='Connector' category='labels'}} {{distantModel._connection}}
-                       </th>
+                       {{#each distantModels}}
+                           <th>
+                               {{translate 'otherFrom' scope='Connector' category='labels'}} {{_connection}}
+                           </th>
+                       {{/each}}
                        <th width="25"></th>
                    </tr>
 
@@ -31,9 +33,11 @@
                             <td class="cell ">
                                 <div class="field">{{{var current ../../this}}}</div>
                             </td>
-                            <td class="cell">
-                                <div class="field">{{{var other ../../this}}}</div>
-                            </td>
+                            {{#each others}}
+                                <td class="cell">
+                                    <div class="field">{{{var other ../../../this}}}</div>
+                                </td>
+                            {{/each}}
                             {{#if isLink }}
                                 <td class="cell" data-name="buttons">
                                     <div class="list-row-buttons btn-group pull-right">
@@ -74,7 +78,11 @@
                                       {{translate 'attribute' scope='Connector' category='labels'}} ({{translate 'channel' scope='Connector' category='labels'}}, {{translate 'language' scope='Connector' category='labels'}})
                                   </th>
                                   <th>{{translate 'currentModel' scope='Connector' category='labels'}}</th>
-                                  <th> {{translate 'otherFrom' scope='Connector' category='labels'}} {{distantModel._connection}}</th>
+                                      {{#each ../../../distantModels}}
+                                          <th>
+                                              {{translate 'otherFrom' scope='Connector' category='labels'}} {{_connection}}
+                                          </th>
+                                      {{/each}}
                               </tr>
                             {{else}}
                                 <tr class="list-row  {{#if  different}} danger {{/if}}" data-id="{{attributeId}}">
@@ -82,9 +90,11 @@
                                     <td class="cell current">
                                      {{{var current ../../../this}}}
                                     </td>
-                                    <td class="cell other">
-                                        {{{var other ../../../this}}}
-                                    </td>
+                                    {{#each others}}
+                                        <td class="cell other{{index}}">
+                                            {{{var other ../../../../this}}}
+                                        </td>
+                                    {{/each}}
                                     <td class="cell" data-name="buttons">
                                         <div class="list-row-buttons btn-group pull-right">
                                             <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">

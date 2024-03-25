@@ -54,33 +54,39 @@ Espo.define('views/record/compare','view', function (Dep) {
         init(){
             Dep.prototype.init.call(this);
             this.id = this.model.get('id');
-            this.distantModelAttribute = this.options.distantModelAttribute;
+            this.distantModelsAttribute = this.options.distantModelsAttribute;
             this.scope = this.name =  this.options.scope
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
             this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
             this.hideQuickMenu = this.options.hideQuickMenu
         },
         setup(){
+            this.notify('Loading...')
             this.getModelFactory().create(this.scope, function (model) {
-                var modelCurrent = this.model;
-                var modelOther = model.clone();
-                modelOther.set(this.distantModelAttribute);
+                let modelCurrent = this.model;
+                let  modelOthers = [];
+                this.distantModelsAttribute.forEach((modelAttribute) => {
+                    let  m = model.clone();
+                    m.set(modelAttribute);
+                    modelOthers.push(m);
+                })
 
                 this.fieldsArr = [];
 
                 let fieldDefs =  this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
 
                 Object.entries(fieldDefs).forEach(function ([field, fieldDef]) {
-                    if(field === "data"){
-                        return;
-                    }
 
                     if(this.nonComparableFields.includes(field)){
                         return ;
                     }
 
-                    let type = fieldDef['type'];
+                    if(field.includes('_')){
+                        return ;
+                    }
 
+                    const  type = fieldDef['type'];
+                    const isLink = type === 'link' || type === 'linkMultiple';
                     let fieldId = field;
                     if (type === 'asset' || type === 'link') {
                         fieldId = field + 'Id';
@@ -88,20 +94,14 @@ Espo.define('views/record/compare','view', function (Dep) {
                         fieldId = field + 'Ids';
                     }
 
-
-
-                    if(!this.distantModelAttribute.hasOwnProperty(fieldId)){
-                        return ;
-                    }
-
-                    if (model.getFieldParam(field, 'isMultilang') && !modelCurrent.has(fieldId) && !modelOther.has(fieldId)) {
+                    if (model.getFieldParam(field, 'isMultilang')
+                        && !modelCurrent.has(fieldId)
+                        && !modelOthers.map(m => m.has(fieldId)).reduce((previous, current) => previous || current)) {
                         return;
                     }
 
-
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     this.createView(field + 'Current', viewName, {
-                        el: this.options.el + ' .current',
                         model: modelCurrent,
                         readOnly: true,
                         defs: {
@@ -112,16 +112,17 @@ Espo.define('views/record/compare','view', function (Dep) {
                         inlineEditDisabled: true,
                     });
 
-                    this.createView(field + 'Other', viewName, {
-                        el: this.options.el + ' .other',
-                        model: modelOther,
-                        readOnly: true,
-                        defs: {
-                            name: field
-                        },
-                        mode: 'detail',
-                        inlineEditDisabled: true,
-                    });
+                    modelOthers.forEach((model, index) => {
+                        this.createView(field + 'Other'+index, viewName, {
+                            model: model,
+                            readOnly: true,
+                            defs: {
+                                name: field
+                            },
+                            mode: 'detail',
+                            inlineEditDisabled: true,
+                        });
+                    })
 
                     let htmlTag = 'code';
 
@@ -129,7 +130,6 @@ Espo.define('views/record/compare','view', function (Dep) {
                         htmlTag = 'span';
                     }
 
-                    const isLink = type === 'link' || type === 'linkMultiple';
                     isLinkMultiple = type === 'linkMultiple';
 
                     const values = (isLinkMultiple && modelCurrent.get(fieldId)) ? modelCurrent.get(fieldId).map(v => {
@@ -138,32 +138,36 @@ Espo.define('views/record/compare','view', function (Dep) {
                                 name: modelCurrent.get(field+'Names') ? (modelCurrent.get(field+'Names')[v] ?? v) : v
                             }
                         }) : null;
+
                     this.fieldsArr.push({
                         isField: true,
                         field: field,
                         label:fieldDef['label'] ?? field,
                         current: field + 'Current',
                         htmlTag: htmlTag,
-                        other: field + 'Other',
+                        others: modelOthers.map((element, index) => {
+                            return  {other: field + 'Other'+index}
+                        }),
                         isLink: isLink && this.hideQuickMenu !== true,
                         foreignScope: isLink ? this.links[field].entity : null,
                         foreignId: isLink ? modelCurrent.get(fieldId)?.toString() : null,
                         isLinkMultiple: isLinkMultiple,
                         values: values,
-                        different:  !this.areEquals(modelCurrent, modelOther, field, fieldDef)
+                        different:  !this.areEquals(modelCurrent, modelOthers, field, fieldDef)
                     });
 
                 }, this);
 
-                this.wait(false);
+                this.addCustomRows(modelCurrent, modelOthers);
 
             }, this)
+
         },
         data (){
             return {
                 buttonList: this.buttonList,
                 fieldsArr: this.fieldsArr,
-                distantModel: this.distantModelAttribute,
+                distantModels: this.distantModelsAttribute,
                 scope: this.scope,
                 id: this.id
             };
@@ -197,31 +201,48 @@ Espo.define('views/record/compare','view', function (Dep) {
             }, this);
 
         },
-        areEquals(current, other, field, fieldDef){
+        areEquals(current, others, field, fieldDef){
             if(fieldDef['type'] === 'linkMultiple'){
                 const fieldId = field+'Ids';
                 const fieldName = field+'Names'
 
-
-                if((current.get(fieldId) && current.get(fieldId).length === 0) && (other.get(fieldId) && other.get(fieldId).length === 0)){
+                if(
+                    (current.get(fieldId) && current.get(fieldId).length === 0)
+                    && others.map(other =>(other.get(fieldId) && other.get(fieldId).length === 0)).reduce((prev, curr) => prev && curr))
+                {
                     return  true;
                 }
 
-                return current.get(fieldId)?.toString() === other.get(fieldId)?.toString()
-               && current.get(fieldName)?.toString() === other.get(fieldName)?.toString();
+                result = true;
+                for (const other of others) {
+                    result = result && current.get(fieldId)?.toString() === other.get(fieldId)?.toString()
+                        && current.get(fieldName)?.toString() === other.get(fieldName)?.toString();
+                }
+                return result
             }
 
             if(fieldDef['type'] === 'link'){
                 const fieldId = field+'Id';
                 const fieldName = field+'Name'
-                return current.get(fieldId) === other.get(fieldId) && current.get(fieldName) === other.get(fieldName);
+                result = true;
+
+                for (const other of others) {
+                    result = result && current.get(fieldId) === other.get(fieldId) && current.get(fieldName) === other.get(fieldName);
+                }
+
+                return result;
             }
 
-            return current.get(field)?.toString() === other.get(field)?.toString()
+            result = true;
+            for (const other of others) {
+                result = result && current.get(field)?.toString() === other.get(field)?.toString();
+            }
+            return result;
 
         },
         afterRender(){
-            this.$el.find('.list-row.different');
-        }
+           this.notify(false)
+        },
+        addCustomRows(modelCurrent, modelOthers){},
     });
 });
