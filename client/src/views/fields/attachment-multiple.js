@@ -521,7 +521,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         hasVideoPlayer(name) {
-            const extensions = this.getMetadata().get('dam.video.videoPlayerExtensions') || [];
+            const extensions = this.getMetadata().get('app.file.video.hasVideoPlayerExtensions') || [];
 
             return $.inArray(this.getFileNameExtension(name), extensions) !== -1;
         },

@@ -1,5 +1,11 @@
 {
   "image": {
+    "extensions": [
+      "jpg",
+      "jpeg",
+      "gif",
+      "png"
+    ],
     "hasPreviewExtensions": [
       "jpg",
       "jpeg",
@@ -58,7 +64,7 @@
       "wmv",
       "yuv"
     ],
-    "videoPlayerExtensions": [
+    "hasVideoPlayerExtensions": [
       "mp4",
       "webm",
       "ogv"
