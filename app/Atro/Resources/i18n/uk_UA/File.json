@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "type": "Тип",
+    "folder": "Папка",
+    "storage": "Сховище",
+    "mimeType": "MIME Type",
+    "path": "Шлях",
+    "thumbnailsPath": "Шлях до ескізів",
+    "preview": "Попередній перегляд",
+    "hash": "Хеш",
+    "fileSize": "Розмір файлу (байт)",
+    "fileMtime": "Дата зміни файлу",
+    "private": "Приватний"
+  },
+  "links": {
+    "folder": "Папка",
+    "storage": "Сховище"
+  },
+  "labels": {
+    "Create File": "Створити файл",
+    "Preview": "Попередній перегляд",
+    "Upload": "Завантажити",
+    "sort": "Сортування",
+    "retry": "Спробувати ще раз?",
+    "uploaded": "завантажено"
+  },
+  "messages": {
+    "notAllFilesWereUploaded": "XX з YY файли не були завантажені.",
+    "fileCouldNotBeUploaded": "Файл не вдалося завантажити.",
+    "fileHasDuplicate": "Вже існує принаймні один <a target=\"_blank\" href=\"/#File/view/{{id}}\">дублікат</a> цього файлу.",
+  },
+  "exceptions": {
+    "fileExtensionCannotBeChanged": "Розширення файлу не може бути змінено.",
+    "fileStorageCannotBeChanged": "Сховище не можна змінити.",
+    "fileCreateFailed": "Не вдалося створити файл.",
+    "fileRenameFailed": "Не вдалося перейменувати файл.",
+    "fileDeleteFailed": "Видалення файлу не вдалося.",
+    "fileNameNotValidByUserRegex": "Ім'я файлу невірне. Воно повинно відповідати регексу '%s'."
+  }
+}
