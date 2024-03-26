@@ -21,6 +21,6 @@
   "exceptions": {
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
     "storagePathCannotBeChanged": "Storage Path cannot be changed.",
-    "storageWithFilesCannotBeRemoved": "Deletion is not allowed. There are files that belong to this Storage."
+    "storageWithFilesCannotBeRemoved": "Delete is not allowed. There are files that belong to this Storage."
   }
 }
