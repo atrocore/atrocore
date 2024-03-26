@@ -1,7 +1,7 @@
 {
   "fields": {
     "type": "Typ",
-    "path": "Path",
+    "path": "Pfad",
     "priority": "Priorität",
     "files": "Dateien",
     "folders": "Ordner"
