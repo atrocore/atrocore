@@ -43,8 +43,8 @@
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
   },
   "scopeNamesPlural": {
-    "Folder": "Ordner",
     "Storage": "Dateiablagen",
+    "Folder": "Ordner",
     "File": "Dateien",
     "FileType": "Datei-Typen",
     "ValidationRule": "Validierungsregel",
