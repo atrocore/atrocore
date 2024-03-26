@@ -272,33 +272,6 @@ class Util
         return md5(self::toString($value));
     }
 
-    /**
-     * Convert name to Camel Case format, ex. camel_case to camelCase
-     *
-     * @param string         $name
-     * @param string | array $symbol
-     * @param boolean        $capitaliseFirstChar
-     *
-     * @return string
-     */
-    public static function toCamelCase($name, $symbol = '_', $capitaliseFirstChar = false)
-    {
-        if (is_array($name)) {
-            foreach ($name as &$value) {
-                $value = static::toCamelCase($value, $symbol, $capitaliseFirstChar);
-            }
-
-            return $name;
-        }
-
-        $name = lcfirst($name);
-        if ($capitaliseFirstChar) {
-            $name = ucfirst($name);
-        }
-
-        return preg_replace_callback('/' . $symbol . '([a-zA-Z])/', 'static::toCamelCaseConversion', $name);
-    }
-
     public static function arrayKeysToCamelCase(array $array, string $symbol = '_', bool $capitaliseFirstChar = false): array
     {
         $result = [];
@@ -333,55 +306,41 @@ class Util
         return $result;
     }
 
-    protected static function toCamelCaseConversion($matches)
-    {
-        return strtoupper($matches[1]);
-    }
-
     /**
-     * Convert name from Camel Case format.
-     * ex. camelCase to camel-case
+     * Convert name to Camel Case format, ex. camel_case to camelCase
      *
-     * @param string | array $name
+     * @param string  $name
+     * @param string  $symbol
+     * @param boolean $capitaliseFirstChar
      *
      * @return string
      */
-    public static function fromCamelCase($name, $symbol = '_')
+    public static function toCamelCase(string $name, string $symbol = '_', bool $capitaliseFirstChar = false): string
     {
-        if (empty($name)) {
-            return $name;
+        $parts = explode($symbol, $name);
+        $camelCaseStr = array_shift($parts);
+        foreach ($parts as $part) {
+            $camelCaseStr .= ucfirst($part);
         }
 
-        if (is_array($name)) {
-            foreach ($name as &$value) {
-                $value = static::fromCamelCase($value, $symbol);
-            }
-
-            return $name;
+        if ($capitaliseFirstChar) {
+            $camelCaseStr = ucfirst($camelCaseStr);
         }
 
-        $name[0] = strtolower($name[0]);
-        return preg_replace_callback('/([A-Z])/', function ($matches) use ($symbol) {
-            return $symbol . strtolower($matches[1]);
-        }, $name);
+        return $camelCaseStr;
     }
 
     /**
      * Convert name from Camel Case format to underscore.
      * ex. camelCase to camel_case
      *
-     * @param string | array $name
+     * @param string $name
      *
      * @return string
      */
-    public static function toUnderScore($name)
+    public static function toUnderScore(string $name): string
     {
-        return static::fromCamelCase($name, '_');
-    }
-
-    public static function camelCaseToUnderscore($value)
-    {
-        return static::toUnderScore($value);
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name));
     }
 
     /**
