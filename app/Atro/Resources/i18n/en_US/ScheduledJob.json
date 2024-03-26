@@ -21,8 +21,9 @@
   },
   "options": {
     "job": {
-      "TreoCleanup": "Old data cleanup",
-      "ComposerAutoUpdate": "Automatic system update"
+      "ComposerAutoUpdate": "Automatic system update",
+      "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
+      "CheckUpdates": "Check system updates"
     },
     "status": {
       "Active": "Active",

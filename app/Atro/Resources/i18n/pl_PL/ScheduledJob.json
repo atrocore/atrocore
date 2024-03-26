@@ -21,7 +21,6 @@
   },
   "options": {
     "job": {
-      "TreoCleanup": "Czyszczenie starych danych",
       "ComposerAutoUpdate": "Automatyczna aktualizacja systemu"
     },
     "status": {
