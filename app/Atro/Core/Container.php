@@ -60,7 +60,6 @@ class Container
             'fieldManagerUtil'         => \Espo\Core\Factories\FieldManagerUtil::class,
             'workflow'                 => \Espo\Core\Factories\Workflow::class,
             'filePathBuilder'          => \Espo\Core\Factories\FilePathBuilder::class,
-            'fileStorageManager'       => \Espo\Core\Factories\FileStorageManager::class,
             'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
             'mailSender'               => \Espo\Core\Factories\MailSender::class,
             'number'                   => \Espo\Core\Factories\Number::class,
