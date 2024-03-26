@@ -1,5 +1,6 @@
 {
   "labels": {
+    "Storage": "Storages",
     "FileTypes": "File Types",
     "GeneralSetting": "General Settings",
     "UiHandler": "UI Handlers",
@@ -40,7 +41,6 @@
     "Auth Tokens": "Auth tokens",
     "Auth Log": "Auth log",
     "Authentication": "Authentication",
-    "Storage": "Storage",
     "Upload": "Upload",
     "Installing...": "Installing...",
     "Upgrading...": "Upgrading...",
@@ -199,7 +199,7 @@
     "rebuildDb": "Are you sure you want to rebuild the database structure? All unused columns and tables will be removed."
   },
   "descriptions": {
-    "Storage": "Storage descr...",
+    "Storage": "Configure where and how files will be stored",
     "listOfSupportedFilesTypes": "List of supported files types",
     "uiHandler": "Manage the behavior of the user interface based on configurable conditional logic.",
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
