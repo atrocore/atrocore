@@ -71,7 +71,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
             this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
 
-            if (this.mode === 'edit') {
+            if (this.mode !== 'list') {
                 this.addActionHandler('selectLink', function () {
                     this.selectLink();
                 });
