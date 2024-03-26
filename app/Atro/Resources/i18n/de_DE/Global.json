@@ -1,5 +1,9 @@
 {
   "scopeNames": {
+    "Storage": "Dateiablage",
+    "Folder": "Ordner",
+    "File": "Datei",
+    "FileType": "Datei Typ",
     "ValidationRule": "Validierungsregel",
     "UiHandler": "UI-Handler",
     "Action": "Aktion",
@@ -39,6 +43,10 @@
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
   },
   "scopeNamesPlural": {
+    "Folder": "Ordner",
+    "Storage": "Dateiablagen",
+    "File": "Dateien",
+    "FileType": "Datei-Typen",
     "ValidationRule": "Validierungsregel",
     "UiHandler": "UI-Handler",
     "Action": "Aktionen",

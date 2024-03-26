@@ -1,5 +1,6 @@
 {
   "labels": {
+    "Storage": "Dateiablage",
     "FileTypes": "Datei-Typen",
     "UiHandler": "UI-Handler",
     "Locale": "Gebietsschema",
@@ -180,6 +181,7 @@
     "rebuildDb": "Möchten Sie die Datenbankstruktur wirklich anpassen? Alle unbenutzten Spalten und Tabellen werden entfernt."
   },
   "descriptions": {
+    "Storage": "Configure where and how files will be stored",
     "listOfSupportedFilesTypes": "Liste der unterstützten Datei-Typen",
     "uiHandler": "Verwalten Sie das Verhalten der Benutzeroberflächen basierend auf der Grundlage einer konfigurierbaren bedingten Logik.",
     "locale": "Verwalten Sie Gebietsschemaeinstellungen wie Sprache, Datums- und Uhrzeitformat, Dezimaltrennzeichen, Tausendertrennzeichen sowie gebietsschemaspezifische Maßeinheiten.",
