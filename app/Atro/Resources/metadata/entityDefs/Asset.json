@@ -80,7 +80,7 @@
     },
     "file": {
       "type": "belongsTo",
-      "entity": "Attachment",
+      "entity": "File",
       "skipOrmDefs": true,
       "entityAsset": false
     }
