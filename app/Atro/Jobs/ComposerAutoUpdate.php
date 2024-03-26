@@ -13,13 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Espo\Core\Jobs\Base;
 use Espo\Services\Composer;
 
 /**
  * Class ComposerAutoUpdate
  */
-class ComposerAutoUpdate extends Base
+class ComposerAutoUpdate extends AbstractJob
 {
     /**
      * Run job

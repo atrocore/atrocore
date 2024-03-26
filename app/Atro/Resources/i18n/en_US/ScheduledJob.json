@@ -23,7 +23,8 @@
     "job": {
       "ComposerAutoUpdate": "Automatic system update",
       "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
-      "CheckUpdates": "Check system updates"
+      "CheckUpdates": "Check system updates",
+      "DeleteFilesChunks": "Delete files chunks"
     },
     "status": {
       "Active": "Active",

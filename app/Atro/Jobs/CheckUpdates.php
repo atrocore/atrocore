@@ -15,9 +15,8 @@ namespace Atro\Jobs;
 
 use Atro\Console\AbstractConsole;
 use Espo\Core\DataManager;
-use Espo\Core\Jobs\Base;
 
-class CheckUpdates extends Base
+class CheckUpdates extends AbstractJob
 {
     public const CHECK_UPDATES_LOG_FILE = 'data/check-updates.log';
 

@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Espo\Core\Jobs\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-class UpdateCurrencyExchangeViaECB extends Base
+class UpdateCurrencyExchangeViaECB extends AbstractJob
 {
     public function run($scheduledJobId): bool
     {
