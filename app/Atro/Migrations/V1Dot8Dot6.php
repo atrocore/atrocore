@@ -90,6 +90,9 @@ class V1Dot8Dot6 extends Base
             }
             $entity = explode(".", $file)[0];
             $data = $metadata->getCustom("entityDefs", $entity);
+            if (empty($data['fields'])) {
+                continue;
+            }
             foreach ($data['fields'] as $field => $fieldDef) {
                 if (!empty($fieldDef['type'])) {
                     $type = $fieldDef['type'];
