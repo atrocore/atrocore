@@ -43,6 +43,13 @@ Espo.define('views/admin/dynamic-logic/fields/field', 'views/fields/multi-enum',
 
                 if (!this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType])) return;
 
+                if (field.endsWith('Name')) {
+                    const fieldName = field.substring(0, fieldType.length - 3);
+                    if (fields[fieldName] && (fields[fieldName].type || null) === 'extensibleEnum') {
+                        return;
+                    }
+                }
+
                 return true;
             }, this);
 

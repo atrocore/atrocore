@@ -2014,8 +2014,11 @@ class Record extends Base
         $input->{$keySet['nearKey']} = $entity->get('id');
         $input->{$keySet['distantKey']} = $foreignEntity->get('id');
 
+        /* @var $relService \Atro\Core\Templates\Services\Relation */
         $relService = $this->getServiceFactory()->create(ucfirst($relationName));
-
+        if ($this->isPseudoTransaction()) {
+            $relService->setPseudoTransactionId($this->getPseudoTransactionId());
+        }
         try {
             $relService->createEntity($input);
         } catch (NotUnique $e) {
@@ -2112,7 +2115,13 @@ class Record extends Base
             ->findOne();
 
         if (!empty($relEntity)) {
-            $result = $this->getServiceFactory()->create($relEntityType)->deleteEntity($relEntity->get('id'));
+            /* @var $relService \Atro\Core\Templates\Services\Relation */
+            $relService = $this->getServiceFactory()->create($relEntityType);
+            if ($this->isPseudoTransaction()) {
+                $relService->setPseudoTransactionId($this->getPseudoTransactionId());
+            }
+
+            $result = $relService->deleteEntity($relEntity->get('id'));
         }
 
         return $this

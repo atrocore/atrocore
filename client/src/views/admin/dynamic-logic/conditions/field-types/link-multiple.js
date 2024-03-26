@@ -51,11 +51,22 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link-multiple', 'v
         },
 
         createLinkValueField: function () {
-            var viewName = 'views/fields/link'
-            var fieldName = 'link';
+            const ids = this.model.get(this.field + 'Ids');
+            const names = this.model.get(this.field + 'Names');
+            const id = Array.isArray(ids) ? ids[0] : ids;
+            if (ids) {
+                this.model.set(this.field + 'Id', id);
+            }
+
+            if (typeof names === 'object') {
+                this.model.set(this.field + 'Name', names[id] ?? id);
+            }
+
+            const viewName = 'views/fields/link';
+
             this.createView('value', viewName, {
                 model: this.model,
-                name: fieldName,
+                name: this.field,
                 el: this.getSelector() + ' .value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
@@ -80,11 +91,13 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link-multiple', 'v
 
             if (valueView) {
                 valueView.fetchToModel();
-                item.value = this.model.get('linkId');
+                item.value = this.model.get(this.field + 'Id');
 
-                var values = {};
-                values['linkName'] = this.model.get('linkName');
-                values['linkId'] = this.model.get('linkId');
+                const values = {};
+                const names = {};
+                names[this.model.get(this.field + 'Id')] = this.model.get(this.field + 'Name');
+                values[this.field + 'Names'] = names;
+                values[this.field + 'Ids'] = [this.model.get(this.field + 'Id')];
                 item.data.values = values;
             }
 
