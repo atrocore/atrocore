@@ -436,10 +436,10 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
         uploadFailed: function (file, response) {
             this.failedFiles[file.uniqueId] = file;
 
-            let html = response.getResponseHeader('X-Status-Reason') || this.translate('assetCouldNotBeUploaded', 'messages', 'Asset');
+            let html = response.getResponseHeader('X-Status-Reason') || this.translate('fileCouldNotBeUploaded', 'messages', 'File');
 
             if (response.status !== 400) {
-                html += ` <a href="javascript:" class="retry-upload" data-unique="${file.uniqueId}">${this.translate('retry', 'labels', 'Asset')}</a>`;
+                html += ` <a href="javascript:" class="retry-upload" data-unique="${file.uniqueId}">${this.translate('retry', 'labels', 'File')}</a>`;
             }
 
             file.attachmentBox.parent().find('.uploading-message').html(html);
@@ -488,7 +488,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
             if (percentCompleted !== 100) {
                 percentCompleted = Math.round(percentCompleted);
                 $progress.parent().show();
-                $progress.css('width', percentCompleted + '%').html('&nbsp;' + percentCompleted + '% ' + this.translate('uploaded', 'labels', 'Asset'));
+                $progress.css('width', percentCompleted + '%').html('&nbsp;' + percentCompleted + '% ' + this.translate('uploaded', 'labels', 'File'));
             } else {
                 $progress.parent().hide();
             }

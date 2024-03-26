@@ -20,10 +20,13 @@
     "Create File": "Create File",
     "Preview": "Preview",
     "Upload": "Upload",
-    "sort": "Sort"
+    "sort": "Sort",
+    "retry": "Retry?",
+    "uploaded": "uploaded"
   },
   "messages": {
-    "notAllFilesWereUploaded": "notAllFilesWereUploaded",
+    "notAllFilesWereUploaded": "XX of YY files were not uploaded.",
+    "fileCouldNotBeUploaded": "File could not be uploaded.",
     "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file."
   },
   "exceptions": {
