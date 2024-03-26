@@ -40,7 +40,7 @@
             "readOnly": true
         },
         "attachments": {
-            "type": "attachmentMultiple",
+            "type": "linkMultiple",
             "view": "views/stream/fields/attachment-multiple"
         },
         "number": {
@@ -113,7 +113,7 @@
         },
         "attachments": {
             "type": "hasChildren",
-            "entity": "Attachment",
+            "entity": "File",
             "relationName": "attachments",
             "foreign": "parent"
         },

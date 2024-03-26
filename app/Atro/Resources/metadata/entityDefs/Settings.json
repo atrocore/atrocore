@@ -132,10 +132,10 @@
       "view": "views/settings/fields/global-search-entity-list"
     },
     "companyLogo": {
-      "type": "image"
+      "type": "file"
     },
     "favicon": {
-      "type": "image"
+      "type": "file"
     },
     "assignmentEmailNotifications": {
       "type": "bool",
