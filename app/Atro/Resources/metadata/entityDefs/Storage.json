@@ -9,7 +9,7 @@
     "type": {
       "type": "enum",
       "required": true,
-      "default": "fileSystem",
+      "default": "local",
       "optionsIds": [
         "local"
       ],
