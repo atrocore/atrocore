@@ -51,14 +51,44 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             throw new \Error("Xattr extension is not installed and the attr command is not available. See documentation for details.");
         }
 
+        $limit = 20000;
+
         /** @var \Atro\Repositories\File $fileRepo */
         $fileRepo = $this->getEntityManager()->getRepository('File');
+
+        /**
+         * Mark stored file
+         */
+        $offset = 0;
+        while (true) {
+            $files = $fileRepo
+                ->where(['storageId' => $storage->get('id')])
+                ->limit($offset, $limit)
+                ->order('id')
+                ->find();
+
+            if (empty($files[0])) {
+                break;
+            }
+            $offset += $limit;
+
+            /** @var File $file */
+            foreach ($files as $file) {
+                $filePath = $file->getFilePath();
+                if (!file_exists($filePath)) {
+                    $this->getEntityManager()->removeEntity($file);
+                } else {
+                    $xattr = new Xattr();
+                    $xattr->set($filePath, 'atroId', $file->id);
+                }
+            }
+        }
 
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
 
         $ids = [];
 
-        foreach (array_chunk($files, 20000) as $chunk) {
+        foreach (array_chunk($files, $limit) as $chunk) {
             $toCreate = [];
             $toUpdate = [];
             $toUpdateByFile = [];
@@ -135,7 +165,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         $offset = 0;
-        $limit = 30000;
         while (true) {
             $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('id')
@@ -151,7 +180,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 break;
             }
 
-            $offset = $offset + $limit;
+            $offset += $limit;
 
             $diff = array_diff($res, $ids);
             if (!empty($diff)) {
