@@ -24,7 +24,7 @@ Espo.define('views/file/modals/select-records', 'views/modals/select-records',
                 scope: 'File',
                 fullFormDisabled: true,
                 layoutName: 'upload',
-                multiUpload: false,
+                multiUpload: this.multiple,
                 attributes: this.options.createAttributes || {},
             }, view => {
                 view.once('after:render', () => {
@@ -39,7 +39,7 @@ Espo.define('views/file/modals/select-records', 'views/modals/select-records',
                     });
                 });
 
-                view.listenTo(view.model, 'after:delete-action', () => this.trigger('unselect'));
+                view.listenTo(view.model, 'after:delete-action', id => this.trigger('unselect', id));
 
                 this.listenToOnce(view, 'close', () => {
                     this.close();

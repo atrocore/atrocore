@@ -63,7 +63,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                         this.model.trigger('updating-ended', {hideNotification: true});
                     }
 
-                    this.model.trigger('after:delete-action');
+                    this.model.trigger('after:delete-action', id);
                 },
 
                 'click a.retry-upload': function (e) {
