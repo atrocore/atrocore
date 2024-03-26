@@ -334,12 +334,20 @@ class Util
      * Convert name from Camel Case format to underscore.
      * ex. camelCase to camel_case
      *
-     * @param string $name
+     * @param string|array $name
      *
-     * @return string
+     * @return string|array
      */
-    public static function toUnderScore(string $name): string
+    public static function toUnderScore($name)
     {
+        if (is_array($name)) {
+            $res = [];
+            foreach ($name as $v) {
+                $res[] = self::toUnderScore($v);
+            }
+            return $res;
+        }
+
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name));
     }
 
