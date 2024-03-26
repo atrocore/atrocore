@@ -42,7 +42,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.notify(false);
                 var o = {
                     model: this.model,
-                    distantModelAttribute: attr,
+                    distantModelsAttribute: attr,
                     hideQuickMenu: true,
                     scope: this.scope
                 };
