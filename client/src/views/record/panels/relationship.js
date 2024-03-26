@@ -326,6 +326,18 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     primaryFilterName: this.defs.selectPrimaryFilterName || null
                 };
             }
+
+            if (this.scope === 'File') {
+                this.actionList.unshift({
+                    label: this.translate('upload'),
+                    action: 'upload',
+                    data: {
+                        link: this.link
+                    },
+                    acl: 'create',
+                    aclScope: 'File'
+                });
+            }
         },
 
         setupTotal() {
@@ -744,6 +756,38 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.model.trigger('after:unrelate');
                 }.bind(this));
             }, this);
+        },
+
+        actionUpload(data) {
+            const link = data.link;
+            const relationName = this.getMetadata().get(['entityDefs', this.model.name, 'links', link, 'relationName']);
+            const relationEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1)
+
+            this.notify('Loading...');
+            this.createView('upload', 'views/file/modals/upload', {
+                scope: 'File',
+                fullFormDisabled: true,
+                layoutName: 'upload',
+                multiUpload: true,
+                attributes: this.options.createAttributes || {},
+            }, view => {
+                view.once('after:render', () => {
+                    this.notify(false);
+                });
+                view.render();
+
+                view.listenTo(view.model, 'after:file-upload', entity => {
+                    this.ajaxPostRequest(relationEntity, {fileId: entity.id, fooId: this.model.get('id')}).success(() => {
+                        this.model.trigger('after:relate', link);
+                        this.actionRefresh();
+                    });
+                });
+
+                view.listenTo(view.model, 'after:file-delete', () => {
+                    this.actionRefresh();
+                });
+            });
+
         },
 
     });

@@ -32,7 +32,7 @@ Espo.define('views/file/record/panels/side/preview/main', 'view', Dep => {
             },
 
             hasVideoPlayer() {
-                return this.getMetadata().get('app.file.video.videoPlayerExtensions').includes(this.model.get('extension'));
+                return this.getMetadata().get('app.file.video.hasVideoPlayerExtensions').includes(this.model.get('extension'));
             },
 
             isImage() {

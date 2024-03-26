@@ -82,6 +82,6 @@ class Image extends AbstractEntryPoint
 
     protected function getImageSize(string $size): ?array
     {
-        return $this->getMetadata()->get(['app', 'file', 'thumbnailSize', $size], null);
+        return $this->getMetadata()->get(['app', 'file', 'image', 'thumbnailSize', $size], null);
     }
 }

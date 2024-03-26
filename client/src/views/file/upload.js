@@ -103,7 +103,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                     setTimeout(function () {
                         let failedCount = $('.file-uploading-failed').length;
                         if (failedCount > 0) {
-                            let message = this.translate('notAllAssetsWereUploaded', 'messages', 'Asset');
+                            let message = this.translate('notAllFilesWereUploaded', 'messages', 'File');
                             message = message.replace('XX', failedCount);
                             message = message.replace('YY', $('.uploaded-file').length);
 

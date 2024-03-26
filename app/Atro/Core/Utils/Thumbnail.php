@@ -64,7 +64,7 @@ class Thumbnail
             return false;
         }
 
-        $imageSizes = $this->getMetadata()->get(['app', 'file', 'thumbnailSize'], []);
+        $imageSizes = $this->getMetadata()->get(['app', 'file', 'image', 'thumbnailSize'], []);
         if (!$imageSizes[$size]) {
             return false;
         }

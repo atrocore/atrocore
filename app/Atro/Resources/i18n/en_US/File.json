@@ -23,6 +23,7 @@
     "sort": "Sort"
   },
   "messages": {
+    "notAllFilesWereUploaded": "notAllFilesWereUploaded",
     "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file."
   },
   "exceptions": {
