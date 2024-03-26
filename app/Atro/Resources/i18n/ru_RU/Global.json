@@ -1,5 +1,9 @@
 {
   "scopeNames": {
+    "Storage": "Хранилище",
+    "Folder": "Папка",
+    "File": "Файл",
+    "FileType": "Типы файлов",
     "ValidationRule": "Правило проверки",
     "Sharing": "Шеринг",
     "Translation": "Надпись",
@@ -47,6 +51,10 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
+    "Storage": "Хранилища",
+    "Folder": "Папки",
+    "File": "Файлы",
+    "FileType": "Типы файлов",
     "ValidationRule": "Правила проверки",
     "Sharing": "Шеринги",
     "Translation": "Надписи",

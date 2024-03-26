@@ -1,5 +1,9 @@
 {
   "scopeNames": {
+    "Storage": "Сховище",
+    "Folder": "Папка",
+    "File": "Файл",
+    "FileType": "Тип файлу",
     "ValidationRule": "Правило перевірки",
     "UiHandler": "Обробник інтерфейсу",
     "Action": "Дія",
@@ -51,7 +55,11 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
-    "validationRules": "Правила перевірки",
+    "Storage": "Сховища",
+    "Folder": "Папки",
+    "File": "Файли",
+    "FileType": "Типи файлів",
+    "ValidationRules": "Правила перевірки",
     "UiHandler": "Обробники інтерфейсу",
     "Action": "Дії",
     "ExtensibleEnum": "Списки",

@@ -54,8 +54,8 @@
     "AuthFailLogRecord": "Auth Fail Log Record"
   },
   "scopeNamesPlural": {
-    "Folder": "Folders",
     "Storage": "Storages",
+    "Folder": "Folders",
     "File": "Files",
     "FileType": "File Types",
     "ValidationRules": "Validation Rules",
