@@ -275,6 +275,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $chunks;
     }
 
+    public function deleteAllChunks(Storage $storage): void
+    {
+        $this->getFileManager()->removeAllInDir($this->getChunksDir($storage));
+    }
+
     public function rename(File $file): bool
     {
         $from = $this->getLocalPath($file, true);

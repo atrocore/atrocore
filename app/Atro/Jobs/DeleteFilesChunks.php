@@ -17,6 +17,10 @@ class DeleteFilesChunks extends AbstractJob
 {
     public function run(): bool
     {
+        foreach ($this->getEntityManager()->getRepository('Storage')->find() as $storage) {
+            $this->getContainer()->get($storage->get('type') . 'Storage')->deleteAllChunks($storage);
+        }
+
         return true;
     }
 }
