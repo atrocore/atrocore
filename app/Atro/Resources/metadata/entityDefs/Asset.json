@@ -12,152 +12,10 @@
       "prohibitedEmptyValue": true,
       "emHidden": true
     },
-    "preview": {
-      "type": "varchar",
-      "view": "views/asset/fields/preview",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "icon": {
-      "type": "varchar",
-      "notStorable": true,
-      "default": null,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "url": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true,
-      "filterDisabled": true,
-      "importDisabled": false
-    },
-    "hasOpen": {
-      "type": "bool",
-      "notStorable": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "afterSaveMessage": {
-      "type": "text",
-      "notStorable": true,
-      "default": "",
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "height": {
-      "type": "int",
-      "required": false,
-      "readOnly": true,
-      "disableFormatting": false,
-      "audited": false,
-      "tooltip": false,
-      "importDisabled": true,
-      "massUpdateDisabled": true
-    },
-    "width": {
-      "type": "int",
-      "required": false,
-      "readOnly": true,
-      "disableFormatting": false,
-      "audited": false,
-      "tooltip": false,
-      "importDisabled": true,
-      "massUpdateDisabled": true
-    },
-    "colorSpace": {
-      "type": "varchar",
-      "required": false,
-      "trim": true,
-      "readOnly": true,
-      "audited": false,
-      "tooltip": false,
-      "importDisabled": true,
-      "massUpdateDisabled": true
-    },
-    "colorDepth": {
-      "type": "varchar",
-      "required": false,
-      "trim": true,
-      "readOnly": true,
-      "audited": false,
-      "tooltip": false,
-      "importDisabled": true,
-      "massUpdateDisabled": true
-    },
-    "orientation": {
-      "type": "varchar",
-      "required": false,
-      "trim": true,
-      "readOnly": true,
-      "audited": false,
-      "tooltip": false,
-      "importDisabled": true,
-      "massUpdateDisabled": true
-    },
-    "isActive": {
-      "default": true
-    },
-    "tags": {
-      "type": "multiEnum",
-      "storeArrayValues": true,
-      "required": false,
-      "fontSize": 1,
-      "optionsIds": [
-        "tag1",
-        "tag2",
-        "tag3",
-        "tag4",
-        "tag5"
-      ],
-      "options": [
-        "tag1",
-        "tag2",
-        "tag3",
-        "tag4",
-        "tag5"
-      ],
-      "optionColors": [
-        "FF0000",
-        "FFFF00",
-        "00FF00",
-        "0000FF",
-        "00FFFF"
-      ],
-      "audited": false,
-      "readOnly": false
-    },
     "name": {
       "type": "varchar",
       "required": false,
-      "trim": true,
-      "isMultilang": false,
-      "view": "views/asset/fields/name"
+      "trim": true
     },
     "description": {
       "type": "text",
@@ -190,16 +48,6 @@
       "view": "views/fields/user",
       "massUpdateDisabled": true
     },
-    "private": {
-      "notNull": true,
-      "type": "bool",
-      "notStorable": true,
-      "default": false,
-      "audited": false,
-      "readOnly": false,
-      "tooltip": false,
-      "filterDisabled": true
-    },
     "file": {
       "type": "file",
       "required": true,
@@ -211,27 +59,6 @@
       "layoutMassUpdateDisabled": true,
       "importDisabled": true,
       "exportDisabled": false
-    },
-    "files": {
-      "type": "attachmentMultiple",
-      "required": true,
-      "previewSize": "x-small",
-      "sourceList": [],
-      "noAsset": true,
-      "tooltip": false,
-      "notStorable": true,
-      "view": "views/asset/fields/files",
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "size": {
-      "type": "float",
-      "required": false,
-      "audited": false,
-      "readOnly": true,
-      "tooltip": false,
-      "importDisabled": true,
-      "massUpdateDisabled": true
     },
     "sortOrder": {
       "type": "int",
