@@ -59,7 +59,7 @@
     "Folder": "Foldery",
     "File": "Pliki",
     "FileType": "Typy plików",
-    "validationRules":"Reguły walidacji",
+    "ValidationRule":"Reguły walidacji",
     "UiHandler":"Obsługi UI",
     "Action":"Akcje",
     "ExtensibleEnum":"Listy",
