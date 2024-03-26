@@ -35,6 +35,7 @@ class File extends Base
         $entity->set('smallThumbnailUrl', $entity->getSmallThumbnailUrl());
         $entity->set('mediumThumbnailUrl', $entity->getMediumThumbnailUrl());
         $entity->set('largeThumbnailUrl', $entity->getLargeThumbnailUrl());
+        $entity->set('hasOpen', in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', [])));
     }
 
     public function createEntity($attachment)

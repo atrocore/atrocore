@@ -36,7 +36,7 @@ Espo.define('views/file/record/panels/side/preview/main', 'view', Dep => {
             },
 
             isImage() {
-                return this.getMetadata().get('app.file.image.extensions').includes(this.model.get('extension'));
+                return this.getMetadata().get('app.file.image.hasPreviewExtensions').includes(this.model.get('extension'));
             },
 
             data() {

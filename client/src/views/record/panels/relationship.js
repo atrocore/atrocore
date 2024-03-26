@@ -110,6 +110,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+            if (this.scope === 'File') {
+                this.defs.create = false;
+            }
+
             let canSelect = true;
             let canUnlink = true;
 

@@ -16,7 +16,7 @@ Espo.define('views/file/record/detail', 'views/record/detail',
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
 
-            if (this.getMetadata().get('app.file.image.extensions').includes(this.model.get('extension'))) {
+            if (this.getMetadata().get('app.file.image.hasPreviewExtensions').includes(this.model.get('extension'))) {
                 this.dropdownItemList.push({
                     'label': 'Open',
                     'name': 'openInTab'

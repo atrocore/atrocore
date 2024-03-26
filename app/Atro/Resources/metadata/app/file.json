@@ -1,6 +1,6 @@
 {
   "image": {
-    "extensions": [
+    "hasPreviewExtensions": [
       "jpg",
       "jpeg",
       "gif",
