@@ -235,6 +235,7 @@ class Attachment extends Record
 
             // create thumbnails
             $this->createThumbnails($entity);
+            $entity->setIsNew(true);
         } else {
             unlink($attachment->fileName);
         }

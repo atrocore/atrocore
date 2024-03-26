@@ -75,7 +75,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 var $div = $(e.currentTarget).parent();
                 var id = $div.attr('data-id');
                 if (id) {
-                    this.deleteAttachment(id);
+                    this.deleteAttachment(id, $div.attr('data-is-new') === 'true');
                 }
                 $div.parent().remove();
             },
@@ -164,7 +164,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.typeHashName = this.name + 'Types';
-            this.pathsDatasName = this.name +  'PathsDatas'
+            this.pathsDatasName = this.name + 'PathsDatas'
             this.idsName = this.name + 'Ids';
             this.foreignScope = 'Attachment';
 
@@ -226,9 +226,9 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.$el.find('img.image-preview').css('maxWidth', width + 'px');
         },
 
-        deleteAttachment: function (id) {
+        deleteAttachment: function (id, isNew = true) {
             this.removeId(id);
-            if (this.model.isNew()) {
+            if (this.model.isNew() && isNew) {
                 this.getModelFactory().create('Attachment', function (attachment) {
                     attachment.id = id;
                     attachment.destroy();
@@ -312,12 +312,12 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             }
 
             if (link && preview === name) {
-                preview = '<a href="'+this.getBasePath()+'?entryPoint=download&id='+id+'" target="_BLANK">' + preview + '</a>';
+                preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" target="_BLANK">' + preview + '</a>';
             }
 
             var $att = $('<div>').addClass('gray-box')
-                                 .append(removeLink)
-                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'));
+                .append(removeLink)
+                .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'));
 
             var $container = $('<div>').append($att);
             $attachments.append($container);
@@ -365,8 +365,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             }
             if (exceedsMaxFileSize) {
                 var msg = this.translate('fieldMaxFileSizeError', 'messages')
-                          .replace('{field}', this.getLabelText())
-                          .replace('{max}', maxFileSize);
+                    .replace('{field}', this.getLabelText())
+                    .replace('{max}', maxFileSize);
 
                 this.showValidationMessage(msg, 'label');
                 return;
@@ -409,7 +409,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         attachment.set('file', e.target.result);
                         attachment.set('field', this.name);
 
-                        attachment.save({}, {timeout: 0}).then(function () {
+                        attachment.save({}, {timeout: 0}).then(function (response) {
                             if (canceledList.indexOf(attachment.cid) === -1) {
                                 $attachmentBox.trigger('ready');
                                 this.pushAttachment(attachment);
@@ -419,6 +419,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                                     this.isUploading = false;
                                     this.afterAttachmentsUploaded.call(this);
                                 }
+                                this.$attachments.find(`[data-id="${attachment.id}"]`)?.attr('data-is-new', response.isNew ? 'true' : 'false');
                             }
                         }.bind(this)).fail(function () {
                             $attachmentBox.remove();
@@ -447,7 +448,6 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 this.$attachments = this.$el.find('div.attachments');
 
                 var ids = this.model.get(this.idsName) || [];
-
                 var hameHash = this.model.get(this.nameHashName);
                 var typeHash = this.model.get(this.typeHashName) || {};
 
@@ -511,7 +511,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
             var preview = name;
             if (this.isTypeIsImage(type)) {
-                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getImageUrl(id, this.previewSize)+'" class="image-preview"></a>';
+                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a>';
             }
             return preview;
         },
