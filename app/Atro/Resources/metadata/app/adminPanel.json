@@ -162,11 +162,5 @@
       }
     ],
     "order": 40
-  },
-  "data": {
-    "label": "Data",
-    "itemList": [
-    ],
-    "order": 50
   }
 }
