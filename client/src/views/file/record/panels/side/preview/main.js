@@ -11,7 +11,7 @@
 Espo.define('views/file/record/panels/side/preview/main', 'view', Dep => {
         return Dep.extend({
 
-            template: "asset/record/panels/side/preview/main",
+            template: "file/record/panels/side/preview/main",
 
             events: {
                 'click a[data-action="showImagePreview"]': function (e) {
