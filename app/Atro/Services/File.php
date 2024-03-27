@@ -40,6 +40,14 @@ class File extends Base
 
     public function createEntity($attachment)
     {
+        // set default storage on create
+        if (!property_exists($attachment, 'storageId')) {
+            $default = $this->getServiceFactory()->create('Folder')->getDefaultStorage('');
+            if (!empty($default['id'])) {
+                $attachment->storageId = $default['id'];
+            }
+        }
+
         // for single upload
         if (!property_exists($attachment, 'piecesCount')) {
             if (empty($attachment->id)) {

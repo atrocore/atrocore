@@ -166,11 +166,9 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.typeHashName = this.name + 'Types';
             this.pathsDatasName = this.name + 'PathsDatas'
             this.idsName = this.name + 'Ids';
-            this.foreignScope = 'Attachment';
+            this.foreignScope = 'File';
 
             this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
-
-            var self = this;
 
             this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
 
@@ -180,7 +178,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 this.showPreviews = this.params.showPreviews;
             }
 
-            var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
+            var sourceDefs = this.getMetadata().get(['clientDefs', 'File', 'sourceDefs']) || {};
 
             this.sourceList = Espo.Utils.clone(this.params.sourceList || []).filter(function (item) {
                 if (!(item in sourceDefs)) return true;
@@ -229,7 +227,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         deleteAttachment: function (id, isNew = true) {
             this.removeId(id);
             if (this.model.isNew() && isNew) {
-                this.getModelFactory().create('Attachment', function (attachment) {
+                this.getModelFactory().create('File', function (attachment) {
                     attachment.id = id;
                     attachment.destroy();
                 });
@@ -245,8 +243,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         getDownloadUrl: function (id) {
-            var url = this.getBasePath() + '?entryPoint=download&id=' + id;
-            return url;
+            return this.getBasePath() + '?entryPoint=download&id=' + id;
         },
 
         removeId: function (id) {
@@ -375,8 +372,6 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             this.isUploading = true;
 
             this.getModelFactory().create('Attachment', function (model) {
-                var canceledList = [];
-
                 var fileList = [];
                 for (var i = 0; i < files.length; i++) {
                     fileList.push(files[i]);
@@ -385,54 +380,43 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
                 fileList.forEach(function (file) {
                     var $attachmentBox = this.addAttachmentBox(file.name, file.type);
-
-                    $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
-                        canceledList.push(attachment.cid);
-                        totalCount--;
-                        if (uploadedCount == totalCount) {
-                            this.isUploading = false;
-                            if (totalCount) {
-                                this.afterAttachmentsUploaded.call(this);
-                            }
-                        }
-                    }.bind(this));
-
-                    var attachment = model.clone();
-
                     var fileReader = new FileReader();
                     fileReader.onload = function (e) {
-                        attachment.set('name', file.name);
-                        attachment.set('type', file.type || 'text/plain');
-                        attachment.set('role', 'Attachment');
-                        attachment.set('size', file.size);
-                        attachment.set('relatedType', this.model.name);
-                        attachment.set('file', e.target.result);
-                        attachment.set('field', this.name);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'File',
+                            contentType: "application/json",
+                            data: JSON.stringify(_.extend(this.model.attributes, {
+                                name: file.name,
+                                fileSize: file.size,
+                                piecesCount: undefined,
+                                fileContents: e.target.result
+                            })),
+                        }).done(response => {
+                            let attachment = model.clone();
+                            attachment.set(response);
 
-                        attachment.save({}, {timeout: 0}).then(function (response) {
-                            if (canceledList.indexOf(attachment.cid) === -1) {
-                                $attachmentBox.trigger('ready');
-                                this.pushAttachment(attachment);
-                                $attachmentBox.attr('data-id', attachment.id);
-                                uploadedCount++;
-                                if (uploadedCount == totalCount && this.isUploading) {
-                                    this.isUploading = false;
-                                    this.afterAttachmentsUploaded.call(this);
-                                }
-                                this.$attachments.find(`[data-id="${attachment.id}"]`)?.attr('data-is-new', response.isNew ? 'true' : 'false');
+                            $attachmentBox.trigger('ready');
+                            this.pushAttachment(attachment);
+                            $attachmentBox.attr('data-id', attachment.id);
+                            uploadedCount++;
+                            if (uploadedCount === totalCount && this.isUploading) {
+                                this.isUploading = false;
+                                this.afterAttachmentsUploaded.call(this);
                             }
-                        }.bind(this)).fail(function () {
+                            this.$attachments.find(`[data-id="${attachment.id}"]`)?.attr('data-is-new', response.isNew ? 'true' : 'false');
+                        }).error(() => {
                             $attachmentBox.remove();
                             totalCount--;
                             if (!totalCount) {
                                 this.isUploading = false;
                                 this.$el.find('.uploading-message').remove();
                             }
-                            if (uploadedCount == totalCount && this.isUploading) {
+                            if (uploadedCount === totalCount && this.isUploading) {
                                 this.isUploading = false;
                                 this.afterAttachmentsUploaded.call(this);
                             }
-                        }.bind(this));
+                        });
                     }.bind(this);
                     fileReader.readAsDataURL(file);
                 }, this);
