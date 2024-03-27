@@ -760,8 +760,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         actionUpload(data) {
             const link = data.link;
-            const relationName = this.getMetadata().get(['entityDefs', this.model.name, 'links', link, 'relationName']);
-            const relationEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1)
 
             this.notify('Loading...');
             this.createView('upload', 'views/file/modals/upload', {
@@ -777,7 +775,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 view.render();
 
                 view.listenTo(view.model, 'after:file-upload', entity => {
-                    this.ajaxPostRequest(relationEntity, {fileId: entity.id, fooId: this.model.get('id')}).success(() => {
+                    this.ajaxPostRequest(`${this.model.name}/${this.model.get('id')}/${link}`, {ids: [entity.id]}).success(() => {
                         this.model.trigger('after:relate', link);
                         this.actionRefresh();
                     });
