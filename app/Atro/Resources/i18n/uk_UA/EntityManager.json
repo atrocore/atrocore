@@ -49,7 +49,8 @@
     "iconClass": "Значок",
     "disableHierarchy": "Вимкнути ієрархію",
     "modifiedExtendedRelations": "Зв'язки, що впливають на дату/час зміни",
-    "duplicatableRelations": "Зв'язки, що дублюються"
+    "duplicatableRelations": "Зв'язки, що дублюються",
+    "nonComparableFields": "Непорівнянні поля"
   },
   "options": {
     "linkType": {

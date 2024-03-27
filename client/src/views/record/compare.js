@@ -13,18 +13,7 @@ Espo.define('views/record/compare','view', function (Dep) {
     return Dep.extend({
         template: 'record/compare',
         panelDetailNavigation: null,
-        buttonList: [
-            {
-                name: 'Save',
-                label: 'save',
-                style: 'primary',
-            },
-            {
-                name: 'Reset',
-                label: 'reset',
-                style: 'default',
-            },
-        ],
+        buttonList: [],
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -59,6 +48,7 @@ Espo.define('views/record/compare','view', function (Dep) {
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
             this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
             this.hideQuickMenu = this.options.hideQuickMenu
+            this.firstEl = this.options.el.split(' ')[0];
         },
         setup(){
             this.notify('Loading...')
@@ -102,6 +92,7 @@ Espo.define('views/record/compare','view', function (Dep) {
 
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     this.createView(field + 'Current', viewName, {
+                        el: this.firstEl +` [data-field="${field}"]  .current`,
                         model: modelCurrent,
                         readOnly: true,
                         defs: {
@@ -114,6 +105,7 @@ Espo.define('views/record/compare','view', function (Dep) {
 
                     modelOthers.forEach((model, index) => {
                         this.createView(field + 'Other'+index, viewName, {
+                            el: this.firstEl+` [data-field="${field}"]  .other${index}`,
                             model: model,
                             readOnly: true,
                             defs: {
@@ -139,18 +131,27 @@ Espo.define('views/record/compare','view', function (Dep) {
                             }
                         }) : null;
 
+                    let showQuickCompare = (modelCurrent.get(fieldId)  && type === "link")
+                        || ((modelCurrent.get(fieldId)?.length ?? 0) > 0  && type === "linkMultiple")
+                    if(showQuickCompare){
+                        for (const other of modelOthers) {
+                            showQuickCompare = showQuickCompare && modelCurrent.get(fieldId)?.toString() === other.get(fieldId)?.toString();
+                        }
+                    }
+
                     this.fieldsArr.push({
                         isField: true,
                         field: field,
-                        label:fieldDef['label'] ?? field,
+                        label: fieldDef['label'] ?? field,
                         current: field + 'Current',
                         htmlTag: htmlTag,
                         others: modelOthers.map((element, index) => {
-                            return  {other: field + 'Other'+index}
+                            return  {other: field + 'Other'+index, index}
                         }),
-                        isLink: isLink && this.hideQuickMenu !== true,
+                        isLink: isLink ,
                         foreignScope: isLink ? this.links[field].entity : null,
                         foreignId: isLink ? modelCurrent.get(fieldId)?.toString() : null,
+                        showQuickCompare: showQuickCompare && this.hideQuickMenu !== true,
                         isLinkMultiple: isLinkMultiple,
                         values: values,
                         different:  !this.areEquals(modelCurrent, modelOthers, field, fieldDef)
