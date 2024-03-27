@@ -111,12 +111,6 @@
             "type": "belongsTo",
             "entity": "User"
         },
-        "attachments": {
-            "type": "hasChildren",
-            "entity": "File",
-            "relationName": "attachments",
-            "foreign": "parent"
-        },
         "parent": {
             "type": "belongsToParent",
             "foreign": "notes"
