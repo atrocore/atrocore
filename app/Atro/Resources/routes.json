@@ -17,7 +17,7 @@
   },
   {
     "route": "/File/action/upload-proxy",
-    "method": "get",
+    "method": "post",
     "params": {
       "controller": "File",
       "action": "uploadProxy"

@@ -21,12 +21,12 @@ class File extends Base
 {
     public function actionUploadProxy($params, $data, $request)
     {
-        if (!$request->isGet() || empty($request->get('url'))) {
+        if (!$request->isPost() || !property_exists($data, 'url') || empty($data->url)) {
             throw new BadRequest();
         }
 
         // Open stream to file URL
-        $fileStream = fopen($request->get('url'), 'r');
+        $fileStream = fopen($data->url, 'r');
         if (!$fileStream) {
             throw new \Exception('Failed to open file stream');
         }
@@ -36,8 +36,10 @@ class File extends Base
 
         // Stream the file content
         while (!feof($fileStream)) {
-            echo fread($fileStream, 8192); // Read and output in 8KB chunks
-            flush(); // Flush output buffer to ensure immediate output
+            // Read and output in 16MB chunks
+            echo fread($fileStream, 1024 * 1024 * 16);
+            // Flush output buffer to ensure immediate output
+            flush();
         }
 
         // Close the file stream
