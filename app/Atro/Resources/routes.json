@@ -16,6 +16,17 @@
     }
   },
   {
+    "route": "/File/action/upload-proxy",
+    "method": "get",
+    "params": {
+      "controller": "File",
+      "action": "uploadProxy"
+    },
+    "conditions": {
+      "auth": false
+    }
+  },
+  {
     "route": "/Composer/list",
     "method": "get",
     "params": {

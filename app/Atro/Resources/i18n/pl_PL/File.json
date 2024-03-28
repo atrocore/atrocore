@@ -37,6 +37,7 @@
     "fileCreateFailed": "Tworzenie pliku nie powiodło się.",
     "fileRenameFailed": "Zmiana nazwy pliku nie powiodła się.",
     "fileDeleteFailed": "Usunięcie pliku nie powiodło się.",
-    "fileNameNotValidByUserRegex": "Nazwa pliku jest nieprawidłowa. Powinna pasować do wyrażenia regularnego '%s'."
+    "fileNameNotValidByUserRegex": "Nazwa pliku jest nieprawidłowa. Powinna pasować do wyrażenia regularnego '%s'.",
+    "cannotDefineFileName": "System nie może rozpoznać nazwy pliku z adresu URL."
   }
 }

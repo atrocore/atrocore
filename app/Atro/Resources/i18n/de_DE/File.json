@@ -37,6 +37,7 @@
     "fileCreateFailed": "Das Erstellen der Datei ist fehlgeschlagen.",
     "fileRenameFailed": "Die Umbenennung der Datei ist fehlgeschlagen.",
     "fileDeleteFailed": "Das Löschen der Datei ist fehlgeschlagen.",
-    "fileNameNotValidByUserRegex": "Der Dateiname ist nicht gültig. Er sollte mit dem Regex '%s' übereinstimmen."
+    "fileNameNotValidByUserRegex": "Der Dateiname ist nicht gültig. Er sollte mit dem Regex '%s' übereinstimmen.",
+    "cannotDefineFileName": "Das System kann den Dateinamen aus der URL nicht erkennen."
   }
 }

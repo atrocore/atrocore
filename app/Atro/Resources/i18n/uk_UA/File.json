@@ -37,6 +37,7 @@
     "fileCreateFailed": "Не вдалося створити файл.",
     "fileRenameFailed": "Не вдалося перейменувати файл.",
     "fileDeleteFailed": "Видалення файлу не вдалося.",
-    "fileNameNotValidByUserRegex": "Ім'я файлу невірне. Воно повинно відповідати регексу '%s'."
+    "fileNameNotValidByUserRegex": "Ім'я файлу невірне. Воно повинно відповідати регексу '%s'.",
+    "cannotDefineFileName": "Система не може розпізнати ім'я файлу за URL-адресою."
   }
 }

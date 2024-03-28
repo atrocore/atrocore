@@ -37,6 +37,7 @@
     "fileCreateFailed": "File create has been failed.",
     "fileRenameFailed": "File rename has been failed.",
     "fileDeleteFailed": "File delete has been failed.",
-    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'."
+    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'.",
+    "cannotDefineFileName": "The system cannot recognize the file name from the URL."
   }
 }
