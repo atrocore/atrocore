@@ -1,0 +1,17 @@
+{
+    "preview": {
+        "style": null,
+        "sticked": null,
+        "index": 0
+    },
+    "default": {
+        "style": null,
+        "sticked": null,
+        "index": 1
+    },
+    "customDownload": {
+        "style": null,
+        "sticked": null,
+        "index": 2
+    }
+}

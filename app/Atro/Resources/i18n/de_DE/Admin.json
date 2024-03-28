@@ -1,6 +1,7 @@
 {
   "labels": {
-    "AssetTypes": "Asset-Typen",
+    "Storage": "Dateiablage",
+    "FileTypes": "Datei-Typen",
     "UiHandler": "UI-Handler",
     "Locale": "Gebietsschema",
     "multiLanguagesSettings": "Sprachen",
@@ -50,7 +51,6 @@
     "Reset to Default": "Auf Standardwert zurücksetzen",
     "Action History": "Aktionsverlauf",
     "Auth Log": "Auth-Protokoll",
-    "Attachments": "Anhänge",
     "Layout Manager": "Layouts",
     "Accounts": "Konto",
     "Contacts": "Kontakte",
@@ -98,7 +98,6 @@
     "varchar": "Einzeiliger Text",
     "file": "Datei",
     "image": "Bild",
-    "asset": "Asset",
     "extensibleMultiEnum": "Liste mit Mehrfachauswahl",
     "multiEnum": "Statische Liste mit Mehrfachauswahl",
     "attachmentMultiple": "Anhang mit Mehrfachauswahl",
@@ -123,7 +122,6 @@
     "defaultUnit": "Standard Maßeinheit",
     "isMultilang": "Mehrsprachig",
     "fontSize": "Schriftgröße",
-    "assetType": "Asset-Typ",
     "type": "Typ",
     "label": "Label",
     "required": "Erforderlich",
@@ -183,7 +181,8 @@
     "rebuildDb": "Möchten Sie die Datenbankstruktur wirklich anpassen? Alle unbenutzten Spalten und Tabellen werden entfernt."
   },
   "descriptions": {
-    "listOfSupportedAssetsTypes": "Liste der unterstützten Asset-Typen",
+    "Storage": "Configure where and how files will be stored",
+    "listOfSupportedFilesTypes": "Liste der unterstützten Datei-Typen",
     "uiHandler": "Verwalten Sie das Verhalten der Benutzeroberflächen basierend auf der Grundlage einer konfigurierbaren bedingten Logik.",
     "locale": "Verwalten Sie Gebietsschemaeinstellungen wie Sprache, Datums- und Uhrzeitformat, Dezimaltrennzeichen, Tausendertrennzeichen sowie gebietsschemaspezifische Maßeinheiten.",
     "multiLanguagesSettings": "Konfigurieren Sie die zu verwendenden Sprachen.",
@@ -208,7 +207,6 @@
     "actionHistory": "Sehen Sie den Verlauf aller Benutzeraktionen im System an, einschließlich Benutzername, Zieldatensatz, Aktionstyp, IP-Adresse, Zugriffsdatum und -zeit.",
     "labelManager": "Verwalten Sie Label-Übersetzungen für vorausgewählte Sprachen, übermitteln Sie Ihre Übersetzungen zur Überprüfung durch das AtroCore-Team, setzen Sie Ihre Übersetzungen auf Standardwerte zurück.",
     "authLog": "Überprüfen Sie den Anmeldeverlauf.",
-    "attachments": "Verwalten Sie alle im System gespeicherten Dateien (Anhänge).",
     "accounts": "Konten verwalten",
     "contacts": "Kontakte verwalten",
     "addresses": "Adressen verwalten",

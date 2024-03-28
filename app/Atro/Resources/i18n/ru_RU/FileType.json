@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "validationRules": "Правила проверки",
+    "sortOrder": "Порядок сортировки",
+    "assignAutomatically": "Назначить автоматически",
+    "files": "Файлы"
+  },
+  "links": {
+    "validationRules": "Правила проверки",
+    "files": "Файлы"
+  },
+  "labels": {
+    "Create FileType": "Создать тип файла"
+  }
+}

@@ -91,8 +91,6 @@ class Application
             }
 
             if ($show404) {
-                $this->createAndDisplayThumb($query);
-
                 header('HTTP/1.0 404 Not Found');
                 exit();
             }
@@ -175,33 +173,6 @@ class Application
         $this->initRoutes($baseRoute);
         $this->getSlim()->run();
         exit;
-    }
-
-    /**
-     * Create and display thumb if it needs
-     *
-     * @param string $path
-     */
-    protected function createAndDisplayThumb(string $path): void
-    {
-        if ($this->isInstalled() && !empty($attachment = $this->getContainer()->get('thumbnail')->createThumbnailByPath($path))) {
-            $content = file_get_contents($path);
-            $fileType = $attachment->get('type');
-            $fileName = $attachment->get('name');
-
-            header('Content-Disposition:inline;filename="' . $fileName . '"');
-            if (!empty($fileType)) {
-                header('Content-Type: ' . $fileType);
-            }
-            header('Pragma: public');
-            header('Cache-Control: max-age=360000, must-revalidate');
-            $fileSize = mb_strlen($content, "8bit");
-            if ($fileSize) {
-                header('Content-Length: ' . $fileSize);
-            }
-            echo $content;
-            exit;
-        }
     }
 
     /**

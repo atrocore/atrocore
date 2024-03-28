@@ -1,0 +1,22 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "private"
+        }
+      ],
+      [
+        {
+          "name": "folder"
+        },
+        {
+          "name": "storage"
+        }
+      ]
+    ]
+  }
+]

@@ -28,9 +28,9 @@ class Container
 
     protected array $classAliases
         = [
+            'fileManager'              => \Atro\Core\Utils\FileManager::class,
+            'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
-            'thumbnail'                => \Atro\Core\Thumbnail\Image::class,
-            'validator'                => \Atro\Core\AssetValidation\Validator::class,
             'migration'                => \Atro\Core\Migration\Migration::class,
             'twig'                     => \Atro\Core\Twig\Twig::class,
             'queueManager'             => \Atro\Core\QueueManager::class,
@@ -42,7 +42,7 @@ class Container
             Connection::class          => \Atro\Core\Factories\Connection::class,
             'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
             'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
-            'configManager'            => \Atro\Core\ConfigManager::class,
+            'chatgpt'                  => \Atro\Core\ChatGpt\ChatGptClient::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,
@@ -60,7 +60,6 @@ class Container
             'fieldManagerUtil'         => \Espo\Core\Factories\FieldManagerUtil::class,
             'workflow'                 => \Espo\Core\Factories\Workflow::class,
             'filePathBuilder'          => \Espo\Core\Factories\FilePathBuilder::class,
-            'fileStorageManager'       => \Espo\Core\Factories\FileStorageManager::class,
             'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
             'mailSender'               => \Espo\Core\Factories\MailSender::class,
             'number'                   => \Espo\Core\Factories\Number::class,
@@ -74,7 +73,6 @@ class Container
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
             'themeManager'             => \Espo\Core\Factories\ThemeManager::class,
             'pdo'                      => \Espo\Core\Factories\Pdo::class,
-            'fileManager'              => \Espo\Core\Factories\FileManager::class,
             'log'                      => \Espo\Core\Factories\Log::class,
             'defaultLanguage'          => \Espo\Core\Factories\DefaultLanguage::class,
             'baseLanguage'             => \Espo\Core\Factories\BaseLanguage::class,
@@ -84,8 +82,7 @@ class Container
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'config'                   => \Espo\Core\Utils\Config::class,
-            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
-            'chatgpt'                  => \Atro\Core\ChatGpt\ChatGptClient::class
+            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class
         ];
 
     public function __construct()

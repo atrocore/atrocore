@@ -16,12 +16,6 @@ Espo.define('views/validation-rule/modals/edit', 'views/modals/edit', function (
 
         sideDisabled: true,
 
-        actionSave() {
-            this.confirm(this.translate('recheckAllAssets', 'confirmations', 'ValidationRule'), () => {
-                Dep.prototype.actionSave.call(this);
-            });
-        },
-
     });
 });
 

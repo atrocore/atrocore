@@ -156,6 +156,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                     var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
 
+                    console.log(this.foreignScope)
+
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
                         createButton: !this.createDisabled && this.mode != 'search',
@@ -171,8 +173,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     }, function (dialog) {
                         dialog.render();
                         self.notify(false);
-                        this.listenToOnce(dialog, 'select', function (models) {
-                            this.clearView('dialog');
+
+                        this.listenTo(dialog, 'select', function (models) {
+                            if (this.foreignScope !== 'File'){
+                                this.clearView('dialog');
+                            }
                             if (models.massRelate) {
                                 if (models.where.length === 0) {
                                     // force subquery if primary filter "all" is used in modal
@@ -194,6 +199,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                                 }
                             });
                         });
+
+                        this.listenTo(dialog, 'unselect', id => {
+                            self.deleteLink(id);
+                        });
+
                     }, this);
                 });
 

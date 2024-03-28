@@ -21,12 +21,12 @@
     "entityType": {
       "type": "enum",
       "required": true,
-      "default": "Asset",
-      "options": [
-        "Asset"
-      ],
+      "default": "File",
       "optionsIds": [
-        "asset"
+        "File"
+      ],
+      "options": [
+        "File"
       ]
     },
     "entityId": {

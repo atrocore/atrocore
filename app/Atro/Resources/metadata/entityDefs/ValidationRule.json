@@ -29,7 +29,7 @@
       "readOnly": false,
       "tooltip": false
     },
-    "assetType": {
+    "fileType": {
       "type": "link"
     },
     "type": {
@@ -197,11 +197,10 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "assetType": {
+    "fileType": {
       "type": "belongsTo",
       "foreign": "validationRules",
-      "entity": "AssetType",
-      "audited": false
+      "entity": "FileType"
     }
   },
   "collection": {

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
-use Espo\Jobs\CheckUpdates as Job;
+use Atro\Jobs\CheckUpdates as Job;
 
 class CheckUpdates extends AbstractConsole
 {

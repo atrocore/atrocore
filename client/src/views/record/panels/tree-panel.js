@@ -307,7 +307,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         pushShowMore(list, direction) {
             if (!direction || direction === 'up') {
                 let first = Espo.Utils.cloneDeep(list).shift();
-                if (first.offset && first.offset !== 0) {
+                if (first && first.offset && first.offset !== 0) {
                     list.unshift({
                         id: 'show-more-' + first.offset,
                         offset: first.offset,
@@ -319,7 +319,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             if (!direction || direction === 'down') {
                 let last = Espo.Utils.cloneDeep(list).pop();
-                if (last.offset && last.total - 1 !== last.offset) {
+                if (last && last.offset && last.total - 1 !== last.offset) {
                     list.push({
                         id: 'show-more-' + last.offset,
                         offset: last.offset,

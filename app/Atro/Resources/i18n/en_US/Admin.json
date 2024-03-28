@@ -1,6 +1,7 @@
 {
   "labels": {
-    "AssetTypes": "Asset Types",
+    "Storage": "Storages",
+    "FileTypes": "File Types",
     "GeneralSetting": "General Settings",
     "UiHandler": "UI Handlers",
     "multiLanguagesSettings": "Languages",
@@ -57,7 +58,6 @@
     "Reset to Default": "Reset to default",
     "Action History": "Action history",
     "Label Manager": "Labels",
-    "Attachments": "Attachments",
     "Accounts": "Accounts",
     "Contacts": "Contacts",
     "Addresses": "Addresses",
@@ -105,7 +105,6 @@
     "url": "Url",
     "varchar": "String",
     "file": "File",
-    "asset": "Asset",
     "image": "Image",
     "extensibleMultiEnum": "Multi-value list",
     "multiEnum": "Static Multi-value list",
@@ -128,7 +127,6 @@
     "defaultUnit": "Default Unit",
     "isMultilang": "Multilingual",
     "fontSize": "Font size",
-    "assetType": "Asset type",
     "type": "Type",
     "name": "Name",
     "label": "Label",
@@ -201,7 +199,8 @@
     "rebuildDb": "Are you sure you want to rebuild the database structure? All unused columns and tables will be removed."
   },
   "descriptions": {
-    "listOfSupportedAssetsTypes": "List of supported assets types",
+    "Storage": "Configure where and how files will be stored",
+    "listOfSupportedFilesTypes": "List of supported files types",
     "uiHandler": "Manage the behavior of the user interface based on configurable conditional logic.",
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
     "multiLanguagesSettings": "Configure languages to be used.",
@@ -226,7 +225,6 @@
     "actionHistory": "See the history of all user actions in the system, including username, target data record, action type, IP address, access date and time.",
     "labelManager": "Manage label translations for pre-selected languages, push your translations for the review by AtroCore team as well as reset your translations to default values.",
     "authLog": "Review the login history.",
-    "attachments": "Manage all files (attachments) stored in the system.",
     "accounts": "Manage accounts",
     "contacts": "Manage contacts",
     "addresses": "Manage addresses",

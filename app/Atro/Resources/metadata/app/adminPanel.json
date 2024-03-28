@@ -73,9 +73,14 @@
         "description": "multiLanguagesSettings"
       },
       {
-        "url": "#AssetType",
-        "label": "AssetTypes",
-        "description": "listOfSupportedAssetsTypes"
+        "url": "#Storage",
+        "label": "Storage",
+        "description": "Storage"
+      },
+      {
+        "url": "#FileType",
+        "label": "FileTypes",
+        "description": "listOfSupportedFilesTypes"
       }
     ],
     "order": 0
@@ -157,11 +162,5 @@
       }
     ],
     "order": 40
-  },
-  "data": {
-    "label": "Data",
-    "itemList": [
-    ],
-    "order": 50
   }
 }

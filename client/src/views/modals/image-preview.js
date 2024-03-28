@@ -44,8 +44,6 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
         backdrop: true,
 
-        pathsData: null,
-
         name: null,
 
         data: function () {
@@ -66,21 +64,17 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
             this.imageList = this.options.imageList || [];
 
-            this.pathsData = this.options.pathsData ;
-
-            this.name = this.options.name ;
-
             this.once('remove', function () {
                 $(window).off('resize.image-review');
             }, this);
         },
 
         getImageUrl: function () {
-            return   this.getBasePath() + '/' + (this.pathsData ?? this.model.get('filePathsData')).thumbs.large;
+            return this.getBasePath() + '/' + this.options.thumbnailUrl ?? this.model.get('largeThumbnailUrl');
         },
 
         getOriginalImageUrl: function () {
-            return this.getBasePath() + '/' + (this.pathsData ?? this.model.get('filePathsData')).download;
+            return this.getBasePath() + '/' + this.options.downloadUrl ?? this.model.get('downloadUrl');
         },
 
         afterRender: function () {

@@ -37,7 +37,7 @@ namespace Espo\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;

@@ -33,7 +33,7 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\Forbidden;
 
 class ActionHistoryRecord extends \Espo\Core\Controllers\Record
 {

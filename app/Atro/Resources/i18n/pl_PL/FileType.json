@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "validationRules": "Reguły walidacji",
+    "sortOrder": "Kolejność sortowania",
+    "assignAutomatically": "Przypisz automatycznie",
+    "files": "Pliki"
+  },
+  "links": {
+    "validationRules": "Reguły walidacji",
+    "files": "Pliki"
+  },
+  "labels": {
+    "Create FileType": "Utwórz typ pliku"
+  }
+}

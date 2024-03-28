@@ -33,48 +33,11 @@
 
 namespace Espo\Core\Jobs;
 
-use Atro\Core\Container;
-use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
-use Espo\ORM\EntityManager;
+use Atro\Jobs\AbstractJob;
 
-abstract class Base
+/**
+ * @deprecated
+ */
+abstract class Base extends AbstractJob
 {
-    private Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    protected function getServiceFactory(): ServiceFactory
-    {
-        return $this->getContainer()->get('serviceFactory');
-    }
-
-    protected function getConfig(): Config
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    protected function getMetadata(): Metadata
-    {
-        return $this->getContainer()->get('metadata');
-    }
-
-    protected function getUser()
-    {
-        return $this->getContainer()->get('user');
-    }
 }

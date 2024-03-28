@@ -1,6 +1,5 @@
 {
   "fields": {
-    "attachmentDuplicates": "Дублікати ресурсів",
     "fileNameRegexPattern": "Шаблон для імені файлу",
     "variables": "Змінні",
     "locale": "Локаль",

@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "code": "Код",
+    "files": "Файлы",
+    "storages": "Хранилища"
+  },
+  "links": {
+    "files": "Файлы",
+    "storages": "Хранилища"
+  },
+  "labels": {
+    "Create Folder": "Создать папку"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "code": "Kod",
+    "files": "Pliki",
+    "storages": "Przechowywanie plików"
+  },
+  "links": {
+    "files": "Pliki",
+    "storages": "Przechowywanie plików"
+  },
+  "labels": {
+    "Create Folder": "Utwórz folder"
+  }
+}

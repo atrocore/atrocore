@@ -75,7 +75,7 @@ class RegenerateMeasures extends AbstractConsole
 
     protected function calculateMultiplier(Entity $unit): void
     {
-        $job = new \Espo\Jobs\UpdateCurrencyExchangeViaECB($this->getContainer());
+        $job = new \Atro\Jobs\UpdateCurrencyExchangeViaECB($this->getContainer());
         $job->updateCurrencyRates($unit);
     }
 }

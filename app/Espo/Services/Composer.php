@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Espo\Core\Exceptions;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Slim\Http\Request;
 use Espo\Core\Application;

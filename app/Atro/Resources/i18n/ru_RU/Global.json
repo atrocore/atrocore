@@ -1,14 +1,9 @@
 {
   "scopeNames": {
-    "Asset": "Ассет",
-    "Rendition": "Преобразование",
-    "RenditionMetaData": "Преобразование мета данные",
-    "Library": "Библиотека",
-    "AssetVariant": "Вариант ассета",
-    "AssetCategory": "Категория ассета",
-    "AssetMetadata": "Метаданные ассета",
-    "AssetVersion": "Версия ассета",
-    "AssetType": "Тип ассета",
+    "Storage": "Хранилище",
+    "Folder": "Папка",
+    "File": "Файл",
+    "FileType": "Типы файлов",
     "ValidationRule": "Правило проверки",
     "Sharing": "Шеринг",
     "Translation": "Надпись",
@@ -22,7 +17,6 @@
     "Dashboard": "Панель виджетов",
     "Stream": "Лента",
     "Job": "Задание",
-    "Attachment": "Вложение",
     "ScheduledJobLogRecord": "Запись журнала запланированных работ",
     "PasswordChangeRequest": "Запрос на изменение пароля",
     "ActionHistoryRecord": "Запись истории действий",
@@ -57,14 +51,11 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
-    "Library": "Библиотеки",
-    "Asset": "Ассеты",
-    "AssetVersion": "Версии ассета",
-    "AssetVariant": "Варианты ассета",
-    "AssetCategory": "Категория ассета",
-    "AssetMetadata": "Метаданные ассета",
-    "AssetType": "Типы ассета",
-    "validationRules": "Правила проверки",
+    "Storage": "Хранилища",
+    "Folder": "Папки",
+    "File": "Файлы",
+    "FileType": "Типы файлов",
+    "ValidationRule": "Правила проверки",
     "Sharing": "Шеринги",
     "Translation": "Надписи",
     "Locale": "Локали",
@@ -79,7 +70,6 @@
     "Dashboard": "Панели виджетов",
     "Stream": "Ленты",
     "Job": "Задания",
-    "Attachment": "Вложения",
     "ScheduledJobLogRecord": "Записи журнала запланированных работ",
     "PasswordChangeRequest": "Запросы смены пароля",
     "ActionHistoryRecord": "История действий",
@@ -100,8 +90,9 @@
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."
   },
   "labels": {
+    "typeToSearch": "Введ. и нажм. Enter...",
     "dragAndDropBtnText": "Перетяните",
-    "dragAndDropBtnTextSmall": "Ваши ассеты или",
+    "dragAndDropBtnTextSmall": "Ваши файлы или",
     "upload": "Загрузка",
     "attachFile": "Прикрепить файл",
     "noData": "Нет данных",
@@ -747,10 +738,6 @@
       "isNot": "Не",
       "isNotOneOf": "Ни один из",
       "noneOf": "Ни один из"
-    },
-    "assetSearchRanges": {
-      "isEmpty": "Является NULL",
-      "isNotEmpty": "Не является NULL"
     },
     "varcharSearchRanges": {
       "equals": "Равняется",

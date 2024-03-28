@@ -1,6 +1,7 @@
 {
     "labels":{
-       "AssetTypes":"Typy zasobów",
+       "Storage": "Repozytoria plików",
+       "FileTypes": "Typy plików",
        "GeneralSetting":"Ustawienia ogólne",
        "UiHandler":"Obsługa interfejsu użytkownika",
        "multiLanguagesSettings":"Języki",
@@ -105,7 +106,6 @@
        "url":"Adres URL",
        "varchar":"Ciąg znaków",
        "file":"Plik",
-       "asset":"Zasób",
        "image":"Obraz",
        "extensibleMultiEnum":"Lista wielowartościowa",
        "multiEnum":"Statyczna lista wielowartościowa",
@@ -128,7 +128,6 @@
        "defaultUnit":"Domyślna jednostka",
        "isMultilang":"Wielojęzyczny",
        "fontSize":"Rozmiar czcionki",
-       "assetType":"Typ zasobu",
        "type":"Typ",
        "name":"Nazwa",
        "label":"Etykieta",
@@ -201,7 +200,8 @@
        "rebuildDb":"Czy na pewno chcesz odbudować strukturę bazy danych? Wszystkie nieużywane kolumny i tabele zostaną usunięte."
     },
     "descriptions":{
-       "listOfSupportedAssetsTypes":"Lista obsługiwanych typów zasobów",
+       "Storage": "Konfiguracja miejsca i sposobu przechowywania plików",
+       "listOfSupportedFilesTypes": "Lista obsługiwanych typów plików",
        "uiHandler":"Zarządzaj zachowaniem interfejsu użytkownika na podstawie konfigurowalnej logiki warunkowej.",
        "locale":"Zarządzaj ustawieniami lokalizacji, takimi jak język, format daty i czasu, separator dziesiętny, separator tysięcy oraz jednostki miary specyficzne dla lokalizacji.",
        "multiLanguagesSettings":"Skonfiguruj języki do użycia.",

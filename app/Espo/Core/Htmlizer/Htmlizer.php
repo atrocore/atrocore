@@ -197,7 +197,7 @@ class Htmlizer
                 'file' => function ($context, $options) {
                     if (count($context) && $context[0]) {
                         $id = $context[0];
-                        return "?entryPoint=attachment&id=" . $id;
+                        return "?entryPoint=download&id=" . $id;
                     }
                 },
                 'numberFormat' => function ($context, $options) {
@@ -283,10 +283,10 @@ class Htmlizer
 
         $html = $renderer($data);
 
-        $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
+        $html = str_replace('?entryPoint=download&amp;', '?entryPoint=download&', $html);
 
         if ($this->getEntityManager()) {
-            $html = preg_replace_callback('/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/', function ($matches) {
+            $html = preg_replace_callback('/\?entryPoint=download\&id=([A-Za-z0-9]*)/', function ($matches) {
                 $id = $matches[1];
                 $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
 

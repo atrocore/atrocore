@@ -1,14 +1,9 @@
 {
   "scopeNames": {
-    "Asset": "Ассет",
-    "Rendition": "Перетворення",
-    "RenditionMetaData": "Перетворення мета даних",
-    "Library": "Бібліотека",
-    "AssetVariant": "Варіант асета",
-    "AssetCategory": "Категорія асету",
-    "AssetMetadata": "Метадані асету",
-    "AssetVersion": "Версія асету",
-    "AssetType": "Тип асету",
+    "Storage": "Сховище",
+    "Folder": "Папка",
+    "File": "Файл",
+    "FileType": "Тип файлу",
     "ValidationRule": "Правило перевірки",
     "UiHandler": "Обробник інтерфейсу",
     "Action": "Дія",
@@ -26,7 +21,6 @@
     "Dashboard": "Панель віджетів",
     "Stream": "Стрічка",
     "Job": "Завдання",
-    "Attachment": "Вкладення",
     "ScheduledJobLogRecord": "Запис журналу запланованих робіт",
     "PasswordChangeRequest": "Запит на зміну пароля",
     "ActionHistoryRecord": "Запис історії дій",
@@ -61,14 +55,11 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
-    "Library": "Бібліотеки",
-    "Asset": "Асети",
-    "AssetVersion": "Версії асету",
-    "AssetVariant": "Варіанти асету",
-    "AssetCategory": "Категорія асету",
-    "AssetMetadata": "Метадані асету",
-    "AssetType": "Типи асету",
-    "validationRules": "Правила перевірки",
+    "Storage": "Сховища",
+    "Folder": "Папки",
+    "File": "Файли",
+    "FileType": "Типи файлів",
+    "ValidationRules": "Правила перевірки",
     "UiHandler": "Обробники інтерфейсу",
     "Action": "Дії",
     "ExtensibleEnum": "Списки",
@@ -87,7 +78,6 @@
     "Dashboard": "Панелі віджетів",
     "Stream": "Стрічки",
     "Job": "Завдання",
-    "Attachment": "Вкладення",
     "ScheduledJobLogRecord": "Записи журналу запланованих робіт",
     "PasswordChangeRequest": "Запити зміни пароля",
     "ActionHistoryRecord": "Історія дій",
@@ -108,8 +98,9 @@
     "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу."
   },
   "labels": {
+    "typeToSearch": "Введ. і натисн. Enter...",
     "dragAndDropBtnText": "Перетягніть",
-    "dragAndDropBtnTextSmall": "Ваші асети або",
+    "dragAndDropBtnTextSmall": "Ваші файли або",
     "upload": "Завантаження",
     "attachFile": "Прикріпити файл",
     "noData": "Немає даних",
@@ -782,10 +773,6 @@
       "isNot": "Не",
       "isNotOneOf": "Жоден з",
       "noneOf": "Жоден із"
-    },
-    "assetSearchRanges": {
-      "isEmpty": "Є NULL",
-      "isNotEmpty": "Не є NULL"
     },
     "varcharSearchRanges": {
       "equals": "Дорівнює",

@@ -35,8 +35,8 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Services\Base;
 
 class Variable extends Base

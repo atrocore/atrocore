@@ -483,21 +483,20 @@ class Record extends Base
             return;
         }
 
-        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
-        foreach ($attachmentRepository->where(['id' => $ids])->find(["withDeleted" => true]) as $attachment) {
-            $attachments[$attachment->get('id')] = [
-                'name'      => $attachment->get('name'),
-                'pathsData' => $attachmentRepository->getAttachmentPathsData($attachment),
+        foreach ($this->getEntityManager()->getRepository('File')->where(['id' => $ids])->find(["withDeleted" => true]) as $file) {
+            $files[$file->get('id')] = [
+                'name'      => $file->get('name'),
+                'pathsData' => $file->getPathsData(),
             ];
         }
 
         foreach ($fields as $field) {
             foreach ($collection as $entity) {
-                $attachmentId = $entity->get("{$field}Id");
-                if (isset($attachments[$attachmentId])) {
-                    $entity->set("{$field}Id", $attachmentId);
-                    $entity->set("{$field}Name", $attachments[$attachmentId]['name']);
-                    $entity->set("{$field}PathsData", $attachments[$attachmentId]['pathsData']);
+                $fileId = $entity->get("{$field}Id");
+                if (isset($files[$fileId])) {
+                    $entity->set("{$field}Id", $fileId);
+                    $entity->set("{$field}Name", $files[$fileId]['name']);
+                    $entity->set("{$field}PathsData", $files[$fileId]['pathsData']);
                 } else {
                     $entity->set("{$field}Id", null);
                     $entity->set("{$field}Name", null);
@@ -523,10 +522,7 @@ class Record extends Base
             return;
         }
 
-        /** @var \Espo\Repositories\Attachment $attachmentRepository */
-        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
-
-        $attachments = $attachmentRepository
+        $files = $this->getEntityManager()->getRepository('File')
             ->where(['id' => array_unique(array_values($fields))])
             ->find();
 
@@ -535,14 +531,12 @@ class Record extends Base
             $entity->set("{$field}Name", null);
         }
 
-        if (!empty($attachments) && count($attachments) > 0) {
-            foreach ($attachments as $attachment) {
-                foreach ($fields as $field => $attachmentId) {
-                    if ($attachment->id == $attachmentId) {
-                        $entity->set("{$field}Id", $attachment->get('id'));
-                        $entity->set("{$field}Name", $attachment->get('name'));
-                        $entity->set("{$field}PathsData", $attachmentRepository->getAttachmentPathsData($attachment));
-                    }
+        foreach ($files as $file) {
+            foreach ($fields as $field => $fileId) {
+                if ($file->id == $fileId) {
+                    $entity->set("{$field}Id", $file->get('id'));
+                    $entity->set("{$field}Name", $file->get('name'));
+                    $entity->set("{$field}PathsData", $file->getPathsData());
                 }
             }
         }

@@ -36,6 +36,6 @@ class IsImage extends AbstractTwigFilter
         $fileNameParts = explode('.', $value->get("file")->get('name'));
         $fileExt = strtolower(array_pop($fileNameParts));
 
-        return in_array($fileExt, $this->metadata->get('dam.image.extensions', []));
+        return in_array($fileExt, $this->metadata->get('app.file.image.extensions', []));
     }
 }
