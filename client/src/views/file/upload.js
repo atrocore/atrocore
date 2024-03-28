@@ -98,7 +98,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                 const $el = $('#upload-url-input');
                 const url = $el.val() || '';
                 if (url.length < 1 || !this.isURL(url)) {
-                    this.notify(this.translate('urlExpected', 'labels', 'File'), 'error');
+                    this.notify(this.translate('urlExpected', 'messages', 'File'), 'error');
                 } else {
                     $el.val('');
                     fetch('api/v1/File/action/upload-proxy?url=' + url).then(response => {
@@ -108,7 +108,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                                 file.name = fileName;
                                 this.uploadFiles([file]);
                             } else {
-                                this.notify(this.translate('cannotDefineFileName', 'labels', 'File'), 'error');
+                                this.notify(this.translate('cannotDefineFileName', 'messages', 'File'), 'error');
                             }
                         });
                     });

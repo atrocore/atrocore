@@ -23,13 +23,14 @@
     "sort": "Sortieren",
     "retry": "Wiederholen?",
     "uploaded": "hochgeladen",
-    "putUploadUrl": "Geben Sie die URL der Datei an, wenn Sie sie per URL hochladen möchten",
-    "urlExpected": "Falsche URL wurde angegeben"
+    "putUploadUrl": "Geben Sie die URL der Datei an, wenn Sie sie per URL hochladen möchten"
   },
   "messages": {
     "notAllFilesWereUploaded": "XX von YY Dateien wurden nicht hochgeladen.",
     "fileCouldNotBeUploaded": "Die Datei konnte nicht hochgeladen werden.",
     "fileHasDuplicate": "Es gibt bereits mindestens ein <a target=\"_blank\" href=\"/#File/view/{{id}}\">Duplikat</a> dieser Datei.",
+    "cannotDefineFileName": "Das System kann den Dateinamen aus der URL nicht erkennen.",
+    "urlExpected": "Falsche URL wurde angegeben"
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Die Dateierweiterung kann nicht geändert werden.",
@@ -37,7 +38,6 @@
     "fileCreateFailed": "Das Erstellen der Datei ist fehlgeschlagen.",
     "fileRenameFailed": "Die Umbenennung der Datei ist fehlgeschlagen.",
     "fileDeleteFailed": "Das Löschen der Datei ist fehlgeschlagen.",
-    "fileNameNotValidByUserRegex": "Der Dateiname ist nicht gültig. Er sollte mit dem Regex '%s' übereinstimmen.",
-    "cannotDefineFileName": "Das System kann den Dateinamen aus der URL nicht erkennen."
+    "fileNameNotValidByUserRegex": "Der Dateiname ist nicht gültig. Er sollte mit dem Regex '%s' übereinstimmen."
   }
 }

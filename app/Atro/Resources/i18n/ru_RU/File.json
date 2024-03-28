@@ -23,13 +23,14 @@
     "sort": "Сортировать",
     "retry": "Повторить попытку?",
     "uploaded": "загружено",
-    "putUploadUrl": "Укажите URL-адрес файла, если вы хотите загрузить его по URL-адресу",
-    "urlExpected": "Был указан неверный URL-адрес"
+    "putUploadUrl": "Укажите URL-адрес файла, если вы хотите загрузить его по URL-адресу"
   },
   "messages": {
     "notAllFilesWereUploaded": "Файлы XX из YY не были загружены.",
     "fileCouldNotBeUploaded": "Не удалось загрузить файл.",
     "fileHasDuplicate": "Уже существует как минимум один <a target=\"_blank\" href=\"/#File/view/{{id}}\">дубликат</a> этого файла.",
+    "cannotDefineFileName": "Система не может распознать имя файла из URL-адреса.",
+    "urlExpected": "Был указан неверный URL-адрес"
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Расширение файла изменить нельзя.",
@@ -37,7 +38,6 @@
     "fileCreateFailed": "Не удалось создать файл.",
     "fileRenameFailed": "Не удалось переименовать файл.",
     "fileDeleteFailed": "Не удалось удалить файл.",
-    "fileNameNotValidByUserRegex": "Имя файла не является действительным. Оно должно соответствовать регексу '%s'.",
-    "cannotDefineFileName": "Система не может распознать имя файла из URL-адреса."
+    "fileNameNotValidByUserRegex": "Имя файла не является действительным. Оно должно соответствовать регексу '%s'."
   }
 }

@@ -23,13 +23,14 @@
     "sort": "Sort",
     "retry": "Retry?",
     "uploaded": "uploaded",
-    "putUploadUrl": "Specify the URL to the file if you want to upload via URL",
-    "urlExpected": "Incorrect URL was given"
+    "putUploadUrl": "Specify the URL to the file if you want to upload via URL"
   },
   "messages": {
     "notAllFilesWereUploaded": "XX of YY files were not uploaded.",
     "fileCouldNotBeUploaded": "File could not be uploaded.",
-    "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file."
+    "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file.",
+    "cannotDefineFileName": "The system cannot recognize the file name from the URL.",
+    "urlExpected": "Incorrect URL was given"
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",
@@ -37,7 +38,6 @@
     "fileCreateFailed": "File create has been failed.",
     "fileRenameFailed": "File rename has been failed.",
     "fileDeleteFailed": "File delete has been failed.",
-    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'.",
-    "cannotDefineFileName": "The system cannot recognize the file name from the URL."
+    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'."
   }
 }
