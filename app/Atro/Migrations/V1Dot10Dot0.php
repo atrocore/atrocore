@@ -123,7 +123,7 @@ class V1Dot10Dot0 extends Base
         $this->exec("DROP TABLE asset_type");
         $this->exec("DROP TABLE library");
         $this->exec("DROP TABLE library_asset_category");
-        $this->exec("DROP TABLE asset");
+//        $this->exec("DROP TABLE asset");
         $this->exec("DROP TABLE attachment");
 
         $this->updateComposer('atrocore/core', '^1.10.0');
