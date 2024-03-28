@@ -133,8 +133,10 @@ class QueryConverter
             $whereClause = [];
         }
 
+        $withDeleted = true;
         if (!$deleted && !(!empty($params['withDeleted']) && $params['withDeleted'] === true)) {
             $whereClause = $whereClause + ['deleted' => false];
+            $withDeleted = false;
         }
 
         if (empty($params['joins'])) {
@@ -181,7 +183,7 @@ class QueryConverter
             $selectPart = [$this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist)];
         }
 
-        $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']));
+        $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']), $withDeleted);
 
         if (!empty($params['customWhere'])) {
             throw new \Error('CustomWhere does not supporting. Use callbacks instead.');
@@ -192,14 +194,14 @@ class QueryConverter
         }
 
         if (!empty($params['joins']) && is_array($params['joins'])) {
-            $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions']);
+            $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions'], $withDeleted);
             if (!empty($joinsRelated)) {
                 $joinsPart = array_merge($joinsPart, $joinsRelated);
             }
         }
 
         if (!empty($params['leftJoins']) && is_array($params['leftJoins'])) {
-            $joinsRelated = $this->getJoins($entity, $params['leftJoins'], true, $params['joinConditions']);
+            $joinsRelated = $this->getJoins($entity, $params['leftJoins'], true, $params['joinConditions'], $withDeleted);
             if (!empty($joinsRelated)) {
                 $joinsPart = array_merge($joinsPart, $joinsRelated);
             }
@@ -488,7 +490,7 @@ class QueryConverter
         return $arr;
     }
 
-    protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null, $alias = null): ?array
+    protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null, $alias = null, $withDeleted = false): ?array
     {
         if (empty($r)) {
             $r = $entity->relations[$relationName];
@@ -503,18 +505,22 @@ class QueryConverter
         }
 
         if ($alias) {
+            if (!$withDeleted) {
+                $this->parameters['false'] = false;
+            }
             return [
                 'fromAlias' => self::TABLE_ALIAS,
                 'table'     => $this->quoteIdentifier($this->toDb($r['entity'])),
                 'alias'     => $alias,
-                'condition' => self::TABLE_ALIAS . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey)
+                'condition' => self::TABLE_ALIAS . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey) .
+                    (!$withDeleted ? " and " . $alias . ".deleted = :false" : "")
             ];
         }
 
         return null;
     }
 
-    protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array())
+    protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array(), $withDeleted = false)
     {
         $joinsArr = array();
 
@@ -549,7 +555,7 @@ class QueryConverter
                     }
                 }
 
-                $join = $this->getBelongsToJoin($entity, $relationName, $r);
+                $join = $this->getBelongsToJoin($entity, $relationName, $r, $withDeleted);
                 if ($join) {
                     $joinsArr[] = array_merge($join, ['type' => 'left']);
                 }
@@ -1067,7 +1073,7 @@ class QueryConverter
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
-    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array())
+    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array(), $withDeleted = false)
     {
         $joinSqlList = [];
         foreach ($joins as $item) {
@@ -1093,7 +1099,7 @@ class QueryConverter
             foreach ($itemConditions as $left => $right) {
                 $conditions[$left] = $right;
             }
-            if ($joinPart = $this->getJoinPart($entity, $relationName, $left, $conditions, $alias)) {
+            if ($joinPart = $this->getJoinPart($entity, $relationName, $left, $conditions, $alias, $withDeleted)) {
                 $joinSqlList = array_merge($joinSqlList, $joinPart);
             }
         }
@@ -1186,7 +1192,7 @@ class QueryConverter
         return $prefix . "JOIN {$this->quoteIdentifier($table)} {$alias} ON";
     }
 
-    protected function getJoinPart(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null): array
+    protected function getJoinPart(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null, $withDeleted = false): array
     {
         if (!$entity->hasRelation($name)) {
             if (empty($conditions)) {
@@ -1243,7 +1249,12 @@ class QueryConverter
                     $midAlias = $this->toDb($alias) . '_mm';
                 }
 
-                $condition = self::TABLE_ALIAS . ".{$this->toDb($key)} = {$midAlias}.{$this->toDb($nearKey)} AND {$midAlias}.deleted = :deleted_mm5";
+                $condition = self::TABLE_ALIAS . ".{$this->toDb($key)} = {$midAlias}.{$this->toDb($nearKey)}";
+                if (!$withDeleted) {
+                    $condition .= " AND {$midAlias}.deleted = :deleted_mm5";
+                    $this->parameters['deleted_mm5'] = false;
+                }
+
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                     $conditions = array_merge($conditions, $relOpt['conditions']);
                 }
@@ -1270,15 +1281,17 @@ class QueryConverter
                     'alias'     => $alias,
                     'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)} AND {$alias}.deleted = :deleted_mm5"
                 ];
-                $this->parameters['deleted_mm5'] = false;
                 return $res;
             case IEntity::HAS_MANY:
             case IEntity::HAS_ONE:
                 $foreignKey = $keySet['foreignKey'];
                 $distantTable = $this->toDb($relOpt['entity']);
 
-                $condition = self::TABLE_ALIAS . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey) . " AND {$alias}.deleted = :deleted_j1";
-                $this->parameters['deleted_j1'] = false;
+                $condition = self::TABLE_ALIAS . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey);
+                if (!$withDeleted) {
+                    $condition .= " AND {$alias}.deleted = :deleted_j1";
+                    $this->parameters['deleted_j1'] = false;
+                }
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
@@ -1325,7 +1338,7 @@ class QueryConverter
 //                return $sql;
 
             case IEntity::BELONGS_TO:
-                $join = $this->getBelongsToJoin($entity, $relationName, null, $alias);
+                $join = $this->getBelongsToJoin($entity, $relationName, null, $alias, $withDeleted);
                 $join['type'] = $left ? 'left' : 'inner';
                 return [$join];
         }
