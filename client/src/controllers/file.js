@@ -16,7 +16,9 @@ Espo.define('controllers/file', 'controllers/record',
             defaultAction: 'list',
 
             doAction(action, options) {
-                action = action ? action : this.getStorage().get('list-view', this.name);
+                if (!action) {
+                    action = this.getStorage().get('list-view', this.name) || 'list';
+                }
 
                 Dep.prototype.doAction.call(this, action, options);
             },
