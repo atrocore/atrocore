@@ -555,7 +555,7 @@ class QueryConverter
                     }
                 }
 
-                $join = $this->getBelongsToJoin($entity, $relationName, $r, $withDeleted);
+                $join = $this->getBelongsToJoin($entity, $relationName, $r,null, $withDeleted);
                 if ($join) {
                     $joinsArr[] = array_merge($join, ['type' => 'left']);
                 }
