@@ -22,7 +22,9 @@
     "Upload": "Hochladen",
     "sort": "Sortieren",
     "retry": "Wiederholen?",
-    "uploaded": "hochgeladen"
+    "uploaded": "hochgeladen",
+    "putUploadUrl": "Geben Sie die URL der Datei an, wenn Sie sie per URL hochladen möchten",
+    "urlExpected": "Falsche URL wurde angegeben"
   },
   "messages": {
     "notAllFilesWereUploaded": "XX von YY Dateien wurden nicht hochgeladen.",

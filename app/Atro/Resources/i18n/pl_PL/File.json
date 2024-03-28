@@ -22,7 +22,9 @@
     "Upload": "Przesyłanie",
     "sort": "Sortuj",
     "retry": "Ponowić próbę?",
-    "uploaded": "przesłany"
+    "uploaded": "przesłany",
+    "putUploadUrl": "Podaj adres URL pliku, jeśli chcesz przesłać go za pośrednictwem adresu URL",
+    "urlExpected": "Podano nieprawidłowy adres URL"
   },
   "messages": {
     "notAllFilesWereUploaded": "Pliki XX of YY nie zostały przesłane.",

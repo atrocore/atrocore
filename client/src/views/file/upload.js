@@ -94,6 +94,22 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
             this.filesSize = {};
             this.failedFiles = {};
 
+            this.listenTo(this.model, "click:upload-via-url", () => {
+                const $el = $('#upload-url-input');
+                const url = $el.val() || '';
+                if (url.length < 1 || !this.isURL(url)) {
+                    this.notify(this.translate('urlExpected', 'labels', 'File'), 'error');
+                } else {
+                    $el.val('');
+                    fetch(url).then(response => {
+                        response.blob().then(file => {
+                            file.name = this.getFileNameFromURL(url);
+                            this.uploadFiles([file]);
+                        });
+                    });
+                }
+            });
+
             this.listenTo(this.model, "updating-started", function () {
                 this.isUploading = true;
             });
@@ -116,6 +132,17 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                 this.isUploading = false;
                 $('.attachment-upload .progress').hide();
             }.bind(this));
+        },
+
+        isURL(str) {
+            const urlRegex = /^(?:https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+            return urlRegex.test(str);
+        },
+
+        getFileNameFromURL(url) {
+            const urlObject = new URL(url);
+            const pathname = urlObject.pathname;
+            return pathname.substring(pathname.lastIndexOf('/') + 1);
         },
 
         data() {
@@ -162,7 +189,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                 start += sliceSize;
 
                 stream++;
-                if (stream > this.streams){
+                if (stream > this.streams) {
                     stream = 1;
                 }
 

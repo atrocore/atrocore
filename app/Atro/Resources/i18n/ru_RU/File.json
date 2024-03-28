@@ -22,7 +22,9 @@
     "Upload": "Загрузить",
     "sort": "Сортировать",
     "retry": "Повторить попытку?",
-    "uploaded": "загружено"
+    "uploaded": "загружено",
+    "putUploadUrl": "Укажите URL-адрес файла, если вы хотите загрузить его по URL-адресу",
+    "urlExpected": "Был указан неверный URL-адрес"
   },
   "messages": {
     "notAllFilesWereUploaded": "Файлы XX из YY не были загружены.",

@@ -13,6 +13,13 @@ Espo.define('views/file/modals/upload', 'views/modals/edit',
 
         fullFormDisabled: true,
 
+        events: _.extend(Dep.prototype.events, {
+                'click #upload-via-url': function (e) {
+                    this.model.trigger('click:upload-via-url');
+                },
+            },
+        ),
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -29,7 +36,11 @@ Espo.define('views/file/modals/upload', 'views/modals/edit',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.find('.modal-content .edit-container .edit .middle .panel-body').append('<div class="row"><div class="cell col-sm-12 form-group" data-name="files"><div class="field" data-name="files"></div></div><div class="col-sm-6"></div></div>');
+            let html = '';
+            html += `<div class="row"><div class="cell col-sm-12 form-group" data-name="upload-url"><label class="control-label" data-name="upload-url"><span class="label-text">URL</span></label><div class="field" data-name="upload-url"><div class="input-group"><input id="upload-url-input" type="text" placeholder="${this.translate('putUploadUrl', 'labels', 'File')}" class="main-element form-control upload-url" name="upload-url" value="" autoComplete="off"><span id="upload-via-url" class="input-group-btn"><span class="form-control btn btn-primary">${this.translate('Upload', 'labels', 'File')}</span></span></div></div></div><div class="col-sm-6"></div></div>`;
+            html += '<div class="row"><div class="cell col-sm-12 form-group" data-name="files"><div class="field" data-name="files"></div></div><div class="col-sm-6"></div></div>';
+
+            this.$el.find('.modal-content .edit-container .edit .middle .panel-body').append(html);
 
             this.createView('files', 'views/file/upload', {
                 name: 'files',
