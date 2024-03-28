@@ -45,7 +45,8 @@
     "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
     "disableHierarchy": "Hierarchie deaktivieren",
     "modifiedExtendedRelations": "Relationen mit Auswirkungen auf Änderungsdatum/-Zeit",
-    "duplicatableRelations": "Duplizierbare Beziehungen"
+    "duplicatableRelations": "Duplizierbare Beziehungen",
+    "nonComparableFields": "Nicht vergleichbare Felder"
   },
   "options": {
     "linkType": {
