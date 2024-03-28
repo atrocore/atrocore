@@ -3,7 +3,7 @@
         <a target="_blank" href="https://github.com/atrocore/atrocore/issues/new">Report a Bug</a>
     </li>
     <li>
-        <a target="_blank" href="https://github.com/atrocore/atrocore/discussions">Community</a>
+        <a target="_blank" href="https://community.atrocore.com">Community</a>
     </li>
     <li>
         <a target="_blank" href="https://help.atrocore.com">Help Center</a>

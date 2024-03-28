@@ -49,7 +49,8 @@
     "iconClass": "Icon",
     "disableHierarchy": "Disable Hierarchy",
     "modifiedExtendedRelations": "Relations effecting modification date/time",
-    "duplicatableRelations": "Duplicatable Relations"
+    "duplicatableRelations": "Duplicatable Relations",
+    "nonComparableFields": "Non Comparable Fields"
   },
   "options": {
     "linkType": {

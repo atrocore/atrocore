@@ -335,7 +335,10 @@ class Metadata
 
                 $conditions = ['type' => $v['conditions_type']];
                 if ($v['conditions_type'] === 'basic') {
-                    $conditions = array_merge($conditions, @json_decode((string)$v['conditions'], true));
+                    $val = @json_decode((string)$v['conditions'], true);
+                    if (is_array($val)) {
+                        $conditions = array_merge($conditions, $val);
+                    }
                 } else {
                     $conditions['script'] = (string)$v['conditions'];
                 }

@@ -749,6 +749,16 @@ class Installer extends HasContainer
 
         // refresh translations
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
+
+        // regenerate lists
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate lists >/dev/null");
+
+        // regenerate measures
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate measures >/dev/null");
+
+        // regenerate ui handlers
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate ui handlers >/dev/null");
+
     }
 
     /**

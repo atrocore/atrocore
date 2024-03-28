@@ -591,7 +591,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->assignmentNotifications($entity);
 
         if (!$this->processFieldsAfterSaveDisabled) {
-            $this->processSpecifiedRelationsSave($entity);
+            $this->processSpecifiedRelationsSave($entity, $options);
             if (empty($entity->skipProcessFileFieldsSave)) {
                 $this->processFileFieldsSave($entity);
             }
@@ -617,9 +617,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $params = [
                     'where' => [
                         [
-                            'type' => 'linkedWith',
+                            'type'      => 'linkedWith',
                             'attribute' => $defs['foreign'],
-                            'value' => [$entity->id]
+                            'value'     => [$entity->id]
                         ]
                     ]
                 ];
@@ -725,7 +725,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function processSpecifiedRelationsSave(Entity $entity)
+    protected function processSpecifiedRelationsSave(Entity $entity, array $options = array())
     {
         $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
         foreach ($entity->getRelations() as $name => $defs) {
@@ -821,12 +821,12 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                 if ($name === 'teams') {
                                     $data = ['entityType' => $entity->getEntityType()];
                                 }
-                                $this->relate($entity, $name, $id, $data);
+                                $this->relate($entity, $name, $id, $data, $options);
                             }
                         }
 
                         foreach ($toRemoveIds as $id) {
-                            $this->unrelate($entity, $name, $id);
+                            $this->unrelate($entity, $name, $id, $options);
                         }
                         if (!empty($columns)) {
                             foreach ($toUpdateIds as $id) {
