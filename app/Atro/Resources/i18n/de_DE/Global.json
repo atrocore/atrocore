@@ -962,6 +962,7 @@
     "hasMultipleParents": "Es gibt einen oder mehr Datensätze mit mehreren Elterndatensätzen.",
     "unitValueIsRequired": "Die Einheit für das Feld '%s' erforderlich.",
     "emailIsInvalid": "E-Mail für das Feld '%s' ist ungültig.",
+    "fileIsInvalid": "Datei für das Feld '%s' ist ungültig.",
     "noSuchUnit": "Die Einheit '%s' für das Feld '%s' ist ungültig.",
     "noSuchOptions": "Der Wert '%s' für das Feld '%s' ist ungültig.",
     "noOptionsDefined": "Optionen für das Feld '%s' sind nicht definiert.",

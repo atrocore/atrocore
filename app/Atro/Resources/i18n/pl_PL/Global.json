@@ -1056,6 +1056,7 @@
     "hasMultipleParents":"Istnieje jeden lub więcej rekordów z wieloma rodzicami.",
     "unitValueIsRequired":"Jednostka dla pola '%s' jest wymagana.",
     "emailIsInvalid":"Adres e-mail dla pola '%s' jest nieprawidłowy.",
+    "fileIsInvalid":"Plik dla pola '%s' jest nieprawidłowy.",
     "noSuchUnit":"Jednostka '%s' dla pola '%s' jest nieprawidłowa.",
     "noSuchOptions":"Wartość '%s' dla pola '%s' jest nieprawidłowa.",
     "noOptionsDefined":"Opcje dla pola '%s' nie są zdefiniowane.",
