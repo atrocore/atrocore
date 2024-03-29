@@ -27,7 +27,9 @@ class V1Dot10Dot0 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE file (id VARCHAR(24) NOT NULL, name VARCHAR(255) NOT NULL, deleted BOOLEAN DEFAULT 'false', description TEXT DEFAULT NULL, private BOOLEAN DEFAULT 'false' NOT NULL, mime_type VARCHAR(255) DEFAULT NULL, file_size INT DEFAULT NULL, file_mtime TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, path VARCHAR(255) DEFAULT NULL, thumbnails_path TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, storage_id VARCHAR(24) DEFAULT NULL, folder_id VARCHAR(24) DEFAULT NULL, type_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE file (id VARCHAR(24) NOT NULL, name VARCHAR(255) NOT NULL, deleted BOOLEAN DEFAULT 'false', description TEXT DEFAULT NULL, private BOOLEAN DEFAULT 'false' NOT NULL, mime_type VARCHAR(255) DEFAULT NULL, file_size INT DEFAULT NULL, file_mtime TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, path VARCHAR(255) DEFAULT NULL, thumbnails_path TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, storage_id VARCHAR(24) DEFAULT NULL, folder_id VARCHAR(24) DEFAULT NULL, type_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX IDX_FILE_UNIQUE_FILE ON file (deleted, name, path, storage_id)");
             $this->exec("CREATE INDEX IDX_FILE_HASH ON file (hash, deleted)");
             $this->exec("CREATE INDEX IDX_FILE_STORAGE_ID ON file (storage_id, deleted)");
@@ -36,12 +38,16 @@ class V1Dot10Dot0 extends Base
             $this->exec("CREATE INDEX IDX_FILE_CREATED_BY_ID ON file (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_FILE_MODIFIED_BY_ID ON file (modified_by_id, deleted)");
 
-            $this->exec("CREATE TABLE file_type (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', assign_automatically BOOLEAN DEFAULT 'false' NOT NULL, sort_order INT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE file_type (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', assign_automatically BOOLEAN DEFAULT 'false' NOT NULL, sort_order INT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE INDEX IDX_FILE_TYPE_CREATED_BY_ID ON file_type (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_FILE_TYPE_MODIFIED_BY_ID ON file_type (modified_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_FILE_TYPE_NAME ON file_type (name, deleted)");
 
-            $this->exec("CREATE TABLE folder (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', description TEXT DEFAULT NULL, sort_order INT DEFAULT NULL, code VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE folder (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', description TEXT DEFAULT NULL, sort_order INT DEFAULT NULL, code VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX UNIQ_ECA209CD77153098EB3B4E33 ON folder (code, deleted)");
             $this->exec("CREATE INDEX IDX_FOLDER_CREATED_BY_ID ON folder (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_FOLDER_MODIFIED_BY_ID ON folder (modified_by_id, deleted)");
@@ -49,11 +55,15 @@ class V1Dot10Dot0 extends Base
             $this->exec("CREATE INDEX IDX_FOLDER_CREATED_AT ON folder (created_at, deleted)");
             $this->exec("CREATE INDEX IDX_FOLDER_MODIFIED_AT ON folder (modified_at, deleted)");
 
-            $this->exec("CREATE TABLE storage (id VARCHAR(24) NOT NULL, name VARCHAR(255) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(255) DEFAULT 'local', path VARCHAR(255) DEFAULT 'upload/files', priority INT DEFAULT 10 NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, created_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE storage (id VARCHAR(24) NOT NULL, name VARCHAR(255) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(255) DEFAULT 'local', path VARCHAR(255) DEFAULT 'upload/files', priority INT DEFAULT 10 NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, created_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX UNIQ_547A1B34B548B0FEB3B4E33 ON storage (path, deleted)");
             $this->exec("CREATE INDEX IDX_STORAGE_CREATED_BY_ID ON storage (created_by_id, deleted)");
 
-            $this->exec("CREATE TABLE folder_hierarchy (id VARCHAR(24) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, hierarchy_sort_order INT DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, parent_id VARCHAR(24) DEFAULT NULL, entity_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE folder_hierarchy (id VARCHAR(24) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, hierarchy_sort_order INT DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, parent_id VARCHAR(24) DEFAULT NULL, entity_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX IDX_FOLDER_HIERARCHY_UNIQUE_RELATION ON folder_hierarchy (deleted, parent_id, entity_id)");
             $this->exec("CREATE INDEX IDX_FOLDER_HIERARCHY_CREATED_BY_ID ON folder_hierarchy (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_FOLDER_HIERARCHY_MODIFIED_BY_ID ON folder_hierarchy (modified_by_id, deleted)");
@@ -62,7 +72,9 @@ class V1Dot10Dot0 extends Base
             $this->exec("CREATE INDEX IDX_FOLDER_HIERARCHY_CREATED_AT ON folder_hierarchy (created_at, deleted)");
             $this->exec("CREATE INDEX IDX_FOLDER_HIERARCHY_MODIFIED_AT ON folder_hierarchy (modified_at, deleted)");
 
-            $this->exec("CREATE TABLE folder_storage (id VARCHAR(24) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, folder_id VARCHAR(24) DEFAULT NULL, storage_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE folder_storage (id VARCHAR(24) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, folder_id VARCHAR(24) DEFAULT NULL, storage_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX IDX_FOLDER_STORAGE_UNIQUE_RELATION ON folder_storage (deleted, folder_id, storage_id)");
             $this->exec("CREATE INDEX IDX_FOLDER_STORAGE_CREATED_BY_ID ON folder_storage (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_FOLDER_STORAGE_MODIFIED_BY_ID ON folder_storage (modified_by_id, deleted)");
@@ -107,24 +119,38 @@ class V1Dot10Dot0 extends Base
         $this->migrateAssetTypes();
         $this->migrateAssets();
 
-        $this->getConfig()->set('globalSearchEntityList', array_values(array_unique(array_merge($this->getConfig()->get('globalSearchEntityList', []), ['File', 'Folder']))));
-        $this->getConfig()->set('tabList', array_values(array_unique(array_merge($this->getConfig()->get('tabList', []), ['File', 'Folder']))));
-        $this->getConfig()->set('twoLevelTabList', array_values(array_unique(array_merge($this->getConfig()->get('twoLevelTabList', []), ['File', 'Folder']))));
-        $this->getConfig()->set('quickCreateList', array_values(array_unique(array_merge($this->getConfig()->get('quickCreateList', []), ['File', 'Folder']))));
+        foreach (['globalSearchEntityList', 'tabList', 'twoLevelTabList', 'quickCreateList'] as $confName) {
+            $conf = $this->getConfig()->get($confName, []);
+            foreach (['File', 'Folder'] as $v) {
+                if (!in_array($v, $conf)) {
+                    $conf[] = $v;
+                }
+            }
+
+            foreach (['Asset', 'AssetCategory', 'Library'] as $v) {
+                $key = array_search($v, $conf);
+                if ($key !== false) {
+                    unset($conf[$key]);
+                }
+            }
+
+            $this->getConfig()->set($confName, array_values($conf));
+        }
+
         $this->getConfig()->remove('whitelistedExtensions');
         $this->getConfig()->save();
 
-        $this->exec("DROP TABLE asset_asset");
-        $this->exec("DROP TABLE asset_category");
-        $this->exec("DROP TABLE asset_category_asset");
-        $this->exec("DROP TABLE asset_category_hierarchy");
-        $this->exec("DROP TABLE asset_hierarchy");
-        $this->exec("DROP TABLE asset_metadata");
-        $this->exec("DROP TABLE asset_type");
-        $this->exec("DROP TABLE library");
-        $this->exec("DROP TABLE library_asset_category");
+//        $this->exec("DROP TABLE asset_asset");
+//        $this->exec("DROP TABLE asset_category");
+//        $this->exec("DROP TABLE asset_category_asset");
+//        $this->exec("DROP TABLE asset_category_hierarchy");
+//        $this->exec("DROP TABLE asset_hierarchy");
+//        $this->exec("DROP TABLE asset_metadata");
+//        $this->exec("DROP TABLE asset_type");
+//        $this->exec("DROP TABLE library");
+//        $this->exec("DROP TABLE library_asset_category");
 //        $this->exec("DROP TABLE asset");
-        $this->exec("DROP TABLE attachment");
+//        $this->exec("DROP TABLE attachment");
 
         $this->updateComposer('atrocore/core', '^1.10.0');
     }
