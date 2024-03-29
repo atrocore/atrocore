@@ -25,7 +25,6 @@
   "notActualFields": [
     "name"
   ],
-  "notCreatable": true,
   "filter": true,
   "personalData": true
 }
