@@ -59,6 +59,14 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
         },
 
+        selectBoolFilterList: ['onlyType'],
+
+        boolFilterData: {
+            onlyType() {
+                return this.fileTypeId || null;
+            }
+        },
+
         data: function () {
             return _.extend({valueIsSet: this.model.has(this.idName)}, Dep.prototype.data.call(this));
         },
@@ -68,6 +76,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.namePathsData = this.name + 'PathsData';
             this.idName = this.name + 'Id';
             this.foreignScope = 'File';
+            this.fileTypeId = this.options.fileTypeId || this.params.fileTypeId || this.model.getFieldParam(this.name, 'fileTypeId');
 
             this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
 

@@ -41,4 +41,16 @@ class File extends Base
         $qb->andWhere("$tableAlias.folder_id IN (:foldersIds)");
         $qb->setParameter('foldersIds', $ids, Connection::PARAM_STR_ARRAY);
     }
+
+    protected function boolFilterOnlyType(&$result)
+    {
+        $typeId = (string)$this->getBoolFilterParameter('onlyType');
+        if (empty($typeId)) {
+            return;
+        }
+
+        $result['whereClause'][] = [
+            'typeId' => $typeId
+        ];
+    }
 }

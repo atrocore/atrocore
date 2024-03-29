@@ -2,6 +2,13 @@
   "controller": "controllers/file",
   "createDisabled": true,
   "iconClass": "fas fa-file",
+  "boolFilterList": [
+    "onlyMy",
+    "onlyType"
+  ],
+  "hiddenBoolFilterList": [
+    "onlyType"
+  ],
   "views": {
     "list": "views/file/list",
     "plate": "views/file/plate"
