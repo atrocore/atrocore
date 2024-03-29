@@ -436,6 +436,7 @@
   },
   "fields": {
     "file": "File",
+    "files": "Files",
     "isInherited": "Inherited",
     "isArchived": "Archived",
     "code": "Code",
@@ -495,7 +496,8 @@
     "isActive": "Active"
   },
   "links": {
-    "file": "Files",
+    "file": "File",
+    "files": "Files",
     "ownerUser": "Owner",
     "assignedUser": "Assigned User",
     "createdBy": "Created By",

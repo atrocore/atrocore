@@ -406,6 +406,7 @@
   },
   "fields": {
     "file": "Файл",
+    "files": "Файлы",
     "sortOrder": "Порядок сортировки",
     "parents": "Родительские записи",
     "assignedAccounts": "Контрагенты",
@@ -456,7 +457,8 @@
     "ids": "IDs"
   },
   "links": {
-    "file": "Файлы",
+    "file": "Файл",
+    "files": "Файлы",
     "assignedAccounts": "Контрагенты",
     "assignedUser": "Ответственный",
     "createdBy": "Создан (кем)",

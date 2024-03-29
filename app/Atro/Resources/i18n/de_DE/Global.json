@@ -457,6 +457,7 @@
   },
   "fields": {
     "file": "Datei",
+    "files": "Dateien",
     "isInherited": "Vererbt",
     "isArchived": "Archiviert",
     "code": "Code",
@@ -514,7 +515,8 @@
     "isActive": "Aktiv"
   },
   "links": {
-    "file": "Dateien",
+    "file": "Datei",
+    "files": "Dateien",
     "parent": "Parent",
     "ownerUser": "Besitzer",
     "assignedAccounts": "Accounts",

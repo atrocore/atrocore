@@ -435,6 +435,7 @@
   },
   "fields": {
     "file": "Файл",
+    "files": "Файли",
     "isInherited": "Унаслідувано",
     "isArchived": "Заархівованo",
     "code": "Код",
@@ -491,7 +492,8 @@
     "isActive": "Активний"
   },
   "links": {
-    "file": "Файли",
+    "file": "Файл",
+    "files": "Файли",
     "assignedAccounts": "Контрагенти",
     "assignedUser": "Відповідальний",
     "createdBy": "Створено (ким)",
