@@ -286,6 +286,14 @@ class V1Dot10Dot0 extends Base
                                 $metadata['fields'][$field]['type'] = 'file';
                                 $toUpdate = true;
                             }
+
+                            if ($fieldDefs['type'] === 'attachmentMultiple') {
+                                unset($metadata['fields'][$field]);
+                                if (isset($metadata['links'][$field])) {
+                                    unset($metadata['links'][$field]);
+                                }
+                                $toUpdate = true;
+                            }
                         }
                     }
                 }
