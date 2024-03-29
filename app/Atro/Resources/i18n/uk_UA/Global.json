@@ -434,6 +434,7 @@
     "restore": "Відновлення"
   },
   "fields": {
+    "file": "Файл",
     "isInherited": "Унаслідувано",
     "isArchived": "Заархівованo",
     "code": "Код",
@@ -490,6 +491,7 @@
     "isActive": "Активний"
   },
   "links": {
+    "file": "Файли",
     "assignedAccounts": "Контрагенти",
     "assignedUser": "Відповідальний",
     "createdBy": "Створено (ким)",

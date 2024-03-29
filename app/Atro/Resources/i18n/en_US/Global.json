@@ -435,6 +435,7 @@
     "restore": "Restore"
   },
   "fields": {
+    "file": "File",
     "isInherited": "Inherited",
     "isArchived": "Archived",
     "code": "Code",
@@ -494,6 +495,7 @@
     "isActive": "Active"
   },
   "links": {
+    "file": "Files",
     "ownerUser": "Owner",
     "assignedUser": "Assigned User",
     "createdBy": "Created By",

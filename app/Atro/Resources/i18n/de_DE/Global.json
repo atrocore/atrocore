@@ -456,6 +456,7 @@
     "restore": "Wiederherstellen"
   },
   "fields": {
+    "file": "Datei",
     "isInherited": "Vererbt",
     "isArchived": "Archiviert",
     "code": "Code",
@@ -513,6 +514,7 @@
     "isActive": "Aktiv"
   },
   "links": {
+    "file": "Dateien",
     "parent": "Parent",
     "ownerUser": "Besitzer",
     "assignedAccounts": "Accounts",

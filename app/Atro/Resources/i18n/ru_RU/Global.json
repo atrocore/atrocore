@@ -405,6 +405,7 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "file": "Файл",
     "sortOrder": "Порядок сортировки",
     "parents": "Родительские записи",
     "assignedAccounts": "Контрагенты",
@@ -455,6 +456,7 @@
     "ids": "IDs"
   },
   "links": {
+    "file": "Файлы",
     "assignedAccounts": "Контрагенты",
     "assignedUser": "Ответственный",
     "createdBy": "Создан (кем)",
