@@ -284,6 +284,23 @@ class V1Dot10Dot0 extends Base
                         if (!empty($fieldDefs['type'])) {
                             if (in_array($fieldDefs['type'], ['asset', 'attachment', 'image'])) {
                                 $metadata['fields'][$field]['type'] = 'file';
+                                if (!empty($fieldDefs['assetType'])) {
+                                    try {
+                                        $fileType = $this->getConnection()->createQueryBuilder()
+                                            ->select('*')
+                                            ->from('file_type')
+                                            ->where('deleted=:false')
+                                            ->andWhere('name=:name')
+                                            ->setParameter('false', false, ParameterType::BOOLEAN)
+                                            ->setParameter('name', $fieldDefs['assetType'])
+                                            ->fetchAssociative();
+                                        if (!empty($fileType)) {
+                                            $metadata['fields'][$field]['fileTypeId'] = $fileType['id'];
+                                            unset($metadata['fields'][$field]['assetType']);
+                                        }
+                                    } catch (\Throwable $e) {
+                                    }
+                                }
                                 $toUpdate = true;
                             }
 
