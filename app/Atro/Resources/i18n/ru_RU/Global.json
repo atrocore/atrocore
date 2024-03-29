@@ -3,7 +3,7 @@
     "Storage": "Хранилище",
     "Folder": "Папка",
     "File": "Файл",
-    "FileType": "Типы файлов",
+    "FileType": "Тип файла",
     "ValidationRule": "Правило проверки",
     "Sharing": "Шеринг",
     "Translation": "Надпись",
@@ -405,6 +405,7 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "fileType": "Тип файла",
     "file": "Файл",
     "files": "Файлы",
     "sortOrder": "Порядок сортировки",

@@ -435,6 +435,7 @@
     "restore":"Przywróć"
 },
 "fields":{
+    "fileType": "Typ pliku",
     "file": "Plik",
     "files": "Pliki",
     "isInherited":"Inherited",

@@ -456,6 +456,7 @@
     "restore": "Wiederherstellen"
   },
   "fields": {
+    "fileType": "Datei Typ",
     "file": "Datei",
     "files": "Dateien",
     "isInherited": "Vererbt",

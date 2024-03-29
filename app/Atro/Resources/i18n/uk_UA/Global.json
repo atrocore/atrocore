@@ -434,6 +434,7 @@
     "restore": "Відновлення"
   },
   "fields": {
+    "fileType": "Тип файлу",
     "file": "Файл",
     "files": "Файли",
     "isInherited": "Унаслідувано",

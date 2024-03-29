@@ -6,6 +6,11 @@
       "default": false
     },
     {
+      "name": "fileType",
+      "type": "link",
+      "entity": "FileType"
+    },
+    {
       "name": "audited",
       "type": "bool"
     },

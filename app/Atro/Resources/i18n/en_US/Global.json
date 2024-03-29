@@ -435,6 +435,7 @@
     "restore": "Restore"
   },
   "fields": {
+    "fileType": "File Type",
     "file": "File",
     "files": "Files",
     "isInherited": "Inherited",
