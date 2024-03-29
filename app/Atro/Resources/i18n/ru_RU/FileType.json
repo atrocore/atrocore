@@ -9,6 +9,9 @@
     "validationRules": "Правила проверки",
     "files": "Файлы"
   },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Запись не может быть удалена, так как она используется в поле '%s' сущности '%s'."
+  },
   "labels": {
     "Create FileType": "Создать тип файла"
   }

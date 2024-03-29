@@ -9,6 +9,9 @@
     "validationRules": "Reguły walidacji",
     "files": "Pliki"
   },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w polu \"%s\" podmiotu \"%s\"."
+  },
   "labels": {
     "Create FileType": "Utwórz typ pliku"
   }
