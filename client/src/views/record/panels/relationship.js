@@ -737,7 +737,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.notify(false);
                     this.notify('Unlinked', 'success');
                     this.collection.fetch();
-                    this.model.trigger('after:unrelate');
+                    this.model.trigger('after:unrelate', this.link, this.defs);
                 }.bind(this));
             }, this);
         },

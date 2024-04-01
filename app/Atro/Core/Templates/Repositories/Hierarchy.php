@@ -41,11 +41,11 @@ class Hierarchy extends RDB
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
-        if($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)){
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::findRelated($entity, $relationName, $params);
         }
 
-        if ( $relationName === 'children') {
+        if ($relationName === 'children') {
             $params['orderBy'] = $this->hierarchyTableName . '_mm.hierarchy_sort_order';
             $params['order'] = "ASC";
         }
@@ -722,14 +722,17 @@ class Hierarchy extends RDB
             $selectCountQuery
                 ->andWhere($expr->in("$tableAlias.id", $subQuery->select("$tableAlias.id")->getSQL()));
 
-            $qb->select("$tableAlias.*", "({$selectCountQuery->where("$tableAlias.id = r1.parent_id")->getSQL()}) as children_count");
+            $qb->select("$tableAlias.*", "({$selectCountQuery->where("$tableAlias.id = r1.parent_id ".($withDeleted?"":"and r1.deleted=:deleted"))->getSQL()}) as children_count");
+            if (!$withDeleted) {
+                $qb->setParameter('deleled', false, ParameterType::BOOLEAN);
+            }
 
             if (empty($parentId)) {
 
                 $qb->andWhere(
                     $expr->notIn(
                         "$tableAlias.id",
-                        "SELECT entity_id FROM $quotedHierarchyTableName qh". (!$withDeleted ? " WHERE qh.deleted = :deleted" : "")
+                        "SELECT entity_id FROM $quotedHierarchyTableName qh" . (!$withDeleted ? " WHERE qh.deleted = :deleted" : "")
                     ))
                     ->orderBy("$tableAlias.sort_order")
                     ->addOrderBy("$tableAlias.$sortBy", $sortOrder)
