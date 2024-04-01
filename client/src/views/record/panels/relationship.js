@@ -761,13 +761,21 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         actionUpload(data) {
             const link = data.link;
 
+            let createAttributes = this.options.createAttributes || {};
+
+            const foreign = this.getMetadata().get(['entityDefs', this.model.name, 'links', link, 'foreign']);
+            if (foreign) {
+                createAttributes[foreign + "Id"] = this.model.get('id');
+                createAttributes[foreign + "Name"] = this.model.get('name');
+            }
+
             this.notify('Loading...');
             this.createView('upload', 'views/file/modals/upload', {
                 scope: 'File',
                 fullFormDisabled: true,
                 layoutName: 'upload',
                 multiUpload: true,
-                attributes: this.options.createAttributes || {},
+                attributes: createAttributes,
             }, view => {
                 view.once('after:render', () => {
                     this.notify(false);
