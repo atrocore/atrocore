@@ -763,10 +763,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             let createAttributes = this.options.createAttributes || {};
 
-            const foreign = this.getMetadata().get(['entityDefs', this.model.name, 'links', link, 'foreign']);
-            if (foreign) {
-                createAttributes[foreign + "Id"] = this.model.get('id');
-                createAttributes[foreign + "Name"] = this.model.get('name');
+            if (this.model.name === 'Folder') {
+                createAttributes.folderId = this.model.get('id');
+                createAttributes.folderName = this.model.get('name');
+            }
+
+            if (this.model.name === 'FileType') {
+                createAttributes.typeId = this.model.get('id');
+                createAttributes.typeName = this.model.get('name');
             }
 
             this.notify('Loading...');
