@@ -42,6 +42,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         previewSize: 'small',
 
+        fileTypeId: null,
+
         events: {
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
@@ -76,9 +78,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.namePathsData = this.name + 'PathsData';
             this.idName = this.name + 'Id';
             this.foreignScope = 'File';
-            this.fileTypeId = this.options.fileTypeId || this.params.fileTypeId || this.model.getFieldParam(this.name, 'fileTypeId');
-
-            this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
+            this.fileTypeId = this.options.fileTypeId || this.params.fileTypeId || this.model.getFieldParam(this.name, 'fileTypeId') || this.fileTypeId;
+            this.previewSize = this.options.previewSize || this.params.previewSize || this.model.getFieldParam(this.name, 'previewSize') || this.previewSize;
 
             if (this.mode !== 'list') {
                 this.addActionHandler('selectLink', function () {
