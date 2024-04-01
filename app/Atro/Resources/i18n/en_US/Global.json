@@ -435,6 +435,7 @@
     "restore": "Restore"
   },
   "fields": {
+    "priority": "Priority",
     "fileType": "File Type",
     "file": "File",
     "files": "Files",

@@ -2,7 +2,6 @@
   "fields": {
     "type": "Тип",
     "path": "Путь",
-    "priority": "Приоритет",
     "files": "Файлы",
     "folders": "Папки"
   },

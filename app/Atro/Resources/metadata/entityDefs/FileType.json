@@ -10,8 +10,11 @@
       "notNull": true,
       "default": false
     },
-    "sortOrder": {
-      "type": "int"
+    "priority": {
+      "type": "int",
+      "notNull": true,
+      "default": 10,
+      "min": 0
     },
     "files": {
       "type": "linkMultiple",
@@ -61,8 +64,8 @@
     }
   },
   "collection": {
-    "sortBy": "sortOrder",
-    "asc": true
+    "sortBy": "priority",
+    "asc": false
   },
   "indexes": {
     "name": {

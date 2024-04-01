@@ -456,6 +456,7 @@
     "restore": "Wiederherstellen"
   },
   "fields": {
+    "priority": "Priorität",
     "fileType": "Datei Typ",
     "file": "Datei",
     "files": "Dateien",

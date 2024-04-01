@@ -113,6 +113,10 @@ class V1Dot10Dot0 extends Base
             $this->exec("CREATE INDEX IDX_VALIDATION_RULE_FILE_TYPE_ID ON validation_rule (file_type_id, deleted)");
         }
 
+        $this->exec("ALTER TABLE file_type RENAME COLUMN sort_order to priority");
+        $this->exec("ALTER TABLE file_type ALTER priority SET DEFAULT 10");
+        $this->exec("ALTER TABLE file_type ALTER priority SET NOT NULL");
+
         self::createDefaultStorage($this->getConnection());
 
         $this->migrateAssetCategories();

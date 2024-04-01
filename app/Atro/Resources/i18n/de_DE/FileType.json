@@ -1,7 +1,6 @@
 {
   "fields": {
     "validationRules": "Validierungsregel",
-    "sortOrder": "Sortierreihenfolge",
     "assignAutomatically": "Automatisch zuordnen",
     "files": "Dateien"
   },

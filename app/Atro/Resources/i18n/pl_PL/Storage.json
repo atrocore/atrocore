@@ -2,7 +2,6 @@
   "fields": {
     "type": "Typ",
     "path": "Ścieżka",
-    "priority": "Priorytet",
     "files": "Pliki",
     "folders": "Foldery"
   },

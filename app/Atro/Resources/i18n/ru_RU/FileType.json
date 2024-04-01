@@ -1,7 +1,6 @@
 {
   "fields": {
     "validationRules": "Правила проверки",
-    "sortOrder": "Порядок сортировки",
     "assignAutomatically": "Назначить автоматически",
     "files": "Файлы"
   },

@@ -435,6 +435,7 @@
     "restore":"Przywróć"
 },
 "fields":{
+    "priority": "Priorytet",
     "fileType": "Typ pliku",
     "file": "Plik",
     "files": "Pliki",

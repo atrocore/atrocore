@@ -12,7 +12,7 @@
           "name": "assignAutomatically"
         },
         {
-          "name": "sortOrder"
+          "name": "priority"
         }
       ]
     ],

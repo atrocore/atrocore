@@ -69,7 +69,7 @@ class File extends Base
             if (empty($entity->get('typeId'))) {
                 $fileTypes = $this->getEntityManager()->getRepository('FileType')
                     ->where(['assignAutomatically' => true])
-                    ->order('sortOrder')
+                    ->order('priority', 'DESC')
                     ->find();
                 foreach ($fileTypes as $fileType) {
                     if ($this->getFileValidator()->validateFile($fileType, $entity)) {

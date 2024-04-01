@@ -2,7 +2,6 @@
   "fields": {
     "type": "Type",
     "path": "Path",
-    "priority": "Priority",
     "files": "Files",
     "folders": "Folders"
   },
