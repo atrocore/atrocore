@@ -90,10 +90,12 @@ class Metadata extends AbstractListener
                     if (!empty($fieldDefs['dropdown'])) {
                         if ($fieldDefs['type'] == 'extensibleMultiEnum') {
                             $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-multi-enum-dropdown';
-                        } else if ($fieldDefs['type'] == 'extensibleEnum') {
-                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-enum-dropdown';
                         } else {
-                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/measure-dropdown';
+                            if ($fieldDefs['type'] == 'extensibleEnum') {
+                                $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-enum-dropdown';
+                            } else {
+                                $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/measure-dropdown';
+                            }
                         }
                     }
                 }
@@ -689,19 +691,20 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    private function addScopesToRelationShip(array &$metadata, string $scope, string $relationEntityName, string $relation){
-        if(empty($metadata['clientDefs'][$scope]['relationshipPanels'])){
+    private function addScopesToRelationShip(array &$metadata, string $scope, string $relationEntityName, string $relation)
+    {
+        if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
             ];
         }
-        $data =  $metadata['clientDefs'][$scope]['relationshipPanels'][$relation] ;
-        if(empty($data)){
+        $data = $metadata['clientDefs'][$scope]['relationshipPanels'][$relation];
+        if (empty($data)) {
             $metadata['clientDefs'][$scope]['relationshipPanels'][$relation] = [
                 "aclScopesList" => [$scope, $relationEntityName]
             ];
-        }else{
-            $metadata['clientDefs'][$scope]['relationshipPanels'][$relation]["aclScopesList"] = array_merge($data['aclScopesList'] ?? [], [$scope, $relationEntityName]) ;
+        } else {
+            $metadata['clientDefs'][$scope]['relationshipPanels'][$relation]["aclScopesList"] = array_merge($data['aclScopesList'] ?? [], [$scope, $relationEntityName]);
         }
     }
 
@@ -1055,7 +1058,9 @@ class Metadata extends AbstractListener
     protected function addOnlyDeletedFilter(array $data): array
     {
         foreach ($data['entityDefs'] as $entity => $row) {
-            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
+            if ($entity !== 'File') {
+                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
+            }
         }
 
         return $data;

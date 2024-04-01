@@ -2348,6 +2348,10 @@ class Record extends Base
             ->dispatchEvent('beforeMassRestore', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
+        if ($this->entityType === 'File') {
+            return false;
+        }
+
         $name = $this->getInjection('language')->translate('restore', 'massActions', 'Global') . ': ' . $this->entityType;
 
         $data = [
