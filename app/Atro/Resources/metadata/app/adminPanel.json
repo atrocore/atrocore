@@ -71,7 +71,13 @@
         "url": "#Settings/inputLanguage",
         "label": "multiLanguages",
         "description": "multiLanguagesSettings"
-      },
+      }
+    ],
+    "order": 0
+  },
+  "files": {
+    "label": "FileManagement",
+    "itemList": [
       {
         "url": "#Storage",
         "label": "Storage",
@@ -81,9 +87,13 @@
         "url": "#FileType",
         "label": "FileTypes",
         "description": "listOfSupportedFilesTypes"
+      },
+      {
+        "url": "#Folder",
+        "label": "Folders",
+        "description": "folders"
       }
-    ],
-    "order": 0
+    ]
   },
   "users": {
     "label": "AccessManagement",

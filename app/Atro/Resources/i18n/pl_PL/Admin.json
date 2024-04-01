@@ -2,6 +2,7 @@
     "labels":{
        "Storage": "Repozytoria plików",
        "FileTypes": "Typy plików",
+       "Folders": "Foldery",
        "GeneralSetting":"Ustawienia ogólne",
        "UiHandler":"Obsługa interfejsu użytkownika",
        "multiLanguagesSettings":"Języki",
@@ -16,6 +17,7 @@
        "Enabled":"Włączone",
        "Disabled":"Wyłączone",
        "System":"System",
+       "FileManagement": "Zarządzanie plikami",
        "AccessManagement":"Zarządzanie dostępem",
        "Users":"Użytkownicy",
        "Email":"E-mail",
@@ -202,6 +204,7 @@
     "descriptions":{
        "Storage": "Konfiguracja miejsca i sposobu przechowywania plików",
        "listOfSupportedFilesTypes": "Lista obsługiwanych typów plików",
+       "folders": "folders",
        "uiHandler":"Zarządzaj zachowaniem interfejsu użytkownika na podstawie konfigurowalnej logiki warunkowej.",
        "locale":"Zarządzaj ustawieniami lokalizacji, takimi jak język, format daty i czasu, separator dziesiętny, separator tysięcy oraz jednostki miary specyficzne dla lokalizacji.",
        "multiLanguagesSettings":"Skonfiguruj języki do użycia.",

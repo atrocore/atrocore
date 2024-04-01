@@ -2,6 +2,7 @@
   "labels": {
     "Storage": "Storages",
     "FileTypes": "File Types",
+    "Folders": "Folders",
     "GeneralSetting": "General Settings",
     "UiHandler": "UI Handlers",
     "multiLanguagesSettings": "Languages",
@@ -16,6 +17,7 @@
     "Enabled": "Enabled",
     "Disabled": "Disabled",
     "System": "System",
+    "FileManagement": "File Management",
     "AccessManagement": "Access Management",
     "Users": "Users",
     "Email": "Email",
@@ -201,6 +203,7 @@
   "descriptions": {
     "Storage": "Configure where and how files will be stored",
     "listOfSupportedFilesTypes": "List of supported files types",
+    "folders": "folders",
     "uiHandler": "Manage the behavior of the user interface based on configurable conditional logic.",
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
     "multiLanguagesSettings": "Configure languages to be used.",

@@ -3,6 +3,7 @@
     "Storage": "Dateiablage",
     "FileTypes": "Datei-Typen",
     "UiHandler": "UI-Handler",
+    "Folders": "Ordner",
     "Locale": "Gebietsschema",
     "multiLanguagesSettings": "Sprachen",
     "multiLanguages": "Sprachen",
@@ -16,6 +17,7 @@
     "addOption": "Option hinzufügen",
     "Enabled": "Aktiv",
     "Disabled": "Inaktiv",
+    "FileManagement": "Dateiverwaltung",
     "AccessManagement": "Zugriffsverwaltung",
     "Users": "Benutzer",
     "Email": "E-Mail",
@@ -183,6 +185,7 @@
   "descriptions": {
     "Storage": "Configure where and how files will be stored",
     "listOfSupportedFilesTypes": "Liste der unterstützten Datei-Typen",
+    "folders": "",
     "uiHandler": "Verwalten Sie das Verhalten der Benutzeroberflächen basierend auf der Grundlage einer konfigurierbaren bedingten Logik.",
     "locale": "Verwalten Sie Gebietsschemaeinstellungen wie Sprache, Datums- und Uhrzeitformat, Dezimaltrennzeichen, Tausendertrennzeichen sowie gebietsschemaspezifische Maßeinheiten.",
     "multiLanguagesSettings": "Konfigurieren Sie die zu verwendenden Sprachen.",
