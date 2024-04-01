@@ -183,9 +183,9 @@
     "rebuildDb": "Möchten Sie die Datenbankstruktur wirklich anpassen? Alle unbenutzten Spalten und Tabellen werden entfernt."
   },
   "descriptions": {
-    "Storage": "Configure where and how files will be stored",
-    "listOfSupportedFilesTypes": "Liste der unterstützten Datei-Typen",
-    "folders": "",
+    "Storage": "Verwalten Sie physische Speicherorte für alle hochgeladenen Dateien (Lokales Dateisystem, Microsoft Sharepoint, Amazon S3 usw.)",
+    "listOfSupportedFilesTypes": "Verwalten Sie Dateitypen für zusätzliche Dateivalidierung (z.B. Bilder, Dokumente, Videos, etc.) und Klassifizierung.",
+    "folders": "Verwalten Sie virtuelle Ordner zum Speichern hochgeladener Dateien.",
     "uiHandler": "Verwalten Sie das Verhalten der Benutzeroberflächen basierend auf der Grundlage einer konfigurierbaren bedingten Logik.",
     "locale": "Verwalten Sie Gebietsschemaeinstellungen wie Sprache, Datums- und Uhrzeitformat, Dezimaltrennzeichen, Tausendertrennzeichen sowie gebietsschemaspezifische Maßeinheiten.",
     "multiLanguagesSettings": "Konfigurieren Sie die zu verwendenden Sprachen.",

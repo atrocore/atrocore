@@ -201,9 +201,9 @@
     "rebuildDb": "Are you sure you want to rebuild the database structure? All unused columns and tables will be removed."
   },
   "descriptions": {
-    "Storage": "Configure where and how files will be stored",
-    "listOfSupportedFilesTypes": "List of supported files types",
-    "folders": "folders",
+    "Storage": "Manage physical locations for all uploaded files (Local File System, Microsoft Sharepoint, Amazon S3, etc.)",
+    "listOfSupportedFilesTypes": "Manage file types for additional file validation (e.g. images, documents, videos, etc.) and classification.",
+    "folders": "Maintain virtual folders for saving uploaded files.",
     "uiHandler": "Manage the behavior of the user interface based on configurable conditional logic.",
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
     "multiLanguagesSettings": "Configure languages to be used.",
