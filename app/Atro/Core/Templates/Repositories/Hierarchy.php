@@ -383,14 +383,12 @@ class Hierarchy extends RDB
                     "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
                 ))
                 ->orderBy('e.sort_order')
-                ->orderBy("e.$sortBy", $sortOrder)
-                ->orderBy('e.id');
+                ->addOrderBy("e.$sortBy", $sortOrder);
         } else {
             $qb->leftJoin('e', $quotedHierarchyTableName, 'h', 'h.entity_id = e.id')
                 ->andWhere('h.parent_id = :parentId')
                 ->orderBy('h.hierarchy_sort_order')
-                ->orderBy("e.$sortBy", $sortOrder)
-                ->orderBy('e.id');
+                ->addOrderBy("e.$sortBy", $sortOrder);
 
             if (!$withDeleted) {
                 $qb->andWhere('h.deleted = :deleted');
