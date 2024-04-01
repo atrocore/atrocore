@@ -11,7 +11,8 @@
     "countryCode": "Landesvorwahl",
     "type": "Typ",
     "account": "Konto",
-    "contactName": "Kontaktname"
+    "contactName": "Kontaktname",
+    "name": "Name der Firma"
   },
   "options": {
     "type": {

@@ -40,5 +40,33 @@
     "name": "Read-only",
     "code": "readOnly",
     "sortOrder": 20
+  },
+  {
+    "id": "supplier",
+    "extensibleEnumId": "role",
+    "name": "Supplier",
+    "code": "supplier",
+    "sortOrder": 10
+  },
+  {
+    "id": "customer",
+    "extensibleEnumId": "role",
+    "name": "Customer",
+    "code": "customer",
+    "sortOrder": 20
+  },
+  {
+    "id": "billing",
+    "extensibleEnumId": "addressType",
+    "name": "Billing",
+    "code": "billing",
+    "sortOrder": 10
+  },
+  {
+    "id": "delivery",
+    "extensibleEnumId": "addressType",
+    "name": "Delivery",
+    "code": "delivery",
+    "sortOrder": 20
   }
 ]
