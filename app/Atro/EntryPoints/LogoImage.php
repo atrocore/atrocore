@@ -26,7 +26,7 @@ class LogoImage extends Image
         }
 
         /** @var File $file */
-        $file = $this->getEntityManager()->getEntity("File", $_GET['id']);
+        $file = $this->getEntityManager()->getEntity("File", $id);
         if (empty($file)) {
             throw new NotFound();
         }

@@ -583,6 +583,12 @@ class V1Dot10Dot0 extends Base
                 'extensions'          => ['jpg', 'jpeg', 'gif', 'tiff', 'png', 'bmp']
             ],
             [
+                'id'                  => 'a_favicon',
+                'name'                => 'Favicon',
+                'assignAutomatically' => true,
+                'extensions'          => ['ico', 'png', 'svg']
+            ],
+            [
                 'id'                  => 'a_audio',
                 'name'                => 'Audio',
                 'assignAutomatically' => true,

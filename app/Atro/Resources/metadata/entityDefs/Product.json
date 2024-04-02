@@ -47,6 +47,7 @@
     "image": {
       "type": "file",
       "required": false,
+      "fileTypeId": "a_image",
       "previewSize": "medium"
     },
     "sku": {
