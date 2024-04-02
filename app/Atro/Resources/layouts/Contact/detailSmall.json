@@ -26,7 +26,7 @@
           "name": "title"
         },
         {
-          "jobPosition": "city"
+          "name": "jobPosition"
         }
       ],
       [
@@ -41,25 +41,7 @@
         {
           "name": "email"
         },
-        {
-          "name": "street"
-        }
-      ],
-      [
-        {
-          "name": "zip"
-        },
-        {
-          "name": "city"
-        }
-      ],
-      [
-        {
-          "name": "country"
-        },
-        {
-          "name": "countryCode"
-        }
+        false
       ]
     ],
     "style": "default",
