@@ -66,11 +66,6 @@ Espo.define('views/admin/field-manager/fields/link/default', 'views/fields/link'
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.getMetadata().get(['entityDefs', this.options.scope, 'fields', this.options.field, 'type']) === 'file'){
-                this.foreignScope = 'File';
-                return;
-            }
-
             this.foreignScope = this.getMetadata().get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
         },
 
