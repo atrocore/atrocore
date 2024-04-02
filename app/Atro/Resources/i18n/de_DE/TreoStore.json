@@ -1,7 +1,5 @@
 {
   "fields": {
-    "packageId": "Package ID",
-    "url": "URL",
     "status": "Status",
     "versions": "Versionen",
     "tags": "Stichworte"
@@ -13,7 +11,6 @@
     }
   },
   "labels": {
-    "Create TreoStore": "AtroShop erstellen",
     "installModule": "Modul installieren"
   }
 }

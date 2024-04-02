@@ -1,6 +1,5 @@
 {
   "fields": {
-    "actions": "Aktionen",
     "serviceName": "Bedienung",
     "stream": "Warteschlange",
     "isWriting": "Ist Update Job?",
@@ -10,8 +9,6 @@
     "status": "Status",
     "message": "Nachricht",
     "priority": "Priorität"
-  },
-  "links": {
   },
   "labels": {
     "Create QueueItem": "Warteschlangenelement erstellen",

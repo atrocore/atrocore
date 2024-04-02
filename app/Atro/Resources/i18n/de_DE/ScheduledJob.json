@@ -1,8 +1,6 @@
 {
   "fields": {
-    "isInternal": "Ist intern",
     "job": "Aufgabe",
-    "lastRun": "Zuletzt ausgeführt",
     "scheduling": "Planung"
   },
   "links": {

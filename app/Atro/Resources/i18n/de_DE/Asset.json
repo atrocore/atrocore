@@ -1,6 +1,5 @@
 {
   "labels": {
-    "Create Asset": "Asset erstellen",
     "sort": "Sortieren",
     "upload": "Upload",
     "uploaded": "hochgeladen",
@@ -14,11 +13,7 @@
   "links": {
     "renditions": "Derivate",
     "assetCategories": "Asset Kategorien",
-    "assetMetaDatas": "Asset Metadaten",
     "assetVersions": "Asset Versionen",
-    "collection": "Kollektion",
-    "file": "Datei",
-    "image": "Bild",
     "relatedAssets": "Verwandte Assets"
   },
   "fields": {
@@ -29,7 +24,6 @@
     "image": "Bild",
     "relatedAssets": "Verwandte Assets",
     "assetCategories": "Asset Kategorien",
-    "assetMetaDatas": "Asset Metadaten",
     "assetVersions": "Asset Versionen",
     "library": "Bibliothek",
     "colorDepth": "Farbtiefe",
@@ -44,8 +38,6 @@
     "tags": "Tags",
     "width": "Breite",
     "private": "Privat",
-    "ownerUser": "Inhaber",
-    "path": "Pfad",
     "preview": "Vorschau"
   },
   "boolFilters": {

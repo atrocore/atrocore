@@ -1,7 +1,6 @@
 {
   "fields": {
     "defaultCurrency": "Moneda por defecto",
-    "currencyList": "Lista de monedas",
     "emailAddress": "Correo electrónico",
     "dashboardTabList": "Lista de pestañas",
     "tabList": "Menú de Navegación",
@@ -18,14 +17,6 @@
     "assignmentNotifications": "Notifications upon assignment",
     "scopeColorsDisabled": "Disable scope colors",
     "tabColorsDisabled": "Disable tab icons colors"
-  },
-  "links": {
-  },
-  "options": {
-    "weekStart": {
-      "0": "Domingo",
-      "1": "Lunes"
-    }
   },
   "labels": {
     "Notifications": "Notificaciones",

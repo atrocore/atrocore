@@ -1,6 +1,5 @@
 {
   "fields": {
-    "userRole": "Benutzer Rolle",
     "roles": "Rollen",
     "positionList": "Positionsbezeichnungen"
   },

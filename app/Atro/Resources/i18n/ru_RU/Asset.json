@@ -18,7 +18,6 @@
     "image": "Изображение",
     "relatedAssets": "Связанные ассеты",
     "assetCategories": "Категории ассетов",
-    "assetMetaDatas": "Метаданные ассета",
     "assetVersions": "Версии ассета",
     "type": "Типы",
     "library": "Библиотека",
@@ -39,7 +38,6 @@
   },
   "links": {
     "assetCategories": "Категории ассета",
-    "assetMetaDatas": "Метаданные ассета",
     "assetVersions": "Версии ассета",
     "renditions": "Преобразование",
     "relatedAssets": "Связанные ассеты"

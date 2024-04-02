@@ -1,12 +1,7 @@
 {
   "fields": {
     "assetCategories": "Asset Kategorien",
-    "createdBy": "Erstellt vom",
-    "isActive": "Aktiv",
-    "modifiedBy": "Geändert vom"
-  },
-  "labels": {
-    "Create Collection": "Kollektion erstellen"
+    "isActive": "Aktiv"
   },
   "links": {
     "assetCategories": "Asset Kategorien",

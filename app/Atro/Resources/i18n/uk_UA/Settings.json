@@ -5,7 +5,6 @@
     "variables": "Змінні",
     "locale": "Локаль",
     "useCache": "Використовувати кеш",
-    "defaultCurrency": "Валюта за замовчуванням",
     "currencyRates": "Курси обміну",
     "companyLogo": "Логотип заголовка",
     "smtpServer": "Сервер",
@@ -49,8 +48,6 @@
     "tabIconsDisabled": "Вимкнути значки вкладок",
     "textFilterUseContainsForVarchar": "Використовувати оператор 'містить' при фільтрації полів varchar",
     "emailAddressIsOptedOutByDefault": "Відзначити нові адреси ел. пошти як ті, які не беруть участі в ел. розсилці",
-    "adminNotificationsNewExtensionVersion": "Показувати повідомлення, коли доступні нові версії розширень",
-    "cleanupDeletedRecords": "Очистити видалені записи",
     "isMultilangActive": "Мультимовність",
     "mainLanguage": "Основна мова",
     "inputLanguageList": "Задати мову",
@@ -78,7 +75,9 @@
     "success": "Успіх",
     "notice": "Повідомлення",
     "information": "Інформація",
-    "error": "Помилка"
+    "error": "Помилка",
+    "languageList": "Мови інтерфейсу",
+    "smtpAuthMechanism": "Спосіб автентифікації"
   },
   "links": {
     "variables": "Змінні"
@@ -119,7 +118,8 @@
     "notAllowByContentAndName": "Не дозволено, перевірка на ім'я файлу + вміст файлу",
     "allow": "Дозволено",
     "SMTP": "SMTP",
-    "Theme Configuration": "Конфігурація теми"
+    "Theme Configuration": "Конфігурація теми",
+    "Currency Rates": "Курс валют"
   },
   "messages": {
     "languageMustBeSelected": "Мінімум одна мова має бути обрана."
