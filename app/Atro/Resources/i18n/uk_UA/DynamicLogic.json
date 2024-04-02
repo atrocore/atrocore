@@ -5,7 +5,8 @@
   "options": {
     "operators": {
       "equals": "Дорівнює",
-      "notEquals": "Не дорівнює"
+      "notEquals": "Не дорівнює",
+      "greaterThan": "Більше, ніж"
     }
   }
 }
