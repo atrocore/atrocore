@@ -43,6 +43,14 @@
             "type": "linkMultiple",
             "view": "views/stream/fields/attachment-multiple"
         },
+        "attachmentsTypes": {
+            "type": "jsonObject",
+            "notStorable": true
+        },
+        "attachmentsPathsDatas": {
+            "type": "jsonObject",
+            "notStorable": true
+        },
         "number": {
             "type": "int",
             "index": true,
