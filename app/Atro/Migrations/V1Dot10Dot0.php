@@ -584,7 +584,7 @@ class V1Dot10Dot0 extends Base
             ],
             [
                 'id'                  => 'a_favicon',
-                'name'                => 'Favicon',
+                'name'                => 'Icon',
                 'assignAutomatically' => true,
                 'extensions'          => ['ico', 'png', 'svg']
             ],
