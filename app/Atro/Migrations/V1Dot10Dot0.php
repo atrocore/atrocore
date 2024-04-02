@@ -115,6 +115,14 @@ class V1Dot10Dot0 extends Base
 
         $this->exec("ALTER TABLE file_type RENAME COLUMN sort_order to priority");
         $this->exec("ALTER TABLE file_type ALTER priority SET DEFAULT 10");
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('file_type')
+            ->set('priority', ':priority')
+            ->where('priority IS NULL')
+            ->setParameter('priority', 0, ParameterType::INTEGER)
+            ->executeQuery();
+
         $this->exec("ALTER TABLE file_type ALTER priority SET NOT NULL");
 
         self::createDefaultStorage($this->getConnection());
