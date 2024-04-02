@@ -9,7 +9,8 @@
     "country": "País",
     "countryCode": "Código de país",
     "type": "Tipo",
-    "account": "Cuenta"
+    "account": "Cuenta",
+    "name": "Nombre de compañía"
   },
   "options": {
     "type": {

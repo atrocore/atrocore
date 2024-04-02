@@ -10,7 +10,8 @@
     "countryCode": "код країни",
     "type": "типовий",
     "account": "лічильний",
-    "contactName": "Контактна Особа"
+    "contactName": "Контактна Особа",
+    "name": "Назва компанії"
   },
   "options": {
     "type": {

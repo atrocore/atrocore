@@ -15,18 +15,12 @@
       "type": "email"
     },
     "type": {
-      "type": "enum",
+      "type": "extensibleEnum",
+      "extensibleEnumId": "addressType",
       "required": true,
       "prohibitedEmptyValue": true,
       "notNull": true,
-      "options": [
-        "billing",
-        "delivery"
-      ],
-      "optionsIds": [
-        "billing",
-        "delivery"
-      ]
+      "dropdown": true
     },
     "contactName": {
       "type": "varchar"
@@ -49,10 +43,6 @@
     "countryCode": {
       "type": "varchar"
     },
-    "account": {
-      "type": "link",
-      "required": true
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -70,6 +60,32 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "accounts": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "contacts": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "hash": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
@@ -81,10 +97,17 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "account": {
-      "type": "belongsTo",
+    "accounts": {
+      "type": "hasMany",
       "foreign": "addresses",
-      "entity": "Account"
+      "entity": "Account",
+      "relationName": "AddressAccount"
+    },
+    "contacts": {
+      "type": "hasMany",
+      "relationName": "AddressContact",
+      "foreign": "addresses",
+      "entity": "Contact"
     }
   },
   "collection": {
@@ -98,5 +121,11 @@
         "deleted"
       ]
     }
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "hash"
+    ]
   }
 }

@@ -8,5 +8,15 @@
     "id": "ui_handler_type",
     "name": "UI Handler Type",
     "multilingual": false
+  },
+  {
+    "id": "role",
+    "name": "Role",
+    "multilingual": false
+  },
+  {
+    "id": "addressType",
+    "name": "Address Type",
+    "multilingual": false
   }
 ]
