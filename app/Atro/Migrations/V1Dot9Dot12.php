@@ -243,7 +243,7 @@ class V1Dot9Dot12 extends Base
 
     protected function generateStreetName($record, &$index)
     {
-        $street = (empty($record['street']) ? "" : $record['street']) . " ($index)";
+        $street = (empty($record['street']) ? "" : $record['street']) . "($index)";
         $index++;
 
         $address = $this->getConnection()

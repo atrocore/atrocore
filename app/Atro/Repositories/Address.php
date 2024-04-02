@@ -35,22 +35,6 @@ class Address extends Base
         parent::beforeSave($entity, $options);
     }
 
-
-    public function save(Entity $entity, array $options = [])
-    {
-        try {
-            $result = parent::save($entity, $options);
-        } catch (\Throwable $e) {
-            // if duplicate
-            if ($e instanceof NotUnique) {
-                throw new BadRequest($this->getInjection('language')->translate('unique', 'exceptions', 'Address'));
-            }
-            throw $e;
-        }
-
-        return $result;
-    }
-
     protected function init()
     {
         parent::init();
