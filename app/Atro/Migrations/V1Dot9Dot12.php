@@ -117,7 +117,7 @@ class V1Dot9Dot12 extends Base
                         ->values(
                             [
                                 'id'           => '?',
-                                'name'         => '?',
+                                'contact_name' => '?',
                                 'street'       => '?',
                                 'zip'          => '?',
                                 'city'         => '?',
@@ -129,7 +129,7 @@ class V1Dot9Dot12 extends Base
                             ]
                         )
                         ->setParameter(0, $id)
-                        ->setParameter(1, "Address for contact: " . (empty($entity['name']) ? $entity['id'] : $entity['name']))
+                        ->setParameter(1, (empty($entity['name']) ? '' : $entity['name']))
                         ->setParameter(2, $entity['street'])
                         ->setParameter(3, $entity['zip'])
                         ->setParameter(4, $entity['city'])
