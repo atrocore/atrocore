@@ -74,6 +74,18 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "hash": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
@@ -113,15 +125,7 @@
   "uniqueIndexes": {
     "unique": [
       "deleted",
-      "phone",
-      "email",
-      "type",
-      "street",
-      "zip",
-      "box",
-      "city",
-      "country",
-      "country_code"
+      "hash"
     ]
   }
 }
