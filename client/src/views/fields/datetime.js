@@ -38,7 +38,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
         editTemplate: 'fields/datetime/edit',
 
-        validations: ['required', 'datetime', 'after', 'before'],
+        validations: ['required', 'datetime', 'after', 'before', 'afterOrEqual', 'beforeOrEqual'],
 
         searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between'],
 
