@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\NotUnique;
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -25,7 +23,7 @@ class Address extends Base
      */
     public function beforeSave(Entity $entity, array $options = array())
     {
-        // set name
+        // set hash
         $fields = ["phone", "email", "type", "street", "zip", "box", "city", "country", "country_code"];
         $text = join("\n", array_map(function ($field) use ($entity) {
             return empty($entity->get($field)) ? "" : $entity->get($field);
