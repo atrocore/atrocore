@@ -114,7 +114,7 @@ class V1Dot9Dot12 extends Base
                     $id = Util::generateId();
                     $this->getConnection()->createQueryBuilder()
                         ->insert('address')
-                        ->values([
+                        ->values(
                             [
                                 'id'           => '?',
                                 'name'         => '?',
@@ -127,7 +127,7 @@ class V1Dot9Dot12 extends Base
                                 'email'        => '?',
                                 'type'         => '?'
                             ]
-                        ])
+                        )
                         ->setParameter(0, $id)
                         ->setParameter(1, "Address for contact: " . (empty($entity['name']) ? $entity['id'] : $entity['name']))
                         ->setParameter(2, $entity['street'])
@@ -142,13 +142,13 @@ class V1Dot9Dot12 extends Base
 
                     $this->getConnection()->createQueryBuilder()
                         ->insert('address_contact')
-                        ->values([
+                        ->values(
                             [
                                 'contact_id' => '?',
                                 'address_id' => '?',
                                 'id'         => '?'
                             ]
-                        ])
+                        )
                         ->setParameter(0, $entity['id'])
                         ->setParameter(1, $id)
                         ->setParameter(2, Util::generateId())
