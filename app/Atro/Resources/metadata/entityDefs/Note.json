@@ -45,11 +45,13 @@
         },
         "attachmentsTypes": {
             "type": "jsonObject",
-            "notStorable": true
+            "notStorable": true,
+            "readOnly": true
         },
         "attachmentsPathsDatas": {
             "type": "jsonObject",
-            "notStorable": true
+            "notStorable": true,
+            "readOnly": true
         },
         "number": {
             "type": "int",
