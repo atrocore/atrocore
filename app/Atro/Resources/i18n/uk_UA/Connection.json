@@ -5,7 +5,8 @@
     "host": "Хост",
     "port": "Порт",
     "user": "Користувач",
-    "password": "Пароль"
+    "password": "Пароль",
+    "ftpSsl": "TLS/SSL"
   },
   "labels": {
     "connectionSuccess": "З'єднання успішно встановлено",
