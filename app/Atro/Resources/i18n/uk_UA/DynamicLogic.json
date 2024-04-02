@@ -1,5 +1,10 @@
 {
   "labels": {
     "Field": "Поле"
+  },
+  "options": {
+    "operators": {
+      "equals": "Дорівнює"
+    }
   }
 }
