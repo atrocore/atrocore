@@ -6,7 +6,8 @@
     "operators": {
       "equals": "Дорівнює",
       "notEquals": "Не дорівнює",
-      "greaterThan": "Більше, ніж"
+      "greaterThan": "Більше, ніж",
+      "lessThan": "Менше, ніж"
     }
   }
 }
