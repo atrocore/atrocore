@@ -206,10 +206,12 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         getCreateAttributes: function () {
             let res = {};
 
-            this.ajaxGetRequest(`FileType/${this.fileTypeId}`, {async: false}).success(entity => {
-                res.typeId = entity.id;
-                res.typeName = entity.name;
-            });
+            if (this.fileTypeId) {
+                this.ajaxGetRequest(`FileType/${this.fileTypeId}`, {async: false}).success(entity => {
+                    res.typeId = entity.id;
+                    res.typeName = entity.name;
+                });
+            }
 
             return res;
         },
