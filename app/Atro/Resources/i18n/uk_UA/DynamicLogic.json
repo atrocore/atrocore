@@ -4,7 +4,8 @@
   },
   "options": {
     "operators": {
-      "equals": "Дорівнює"
+      "equals": "Дорівнює",
+      "notEquals": "Не дорівнює"
     }
   }
 }
