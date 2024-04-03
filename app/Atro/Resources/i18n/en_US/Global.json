@@ -1,4 +1,4 @@
-{
+:{
   "scopeNames": {
     "Storage": "Storage",
     "Folder": "Folder",
@@ -96,6 +96,7 @@
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
+    "attachFiles":"Attach Files",
     "typeToSearch": "Type and press Enter...",
     "dragAndDropBtnText": "Drag & Drop",
     "dragAndDropBtnTextSmall": "your file(s) here or",

@@ -334,6 +334,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 mode: 'edit',
                 el: this.options.el + ' div.attachments-container',
                 foreignScope: "File",
+                placeholder: this.translate("attachFiles"),
                 defs: {
                     name: 'attachments',
                 },

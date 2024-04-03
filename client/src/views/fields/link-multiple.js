@@ -101,6 +101,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 idValuesString: ids ? ids.join(',') : '',
                 nameHash: nameHash,
                 foreignScope: this.foreignScope,
+                placeholder: this.options.placeholder || this.translate('Select'),
                 valueIsSet: this.model.has(this.idsName)
             }, Dep.prototype.data.call(this));
         },
