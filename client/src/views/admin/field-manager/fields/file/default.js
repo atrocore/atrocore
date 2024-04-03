@@ -30,12 +30,14 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/file/default', 'views/fields/file', function (Dep) {
+Espo.define('views/admin/field-manager/fields/file/default', ['views/fields/file', 'views/admin/field-manager/fields/link/default'], (Dep, Link) => {
 
     return Dep.extend({
 
-        setup: function () {
+        setup() {
             Dep.prototype.setup.call(this);
+
+            this.foreignScope = 'File';
 
             this.fileTypeId = this.model.get('fileTypeId') || null;
             this.listenTo(this.model, 'change:fileTypeId', () => {
@@ -43,6 +45,14 @@ Espo.define('views/admin/field-manager/fields/file/default', 'views/fields/file'
                 this.model.set(this.nameName, null);
                 this.fileTypeId = this.model.get('fileTypeId') || null;
             });
+        },
+
+        data() {
+            return Link.prototype.data.call(this);
+        },
+
+        fetch() {
+            return Link.prototype.fetch.call(this);
         },
 
     });
