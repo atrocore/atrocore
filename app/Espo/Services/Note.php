@@ -205,12 +205,11 @@ class Note extends Record
 
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
-        $result = parent::getFieldsThatConflict($entity, $data);
+        return [];
+    }
 
-        if (isset($result['attachmentsIds'])) {
-            unset($result['attachmentsIds']);
-        }
-
-        return $result;
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
+        return true;
     }
 }

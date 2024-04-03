@@ -41,7 +41,7 @@
         },
         "attachments": {
             "type": "linkMultiple",
-            "view": "views/stream/fields/attachment-multiple"
+            "entity": "File"
         },
         "attachmentsTypes": {
             "type": "jsonObject",

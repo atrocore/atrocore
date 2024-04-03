@@ -10,7 +10,7 @@
                 </span>
             {{/if}}
         </div>
-        <div class="attachments-container">
+        <div class="attachments-container field">
             {{{attachments}}}
         </div>
         <a href="javascript:" class="text-muted pull-right stream-post-info">

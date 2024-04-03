@@ -156,8 +156,6 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                     var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
 
-                    console.log(this.foreignScope)
-
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
                         createButton: !this.createDisabled && this.mode != 'search',
@@ -404,6 +402,12 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         getIconHtml: function (id) {
             return this.iconHtml;
+        },
+
+        empty() {
+            this.model.set(this.idsName, []);
+            this.model.set(this.nameHashName, {});
+            this.model.set(this.typeHashName, {});
         },
 
         getDetailLinkHtml: function (id) {

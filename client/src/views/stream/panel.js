@@ -108,11 +108,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     if ($target.parent().hasClass('remove-attachment')) return;
                     if ($.contains(this.$postContainer.get(0), e.target)) return;
                     if (this.$textarea.val() !== '') return;
-
-                    var attachmentsIds = this.seed.get('attachmentsIds') || [];
-                    if (!attachmentsIds.length && !this.getView('attachments').isUploading) {
-                        this.disablePostingMode();
-                    }
                 }.bind(this));
             }
 
@@ -236,11 +231,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             $textarea.on('drop', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var e = e.originalEvent;
-                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
-                    this.getView('attachments').uploadFiles(e.dataTransfer.files);
-                    this.enablePostingMode();
-                }
                 this.$textarea.attr('placeholder', originalPlaceholderText);
             }.bind(this));
 
@@ -339,10 +329,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 });
             });
 
-            this.createView('attachments', 'views/stream/fields/attachment-multiple', {
+            this.createView('attachments', 'views/fields/link-multiple', {
                 model: this.seed,
                 mode: 'edit',
                 el: this.options.el + ' div.attachments-container',
+                foreignScope: "File",
                 defs: {
                     name: 'attachments',
                 },
@@ -361,12 +352,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.$textarea.prop('disabled', true);
 
             this.getModelFactory().create('Note', function (model) {
-                if (this.getView('attachments').validateReady()) {
-                    this.$textarea.prop('disabled', false)
-                    return;
-                }
-
-                if (message == '' && (this.seed.get('attachmentsIds') || []).length == 0) {
+                if (message === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                     this.notify('Post cannot be empty', 'error');
                     this.$textarea.prop('disabled', false);
                     return;

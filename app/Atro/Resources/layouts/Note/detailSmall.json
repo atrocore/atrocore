@@ -1,15 +1,17 @@
 [
-    {
-        "label":"",
-        "rows": [
-            [
-                {
-                    "name":"post"
-                }
-            ],
-            [
-                {"name":"attachments"}
-            ]
-        ]
-    }
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "post"
+        }
+      ],
+      [
+        {
+          "name": "attachments"
+        }
+      ]
+    ]
+  }
 ]
