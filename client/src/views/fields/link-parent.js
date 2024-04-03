@@ -60,6 +60,8 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
+        noCreateScopeList: ['User', 'Team', 'Role'],
+
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty'],
 
         data: function () {
@@ -81,11 +83,13 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 foreignScope: this.foreignScope,
                 foreignScopeList: this.foreignScopeList,
                 valueIsSet: this.model.has(this.idName) || this.model.has(this.typeName),
-                iconHtml: iconHtml
+                iconHtml: iconHtml,
+                createDisabled: this.createDisabled
             }, Dep.prototype.data.call(this));
         },
 
-        getSelectFilters: function () {},
+        getSelectFilters: function () {
+        },
 
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
@@ -95,7 +99,8 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             return this.selectPrimaryFilterName;
         },
 
-        getCreateAttributes: function () {},
+        getCreateAttributes: function () {
+        },
 
         setup: function () {
             this.nameName = this.name + 'Name';
@@ -108,11 +113,6 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 if (!this.getMetadata().get(['scopes', item, 'disabled'])) return true;
             }, this);
 
-
-            if (this.mode == 'edit' && this.foreignScopeList.length == 0) {
-                throw new Error('Bad parent link defenition. Model list is empty.');
-            }
-
             this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
 
             this.listenTo(this.model, 'change:' + this.typeName, function () {
@@ -121,6 +121,20 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
+            }
+
+            if (!this.createDisabled && this.noCreateScopeList.indexOf(this.foreignScope) !== -1) {
+                this.createDisabled = true;
+            }
+
+            if (!this.createDisabled) {
+                if (
+                    !this.getAcl().check(this.foreignScope, 'create')
+                    ||
+                    this.getMetadata().get(['clientDefs', this.foreignScope, 'createDisabled'])
+                ) {
+                    this.createDisabled = true;
+                }
             }
 
             var self = this;
@@ -160,6 +174,25 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     this.$elementName.val('');
                     this.$elementId.val('');
                 }
+
+                this.addActionHandler('createLink', function () {
+                    this.notify('Loading...');
+                    this.createView('quickCreate', 'views/modals/edit', {
+                        scope: this.foreignScope,
+                        fullFormDisabled: true,
+                        attributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                    }, view => {
+                        view.once('after:render', () => {
+                            this.notify(false);
+                        });
+                        view.render();
+
+                        this.listenToOnce(view, 'after:save', function (model) {
+                            this.clearView('quickCreate');
+                            this.select(model)
+                        }.bind(this));
+                    });
+                });
             }
         },
 
@@ -254,7 +287,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            response.list.forEach(function(item) {
+                            response.list.forEach(function (item) {
                                 list.push({
                                     id: item.id,
                                     name: item.name,
@@ -296,6 +329,10 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
+            }
+
+            if(this.mode !== 'list' && !this.foreignScopeList.length) {
+                this.hide();
             }
         },
 
