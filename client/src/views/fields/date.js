@@ -46,7 +46,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         searchTemplate: 'fields/date/search',
 
-        validations: ['required', 'date', 'after', 'before'],
+        validations: ['required', 'date', 'after', 'before', 'afterOrEqual','beforeOrEqual'],
 
         searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between'],
 
@@ -357,6 +357,23 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             }
         },
 
+        validateAfterOrEqual: function () {
+            var field = this.model.getFieldParam(this.name, 'afterOrEqual');
+            if (field) {
+                var value = this.model.get(this.name);
+                var otherValue = this.model.get(field);
+                if (value && otherValue) {
+                    if (moment(value).unix() < moment(otherValue).unix()) {
+                        var msg = this.translate('fieldShouldAfterOrEqual', 'messages').replace('{field}', this.getLabelText())
+                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+
+                        this.showValidationMessage(msg);
+                        return true;
+                    }
+                }
+            }
+        },
+
         validateBefore: function () {
             var field = this.model.getFieldParam(this.name, 'before');
             if (field) {
@@ -365,6 +382,22 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 if (value && otherValue) {
                     if (moment(value).unix() >= moment(otherValue).unix()) {
                         var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.getLabelText())
+                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                        this.showValidationMessage(msg);
+                        return true;
+                    }
+                }
+            }
+        },
+
+        validateBeforeOrEqual: function () {
+            var field = this.model.getFieldParam(this.name, 'beforeOrEqual');
+            if (field) {
+                var value = this.model.get(this.name);
+                var otherValue = this.model.get(field);
+                if (value && otherValue) {
+                    if (moment(value).unix() > moment(otherValue).unix()) {
+                        var msg = this.translate('fieldShouldBeforeOrEqual', 'messages').replace('{field}', this.getLabelText())
                             .replace('{otherField}', this.translate(field, 'fields', this.model.name));
                         this.showValidationMessage(msg);
                         return true;

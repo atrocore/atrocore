@@ -26,24 +26,10 @@
     "email": {
       "type": "email"
     },
-    "street": {
-      "type": "text"
-    },
-    "zip": {
-      "type": "varchar"
-    },
-    "city": {
-      "type": "varchar"
-    },
-    "country": {
-      "type": "varchar"
-    },
-    "countryCode": {
-      "type": "varchar"
-    },
     "gender": {
       "type": "extensibleEnum",
-      "extensibleEnumId": "gender"
+      "extensibleEnumId": "gender",
+      "dropdown": true
     },
     "createdAt": {
       "type": "datetime",
@@ -69,6 +55,13 @@
       "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "addresses": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -82,9 +75,15 @@
     },
     "accounts": {
       "type": "hasMany",
-      "relationName": "contactAccount",
+      "relationName": "ContactAccount",
       "foreign": "contacts",
       "entity": "Account"
+    },
+    "addresses": {
+      "type": "hasMany",
+      "relationName": "AddressContact",
+      "foreign": "contacts",
+      "entity": "Address"
     }
   },
   "collection": {

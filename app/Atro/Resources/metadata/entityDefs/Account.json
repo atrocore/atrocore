@@ -34,18 +34,10 @@
         "company"
       ]
     },
-    "role":  {
-      "type": "enum",
-      "required": false,
-      "prohibitedEmptyValue": false,
-      "options": [
-        "supplier",
-        "customer"
-      ],
-      "optionsIds": [
-        "supplier",
-        "customer"
-      ]
+    "role": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "role",
+      "dropdown": true
     },
     "emailAddress": {
       "type": "email"
@@ -125,8 +117,9 @@
     },
     "addresses": {
       "type": "hasMany",
-      "foreign": "account",
-      "entity": "Address"
+      "foreign": "accounts",
+      "entity": "Address",
+      "relationName": "AddressAccount"
     }
   },
   "collection": {

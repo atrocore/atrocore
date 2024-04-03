@@ -11,7 +11,8 @@
 		"countryCode": "Kod kraju",
 		"type": "Typ",
 		"account": "Konto",
-		"contactName": "Imię i nazwisko kontaktowe"
+		"contactName": "Imię i nazwisko kontaktowe",
+		"name": "Nazwa firmy"
 	},
 	"options": {
 		"type": {

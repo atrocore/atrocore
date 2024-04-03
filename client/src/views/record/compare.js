@@ -77,6 +77,11 @@ Espo.define('views/record/compare','view', function (Dep) {
 
                     const  type = fieldDef['type'];
                     const isLink = type === 'link' || type === 'linkMultiple';
+
+                    if( isLink && !this.links[field]?.entity){
+                        return;
+                    }
+
                     let fieldId = field;
                     if (type === 'asset' || type === 'link') {
                         fieldId = field + 'Id';

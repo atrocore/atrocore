@@ -11,7 +11,8 @@
     "countryCode": "Country Code",
     "type": "Type",
     "account": "Account",
-    "contactName": "Contact Name"
+    "contactName": "Contact Name",
+    "name": "Company Name"
   },
   "options": {
     "type": {
