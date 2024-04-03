@@ -188,15 +188,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
                     this.paramList = [];
                     var paramList = Espo.Utils.clone(this.getFieldManager().getParams(this.type) || []);
-                    // (this.getConfig().get('interfaceLocales') || []).forEach(locale => {
-                    //     let name = 'label' + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
-                    //     if (paramList.findIndex(item => item.name === name) === -1) {
-                    //         paramList.unshift({
-                    //             name: name,
-                    //             type: 'varchar'
-                    //         });
-                    //     }
-                    // });
 
                     if (!this.isNew) {
                         (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerAdditionalParamList']) || []).forEach(function (item) {
