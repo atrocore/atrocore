@@ -1159,15 +1159,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let options = ['allLanguages', 'main','unilingual'].concat(this.getConfig().get('inputLanguageList'));
                 let translatedOptions = {};
                 options.forEach(option => {
-                    if(option === 'allLanguages'){
-                        translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
-                        return ;
-                    }
+
                     if(option === 'main'){
-                        translatedOptions[option] = this.getLanguage().translateOption(this.getConfig().get('mainLanguage'), 'language', 'Global');
+                        translatedOptions[option] = this.getLanguage().translateOption(this.getConfig().get('mainLanguage'), 'languageFilter', 'Global');
                         return;
                     }
-                    translatedOptions[option] = this.getLanguage().translateOption(option, 'language', 'Global');
+                    translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
                 });
 
                 result.push({
