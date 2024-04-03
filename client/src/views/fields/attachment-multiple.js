@@ -134,8 +134,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     id: id,
                     model: this.model,
                     name: this.nameHash[id],
-                    pathsData: this.pathsDatas[id],
-                    imageList: imageList
+                    downloadUrl: this.pathsDatas[id].download,
+                    thumbnailUrl: this.pathsDatas[id].thumbnails.large
                 }, function (view) {
                     view.render();
                 });
