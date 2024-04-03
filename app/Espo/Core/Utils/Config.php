@@ -358,7 +358,9 @@ class Config
     protected function loadInterfaceLocales(): array
     {
         $locales = [$this->get('mainLanguage', 'en_US')];
-        $locales = array_merge($locales, array_column($this->get('locales', []), 'language'));
+        if (!empty($this->get('locales', []))) {
+            $locales = array_merge($locales, array_column($this->get('locales', []), 'language'));
+        }
 
         if (!empty($this->get('isMultilangActive'))) {
             $locales = array_merge($locales, $this->get('inputLanguageList', []));
