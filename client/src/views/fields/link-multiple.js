@@ -66,9 +66,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
 
-        selectBoolFilterList:  [],
+        selectBoolFilterList: [],
 
         boolFilterData: {},
+
+        noCreateScopeList: ['User', 'Team', 'Role'],
 
         getBoolFilterData() {
             let data = {};
@@ -101,11 +103,13 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 idValuesString: ids ? ids.join(',') : '',
                 nameHash: nameHash,
                 foreignScope: this.foreignScope,
-                valueIsSet: this.model.has(this.idsName)
+                valueIsSet: this.model.has(this.idsName),
+                createDisabled: this.createDisabled
             }, Dep.prototype.data.call(this));
         },
 
-        getSelectFilters: function () {},
+        getSelectFilters: function () {
+        },
 
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
@@ -115,7 +119,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return this.selectPrimaryFilterName;
         },
 
-        getCreateAttributes: function () {},
+        getCreateAttributes: function () {
+        },
 
         setup: function () {
             if (this.nameHashName === null) {
@@ -129,6 +134,20 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
+            }
+
+            if (!this.createDisabled && this.noCreateScopeList.indexOf(this.foreignScope) !== -1) {
+                this.createDisabled = true;
+            }
+
+            if (!this.createDisabled) {
+                if (
+                    !this.getAcl().check(this.foreignScope, 'create')
+                    ||
+                    this.getMetadata().get(['clientDefs', this.foreignScope, 'createDisabled'])
+                ) {
+                    this.createDisabled = true;
+                }
             }
 
             var self = this;
@@ -154,7 +173,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
@@ -204,6 +223,25 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.events['click a[data-action="clearLinkSubQuery"]'] = function (e) {
                     this.deleteLinkSubQuery();
                 };
+
+                this.addActionHandler('createLink', function () {
+                    this.notify('Loading...');
+                    this.createView('quickCreate', 'views/modals/edit', {
+                        scope: this.foreignScope,
+                        fullFormDisabled: true,
+                        attributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                    }, view => {
+                        view.once('after:render', () => {
+                            this.notify(false);
+                        });
+                        view.render();
+
+                        this.listenToOnce(view, 'after:save', function (model) {
+                            this.clearView('quickCreate');
+                            this.addLink(model.id, model.get('name'));
+                        }.bind(this));
+                    });
+                });
             }
         },
 
@@ -258,7 +296,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            response.list.forEach(function(item) {
+                            response.list.forEach(function (item) {
                                 list.push({
                                     id: item.id,
                                     name: item.name,
@@ -354,9 +392,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.trigger('change');
         },
 
-        afterDeleteLink: function (id) {},
+        afterDeleteLink: function (id) {
+        },
 
-        afterAddLink: function (id) {},
+        afterAddLink: function (id) {
+        },
 
         deleteLinkHtml: function (id) {
             this.$el.find('.link-' + id).remove();
@@ -367,7 +407,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         addLinkSubQueryHtml: function (subQuery) {
-            if (!subQuery || subQuery.length === 0){
+            if (!subQuery || subQuery.length === 0) {
                 return;
             }
 
@@ -442,7 +482,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         fetchFromDom: function () {
             this.ids = [];
-            this.$el.find('.link-container').children().each(function(i, li) {
+            this.$el.find('.link-container').children().each(function (i, li) {
                 var id = $(li).attr('data-id');
                 if (!id) return;
                 this.ids.push(id);

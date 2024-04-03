@@ -102,7 +102,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 nameValue: nameValue,
                 foreignScope: this.foreignScope,
                 valueIsSet: this.model.has(this.idName),
-                iconHtml: iconHtml
+                iconHtml: iconHtml,
+                createDisabled: this.createDisabled
             }, Dep.prototype.data.call(this));
         },
 
