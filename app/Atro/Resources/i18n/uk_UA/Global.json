@@ -674,7 +674,8 @@
     },
     "languageFilter": {
       "allLanguages": "Усі мови",
-      "main": "Осн. мова"
+      "main": "Осн. мова",
+      "unilingual": "Одномовний"
     },
     "language": {
       "af_ZA": "Африкаанс",

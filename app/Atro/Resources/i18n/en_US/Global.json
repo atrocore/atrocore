@@ -674,7 +674,8 @@
     },
     "languageFilter": {
       "allLanguages": "All Languages",
-      "main": "Main language"
+      "main": "Main language",
+      "unilingual": "UniLingual"
     },
     "language": {
       "af_ZA": "Afrikaans (South Africa) / af_ZA",
