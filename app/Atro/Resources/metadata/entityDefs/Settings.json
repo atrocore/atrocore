@@ -12,13 +12,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "languageList": {
-      "type": "multiEnum",
-      "default": [],
-      "options": [],
-      "required": true,
-      "view": "views/admin/fields/language-list"
-    },
     "mainLanguage": {
       "type": "varchar",
       "default": "en_US",

@@ -72,7 +72,8 @@
     "success": "Éxito",
     "notice": "Aviso",
     "information": "Información",
-    "error": "Error"
+    "error": "Error",
+    "locale": "Localización por defecto"
   },
   "tooltips": {
     "recordsPerPage": "Número de registros a mostrar inicialmente en las vistas.",

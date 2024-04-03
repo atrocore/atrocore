@@ -165,6 +165,10 @@ class Config
             return $this->loadLocales()[$name];
         }
 
+        if ($name == 'interfaceLocales') {
+            return $this->loadInterfaceLocales()[$name];
+        }
+
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();
@@ -351,6 +355,18 @@ class Config
         return $result;
     }
 
+    protected function loadInterfaceLocales(): array
+    {
+        $locales = [$this->get('mainLanguage', 'en_US')];
+        $locales = array_merge($locales, array_column($this->get('locales', []), 'language'));
+
+        if (!empty($this->get('isMultilangActive'))) {
+            $locales = array_merge($locales, $this->get('inputLanguageList', []));
+        }
+
+        return ['interfaceLocales' => array_values(array_unique($locales))];
+    }
+
     public function getCachedLocales(): array
     {
         $data = $this->container->get('dataManager')->getCacheData('locales');
@@ -394,7 +410,7 @@ class Config
      */
     public function getData($isAdmin = null)
     {
-        $data = array_merge($this->loadConfig(), $this->loadLocales());
+        $data = array_merge($this->loadConfig(), $this->loadLocales(), $this->loadInterfaceLocales());
 
         $data = $this->prepareStylesheetConfigForOutput($data);
 

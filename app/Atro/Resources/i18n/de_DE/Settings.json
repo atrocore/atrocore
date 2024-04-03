@@ -3,7 +3,7 @@
     "attachmentDuplicates": "Asset-Duplikat",
     "fileNameRegexPattern": "Dateiname Regex Pattern",
     "variables": "Variablen",
-    "locale": "Gebietsschema",
+    "locale": "Standard-Locale",
     "isMultilangActive": "Mehrsprachig",
     "mainLanguage": "Hauptsprache",
     "inputLanguageList": "Eingabesprachen",
