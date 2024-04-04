@@ -2870,34 +2870,7 @@ class Record extends Base
                 continue;
             }
 
-            if (in_array($type, ['file', 'image'])) {
-                $attachment = $entity->get($field);
-                if ($attachment) {
-                    $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
-                    $idAttribute = $field . 'Id';
-                    if ($attachment) {
-                        $attributes->$idAttribute = $attachment->id;
-                    }
-                }
-            } else if (in_array($type, ['attachmentMultiple'])) {
-                $attachmentList = $entity->get($field);
-                if (count($attachmentList)) {
-                    $idList = [];
-                    $nameHash = (object)[];
-                    $typeHash = (object)[];
-                    foreach ($attachmentList as $attachment) {
-                        $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
-                        if ($attachment) {
-                            $idList[] = $attachment->id;
-                            $nameHash->{$attachment->id} = $attachment->get('name');
-                            $typeHash->{$attachment->id} = $attachment->get('type');
-                        }
-                    }
-                    $attributes->{$field . 'Ids'} = $idList;
-                    $attributes->{$field . 'Names'} = $nameHash;
-                    $attributes->{$field . 'Types'} = $typeHash;
-                }
-            } else if ($type === 'linkMultiple') {
+            if ($type === 'linkMultiple') {
                 if (!in_array($field, $duplicatableRelations)) {
                     unset($attributes->{$field . 'Ids'});
                     unset($attributes->{$field . 'Names'});
