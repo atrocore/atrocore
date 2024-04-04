@@ -1156,7 +1156,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             ];
 
             if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                let options = ['allLanguages', 'main','unilingual'].concat(this.getConfig().get('inputLanguageList'));
+                let options = ['allLanguages', 'unilingual', 'main'].concat(this.getConfig().get('inputLanguageList'));
                 let translatedOptions = {};
                 options.forEach(option => {
 
@@ -1541,6 +1541,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         if (!languageFilter.includes(fieldLanguage ?? 'main')) {
                             hide = true;
+                        }
+
+                        if(!hide && this.isUniLingualField(name, fieldLanguage)){
+                            hide = true
                         }
 
                         if(hide && languageFilter.includes('unilingual') && this.isUniLingualField(name, fieldLanguage)){
