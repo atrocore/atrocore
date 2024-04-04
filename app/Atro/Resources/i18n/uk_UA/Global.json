@@ -423,10 +423,10 @@
     "onlyMy": "Тільки мої",
     "followed": "Ви підписані",
     "onlyArchived": "Без неархівних",
-    "withArchived": "З архівом"
+    "withArchived": "З архівом",
+    "onlyFollowed": "Ви підписані"
   },
   "presetFilters": {
-    "followed": "Ви підписані",
     "all": "Усі"
   },
   "massActions": {
