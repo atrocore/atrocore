@@ -109,7 +109,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                     let type = fieldDefs[field]['type'];
 
                     let fieldId = field;
-                    if (type === 'asset' || type === 'link') {
+                    if (type === 'file' || type === 'link') {
                         fieldId = field + 'Id';
                     } else if (type === 'linkMultiple') {
                         fieldId = field + 'Ids';
@@ -139,8 +139,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         model: modelWas,
                         readOnly: true,
                         defs: {
-                            name: field,
-                            label: field + ' 11'
+                            name: field
                         },
                         mode: 'detail',
                         inlineEditDisabled: true,
@@ -179,18 +178,6 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.wait(false);
 
             }, this);
-        },
-
-        getInputLangName(lang, field) {
-            return lang.split('_').reduce((prev, curr) => prev + Espo.utils.upperCaseFirst(curr.toLowerCase()), field);
-        },
-
-        getCustomLabel(field, langField) {
-            let label = '';
-            label += this.translate(field, 'fields', this.model.get('parentType')) + ' &#8250; ';
-            label += langField.slice(-4, -2).toLowerCase() + "_" + langField.slice(-2).toUpperCase();
-
-            return label;
         },
 
     });
