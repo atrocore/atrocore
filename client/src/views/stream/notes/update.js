@@ -40,6 +40,8 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
         customLabels: {},
 
+        show: false,
+
         data: function () {
             const diff = this.model.get('diff');
             const showInline = this.model.get('data').fields.length === 1 && !diff;
@@ -124,6 +126,8 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         return;
                     }
 
+                    this.show = true;
+
                     let params = {};
                     if (('typeValue' in data) && ('typeValueIds' in data)) {
                         params.options = data.typeValueIds[field];
@@ -179,6 +183,14 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.wait(false);
 
             }, this);
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (!this.show) {
+                this.$el.addClass('hidden');
+            }
         },
 
         getInputLangName(lang, field) {
