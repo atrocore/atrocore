@@ -38,8 +38,18 @@ class File extends Base
         $entity->set('hasOpen', in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', [])));
     }
 
+    /**
+     * @param \stdClass $attachment
+     *
+     * @return array
+     */
     public function createEntity($attachment)
     {
+        if (property_exists($attachment, '_contents')) {
+            $attachment->fileContents = "data:application/unknown;base64," . base64_encode($attachment->_contents);
+            unset($attachment->_contents);
+        }
+
         // set default storage on create
         if (!property_exists($attachment, 'storageId')) {
             $default = $this->getServiceFactory()->create('Folder')->getDefaultStorage('');
