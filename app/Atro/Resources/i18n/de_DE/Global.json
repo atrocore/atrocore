@@ -432,6 +432,7 @@
   },
   "boolFilters": {
     "onlyMy": "Mein",
+    "onlyHidden": "Nur versteckt",
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
     "followed": "abonniert",

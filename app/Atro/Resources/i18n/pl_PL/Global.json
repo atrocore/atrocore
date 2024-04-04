@@ -413,6 +413,7 @@
     "onlyActive":"Aktywne",
     "notActive":"Nieaktywne",
     "onlyMy":"Moje",
+    "onlyHidden": "Tylko ukryte",
     "assignedToMe":"Przypisane do mnie",
     "ownedByMe":"Własność moja",
     "onlyArchived":"Bez niezarchiwizowanych",

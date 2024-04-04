@@ -386,6 +386,7 @@
     "assignedToMe": "Назначен мне",
     "ownedByMe": "Принадлежит мне",
     "onlyMy": "Только мои",
+    "onlyHidden": "Только скрытое",
     "followed": "Вы подписаны"
   },
   "presetFilters": {

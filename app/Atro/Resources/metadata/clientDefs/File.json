@@ -4,7 +4,8 @@
   "iconClass": "fas fa-file",
   "boolFilterList": [
     "onlyMy",
-    "onlyType"
+    "onlyType",
+    "onlyHidden"
   ],
   "hiddenBoolFilterList": [
     "onlyType"

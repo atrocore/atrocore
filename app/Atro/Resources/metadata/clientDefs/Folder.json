@@ -6,7 +6,8 @@
     "assignedToMe",
     "ownedByMe",
     "notParents",
-    "notChildren"
+    "notChildren",
+    "onlyHidden"
   ],
   "hiddenBoolFilterList": [
     "notParents",
