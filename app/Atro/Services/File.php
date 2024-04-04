@@ -45,11 +45,6 @@ class File extends Base
      */
     public function createEntity($attachment)
     {
-        if (property_exists($attachment, '_contents')) {
-            $attachment->fileContents = "data:application/unknown;base64," . base64_encode($attachment->_contents);
-            unset($attachment->_contents);
-        }
-
         // set default storage on create
         if (!property_exists($attachment, 'storageId')) {
             $default = $this->getServiceFactory()->create('Folder')->getDefaultStorage('');
@@ -110,6 +105,13 @@ class File extends Base
         }
 
         return array_merge($result, ['chunks' => $chunks]);
+    }
+
+    public function createFileViaContents(\stdClass $attachment, string $contents): array
+    {
+        $attachment->fileContents = "data:application/unknown;base64," . base64_encode($contents);
+
+        return $this->createEntity($attachment);
     }
 
     protected function createFileEntity(\stdClass $attachment): array
