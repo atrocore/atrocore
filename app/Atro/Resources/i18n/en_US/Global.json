@@ -438,6 +438,7 @@
     "restore": "Restore"
   },
   "fields": {
+    "hidden": "Hidden",
     "priority": "Priority",
     "fileType": "File Type",
     "file": "File",

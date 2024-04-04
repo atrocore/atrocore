@@ -18,6 +18,11 @@
       "view": "views/fields/hierarchy-parents",
       "noLoad": true
     },
+    "hidden": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
     "sortOrder": {
       "type": "int",
       "default": null,

@@ -406,6 +406,7 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "hidden": "Скрытый",
     "priority": "Приоритет",
     "fileType": "Тип файла",
     "file": "Файл",

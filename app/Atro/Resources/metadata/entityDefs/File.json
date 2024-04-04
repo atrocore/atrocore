@@ -23,6 +23,11 @@
       "importDisabled": true,
       "exportDisabled": true
     },
+    "hidden": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
     "hasOpen": {
       "type": "bool",
       "notStorable": true,

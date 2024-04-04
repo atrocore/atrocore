@@ -459,6 +459,7 @@
     "restore": "Wiederherstellen"
   },
   "fields": {
+    "hidden": "Versteckt",
     "priority": "Priorität",
     "fileType": "Datei Typ",
     "file": "Datei",

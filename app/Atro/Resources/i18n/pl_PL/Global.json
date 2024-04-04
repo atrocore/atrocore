@@ -438,6 +438,7 @@
     "restore":"Przywróć"
 },
 "fields":{
+    "hidden": "Ukryty",
     "priority": "Priorytet",
     "fileType": "Typ pliku",
     "file": "Plik",
