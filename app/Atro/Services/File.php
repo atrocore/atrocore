@@ -45,6 +45,12 @@ class File extends Base
      */
     public function createEntity($attachment)
     {
+        if (property_exists($attachment, 'url')) {
+            $url = (string)$attachment->url;
+            unset($attachment->url);
+            return $this->createFileViaUrl($attachment, $url);
+        }
+
         // set default storage on create
         if (!property_exists($attachment, 'storageId')) {
             $default = $this->getServiceFactory()->create('Folder')->getDefaultStorage('');
@@ -110,6 +116,25 @@ class File extends Base
     public function createFileViaContents(\stdClass $attachment, string $contents): array
     {
         $attachment->fileContents = "data:application/unknown;base64," . base64_encode($contents);
+
+        return $this->createEntity($attachment);
+    }
+
+    public function createFileViaUrl(\stdClass $attachment, string $url)
+    {
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            throw new BadRequest("Invalid URL");
+        }
+
+        if (!property_exists($attachment, 'name')) {
+            $attachment->name = basename($url);
+            $extension = pathinfo($attachment->name, PATHINFO_EXTENSION);
+            if (empty($extension)) {
+                throw new BadRequest("The filename does not have an extension");
+            }
+        }
+
+        $attachment->remoteUrl = str_replace(" ", "%20", $url);
 
         return $this->createEntity($attachment);
     }

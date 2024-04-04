@@ -28,6 +28,19 @@
       "notNull": true,
       "default": false
     },
+    "url": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": false,
+      "exportDisabled": true
+    },
     "hasOpen": {
       "type": "bool",
       "notStorable": true,

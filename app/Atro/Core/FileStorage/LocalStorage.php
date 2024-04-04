@@ -12,6 +12,7 @@
 namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
@@ -262,6 +263,49 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 fwrite($f, file_get_contents($chunkDirPath . DIRECTORY_SEPARATOR . $chunk));
             }
             fclose($f);
+
+            $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
+            $file->set('fileSize', filesize($fileName));
+            $file->set('mimeType', mime_content_type($fileName));
+            $file->set('hash', $this->getFileManager()->md5File($fileName));
+
+            $xattr = new Xattr();
+            $xattr->set($fileName, 'atroId', $file->id);
+
+            $this->getMemoryStorage()->set("file_{$file->id}", $file);
+
+            return true;
+        }
+
+        // create via remote URL
+        if (property_exists($input, 'remoteUrl')) {
+            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
+            $fileName = $this->getLocalPath($file);
+
+            // create folders for new file
+            $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
+
+            // load file from url
+            set_time_limit(0);
+            $fp = fopen($fileName, 'w+');
+            if ($fp === false) {
+                throw new Error(sprintf("Can't write any data to the file %s", $file->get('name')));
+            }
+            $ch = curl_init($input->remoteUrl);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_exec($ch);
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            fclose($fp);
+
+            if (!in_array($responseCode, [200, 201])) {
+                if (file_exists($fileName)) {
+                    unlink($fileName);
+                }
+                throw new Error(sprintf("Download for '%s' failed.", $input->remoteUrl));
+            }
 
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
             $file->set('fileSize', filesize($fileName));

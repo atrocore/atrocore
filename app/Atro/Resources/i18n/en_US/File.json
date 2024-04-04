@@ -10,7 +10,8 @@
     "hash": "Hash",
     "fileSize": "File Size (bytes)",
     "fileMtime": "File Modification Date",
-    "private": "Private"
+    "private": "Private",
+    "url": "URL"
   },
   "links": {
     "folder": "Folder",
