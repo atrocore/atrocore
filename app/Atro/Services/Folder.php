@@ -58,4 +58,16 @@ class Folder extends Hierarchy
 
         return empty($storage) ? null : ['id' => $storage->get('id'), 'name' => $storage->get('name')];
     }
+
+    public function findLinkedEntities($id, $link, $params)
+    {
+        if ($link === 'parents' || $link === 'children' || $link === 'files') {
+            $params['where'][] = [
+                'type'  => 'bool',
+                'value' => ['hiddenAndUnHidden']
+            ];
+        }
+
+        return parent::findLinkedEntities($id, $link, $params);
+    }
 }

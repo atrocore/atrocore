@@ -75,4 +75,9 @@ class File extends Base
             'hidden' => true
         ];
     }
+
+    protected function boolFilterHiddenAndUnHidden(&$result)
+    {
+        $this->hasOnlyHiddenFilter = true;
+    }
 }

@@ -5,10 +5,12 @@
   "boolFilterList": [
     "onlyMy",
     "onlyType",
-    "onlyHidden"
+    "onlyHidden",
+    "hiddenAndUnHidden"
   ],
   "hiddenBoolFilterList": [
-    "onlyType"
+    "onlyType",
+    "hiddenAndUnHidden"
   ],
   "views": {
     "list": "views/file/list",

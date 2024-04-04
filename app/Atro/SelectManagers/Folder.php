@@ -42,4 +42,9 @@ class Folder extends Base
             'hidden' => true
         ];
     }
+
+    protected function boolFilterHiddenAndUnHidden(&$result)
+    {
+        $this->hasOnlyHiddenFilter = true;
+    }
 }

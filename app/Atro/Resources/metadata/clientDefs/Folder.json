@@ -7,11 +7,13 @@
     "ownedByMe",
     "notParents",
     "notChildren",
-    "onlyHidden"
+    "onlyHidden",
+    "hiddenAndUnHidden"
   ],
   "hiddenBoolFilterList": [
     "notParents",
-    "notChildren"
+    "notChildren",
+    "hiddenAndUnHidden"
   ],
   "views": {
     "list": "views/list-tree",
