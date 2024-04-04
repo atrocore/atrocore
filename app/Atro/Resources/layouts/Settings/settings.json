@@ -34,9 +34,7 @@
         {
           "name": "textFilterUseContainsForVarchar"
         },
-        {
-          "name": "languageList"
-        }
+        false
       ],
       [
         {
