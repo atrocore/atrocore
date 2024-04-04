@@ -56,9 +56,6 @@
   "views/fields/currency": [
     "treo-core"
   ],
-  "views/fields/link-parent": [
-    "treo-core"
-  ],
   "views/fields/varchar": [
     "treo-core"
   ],
