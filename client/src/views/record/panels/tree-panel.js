@@ -47,9 +47,15 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
         maxSize: null,
 
+
         events: {
             'click button[data-action="collapsePanel"]': function () {
                 this.actionCollapsePanel();
+
+                if(this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed') {
+                    this.notify('Loading...')
+                    this.rebuildTree()
+                }
             },
 
             'click .reset-tree-filter': function (e) {
@@ -78,13 +84,21 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             if (this.options.collection) {
                 this.listenTo(Backbone, 'after:search', collection => {
                     if (this.options.collection.name === collection.name) {
+
                         if (collection.name === this.treeScope) {
                             this.getStorage().set('treeWhereData', this.treeScope, collection.where);
                         }
-                        this.rebuildTree();
+
+                        if(this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed'){
+                            this.rebuildTree()
+                        }
                     }
                 });
             }
+
+            this.listenTo(this, 'tree-load', function(data){
+                this.notify(false)
+            })
         },
 
         data() {
@@ -109,7 +123,10 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             });
 
             this.toggleVisibilityForResetButton();
-            this.buildTree();
+
+            if(this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed'){
+                this.buildTree()
+            }
         },
 
         toggleVisibilityForResetButton() {
