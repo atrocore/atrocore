@@ -233,7 +233,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     let $el = $(el);
                     let $li = $el.parent().parent();
 
-                    if ($el.data('id') !== id) {
+                    if ($el.data('id') !== id && $tree.tree('getNodeById', $el.data('id'))) {
                         $tree.tree('removeFromSelection', $tree.tree('getNodeById', $el.data('id')));
                         $li.removeClass('jqtree-selected');
                     } else if (!$li.hasClass('jqtree-selected')) {
