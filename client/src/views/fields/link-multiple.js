@@ -70,6 +70,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         boolFilterData: {},
 
+        noCreateScopeList: ['User', 'Team', 'Role'],
+
         getBoolFilterData() {
             let data = {};
             this.selectBoolFilterList.forEach(item => {
@@ -102,7 +104,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 nameHash: nameHash,
                 foreignScope: this.foreignScope,
                 placeholder: this.options.placeholder || this.translate('Select'),
-                valueIsSet: this.model.has(this.idsName)
+                valueIsSet: this.model.has(this.idsName),
+                createDisabled: this.createDisabled
             }, Dep.prototype.data.call(this));
         },
 
@@ -130,6 +133,20 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
+            }
+
+            if (!this.createDisabled && this.noCreateScopeList.indexOf(this.foreignScope) !== -1) {
+                this.createDisabled = true;
+            }
+
+            if (!this.createDisabled) {
+                if (
+                    !this.getAcl().check(this.foreignScope, 'create')
+                    ||
+                    this.getMetadata().get(['clientDefs', this.foreignScope, 'createDisabled'])
+                ) {
+                    this.createDisabled = true;
+                }
             }
 
             var self = this;
@@ -213,6 +230,25 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.events['click a[data-action="clearLinkSubQuery"]'] = function (e) {
                     this.deleteLinkSubQuery();
                 };
+
+                this.addActionHandler('createLink', function () {
+                    this.notify('Loading...');
+                    this.createView('quickCreate', 'views/modals/edit', {
+                        scope: this.foreignScope,
+                        fullFormDisabled: true,
+                        attributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                    }, view => {
+                        view.once('after:render', () => {
+                            this.notify(false);
+                        });
+                        view.render();
+
+                        this.listenToOnce(view, 'after:save', function (model) {
+                            this.clearView('quickCreate');
+                            this.addLink(model.id, model.get('name'));
+                        }.bind(this));
+                    });
+                });
             }
         },
 
