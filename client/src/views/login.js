@@ -94,7 +94,7 @@ Espo.define('views/login', 'view', function (Dep) {
                 this.localeId = $(event.currentTarget).val();
                 if (this.localeId) {
                     let language = $("#locale option:selected").data('language');
-                    this.ajaxGetRequest('I18n', { locale: language }).then(data => {
+                    this.ajaxGetRequest('I18n', {locale: language}).then(data => {
                         this.getLanguage().data = data;
                         this.reRender();
                         localStorage.setItem('localeId', this.localeId);
@@ -213,14 +213,18 @@ Espo.define('views/login', 'view', function (Dep) {
                         requestData['theme'] = this.theme;
                     }
 
-                    $.ajax({
+                    const response = $.ajax({
                         url: 'Preferences/' + data.user.id,
                         method: 'PUT',
                         headers: {
                             'Authorization-Token': Base64.encode(userName + ':' + data.token)
                         },
-                        data: JSON.stringify(requestData)
+                        data: JSON.stringify(requestData),
+                        async: false
                     });
+                    if (response && response.responseJSON) {
+                        data.preferences = response.responseJSON
+                    }
 
                     this.trigger('login', {
                         auth: {
