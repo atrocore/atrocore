@@ -194,15 +194,12 @@ class FieldManager extends \Espo\Core\Controllers\Base
         }
 
         $mainLanguage = Language::detectLanguage($this->getConfig(), $this->getPreferences());
-        foreach (array_merge([$mainLanguage], $this->getConfig()->get('inputLanguageList', [])) as $language) {
+        foreach ($this->getConfig()->get('interfaceLocales', []) as $language) {
             $languageObj = new Language($this->getContainer(), $language);
 
             $needToSave = false;
 
-            $label = 'label';
-            if ($language !== $mainLanguage) {
-                $label = Util::toCamelCase('label_' . strtolower($language));
-            }
+            $label = Util::toCamelCase('label_' . strtolower($language));
 
             $name = $input->name;
             if (property_exists($input, 'multilangField')) {

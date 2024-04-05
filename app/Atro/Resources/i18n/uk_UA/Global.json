@@ -416,10 +416,10 @@
     "onlyHidden": "Тільки приховані",
     "followed": "Ви підписані",
     "onlyArchived": "Без неархівних",
-    "withArchived": "З архівом"
+    "withArchived": "З архівом",
+    "onlyFollowed": "Ви підписані"
   },
   "presetFilters": {
-    "followed": "Ви підписані",
     "all": "Усі"
   },
   "massActions": {
@@ -674,7 +674,8 @@
     },
     "languageFilter": {
       "allLanguages": "Усі мови",
-      "main": "Осн. мова"
+      "main": "Осн. мова",
+      "unilingual": "Одномовний"
     },
     "language": {
       "af_ZA": "Африкаанс",

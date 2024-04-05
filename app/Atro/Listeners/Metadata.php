@@ -39,6 +39,9 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareMultiLang($data);
 
+        // prepare multi-lang labels
+        $data = $this->prepareMultiLangLabels($data);
+
         $data = $this->setForeignName($data);
 
         $data = $this->showConnections($data);
@@ -749,6 +752,21 @@ class Metadata extends AbstractListener
         return $data;
     }
 
+    protected function prepareMultiLangLabels(array $data): array
+    {
+        foreach ($data['fields'] as $field => $v) {
+            foreach ($this->getConfig()->get('interfaceLocales', []) as $locale) {
+                if (!empty($data['fields'][$field]['params']) && is_array($data['fields'][$field]['params'])) {
+                    $param = ['name' => 'label' . ucfirst(Util::toCamelCase(strtolower($locale))), 'type' => 'varchar'];
+
+                    $data['fields'][$field]['params'] = array_merge([$param], $data['fields'][$field]['params']);
+                }
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * @param array $data
      *
@@ -766,13 +784,9 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        $defaultParams = [];
-        foreach ($locales as $locale) {
-            $defaultParams[] = ['name' => 'label' . ucfirst(Util::toCamelCase(strtolower($locale))), 'type' => 'varchar'];
-        }
 
         foreach ($data['fields'] as $field => $v) {
-            $params = $defaultParams;
+            $params = [];
             if (!empty($v['multilingual'])) {
                 $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
             }
@@ -893,6 +907,11 @@ class Metadata extends AbstractListener
     protected function addOwner(array $data): array
     {
         foreach ($data['scopes'] as $scope => $row) {
+
+            if (!empty($row['stream'])) {
+                $data['clientDefs'][$scope]['boolFilterList'][] = 'onlyFollowed';
+            }
+
             // for owner user
             if (!empty($row['hasOwner'])) {
                 if (!isset($data['entityDefs'][$scope]['fields']['ownerUser']['type'])) {

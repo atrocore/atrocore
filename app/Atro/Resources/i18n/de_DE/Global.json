@@ -439,10 +439,10 @@
     "onlyActive": "Aktiv",
     "notActive": "Inaktiv",
     "onlyArchived": "Ohne nicht archiviert",
-    "withArchived": "Mit archiviert"
+    "withArchived": "Mit archiviert",
+    "onlyFollowed": "Abonniert"
   },
   "presetFilters": {
-    "followed": "abonniert",
     "all": "Alle"
   },
   "massActions": {
@@ -789,7 +789,8 @@
     },
     "languageFilter": {
       "allLanguages": "Alle Sprachen",
-      "main": "Hauptsprache"
+      "main": "Hauptsprache",
+      "unilingual": "Unisprachlich"
     },
     "varcharSearchRanges": {
       "equals": "Gleich",

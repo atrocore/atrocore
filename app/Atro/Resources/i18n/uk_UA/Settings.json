@@ -2,7 +2,7 @@
   "fields": {
     "fileNameRegexPattern": "Шаблон для імені файлу",
     "variables": "Змінні",
-    "locale": "Локаль",
+    "locale": "Локаль за замовчуванням",
     "useCache": "Використовувати кеш",
     "defaultCurrency": "Валюта за замовчуванням",
     "currencyRates": "Курси обміну",

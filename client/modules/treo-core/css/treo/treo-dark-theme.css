@@ -17547,6 +17547,10 @@ a.field-info > span.fa-info-circle {
     color: #bbb;
 }
 
+.btn-icon[data-action="createLink"] > i {
+    color: #bbb;
+}
+
 .btn-icon {
     width: 36px;
     padding-left: 0;

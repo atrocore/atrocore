@@ -824,14 +824,24 @@ class Stream extends \Espo\Core\Services\Base
                 $updatedFieldList[] = $field;
                 foreach ($item['actualList'] as $attribute) {
                     if ($entity->isAttributeChanged($attribute)) {
-                        $was[$attribute] = $entity->getFetched($attribute);
-                        $became[$attribute] = $entity->get($attribute);
+                        $valueWas = $entity->getFetched($attribute);
+                        $valueBecame = $entity->get($attribute);
+
+                        if (!(($valueWas === null || $valueWas === '') && ($valueBecame === null || $valueBecame === ''))) {
+                            $was[$attribute] = $valueWas;
+                            $became[$attribute] = $valueBecame;
+                        }
                     }
                 }
                 foreach ($item['notActualList'] as $attribute) {
                     if ($entity->isAttributeChanged($attribute)) {
-                        $was[$attribute] = $entity->getFetched($attribute);
-                        $became[$attribute] = $entity->get($attribute);
+                        $valueWas = $entity->getFetched($attribute);
+                        $valueBecame = $entity->get($attribute);
+
+                        if (!(($valueWas === null || $valueWas === '') && ($valueBecame === null || $valueBecame === ''))) {
+                            $was[$attribute] = $valueWas;
+                            $became[$attribute] = $valueBecame;
+                        }
                     }
                 }
 
@@ -848,6 +858,10 @@ class Stream extends \Espo\Core\Services\Base
                     }
                 }
             }
+        }
+
+        if (empty($was) && empty($became)) {
+            return;
         }
 
         if (!empty($updatedFieldList)) {

@@ -335,10 +335,10 @@
     "assignedToMe": "Assigned to me",
     "ownedByMe": "Owned by me",
     "onlyArchived": "Sin no archivado",
-    "withArchived": "Con archivado"
+    "withArchived": "Con archivado",
+    "onlyFollowed": "Siguiendo"
   },
   "presetFilters": {
-    "followed": "Siguiendo",
     "all": "Todos"
   },
   "massActions": {

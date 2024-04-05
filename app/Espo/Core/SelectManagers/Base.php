@@ -1686,6 +1686,12 @@ class Base
             $value = $preparedValue;
         }
 
+        if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'array') {
+            // escape slashes to search in escaped json
+            $value = str_replace('\\', '\\\\\\\\', $value);
+            $value = str_replace("/", "\\\\/", $value);
+        }
+
         return $value;
     }
 
@@ -2012,6 +2018,19 @@ class Base
         $ids = array_merge($ids, array_column($this->getRepository()->get($id)->get('parents')->toArray(), 'id'));
 
         $result['whereClause'][] = ['id!=' => $ids];
+    }
+
+    protected function boolFilterOnlyFollowed(array &$result)
+    {
+        $result['callbacks'][] = [$this, 'applyOnlyFollowedFilter'];
+    }
+
+    public function applyOnlyFollowedFilter(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        $qb->innerJoin($tableAlias, 'user_followed_record', 'ufr', "ufr.entity_id = $tableAlias.id and ufr.user_id = :ufrUserId and ufr.entity_type = :ufrEntityType");
+        $qb->setParameter('ufrUserId', $this->getUser()->get('id'));
+        $qb->setParameter('ufrEntityType', $this->getEntityType());
     }
 
     /**

@@ -2,9 +2,8 @@
   "fields": {
     "fileNameRegexPattern": "Filename Regex Pattern",
     "variables": "Variables",
-    "locale": "Locale",
+    "locale": "Default Locale",
     "isMultilangActive": "Multilingual",
-    "languageList": "Interface Languages",
     "mainLanguage": "Main Language",
     "inputLanguageList": "Input Languages",
     "appId": "ID",

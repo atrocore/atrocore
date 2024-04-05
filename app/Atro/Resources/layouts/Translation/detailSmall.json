@@ -15,24 +15,6 @@
           "name": "isCustomized"
         },
         false
-      ],
-      [
-        {
-          "name": "enUs",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "deDe",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "ruRu",
-          "fullWidth": true
-        }
       ]
     ]
   }
