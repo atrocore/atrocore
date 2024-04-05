@@ -2014,6 +2014,19 @@ class Base
         $result['whereClause'][] = ['id!=' => $ids];
     }
 
+    protected function boolFilterOnlyFollowed(array &$result)
+    {
+        $result['callbacks'][] = [$this, 'applyOnlyFollowedFilter'];
+    }
+
+    public function applyOnlyFollowedFilter(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        $qb->innerJoin($tableAlias, 'user_followed_record', 'ufr', "ufr.entity_id = $tableAlias.id and ufr.user_id = :ufrUserId and ufr.entity_type = :ufrEntityType");
+        $qb->setParameter('ufrUserId', $this->getUser()->get('id'));
+        $qb->setParameter('ufrEntityType', $this->getEntityType());
+    }
+
     /**
      * @param string $filterName
      *

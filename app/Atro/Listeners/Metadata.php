@@ -999,6 +999,11 @@ class Metadata extends AbstractListener
     protected function addOwner(array $data): array
     {
         foreach ($data['scopes'] as $scope => $row) {
+
+            if (!empty($row['stream'])) {
+                $data['clientDefs'][$scope]['boolFilterList'][] = 'onlyFollowed';
+            }
+
             // for owner user
             if (!empty($row['hasOwner'])) {
                 if (!isset($data['entityDefs'][$scope]['fields']['ownerUser']['type'])) {

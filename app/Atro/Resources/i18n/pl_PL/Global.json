@@ -425,10 +425,10 @@
     "ownedByMe":"Własność moja",
     "onlyArchived":"Bez niezarchiwizowanych",
     "withArchived":"Z zarchiwizowanymi",
-    "onlyDeleted":"Usunięte"
+    "onlyDeleted":"Usunięte",
+    "onlyFollowed": "Śledzone"
 },
 "presetFilters":{
-    "followed":"Śledzone",
     "all":"Wszystkie"
 },
 "massActions":{

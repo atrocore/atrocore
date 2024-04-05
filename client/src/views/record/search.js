@@ -176,10 +176,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 this.presetFilterList = [];
             }
 
-            if (this.getMetadata().get('scopes.' + this.entityType + '.stream')) {
-                this.boolFilterList.push('followed');
-            }
-
             this.loadSearchData();
 
             if (this.presetName) {

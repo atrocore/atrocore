@@ -425,10 +425,10 @@
     "ownedByMe": "Owned by me",
     "onlyArchived": "Without non-archived",
     "withArchived": "With archived",
-    "onlyDeleted": "Deleted"
+    "onlyDeleted": "Deleted",
+    "onlyFollowed": "Followed"
   },
   "presetFilters": {
-    "followed": "Followed",
     "all": "All"
   },
   "massActions": {
