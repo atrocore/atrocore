@@ -1686,6 +1686,12 @@ class Base
             $value = $preparedValue;
         }
 
+        if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'array') {
+            // escape slashes to search in escaped json
+            $value = str_replace('\\', '\\\\\\\\', $value);
+            $value = str_replace("/", "\\\\/", $value);
+        }
+
         return $value;
     }
 
