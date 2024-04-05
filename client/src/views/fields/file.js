@@ -40,6 +40,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         detailTemplate: 'fields/file/detail',
 
+        editTemplate: 'fields/file/edit',
+
         previewSize: 'small',
 
         fileTypeId: null,
@@ -84,6 +86,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             if (this.mode !== 'list') {
                 this.addActionHandler('selectLink', function () {
                     this.selectLink();
+                });
+
+                this.addActionHandler('uploadLink', function () {
+                    this.uploadLink();
                 });
 
                 this.addActionHandler('clearLink', function () {
@@ -203,11 +209,36 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             });
         },
 
+        uploadLink: function () {
+            this.notify('Loading...');
+            this.createView('upload', 'views/file/modals/upload', {
+                scope: 'File',
+                fullFormDisabled: true,
+                layoutName: 'upload',
+                multiUpload: false,
+                attributes: this.getCreateAttributes(),
+            }, view => {
+                view.render();
+                this.notify(false);
+                this.listenTo(view.model, 'after:file-upload', entity => {
+                    this.getModelFactory().create('File', model => {
+                        model.set(entity);
+                        this.select(model);
+                    });
+                });
+                this.listenTo(view.model, 'after:delete-action', id => this.clearLink());
+
+                this.listenToOnce(view, 'close', () => {
+                    this.clearView('upload');
+                });
+            });
+        },
+
         getCreateAttributes: function () {
             let res = {};
 
             if (this.fileTypeId) {
-                this.ajaxGetRequest(`FileType/${this.fileTypeId}`, {async: false}).success(entity => {
+                this.ajaxGetRequest(`FileType/${this.fileTypeId}`, null, {async: false}).success(entity => {
                     res.typeId = entity.id;
                     res.typeName = entity.name;
                 });
