@@ -7,5 +7,8 @@
         {{#unless createDisabled}}
         <button data-action="createLink" class="btn btn-default btn-icon" type="button" tabindex="-1" title="{{translate 'Create'}}"><i class="fas fa-plus"></i></button>
         {{/unless}}
+        {{#unless uploadDisabled}}
+        <button data-action="uploadLink" class="btn btn-default btn-icon" type="button" tabindex="-1" title="{{translate 'Upload'}}"><i class="fas fa-paperclip"></i></button>
+        {{/unless}}
     </span>
 </div>

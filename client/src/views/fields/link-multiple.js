@@ -60,6 +60,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
+        uploadDisabled: true,
+
         sortable: false,
 
         linkMultiple: true,
@@ -105,7 +107,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 foreignScope: this.foreignScope,
                 placeholder: this.options.placeholder || this.translate('Select'),
                 valueIsSet: this.model.has(this.idsName),
-                createDisabled: this.createDisabled
+                createDisabled: this.createDisabled,
+                uploadDisabled: this.uploadDisabled
             }, Dep.prototype.data.call(this));
         },
 
@@ -146,6 +149,19 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     this.getMetadata().get(['clientDefs', this.foreignScope, 'createDisabled'])
                 ) {
                     this.createDisabled = true;
+                }
+            }
+
+            if (this.foreignScope === 'File') {
+                this.uploadDisabled = false;
+                this.createDisabled = true;
+                if ('uploadDisabled' in this.options) {
+                    this.uploadDisabled = this.options.uploadDisabled;
+                }
+                if (!this.uploadDisabled) {
+                    if (!this.getAcl().check(this.foreignScope, 'create')) {
+                        this.uploadDisabled = true;
+                    }
                 }
             }
 
@@ -223,6 +239,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     }, this);
                 });
 
+                this.addActionHandler('uploadLink', function () {
+                    this.uploadLink();
+                });
+
                 this.events['click a[data-action="clearLink"]'] = function (e) {
                     var id = $(e.currentTarget).attr('data-id');
                     this.deleteLink(id);
@@ -250,6 +270,28 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     });
                 });
             }
+        },
+
+        uploadLink: function () {
+            this.notify('Loading...');
+            this.createView('upload', 'views/file/modals/upload', {
+                scope: 'File',
+                fullFormDisabled: true,
+                layoutName: 'upload',
+                multiUpload: true,
+                attributes: this.getCreateAttributes(),
+            }, view => {
+                view.render();
+                this.notify(false);
+                this.listenTo(view.model, 'after:file-upload', entity => {
+                    this.addLink(entity.id, entity.name);
+                });
+                this.listenTo(view.model, 'after:delete-action', id => this.deleteLink(id));
+
+                this.listenToOnce(view, 'close', () => {
+                    this.clearView('upload');
+                });
+            });
         },
 
         handleSearchType: function (type) {

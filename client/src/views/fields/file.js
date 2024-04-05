@@ -46,6 +46,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         fileTypeId: null,
 
+        uploadDisabled: false,
+
         events: {
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
@@ -72,7 +74,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         data: function () {
-            return _.extend({valueIsSet: this.model.has(this.idName)}, Dep.prototype.data.call(this));
+            return _.extend({uploadDisabled: this.uploadDisabled, valueIsSet: this.model.has(this.idName)}, Dep.prototype.data.call(this));
         },
 
         setup: function () {
@@ -82,6 +84,16 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.foreignScope = 'File';
             this.fileTypeId = this.options.fileTypeId || this.params.fileTypeId || this.model.getFieldParam(this.name, 'fileTypeId') || this.fileTypeId;
             this.previewSize = this.options.previewSize || this.params.previewSize || this.model.getFieldParam(this.name, 'previewSize') || this.previewSize;
+
+            if ('uploadDisabled' in this.options) {
+                this.uploadDisabled = this.options.uploadDisabled;
+            }
+
+            if (!this.uploadDisabled) {
+                if (!this.getAcl().check(this.foreignScope, 'create')) {
+                    this.uploadDisabled = true;
+                }
+            }
 
             if (this.mode !== 'list') {
                 this.addActionHandler('selectLink', function () {
