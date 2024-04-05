@@ -106,6 +106,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                     continue;
                 }
 
+                // ignore .tmp dir
+                if (strpos($fileInfo['dirname'], '.tmp') !== false) {
+                    continue;
+                }
+
                 $entityData = [
                     'name'      => $fileInfo['basename'],
                     'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
