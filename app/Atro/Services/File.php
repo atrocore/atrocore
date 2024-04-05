@@ -32,9 +32,9 @@ class File extends Base
 
         $entity->set('extension', strtolower(array_pop($fileNameParts)));
         $entity->set('downloadUrl', $entity->getDownloadUrl());
-        $entity->set('smallThumbnailUrl', $entity->getSmallThumbnailUrl());
-        $entity->set('mediumThumbnailUrl', $entity->getMediumThumbnailUrl());
-        $entity->set('largeThumbnailUrl', $entity->getLargeThumbnailUrl());
+        $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
+        $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
+        $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
         $entity->set('hasOpen', in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', [])));
     }
 

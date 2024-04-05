@@ -21,6 +21,7 @@ use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
+use Espo\Core\Utils\Config;
 use Espo\ORM\EntityManager;
 
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
@@ -396,7 +397,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     public function getUrl(File $file): string
     {
         if (!$file->get('private')) {
-            return $this->getLocalPath($file);
+            return $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $this->getLocalPath($file);
         }
 
         $url = '?entryPoint=';
@@ -407,7 +408,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
         $url .= "&id={$file->get('id')}";
 
-        return $url;
+        return $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $url;
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 
     protected function getEntityManager(): EntityManager
