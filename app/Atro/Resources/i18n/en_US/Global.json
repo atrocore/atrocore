@@ -439,6 +439,11 @@
     "restore": "Restore"
   },
   "fields": {
+    "downloadUrl": "Download URL",
+    "smallThumbnailUrl": "Thumbnail URL (small)",
+    "mediumThumbnailUrl": "Thumbnail URL (medium)",
+    "largeThumbnailUrl": "Thumbnail URL (large)",
+    "extension": "Extension",
     "hidden": "Hidden",
     "priority": "Priority",
     "fileType": "File Type",
