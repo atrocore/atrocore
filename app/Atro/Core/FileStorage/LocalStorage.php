@@ -226,42 +226,30 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function create(File $file): bool
     {
+        $result = false;
+
         $input = $file->_input ?? new \stdClass();
 
-        // create via contents
+        $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
+        $fileName = $this->getLocalPath($file);
+
+        // create folders for new file
+        $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
+
+        /**
+         * Create via contents
+         */
         if (property_exists($input, 'fileContents')) {
-            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
-
-            $fileName = $this->getLocalPath($file);
-
-            // create folders for new file
-            $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
-
-            if (file_put_contents($fileName, self::parseInputFileContent($input->fileContents))) {
-                $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
-                $file->set('mimeType', mime_content_type($fileName));
-                $file->set('fileSize', filesize($fileName));
-                $file->set('hash', $this->getFileManager()->md5File($fileName));
-
-                $xattr = new Xattr();
-                $xattr->set($fileName, 'atroId', $file->id);
-
-                return true;
-            }
+            $result = file_put_contents($fileName, self::parseInputFileContent($input->fileContents));
         }
 
-        // create via chunks
-        if (property_exists($input, 'allChunks')) {
-            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
-
-            $fileName = $this->getLocalPath($file);
-
+        /**
+         * Create via chunks
+         */
+        if (!$result && property_exists($input, 'allChunks')) {
             $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
 
             $chunkDirPath = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
-
-            // create folders for new file
-            $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
 
             // create file via chunks
             $f = fopen($fileName, 'a+');
@@ -270,27 +258,13 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             }
             fclose($f);
 
-            $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
-            $file->set('fileSize', filesize($fileName));
-            $file->set('mimeType', mime_content_type($fileName));
-            $file->set('hash', $this->getFileManager()->md5File($fileName));
-
-            $xattr = new Xattr();
-            $xattr->set($fileName, 'atroId', $file->id);
-
-            $this->getMemoryStorage()->set("file_{$file->id}", $file);
-
-            return true;
+            $result = true;
         }
 
-        // create via remote URL
-        if (property_exists($input, 'remoteUrl')) {
-            $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
-            $fileName = $this->getLocalPath($file);
-
-            // create folders for new file
-            $this->getFileManager()->mkdir($this->getFileManager()->getFileDir($fileName), 0777, true);
-
+        /**
+         * Create via remote URL
+         */
+        if (!$result && property_exists($input, 'remoteUrl')) {
             // load file from url
             set_time_limit(0);
             $fp = fopen($fileName, 'w+');
@@ -313,20 +287,27 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 throw new Error(sprintf("Download for '%s' failed.", $input->remoteUrl));
             }
 
+            $result = true;
+        }
+
+        /**
+         * Create via local file
+         */
+        if (!$result && property_exists($input, 'localFileName')) {
+            $result = file_exists($input->localFileName) && rename($input->localFileName, $fileName);
+        }
+
+        if ($result) {
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
-            $file->set('fileSize', filesize($fileName));
             $file->set('mimeType', mime_content_type($fileName));
+            $file->set('fileSize', filesize($fileName));
             $file->set('hash', $this->getFileManager()->md5File($fileName));
 
             $xattr = new Xattr();
             $xattr->set($fileName, 'atroId', $file->id);
-
-            $this->getMemoryStorage()->set("file_{$file->id}", $file);
-
-            return true;
         }
 
-        return false;
+        return $result;
     }
 
     public function getChunksDir(Storage $storage): string

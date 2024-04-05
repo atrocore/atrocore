@@ -120,7 +120,7 @@ class File extends Base
         return $this->createEntity($attachment);
     }
 
-    public function createFileViaUrl(\stdClass $attachment, string $url)
+    public function createFileViaUrl(\stdClass $attachment, string $url): array
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new BadRequest("Invalid URL");
@@ -135,6 +135,13 @@ class File extends Base
         }
 
         $attachment->remoteUrl = str_replace(" ", "%20", $url);
+
+        return $this->createEntity($attachment);
+    }
+
+    public function moveLocalFileToFileEntity(\stdClass $attachment, string $fileName): array
+    {
+        $attachment->localFileName = $fileName;
 
         return $this->createEntity($attachment);
     }
