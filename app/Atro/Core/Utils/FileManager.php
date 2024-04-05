@@ -30,26 +30,6 @@ class FileManager extends Manager
         $this->chunkSize = $container->get('config')->get('md5FileChunkSize', 2 * (1024 * 1024));
     }
 
-    public function deleteEmptyDirs(string $directory): void
-    {
-        if (!file_exists($directory)) {
-            return;
-        }
-        $handle = opendir($directory);
-        while (false !== ($entry = readdir($handle))) {
-            if ($entry != "." && $entry != "..") {
-                $path = $directory . DIRECTORY_SEPARATOR . $entry;
-                if (is_dir($path)) {
-                    $this->deleteEmptyDirs($path);
-                    if (count(scandir($path)) == 2) {
-                        rmdir($path);
-                    }
-                }
-            }
-        }
-        closedir($handle);
-    }
-
     public function md5File(string $fileName): ?string
     {
         if (!file_exists($fileName)) {
