@@ -20,6 +20,10 @@ Espo.define('views/file/record/panels/side/preview/main', 'view', Dep => {
                     let id = $(e.currentTarget).data('id');
                     this.createView('preview', 'views/modals/image-preview', {
                         id: id,
+                        name: this.model.get('name'),
+                        fileId: id,
+                        downloadUrl: this.model.get('downloadUrl'),
+                        thumbnailUrl: this.model.get('largeThumbnailUrl'),
                         model: this.model
                     }, function (view) {
                         view.render();
