@@ -21,6 +21,7 @@ Espo.define('views/file/fields/preview', 'view',
                 this.createView('preview', 'views/modals/image-preview', {
                     id: id,
                     model: this.model,
+                    fileId: id,
                     downloadUrl: this.model.get('downloadUrl'),
                     thumbnailUrl:  this.model.get('largeThumbnailUrl'),
                 }, function (view) {
