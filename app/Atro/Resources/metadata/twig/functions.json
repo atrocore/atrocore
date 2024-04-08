@@ -3,6 +3,8 @@
   "isAttributeChanged": "\\Atro\\TwigFunction\\IsAttributeChanged",
   "getFetched": "\\Atro\\TwigFunction\\GetFetched",
   "get": "\\Atro\\TwigFunction\\GetField",
+  "createEntity": "\\Atro\\TwigFunction\\CreateEntity",
+  "createRecord": "\\Atro\\TwigFunction\\CreateEntity",
   "findEntity": "\\Atro\\TwigFunction\\FindEntity",
   "findRecord": "\\Atro\\TwigFunction\\FindEntity",
   "findEntities": "\\Atro\\TwigFunction\\FindEntities",
