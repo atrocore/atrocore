@@ -98,6 +98,7 @@
     "Core":"AtroCore to ekosystem oprogramowania, zaprojektowany do szybkiego tworzenia responsywnych aplikacji biznesowych opartych na sieci."
 },
 "labels":{
+    "Reupload": "Prześlij ponownie",
     "attachFiles":"Dołączanie plików",
     "dragAndDropBtnText":"Przeciągnij i upuść",
     "dragAndDropBtnTextSmall":"swoje zasoby tutaj lub",

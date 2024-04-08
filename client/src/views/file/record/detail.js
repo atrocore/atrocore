@@ -13,7 +13,7 @@ Espo.define('views/file/record/detail', 'views/record/detail',
 
         duplicateAction: false,
 
-        setupActionItems: function () {
+        setupActionItems() {
             Dep.prototype.setupActionItems.call(this);
 
             if (this.getMetadata().get('app.file.image.hasPreviewExtensions').includes(this.model.get('extension'))) {
@@ -22,10 +22,38 @@ Espo.define('views/file/record/detail', 'views/record/detail',
                     'name': 'openInTab'
                 });
             }
+
+            this.dropdownItemList.push({
+                'label': 'Reupload',
+                'name': 'reupload'
+            });
         },
 
-        actionOpenInTab: function () {
+        actionOpenInTab() {
             window.open(this.model.get('downloadUrl'), "_blank");
+        },
+
+        actionReupload() {
+            this.notify('Loading...');
+            this.createView('upload', 'views/file/modals/upload', {
+                scope: 'File',
+                fullFormDisabled: true,
+                layoutName: 'upload',
+                multiUpload: false,
+                attributes: _.extend(this.model.attributes, {reupload: this.model.id}),
+            }, view => {
+                view.render();
+                this.notify(false);
+
+                this.listenTo(view.model, 'after:file-upload', entity => {
+                    this.model.fetch();
+                    this.model.trigger('reuploaded');
+                });
+
+                this.listenToOnce(view, 'close', () => {
+                    this.clearView('upload');
+                });
+            });
         },
 
     })

@@ -30,7 +30,7 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                     let id = $div.attr('data-id');
                     let hash = $div.attr('data-unique');
 
-                    if (id) {
+                    if (id && !this.model.get('reupload')) {
                         $.ajax({
                             type: 'DELETE',
                             url: `File/${id}?silent=true`,
@@ -55,12 +55,12 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
 
                     $div.parent().remove();
 
-
-                    this.model.trigger('upload-disabled', false);
-
-                    this.$el.find('#upload-input').removeAttr('disabled');
-                    this.$el.find('#upload-btn').removeClass('disabled');
-                    this.$el.find('#upload-area').removeClass('disabled');
+                    if (_.isEmpty(this.filesSize)) {
+                        this.model.trigger('upload-disabled', false);
+                        this.$el.find('#upload-input').removeAttr('disabled');
+                        this.$el.find('#upload-btn').removeClass('disabled');
+                        this.$el.find('#upload-area').removeClass('disabled');
+                    }
 
                     if (this.isDone()) {
                         this.model.trigger('updating-ended', {hideNotification: true});
@@ -464,7 +464,9 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
 
             if (entity !== null) {
                 file.attachmentBox.attr('data-id', entity.id).addClass('file-uploading-success');
-                file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<span class="fas fa-trash"></span>');
+                if (!this.model.get('reupload')) {
+                    file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<span class="fas fa-trash"></span>');
+                }
                 file.attachmentBox.find('.preview').html(`<a target="_blank" href="/#File/view/${entity.id}">${entity.name}</a>`);
                 if (entity.duplicate) {
                     let message = this.translate('fileHasDuplicate', 'messages', 'File').replace('{{id}}', entity.duplicate.id);

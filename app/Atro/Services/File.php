@@ -158,6 +158,34 @@ class File extends Base
             }
         }
 
+        /**
+         * If reupload
+         */
+        if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
+            $old = $this->getRepository()->get($attachment->reupload);
+            if (!empty($old)) {
+                $this->getEntityManager()->removeEntity($old, ['reupload' => true]);
+            }
+
+            // delete forever
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->delete('file')
+                ->where('id=:id')
+                ->setParameter('id', $attachment->reupload)
+                ->executeQuery();
+
+            // update ID
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->update('file')
+                ->set('id', ':id')
+                ->where('id=:newId')
+                ->setParameter('id', $attachment->reupload)
+                ->setParameter('newId', $result['id'])
+                ->executeQuery();
+
+            $result['id'] = $attachment->reupload;
+        }
+
         return $result;
     }
 
