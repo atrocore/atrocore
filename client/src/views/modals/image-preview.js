@@ -52,7 +52,8 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
                 url: this.getImageUrl(),
                 originalUrl: this.getOriginalImageUrl(),
                 size: this.size,
-                path: this.options.el
+                path: this.options.el,
+                fileId: this.options.fileId ?? null
             };
         },
 

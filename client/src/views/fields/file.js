@@ -57,6 +57,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     id: id,
                     model: this.model,
                     name: this.model.get(this.nameName),
+                    fileId: this.model.get(this.idName),
                     downloadUrl: this.getFilePathsData().download,
                     thumbnailUrl: this.getFilePathsData().thumbnails.large,
                 }, function (view) {
@@ -151,11 +152,13 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     return false;
                 }
 
+                let html = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="/#File/view/' + id + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a><a href="' + this.getDownloadUrl(id) + '" style="margin-left: 5px" download=""><span class="fas fa-download fa-sm"></span></a>';
+
                 if (this.hasPreview(name) && this.getImageUrl(id)) {
-                    return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                    html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
                 }
 
-                return '<span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a>';
+                return html;
             }
         },
 
