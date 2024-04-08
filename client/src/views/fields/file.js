@@ -75,7 +75,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         data: function () {
-            return _.extend({uploadDisabled: this.uploadDisabled, valueIsSet: this.model.has(this.idName)}, Dep.prototype.data.call(this));
+            return _.extend({
+                uploadDisabled: this.uploadDisabled,
+                valueIsSet: this.model.has(this.idName)
+            }, Dep.prototype.data.call(this));
         },
 
         setup: function () {
@@ -152,10 +155,19 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     return false;
                 }
 
-                let html = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="/#File/view/' + id + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a><a href="' + this.getDownloadUrl(id) + '" style="margin-left: 5px" download=""><span class="fas fa-download fa-sm"></span></a>';
+                let html = '';
 
-                if (this.hasPreview(name) && this.getImageUrl(id)) {
-                    html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                if (this.mode === 'list') {
+                    if (this.hasPreview(name) && this.getImageUrl(id)) {
+                        html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                    } else {
+                        html += '<span class="glyphicon glyphicon-paperclip small"></span> <a href="/#File/view/' + id + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a>';
+                    }
+                } else {
+                    html += '<span class="glyphicon glyphicon-paperclip small"></span> <a href="/#File/view/' + id + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a><a href="' + this.getDownloadUrl(id) + '" style="margin-left: 5px" download=""><span class="fas fa-download fa-sm"></span></a>';
+                    if (this.hasPreview(name) && this.getImageUrl(id)) {
+                        html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                    }
                 }
 
                 return html;
