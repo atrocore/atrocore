@@ -190,7 +190,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 path = data.thumbnails[size];
             }
 
-            return this.getBasePath() + '/' + path;
+            return path;
         },
 
         getDownloadUrl: function (id) {
@@ -199,7 +199,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 return this.getBasePath() + '?entryPoint=download&id=' + id;
             }
 
-            return this.getBasePath() + data['download'];
+            return data['download'];
         },
 
         selectLink: function () {

@@ -70,11 +70,11 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
         },
 
         getImageUrl: function () {
-            return this.getBasePath() + '/' + this.options.thumbnailUrl ?? this.model.get('largeThumbnailUrl');
+            return this.options.thumbnailUrl ?? this.model.get('largeThumbnailUrl');
         },
 
         getOriginalImageUrl: function () {
-            return this.getBasePath() + '/' + this.options.downloadUrl ?? this.model.get('downloadUrl');
+            return this.options.downloadUrl ?? this.model.get('downloadUrl');
         },
 
         afterRender: function () {
