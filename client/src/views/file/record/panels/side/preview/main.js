@@ -8,65 +8,40 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/file/record/panels/side/preview/main', 'view', Dep => {
+Espo.define('views/file/record/panels/side/preview/main', 'views/fields/file', Dep => {
         return Dep.extend({
 
-            template: "file/record/panels/side/preview/main",
+            setup() {
+                Dep.prototype.setup.call(this);
 
-            events: {
-                'click a[data-action="showImagePreview"]': function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    let id = $(e.currentTarget).data('id');
-                    this.createView('preview', 'views/modals/image-preview', {
-                        id: id,
-                        name: this.model.get('name'),
-                        fileId: id,
-                        downloadUrl: this.model.get('downloadUrl'),
-                        thumbnailUrl: this.model.get('largeThumbnailUrl'),
-                        model: this.model
-                    }, function (view) {
-                        view.render();
-                    });
-                }
+                this.idName = 'id';
+                this.nameName = 'name';
+
+                this.mode = 'list';
+                this.previewSize = 'large';
+
+                this.listenTo(this.model, 'reuploaded', () => {
+                    this.model.fetch().then(() => this.reRender());
+                });
             },
 
-            isVideo() {
-                return this.getMetadata().get('app.file.video.extensions').includes(this.model.get('extension'));
-            },
-
-            hasVideoPlayer() {
-                return this.getMetadata().get('app.file.video.hasVideoPlayerExtensions').includes(this.model.get('extension'));
-            },
-
-            isImage() {
-                return this.getMetadata().get('app.file.image.hasPreviewExtensions').includes(this.model.get('extension'));
-            },
-
-            data() {
+            getFilePathsData: function () {
                 return {
-                    originPath: this.model.get('downloadUrl'),
-                    thumbnailPath: this.model.get('largeThumbnailUrl'),
-                    fileId: this.model.get('id'),
-                    path: this.options.el,
-                    hasVideoPlayer: this.hasVideoPlayer(),
-                    isImage: this.isImage(),
-                    hasIcon: !this.isImage() && !this.hasVideoPlayer(),
-                    extension: this.model.get('extension')
-                }
+                    download: this.model.get('downloadUrl'),
+                    thumbnails: {
+                        small: this.model.get('smallThumbnailUrl'),
+                        medium: this.model.get('mediumThumbnailUrl'),
+                        large: this.model.get('largeThumbnailUrl'),
+                    }
+                };
             },
 
             afterRender() {
                 Dep.prototype.afterRender.call(this);
 
-                if (!this.isImage() && !this.isVideo()) {
-                    this.$el.parent().hide();
-                } else {
-                    this.$el.parent().show();
-                }
-
-                if (this.isVideo() && !this.hasVideoPlayer()) {
-                    this.$el.find('.row').append(`<div class="col-sm-12" style="text-align: left; margin-top: 10px"><span style="font-size: 12px">${this.translate('availableVideoFormats', 'labels', 'Asset')}</span></div>`);
+                if (this.mode === 'detail') {
+                    this.$el.find('.attachment-preview').css({'display': 'block'});
+                    this.$el.find('img').css({'display': 'block', 'margin': '0 auto'});
                 }
             },
 
