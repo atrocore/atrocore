@@ -110,7 +110,7 @@ Espo.define('model', [], function () {
             if ('fields' in this.defs) {
                 for (let field in this.defs.fields) {
                     const defaultValue = this.getFieldParam(field, 'default')
-                    if (defaultValue && defaultValue.includes('{{') && defaultValue.includes('}}')) {
+                    if (defaultValue && typeof defaultValue === 'string' && defaultValue.includes('{{') && defaultValue.includes('}}')) {
                         seed = $.ajax({
                             url: this.name + '/action/Seed?silent=true',
                             type: 'GET',

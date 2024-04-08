@@ -218,8 +218,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (response.success) {
                         this.notify(response.message, 'success');
                         if (response.redirect) {
-                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, {trigger: false});
-                            this.getRouter().dispatch(response.scope, 'view', {
+                            const action = response.action ?? 'view'
+                            this.getRouter().navigate('#' + response.scope + '/' + action + '/' + response.entityId, {trigger: false});
+                            this.getRouter().dispatch(response.scope, action, {
                                 id: response.entityId,
                             })
                             return;
@@ -316,13 +317,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (this.getAcl().check(this.entityType, 'create')) {
                     let exists = false;
 
-                    for( const item of  (this.dropdownItemList || [])){
+                    for (const item of (this.dropdownItemList || [])) {
                         if (item.name === 'compare') {
-                           exists = true;
+                            exists = true;
                         }
                     }
 
-                    if(!exists){
+                    if (!exists) {
                         this.dropdownItemList.push({
                             'label': 'Compare',
                             'name': 'compare',
@@ -1160,7 +1161,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let translatedOptions = {};
                 options.forEach(option => {
 
-                    if(option === 'main'){
+                    if (option === 'main') {
                         translatedOptions[option] = this.getLanguage().translateOption(this.getConfig().get('mainLanguage'), 'languageFilter', 'Global');
                         return;
                     }
@@ -1543,11 +1544,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             hide = true;
                         }
 
-                        if(!hide && this.isUniLingualField(name, fieldLanguage)){
+                        if (!hide && this.isUniLingualField(name, fieldLanguage)) {
                             hide = true
                         }
 
-                        if(hide && languageFilter.includes('unilingual') && this.isUniLingualField(name, fieldLanguage)){
+                        if (hide && languageFilter.includes('unilingual') && this.isUniLingualField(name, fieldLanguage)) {
                             hide = false;
                         }
 
@@ -1557,7 +1558,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.controlFieldVisibility(fieldView, hide);
             });
         },
-        isUniLingualField(name, fieldLanguage){
+        isUniLingualField(name, fieldLanguage) {
             return !(this.getMetadata().get(`entityDefs.${this.scope}.fields.${name}.isMultilang`) || fieldLanguage !== null);
         },
 
