@@ -17354,8 +17354,8 @@ a.field-info > span.fa-info-circle {
   color: #bbb;
 }
 
-.btn-icon[data-action="createLink"] > i {
-  color: #bbb;
+.btn-icon[data-action="selectLink"] > i {
+  color: inherit;
 }
 
 .btn-icon {
