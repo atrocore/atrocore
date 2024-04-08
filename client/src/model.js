@@ -105,12 +105,22 @@ Espo.define('model', [], function () {
         populateDefaults: function () {
             var defaultHash = {};
 
-            const seed = $.ajax({
-                url: this.name + '/action/Seed?silent=true',
-                type: 'GET',
-                dataType: 'json',
-                async: false,
-            }).responseJSON
+            let seed = false;
+
+            if ('fields' in this.defs) {
+                for (let field in this.defs.fields) {
+                    const defaultValue = this.getFieldParam(field, 'default')
+                    if (defaultValue && defaultValue.includes('{{') && defaultValue.includes('}}')) {
+                        seed = $.ajax({
+                            url: this.name + '/action/Seed?silent=true',
+                            type: 'GET',
+                            dataType: 'json',
+                            async: false,
+                        }).responseJSON
+                        break;
+                    }
+                }
+            }
 
             if ('fields' in this.defs) {
                 for (var field in this.defs.fields) {
