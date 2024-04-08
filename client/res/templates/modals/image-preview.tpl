@@ -13,8 +13,5 @@
 </style>
 
 {{#if originalUrl}}
-<div class="margin">
-{{translate 'Original'}}: <a href="{{originalUrl}}" target="_blank">{{name}}</a>
-<a href="{{originalUrl}}" style="margin-left: 3px" download=""><span class="fas fa-download fa-sm"></span></a>
-</div>
+<div class="margin"><a href="/#File/view/{{fileId}}" target="_blank">{{name}}</a><a href="{{originalUrl}}" style="margin-left: 5px" download=""><span class="fas fa-download fa-sm"></span></a></div>
 {{/if}}
