@@ -134,6 +134,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     id: id,
                     model: this.model,
                     name: this.nameHash[id],
+                    fileId: id,
                     downloadUrl: this.pathsDatas[id].download,
                     thumbnailUrl: this.pathsDatas[id].thumbnails.large
                 }, function (view) {
