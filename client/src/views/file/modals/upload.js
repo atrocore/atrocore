@@ -15,7 +15,9 @@ Espo.define('views/file/modals/upload', 'views/modals/edit',
 
         events: _.extend(Dep.prototype.events, {
                 'click #upload-via-url': function (e) {
-                    this.model.trigger('click:upload-via-url');
+                    if (!this.$el.find('#upload-via-url .btn-primary').hasClass('disabled')) {
+                        this.model.trigger('click:upload-via-url');
+                    }
                 },
             },
         ),
@@ -31,6 +33,16 @@ Espo.define('views/file/modals/upload', 'views/modals/edit',
             ];
 
             this.header = this.translate('Upload', 'labels', 'File');
+
+            this.listenTo(this.model, 'upload-disabled', disabled => {
+                if (disabled) {
+                    this.$el.find('#upload-via-url .btn-primary').addClass('disabled');
+                    this.$el.find('#upload-url-input').attr('disabled', 'disabled');
+                } else {
+                    this.$el.find('#upload-via-url .btn-primary').removeClass('disabled');
+                    this.$el.find('#upload-url-input').removeAttr('disabled');
+                }
+            });
         },
 
         afterRender() {

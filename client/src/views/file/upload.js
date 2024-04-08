@@ -55,6 +55,9 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
 
                     $div.parent().remove();
 
+
+                    this.model.trigger('upload-disabled', false);
+
                     this.$el.find('#upload-input').removeAttr('disabled');
                     this.$el.find('#upload-btn').removeClass('disabled');
                     this.$el.find('#upload-area').removeClass('disabled');
@@ -447,6 +450,8 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
 
         uploadSuccess: function (file, entity) {
             if (!this.multiUpload) {
+                this.model.trigger('upload-disabled', true);
+
                 this.$el.find('#upload-input').attr('disabled', 'disabled');
                 this.$el.find('#upload-btn').addClass('disabled');
                 this.$el.find('#upload-area').addClass('disabled');
