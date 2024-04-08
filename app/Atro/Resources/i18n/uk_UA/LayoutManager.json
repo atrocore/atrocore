@@ -10,7 +10,8 @@
     "isLarge": "Великий розмір шрифту",
     "dynamicLogicVisible": "Умови, які роблять панель видимою",
     "sticked": "Приліплений",
-    "cssStyle": "CSS Styles"
+    "cssStyle": "CSS Styles",
+    "hiddenPerDefault": "приховано за замовчуванням"
   },
   "options": {
     "align": {
