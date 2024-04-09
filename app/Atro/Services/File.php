@@ -38,11 +38,6 @@ class File extends Base
         $entity->set('hasOpen', in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', [])));
     }
 
-    /**
-     * @param \stdClass $attachment
-     *
-     * @return array
-     */
     public function createEntity($attachment)
     {
         if (property_exists($attachment, 'url')) {
@@ -113,14 +108,14 @@ class File extends Base
         return array_merge($result, ['chunks' => $chunks]);
     }
 
-    public function createFileViaContents(\stdClass $attachment, string $contents): array
+    public function createFileViaContents(\stdClass $attachment, string $contents)
     {
         $attachment->fileContents = "data:application/unknown;base64," . base64_encode($contents);
 
         return $this->createEntity($attachment);
     }
 
-    public function createFileViaUrl(\stdClass $attachment, string $url): array
+    public function createFileViaUrl(\stdClass $attachment, string $url)
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new BadRequest("Invalid URL");
@@ -139,16 +134,21 @@ class File extends Base
         return $this->createEntity($attachment);
     }
 
-    public function moveLocalFileToFileEntity(\stdClass $attachment, string $fileName): array
+    public function moveLocalFileToFileEntity(\stdClass $attachment, string $fileName)
     {
         $attachment->localFileName = $fileName;
 
         return $this->createEntity($attachment);
     }
 
-    protected function createFileEntity(\stdClass $attachment): array
+    protected function createFileEntity(\stdClass $attachment)
     {
         $entity = parent::createEntity($attachment);
+
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
+            return $entity;
+        }
+
         $result = $entity->toArray();
 
         if (!empty($entity->get('hash'))) {

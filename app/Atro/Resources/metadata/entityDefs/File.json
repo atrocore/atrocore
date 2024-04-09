@@ -99,21 +99,29 @@
     },
     "mimeType": {
       "type": "varchar",
-      "readOnly": true
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
     },
     "fileSize": {
       "type": "int",
       "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
       "min": 0
     },
     "fileMtime": {
       "type": "datetime",
-      "readOnly": true
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
     },
     "hash": {
       "type": "varchar",
       "readOnly": true,
-      "index": true
+      "index": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
     },
     "storage": {
       "type": "link",
@@ -130,13 +138,17 @@
       "maxLength": 300,
       "view": "views/fields/varchar",
       "readOnly": true,
-      "default": null
+      "default": null,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
     },
     "thumbnailsPath": {
       "type": "text",
       "view": "views/fields/varchar",
       "readOnly": true,
-      "default": null
+      "default": null,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
     },
     "type": {
       "type": "link",
