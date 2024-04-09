@@ -159,7 +159,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 if (this.hasPreview(name) && this.getImageUrl(id)) {
                     html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
                 }
-                html += '<div style="padding-top: 5px"><a href="' + this.getDownloadUrl(id) + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
+                html += '<div style="padding-top: 5px"><a href="' + this.getDownloadUrl(id) + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
 
                 return html;
             }

@@ -36,12 +36,13 @@ Espo.define('views/file/record/panels/side/preview/main', 'views/fields/file', D
                 };
             },
 
-            afterRender() {
-                Dep.prototype.afterRender.call(this);
-
-                if (this.mode === 'detail') {
-                    this.$el.find('.attachment-preview').css({'display': 'block'});
-                    this.$el.find('img').css({'display': 'block', 'margin': '0 auto'});
+            getValueForDisplay: function () {
+                if (this.mode === 'list') {
+                    let id = this.model.get(this.idName);
+                    if (!id) {
+                        return false;
+                    }
+                    return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
                 }
             },
 

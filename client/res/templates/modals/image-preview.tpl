@@ -13,5 +13,5 @@
 </style>
 
 {{#if originalUrl}}
-<div class="margin"><a href="{{originalUrl}}" style="margin-right: 5px" title="{{translate 'Download'}}" download=""><span class="glyphicon glyphicon-download-alt small"></span></a><a href="/#File/view/{{fileId}}" target="_blank">{{name}}</a></div>
+<div class="margin"><a href="{{originalUrl}}" style="margin-right: 5px" title="{{translate 'Download'}}" download=""><span class="glyphicon glyphicon-download-alt small"></span></a><a href="/#File/view/{{fileId}}">{{name}}</a></div>
 {{/if}}
