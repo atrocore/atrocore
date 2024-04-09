@@ -8,41 +8,42 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/file/fields/preview', 'view',
+Espo.define('views/file/fields/preview', 'views/fields/file',
     Dep => Dep.extend({
 
-        template: "file/fields/preview/list",
+        setup() {
+            Dep.prototype.setup.call(this);
 
-        events: {
-            'click a[data-action="showImagePreview"]': function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                let id = $(e.currentTarget).data('id');
-                this.createView('preview', 'views/modals/image-preview', {
-                    id: id,
-                    model: this.model,
-                    fileId: id,
-                    downloadUrl: this.model.get('downloadUrl'),
-                    thumbnailUrl:  this.model.get('largeThumbnailUrl'),
-                }, function (view) {
-                    view.render();
-                });
-            }
+            this.idName = 'id';
+            this.nameName = 'name';
+
+            this.mode = 'list';
+            this.previewSize = 'large';
+
+            this.listenTo(this.model, 'reuploaded', () => {
+                this.model.fetch().then(() => this.reRender());
+            });
         },
 
-        data() {
+        getFilePathsData: function () {
             return {
-                "timestamp": this.getTimestamp(),
-                "originPath": this.model.get('downloadUrl'),
-                "thumbnailPath": this.model.get('smallThumbnailUrl'),
-                "id": this.model.get('id'),
-                "hasIcon": !(this.getMetadata().get('app.file.image.hasPreviewExtensions') || []).includes(this.model.get('extension')),
-                "extension": this.model.get('extension')
+                download: this.model.get('downloadUrl'),
+                thumbnails: {
+                    small: this.model.get('smallThumbnailUrl'),
+                    medium: this.model.get('mediumThumbnailUrl'),
+                    large: this.model.get('largeThumbnailUrl'),
+                }
             };
         },
 
-        getTimestamp() {
-            return (Math.random() * 10000000000).toFixed();
+        getValueForDisplay: function () {
+            if (this.mode === 'list') {
+                let id = this.model.get(this.idName);
+                if (!id) {
+                    return false;
+                }
+                return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+            }
         },
 
     })

@@ -121,6 +121,11 @@ class File extends Base
     {
         parent::beforeRemove($entity, $options);
 
+        $this->deleteFile($entity);
+    }
+
+    public function deleteFile(FileEntity $entity): void
+    {
         // delete origin file
         if (!$this->getStorage($entity)->delete($entity)) {
             throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));

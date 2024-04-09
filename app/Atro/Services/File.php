@@ -163,18 +163,18 @@ class File extends Base
          */
         if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
             $old = $this->getRepository()->get($attachment->reupload);
-            if (!empty($old)) {
-                $this->getEntityManager()->removeEntity($old, ['reupload' => true]);
+            if (!empty($old)){
+                $this->getRepository()->deleteFile($old);
             }
 
-            // delete forever
+            // delete forever old record from DB
             $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->delete('file')
                 ->where('id=:id')
                 ->setParameter('id', $attachment->reupload)
                 ->executeQuery();
 
-            // update ID
+            // update ID for new file
             $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->update('file')
                 ->set('id', ':id')

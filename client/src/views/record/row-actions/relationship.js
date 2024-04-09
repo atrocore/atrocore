@@ -58,6 +58,15 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
             }
 
             if (this.options.acl.edit) {
+                if (this.model.name === 'File') {
+                    list.push({
+                        action: 'reupload',
+                        label: 'Reupload',
+                        data: {
+                            id: this.model.get('id')
+                        },
+                    });
+                }
                 list.push({
                     action: 'quickEdit',
                     label: 'Edit',
