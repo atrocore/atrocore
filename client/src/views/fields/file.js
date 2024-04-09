@@ -156,19 +156,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 }
 
                 let html = '';
-
-                if (this.mode === 'list') {
-                    if (this.hasPreview(name) && this.getImageUrl(id)) {
-                        html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
-                    } else {
-                        html += '<span class="glyphicon glyphicon-paperclip small"></span> <a href="/#File/view/' + id + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a>';
-                    }
-                } else {
-                    html += '<span class="glyphicon glyphicon-paperclip small"></span> <a href="/#File/view/' + id + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a><a href="' + this.getDownloadUrl(id) + '" style="margin-left: 5px" download=""><span class="fas fa-download fa-sm"></span></a>';
-                    if (this.hasPreview(name) && this.getImageUrl(id)) {
-                        html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
-                    }
+                if (this.hasPreview(name) && this.getImageUrl(id)) {
+                    html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
                 }
+                html += '<div style="padding-top: 5px"><a href="' + this.getDownloadUrl(id) + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
 
                 return html;
             }
