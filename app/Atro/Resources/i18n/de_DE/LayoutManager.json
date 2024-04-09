@@ -7,7 +7,8 @@
     "sticked": "Gepinnt",
     "isLarge": "Große Schriftgröße",
     "cssStyle": "CSS-Stile",
-    "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen"
+    "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen",
+    "hiddenPerDefault": "Standardmäßig ausgeblendet"
   },
   "options": {
     "align": {

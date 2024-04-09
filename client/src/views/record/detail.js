@@ -2107,7 +2107,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             }
                         });
                     }
-
                     this.createPanelNavigationView(middlePanels.concat(view.panelList));
                 })
             });

@@ -26,6 +26,11 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
             'hide.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
                 this.afterPanelCollapsed($(e.currentTarget), true);
             },
+            'click span.collapser[data-action="closePanel"]': function (e) {
+                let name = $(e.currentTarget).data('panel');
+                this.$el.find(`.panel[data-name="${name}"]`).addClass('hidden');
+                this.addToClosedPanelStorage(name)
+            },
         }, Dep.prototype.events),
 
         setupPanels: function () {},
@@ -46,9 +51,10 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 this.panelList.push({
                     "name":"stream",
                     "label":"Stream",
+                    "title": this.translate('Stream', 'labels', this.scope),
                     "view":"views/stream/panel",
                     "sticked": false,
-                    "hidden": !streamAllowed,
+                    "hidden": !streamAllowed || (this.getStorage().get('closed-panels', this.scope) || []).includes('stream'),
                     "order": this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
                     "expanded": !(this.getStorage().get('collapsed-panels', this.scope) || []).includes('stream')
                 });
@@ -98,6 +104,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                     } else {
                         this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
                     }
+
                     return item;
                 }, this);
 
@@ -113,8 +120,31 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
             this.listenTo(this, 'collapsePanel', (panel, type) => {
                 this.collapseBottomPanel(panel, type);
             });
-        },
 
+            this.listenTo(Backbone, 'create-bottom-panel', function(panel){
+                this.notify('Loading..');
+                this.$el.find(`.panel[data-name="${panel.name}"]`).removeClass('hidden')
+                panel.hidden = false;
+                this.clearView(panel.name);
+                this.createPanelView(panel, (view, pDefs) => {
+                    view.render();
+                    this.removeFromClosedPanelStorage(panel.name)
+                    Backbone.trigger('after:create-bottom-panel', panel)
+                    this.notify(false)
+
+                });
+            }.bind(this))
+        },
+        addToClosedPanelStorage(name){
+            let closedPanels = this.getStorage().get('closed-panels', this.scope) || [];
+            closedPanels.push(name);
+            this.getStorage().set('closed-panels', this.scope, closedPanels)
+        },
+        removeFromClosedPanelStorage(name){
+            let closedPanels = this.getStorage().get('closed-panels', this.scope) || [];
+            closedPanels = closedPanels.filter(n => n !== name)
+            this.getStorage().set('closed-panels', this.scope, closedPanels)
+        },
         setupRelationshipPanels: function () {
             let scope = this.scope;
 
@@ -171,6 +201,16 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
 
                 p.order = 5;
 
+                if(p.hiddenPerDefault === true
+                    && !(this.getStorage().get('closed-panels', this.scope) || []).includes(p.name)){
+                    this.addToClosedPanelStorage(p.name)
+                }
+
+                if((this.getStorage().get('closed-panels', this.scope) || []).includes(p.name)){
+                    p.hidden = true
+                    this.recordHelper.setPanelStateParam(p.name, true);
+                }
+
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
                 } else {
@@ -178,6 +218,12 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 }
 
                 p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
+
+                if (p.label) {
+                    p.title = this.translate(p.label, 'labels', this.scope);
+                } else {
+                    p.title =  this.translate(p.name, 'links', this.scope);
+                }
 
                 this.panelList.push(p);
             }, this);
@@ -196,9 +242,10 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
         },
 
         createPanelViews() {
-            this.panelList.forEach(p => {
-                this.createPanelView(p);
-            });
+            this.panelList.filter(p => !p.hidden)
+                .forEach(p => {
+                    this.createPanelView(p);
+                });
         },
 
         createPanelView(p, callback) {
