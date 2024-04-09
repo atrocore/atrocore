@@ -42,7 +42,12 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
                 if (!id) {
                     return false;
                 }
-                return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+
+                if (!(this.getMetadata().get('app.file.image.hasPreviewExtensions') || []).includes(this.model.get('extension'))) {
+                    return '<a href="' + this.getDownloadUrl(id) + '" target="_blank"><span class="fiv-cla fiv-icon-' + this.model.get('extension') + ' fiv-size-lg"></span></a>';
+                } else {
+                    return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                }
             }
         },
 
