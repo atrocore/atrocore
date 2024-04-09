@@ -151,6 +151,18 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
             if (this.mode == 'edit') {
                 this.updateTextCounter();
+
+                if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'setDefaultOnlyIfRequired']) &&
+                    this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default']) &&
+                    this.model.defaults[this.name] == null) {
+                    // fetch default value from server
+                    this.model.defaults = $.ajax({
+                        url: this.model.name + '/action/Seed?silent=true',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                    }).responseJSON
+                }
             }
         },
 
