@@ -1,10 +1,9 @@
 {
   "scopeNames": {
-    "AssetMetadata": "Asset-Metadaten",
-    "Asset": "Asset",
-    "Library": "Bibliothek",
-    "Rendition": "Derivat",
-    "AssetType": "Asset-Typ",
+    "Storage": "Dateiablage",
+    "Folder": "Ordner",
+    "File": "Datei",
+    "FileType": "Datei Typ",
     "ValidationRule": "Validierungsregel",
     "UiHandler": "UI-Handler",
     "Action": "Aktion",
@@ -30,7 +29,6 @@
     "Role": "Rolle",
     "OutboundEmail": "Ausgehende E-Mail",
     "ScheduledJob": "Geplante Aufgabe",
-    "Attachment": "Anhang",
     "ScheduledJobLogRecord": "Geplante Aufgabe-Logeintrag",
     "PasswordChangeRequest": "Anforderung zur Passwortänderung",
     "ActionHistoryRecord": "Aktionsverlaufseintrag",
@@ -45,14 +43,11 @@
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
   },
   "scopeNamesPlural": {
-    "AssetMetadata": "Asset-Metadaten",
-    "Asset": "Assets",
-    "Library": "Bibliotheken",
-    "AssetVersion": "Asset Versionen",
-    "Rendition": "Derivate",
-    "RenditionVersion": "Derivatversionen",
-    "AssetType": "Asset-Typen",
-    "validationRules": "Validierungsregel",
+    "Storage": "Dateiablagen",
+    "Folder": "Ordner",
+    "File": "Dateien",
+    "FileType": "Datei-Typen",
+    "ValidationRule": "Validierungsregel",
     "UiHandler": "UI-Handler",
     "Action": "Aktionen",
     "ExtensibleEnum": "Listen",
@@ -65,8 +60,6 @@
     "Unit": "Einheiten",
     "ActionHistoryRecord": "Aktionsgeschichte",
     "Dashboard": "Dashboards",
-    "AssetVariant": "Asset Varianten",
-    "DocumentFolder": "Documentenordner",
     "Integration": "Integrationen",
     "KnowledgeBaseCategory": "Knowledge Base Kategorien",
     "Note": "Notizen",
@@ -79,7 +72,6 @@
     "OutboundEmail": "Ausgehende E-Mails",
     "ScheduledJob": "Geplante Jobs",
     "Stream": "Aktivitäten",
-    "Attachment": "Anhänge",
     "ScheduledJobLogRecord": "Geplante Aufgabe-Logeinträge",
     "PasswordChangeRequest": "Anforderungen zur Passwortänderung",
     "LastViewed": "Zuletzt angezeigt",
@@ -90,8 +82,11 @@
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
   },
   "labels": {
+    "Reupload": "Neu hochladen",
+    "attachFiles":"Dateien anhängen",
+    "typeToSearch": "Tippe und absende...",
     "dragAndDropBtnText": "Drag & Drop",
-    "dragAndDropBtnTextSmall": "Ihre Assets hierher oder",
+    "dragAndDropBtnTextSmall": "Ihre Datei(en) hierher oder",
     "upload": "Hochladen",
     "Preview": "Vorschau",
     "Download": "Herunterladen",
@@ -438,6 +433,7 @@
   },
   "boolFilters": {
     "onlyMy": "Mein",
+    "onlyHidden": "Nur versteckt",
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
     "followed": "abonniert",
@@ -465,6 +461,11 @@
     "restore": "Wiederherstellen"
   },
   "fields": {
+    "hidden": "Versteckt",
+    "priority": "Priorität",
+    "fileType": "Datei Typ",
+    "file": "Datei",
+    "files": "Dateien",
     "isInherited": "Vererbt",
     "isArchived": "Archiviert",
     "code": "Code",
@@ -522,6 +523,8 @@
     "isActive": "Aktiv"
   },
   "links": {
+    "file": "Datei",
+    "files": "Dateien",
     "parent": "Parent",
     "ownerUser": "Besitzer",
     "assignedAccounts": "Accounts",
@@ -778,10 +781,6 @@
       "isNotOneOf": "Keiner von",
       "noneOf": "Keiner von"
     },
-    "assetSearchRanges": {
-      "isEmpty": "Ist NULL",
-      "isNotEmpty": "Ist nicht NULL"
-    },
     "fieldFilter": {
       "allValues": "Alle Werte",
       "filled": "Ausgefüllte Werte",
@@ -956,21 +955,22 @@
     "list": "Liste"
   },
   "exceptions": {
-    "colorDepthValidationFailed": "Die Farbtiefe dieses Assets ist nicht zulässig.",
-    "colorSpaceValidationFailed": "Der Farbraum dieses Assets ist nicht zulässig.",
+    "colorDepthValidationFailed": "Die Farbtiefe dieses Dateien ist nicht zulässig.",
+    "colorSpaceValidationFailed": "Der Farbraum dieses Dateien ist nicht zulässig.",
     "fileExtensionValidationFailed": "Nutzen Sie die Dateien nur mit folgenden Erweiterungen: %s.",
-    "mimeTypeValidationFailed": "Asset hat einen falschen MIME-Typ.",
-    "pdfValidationFailed": "Asset ist kein PDF-Dokument.",
+    "mimeTypeValidationFailed": "Datei hat einen falschen MIME-Typ.",
+    "pdfValidationFailed": "Datei ist kein PDF-Dokument.",
     "imageQualityValidationFailed": "Bildqualität sollte zwischen %s  und %s sein.",
     "imageRatioValidationFailed": "Bild sollte ein Seitenverhältnis von %s haben.",
     "imageScaleValidationFailed": "Bild sollte eine Breite mehr als %spx und eine Höhe mehr als %spx haben.",
-    "imageSizeValidationFailed": "Asset-Größe sollte zwischen %skb und %skb sein.",
+    "imageSizeValidationFailed": "Datei-Größe sollte zwischen %skb und %skb sein.",
     "childsMustBeArchived": "Der (übergeordnete) Datensatz kann nur archiviert werden, wenn auch alle untergeordneten Datensätzte archiviert sind.",
     "maxLengthIsExceeded": "Die zulässige maximale Länge für \"%s\" beträgt \"%s\" Symbole, Ihre aktuelle Länge beträgt \"%s\" Symbole.",
     "parentRecordsHaveDifferentValues": "Eltern-Datensätze haben unterschiedliche Werte, der zu vererbende Wert kann nicht bestimmt werden.",
     "hasMultipleParents": "Es gibt einen oder mehr Datensätze mit mehreren Elterndatensätzen.",
     "unitValueIsRequired": "Die Einheit für das Feld '%s' erforderlich.",
     "emailIsInvalid": "E-Mail für das Feld '%s' ist ungültig.",
+    "fileIsInvalid": "Datei für das Feld '%s' ist ungültig.",
     "noSuchUnit": "Die Einheit '%s' für das Feld '%s' ist ungültig.",
     "noSuchOptions": "Der Wert '%s' für das Feld '%s' ist ungültig.",
     "noOptionsDefined": "Optionen für das Feld '%s' sind nicht definiert.",

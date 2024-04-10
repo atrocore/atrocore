@@ -33,6 +33,8 @@
 
 namespace Espo\Entities;
 
+use Atro\Repositories\File as FileRepository;
+
 class Note extends \Espo\Core\ORM\Entity
 {
     private $aclIsProcessed = false;
@@ -53,8 +55,10 @@ class Note extends \Espo\Core\ORM\Entity
             return;
         }
 
-        $collection = $this->entityManager->getRepository('Attachment')
-            ->select(['id', 'name', 'type','storageFilePath','storageThumbPath'])
+        /** @var FileRepository $repository */
+        $repository = $this->entityManager->getRepository('File');
+
+        $files = $repository
             ->where(['id' => $data->attachmentsIds])
             ->order('createdAt')
             ->find();
@@ -63,14 +67,12 @@ class Note extends \Espo\Core\ORM\Entity
         $attachmentsNames = new \stdClass();
         $attachmentsTypes = new \stdClass();
         $attachmentsPathsDatas = new \stdClass();
-        foreach ($collection as $e) {
-            $id = $e->id;
+        foreach ($files as $file) {
+            $id = $file->id;
             $attachmentsIds[] = $id;
-            $attachmentsNames->$id = $e->get('name');
-            $attachmentsTypes->$id = $e->get('type');
-            $attachmentsPathsDatas->$id = $this->entityManager
-                ->getRepository('Attachment')
-                ->getAttachmentPathsData($e);
+            $attachmentsNames->$id = $file->get('name');
+            $attachmentsTypes->$id = $file->get('mimeType');
+            $attachmentsPathsDatas->$id = $repository->getPathsData($file);
         }
 
         $this->set('attachmentsIds', $attachmentsIds);

@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "type": "Type",
+    "path": "Path",
+    "files": "Files",
+    "folders": "Folders"
+  },
+  "links": {
+    "files": "Files",
+    "folders": "Folders"
+  },
+  "options": {
+    "type": {
+      "local": "Local (Linux)"
+    }
+  },
+  "labels": {
+    "Create Storage": "Create Storage"
+  },
+  "exceptions": {
+    "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
+    "storagePathCannotBeChanged": "Storage Path cannot be changed.",
+    "storageWithFilesCannotBeRemoved": "Delete is not allowed. There are files that belong to this Storage."
+  }
+}

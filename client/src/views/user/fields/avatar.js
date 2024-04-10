@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
+Espo.define('views/user/fields/avatar', 'views/fields/file', function (Dep) {
 
     return Dep.extend({
 

@@ -125,10 +125,12 @@
       "view": "views/settings/fields/global-search-entity-list"
     },
     "companyLogo": {
-      "type": "image"
+      "type": "file",
+      "fileTypeId": "a_image"
     },
     "favicon": {
-      "type": "image"
+      "type": "file",
+      "fileTypeId": "a_favicon"
     },
     "assignmentEmailNotifications": {
       "type": "bool",
@@ -336,24 +338,6 @@
     },
     "error": {
       "type": "color"
-    },
-    "attachmentDuplicates": {
-      "type": "enum",
-      "default": "notAllowByContentAndName",
-      "prohibitedEmptyValue": true,
-      "required": true,
-      "optionsIds": [
-        "notAllowByContentAndName",
-        "notAllowByContent",
-        "notAllowByName",
-        "allow"
-      ],
-      "options": [
-        "notAllowByContentAndName",
-        "notAllowByContent",
-        "notAllowByName",
-        "allow"
-      ]
     },
     "fileNameRegexPattern": {
       "type": "varchar",

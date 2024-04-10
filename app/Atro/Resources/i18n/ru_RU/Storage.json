@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "type": "Тип",
+    "path": "Путь",
+    "files": "Файлы",
+    "folders": "Папки"
+  },
+  "links": {
+    "files": "Файлы",
+    "folders": "Папки"
+  },
+  "options": {
+    "type": {
+      "local": "Local (Linux)"
+    }
+  },
+  "labels": {
+    "Create Storage": "Создать хранилище"
+  },
+  "exceptions": {
+    "storageTypeCannotBeChanged": "Тип хранения изменить нельзя.",
+    "storagePathCannotBeChanged": "Путь хранения изменить нельзя.",
+    "storageWithFilesCannotBeRemoved": "Удаление запрещено. Существуют файлы, принадлежащие этому хранилищу."
+  }
+}

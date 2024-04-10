@@ -1,14 +1,9 @@
 {
 "scopeNames":{
-    "Asset":"Zasób",
-    "Rendition":"Wersja",
-    "Library":"Biblioteka",
-    "AssetVariant":"Wariant zasobu",
-    "AssetCategory":"Kategoria zasobu",
-    "AssetMetadata":"Metadane zasobu",
-    "AssetVersion":"Wersja zasobu",
-    "RenditionVersion":"Wersja wersji",
-    "AssetType":"Typ zasobu",
+    "Storage": "Przechowywanie plików",
+    "Folder": "Folder",
+    "File": "Plik",
+    "FileType": "Typ pliku",
     "ValidationRule":"Reguła walidacji",
     "UiHandler":"Obsługa UI",
     "Action":"Akcja",
@@ -60,15 +55,11 @@
     "AuthFailLogRecord":"Rekord dziennika nieudanych autoryzacji"
 },
 "scopeNamesPlural":{
-    "Library":"Biblioteki",
-    "Asset":"Zasoby",
-    "AssetVersion":"Wersje zasobów",
-    "AssetVariant":"Warianty zasobów",
-    "AssetCategory":"Kategorie zasobów",
-    "AssetMetadata":"Metadane zasobów",
-    "RenditionVersion":"Wersje wersji",
-    "AssetType":"Typy zasobów",
-    "validationRules":"Reguły walidacji",
+    "Storage": "Przechowywanie plików",
+    "Folder": "Foldery",
+    "File": "Pliki",
+    "FileType": "Typy plików",
+    "ValidationRule":"Reguły walidacji",
     "UiHandler":"Obsługi UI",
     "Action":"Akcje",
     "ExtensibleEnum":"Listy",
@@ -107,6 +98,8 @@
     "Core":"AtroCore to ekosystem oprogramowania, zaprojektowany do szybkiego tworzenia responsywnych aplikacji biznesowych opartych na sieci."
 },
 "labels":{
+    "Reupload": "Prześlij ponownie",
+    "attachFiles":"Dołączanie plików",
     "dragAndDropBtnText":"Przeciągnij i upuść",
     "dragAndDropBtnTextSmall":"swoje zasoby tutaj lub",
     "upload":"Prześlij",
@@ -421,6 +414,7 @@
     "onlyActive":"Aktywne",
     "notActive":"Nieaktywne",
     "onlyMy":"Moje",
+    "onlyHidden": "Tylko ukryte",
     "assignedToMe":"Przypisane do mnie",
     "ownedByMe":"Własność moja",
     "onlyArchived":"Bez niezarchiwizowanych",
@@ -446,6 +440,11 @@
     "restore":"Przywróć"
 },
 "fields":{
+    "hidden": "Ukryty",
+    "priority": "Priorytet",
+    "fileType": "Typ pliku",
+    "file": "Plik",
+    "files": "Pliki",
     "isInherited":"Inherited",
     "isArchived":"Archived",
     "code":"Code",
@@ -505,6 +504,8 @@
     "isActive":"Active"
 },
 "links":{
+    "file": "Plik",
+    "files": "Pliki",
     "ownerUser":"Owner",
     "assignedUser":"Assigned User",
     "createdBy":"Created By",
@@ -1062,6 +1063,7 @@
     "hasMultipleParents":"Istnieje jeden lub więcej rekordów z wieloma rodzicami.",
     "unitValueIsRequired":"Jednostka dla pola '%s' jest wymagana.",
     "emailIsInvalid":"Adres e-mail dla pola '%s' jest nieprawidłowy.",
+    "fileIsInvalid":"Plik dla pola '%s' jest nieprawidłowy.",
     "noSuchUnit":"Jednostka '%s' dla pola '%s' jest nieprawidłowa.",
     "noSuchOptions":"Wartość '%s' dla pola '%s' jest nieprawidłowa.",
     "noOptionsDefined":"Opcje dla pola '%s' nie są zdefiniowane.",

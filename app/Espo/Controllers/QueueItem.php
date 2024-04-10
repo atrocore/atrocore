@@ -35,8 +35,8 @@ declare(strict_types=1);
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 
 /**
  * Class QueueItem

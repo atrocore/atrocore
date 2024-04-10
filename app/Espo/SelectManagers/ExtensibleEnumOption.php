@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\SelectManagers;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\SelectManagers\Base;
 
 class ExtensibleEnumOption extends Base

@@ -33,9 +33,9 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
 
 class Settings extends \Espo\Core\Controllers\Base
 {
@@ -85,7 +85,7 @@ class Settings extends \Espo\Core\Controllers\Base
         }
 
         if (!empty($data->fileNameRegexPattern) && !preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $data->fileNameRegexPattern)) {
-            throw new BadRequest($this->getContainer()->get('language')->translate('regexNotValid', 'exceptions', 'FieldManager'));
+            throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
         }
 
         $this->getServiceFactory()->create('Settings')->validate($data);
@@ -123,5 +123,10 @@ class Settings extends \Espo\Core\Controllers\Base
         }
 
         return $config;
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getContainer()->get('language');
     }
 }

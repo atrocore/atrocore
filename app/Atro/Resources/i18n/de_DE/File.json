@@ -1,0 +1,43 @@
+{
+  "fields": {
+    "type": "Typ",
+    "folder": "Ordner",
+    "storage": "Dateiablage",
+    "mimeType": "MIME-Typ",
+    "path": "Pfad",
+    "thumbnailsPath": "Thumbnails Pfad",
+    "preview": "Vorschau",
+    "hash": "Hash",
+    "fileSize": "Dateigröße (Bytes)",
+    "fileMtime": "Datei-Änderungsdatum",
+    "private": "Privat"
+  },
+  "links": {
+    "folder": "Ordner",
+    "storage": "Dateiablage"
+  },
+  "labels": {
+    "Create File": "Datei erstellen",
+    "Preview": "Vorschau",
+    "Upload": "Hochladen",
+    "sort": "Sortieren",
+    "retry": "Wiederholen?",
+    "uploaded": "hochgeladen",
+    "putUploadUrl": "Geben Sie die URL der Datei an, wenn Sie sie per URL hochladen möchten"
+  },
+  "messages": {
+    "notAllFilesWereUploaded": "XX von YY Dateien wurden nicht hochgeladen.",
+    "fileCouldNotBeUploaded": "Die Datei konnte nicht hochgeladen werden.",
+    "fileHasDuplicate": "Es gibt bereits mindestens ein <a target=\"_blank\" href=\"/#File/view/{{id}}\">Duplikat</a> dieser Datei.",
+    "cannotDefineFileName": "Das System kann den Dateinamen aus der URL nicht erkennen.",
+    "urlExpected": "Falsche URL wurde angegeben"
+  },
+  "exceptions": {
+    "fileExtensionCannotBeChanged": "Die Dateierweiterung kann nicht geändert werden.",
+    "fileStorageCannotBeChanged": "Der Speicherplatz kann nicht geändert werden.",
+    "fileCreateFailed": "Das Erstellen der Datei ist fehlgeschlagen.",
+    "fileRenameFailed": "Die Umbenennung der Datei ist fehlgeschlagen.",
+    "fileDeleteFailed": "Das Löschen der Datei ist fehlgeschlagen.",
+    "fileNameNotValidByUserRegex": "Der Dateiname ist nicht gültig. Er sollte mit dem Regex '%s' übereinstimmen."
+  }
+}

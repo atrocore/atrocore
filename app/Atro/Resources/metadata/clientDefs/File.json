@@ -1,0 +1,122 @@
+{
+  "controller": "controllers/file",
+  "createDisabled": true,
+  "iconClass": "fas fa-file",
+  "boolFilterList": [
+    "onlyMy",
+    "onlyType",
+    "onlyHidden",
+    "hiddenAndUnHidden"
+  ],
+  "hiddenBoolFilterList": [
+    "onlyType",
+    "hiddenAndUnHidden"
+  ],
+  "views": {
+    "list": "views/file/list",
+    "plate": "views/file/plate"
+  },
+  "recordViews": {
+    "detail": "views/file/record/detail"
+  },
+  "modalViews": {
+    "select": "views/file/modals/select-records"
+  },
+  "treeScopes": [
+    "Folder"
+  ],
+  "sidePanels": {
+    "edit": [
+      {
+        "name": "preview",
+        "label": "Preview",
+        "view": "views/file/fields/preview"
+      }
+    ],
+    "detail": [
+      {
+        "name": "preview",
+        "label": "Preview",
+        "view": "views/file/fields/preview"
+      },
+      {
+        "name": "sharing",
+        "label": "Sharing",
+        "view": "views/record/panels/sharing"
+      },
+      {
+        "name": "customDownload",
+        "label": "customDownload",
+        "view": "views/file/record/panels/side/download/main"
+      }
+    ],
+    "detailSmall": [
+      {
+        "name": "preview",
+        "label": "Preview",
+        "view": "views/file/fields/preview"
+      },
+      {
+        "name": "sharing",
+        "label": "Sharing",
+        "view": "views/record/panels/sharing"
+      }
+    ]
+  },
+  "menu": {
+    "list": {
+      "buttons": [
+        {
+          "acl": "read",
+          "name": "list",
+          "label": "",
+          "link": "#File/list",
+          "title": "List",
+          "iconHtml": "<span class=\"fa fa-list\"></span>"
+        },
+        {
+          "acl": "read",
+          "name": "plate",
+          "label": "",
+          "link": "#File/plate",
+          "title": "Plate",
+          "iconHtml": "<span class=\"fa fa-th\"></span>"
+        }
+      ]
+    },
+    "plate": {
+      "buttons": [
+        {
+          "acl": "read",
+          "name": "list",
+          "label": "",
+          "link": "#File/list",
+          "title": "List",
+          "iconHtml": "<span class=\"fa fa-list\"></span>"
+        },
+        {
+          "acl": "read",
+          "name": "plate",
+          "label": "",
+          "link": "#File/plate",
+          "title": "Plate",
+          "iconHtml": "<span class=\"fa fa-th\"></span>"
+        }
+      ]
+    }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "storage": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "hash"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

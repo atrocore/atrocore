@@ -22,7 +22,7 @@
     "composer/semver": "~3.3.2",
     "doctrine/dbal": "~3.2.2",
     "atrocore/slim": "~2.6.2",
-    "atrocore/compatibilities": "1.0.5",
+    "atrocore/compatibilities": "1.0.6",
     "dragonmantank/cron-expression": "~1.0.3",
     "laminas/laminas-mail": "~2.16.0",
     "monolog/monolog": "~2.8.0",

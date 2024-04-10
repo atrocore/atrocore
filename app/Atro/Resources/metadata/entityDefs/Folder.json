@@ -1,0 +1,131 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "children": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "noLoad": true
+    },
+    "parents": {
+      "type": "linkMultiple",
+      "view": "views/fields/hierarchy-parents",
+      "noLoad": true
+    },
+    "hidden": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
+    "code": {
+      "type": "varchar",
+      "trim": true,
+      "unique": true
+    },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
+    "storages": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "children": {
+      "type": "hasMany",
+      "relationName": "FolderHierarchy",
+      "foreign": "parents",
+      "entity": "Folder",
+      "audited": false,
+      "midKeys": [
+        "entityId",
+        "parentId"
+      ]
+    },
+    "parents": {
+      "type": "hasMany",
+      "relationName": "FolderHierarchy",
+      "foreign": "children",
+      "entity": "Folder",
+      "audited": false,
+      "midKeys": [
+        "parentId",
+        "entityId"
+      ]
+    },
+    "files": {
+      "type": "hasMany",
+      "foreign": "folder",
+      "entity": "File"
+    },
+    "storages": {
+      "type": "hasMany",
+      "relationName": "FolderStorage",
+      "foreign": "folders",
+      "entity": "Storage"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    }
+  }
+}

@@ -60,13 +60,15 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         createDisabled: false,
 
+        uploadDisabled: true,
+
         sortable: false,
 
         linkMultiple: true,
 
         searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
 
-        selectBoolFilterList: [],
+        selectBoolFilterList:  [],
 
         boolFilterData: {},
 
@@ -103,13 +105,14 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 idValuesString: ids ? ids.join(',') : '',
                 nameHash: nameHash,
                 foreignScope: this.foreignScope,
+                placeholder: this.options.placeholder || this.translate('Select'),
                 valueIsSet: this.model.has(this.idsName),
-                createDisabled: this.createDisabled
+                createDisabled: this.createDisabled,
+                uploadDisabled: this.uploadDisabled
             }, Dep.prototype.data.call(this));
         },
 
-        getSelectFilters: function () {
-        },
+        getSelectFilters: function () {},
 
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
@@ -119,8 +122,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return this.selectPrimaryFilterName;
         },
 
-        getCreateAttributes: function () {
-        },
+        getCreateAttributes: function () {},
 
         setup: function () {
             if (this.nameHashName === null) {
@@ -150,6 +152,19 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 }
             }
 
+            if (this.foreignScope === 'File') {
+                this.uploadDisabled = false;
+                this.createDisabled = true;
+                if ('uploadDisabled' in this.options) {
+                    this.uploadDisabled = this.options.uploadDisabled;
+                }
+                if (!this.uploadDisabled) {
+                    if (!this.getAcl().check(this.foreignScope, 'create')) {
+                        this.uploadDisabled = true;
+                    }
+                }
+            }
+
             var self = this;
 
             this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
@@ -173,7 +188,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
@@ -190,8 +205,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     }, function (dialog) {
                         dialog.render();
                         self.notify(false);
-                        this.listenToOnce(dialog, 'select', function (models) {
-                            this.clearView('dialog');
+
+                        this.listenTo(dialog, 'select', function (models) {
+                            if (this.foreignScope !== 'File'){
+                                this.clearView('dialog');
+                            }
                             if (models.massRelate) {
                                 if (models.where.length === 0) {
                                     // force subquery if primary filter "all" is used in modal
@@ -213,7 +231,16 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                                 }
                             });
                         });
+
+                        this.listenTo(dialog, 'unselect', id => {
+                            self.deleteLink(id);
+                        });
+
                     }, this);
+                });
+
+                this.addActionHandler('uploadLink', function () {
+                    this.uploadLink();
                 });
 
                 this.events['click a[data-action="clearLink"]'] = function (e) {
@@ -243,6 +270,28 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     });
                 });
             }
+        },
+
+        uploadLink: function () {
+            this.notify('Loading...');
+            this.createView('upload', 'views/file/modals/upload', {
+                scope: 'File',
+                fullFormDisabled: true,
+                layoutName: 'upload',
+                multiUpload: true,
+                attributes: this.getCreateAttributes(),
+            }, view => {
+                view.render();
+                this.notify(false);
+                this.listenTo(view.model, 'after:file-upload', entity => {
+                    this.addLink(entity.id, entity.name);
+                });
+                this.listenTo(view.model, 'after:delete-action', id => this.deleteLink(id));
+
+                this.listenToOnce(view, 'close', () => {
+                    this.clearView('upload');
+                });
+            });
         },
 
         handleSearchType: function (type) {
@@ -296,7 +345,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            response.list.forEach(function (item) {
+                            response.list.forEach(function(item) {
                                 list.push({
                                     id: item.id,
                                     name: item.name,
@@ -392,11 +441,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.trigger('change');
         },
 
-        afterDeleteLink: function (id) {
-        },
+        afterDeleteLink: function (id) {},
 
-        afterAddLink: function (id) {
-        },
+        afterAddLink: function (id) {},
 
         deleteLinkHtml: function (id) {
             this.$el.find('.link-' + id).remove();
@@ -407,7 +454,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         addLinkSubQueryHtml: function (subQuery) {
-            if (!subQuery || subQuery.length === 0) {
+            if (!subQuery || subQuery.length === 0){
                 return;
             }
 
@@ -434,6 +481,12 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         getIconHtml: function (id) {
             return this.iconHtml;
+        },
+
+        empty() {
+            this.model.set(this.idsName, []);
+            this.model.set(this.nameHashName, {});
+            this.model.set(this.typeHashName, {});
         },
 
         getDetailLinkHtml: function (id) {
@@ -482,7 +535,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         fetchFromDom: function () {
             this.ids = [];
-            this.$el.find('.link-container').children().each(function (i, li) {
+            this.$el.find('.link-container').children().each(function(i, li) {
                 var id = $(li).attr('data-id');
                 if (!id) return;
                 this.ids.push(id);

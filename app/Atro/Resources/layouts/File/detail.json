@@ -1,0 +1,50 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "private"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "folder"
+        },
+        {
+          "name": "storage"
+        }
+      ],
+      [
+        {
+          "name": "mimeType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "fileSize"
+        },
+        {
+          "name": "fileMtime"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

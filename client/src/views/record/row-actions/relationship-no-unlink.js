@@ -44,6 +44,15 @@ Espo.define('views/record/row-actions/relationship-no-unlink', 'views/record/row
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
             if (this.options.acl.edit) {
+                if (this.model.name === 'File') {
+                    list.push({
+                        action: 'reupload',
+                        label: 'Reupload',
+                        data: {
+                            id: this.model.get('id')
+                        },
+                    });
+                }
                 list.push({
                     action: 'quickEdit',
                     label: 'Edit',

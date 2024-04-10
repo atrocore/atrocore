@@ -1,6 +1,8 @@
 {
     "labels":{
-       "AssetTypes":"Typy zasobów",
+       "Storage": "Repozytoria plików",
+       "FileTypes": "Typy plików",
+       "Folders": "Foldery",
        "GeneralSetting":"Ustawienia ogólne",
        "UiHandler":"Obsługa interfejsu użytkownika",
        "multiLanguagesSettings":"Języki",
@@ -15,6 +17,7 @@
        "Enabled":"Włączone",
        "Disabled":"Wyłączone",
        "System":"System",
+       "FileManagement": "Zarządzanie plikami",
        "AccessManagement":"Zarządzanie dostępem",
        "Users":"Użytkownicy",
        "Email":"E-mail",
@@ -105,7 +108,6 @@
        "url":"Adres URL",
        "varchar":"Ciąg znaków",
        "file":"Plik",
-       "asset":"Zasób",
        "image":"Obraz",
        "extensibleMultiEnum":"Lista wielowartościowa",
        "multiEnum":"Statyczna lista wielowartościowa",
@@ -128,7 +130,6 @@
        "defaultUnit":"Domyślna jednostka",
        "isMultilang":"Wielojęzyczny",
        "fontSize":"Rozmiar czcionki",
-       "assetType":"Typ zasobu",
        "type":"Typ",
        "name":"Nazwa",
        "label":"Etykieta",
@@ -201,7 +202,9 @@
        "rebuildDb":"Czy na pewno chcesz odbudować strukturę bazy danych? Wszystkie nieużywane kolumny i tabele zostaną usunięte."
     },
     "descriptions":{
-       "listOfSupportedAssetsTypes":"Lista obsługiwanych typów zasobów",
+       "Storage": "Zarządzanie fizycznymi lokalizacjami wszystkich przesłanych plików (lokalny system plików, Microsoft Sharepoint, Amazon S3 itp.)",
+       "listOfSupportedFilesTypes": "Zarządzanie typami plików w celu ich dodatkowej weryfikacji (np. obrazy, dokumenty, filmy itp.) i klasyfikacji.",
+       "folders": "Utrzymywanie wirtualnych folderów do zapisywania przesłanych plików.",
        "uiHandler":"Zarządzaj zachowaniem interfejsu użytkownika na podstawie konfigurowalnej logiki warunkowej.",
        "locale":"Zarządzaj ustawieniami lokalizacji, takimi jak język, format daty i czasu, separator dziesiętny, separator tysięcy oraz jednostki miary specyficzne dla lokalizacji.",
        "multiLanguagesSettings":"Skonfiguruj języki do użycia.",

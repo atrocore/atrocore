@@ -267,8 +267,21 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
             if (!filter_var($entity->get($fieldName), FILTER_VALIDATE_EMAIL)) {
-                $language = $this->getLanguage();
-                throw new BadRequest(sprintf($language->translate('emailIsInvalid', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                throw new BadRequest(
+                    sprintf($this->getLanguage()->translate('emailIsInvalid', 'exceptions'), $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType()))
+                );
+            }
+        }
+    }
+
+    protected function validateFile(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!empty($fieldData['fileTypeId']) && $entity->isAttributeChanged($fieldName . 'Id') && !empty($entity->get($fieldName . 'Id'))) {
+            $file = $this->getEntityManager()->getRepository('File')->get($entity->get($fieldName . 'Id'));
+            if (!empty($file) && $file->get('typeId') !== $fieldData['fileTypeId']) {
+                throw new BadRequest(
+                    sprintf($this->getLanguage()->translate('fileIsInvalid', 'exceptions'), $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType()))
+                );
             }
         }
     }
@@ -705,7 +718,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!empty($defs['type']) && $defs['type'] === 'wysiwyg') {
                 $content = $entity->get($field);
                 if (!$content) continue;
-                if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $content, $matches)) {
+                if (preg_match_all("/\?entryPoint=download&amp;id=([^&=\"']+)/", $content, $matches)) {
                     if (!empty($matches[1]) && is_array($matches[1])) {
                         foreach ($matches[1] as $id) {
                             $attachment = $this->getEntityManager()->getEntity('Attachment', $id);

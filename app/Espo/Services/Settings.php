@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
 
@@ -50,7 +50,7 @@ class Settings extends Base
      * @return bool
      *
      * @throws BadRequest
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws \ Atro\Core\Exceptions\Error
      */
     public function validate(\stdClass $data): bool
     {

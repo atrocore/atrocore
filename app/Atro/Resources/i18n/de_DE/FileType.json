@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "validationRules": "Validierungsregel",
+    "assignAutomatically": "Automatisch zuordnen",
+    "files": "Dateien"
+  },
+  "links": {
+    "validationRules": "Validierungsregel",
+    "files": "Dateien"
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Der Datensatz kann nicht gelöscht werden, da er im Feld \"%s\" der Entität \"%s\" verwendet wird."
+  },
+  "labels": {
+    "Create FileType": "Dateityp erstellen"
+  }
+}

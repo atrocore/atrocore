@@ -1,26 +1,13 @@
-<div class="attachment-upload">
-    <div class="attachment-button{{#if id}} hidden{{/if}}">
-        <div class="pull-left">
-        <label class="attach-file-label" title="{{translate 'Attach File'}}">
-            <span class="btn btn-default btn-icon"><span class="glyphicon glyphicon-paperclip"></span></span>
-            <input type="file" class="file pull-right" {{#if acceptAttribue}}accept="{{acceptAttribue}}"{{/if}}>
-        </label>
-        </div>
-        {{#unless id}}
-        {{#if sourceList.length}}
-        <div class="pull-left dropdown">
-            <button class="btn btn-default btn-icon dropdown-toggle" type="button" data-toggle="dropdown">
-                <span class="fas fa-file fa-sm"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-            {{#each sourceList}}
-                <li><a href="javascript:" class="action" data-action="insertFromSource" data-name="{{./this}}">{{translate this category='insertFromSourceLabels' scope='Attachment'}}</a></li>
-            {{/each}}
-            </ul>
-        </div>
-        {{/if}}
+<div class="input-group">
+    <input class="main-element form-control" type="text" name="{{nameName}}" value="{{nameValue}}" autocomplete="off" placeholder="{{translate 'Select'}}">
+    <span class="input-group-btn">
+        <button data-action="selectLink" class="btn btn-default btn-icon" type="button" tabindex="-1" title="{{translate 'Select'}}"><i class="fas fa-angle-up"></i></button>
+        {{#unless uploadDisabled}}
+        <button data-action="uploadLink" class="btn btn-default btn-icon" type="button" tabindex="-1" title="{{translate 'Upload'}}"><i class="fas fa-paperclip"></i></button>
         {{/unless}}
-    </div>
-
-    <div class="attachment"></div>
+        <button data-action="clearLink" class="btn btn-default btn-icon" type="button" tabindex="-1"><i class="fas fa-times"></i></button>
+    </span>
 </div>
+<input type="hidden" name="{{idName}}" value="{{idValue}}">
+
+

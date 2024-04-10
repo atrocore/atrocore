@@ -15,7 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Relation;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 

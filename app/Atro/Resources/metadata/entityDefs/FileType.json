@@ -1,0 +1,78 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "assignAutomatically": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "priority": {
+      "type": "int",
+      "notNull": true,
+      "default": 10,
+      "min": 0
+    },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
+    "validationRules": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "files": {
+      "type": "hasMany",
+      "foreign": "type",
+      "entity": "File"
+    },
+    "validationRules": {
+      "type": "hasMany",
+      "foreign": "fileType",
+      "entity": "ValidationRule"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "priority",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

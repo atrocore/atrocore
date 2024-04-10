@@ -33,10 +33,10 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
 
 class DataPrivacy extends \Espo\Core\Controllers\Base
 {

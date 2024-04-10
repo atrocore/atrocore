@@ -34,8 +34,8 @@
 namespace Espo\Services;
 
 use Atro\ConnectionType\ConnectionInterface;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 

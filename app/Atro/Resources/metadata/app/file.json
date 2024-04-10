@@ -1,0 +1,73 @@
+{
+  "image": {
+    "extensions": [
+      "jpg",
+      "jpeg",
+      "gif",
+      "png"
+    ],
+    "hasPreviewExtensions": [
+      "jpg",
+      "jpeg",
+      "gif",
+      "png",
+      "pdf"
+    ],
+    "thumbnailSize": {
+      "small": [
+        128,
+        128
+      ],
+      "medium": [
+        256,
+        256
+      ],
+      "large": [
+        1024,
+        1024
+      ]
+    }
+  },
+  "video": {
+    "extensions": [
+      "3g2",
+      "3gp",
+      "aaf",
+      "asf",
+      "avchd",
+      "avi",
+      "drc",
+      "flv",
+      "m2v",
+      "m4p",
+      "m4v",
+      "mkv",
+      "mng",
+      "mov",
+      "mp2",
+      "mp4",
+      "mpe",
+      "mpeg",
+      "mpg",
+      "mpv",
+      "mxf",
+      "nsv",
+      "ogg",
+      "ogv",
+      "qt",
+      "rm",
+      "rmvb",
+      "roq",
+      "svi",
+      "vob",
+      "webm",
+      "wmv",
+      "yuv"
+    ],
+    "hasVideoPlayerExtensions": [
+      "mp4",
+      "webm",
+      "ogv"
+    ]
+  }
+}

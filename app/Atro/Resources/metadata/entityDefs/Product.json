@@ -45,8 +45,9 @@
       "filterDisabled": true
     },
     "image": {
-      "type": "image",
+      "type": "file",
       "required": false,
+      "fileTypeId": "a_image",
       "previewSize": "medium"
     },
     "sku": {
@@ -104,7 +105,7 @@
     },
     "image": {
       "type": "belongsTo",
-      "entity": "Attachment",
+      "entity": "File",
       "skipOrmDefs": true
     }
   },

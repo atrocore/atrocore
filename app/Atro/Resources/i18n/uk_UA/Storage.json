@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "type": "Тип",
+    "path": "Шлях",
+    "files": "Файли",
+    "folders": "Папки"
+  },
+  "links": {
+    "files": "Файли",
+    "folders": "Папки"
+  },
+  "options": {
+    "type": {
+      "local": "Local (Linux)"
+    }
+  },
+  "labels": {
+    "Create Storage": "Створити сховище"
+  },
+  "exceptions": {
+    "storageTypeCannotBeChanged": "Тип сховища не можна змінити.",
+    "storagePathCannotBeChanged": "Шлях до сховища не можна змінити.",
+    "storageWithFilesCannotBeRemoved": "Видалення заборонено. Є файли, які належать до цього Сховища."
+  }
+}
