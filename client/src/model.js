@@ -105,24 +105,38 @@ Espo.define('model', [], function () {
         populateDefaults: function () {
             var defaultHash = {};
 
-            const seed = $.ajax({
-                url: this.name + '/action/Seed?silent=true',
-                type: 'GET',
-                dataType: 'json',
-                async: false,
-            }).responseJSON
+            let seed = false;
+
+            if ('fields' in this.defs) {
+                for (let field in this.defs.fields) {
+                    if (this.getFieldParam(field, 'type') === 'varchar') {
+                        const defaultValue = this.getFieldParam(field, 'default')
+                        if (defaultValue && typeof defaultValue === 'string' && defaultValue.includes('{{') && defaultValue.includes('}}')) {
+                            seed = $.ajax({
+                                url: this.name + '/action/Seed?silent=true',
+                                type: 'GET',
+                                dataType: 'json',
+                                async: false,
+                            }).responseJSON
+                            this.defaults = seed
+                            break;
+                        }
+                    }
+                }
+            }
 
             if ('fields' in this.defs) {
                 for (var field in this.defs.fields) {
                     var defaultValue = this.getFieldParam(field, 'default');
 
-                    if (seed && seed[field] != null) {
-                        defaultValue = seed[field]
-                    }
-
-                    if (defaultValue != null && !this.getFieldParam(field, 'required') && this.getFieldParam(field, 'setDefaultOnlyIfRequired')) {
-                        this.defaults[field] = defaultValue
-                        defaultValue = null
+                    if (this.getFieldParam(field, 'type') === "varchar") {
+                        if (defaultValue && typeof defaultValue === 'string' && defaultValue.includes('{{') &&
+                            defaultValue.includes('}}') && seed && seed[field] != null) {
+                            defaultValue = seed[field]
+                            if (!this.getFieldParam(field, 'required')) {
+                                defaultValue = null
+                            }
+                        }
                     }
 
                     if (defaultValue != null) {

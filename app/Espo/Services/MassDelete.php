@@ -43,53 +43,44 @@ class MassDelete extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if (empty($data['entityType'])) {
+        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids'])) {
             return false;
         }
 
         $entityType = $data['entityType'];
 
-        $ids = [];
-        if (array_key_exists('ids', $data) && !empty($data['ids']) && is_array($data['ids'])) {
-            $ids = $data['ids'];
-        }
+        $service = $this->getContainer()->get('serviceFactory')->create($entityType);
 
-        if (array_key_exists('where', $data)) {
-            $selectManager = $this->getContainer()->get('selectManagerFactory')->create($entityType);
-            $selectParams = $selectManager->getSelectParams(['where' => $data['where']], true, true);
-            $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
-            $collection = $this->getEntityManager()->getRepository($entityType)->find(array_merge($selectParams, ['select' => ['id']]));
-            $ids = array_column($collection->toArray(), 'id');
-        }
 
-        if (empty($ids)) {
-            return false;
-        }
+        foreach ($data['ids'] as $id => $position) {
 
-        $deleted = 0;
-        $total = count($ids);
+            $publicData = DataManager::getPublicData('massDelete');
 
-        self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
+            $massDeleteData = $publicData[$entityType] ?? ['total' => $data['total'], 'deleted' => 0];
 
-        $service = $this->getContainer()->get('serviceFactory')->create($data['entityType']);
-        $start = time();
-        foreach ($ids as $id) {
+            if(empty($publicData[$entityType]['deleted'])){
+                $massDeleteData = ['total' => $data['total'], 'deleted' => 0];
+                self::updatePublicData($entityType, $massDeleteData);
+            }
+
             try {
                 $service->deleteEntity($id);
-                $deleted++;
-                if ((time() - $start) > 3) {
-                    self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
-                    $start = time();
-                }
             } catch (\Throwable $e) {
-                $message = "Delete {$data['entityType']} '$id' failed: {$e->getMessage()}";
+                $message = "Delete {$data['entityType']} '$id' failed: {$e->getTraceAsString()}";
                 $GLOBALS['log']->error($message);
                 $this->notify($message);
             }
-        }
 
-        self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total, 'done' => Util::generateId()]);
-        sleep(2);
+            $deleted = $position + 1;
+            if ($massDeleteData['deleted'] < $deleted) {
+                $massDeleteData['deleted'] = $deleted;
+                if ($massDeleteData['deleted'] === $massDeleteData['total'] || !empty($data['last'])) {
+                    $massDeleteData['done'] = Util::generateId();
+                }
+                self::updatePublicData($entityType, $massDeleteData);
+            }
+
+        }
 
         return true;
     }

@@ -34,7 +34,7 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style'],
+        dataAttributeList: ['name', 'style', 'hiddenPerDefault'],
 
         editable: true,
 
@@ -43,6 +43,9 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
                 type: 'enum',
                 options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
                 translation: 'LayoutManager.options.style'
+            },
+            hiddenPerDefault: {
+                type: 'bool',
             },
             name: {
                 readOnly: true

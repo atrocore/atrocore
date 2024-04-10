@@ -39,14 +39,22 @@ Espo.define('views/record/panel-navigation', 'view',
 
         events: {
             'click [data-action="scrollToPanel"]'(e) {
-                let target = e.currentTarget;
-                this.actionScrollToPanel($(target).data('name'));
+                let name = $(e.currentTarget).data('name')
+                if((this.getStorage().get('closed-panels', this.scope) || []).includes(name)){
+                    let panel = this.options.panelList.filter(p => p.name === name)[0]
+                    Backbone.trigger('create-bottom-panel', panel)
+                    this.listenTo(Backbone,'after:create-bottom-panel',function(panel){
+                       setTimeout(() =>  this.actionScrollToPanel(panel.name), 100)
+                    })
+                }else{
+                    this.actionScrollToPanel(name);
+                }
             }
         },
 
         setup() {
             Dep.prototype.setup.call(this);
-
+            this.scope = this.options.scope ?? this.scope
             this.setPanelList();
 
             this.listenTo(this.model, 'change', () => {
@@ -56,7 +64,7 @@ Espo.define('views/record/panel-navigation', 'view',
         },
 
         setPanelList() {
-            this.panelList = this.options.panelList.filter(panel => !panel.hidden)
+            this.panelList = this.options.panelList
                 .filter(panel => {
                     if (panel.name === 'panel-0') {
                         return true;

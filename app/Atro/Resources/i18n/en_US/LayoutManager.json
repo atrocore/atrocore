@@ -10,7 +10,8 @@
     "sticked": "Sticked",
     "isLarge": "Large font size",
     "cssStyle": "CSS Styles",
-    "dynamicLogicVisible": "Conditions making panel visible"
+    "dynamicLogicVisible": "Conditions making panel visible",
+    "hiddenPerDefault": "Hidden per default"
   },
   "options": {
     "align": {

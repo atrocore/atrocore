@@ -55,8 +55,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 this.updateTextCounter();
             },
             'focus input': function () {
-                if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'setDefaultOnlyIfRequired'])
-                    && !this.model.get(this.name) && this.model.defaults[this.name]) {
+                if (!this.model.get(this.name) && this.model.defaults[this.name]) {
                     this.model.set(this.name, this.model.defaults[this.name])
                 }
             }
@@ -151,6 +150,18 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
             if (this.mode == 'edit') {
                 this.updateTextCounter();
+
+                const defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default']);
+                if (defaultValue && typeof defaultValue === 'string' && defaultValue.includes('{{')
+                    && defaultValue.includes('}}') && this.model.defaults[this.name] == null) {
+                    // fetch default value from server
+                    this.model.defaults = $.ajax({
+                        url: this.model.name + '/action/Seed?silent=true',
+                        type: 'GET',
+                        dataType: 'json',
+                        async: false,
+                    }).responseJSON
+                }
             }
         },
 
