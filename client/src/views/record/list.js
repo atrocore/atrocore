@@ -603,6 +603,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
+                    this.notify(false)
                     this.collection.fetch();
                 }.bind(this));
             }, this);

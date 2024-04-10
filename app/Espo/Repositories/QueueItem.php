@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Templates\Repositories\Base;
@@ -144,8 +145,18 @@ class QueueItem extends Base
         }
 
         $data = json_decode(json_encode($entity->get('data')), true);
-        if (!empty($data['entityType'])) {
+        if (!empty($data['entityType']) && !empty($data['chunks']) && $data['totalChunks'] === 1) {
             \Espo\Services\MassDelete::updatePublicData($data['entityType'], null);
+        }else{
+            $publicData = DataManager::getPublicData('massDelete');
+            $entityType = $data['entityType'];
+            $massDeleteData = $publicData[$entityType];
+            if($data['totalChunks'] === ($massDeleteData['proceedChunks'] + 1)){
+                \Espo\Services\MassDelete::updatePublicData($data['entityType'], null);
+            }else{
+                $massDeleteData['proceedChunks']=+1;
+                \Espo\Services\MassDelete::updatePublicData($data['entityType'], $massDeleteData);
+            }
         }
     }
 

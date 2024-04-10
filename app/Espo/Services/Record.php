@@ -2329,17 +2329,64 @@ class Record extends Base
             ->dispatchEvent('beforeMassRemove', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
-        $name = $this->getInjection('language')->translate('remove', 'massActions', 'Global') . ': ' . $this->entityType;
 
-        $data = [
-            'entityType' => $this->entityType
-        ];
+        $ids = [];
         if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
-            $data['ids'] = $params['ids'];
+            $ids = $params['ids'];
         }
+
         if (array_key_exists('where', $params)) {
-            $data['where'] = $params['where'];
+            $selectParams = $this->getSelectParams(['where' => $params['where']], true, true);
+
+            $repository = $this->getEntityManager()->getRepository($this->entityType);
+            $repository->handleSelectParams($selectParams);
+
+            $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
+            $ids = array_column($collection->toArray(), 'id');
         }
+
+        $total = count($ids);
+        $maxMassDeleteCount = $this->getConfig()->get('maxMassDeleteCount', 300);
+
+        if ($total <= $maxMassDeleteCount) {
+            foreach ($ids as $id) {
+                $this->deleteEntity($id);
+            }
+        } else {
+            $massDeleteChunkSize = $this->getConfig()->get('massDeleteChunkSize', 3000);
+            $position = 0;
+            $chunks = array_chunk($ids, $massDeleteChunkSize);
+            \Espo\Services\MassDelete::updatePublicData($this->entityType, null);
+            foreach ($chunks as $part => $chunk) {
+                $jobData = [
+                    'entityType' => $this->getEntityType(),
+                    'ids'        => [],
+                    'total'      =>  $total,
+                    'totalChunks'=> count($chunks),
+                    'part'       => $part,
+                    'last'       => !isset($chunks[$part + 1])
+                ];
+                foreach ($chunk as $id) {
+                    $jobData['ids'][$id] = $position;
+                    $position++;
+                }
+
+                $name = $this->getInjection('language')->translate('remove', 'massActions', 'Global') . ': ' . $this->entityName;
+                if ($part > 0) {
+                    $name .= " ($part)";
+                }
+
+                $this
+                    ->getInjection('queueManager')
+                    ->push($name, 'MassDelete', $jobData);
+            }
+        }
+
+        return $this
+            ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids]]))
+            ->getArgument('result');
+
+
 
         $this
             ->getInjection('queueManager')
