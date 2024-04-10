@@ -113,6 +113,7 @@ class ConsoleManager
             "check updates"                => Console\CheckUpdates::class,
             "pt --run"                     => Console\PseudoTransactionManager::class,
             "storages --scan"              => Console\ScanStorages::class,
+            "storage <id> --scan"          => Console\ScanStorage::class,
         ];
     }
 
