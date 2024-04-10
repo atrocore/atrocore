@@ -11,6 +11,10 @@
       {
          "name":"readOnly",
          "type":"bool"
+      },
+      {
+         "name":"disableNullValue",
+         "type":"bool"
       }
    ],
    "filter": true,

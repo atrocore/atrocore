@@ -2386,13 +2386,6 @@ class Record extends Base
             ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids]]))
             ->getArgument('result');
 
-
-
-        $this
-            ->getInjection('queueManager')
-            ->push($name, 'MassDelete', $data, 'High');
-
-        return true;
     }
 
     public function massRestore(array $params)
@@ -3247,7 +3240,7 @@ class Record extends Base
                 $value = $entity->get($field);
             }
 
-            if ($params['type'] === 'bool') {
+            if ($params['type'] === 'bool' && $params['disableNullValue'] === true) {
                 if (!empty($data->$field) !== !empty($value)) {
                     return true;
                 }
