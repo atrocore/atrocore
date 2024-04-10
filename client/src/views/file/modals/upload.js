@@ -60,6 +60,7 @@ Espo.define('views/file/modals/upload', 'views/modals/edit',
                 multiUpload: this.options.multiUpload ?? true,
                 el: this.getSelector() + ' .field[data-name="files"]',
                 mode: 'edit',
+                attributes: this.attributes || {},
             }, view => {
                 view.render();
             });

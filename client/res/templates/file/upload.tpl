@@ -9,7 +9,7 @@
                         <span id="upload-btn" class="btn btn-primary">{{translate 'upload'}}</span>
                     </span>
                 </span>
-                <input id="upload-input" type="file" class="file pull-right" {{#if multiUpload}}multiple{{/if}}>
+                <input id="upload-input" type="file" class="file pull-right" {{#if multiUpload}}multiple{{/if}} {{#if accept}}accept="{{accept}}"{{/if}}>
             </label>
         </div>
 

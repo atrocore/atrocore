@@ -164,7 +164,8 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
 
         data() {
             return {
-                multiUpload: this.multiUpload
+                multiUpload: this.multiUpload,
+                accept: this.attributes.accept ?? false
             };
         },
 

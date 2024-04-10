@@ -48,6 +48,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         uploadDisabled: false,
 
+        accept: false,
+
         events: {
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
@@ -77,7 +79,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         data: function () {
             return _.extend({
                 uploadDisabled: this.uploadDisabled,
-                valueIsSet: this.model.has(this.idName)
+                valueIsSet: this.model.has(this.idName),
+                accept: this.accept
             }, Dep.prototype.data.call(this));
         },
 
@@ -253,7 +256,9 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getCreateAttributes: function () {
-            let res = {};
+            let res = {
+                accept: this.accept
+            };
 
             if (this.fileTypeId) {
                 this.ajaxGetRequest(`FileType/${this.fileTypeId}`, null, {async: false}).success(entity => {
