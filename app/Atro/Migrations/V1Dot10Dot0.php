@@ -134,6 +134,7 @@ class V1Dot10Dot0 extends Base
         $this->migrateAssetCategories();
         $this->migrateAssetTypes();
         $this->migrateAssets();
+        $this->migrateTags();
 
         foreach (['globalSearchEntityList', 'tabList', 'twoLevelTabList', 'quickCreateList'] as $confName) {
             $conf = $this->getConfig()->get($confName, []);
@@ -174,6 +175,46 @@ class V1Dot10Dot0 extends Base
     public function down(): void
     {
         throw new Error('Downgrade is prohibited.');
+    }
+
+    protected function migrateTags(): void
+    {
+        $fileName = 'custom/Espo/Custom/Resources/metadata/entityDefs/File.json';
+
+        if (file_exists($fileName)) {
+            $meta = @json_decode(file_get_contents($fileName), true);
+            if (is_array($meta) && isset($meta['fields']['tags']['optionsIds'])) {
+                foreach ($meta['fields']['tags']['optionsIds'] as $k => $id) {
+                    $qb = $this->getConnection()->createQueryBuilder()
+                        ->insert('extensible_enum_option')
+                        ->setValue('id', ':id')
+                        ->setValue('name', ':name')
+                        ->setValue('color', ':color')
+                        ->setParameter('id', $id)
+                        ->setParameter('name', $meta['fields']['tags']['options'][$k] ?? $id)
+                        ->setParameter('color', isset($meta['fields']['tags']['optionColors'][$k]) ? '#' . rtrim($meta['fields']['tags']['optionColors'][$k], '#') : null);
+                    try {
+                        $qb->executeQuery();
+                    } catch (\Throwable $e) {
+                    }
+
+                    $qb = $this->getConnection()->createQueryBuilder()
+                        ->insert('extensible_enum_extensible_enum_option')
+                        ->setValue('id', ':id')
+                        ->setValue('extensible_enum_id', ':extensibleEnumId')
+                        ->setValue('extensible_enum_option_id', ':extensibleEnumOptionId')
+                        ->setParameter('id', "a_{$id}")
+                        ->setParameter('extensibleEnumId', 'fileTags')
+                        ->setParameter('extensibleEnumOptionId', $id);
+                    try {
+                        $qb->executeQuery();
+                    } catch (\Throwable $e) {
+                    }
+                }
+                unset($meta['fields']['tags']);
+                file_put_contents($fileName, json_encode($meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            }
+        }
     }
 
     protected function migrateAssets(): void
