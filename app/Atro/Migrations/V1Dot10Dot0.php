@@ -243,9 +243,9 @@ class V1Dot10Dot0 extends Base
                 ->setParameter('storageId', 'a_base')
                 ->setParameter('typeId', $typeId)
                 ->setParameter('createdAt', $v['created_at'])
-                ->setParameter('modifiedAt', $v['modified_at'])
+                ->setParameter('modifiedAt', $v['modified_at'] ?? null)
                 ->setParameter('createdById', $v['created_by_id'])
-                ->setParameter('modifiedById', $v['modified_by_id']);
+                ->setParameter('modifiedById', $v['modified_by_id'] ?? null);
             try {
                 $qb->executeQuery();
             } catch (\Throwable $e) {
