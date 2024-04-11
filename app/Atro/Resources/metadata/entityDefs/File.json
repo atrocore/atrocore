@@ -30,7 +30,8 @@
     },
     "tags": {
       "type": "extensibleMultiEnum",
-      "extensibleEnumId": "fileTags"
+      "extensibleEnumId": "fileTags",
+      "dropdown": true
     },
     "url": {
       "type": "varchar",

@@ -16,6 +16,12 @@
         {
           "name": "storage"
         }
+      ],
+      [
+        {
+          "name": "tags"
+        },
+        false
       ]
     ]
   }

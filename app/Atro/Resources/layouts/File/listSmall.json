@@ -26,5 +26,8 @@
   },
   {
     "name": "private"
+  },
+  {
+    "name": "tags"
   }
 ]

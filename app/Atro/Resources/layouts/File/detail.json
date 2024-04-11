@@ -15,7 +15,9 @@
         {
           "name": "type"
         },
-        false
+        {
+          "name": "tags"
+        }
       ],
       [
         {
