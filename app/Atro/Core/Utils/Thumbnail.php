@@ -37,7 +37,7 @@ class Thumbnail
         }
 
         $thumbnailPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), DIRECTORY_SEPARATOR);
-        if (!empty(trim($file->get('thumbnailsPath'), DIRECTORY_SEPARATOR))) {
+        if (!empty($file->get('thumbnailsPath'))) {
             $thumbnailPath .= DIRECTORY_SEPARATOR . trim($file->get('thumbnailsPath'));
         }
         $thumbnailPath .= DIRECTORY_SEPARATOR . trim($size);
