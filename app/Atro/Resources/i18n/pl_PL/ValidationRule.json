@@ -2,7 +2,6 @@
 	"fields": {
 		"validateBy": "Sprawdź według",
 		"isActive": "Aktywny",
-		"assetType": "Typ zasobu",
 		"type": "Typ",
 		"ratio": "Proporcje",
 		"pattern": "Wzorzec",
@@ -14,9 +13,6 @@
 		"minHeight": "Wysokość",
 		"extension": "Rozszerzenie",
 		"mimeList": "Lista"
-	},
-	"links": {
-		"assetType": "Typ zasobu"
 	},
 	"labels": {
 		"Create ValidationRule": "Utwórz regułę walidacji",

@@ -28,6 +28,10 @@
       "notNull": true,
       "default": false
     },
+    "tags": {
+      "type": "extensibleMultiEnum",
+      "extensibleEnumId": "fileTags"
+    },
     "url": {
       "type": "varchar",
       "notStorable": true,

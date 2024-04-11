@@ -87,6 +87,9 @@ class V1Dot10Dot0 extends Base
             $this->exec("DROP INDEX idx_validation_rule_asset_type_id");
             $this->exec("ALTER TABLE validation_rule RENAME COLUMN asset_type_id TO file_type_id");
             $this->exec("CREATE INDEX IDX_VALIDATION_RULE_FILE_TYPE_ID ON validation_rule (file_type_id, deleted)");
+
+            $this->exec("ALTER TABLE file ADD tags TEXT DEFAULT NULL");
+            $this->exec("COMMENT ON COLUMN file.tags IS '(DC2Type:jsonArray)'");
         } else {
             $this->exec(
                 "CREATE TABLE file (id VARCHAR(24) NOT NULL, name VARCHAR(255) NOT NULL, deleted TINYINT(1) DEFAULT '0', hidden TINYINT(1) DEFAULT '0', description LONGTEXT DEFAULT NULL, private TINYINT(1) DEFAULT '0' NOT NULL, mime_type VARCHAR(255) DEFAULT NULL, file_size INT DEFAULT NULL, file_mtime DATETIME DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, path VARCHAR(255) DEFAULT NULL, thumbnails_path LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, storage_id VARCHAR(24) DEFAULT NULL, folder_id VARCHAR(24) DEFAULT NULL, type_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, UNIQUE INDEX IDX_FILE_UNIQUE_FILE (deleted, name, path, storage_id), INDEX IDX_FILE_HASH (hash, deleted), INDEX IDX_FILE_STORAGE_ID (storage_id, deleted), INDEX IDX_FILE_FOLDER_ID (folder_id, deleted), INDEX IDX_FILE_TYPE_ID (type_id, deleted), INDEX IDX_FILE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_FILE_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"

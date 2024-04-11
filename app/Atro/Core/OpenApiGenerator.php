@@ -293,9 +293,7 @@ class OpenApiGenerator
                     case "multiEnum":
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => ['type' => 'string']];
                         break;
-                    case "asset":
                     case "file":
-                    case "image":
                     case "link":
                     case "linkParent":
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];

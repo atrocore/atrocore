@@ -656,20 +656,6 @@ class Installer extends HasContainer
         $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
-            ->insert($connection->quoteIdentifier('asset_type'))
-            ->setValue('id', ':id')
-            ->setValue($connection->quoteIdentifier('name'), ':name')
-            ->setValue('created_at', ':date')
-            ->setValue('created_by_id', ':userId')
-            ->setValue('assign_automatically', ':true')
-            ->setParameter('id', 'file')
-            ->setParameter('name', 'File')
-            ->setParameter('date', (new \DateTime())->format('Y-m-d H:i:s'))
-            ->setParameter('userId', '1')
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->executeQuery();
-
-        $connection->createQueryBuilder()
             ->insert($connection->quoteIdentifier('locale'))
             ->setValue('id', ':id')
             ->setValue($connection->quoteIdentifier('name'), ':name')

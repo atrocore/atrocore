@@ -137,12 +137,6 @@ class FieldManagerController extends AbstractListener
                     case 'file':
                         $column .= '_id';
                         break;
-                    case 'image':
-                        $column .= '_id';
-                        break;
-                    case 'asset':
-                        $column .= '_id';
-                        break;
                 }
 
                 try {

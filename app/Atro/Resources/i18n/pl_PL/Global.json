@@ -850,10 +850,6 @@
         "anyOf":"Którekolwiek z",
         "noneOf":"Żaden z"
     },
-    "assetSearchRanges":{
-        "isEmpty":"Jest puste",
-        "isNotEmpty":"Nie jest puste"
-    },
     "varcharSearchRanges":{
         "equals":"Równa się",
         "like":"Jest jak (%)",
