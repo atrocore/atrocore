@@ -1,0 +1,218 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "view": "views/file/fields/name",
+      "notNull": true,
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "preview": {
+      "type": "varchar",
+      "view": "views/file/fields/preview",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "hidden": {
+      "type": "bool",
+      "notNull": true,
+      "default": false
+    },
+    "tags": {
+      "type": "extensibleMultiEnum",
+      "extensibleEnumId": "fileTags",
+      "dropdown": false
+    },
+    "url": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": false,
+      "exportDisabled": true
+    },
+    "hasOpen": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "extension": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
+    },
+    "downloadUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
+    },
+    "smallThumbnailUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
+    },
+    "mediumThumbnailUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
+    },
+    "largeThumbnailUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
+    },
+    "private": {
+      "type": "bool",
+      "default": false
+    },
+    "mimeType": {
+      "type": "varchar",
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "fileSize": {
+      "type": "int",
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "min": 0
+    },
+    "fileMtime": {
+      "type": "datetime",
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "hash": {
+      "type": "varchar",
+      "readOnly": true,
+      "index": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "storage": {
+      "type": "link",
+      "view": "views/file/fields/storage",
+      "required": true
+    },
+    "folder": {
+      "type": "link",
+      "view": "views/file/fields/folder",
+      "required": false
+    },
+    "path": {
+      "type": "varchar",
+      "maxLength": 300,
+      "view": "views/fields/varchar",
+      "readOnly": true,
+      "default": null,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "thumbnailsPath": {
+      "type": "text",
+      "view": "views/fields/varchar",
+      "readOnly": true,
+      "default": null,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "type": {
+      "type": "link",
+      "required": false
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "storage": {
+      "type": "belongsTo",
+      "foreign": "files",
+      "entity": "Storage"
+    },
+    "folder": {
+      "type": "belongsTo",
+      "foreign": "files",
+      "entity": "Folder"
+    },
+    "type": {
+      "type": "belongsTo",
+      "foreign": "files",
+      "entity": "FileType"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "fileMtime",
+    "asc": false
+  },
+  "uniqueIndexes": {
+    "unique_file": [
+      "deleted",
+      "name",
+      "path",
+      "storage_id"
+    ]
+  }
+}

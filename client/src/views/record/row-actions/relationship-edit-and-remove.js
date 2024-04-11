@@ -37,6 +37,15 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
         getActionList: function () {
             var list = [];
             if (this.options.acl.edit) {
+                if (this.model.name === 'File') {
+                    list.push({
+                        action: 'reupload',
+                        label: 'Reupload',
+                        data: {
+                            id: this.model.get('id')
+                        },
+                    });
+                }
                 list.push({
                     action: 'quickEdit',
                     label: 'Edit',

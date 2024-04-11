@@ -162,11 +162,13 @@ class Config
         }
 
         if (in_array($name, array_merge(['locales'], array_keys(self::DEFAULT_LOCALE)))) {
-            return $this->loadLocales()[$name];
+            $res = $this->loadLocales();
+            return $res[$name] ?? null;
         }
 
         if ($name == 'interfaceLocales') {
-            return $this->loadInterfaceLocales()[$name];
+            $res = $this->loadInterfaceLocales();
+            return $res[$name] ?? null;
         }
 
         $keys = explode('.', $name);

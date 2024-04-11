@@ -198,6 +198,7 @@ class TreoStore extends Base
                 'status'         => $status,
                 'usage'          => $rows[$max]['extra']['usage'] ?? null,
                 'expirationDate' => $rows[$max]['extra']['expirationDate'] ?? null,
+                'deprecated'     => !empty($rows[$max]['extra']['deprecated']),
             ];
 
             foreach ($versions as $version) {
@@ -208,7 +209,9 @@ class TreoStore extends Base
             }
 
             // push
-            $result[$treoId] = $item;
+            if (empty($item['deprecated'])) {
+                $result[$treoId] = $item;
+            }
         }
 
         return $result;

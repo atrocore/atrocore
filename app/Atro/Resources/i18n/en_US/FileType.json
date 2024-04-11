@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "validationRules": "Validation rules",
+    "assignAutomatically": "Assign automatically",
+    "files": "Files"
+  },
+  "links": {
+    "validationRules": "Validation rules",
+    "files": "Files"
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the '%s' field of the '%s' entity."
+  },
+  "labels": {
+    "Create FileType": "Create File Type"
+  }
+}

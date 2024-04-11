@@ -314,8 +314,7 @@ class Hierarchy extends Record
 
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
             switch ($fieldDefs['type']) {
-                case 'asset':
-                case 'image':
+                case 'file':
                 case 'link':
                     $input->{$field . 'Id'} = $parent->get($field . 'Id');
                     $input->{$field . 'Name'} = $parent->get($field . 'Name');
@@ -928,8 +927,7 @@ class Hierarchy extends Record
         foreach ($this->getRepository()->getInheritableFields() as $field) {
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
             switch ($fieldDefs['type']) {
-                case 'asset':
-                case 'image':
+                case 'file':
                 case 'link':
                     if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
                         $inheritedFields[] = $field;

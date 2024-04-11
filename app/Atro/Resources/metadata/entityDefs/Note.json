@@ -40,8 +40,18 @@
             "readOnly": true
         },
         "attachments": {
-            "type": "attachmentMultiple",
-            "view": "views/stream/fields/attachment-multiple"
+            "type": "linkMultiple",
+            "entity": "File"
+        },
+        "attachmentsTypes": {
+            "type": "jsonObject",
+            "notStorable": true,
+            "readOnly": true
+        },
+        "attachmentsPathsDatas": {
+            "type": "jsonObject",
+            "notStorable": true,
+            "readOnly": true
         },
         "number": {
             "type": "int",
@@ -110,12 +120,6 @@
         "modifiedBy": {
             "type": "belongsTo",
             "entity": "User"
-        },
-        "attachments": {
-            "type": "hasChildren",
-            "entity": "Attachment",
-            "relationName": "attachments",
-            "foreign": "parent"
         },
         "parent": {
             "type": "belongsToParent",

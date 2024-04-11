@@ -8,7 +8,6 @@
     "Dashboard": "Escritorio",
     "Stream": "Historia",
     "Job": "Trabajo",
-    "Attachment": "Adjuntos",
     "ScheduledJobLogRecord": "Registro del registro de trabajo programado",
     "PasswordChangeRequest": "Solicitar Cambio de Contraseña",
     "ActionHistoryRecord": "Registro del histórico",
@@ -24,7 +23,6 @@
     "Admin": "Administrador",
     "Preferences": "Preferencias",
     "Account": "Cuenta",
-    "DocumentFolder": "Carpeta de documento",
     "KnowledgeBaseCategory": "Categoría de la base de conocimiento",
     "Country": "Country",
     "MeasuringUnit": "Measuring Unit",
@@ -49,7 +47,6 @@
     "Dashboard": "Escritorio",
     "Stream": "Historia",
     "Job": "Trabajos",
-    "Attachment": "Adjuntos",
     "ScheduledJobLogRecord": "Registros del registro de trabajo programado",
     "PasswordChangeRequest": "Solicitar Cambios de Contraseñas",
     "ActionHistoryRecord": "Histórico",
@@ -674,10 +671,6 @@
       "isNot": "No es",
       "isNotOneOf": "Ninguno de",
       "noneOf": "Ninguno de"
-    },
-    "assetSearchRanges": {
-      "isEmpty": "Es NULL",
-      "isNotEmpty": "No es NULL"
     },
     "varcharSearchRanges": {
       "equals": "Equivale",

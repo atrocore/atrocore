@@ -270,7 +270,7 @@ class Relation extends RDB
             }
 
             $name = $field;
-            if (in_array($fieldDefs['type'], ['link', 'asset'])) {
+            if (in_array($fieldDefs['type'], ['link', 'file'])) {
                 $name .= 'Id';
             }
 

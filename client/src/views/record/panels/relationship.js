@@ -110,6 +110,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+            if (this.scope === 'File') {
+                this.defs.create = false;
+            }
+
             let canSelect = true;
             let canUnlink = true;
 
@@ -321,6 +325,18 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     boolFilterDataCallback: 'getSelectBoolFilterData',
                     primaryFilterName: this.defs.selectPrimaryFilterName || null
                 };
+            }
+
+            if (this.scope === 'File') {
+                this.actionList.unshift({
+                    label: this.translate('upload'),
+                    action: 'upload',
+                    data: {
+                        link: this.link
+                    },
+                    acl: 'create',
+                    aclScope: 'File'
+                });
             }
         },
 
@@ -740,6 +756,48 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.model.trigger('after:unrelate', this.link, this.defs);
                 }.bind(this));
             }, this);
+        },
+
+        actionUpload(data) {
+            const link = data.link;
+
+            let createAttributes = this.options.createAttributes || {};
+
+            if (this.model.name === 'Folder') {
+                createAttributes.folderId = this.model.get('id');
+                createAttributes.folderName = this.model.get('name');
+            }
+
+            if (this.model.name === 'FileType') {
+                createAttributes.typeId = this.model.get('id');
+                createAttributes.typeName = this.model.get('name');
+            }
+
+            this.notify('Loading...');
+            this.createView('upload', 'views/file/modals/upload', {
+                scope: 'File',
+                fullFormDisabled: true,
+                layoutName: 'upload',
+                multiUpload: true,
+                attributes: createAttributes,
+            }, view => {
+                view.once('after:render', () => {
+                    this.notify(false);
+                });
+                view.render();
+
+                view.listenTo(view.model, 'after:file-upload', entity => {
+                    this.ajaxPostRequest(`${this.model.name}/${this.model.get('id')}/${link}`, {ids: [entity.id]}).success(() => {
+                        this.model.trigger('after:relate', link);
+                        this.actionRefresh();
+                    });
+                });
+
+                view.listenTo(view.model, 'after:file-delete', () => {
+                    this.actionRefresh();
+                });
+            });
+
         },
 
     });

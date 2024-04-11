@@ -1,0 +1,28 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "path"
+        },
+        {
+          "name": "priority"
+        }
+      ]
+    ]
+  }
+]

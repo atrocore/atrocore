@@ -2212,6 +2212,32 @@ Espo.define('views/record/list', 'view', function (Dep) {
             window.open(data.url, "_blank");
         },
 
+        actionReupload: function (data) {
+            if (!data.id || !this.collection) {
+                this.notify('Wrong input data', 'error');
+            }
+
+            let model = this.collection.get(data.id);
+
+            this.notify('Loading...');
+            this.createView('upload', 'views/file/modals/upload', {
+                scope: 'File',
+                fullFormDisabled: true,
+                layoutName: 'upload',
+                multiUpload: false,
+                attributes: _.extend(model.attributes, {reupload: model.id}),
+            }, view => {
+                view.render();
+                this.notify(false);
+                this.listenTo(view.model, 'after:file-upload', entity => {
+                    model.trigger('reuploaded');
+                });
+                this.listenToOnce(view, 'close', () => {
+                    this.clearView('upload');
+                });
+            });
+        },
+
         actionQuickEdit: function (data) {
             data = data || {}
             var id = data.id;

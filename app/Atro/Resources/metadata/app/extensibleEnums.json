@@ -18,5 +18,10 @@
     "id": "addressType",
     "name": "Address Type",
     "multilingual": false
+  },
+  {
+    "id": "fileTags",
+    "name": "File Tags",
+    "multilingual": false
   }
 ]

@@ -29,13 +29,13 @@ class IsImage extends AbstractTwigFilter
 
     public function filter($value)
     {
-        if (empty($value) || !is_object($value) || !($value instanceof Entity) || $value->getEntityType() !== 'Asset') {
+        if (empty($value) || !is_object($value) || !($value instanceof Entity) || $value->getEntityType() !== 'File') {
             return false;
         }
 
-        $fileNameParts = explode('.', $value->get("file")->get('name'));
+        $fileNameParts = explode('.', $value->get("name"));
         $fileExt = strtolower(array_pop($fileNameParts));
 
-        return in_array($fileExt, $this->metadata->get('dam.image.extensions', []));
+        return in_array($fileExt, $this->metadata->get('app.file.image.extensions', []));
     }
 }

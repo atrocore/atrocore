@@ -71,14 +71,29 @@
         "url": "#Settings/inputLanguage",
         "label": "multiLanguages",
         "description": "multiLanguagesSettings"
-      },
-      {
-        "url": "#AssetType",
-        "label": "AssetTypes",
-        "description": "listOfSupportedAssetsTypes"
       }
     ],
     "order": 0
+  },
+  "files": {
+    "label": "FileManagement",
+    "itemList": [
+      {
+        "url": "#Storage",
+        "label": "Storage",
+        "description": "Storage"
+      },
+      {
+        "url": "#FileType",
+        "label": "FileTypes",
+        "description": "listOfSupportedFilesTypes"
+      },
+      {
+        "url": "#Folder",
+        "label": "Folders",
+        "description": "folders"
+      }
+    ]
   },
   "users": {
     "label": "AccessManagement",
@@ -157,11 +172,5 @@
       }
     ],
     "order": 40
-  },
-  "data": {
-    "label": "Data",
-    "itemList": [
-    ],
-    "order": 50
   }
 }

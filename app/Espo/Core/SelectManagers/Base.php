@@ -42,7 +42,7 @@ use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\SelectManagerFactory;

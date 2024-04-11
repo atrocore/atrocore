@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "notNull": true,
+      "required": true,
+      "trim": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "default": "local",
+      "optionsIds": [
+        "local"
+      ],
+      "options": [
+        "local"
+      ]
+    },
+    "path": {
+      "type": "varchar",
+      "maxLength": 300,
+      "unique": true,
+      "default": "upload/files"
+    },
+    "priority": {
+      "type": "int",
+      "notNull": true,
+      "default": 10,
+      "min": 0
+    },
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
+    "folders": {
+      "type": "linkMultiple",
+      "noLoad": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "files": {
+      "type": "hasMany",
+      "foreign": "storage",
+      "entity": "File"
+    },
+    "folders": {
+      "type": "hasMany",
+      "relationName": "FolderStorage",
+      "foreign": "storages",
+      "entity": "Folder"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "priority",
+    "asc": false
+  }
+}

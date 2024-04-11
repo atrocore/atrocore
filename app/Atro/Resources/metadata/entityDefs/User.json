@@ -179,7 +179,8 @@
             "tooltip": true
         },
         "avatar": {
-            "type": "image",
+            "type": "file",
+            "fileTypeId": "a_image",
             "view": "views/user/fields/avatar",
             "previewSize": "small"
         },

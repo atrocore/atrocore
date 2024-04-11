@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "type": "Typ",
+    "path": "Ścieżka",
+    "files": "Pliki",
+    "folders": "Foldery"
+  },
+  "links": {
+    "files": "Pliki",
+    "folders": "Foldery"
+  },
+  "options": {
+    "type": {
+      "local": "Local (Linux)"
+    }
+  },
+  "labels": {
+    "Create Storage": "Utwórz przechowywanie plików"
+  },
+  "exceptions": {
+    "storageTypeCannotBeChanged": "Typu nie można zmienić.",
+    "storagePathCannotBeChanged": "Ścieżka nie może zostać zmieniona.",
+    "storageWithFilesCannotBeRemoved": "Usuwanie jest niedozwolone. Istnieją pliki należące do tego magazynu."
+  }
+}

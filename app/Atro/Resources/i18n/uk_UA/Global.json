@@ -1,14 +1,9 @@
 {
   "scopeNames": {
-    "Asset": "Ассет",
-    "Rendition": "Перетворення",
-    "RenditionMetaData": "Перетворення мета даних",
-    "Library": "Бібліотека",
-    "AssetVariant": "Варіант асета",
-    "AssetCategory": "Категорія асету",
-    "AssetMetadata": "Метадані асету",
-    "AssetVersion": "Версія асету",
-    "AssetType": "Тип асету",
+    "Storage": "Сховище",
+    "Folder": "Папка",
+    "File": "Файл",
+    "FileType": "Тип файлу",
     "ValidationRule": "Правило перевірки",
     "UiHandler": "Обробник інтерфейсу",
     "Action": "Дія",
@@ -26,7 +21,6 @@
     "Dashboard": "Панель віджетів",
     "Stream": "Стрічка",
     "Job": "Завдання",
-    "Attachment": "Вкладення",
     "ScheduledJobLogRecord": "Запис журналу запланованих робіт",
     "PasswordChangeRequest": "Запит на зміну пароля",
     "ActionHistoryRecord": "Запис історії дій",
@@ -61,14 +55,11 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
-    "Library": "Бібліотеки",
-    "Asset": "Асети",
-    "AssetVersion": "Версії асету",
-    "AssetVariant": "Варіанти асету",
-    "AssetCategory": "Категорія асету",
-    "AssetMetadata": "Метадані асету",
-    "AssetType": "Типи асету",
-    "validationRules": "Правила перевірки",
+    "Storage": "Сховища",
+    "Folder": "Папки",
+    "File": "Файли",
+    "FileType": "Типи файлів",
+    "ValidationRules": "Правила перевірки",
     "UiHandler": "Обробники інтерфейсу",
     "Action": "Дії",
     "ExtensibleEnum": "Списки",
@@ -87,7 +78,6 @@
     "Dashboard": "Панелі віджетів",
     "Stream": "Стрічки",
     "Job": "Завдання",
-    "Attachment": "Вкладення",
     "ScheduledJobLogRecord": "Записи журналу запланованих робіт",
     "PasswordChangeRequest": "Запити зміни пароля",
     "ActionHistoryRecord": "Історія дій",
@@ -108,8 +98,11 @@
     "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу."
   },
   "labels": {
+    "Reupload": "Перезавантажити",
+    "attachFiles":"Прикріпити файли",
+    "typeToSearch": "Введ. і натисн. Enter...",
     "dragAndDropBtnText": "Перетягніть",
-    "dragAndDropBtnTextSmall": "Ваші асети або",
+    "dragAndDropBtnTextSmall": "Ваші файли або",
     "upload": "Завантаження",
     "attachFile": "Прикріпити файл",
     "noData": "Немає даних",
@@ -421,6 +414,7 @@
     "assignedToMe": "Призначений мені",
     "ownedByMe": "Належить мені",
     "onlyMy": "Тільки мої",
+    "onlyHidden": "Тільки приховані",
     "followed": "Ви підписані",
     "onlyArchived": "Без неархівних",
     "withArchived": "З архівом",
@@ -445,6 +439,12 @@
     "restore": "Відновлення"
   },
   "fields": {
+    "tags": "Теги",
+    "hidden": "Приховано",
+    "priority": "Пріоритет",
+    "fileType": "Тип файлу",
+    "file": "Файл",
+    "files": "Файли",
     "isInherited": "Унаслідувано",
     "isArchived": "Заархівованo",
     "code": "Код",
@@ -501,6 +501,8 @@
     "isActive": "Активний"
   },
   "links": {
+    "file": "Файл",
+    "files": "Файли",
     "assignedAccounts": "Контрагенти",
     "assignedUser": "Відповідальний",
     "createdBy": "Створено (ким)",
@@ -786,10 +788,6 @@
       "isNotOneOf": "Жоден з",
       "noneOf": "Жоден із"
     },
-    "assetSearchRanges": {
-      "isEmpty": "Є NULL",
-      "isNotEmpty": "Не є NULL"
-    },
     "varcharSearchRanges": {
       "equals": "Дорівнює",
       "like": "Як (%)",
@@ -999,6 +997,7 @@
     "hasMultipleParents": "Є один або більше записів з кількома батьківськими елементами.",
     "unitValueIsRequired": "Необхідна одиниця вимірювання для поля '%s'.",
     "emailIsInvalid": "Email для поля '%s' не допустимий.",
+    "fileIsInvalid": "Файл для поля '%s' не допустимий.",
     "noSuchUnit": "Одиниця виміру '%s' для поля '%s' не допустима.",
     "noSuchOptions": "Значення '%s' для поля '%s' не допустиме.",
     "noOptionsDefined": "Опції для поля '%s' не задані.",

@@ -70,7 +70,11 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
             if (treeScopes) {
-                this.treeScope = this.getStorage().get('treeScope', this.scope) || treeScopes[0];
+                const treeScope = this.getStorage().get('treeScope', this.scope);
+                if (!treeScope || !treeScopes.includes(treeScope)) {
+                    this.getStorage().set('treeScope', this.scope, treeScopes[0]);
+                }
+                this.treeScope = this.getStorage().get('treeScope', this.scope);
             }
 
             this.wait(true);
@@ -246,7 +250,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     let $el = $(el);
                     let $li = $el.parent().parent();
 
-                    if ($el.data('id') !== id) {
+                    if ($el.data('id') !== id && $tree.tree('getNodeById', $el.data('id'))) {
                         $tree.tree('removeFromSelection', $tree.tree('getNodeById', $el.data('id')));
                         $li.removeClass('jqtree-selected');
                     } else if (!$li.hasClass('jqtree-selected')) {
@@ -324,7 +328,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         pushShowMore(list, direction) {
             if (!direction || direction === 'up') {
                 let first = Espo.Utils.cloneDeep(list).shift();
-                if (first.offset && first.offset !== 0) {
+                if (first && first.offset && first.offset !== 0) {
                     list.unshift({
                         id: 'show-more-' + first.offset,
                         offset: first.offset,
@@ -336,7 +340,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             if (!direction || direction === 'down') {
                 let last = Espo.Utils.cloneDeep(list).pop();
-                if (last.offset && last.total - 1 !== last.offset) {
+                if (last && last.offset && last.total - 1 !== last.offset) {
                     list.push({
                         id: 'show-more-' + last.offset,
                         offset: last.offset,

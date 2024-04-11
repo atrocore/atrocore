@@ -8,6 +8,7 @@
  * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
+
 declare(strict_types=1);
 
 namespace Atro\Core;
@@ -111,6 +112,8 @@ class ConsoleManager
             "daemon <name> <id>"           => Console\Daemon::class,
             "check updates"                => Console\CheckUpdates::class,
             "pt --run"                     => Console\PseudoTransactionManager::class,
+            "storages --scan"              => Console\ScanStorages::class,
+            "storage <id> --scan"          => Console\ScanStorage::class,
         ];
     }
 

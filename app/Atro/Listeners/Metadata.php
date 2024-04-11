@@ -27,25 +27,16 @@ class Metadata extends AbstractListener
     {
         $data = $event->getArgument('data');
 
-        $this->updateAssetRelationshipPanels($data);
-
-        $this->setAssetTypes($data);
-
-        // add owner
         $data = $this->addOwner($data);
 
-        // add onlyActive bool filter
         $data = $this->addOnlyActiveFilter($data);
 
         $data = $this->addOnlyDeletedFilter($data);
-        // add archive
+
         $data = $this->addArchive($data);
 
         $data = $this->addActive($data);
-        // set thumbs sizes to options of asset field type
-        $data = $this->setAssetThumbSize($data);
 
-        // prepare multi-lang
         $data = $this->prepareMultiLang($data);
 
         // prepare multi-lang labels
@@ -92,74 +83,6 @@ class Metadata extends AbstractListener
         $event->setArgument('data', $data);
     }
 
-    protected function updateAssetRelationshipPanels(array &$data): void
-    {
-        foreach ($data['entityDefs'] as $scope => $defs) {
-            if (empty($defs['links'])) {
-                continue 1;
-            }
-            foreach ($defs['links'] as $link => $linkData) {
-                if (!empty($linkData['entity']) && $linkData['entity'] == 'Asset' && !isset($data['clientDefs'][$scope]['relationshipPanels'][$link]['view'])) {
-                    $data['clientDefs'][$scope]['relationshipPanels'][$link]['view'] = "views/record/panels/assets";
-                }
-            }
-        }
-    }
-
-    protected function setAssetTypes(array &$data): void
-    {
-        if (!$this->getConfig()->get('isInstalled', false)) {
-            return;
-        }
-
-        $typesData = $this->getAssetTypes();
-
-        $data['fields']['asset']['types'] = array_column($typesData, 'name');
-        $data['fields']['asset']['hasPreviewExtensions'][] = 'pdf';
-        $data['entityDefs']['Asset']['fields']['type']['options'] = $data['fields']['asset']['types'];
-        $data['entityDefs']['Asset']['fields']['type']['optionsIds'] = array_column($typesData, 'id');
-        $data['entityDefs']['Asset']['fields']['type']['assignAutomatically'] = [];
-        foreach ($typesData as $item) {
-            if (!empty($item['assignAutomatically'])) {
-                $data['entityDefs']['Asset']['fields']['type']['assignAutomatically'][] = $item['name'];
-            }
-            if (!empty($item['typesToExclude'])) {
-                $data['entityDefs']['Asset']['fields']['type']['typesToExclude'][$item['name']] = $item['typesToExclude'];
-            }
-        }
-    }
-
-    protected function getAssetTypes(): array
-    {
-        $assetTypes = $this->getContainer()->get('dataManager')->getCacheData('assetTypes');
-        if (!is_array($assetTypes)) {
-            /** @var Connection $connection */
-            $connection = $this->getContainer()->get('connection');
-            try {
-                $res = $connection->createQueryBuilder()
-                    ->select('at.id, at.name, at.assign_automatically, at.types_to_exclude')
-                    ->from($connection->quoteIdentifier('asset_type'), 'at')
-                    ->where('at.deleted = :false')
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->orderBy('at.sort_order', 'ASC')
-                    ->fetchAllAssociative();
-
-                $assetTypes = [];
-                foreach ($res as $k => $row) {
-                    $assetTypes[$k]['id'] = $row['id'];
-                    $assetTypes[$k]['name'] = $row['name'];
-                    $assetTypes[$k]['assignAutomatically'] = !empty($row['assign_automatically']);
-                    $assetTypes[$k]['typesToExclude'] = !empty($row['types_to_exclude']) ? @json_decode((string)$row['types_to_exclude'], true) : [];
-                }
-            } catch (\Throwable $e) {
-                $assetTypes = [];
-            }
-            $this->getContainer()->get('dataManager')->setCacheData('assetTypes', $assetTypes);
-        }
-
-        return $assetTypes;
-    }
-
     protected function prepareExtensibleEnum(array &$data): void
     {
         foreach ($data['entityDefs'] as $entityType => $entityDefs) {
@@ -172,10 +95,12 @@ class Metadata extends AbstractListener
                     if (!empty($fieldDefs['dropdown'])) {
                         if ($fieldDefs['type'] == 'extensibleMultiEnum') {
                             $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-multi-enum-dropdown';
-                        } else if ($fieldDefs['type'] == 'extensibleEnum') {
-                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-enum-dropdown';
                         } else {
-                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/measure-dropdown';
+                            if ($fieldDefs['type'] == 'extensibleEnum') {
+                                $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-enum-dropdown';
+                            } else {
+                                $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/measure-dropdown';
+                            }
                         }
                     }
                 }
@@ -771,19 +696,20 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    private function addScopesToRelationShip(array &$metadata, string $scope, string $relationEntityName, string $relation){
-        if(empty($metadata['clientDefs'][$scope]['relationshipPanels'])){
+    private function addScopesToRelationShip(array &$metadata, string $scope, string $relationEntityName, string $relation)
+    {
+        if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
             ];
         }
-        $data =  $metadata['clientDefs'][$scope]['relationshipPanels'][$relation] ;
-        if(empty($data)){
+        $data = $metadata['clientDefs'][$scope]['relationshipPanels'][$relation];
+        if (empty($data)) {
             $metadata['clientDefs'][$scope]['relationshipPanels'][$relation] = [
                 "aclScopesList" => [$scope, $relationEntityName]
             ];
-        }else{
-            $metadata['clientDefs'][$scope]['relationshipPanels'][$relation]["aclScopesList"] = array_merge($data['aclScopesList'] ?? [], [$scope, $relationEntityName]) ;
+        } else {
+            $metadata['clientDefs'][$scope]['relationshipPanels'][$relation]["aclScopesList"] = array_merge($data['aclScopesList'] ?? [], [$scope, $relationEntityName]);
         }
     }
 
@@ -945,24 +871,6 @@ class Metadata extends AbstractListener
 
         return $data;
     }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function setAssetThumbSize(array $data): array
-    {
-        foreach ($data['fields']['asset']['params'] as $k => $row) {
-            if ($row['name'] === 'previewSize') {
-                $data['fields']['asset']['params'][$k]['options'] = empty($data['app']['imageSizes']) ? [] : array_keys($data['app']['imageSizes']);
-                break;
-            }
-        }
-
-        return $data;
-    }
-
 
     public function addArchive(array $data)
     {
@@ -1171,7 +1079,9 @@ class Metadata extends AbstractListener
     protected function addOnlyDeletedFilter(array $data): array
     {
         foreach ($data['entityDefs'] as $entity => $row) {
-            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
+            if ($entity !== 'File') {
+                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
+            }
         }
 
         return $data;

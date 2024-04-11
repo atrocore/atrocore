@@ -1,0 +1,33 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "preview"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "folder"
+  },
+  {
+    "name": "storage"
+  },
+  {
+    "name": "mimeType"
+  },
+  {
+    "name": "fileSize"
+  },
+  {
+    "name": "fileMtime"
+  },
+  {
+    "name": "private"
+  },
+  {
+    "name": "tags"
+  }
+]

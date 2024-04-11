@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "validationRules": "Reguły walidacji",
+    "assignAutomatically": "Przypisz automatycznie",
+    "files": "Pliki"
+  },
+  "links": {
+    "validationRules": "Reguły walidacji",
+    "files": "Pliki"
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w polu \"%s\" podmiotu \"%s\"."
+  },
+  "labels": {
+    "Create FileType": "Utwórz typ pliku"
+  }
+}

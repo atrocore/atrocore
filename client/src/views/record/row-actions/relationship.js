@@ -47,17 +47,26 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
             });
 
             // if entity can be open in tab
-            if (this.model.get('hasOpen') && this.model.get('url')) {
+            if (this.model.get('hasOpen') && this.model.get('downloadUrl')) {
                 list.push({
                     action: 'openInTab',
                     label: 'Open',
                     data: {
-                        url: this.model.get('url')
+                        url: this.model.get('downloadUrl')
                     },
                 });
             }
 
             if (this.options.acl.edit) {
+                if (this.model.name === 'File') {
+                    list.push({
+                        action: 'reupload',
+                        label: 'Reupload',
+                        data: {
+                            id: this.model.get('id')
+                        },
+                    });
+                }
                 list.push({
                     action: 'quickEdit',
                     label: 'Edit',
@@ -76,7 +85,6 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         }
                     });
                 }
-
             }
 
             if (this.options.acl.unlink) {

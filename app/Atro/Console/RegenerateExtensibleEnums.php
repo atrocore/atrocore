@@ -62,7 +62,7 @@ class RegenerateExtensibleEnums extends AbstractConsole
                 try {
                     $em->saveEntity($extensibleEnumOption);
                 } catch (\Throwable $e) {
-                    $GLOBALS['log']->error("ExtensibleEnumOption generation sdfsdfsd failed: {$e->getMessage()}");
+                    $GLOBALS['log']->error("ExtensibleEnumOption generation failed: {$e->getMessage()}");
                 }
             }
 

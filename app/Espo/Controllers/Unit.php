@@ -36,9 +36,9 @@ declare(strict_types=1);
 namespace Espo\Controllers;
 
 use Espo\Core\DataManager;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Controllers\Base;
 
 /**
