@@ -3210,7 +3210,7 @@ class Record extends Base
                 $value = $entity->get($field);
             }
 
-            if ($params['type'] === 'bool' && $params['notNull'] !== false) {
+            if ($params['type'] === 'bool' && $params['notNull'] === true && $this->customBoolConditionForIsEntityUpdate($data)) {
                 if (!empty($data->$field) !== !empty($value)) {
                     return true;
                 }
@@ -3228,6 +3228,10 @@ class Record extends Base
         }
 
         return false;
+    }
+
+    protected  function customBoolConditionForIsEntityUpdate($data){
+        return true;
     }
 
     protected function areValuesEqual(Entity $entity, string $field, $value1, $value2): bool

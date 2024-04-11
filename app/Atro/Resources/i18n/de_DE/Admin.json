@@ -174,7 +174,7 @@
     "setDefaultOnlyIfRequired": "Wenden Sie den Standardwert nur bei Bedarf an",
     "dropdown": "Runterfallen",
     "defaultEnum": "Standardwert",
-    "disableNullValue": "Nicht Null"
+    "notNull": "Nicht Null"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",

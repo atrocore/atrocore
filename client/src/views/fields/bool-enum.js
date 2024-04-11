@@ -16,11 +16,9 @@ Espo.define('views/fields/bool-enum', 'views/fields/enum',
         init(){
             this.fieldName = this.options.name ?? this.options.defs.name
             this.options.name = '_'+this.fieldName
-            this.options.defs.name = '_'+this.fieldName
             Dep.prototype.init.call(this);
         },
         setup(){
-
             this.model.set(this.options.name, (this.model.get(this.fieldName) ?? null) + '')
             this.listenTo(this.model, 'change:'+this.options.name, function(){
                 let value = this.model.get(this.options.name);
@@ -49,6 +47,17 @@ Espo.define('views/fields/bool-enum', 'views/fields/enum',
                 "true":"☑",
                 "false":"☐"
             };
+        },
+        fetch(){
+            let data = Dep.prototype.fetch.call(this);
+            let value = data[this.name]
+            if(value === "null"){
+                value = null;
+            }else {
+                value = value === "true";
+            }
+            data[this.fieldName] = value;
+            return data;
         },
         fetchSearch: function () {
             var type = this.$el.find('[name="' + this.name + '-type"]').val();
