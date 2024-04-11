@@ -511,13 +511,13 @@ class V1Dot10Dot0 extends Base
                 ->setValue('id', ':id')
                 ->setValue('name', ':name')
                 ->setValue('assign_automatically', ':assignAutomatically')
-                ->setValue('sort_order', ':sortOrder')
+                ->setValue('priority', ':priority')
                 ->setValue('created_by_id', ':createdById')
                 ->setValue('modified_by_id', ':modifiedById')
                 ->setParameter('id', $v['id'])
                 ->setParameter('name', $v['name'])
                 ->setParameter('assignAutomatically', !empty($v['assign_automatically']), ParameterType::BOOLEAN)
-                ->setParameter('sortOrder', $v['sort_order'])
+                ->setParameter('priority', $v['sort_order'])
                 ->setParameter('createdById', $v['created_by_id'])
                 ->setParameter('modifiedById', $v['modified_by_id']);
             try {
@@ -625,13 +625,13 @@ class V1Dot10Dot0 extends Base
                 ->insert('file_type')
                 ->setValue('id', ':id')
                 ->setValue('name', ':name')
-                ->setValue('sort_order', ':sortOrder')
+                ->setValue('priority', ':priority')
                 ->setValue('assign_automatically', ':assignAutomatically')
                 ->setValue('created_by_id', ':system')
                 ->setValue('modified_by_id', ':system')
                 ->setParameter('id', $default['id'])
                 ->setParameter('name', $default['name'])
-                ->setParameter('sortOrder', $k + 100)
+                ->setParameter('priority', $k + 100)
                 ->setParameter('assignAutomatically', $default['assignAutomatically'], ParameterType::BOOLEAN)
                 ->setParameter('system', 'system');
             try {
