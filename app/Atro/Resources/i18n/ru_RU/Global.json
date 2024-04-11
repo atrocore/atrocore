@@ -408,6 +408,7 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "tags": "Теги",
     "hidden": "Скрытый",
     "priority": "Приоритет",
     "fileType": "Тип файла",

@@ -440,6 +440,7 @@
     "restore": "Restore"
   },
   "fields": {
+    "tags": "Tags",
     "downloadUrl": "Download URL",
     "smallThumbnailUrl": "Thumbnail URL (small)",
     "mediumThumbnailUrl": "Thumbnail URL (medium)",
