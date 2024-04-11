@@ -159,7 +159,9 @@
     "foreignName": "Поле пов'язаної сутності",
     "useDisabledTextareaInViewMode": "Використовувати нередаговану текстову область у режимі перегляду",
     "setDefaultOnlyIfRequired": "Застосовуйте значення за замовчуванням лише за потреби",
-    "dropdown": "спадний список"
+    "dropdown": "спадний список",
+    "defaultEnum": "За замовчуванням",
+    "disableNullValue": "Вимкнути значення NULL"
   },
   "messages": {
     "selectEntityType": "Виберіть тип сутності в лівому меню.",

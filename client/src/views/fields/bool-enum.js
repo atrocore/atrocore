@@ -19,7 +19,7 @@ Espo.define('views/fields/bool-enum', 'views/fields/enum',
             Dep.prototype.init.call(this);
         },
         setup(){
-            this.model.set(this.options.name, this.model.get(this.fieldName).toString())
+            this.model.set(this.options.name, (this.model.get(this.fieldName) ?? null) + '')
             this.listenTo(this.model, 'change:'+this.options.name, function(){
                 let value = this.model.get(this.options.name);
                 if(value === "null"){
@@ -28,6 +28,14 @@ Espo.define('views/fields/bool-enum', 'views/fields/enum',
                     value = value === "true";
                 }
                 this.model.set(this.fieldName, value)
+            })
+
+            this.listenTo(this.model, 'change:'+this.fieldName, function(){
+                let value = this.model.get(this.fieldName);
+                if(this.model.get(this.options.name) === value + ''){
+                    return
+                }
+                this.model.set(this.options.name, value + '')
             })
 
             Dep.prototype.setup.call(this);

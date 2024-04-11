@@ -1,8 +1,18 @@
 {
    "params":[
       {
-         "name":"default",
+         "name":"disableNullValue",
          "type":"bool"
+      },
+      {
+         "name":"default",
+         "type":"bool",
+         "view": "views/admin/field-manager/fields/bool/default"
+      },
+      {
+         "name":"defaultEnum",
+         "type":"bool",
+         "view": "views/admin/field-manager/fields/bool/default-enum"
       },
       {
          "name":"audited",
@@ -13,8 +23,9 @@
          "type":"bool"
       },
       {
-         "name":"disableNullValue",
-         "type":"bool"
+         "name":"required",
+         "type":"bool",
+         "view": "views/admin/field-manager/fields/bool/required"
       }
    ],
    "filter": true,

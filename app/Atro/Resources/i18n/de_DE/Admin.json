@@ -172,7 +172,9 @@
     "foreignName": "Fremdfeld",
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
     "setDefaultOnlyIfRequired": "Wenden Sie den Standardwert nur bei Bedarf an",
-    "dropdown": "Runterfallen"
+    "dropdown": "Runterfallen",
+    "defaultEnum": "Standardwert",
+    "disableNullValue": "NULL-Wert deaktivieren"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
