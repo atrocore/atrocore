@@ -1,7 +1,7 @@
 {
    "params":[
       {
-         "name":"disableNullValue",
+         "name":"notNull",
          "type":"bool"
       },
       {
@@ -30,8 +30,5 @@
    ],
    "filter": true,
    "qbFilterType": "boolean",
-   "multilingual": true,
-   "fieldDefs":{
-      "notNull": true
-   }
+   "multilingual": true
 }

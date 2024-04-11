@@ -3240,7 +3240,7 @@ class Record extends Base
                 $value = $entity->get($field);
             }
 
-            if ($params['type'] === 'bool' && $params['disableNullValue'] === true) {
+            if ($params['type'] === 'bool' && $params['notNull'] !== false) {
                 if (!empty($data->$field) !== !empty($value)) {
                     return true;
                 }

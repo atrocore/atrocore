@@ -14,12 +14,11 @@ Espo.define('views/admin/field-manager/fields/bool/default', 'views/fields/bool'
 
         afterRender(){
             Dep.prototype.afterRender.call(this);
-            this.toggleField(!this.model.get('disableNullValue'))
-            this.listenTo(this.model, 'change:disableNullValue', function(){
-                if(!this.model.get('disableNullValue')){
-                    this.model.set('default',null);
-                    this.toggleField(!this.model.get('disableNullValue'))
-                    debugger
+            this.toggleField(!this.model.get('notNull'))
+            this.listenTo(this.model, 'change:notNull', function(){
+                if(this.model.get('notNull')){
+                    this.model.set('default',false);
+                    this.toggleField(!this.model.get('notNull'))
                 }
             })
 
@@ -36,7 +35,7 @@ Espo.define('views/admin/field-manager/fields/bool/default', 'views/fields/bool'
             }
         },
         fetch(){
-            if(this.model.get('disableNullValue')){
+            if(this.model.get('notNull')){
                return  Dep.prototype.fetch.call(this)
             }
         }

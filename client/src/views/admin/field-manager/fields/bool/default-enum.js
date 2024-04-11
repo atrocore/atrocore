@@ -20,11 +20,11 @@ Espo.define('views/admin/field-manager/fields/bool/default-enum', 'views/fields/
         },
         afterRender(){
             Dep.prototype.afterRender.call(this);
-            this.toggleField(this.model.get('disableNullValue'))
-            this.listenTo(this.model, 'change:disableNullValue', function(){
-                if(this.model.get('disableNullValue')){
-                    this.model.set('default',false);
-                    this.toggleField(this.model.get('disableNullValue'))
+            this.toggleField(this.model.get('notNull'))
+            this.listenTo(this.model, 'change:notNull', function(){
+                if(!this.model.get('notNull')){
+                    this.model.set('default', null);
+                    this.toggleField(this.model.get('notNull'))
                 }
             })
         },
@@ -41,18 +41,17 @@ Espo.define('views/admin/field-manager/fields/bool/default-enum', 'views/fields/
         },
 
         fetch(){
-            if(!this.model.get('disableNullValue')){
-                let data = Dep.prototype.fetch.call(this);
-                let value = data['_default']
-                delete  data['_default']
-                if(value === "null"){
-                    value = null;
-                }else {
-                    value = value === "true";
-                }
-                data['default'] = value;
-                return data;
+            let data = Dep.prototype.fetch.call(this);
+            let value = data['_default']
+            delete  data['_default']
+            if(value === "null"){
+                value = null;
+            }else {
+                value = value === "true";
             }
+            delete this.model.attributes['_default']
+            data['default'] = value;
+            return data;
         }
 
     });
