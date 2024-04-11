@@ -1911,7 +1911,7 @@ class Record extends Base
     }
 
     /**
-     * Returns relationship related entities. Example: link productAssets_asset will return Assets
+     * Returns relationship related entities. Example: link productFiles_file will return Files
      *
      * @param Entity $entity
      * @param string $link

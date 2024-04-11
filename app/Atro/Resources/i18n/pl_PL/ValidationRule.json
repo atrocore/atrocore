@@ -18,8 +18,5 @@
 		"Create ValidationRule": "Utwórz regułę walidacji",
 		"minSize": "Min, Kb",
 		"maxSize": "Maks, Kb"
-	},
-	"confirmations": {
-		"recheckAllAssets": "Czy na pewno chcesz zmienić reguły walidacji? Wszystkie powiązane zasoby zostaną ponownie sprawdzone, a w ostateczności odlinkowane."
 	}
 }

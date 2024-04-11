@@ -8,6 +8,5 @@
   "notifications": false,
   "type": "Base",
   "object": true,
-  "skipAssetSorting": true,
   "isActiveUnavailable": true
 }
