@@ -114,6 +114,7 @@ class V1Dot10Dot0 extends Base
             $this->exec("DROP INDEX IDX_VALIDATION_RULE_ASSET_TYPE_ID ON validation_rule");
             $this->exec("ALTER TABLE validation_rule CHANGE asset_type_id file_type_id VARCHAR(24) DEFAULT NULL");
             $this->exec("CREATE INDEX IDX_VALIDATION_RULE_FILE_TYPE_ID ON validation_rule (file_type_id, deleted)");
+            $this->exec("ALTER TABLE file ADD tags LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
         }
 
         $this->exec("ALTER TABLE file_type RENAME COLUMN sort_order to priority");
