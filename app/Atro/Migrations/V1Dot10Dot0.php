@@ -537,6 +537,19 @@ class V1Dot10Dot0 extends Base
         }
 
         self::createDefaultFileTypes($this->getConnection());
+
+        try {
+            $this->getConnection()->createQueryBuilder()
+                ->update('file_type')
+                ->set('assign_automatically', ':false')
+                ->set('priority', ':priority')
+                ->where('id = :id')
+                ->setParameter('id', 'file')
+                ->setParameter('priority', 0, ParameterType::INTEGER)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->executeQuery();
+        } catch (\Throwable $e) {
+        }
     }
 
     public static function createDefaultStorage(Connection $conn): void
