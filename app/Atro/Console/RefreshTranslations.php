@@ -1,40 +1,31 @@
 <?php
 /**
-* AtroCore Software
-*
-* This source file is available under GNU General Public License version 3 (GPLv3).
-* Full copyright and license information is available in LICENSE.txt, located in the root directory.
-*
-*  @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
-*  @license    GPLv3 (https://www.gnu.org/licenses/)
-*/
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
 
 declare(strict_types=1);
 
 namespace Atro\Console;
 
 use Atro\ORM\DB\RDB\Mapper;
-use Atro\Core\Exceptions\BadRequest;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
-use Espo\ORM\EntityManager;
 
-/**
- * Class RefreshTranslations
- */
 class RefreshTranslations extends AbstractConsole
 {
-    /**
-     * Get console command description
-     *
-     * @return string
-     */
     public static function getDescription(): string
     {
         return 'Refresh translations.';
     }
 
-    public static function getSimplifiedTranslates(array $data): array
+    public static function getSimplifiedTranslates(array $data, bool $underscore = false): array
     {
         $records = [];
         foreach ($data as $module => $moduleData) {
@@ -44,8 +35,13 @@ class RefreshTranslations extends AbstractConsole
                 foreach ($preparedLocaleData as $key => $value) {
                     $records[$key]['name'] = $key;
                     $records[$key]['module'] = $module;
-                    $records[$key]['isCustomized'] = $module === 'custom';
-                    $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
+                    if ($underscore) {
+                        $records[$key]['is_customized'] = $module === 'custom';
+                        $records[$key][strtolower($locale)] = $value;
+                    } else {
+                        $records[$key]['isCustomized'] = $module === 'custom';
+                        $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
+                    }
                 }
             }
         }
@@ -68,12 +64,7 @@ class RefreshTranslations extends AbstractConsole
             array_pop($parents);
         }
     }
-
-    /**
-     * Run action
-     *
-     * @param array $data
-     */
+    
     public function run(array $data): void
     {
         $this->refresh();
@@ -84,29 +75,35 @@ class RefreshTranslations extends AbstractConsole
 
     public function refresh(): void
     {
-        /** @var \Doctrine\DBAL\Connection $connection */
-        $connection = $this->getContainer()->get('connection');
+        /** @var \Doctrine\DBAL\Connection $conn */
+        $conn = $this->getContainer()->get('connection');
 
         // delete old
-        $connection->createQueryBuilder()
+        $conn->createQueryBuilder()
             ->delete('translation')
             ->where('is_customized = :customized')
-            ->setParameter('customized', false, Mapper::getParameterType(false))
+            ->setParameter('customized', false, ParameterType::BOOLEAN)
             ->executeQuery();
 
-        /** @var EntityManager $em */
-        $em = $this->getContainer()->get('entityManager');
-
-        $records = self::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
-
+        $records = self::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData(), true);
         foreach ($records as $record) {
-            $label = $em->getEntity('Translation');
-            $label->set($record);
-
+            $qb = $conn->createQueryBuilder()
+                ->insert('translation')
+                ->setValue('id', ':id')
+                ->setValue('created_at', ':now')
+                ->setValue('modified_at', ':now')
+                ->setValue('created_by_id', ':system')
+                ->setValue('modified_by_id', ':system')
+                ->setParameter('id', Util::generateId())
+                ->setParameter('now', date('Y-m-d H:i:s'))
+                ->setParameter('system', 'system');
+            foreach ($record as $name => $value) {
+                $qb->setValue($name, ':' . $name)
+                    ->setParameter($name, $value, Mapper::getParameterType($value));
+            }
             try {
-                $em->saveEntity($label, ['keepCache' => true]);
-            } catch (BadRequest $e) {
-                // ignore validation errors
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
             }
         }
     }

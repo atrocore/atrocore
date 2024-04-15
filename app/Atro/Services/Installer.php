@@ -733,18 +733,10 @@ class Installer extends HasContainer
         \Atro\Migrations\V1Dot10Dot0::createDefaultStorage($this->getEntityManager()->getConnection());
         \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
 
-        // refresh translations
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
-
-        // regenerate lists
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate lists >/dev/null");
-
-        // regenerate measures
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate measures >/dev/null");
-
-        // regenerate ui handlers
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate ui handlers >/dev/null");
-
     }
 
     /**
