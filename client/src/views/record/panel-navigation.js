@@ -40,7 +40,7 @@ Espo.define('views/record/panel-navigation', 'view',
         events: {
             'click [data-action="scrollToPanel"]'(e) {
                 let name = $(e.currentTarget).data('name')
-                if((this.getStorage().get('closed-panels', this.scope) || []).includes(name)){
+                if(this.isPanelClosed(name)){
                     let panel = this.options.panelList.filter(p => p.name === name)[0]
                     Backbone.trigger('create-bottom-panel', panel)
                     this.listenTo(Backbone,'after:create-bottom-panel',function(panel){
@@ -90,6 +90,11 @@ Espo.define('views/record/panel-navigation', 'view',
             let navbarHeight = $('#navbar .navbar-right').outerHeight() || 0;
             let navigationHeight = $('.record-buttons').innerHeight() || 0;
             $(window).scrollTop(offset.top - navbarHeight - navigationHeight + 5);
-        }
+        },
+        isPanelClosed(name){
+            let preferences =  this.getPreferences().get('closedPanels') ?? {};
+            let scopePreferences = preferences[this.scope] ?? []
+            return scopePreferences.includes(name)
+        },
     })
 );
