@@ -41,7 +41,9 @@ class Connection extends Base
     public function get($id = null)
     {
         $entity = parent::get($id);
-        $this->setDataFields($entity);
+        if (!empty($entity)){
+            $this->setDataFields($entity);
+        }
 
         return $entity;
     }
