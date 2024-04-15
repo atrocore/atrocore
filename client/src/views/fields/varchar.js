@@ -171,7 +171,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     }).responseJSON
                 }
 
-                if (this.inlineEditModeIsOn) {
+                if (this.inlineEditModeIsOn && this.isRequired() && this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'setDefaultOnlyIfRequired'])) {
                     this.applyDefaultValue()
                 }
             }
