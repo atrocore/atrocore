@@ -1675,15 +1675,17 @@ class Base
         }
 
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
-        if (!empty($fieldDefs['optionsIds']) && !empty($fieldDefs['options'])) {
-            $preparedValue = [];
-            foreach ($value as $v) {
-                $key = array_search($v, $fieldDefs['options']);
-                if ($key !== false) {
-                    $preparedValue[] = $fieldDefs['optionsIds'][$key];
+        if (!empty($fieldDefs['type']) && in_array($fieldDefs['type'], ['enum', 'enumInt', 'enumFloat', 'multiEnum'])) {
+            if (!empty($fieldDefs['optionsIds']) && !empty($fieldDefs['options'])) {
+                $preparedValue = [];
+                foreach ($value as $v) {
+                    $key = array_search($v, $fieldDefs['options']);
+                    if ($key !== false) {
+                        $preparedValue[] = $fieldDefs['optionsIds'][$key];
+                    }
                 }
+                $value = $preparedValue;
             }
-            $value = $preparedValue;
         }
 
         if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'array') {
