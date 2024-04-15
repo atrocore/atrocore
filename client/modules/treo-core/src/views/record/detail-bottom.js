@@ -127,6 +127,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 panel.hidden = false;
                 this.clearView(panel.name);
                 this.createPanelView(panel, (view, pDefs) => {
+                    this.rebuildPanelHeading(pDefs);
                     view.render();
                     this.removeFromClosedPanelStorage(panel.name)
                     Backbone.trigger('after:create-bottom-panel', panel)
