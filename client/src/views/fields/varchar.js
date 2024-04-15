@@ -56,7 +56,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             },
             'focus input': function () {
                 let defaultValue = this.model.defaults[this.name]
-                if (defaultValue != null) {
+                if (defaultValue == null) {
                     defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default'])
                 }
                 if (!this.model.get(this.name) && defaultValue) {
