@@ -68,6 +68,7 @@
     "audited": "Updates werden im Verlauf geloggt.",
     "required": "Das Feld ist ein Pflichtfeld und darf nicht leer sein.",
     "default": "Der Wert wird beim Erstellen standardmäßig gesetzt.",
+    "defaultEnum": "Der Wert wird beim Erstellen standardmäßig gesetzt.",
     "min": "Min. zulässiger Wert",
     "max": "Max. zulässiger Wert",
     "seeMoreDisabled": "Wenn nicht aktiviert, werden lange anzuzeigende Texte gekürzt.",

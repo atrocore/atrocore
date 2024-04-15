@@ -1,8 +1,18 @@
 {
    "params":[
       {
-         "name":"default",
+         "name":"notNull",
          "type":"bool"
+      },
+      {
+         "name":"default",
+         "type":"bool",
+         "view": "views/admin/field-manager/fields/bool/default"
+      },
+      {
+         "name":"defaultEnum",
+         "type":"bool",
+         "view": "views/admin/field-manager/fields/bool/default-enum"
       },
       {
          "name":"audited",
@@ -11,12 +21,14 @@
       {
          "name":"readOnly",
          "type":"bool"
+      },
+      {
+         "name":"required",
+         "type":"bool",
+         "view": "views/admin/field-manager/fields/bool/required"
       }
    ],
    "filter": true,
    "qbFilterType": "boolean",
-   "multilingual": true,
-   "fieldDefs":{
-      "notNull": true
-   }
+   "multilingual": true
 }

@@ -190,7 +190,9 @@
     "index": "Database Index",
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
     "setDefaultOnlyIfRequired": "Apply default value only if required",
-    "dropdown": "Dropdown"
+    "dropdown": "Dropdown",
+    "defaultEnum": "Default",
+    "notNull": "Not Null"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",

@@ -48,6 +48,8 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareHierarchyEntities($data);
 
+        $data = $this->prepareBoolFieldView($data);
+
         $this->prepareRanges($data);
 
         $this->prepareUnit($data);
@@ -1080,6 +1082,22 @@ class Metadata extends AbstractListener
             if ($entity !== 'File') {
                 $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
             }
+        }
+
+        return $data;
+    }
+
+    protected  function prepareBoolFieldView(array $data){
+        foreach ($data['entityDefs'] as $entity => $entityDef) {
+           foreach ($entityDef['fields'] as $field => $fieldDefs){
+               if($fieldDefs['type'] === 'bool' && $fieldDefs['notNull'] === false){
+                   $data['entityDefs'][$entity]['fields'][$field]['view'] = 'views/fields/bool-enum';
+               }
+
+               if($fieldDefs['type'] === 'bool' && $fieldDefs['notNull'] !== false){
+                   $data['entityDefs'][$entity]['fields'][$field]['notNull'] = true;
+               }
+           }
         }
 
         return $data;
