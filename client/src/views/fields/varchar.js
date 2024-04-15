@@ -170,6 +170,10 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                         async: false,
                     }).responseJSON
                 }
+
+                if (this.inlineEditModeIsOn) {
+                    this.applyDefaultValue()
+                }
             }
         },
 
