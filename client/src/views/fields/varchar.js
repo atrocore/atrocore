@@ -54,14 +54,18 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             'keyup input.with-text-length': function (e) {
                 this.updateTextCounter();
             },
-            'focus input': function () {
-                let defaultValue = this.model.defaults[this.name]
-                if (defaultValue == null) {
-                    defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default'])
-                }
-                if (!this.model.get(this.name) && defaultValue) {
-                    this.model.set(this.name, defaultValue)
-                }
+            'focusin input': function () {
+                this.applyDefaultValue()
+            }
+        },
+
+        applyDefaultValue() {
+            let defaultValue = this.model.defaults[this.name]
+            if (defaultValue == null) {
+                defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default'])
+            }
+            if (!this.model.get(this.name) && defaultValue) {
+                this.model.set(this.name, defaultValue)
             }
         },
 
@@ -148,11 +152,11 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
             }
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 this.updateTextCounter();
 
                 const defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default']);
@@ -167,6 +171,19 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     }).responseJSON
                 }
             }
+        },
+
+        setRequired: function () {
+            if (this.mode === 'edit' && !this.isRequired() && this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'setDefaultOnlyIfRequired'])) {
+                if (this.isRendered()) {
+                    this.applyDefaultValue()
+                } else {
+                    this.once('after:render', function () {
+                        this.applyDefaultValue();
+                    }, this);
+                }
+            }
+            Dep.prototype.setRequired.call(this)
         },
 
         fetch: function () {
