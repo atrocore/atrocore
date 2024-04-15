@@ -1,10 +1,7 @@
 {
   "fields": {
     "useCache": "Usar caché",
-    "defaultCurrency": "Moneda por defecto",
-    "baseCurrency": "Moneda Base",
     "currencyRates": "Tipos de cambio",
-    "currencyList": "Lista de monedas",
     "companyLogo": "El logotipo de cabecera",
     "smtpServer": "Servidor",
     "smtpPort": "Puerto",
@@ -52,7 +49,6 @@
     "tabColorsDisabled": "Disable tab icons colors",
     "tabIconsDisabled": "Disable tab icons",
     "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
-    "cleanupDeletedRecords": "Clean up deleted records",
     "navigationManuBackgroundColor": "Fondo del menú de navegación",
     "navigationMenuFontColor": "Color de fuente de navegación",
     "linkFontColor": "Color de enlace",
@@ -83,7 +79,6 @@
     "authTokenMaxIdleTime": "Define cuándo caduca el Token luego del último acceso.\n0 - significa que no caduca.",
     "userThemesDisabled": "Si está marcado, los usuarios no podrán seleccionar otro tema.",
     "b2cMode": "Por defecto AtroCore esta adaptado para B2B. Usted puede cambiarlo a B2C.",
-    "currencyDecimalPlaces": "Número de decimales. Si está vacía, se mostrarán todas las posiciones decimales disponibles.",
     "aclStrictMode": "Activado: el acceso a los ámbitos estará prohibido si no está especificado en roles.\n\nDeshabilitado: se permitirá el acceso a ámbitos si no está especificado en roles.",
     "isStreamSide": "If enabled: Stream panel will be shown in side.",
     "isStreamPanelFirst": "If enabled: Stream panel will be shown right after overview.",

@@ -25,7 +25,6 @@
     "Account": "Cuenta",
     "KnowledgeBaseCategory": "Categoría de la base de conocimiento",
     "Country": "Country",
-    "MeasuringUnit": "Measuring Unit",
     "Composer": "Composer",
     "Dashlet": "Dashlet",
     "Multilang": "Multilingual",
@@ -56,7 +55,6 @@
     "DocumentFolder": "Carpetas de documentos",
     "KnowledgeBaseCategory": "Categorías de la base de conocimiento",
     "QueueItem": "Queue Items",
-    "MeasuringUnit": "Measuring Units",
     "AuthFailLogRecord": "Auth Fail Log Records",
     "AuthLogRecord": "Auth Log Records",
     "Note": "Notes",
@@ -330,7 +328,6 @@
   },
   "boolFilters": {
     "onlyMy": "Solo míos",
-    "followed": "Siguiendo",
     "onlyActive": "Active",
     "assignedToMe": "Assigned to me",
     "ownedByMe": "Owned by me",
@@ -351,7 +348,6 @@
     "removePartial": "Remove (Part %s)",
     "addRelation": "Add relation",
     "removeRelation": "Remove relation",
-    "convertCurrency": "Convert Currency",
     "restore": "Restaurar"
   },
   "fields": {
@@ -554,15 +550,6 @@
     "s": "s"
   },
   "options": {
-    "fieldsFilter": {
-      "allFields": "All Fields",
-      "empty": "Empty Fields",
-      "emptyAndRequired": "Empty Required Fields"
-    },
-    "localesFilter": {
-      "": "All Languages",
-      "showGenericFields": "Show main language fields"
-    },
     "language": {
       "af_ZA": "Afrikáans",
       "az_AZ": "Azerbaiyán",
@@ -586,9 +573,7 @@
       "fo_FO": "Feroés",
       "fr_CA": "Francés (Canada)",
       "fr_FR": "Francés (Francia)",
-      "ga_IE": "Irlandés",
       "gl_ES": "Gallego",
-      "gn_PY": "Guaraní",
       "he_IL": "Hebreo",
       "hr_HR": "Croata",
       "hu_HU": "Hungaro",
@@ -598,9 +583,7 @@
       "it_IT": "Italiano",
       "ja_JP": "Japonés",
       "ka_GE": "Georgiano",
-      "km_KH": "Camboyano",
       "ko_KR": "Coreano",
-      "ku_TR": "Kurdo",
       "lt_LT": "Lituano",
       "lv_LV": "Latón",
       "mk_MK": "Macedonio",
@@ -608,11 +591,9 @@
       "ms_MY": "Malayo",
       "nb_NO": "Noruego Bokmål",
       "nn_NO": "Noruego Nynorsk",
-      "ne_NP": "Nepalí",
       "nl_NL": "Holandés",
       "pa_IN": "Punyabí",
       "pl_PL": "Polaco",
-      "ps_AF": "Pastún",
       "pt_BR": "Portugués (Brasil)",
       "pt_PT": "Portugués (Portugal)",
       "ro_RO": "Rumano",
@@ -620,12 +601,10 @@
       "sk_SK": "Eslovaco",
       "sl_SI": "Esloveno",
       "sq_AL": "Albanés",
-      "sr_RS": "Serbio",
       "sv_SE": "Sueco",
       "sw_KE": "Suajili",
       "te_IN": "Télugu",
       "th_TH": "Tailandés",
-      "tl_PH": "Tagalo",
       "tr_TR": "Turco",
       "uk_UA": "Ucraniano",
       "vi_VN": "Vietnamita",
@@ -634,8 +613,7 @@
       "zh_TW": "Chino Traditional (Taiwán)",
       "es_MX": "Español (México)",
       "hi_IN": "Hindi (hi_IN)",
-      "ta_IN": "Tamil (ta_IN)",
-      "ur_PK": "Urdu (ur_PK)"
+      "ta_IN": "Tamil (ta_IN)"
     },
     "dateSearchRanges": {
       "on": "Está en",
@@ -871,8 +849,7 @@
     "codeInvalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
     "notDashletService": "Service %s must implement Dashlet Interface",
     "editedByAnotherUser": "The data set [%s] has been changed in the meantime. You can <a href=\"javascript:\" onclick=\"location.reload();\">reload the page</a> to see the new values, return to editing by pressing \"Cancel\" or overwrite the data by pressing \"Apply\". Do you want to overwrite the data?",
-    "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
-    "notUnique": "'%s' should have unique value."
+    "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\"."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

@@ -1,6 +1,5 @@
 {
   "fields": {
-    "attachmentDuplicates": "Duplikaty zasobów",
     "fileNameRegexPattern": "Wzorzec wyrażenia regularnego dla nazwy pliku",
     "variables": "Zmienne",
     "locale": "Lokalizacja domyślna",
