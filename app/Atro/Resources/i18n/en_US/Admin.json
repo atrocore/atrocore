@@ -192,7 +192,8 @@
     "setDefaultOnlyIfRequired": "Apply default value only if required",
     "dropdown": "Dropdown",
     "defaultEnum": "Default",
-    "notNull": "Not Null"
+    "notNull": "Not Null",
+    "disableEmptyValue": "Disable Empty Value"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",

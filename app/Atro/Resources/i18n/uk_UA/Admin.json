@@ -162,7 +162,8 @@
     "setDefaultOnlyIfRequired": "Застосовуйте значення за замовчуванням лише за потреби",
     "dropdown": "спадний список",
     "defaultEnum": "За замовчуванням",
-    "notNull": "Не нуль."
+    "notNull": "Не нуль.",
+    "disableEmptyValue": "Вимкнути Порожнє значення"
   },
   "messages": {
     "selectEntityType": "Виберіть тип сутності в лівому меню.",

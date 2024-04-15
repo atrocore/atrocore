@@ -73,7 +73,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             this.validations = Espo.utils.clone(this.validations);
             this.validations.push('pattern');
 
-            this.disableEmptyValue = this.options.params?.disableEmptyValue
+            this.disableEmptyValue = this.params?.disableEmptyValue
                 ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'disableEmptyValue']);
 
             let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']) || null;
@@ -115,7 +115,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     this.searchData.value = this.searchParams.value;
                 }
             }
-            if(!this.disableEmptyValue && this.mode === "detail" && this.model.get(this.name) === ""){
+            if(["detail",'list'].includes(this.mode) && this.model.get(this.name) === ""){
                 data['value'] = " ";
             }
             return data;
@@ -164,7 +164,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if(this.$element && this.$element.val() === "" && !this.disableEmptyValue && this.model.get(this.name) === "" ){
+            if(this.$element && this.$element.val() === ""  && this.model.get(this.name) === "" ){
                 this.$element.val(" ")
             }
 
@@ -204,7 +204,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     }
                 }
 
-                if(initialValue !== "" && value === "" && !this.disableEmptyValue){
+                if(((initialValue !== "" && value === "") || value === " ")  && !this.disableEmptyValue){
                     data[this.name] = "";
                 }else{
                     data[this.name] = value ? value : null;
