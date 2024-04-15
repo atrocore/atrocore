@@ -203,7 +203,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 p.order = 5;
 
                 if(p.hiddenPerDefault === true
-                    && !(this.getStorage().get('closed-panels', this.scope) || []).includes(p.name)){
+                    && !this.getStorage().has('closed-panels', this.scope)){
                     this.addToClosedPanelStorage(p.name)
                 }
 
