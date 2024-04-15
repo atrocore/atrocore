@@ -113,6 +113,9 @@
         },
         "tabColorsDisabled": {
             "type": "bool"
+        },
+        "closedPanels": {
+            "type": "jsonObject"
         }
     }
 }
