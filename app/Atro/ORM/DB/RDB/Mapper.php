@@ -556,8 +556,7 @@ class Mapper implements MapperInterface
                 continue;
             }
 
-            $notNull =  $this->getMetadata()->get(['entityDefs',$entity->getEntityType(),'fields',$attribute,'notNull'], false);
-            $setArr[$attribute] = $this->prepareValueForUpdate($type, $value, $notNull);
+            $setArr[$attribute] = $this->prepareValueForUpdate($type, $value);
         }
 
         if (count($setArr) == 0) {
@@ -660,7 +659,7 @@ class Mapper implements MapperInterface
         return $data;
     }
 
-    public function prepareValueForUpdate($type, $value, $notNull = true)
+    public function prepareValueForUpdate($type, $value)
     {
         if ($type == IEntity::JSON_ARRAY && is_array($value)) {
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
@@ -670,7 +669,7 @@ class Mapper implements MapperInterface
             }
         }
 
-        if ($type === IEntity::BOOL && $notNull && $value === null) {
+        if ($type === IEntity::BOOL && $value === null) {
             $value = false;
         }
 
