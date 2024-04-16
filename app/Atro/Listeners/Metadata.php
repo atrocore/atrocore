@@ -1087,17 +1087,22 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    protected  function prepareBoolFieldView(array $data){
+    protected function prepareBoolFieldView(array $data): array
+    {
         foreach ($data['entityDefs'] as $entity => $entityDef) {
-           foreach ($entityDef['fields'] as $field => $fieldDefs){
-               if($fieldDefs['type'] === 'bool' && $fieldDefs['notNull'] === false){
-                   $data['entityDefs'][$entity]['fields'][$field]['view'] = 'views/fields/bool-enum';
-               }
+            foreach ($entityDef['fields'] as $field => $fieldDefs) {
+                if (!isset($fieldDefs['type']) || !isset($fieldDefs['notNull'])) {
+                    continue;
+                }
 
-               if($fieldDefs['type'] === 'bool' && $fieldDefs['notNull'] !== false){
-                   $data['entityDefs'][$entity]['fields'][$field]['notNull'] = true;
-               }
-           }
+                if ($fieldDefs['type'] === 'bool' && $fieldDefs['notNull'] === false) {
+                    $data['entityDefs'][$entity]['fields'][$field]['view'] = 'views/fields/bool-enum';
+                }
+
+                if ($fieldDefs['type'] === 'bool' && $fieldDefs['notNull'] !== false) {
+                    $data['entityDefs'][$entity]['fields'][$field]['notNull'] = true;
+                }
+            }
         }
 
         return $data;
