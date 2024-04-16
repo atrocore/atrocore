@@ -157,33 +157,45 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
            let scopePreferences = preferences[this.scope] ?? {}
             let panels = scopePreferences['closed'] ?? []
-            panels.push(...names);
+            names.forEach(name => {
+                if(!panels.includes(name)){
+                    panels.push(name)
+                }
+            })
             scopePreferences['closed'] = panels;
 
             if(isHiddenPerDefault){
                 panels = scopePreferences['hiddenPerDefault'] ?? []
-                panels.push(...names);
+                names.forEach(name => {
+                    if(!panels.includes(name)){
+                        panels.push(name)
+                    }
+                })
                 scopePreferences['hiddenPerDefault'] = panels;
             }
 
             preferences[this.scope] = scopePreferences;
-
             this.getPreferences().set('closedPanelOptions', preferences);
             this.getPreferences().save({patch: true});
             this.getPreferences().trigger('update');
         },
-        removeFromClosedPanelPreferences(names, fromHidden = false){
+        removeFromClosedPanelPreferences(names, fromHiddenPerDefault = false){
 
             if(names.length === 0) return;
             let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? {};
-            let type = fromHidden ? 'hiddenPerDefault' : 'closed';
-            let panels = scopePreferences[fromHidden] ?? []
+            let panels = scopePreferences['closed'] ?? []
 
             panels = panels.filter(n => !names.includes(n));
-            scopePreferences[type] = panels;
-            preferences[this.scope] = scopePreferences;
+            scopePreferences['closed'] = panels;
 
+            if(fromHiddenPerDefault){
+                panels = scopePreferences['hiddenPerDefault'] ?? []
+                panels = panels.filter(n => !names.includes(n));
+                scopePreferences['hiddenPerDefault'] = panels;
+            }
+
+            preferences[this.scope] = scopePreferences;
             this.getPreferences().set('closedPanelOptions', preferences);
             this.getPreferences().save({patch: true});
             this.getPreferences().trigger('update');
@@ -250,7 +262,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                     toRemoveAsHiddenPerDefault.push(p.name)
                 }
 
-                if(this.isPanelClosed(p.name)){
+                if(this.isPanelClosed(p.name) && !toRemoveAsHiddenPerDefault.includes(p.name)){
                     p.hidden = true
                     this.recordHelper.setPanelStateParam(p.name, true);
                 }
