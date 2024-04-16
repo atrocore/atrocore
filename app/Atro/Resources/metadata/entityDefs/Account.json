@@ -10,16 +10,8 @@
       "type": "text"
     },
     "language": {
-      "type": "enum",
-      "required": false,
-      "options": [
-        "English",
-        "German"
-      ],
-      "optionsIds": [
-        "en",
-        "de"
-      ]
+      "type": "language",
+      "required": false
     },
     "type": {
       "type": "enum",
