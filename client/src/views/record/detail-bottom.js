@@ -341,7 +341,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         filterActions: function (actions) {
             var filtered = [];
             actions.forEach(function (item) {
-                if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item)) {
+                if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item) && filtered.findIndex(i => i.action === item.action) === -1) {
                     filtered.push(item);
                 }
             }.bind(this));
