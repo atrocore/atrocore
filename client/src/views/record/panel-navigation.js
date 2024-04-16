@@ -92,9 +92,9 @@ Espo.define('views/record/panel-navigation', 'view',
             $(window).scrollTop(offset.top - navbarHeight - navigationHeight + 5);
         },
         isPanelClosed(name){
-            let preferences =  this.getPreferences().get('closedPanels') ?? {};
+            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? []
-            return scopePreferences.includes(name)
+            return scopePreferences['closed'].includes(name)
         },
     })
 );

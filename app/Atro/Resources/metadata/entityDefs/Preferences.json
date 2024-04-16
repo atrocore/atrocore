@@ -114,7 +114,7 @@
         "tabColorsDisabled": {
             "type": "bool"
         },
-        "closedPanels": {
+        "closedPanelOptions": {
             "type": "jsonObject"
         }
     }
