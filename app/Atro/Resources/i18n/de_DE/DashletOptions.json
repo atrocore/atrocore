@@ -16,7 +16,8 @@
     "sortDirection": "Bestellung (Richtung)",
     "title": "Titel",
     "mode": "Modus",
-    "users": "Benutzer"
+    "users": "Benutzer",
+    "savedFilter": "Gespeicherter Filter"
   },
   "options": {
     "mode": {
