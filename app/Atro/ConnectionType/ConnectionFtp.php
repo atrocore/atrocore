@@ -26,7 +26,7 @@ class ConnectionFtp extends AbstractConnection implements ConnectionInterface
     {
         $port = 21;
         if (!empty($connection->get('port'))) {
-            $port = $connection->get('port');
+            $port = (int)$connection->get('port');
         }
 
         $className = FtpConnection::class;
