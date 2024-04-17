@@ -16,7 +16,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Espo\Core\Exceptions\Error;
 
-class V1Dot9Dot18 extends Base
+class V1Dot9Dot19 extends Base
 {
     public function up(): void
     {
