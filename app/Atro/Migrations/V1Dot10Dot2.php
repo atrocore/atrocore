@@ -17,11 +17,11 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 
-class V1Dot10Dot1 extends Base
+class V1Dot10Dot2 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-04-16 00:00:00');
+        return new \DateTime('2024-04-17 00:00:00');
     }
 
     public function up(): void
