@@ -33,7 +33,10 @@
 Espo.define('views/fields/language', 'views/fields/enum', Dep => {
 
     return Dep.extend({
-
+        setupOptions() {
+            this.params.options = Espo.Utils.clone(this.getMetadata().get(['multilang', 'languageList']));
+            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
+        },
     });
 
 });

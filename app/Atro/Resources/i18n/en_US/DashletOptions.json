@@ -15,7 +15,8 @@
     "sortBy": "Order (field)",
     "sortDirection": "Order (direction)",
     "expandedLayout": "Layout",
-    "dateFilter": "Date Filter"
+    "dateFilter": "Date Filter",
+    "savedFilter": "Saved Filter"
   },
   "options": {
     "mode": {

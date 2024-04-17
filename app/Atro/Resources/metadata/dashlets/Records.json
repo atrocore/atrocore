@@ -24,6 +24,13 @@
         "type": "enum",
         "view": "views/dashlets/fields/records/primary-filter"
       },
+      "savedFilter": {
+        "type": "enum",
+        "view": "views/dashlets/fields/records/saved-filter"
+      },
+      "saveFilterData": {
+        "type": "jsonObject"
+      },
       "boolFilterList": {
         "type": "multiEnum",
         "view": "views/dashlets/fields/records/bool-filter-list"
@@ -69,6 +76,10 @@
           [
             {"name": "boolFilterList"},
             {"name": "sortDirection"}
+          ],
+          [
+            {"name": "savedFilter"},
+            false
           ],
           [
             {"name": "displayRecords"},

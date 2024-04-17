@@ -29,7 +29,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
             'click span.collapser[data-action="closePanel"]': function (e) {
                 let name = $(e.currentTarget).data('panel');
                 this.$el.find(`.panel[data-name="${name}"]`).addClass('hidden');
-                this.addToClosedPanelStorage(name)
+                this.addToClosedPanelPreferences([name])
             },
         }, Dep.prototype.events),
 
@@ -54,9 +54,9 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                     "title": this.translate('Stream', 'labels', this.scope),
                     "view":"views/stream/panel",
                     "sticked": false,
-                    "hidden": !streamAllowed || (this.getStorage().get('closed-panels', this.scope) || []).includes('stream'),
+                    "hidden": !streamAllowed || this.isPanelClosed('stream'),
                     "order": this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
-                    "expanded": !(this.getStorage().get('collapsed-panels', this.scope) || []).includes('stream')
+                    "expanded": !this.isPanelClosed('stream')
                 });
             }
         },
@@ -129,22 +129,76 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 this.createPanelView(panel, (view, pDefs) => {
                     this.rebuildPanelHeading(pDefs);
                     view.render();
-                    this.removeFromClosedPanelStorage(panel.name)
+                    this.removeFromClosedPanelPreferences([panel.name])
                     Backbone.trigger('after:create-bottom-panel', panel)
                     this.notify(false)
 
                 });
             }.bind(this))
         },
-        addToClosedPanelStorage(name){
-            let closedPanels = this.getStorage().get('closed-panels', this.scope) || [];
-            closedPanels.push(name);
-            this.getStorage().set('closed-panels', this.scope, closedPanels)
+        isPreferenceScopeExists(){
+            let preferences =  this.getPreferences().get('closedPanels') ?? {};
+            return preferences.hasOwnProperty(this.scope)
         },
-        removeFromClosedPanelStorage(name){
-            let closedPanels = this.getStorage().get('closed-panels', this.scope) || [];
-            closedPanels = closedPanels.filter(n => n !== name)
-            this.getStorage().set('closed-panels', this.scope, closedPanels)
+        isPanelClosed(name){
+            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['closed'] ?? [];
+            return panels.includes(name)
+        },
+        isPanelHiddenPerDefault(name){
+            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['hiddenPerDefault'] ?? []
+            return panels.includes(name)
+        },
+        addToClosedPanelPreferences(names, isHiddenPerDefault = false){
+            if(names.length === 0) return;
+           let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+           let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['closed'] ?? []
+            names.forEach(name => {
+                if(!panels.includes(name)){
+                    panels.push(name)
+                }
+            })
+            scopePreferences['closed'] = panels;
+
+            if(isHiddenPerDefault){
+                panels = scopePreferences['hiddenPerDefault'] ?? []
+                names.forEach(name => {
+                    if(!panels.includes(name)){
+                        panels.push(name)
+                    }
+                })
+                scopePreferences['hiddenPerDefault'] = panels;
+            }
+
+            preferences[this.scope] = scopePreferences;
+            this.getPreferences().set('closedPanelOptions', preferences);
+            this.getPreferences().save({patch: true});
+            this.getPreferences().trigger('update');
+        },
+        removeFromClosedPanelPreferences(names, fromHiddenPerDefault = false){
+
+            if(names.length === 0) return;
+            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {};
+            let panels = scopePreferences['closed'] ?? []
+
+            panels = panels.filter(n => !names.includes(n));
+            scopePreferences['closed'] = panels;
+
+            if(fromHiddenPerDefault){
+                panels = scopePreferences['hiddenPerDefault'] ?? []
+                panels = panels.filter(n => !names.includes(n));
+                scopePreferences['hiddenPerDefault'] = panels;
+            }
+
+            preferences[this.scope] = scopePreferences;
+            this.getPreferences().set('closedPanelOptions', preferences);
+            this.getPreferences().save({patch: true});
+            this.getPreferences().trigger('update');
         },
         setupRelationshipPanels: function () {
             let scope = this.scope;
@@ -152,7 +206,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
             let scopesDefs = this.getMetadata().get('scopes') || {};
 
             let panelList = this.relationshipsLayout;
-
+            let toRemoveAsHiddenPerDefault = []
             panelList.forEach(function (item) {
                 let p;
                 if (typeof item === 'string' || item instanceof String) {
@@ -201,13 +255,14 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 }
 
                 p.order = 5;
-
                 if(p.hiddenPerDefault === true
-                    && !(this.getStorage().get('closed-panels', this.scope) || []).includes(p.name)){
-                    this.addToClosedPanelStorage(p.name)
+                    && !this.isPanelHiddenPerDefault(p.name)){
+                    this.addToClosedPanelPreferences([p.name], true)
+                }else if(p.hiddenPerDefault !== true && this.isPanelHiddenPerDefault(p.name)){
+                    toRemoveAsHiddenPerDefault.push(p.name)
                 }
 
-                if((this.getStorage().get('closed-panels', this.scope) || []).includes(p.name)){
+                if(this.isPanelClosed(p.name) && !toRemoveAsHiddenPerDefault.includes(p.name)){
                     p.hidden = true
                     this.recordHelper.setPanelStateParam(p.name, true);
                 }
@@ -228,6 +283,8 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
 
                 this.panelList.push(p);
             }, this);
+
+            this.removeFromClosedPanelPreferences(toRemoveAsHiddenPerDefault, true)
         },
 
         setupPanelViews() {

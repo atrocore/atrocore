@@ -15,7 +15,8 @@
     "sortBy": "Сортування (поле)",
     "sortDirection": "Сортування (напрямок)",
     "expandedLayout": "Макет",
-    "dateFilter": "Фільтр дати"
+    "dateFilter": "Фільтр дати",
+    "savedFilter": "Збережений фільтр"
   },
   "options": {
     "mode": {

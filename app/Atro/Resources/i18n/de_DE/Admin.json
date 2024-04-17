@@ -173,9 +173,7 @@
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
     "setDefaultOnlyIfRequired": "Wenden Sie den Standardwert nur bei Bedarf an",
     "dropdown": "Runterfallen",
-    "defaultEnum": "Standardwert",
-    "notNull": "Nicht Null",
-    "disableEmptyValue": "Leeren Wert deaktivieren"
+    "disableEmptyValue": "Leeren wert deaktivieren"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
