@@ -21,9 +21,11 @@ class ActionSetLinker extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        $actionSet = $this->getEntityManager()->getRepository('Action')->get($entity->get('setId'));
-        if (empty($actionSet) || $actionSet->get('type') !== 'set') {
-            throw new BadRequest('Action Set should be chosen.');
+        if (!empty($setId = $entity->get('setId'))) {
+            $actionSet = $this->getEntityManager()->getRepository('Action')->get($setId);
+            if (empty($actionSet) || $actionSet->get('type') !== 'set') {
+                throw new BadRequest('Action Set should be chosen.');
+            }
         }
 
         $action = $this->getEntityManager()->getRepository('Action')->get($entity->get('actionId'));

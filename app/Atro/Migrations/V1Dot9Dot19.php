@@ -54,11 +54,6 @@ class V1Dot9Dot19 extends Base
         $this->updateComposer('atrocore/core', '^1.9.19');
     }
 
-    public function down(): void
-    {
-        throw new Error("Downgrade is prohibited");
-    }
-
     protected function exec(string $query): void
     {
         try {
