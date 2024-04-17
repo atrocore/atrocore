@@ -33,21 +33,10 @@
 Espo.define('views/fields/multi-language', 'views/fields/multi-enum', Dep => {
 
     return Dep.extend({
-
-        setup: function () {
-            this.params.options = ['main']
-            this.translatedOptions = {'main': this.translate('mainLanguage', 'labels', 'Global')};
-
-            if (this.getConfig().get('isMultilangActive')) {
-                (this.getConfig().get('inputLanguageList') || []).forEach(language => {
-                    this.params.options.push(language);
-                    this.translatedOptions[language] = language;
-                });
-            }
-
-            Dep.prototype.setup.call(this);
+        setupOptions() {
+            this.params.options = Espo.Utils.clone(this.getMetadata().get(['multilang', 'languageList']));
+            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
         },
-
     });
 
 });
