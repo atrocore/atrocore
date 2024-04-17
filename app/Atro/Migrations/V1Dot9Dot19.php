@@ -45,10 +45,10 @@ class V1Dot9Dot19 extends Base
             $table->addIndex(['modified_at', 'deleted'], 'IDX_ACTION_SET_LINKER_MODIFIED_AT');
 
             $table->setPrimaryKey(['id']);
-        }
 
-        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            $this->exec($sql);
+            foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+                $this->exec($sql);
+            }
         }
 
         $this->updateComposer('atrocore/core', '^1.9.19');
