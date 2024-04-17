@@ -52,8 +52,6 @@ class Metadata extends AbstractListener
 
         $this->prepareUnit($data);
 
-        $this->prepareLanguageField($data);
-
         $this->setTranslationRequiredLanguage($data);
 
         $this->prepareScriptField($data);
@@ -146,26 +144,6 @@ class Metadata extends AbstractListener
         $language = Util::toCamelCase(strtolower($this->getConfig()->get('mainLanguage', 'en_Us')));
         if (is_array($data['entityDefs']['Translation']['fields'][$language])) {
             $data['entityDefs']['Translation']['fields'][$language]['required'] = true;
-        }
-    }
-
-    protected function prepareLanguageField(array &$data): void
-    {
-        $languages = ['main'];
-        if ($this->getConfig()->get('isMultilangActive')) {
-            $languages = array_merge($languages, $this->getConfig()->get('inputLanguageList', []));
-        }
-
-        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
-            if (empty($entityDefs['fields'])) {
-                continue 1;
-            }
-            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'language') {
-                    $data['entityDefs'][$entityType]['fields'][$field]['optionsIds'] = $languages;
-                    $data['entityDefs'][$entityType]['fields'][$field]['options'] = $languages;
-                }
-            }
         }
     }
 

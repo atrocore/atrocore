@@ -6,7 +6,8 @@
     "description": "Опис",
     "type": "типовий",
     "role": "Роль",
-    "number": "Номер"
+    "number": "Номер",
+    "language": "Мова"
   },
   "options": {
     "type": {
