@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "sortOrder": {
+      "type": "int"
+    },
+    "isActive": {
+      "type": "bool",
+      "default": true
+    }
+  }
+}

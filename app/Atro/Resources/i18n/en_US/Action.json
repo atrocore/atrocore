@@ -6,7 +6,13 @@
     "inBackground": "Execute in Background",
     "usage": "Usage",
     "massAction": "Mass Action",
-    "display": "Display"
+    "display": "Display",
+    "actionsSet": "Actions Set",
+    "actions": "Actions"
+  },
+  "links": {
+    "actionsSet": "Actions Set",
+    "actions": "Actions"
   },
   "labels": {
     "Create Action": "Create Action",
@@ -19,6 +25,9 @@
     "executeNow": "Are you sure you want to execute selected action?"
   },
   "options": {
+    "type": {
+      "set": "Action Set"
+    },
     "usage": {
       "entity": "Entity",
       "record": "Record"
