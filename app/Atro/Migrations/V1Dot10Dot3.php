@@ -13,12 +13,12 @@ declare(strict_types = 1);
 
 namespace Atro\Migrations;
 
-class V1Dot10Dot2 extends V1Dot9Dot19
+class V1Dot10Dot3 extends V1Dot9Dot19
 {
     public function up(): void
     {
         parent::up();
 
-        $this->updateComposer('atrocore/core', '^1.10.2');
+        $this->updateComposer('atrocore/core', '^1.10.3');
     }
 }
