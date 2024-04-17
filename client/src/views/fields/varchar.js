@@ -50,7 +50,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         defaultFilterValue: '',
 
-        disableEmptyValue: true,
+        disableEmptyValue: false,
 
         events: {
             'keyup input.with-text-length': function (e) {
@@ -78,7 +78,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             this.validations.push('pattern');
 
             this.disableEmptyValue = this.params?.disableEmptyValue
-                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'disableEmptyValue']);
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'disableEmptyValue']) ?? false;
 
             let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']) || null;
 

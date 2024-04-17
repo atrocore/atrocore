@@ -28,17 +28,6 @@ class Entity extends AbstractListener
                 ->createHook(Common\NextNumber::class)
                 ->beforeSave($event->getArgument('entity'), $event->getArgument('options'));
         }
-
-        $entity = $event->getArgument('entity');
-
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $fieldDefs){
-            if($fieldDefs['type'] === 'varchar'
-                && $fieldDefs['disableEmptyValue']
-                && $entity->get($field) === ""
-                && $entity->isAttributeChaned($field)){
-                $entity->set($field, null);
-            }
-        }
     }
 
     public function afterSave(Event $event): void

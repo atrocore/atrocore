@@ -62,7 +62,7 @@
     {
       "name": "disableEmptyValue",
       "type": "bool",
-      "default": true
+      "default": false
     }
   ],
   "filter": true,
