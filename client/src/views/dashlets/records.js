@@ -47,7 +47,8 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', fun
 
         getSearchData: function () {
             var data = {
-                primary: this.getOption('primaryFilter')
+                primary: this.getOption('primaryFilter'),
+                advanced: this.getOption('savedFilterData')?.data
             };
 
             var bool = {};

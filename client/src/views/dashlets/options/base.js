@@ -104,9 +104,14 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             model.defs = {
                 fields: this.fields
             };
+
             model.set(this.optionsData);
 
             model.dashletName = this.name;
+
+            if(this.optionsData.entityType){
+                this.model.id = "id"
+            }
 
             this.setupBeforeFinal();
 
@@ -133,7 +138,9 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             var attributes = {};
             this.fieldList.forEach(function (field) {
                 var fieldView = this.getView('record').getFieldView(field);
-                _.extend(attributes, fieldView.fetch());
+                if(fieldView){
+                    _.extend(attributes, fieldView.fetch());
+                }
             }, this);
 
             this.model.set(attributes, {silent: true});
@@ -141,6 +148,9 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             var valid = true;
             this.fieldList.forEach(function (field) {
                 var fieldView = this.getView('record').getFieldView(field);
+                if(!fieldView){
+                    return;
+                }
                 valid = !fieldView.validate() && valid;
             }, this);
 
