@@ -37,7 +37,7 @@ namespace Espo\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Espo\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\Base;
 use Espo\Services\QueueManagerServiceInterface;
 use Atro\Core\QueueManager;
 
@@ -144,6 +144,21 @@ class QueueItem extends Base
         }
 
         $data = json_decode(json_encode($entity->get('data')), true);
+
+        if(!empty($data['entityType']) && !empty($data['totalChunks']) && $data['totalChunks'] > 1){
+            $notification = $this->getEntityManager()->getEntity('Notification');
+            $notification->set('type', 'Message');
+            $message = $this->getInjection('language')->translate('massDeletingFromToEnded', 'messages', 'Global');
+            $message = str_replace(
+                ["{entityType}", "{from}", "{to}", '{total}'],
+                [$data['entityType'], $data['part'] * $data['chunkSize']+1, ($data['part']  * $data['chunkSize']) + count($data['ids']), $data['total']],
+                $message
+            );
+            $notification->set('message', $message);
+            $notification->set('userId', $entity->get('createdById'));
+            $this->getEntityManager()->saveEntity($notification);
+        }
+
         if (!empty($data['entityType'])) {
             \Espo\Services\MassDelete::updatePublicData($data['entityType'], null);
         }

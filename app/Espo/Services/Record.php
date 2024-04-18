@@ -2358,6 +2358,7 @@ class Record extends Base
                     'total'      =>  $total,
                     'totalChunks'=> count($chunks),
                     'part'       => $part,
+                    'chunkSize'  => $massDeleteChunkSize,
                     'last'       => !isset($chunks[$part + 1])
                 ];
                 foreach ($chunk as $id) {

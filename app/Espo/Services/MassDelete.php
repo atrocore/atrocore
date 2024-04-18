@@ -43,7 +43,7 @@ class MassDelete extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids'])) {
+        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids']) || empty($data['totalChunks'])) {
             return false;
         }
 
@@ -54,30 +54,28 @@ class MassDelete extends QueueManagerBase
 
         foreach ($data['ids'] as $id => $position) {
 
-            $publicData = DataManager::getPublicData('massDelete');
+            if($data['totalChunks'] === 1){
+                $publicData = DataManager::getPublicData('massDelete');
 
-            $massDeleteData = $publicData[$entityType] ?? ['total' => $data['total'], 'deleted' => 0];
+                $massDeleteData = $publicData[$entityType] ?? ['total' => $data['total'], 'deleted' => 0];
 
-            if(empty($publicData[$entityType]['deleted'])){
-                $massDeleteData = ['total' => $data['total'], 'deleted' => 0];
-                self::updatePublicData($entityType, $massDeleteData);
-            }
-
-            try {
-                $service->deleteEntity($id);
-            } catch (\Throwable $e) {
-                $message = "Delete {$data['entityType']} '$id' failed: {$e->getTraceAsString()}";
-                $GLOBALS['log']->error($message);
-                $this->notify($message);
-            }
-
-            $deleted = $position + 1;
-            if ($massDeleteData['deleted'] < $deleted) {
-                $massDeleteData['deleted'] = $deleted;
-                if ($massDeleteData['deleted'] === $massDeleteData['total'] || !empty($data['last'])) {
-                    $massDeleteData['done'] = Util::generateId();
+                if(empty($publicData[$entityType]['deleted'])){
+                    $massDeleteData = ['total' => $data['total'], 'deleted' => 0];
+                    self::updatePublicData($entityType, $massDeleteData);
                 }
-                self::updatePublicData($entityType, $massDeleteData);
+
+                $this->execute($service, $id, $data['entityType']);
+                $deleted = $position + 1;
+
+                if ($massDeleteData['deleted'] < $deleted) {
+                    $massDeleteData['deleted'] = $deleted;
+                    if ($massDeleteData['deleted'] === $massDeleteData['total'] ) {
+                        $massDeleteData['done'] = Util::generateId();
+                    }
+                    self::updatePublicData($entityType, $massDeleteData);
+                }
+            }else{
+                $this->execute($service, $id, $data['entityType']);
             }
 
         }
@@ -107,5 +105,22 @@ class MassDelete extends QueueManagerBase
         $notification->set('message', $message);
         $notification->set('userId', $this->getUser()->get('id'));
         $this->getEntityManager()->saveEntity($notification);
+    }
+
+    /**
+     * @param $service
+     * @param $id
+     * @param $entityType1
+     * @return void
+     */
+    public function execute($service, $id, $entityType1): void
+    {
+        try {
+            $service->deleteEntity($id);
+        } catch (\Throwable $e) {
+            $message = "Delete {$entityType1} '$id' failed: {$e->getTraceAsString()}";
+            $GLOBALS['log']->error($message);
+            $this->notify($message);
+        }
     }
 }

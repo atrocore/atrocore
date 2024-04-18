@@ -389,7 +389,8 @@
     "fieldShouldBeGreater": "{field} muss größer als {value} sein",
     "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
     "clearAclCacheError": "Cache von Zugriffskontrollliste konnte nicht geleert werden.",
-    "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist."
+    "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist.",
+    "massDeletingFromToEnded": "{entityType} Elemente von {from} bis {to} wurden auf insgesamt {total} gelöscht zu löschen"
   },
   "unit Length": {
     "mm": "mm",
