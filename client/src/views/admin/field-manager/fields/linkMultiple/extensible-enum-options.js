@@ -61,7 +61,8 @@ Espo.define('views/admin/field-manager/fields/linkMultiple/extensible-enum-optio
                             model: model,
                             scope: scope,
                             staticAllowedPanelNames: ["extensibleEnumOptions"],
-                            recordHelper: new ViewRecordHelper()
+                            recordHelper: new ViewRecordHelper(),
+                            canClose: false
                         };
 
                         this.createView('valueField', 'views/record/detail-bottom', options, view => {
