@@ -16,6 +16,8 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
 
         panelHeadingTemplate: 'treo-core:record/panel-heading',
 
+        canClose: true,
+
         events: _.extend({
             'click span.collapser[data-action="collapsePanel"]': function (e) {
                 this.collapseBottomPanel($(e.currentTarget).data('panel'));
@@ -65,6 +67,10 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
             this.type = this.mode;
             if ('type' in this.options) {
                 this.type = this.options.type;
+            }
+
+            if ('canClose' in this.options) {
+                this.canClose = this.options.canClose;
             }
 
             this.panelList = [];
@@ -254,6 +260,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                     p.view = bottomPanelOptions ? 'views/record/panels/bottom' : 'views/record/panels/relationship';
                 }
 
+                p.canClose = this.canClose
                 p.order = 5;
                 if(p.hiddenPerDefault === true
                     && !this.isPanelHiddenPerDefault(p.name)){
