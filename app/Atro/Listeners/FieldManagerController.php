@@ -93,6 +93,7 @@ class FieldManagerController extends AbstractListener
     public function beforePatchActionUpdate(Event $event)
     {
         $this->beforePostActionCreate($event);
+        $this->setEmptyValueToNullOnDisableEmptyValueActivate($event);
     }
 
     /**
@@ -101,6 +102,7 @@ class FieldManagerController extends AbstractListener
     public function beforePutActionUpdate(Event $event)
     {
         $this->beforePostActionCreate($event);
+        $this->setEmptyValueToNullOnDisableEmptyValueActivate($event);
     }
 
     /**
@@ -111,6 +113,8 @@ class FieldManagerController extends AbstractListener
         // delete columns from DB
         $this->deleteColumns($event->getArgument('params')['scope'], $event->getArgument('params')['name']);
     }
+
+
 
     /**
      * Delete column(s) from DB
@@ -232,5 +236,34 @@ class FieldManagerController extends AbstractListener
                 throw new BadRequest($message);
             }
         }
+    }
+
+
+    public function setEmptyValueToNullOnDisableEmptyValueActivate(Event $event){
+        $data = $event->getArgument('data');
+        $params = $event->getArgument('params');
+
+        if($data->type !== 'varchar'
+            || !property_exists($data,'disableEmptyValue')
+            || empty($data->disableEmptyValue))
+        {
+            return;
+        }
+
+        $table = Util::toUnderScore($params['scope']);
+        $column = Util::toUnderScore($data->name);
+
+        $conn = $this->getEntityManager()
+            ->getConnection();
+
+        $conn->createQueryBuilder()
+            ->update($conn->quoteIdentifier($table))
+            ->set($column, ':null')
+            ->where("$column=:empty")
+            ->andWhere('deleted=:false')
+            ->setParameter('null',null, Mapper::getParameterType(null))
+            ->setParameter('false',false, Mapper::getParameterType(false))
+            ->setParameter('empty','', Mapper::getParameterType(''))
+            ->executeQuery();
     }
 }

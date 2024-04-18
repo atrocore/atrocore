@@ -100,26 +100,20 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             if (
                 this.model.get(this.name) !== null
                 &&
-                (this.model.get(this.name) !== '' || !this.disableEmptyValue)
-                &&
                 this.model.has(this.name)
             ) {
                 data.isNotEmpty = true;
             }
 
             data.valueIsSet = this.model.has(this.name);
-            data.isNull = false;
-
-            if(!this.disableEmptyValue){
-                data.isNull = this.model.get(this.name) === null;
-            }
+            data.isNull = this.model.get(this.name) === null;
 
             if (this.mode === 'search') {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
                 }
             }
-            if(["detail",'list'].includes(this.mode) && this.model.get(this.name) === ""){
+            if(this.model.get(this.name) === ""){
                 data['value'] = " ";
             }
             return data;
@@ -167,11 +161,6 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-
-            if(this.$element && this.$element.val() === ""
-                && this.model.get(this.name) === ""  && this.disableEmptyValue){
-                this.$element.val(" ")
-            }
 
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
@@ -226,7 +215,10 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     }
                 }
 
-                if(((initialValue !== "" && value === "") || value === " ")  && !this.disableEmptyValue){
+                if(value === " "){
+                    value= "" ;
+                }
+                if(((initialValue !== "" && value === ""))  && !this.disableEmptyValue){
                     data[this.name] = "";
                 }else{
                     data[this.name] = value ? value : null;
