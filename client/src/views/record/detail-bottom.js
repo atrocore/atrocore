@@ -368,7 +368,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
             this.panelList.forEach(function (p) {
                 var panelView = this.getView(p.name);
-                if (!panelView.disabled && 'fetch' in panelView) {
+                if (panelView && !panelView.disabled && 'fetch' in panelView) {
                     data = _.extend(data, panelView.fetch());
                 }
             }, this);
