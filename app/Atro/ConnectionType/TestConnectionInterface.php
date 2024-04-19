@@ -15,9 +15,7 @@ namespace Atro\ConnectionType;
 
 use Espo\ORM\Entity;
 
-interface ConnectionInterface
+interface TestConnectionInterface
 {
-    public function connect(Entity $connectionEntity);
-
-    public function setConnectionEntity(Entity $connectionEntity): void;
+    public function testConnection(Entity $connectionEntity): bool;
 }
