@@ -18,6 +18,7 @@
     "Create Storage": "Создать хранилище"
   },
   "exceptions": {
+    "storagePathNotUnique": "Путь к хранилищу должен быть уникальным.",
     "storageTypeCannotBeChanged": "Тип хранения изменить нельзя.",
     "storagePathCannotBeChanged": "Путь хранения изменить нельзя.",
     "storageWithFilesCannotBeRemoved": "Удаление запрещено. Существуют файлы, принадлежащие этому хранилищу."

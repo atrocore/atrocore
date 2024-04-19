@@ -18,6 +18,7 @@
     "Create Storage": "Створити сховище"
   },
   "exceptions": {
+    "storagePathNotUnique": "Шлях до сховища має бути унікальним.",
     "storageTypeCannotBeChanged": "Тип сховища не можна змінити.",
     "storagePathCannotBeChanged": "Шлях до сховища не можна змінити.",
     "storageWithFilesCannotBeRemoved": "Видалення заборонено. Є файли, які належать до цього Сховища."

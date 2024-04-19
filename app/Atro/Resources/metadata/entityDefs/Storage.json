@@ -19,9 +19,9 @@
     },
     "path": {
       "type": "varchar",
+      "view": "views/storage/fields/path",
       "maxLength": 300,
-      "unique": true,
-      "default": "upload/files"
+      "unique": true
     },
     "priority": {
       "type": "int",

@@ -31,6 +31,16 @@ class Storage extends Base
                 throw new BadRequest($this->translate('storagePathCannotBeChanged', 'exceptions', 'Storage'));
             }
         }
+
+        if ($entity->get('path') !== null) {
+            $existed = $this
+                ->where(['path' => $entity->get('path'), 'id!=' => $entity->get('id')])
+                ->findOne();
+
+            if (!empty($existed)) {
+                throw new BadRequest($this->translate('storagePathNotUnique', 'exceptions', 'Storage'));
+            }
+        }
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])

@@ -18,6 +18,7 @@
     "Create Storage": "Create Storage"
   },
   "exceptions": {
+    "storagePathNotUnique": "Storage path should be unique.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
     "storagePathCannotBeChanged": "Storage Path cannot be changed.",
     "storageWithFilesCannotBeRemoved": "Delete is not allowed. There are files that belong to this Storage."
