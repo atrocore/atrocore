@@ -32,5 +32,7 @@
         </span>
     {{/unless}}
     <span class="collapser fas {{#if expanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}}" data-action="collapsePanel" data-panel="{{name}}"></span>
+    {{#if canClose }}
     <span class="collapser fas fa-times" data-action="closePanel" data-panel="{{name}}"></span>
+    {{/if}}
 </h4>

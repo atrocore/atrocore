@@ -58,6 +58,11 @@
     {
       "name": "index",
       "type": "bool"
+    },
+    {
+      "name": "disableEmptyValue",
+      "type": "bool",
+      "default": false
     }
   ],
   "filter": true,

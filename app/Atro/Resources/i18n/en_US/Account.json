@@ -6,7 +6,8 @@
     "description": "Description",
     "type": "Type",
     "role": "Role",
-    "number": "Number"
+    "number": "Number",
+    "language": "Language"
   },
   "options": {
     "type": {

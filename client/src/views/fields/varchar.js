@@ -50,6 +50,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         defaultFilterValue: '',
 
+        disableEmptyValue: false,
+
         events: {
             'keyup input.with-text-length': function (e) {
                 this.updateTextCounter();
@@ -75,8 +77,11 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             this.validations = Espo.utils.clone(this.validations);
             this.validations.push('pattern');
 
+            this.disableEmptyValue = this.params?.disableEmptyValue
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'disableEmptyValue']) ?? false;
 
             let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']) || null;
+
             this.validationPattern = this.convertStrToRegex(patternString);
         },
 
@@ -91,21 +96,31 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             if (
                 this.model.get(this.name) !== null
                 &&
-                this.model.get(this.name) !== ''
+                (this.model.get(this.name) !== '' || !this.disableEmptyValue)
                 &&
                 this.model.has(this.name)
             ) {
                 data.isNotEmpty = true;
             }
+
             data.valueIsSet = this.model.has(this.name);
+            data.isNull = false;
+
+            if(!this.disableEmptyValue){
+                data.isNull = this.model.get(this.name) === null;
+            }
 
             if (this.mode === 'search') {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
                 }
+            }
+            if(["detail",'list'].includes(this.mode) && this.model.get(this.name) === ""){
+                data['value'] = " ";
             }
             return data;
         },
@@ -152,7 +167,13 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            if (this.mode === 'search') {
+
+            if(this.$element && this.$element.val() === ""
+                && this.model.get(this.name) === ""  && this.disableEmptyValue){
+                this.$element.val(" ")
+            }
+
+            if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
             }
@@ -194,16 +215,24 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             let data = {};
 
             let $el = this.$element;
+
             if ($el) {
-                let value = $el.val();
+                let initialValue = $el.val();
+                let value = initialValue;
+
                 if (this.params.trim || this.forceTrim) {
                     if (typeof value.trim === 'function') {
                         value = value.trim();
                     }
                 }
-                data[this.name] = value ? value : null;
-            }
 
+                if(((initialValue !== "" && value === "") || value === " ")  && !this.disableEmptyValue){
+                    data[this.name] = "";
+                }else{
+                    data[this.name] = value ? value : null;
+                }
+
+            }
             return data;
         },
 

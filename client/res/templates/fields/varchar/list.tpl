@@ -1,1 +1,1 @@
-<span>{{#if value}}{{value}} {{#if unitFieldName}}{{#if unitValue}}{{unitValueTranslate}}{{else}}{{translate 'None'}}{{/if}}{{/if}} {{else}}{{translate 'None'}}{{/if}}</span>
+<span>{{#if value}}{{value}} {{#if unitFieldName}}{{#if unitValue}}{{unitValueTranslate}}{{else}}{{translate 'None'}}{{/if}}{{/if}} {{else}}{{translate 'NULL'}}{{/if}}</span>
