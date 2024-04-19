@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
@@ -113,8 +112,6 @@ class FieldManagerController extends AbstractListener
         // delete columns from DB
         $this->deleteColumns($event->getArgument('params')['scope'], $event->getArgument('params')['name']);
     }
-
-
 
     /**
      * Delete column(s) from DB
@@ -261,9 +258,9 @@ class FieldManagerController extends AbstractListener
             ->set($column, ':null')
             ->where("$column=:empty")
             ->andWhere('deleted=:false')
-            ->setParameter('null',null, Mapper::getParameterType(null))
-            ->setParameter('false',false, Mapper::getParameterType(false))
-            ->setParameter('empty','', Mapper::getParameterType(''))
+            ->setParameter('null',null, ParameterType::NULL)
+            ->setParameter('false',false, ParameterType::BOOLEAN)
+            ->setParameter('empty','', ParameterType::STRING)
             ->executeQuery();
     }
 }
