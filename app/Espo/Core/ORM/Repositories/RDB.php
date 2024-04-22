@@ -469,8 +469,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        if (!empty($fieldData['disableEmptyValue']) && $entity->get($fieldName) === "") {
-            $entity->set($fieldName, null);
+        if (!empty($fieldData['notNull']) && $entity->get($fieldName) === null) {
+            $entity->set($fieldName, '');
          }
 
         $this->validateText($entity, $fieldName, $fieldData);

@@ -9,5 +9,5 @@
 </div>
 {{#if params.maxLength}}<div class="text-length-counter"><span class="current-length">0</span> / <span class="max-length">{{params.maxLength}}</span></div>{{/if}}
 {{else}}
-<input type="text" class="main-element form-control {{#if params.maxLength}}with-text-length{{/if}}" name="{{name}}" value="{{value}}" autocomplete="off" placeholder="{{#if isNull}}{{{translate 'Null'}}}{{/if}}">{{#if params.maxLength}}<div class="text-length-counter"><span class="current-length">0</span> / <span class="max-length">{{params.maxLength}}</span></div>{{/if}}
+<input type="text" class="main-element form-control {{#if params.maxLength}}with-text-length{{/if}}" name="{{name}}" value="{{value}}" autocomplete="off" placeholder="{{#if isNull}}Null{{else}}{{{translate 'None' }}}{{/if}}">{{#if params.maxLength}}<div class="text-length-counter"><span class="current-length">0</span> / <span class="max-length">{{params.maxLength}}</span></div>{{/if}}
 {{/if}}

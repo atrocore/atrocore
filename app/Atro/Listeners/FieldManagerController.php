@@ -240,9 +240,9 @@ class FieldManagerController extends AbstractListener
         $data = $event->getArgument('data');
         $params = $event->getArgument('params');
 
-        if($data->type !== 'varchar'
-            || !property_exists($data,'disableEmptyValue')
-            || empty($data->disableEmptyValue))
+        if(($data->type !== 'varchar')
+            || !property_exists($data,'notNull')
+            || empty($data->notNull))
         {
             return;
         }
@@ -255,11 +255,8 @@ class FieldManagerController extends AbstractListener
 
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier($table))
-            ->set($column, ':null')
-            ->where("$column=:empty")
-            ->andWhere('deleted=:false')
-            ->setParameter('null',null, ParameterType::NULL)
-            ->setParameter('false',false, ParameterType::BOOLEAN)
+            ->set($column, ':empty')
+            ->where("$column is NULL")
             ->setParameter('empty','', ParameterType::STRING)
             ->executeQuery();
     }

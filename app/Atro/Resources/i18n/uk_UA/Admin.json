@@ -161,7 +161,7 @@
     "useDisabledTextareaInViewMode": "Використовувати нередаговану текстову область у режимі перегляду",
     "setDefaultOnlyIfRequired": "Застосовуйте значення за замовчуванням лише за потреби",
     "dropdown": "спадний список",
-    "disableEmptyValue": "Вимкнути Порожнє значенн"
+    "notNull": "Вимкнути Нульове значення"
   },
   "messages": {
     "selectEntityType": "Виберіть тип сутності в лівому меню.",

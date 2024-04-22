@@ -6,6 +6,11 @@
       "default": false
     },
     {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
       "name": "measure",
       "type": "link",
       "entity": "Measure",
@@ -58,11 +63,6 @@
     {
       "name": "index",
       "type": "bool"
-    },
-    {
-      "name": "disableEmptyValue",
-      "type": "bool",
-      "default": false
     }
   ],
   "filter": true,
