@@ -79,18 +79,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "actionsSet": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
-    },
-    "actions": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
     }
   },
   "links": {
@@ -101,26 +89,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "actionsSet": {
-      "type": "hasMany",
-      "relationName": "actionSetLinker",
-      "foreign": "actions",
-      "entity": "Action",
-      "midKeys": [
-        "setId",
-        "actionId"
-      ]
-    },
-    "actions": {
-      "type": "hasMany",
-      "relationName": "actionSetLinker",
-      "foreign": "actionsSet",
-      "entity": "Action",
-      "midKeys": [
-        "actionId",
-        "setId"
-      ]
     }
   },
   "collection": {

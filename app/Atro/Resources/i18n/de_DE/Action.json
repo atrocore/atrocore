@@ -6,13 +6,7 @@
     "inBackground": "Im Hintergrund ausführen",
     "usage": "Verwendung",
     "massAction": "Massenaktion",
-    "display": "Anzeige",
-    "actionsSet": "Actions Set",
-    "actions": "Aktionen"
-  },
-  "links": {
-    "actionsSet": "Aktionsset",
-    "actions": "Aktionen"
+    "display": "Anzeige"
   },
   "labels": {
     "Create Action": "Aktion erstellen",
@@ -32,9 +26,6 @@
     "display": {
       "dropdown": "Auswahlliste",
       "single": "Einzeln"
-    },
-    "type": {
-      "set": "Aktionsset"
     }
   },
   "tooltips": {
