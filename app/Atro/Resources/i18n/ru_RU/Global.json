@@ -408,6 +408,7 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "connection": "Соединение",
     "tags": "Теги",
     "hidden": "Скрытый",
     "priority": "Приоритет",
@@ -464,6 +465,7 @@
     "ids": "IDs"
   },
   "links": {
+    "connection": "Соединение",
     "file": "Файл",
     "files": "Файлы",
     "assignedAccounts": "Контрагенты",

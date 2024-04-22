@@ -440,6 +440,7 @@
     "restore": "Restore"
   },
   "fields": {
+    "connection": "Connection",
     "tags": "Tags",
     "downloadUrl": "Download URL",
     "smallThumbnailUrl": "Thumbnail URL (small)",
@@ -510,6 +511,7 @@
     "isActive": "Active"
   },
   "links": {
+    "connection": "Connection",
     "file": "File",
     "files": "Files",
     "ownerUser": "Owner",

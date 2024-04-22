@@ -461,6 +461,7 @@
     "restore": "Wiederherstellen"
   },
   "fields": {
+    "connection": "Verbindung",
     "tags": "Tags",
     "hidden": "Versteckt",
     "priority": "Priorität",
@@ -524,6 +525,7 @@
     "isActive": "Aktiv"
   },
   "links": {
+    "connection": "Verbindung",
     "file": "Datei",
     "files": "Dateien",
     "parent": "Parent",

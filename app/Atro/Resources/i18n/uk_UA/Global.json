@@ -439,6 +439,7 @@
     "restore": "Відновлення"
   },
   "fields": {
+    "connection": "З'єднання",
     "tags": "Теги",
     "hidden": "Приховано",
     "priority": "Пріоритет",
@@ -501,6 +502,7 @@
     "isActive": "Активний"
   },
   "links": {
+    "connection": "З'єднання",
     "file": "Файл",
     "files": "Файли",
     "assignedAccounts": "Контрагенти",

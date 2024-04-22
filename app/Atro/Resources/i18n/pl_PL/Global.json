@@ -440,6 +440,7 @@
     "restore":"Przywróć"
 },
 "fields":{
+    "connection":"Połączenie",
     "tags": "Tagi",
     "hidden": "Ukryty",
     "priority": "Priorytet",
@@ -505,6 +506,7 @@
     "isActive":"Active"
 },
 "links":{
+    "connection":"Połączenie",
     "file": "Plik",
     "files": "Pliki",
     "ownerUser":"Owner",
