@@ -33,6 +33,24 @@
       "extensibleEnumId": "fileTags",
       "dropdown": false
     },
+    "foreignId": {
+      "type": "varchar",
+      "readOnly": true,
+      "unique": true
+    },
+    "data": {
+      "type": "jsonObject",
+      "readOnly": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
     "url": {
       "type": "varchar",
       "notStorable": true,

@@ -11,7 +11,8 @@
     "fileSize": "File Size (bytes)",
     "fileMtime": "File Modification Date",
     "private": "Private",
-    "url": "URL"
+    "url": "URL",
+    "foreignId": "Foreign ID"
   },
   "links": {
     "folder": "Folder",
