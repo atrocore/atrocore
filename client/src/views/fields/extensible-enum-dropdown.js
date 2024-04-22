@@ -41,11 +41,13 @@ Espo.define('views/fields/extensible-enum-dropdown', ['views/fields/colored-enum
         prepareOptionsList() {
             this.params.options = [];
             this.translatedOptions = {};
+            this.params.optionColors = [];
 
             this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
                     this.translatedOptions[option.id] = option.name || option.id;
+                    this.params.optionColors.push(option.color || null);
                 }
             });
         },
