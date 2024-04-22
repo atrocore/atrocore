@@ -50,7 +50,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         defaultFilterValue: '',
 
-        disableEmptyValue: false,
+        notNull: false,
 
         events: {
             'keyup input.with-text-length': function (e) {
@@ -58,6 +58,30 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             },
             'focusin input': function () {
                 this.applyDefaultValue()
+            },
+            'keydown': function(e){
+                let value = this.$el.find('input.main-element').val();
+                let isNullValue = this.$el.find('input.main-element').attr('placeholder') === 'Null'
+                if(e.keyCode === 8){
+                    // backspace
+                    if(value === ""  && !isNullValue){
+                        e.preventDefault()
+                        this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
+                        this.isEmptyValue = true;
+                    }
+                    if(!this.notNull && value === "" && !isNullValue){
+                        e.preventDefault()
+                        this.$el.find('input.main-element').attr('placeholder','Null')
+                    }
+                }else if(e.keyCode === 32){
+                    // space
+                    if(value === "" && isNullValue){
+                        e.preventDefault()
+                        this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
+                    }
+                }else if(value === ""){
+                    this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
+                }
             }
         },
 
@@ -77,8 +101,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             this.validations = Espo.utils.clone(this.validations);
             this.validations.push('pattern');
 
-            this.disableEmptyValue = this.params?.disableEmptyValue
-                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'disableEmptyValue']) ?? false;
+            this.notNull = this.params?.notNull
+                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? false;
 
             let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']) || null;
 
@@ -99,28 +123,25 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
             if (
                 this.model.get(this.name) !== null
-                &&
-                (this.model.get(this.name) !== '' || !this.disableEmptyValue)
-                &&
-                this.model.has(this.name)
+                && this.model.get(this.name) !== ''
+                && this.model.has(this.name)
             ) {
                 data.isNotEmpty = true;
             }
 
             data.valueIsSet = this.model.has(this.name);
-            data.isNull = false;
-
-            if(!this.disableEmptyValue){
-                data.isNull = this.model.get(this.name) === null;
-            }
+            data.isNull = this.model.get(this.name) === null;
 
             if (this.mode === 'search') {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
                 }
             }
-            if(["detail",'list'].includes(this.mode) && this.model.get(this.name) === ""){
-                data['value'] = " ";
+
+            if(['detail','list'].includes(this.mode) && this.model.get(this.name)){
+                let value = this.model.get(this.name)
+                let trimValue = value.trim()
+                data['value'] = value.replace(trimValue, 'word').replaceAll(' ','⎵').replace('word',trimValue)
             }
             return data;
         },
@@ -168,11 +189,6 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if(this.$element && this.$element.val() === ""
-                && this.model.get(this.name) === ""  && this.disableEmptyValue){
-                this.$element.val(" ")
-            }
-
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
@@ -217,22 +233,25 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             let $el = this.$element;
 
             if ($el) {
-                let initialValue = $el.val();
-                let value = initialValue;
-
+                let value = $el.val();
                 if (this.params.trim || this.forceTrim) {
                     if (typeof value.trim === 'function') {
                         value = value.trim();
                     }
                 }
 
-                if(((initialValue !== "" && value === "") || value === " ")  && !this.disableEmptyValue){
+                let isNullValue = this.$el.find('input.main-element').attr('placeholder') === 'Null'
+
+                if(!this.notNull && value === "" && isNullValue){
+                    data[this.name] = null;
+                } else if(this.notNull && value === ""){
                     data[this.name] = "";
                 }else{
-                    data[this.name] = value ? value : null;
+                    data[this.name] = value ;
                 }
 
             }
+
             return data;
         },
 

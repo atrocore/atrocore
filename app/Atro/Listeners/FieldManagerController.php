@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
@@ -93,6 +92,7 @@ class FieldManagerController extends AbstractListener
     public function beforePatchActionUpdate(Event $event)
     {
         $this->beforePostActionCreate($event);
+        $this->setEmptyValueToNullOnDisableEmptyValueActivate($event);
     }
 
     /**
@@ -101,6 +101,7 @@ class FieldManagerController extends AbstractListener
     public function beforePutActionUpdate(Event $event)
     {
         $this->beforePostActionCreate($event);
+        $this->setEmptyValueToNullOnDisableEmptyValueActivate($event);
     }
 
     /**
@@ -232,5 +233,31 @@ class FieldManagerController extends AbstractListener
                 throw new BadRequest($message);
             }
         }
+    }
+
+
+    public function setEmptyValueToNullOnDisableEmptyValueActivate(Event $event){
+        $data = $event->getArgument('data');
+        $params = $event->getArgument('params');
+
+        if(($data->type !== 'varchar')
+            || !property_exists($data,'notNull')
+            || empty($data->notNull))
+        {
+            return;
+        }
+
+        $table = Util::toUnderScore($params['scope']);
+        $column = Util::toUnderScore($data->name);
+
+        $conn = $this->getEntityManager()
+            ->getConnection();
+
+        $conn->createQueryBuilder()
+            ->update($conn->quoteIdentifier($table))
+            ->set($column, ':empty')
+            ->where("$column is NULL")
+            ->setParameter('empty','', ParameterType::STRING)
+            ->executeQuery();
     }
 }

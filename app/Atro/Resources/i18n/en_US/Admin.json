@@ -191,7 +191,7 @@
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
     "setDefaultOnlyIfRequired": "Apply default value only if required",
     "dropdown": "Dropdown",
-    "disableEmptyValue": "Disable empty value"
+    "notNull": "Disable null value"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
