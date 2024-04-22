@@ -83,6 +83,7 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         setupMassDeletingNotification: function () {
+            let interval;
             this.listenTo(Backbone.Events, 'publicData', data => {
                 let locationHash = window.location.hash;
 
@@ -105,7 +106,28 @@ Espo.define('views/main', 'view', function (Dep) {
                                 }
                             }
                         } else {
-                            Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total), null, 2000);
+                            if(scopeData['chunkId']){
+                                if(interval){
+                                   return;
+                                }
+                                let data = scopeData;
+                               interval = setInterval(() => this.ajaxGetRequest(`${this.scope}/action/getMassDeletedItemsCount?chunkId=${data['chunkId']}`).then((res) => {
+                                   if(res.total < data.total){
+                                       Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', res.total).replace('{{total}}', data.total), null, 2000);
+                                   }else{
+                                       this.getStorage().set('massDeleteDoneHash', this.scope, true);
+                                       Espo.Ui.notify(this.translate('Done'), 'success', 2000);
+                                       if (this.collection) {
+                                           this.collection.fetch();
+                                       }
+                                       clearInterval(interval)
+                                       interval = null
+                                   }
+                               }), 3000)
+
+                            }else{
+                                Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total), null, 2000);
+                            }
                         }
                     }
                 }
@@ -142,6 +164,7 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         setupMassUpdatingNotification: function () {
+            let interval = null;
             this.listenTo(Backbone.Events, 'publicData', data => {
                 let locationHash = window.location.hash;
 
@@ -164,7 +187,28 @@ Espo.define('views/main', 'view', function (Dep) {
                                 }
                             }
                         } else {
-                            Espo.Ui.notify(this.translate('massUpdating', 'messages', 'Global').replace('{{deleted}}', scopeData.updated).replace('{{total}}', scopeData.total), null, 2000);
+                            if(scopeData['chunkId']){
+                                if(interval){
+                                    return;
+                                }
+                                let data = scopeData;
+                                interval = setInterval(() => this.ajaxGetRequest(`${this.scope}/action/getMassUpdatedItemsCount?chunkId=${data['chunkId']}`).then((res) => {
+                                    if(res.total < data.total){
+                                        Espo.Ui.notify(this.translate('massUpdating', 'messages', 'Global').replace('{{deleted}}', res.total).replace('{{total}}', data.total), null, 2000);
+                                    }else{
+                                        this.getStorage().set('massUpdateDoneHash', this.scope, true);
+                                        Espo.Ui.notify(this.translate('Done'), 'success', 2000);
+                                        if (this.collection) {
+                                            this.collection.fetch();
+                                        }
+                                        clearInterval(interval)
+                                        interval = null
+                                    }
+                                }), 3000)
+
+                            }else{
+                                Espo.Ui.notify(this.translate('massUpdating', 'messages', 'Global').replace('{{deleted}}', scopeData.updated).replace('{{total}}', scopeData.total), null, 2000);
+                            }
                         }
                     }
                 }

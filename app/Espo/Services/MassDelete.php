@@ -107,18 +107,12 @@ class MassDelete extends QueueManagerBase
         $this->getEntityManager()->saveEntity($notification);
     }
 
-    /**
-     * @param $service
-     * @param $id
-     * @param $entityType1
-     * @return void
-     */
-    public function execute($service, $id, $entityType1): void
+    public function execute($service, $id, $entityType): void
     {
         try {
             $service->deleteEntity($id);
         } catch (\Throwable $e) {
-            $message = "Delete {$entityType1} '$id' failed: {$e->getTraceAsString()}";
+            $message = "Delete {$entityType} '$id' failed: {$e->getTraceAsString()}";
             $GLOBALS['log']->error($message);
             $this->notify($message);
         }

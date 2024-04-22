@@ -34,6 +34,8 @@
 namespace Espo\Services;
 
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Services\MassUpdate;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Services\Base;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
@@ -2288,14 +2290,21 @@ class Record extends Base
             $massUpdateChunkSize = $this->getConfig()->get('massUpdateChunkSize', 2000);
             $position = 0;
             $chunks = array_chunk($ids, $massUpdateChunkSize);
+            $chunkId = 'chunk_'.Util::generateId();
+            $hasChunks = count($chunks) > 1 ;
             foreach ($chunks as $part => $chunk) {
                 $jobData = [
-                    'entityType' => $this->getEntityType(),
-                    'ids'        => [],
-                    'total'      => $total,
-                    'input'      => clone $data,
-                    'last'       => !isset($chunks[$part + 1])
+                    'entityType'        => $this->getEntityType(),
+                    'chunkId'           => $chunkId,
+                    'ids'               => [],
+                    'total'             => $total,
+                    'totalChunks'       => count($chunks),
+                    'totalItemsInChunk' => count($chunk),
+                    'part'              => $part,
+                    'chunkSize'         => $massUpdateChunkSize,
+                    'input'             => clone $data,
                 ];
+
                 foreach ($chunk as $id) {
                     $jobData['ids'][$id] = $position;
                     $position++;
@@ -2312,9 +2321,64 @@ class Record extends Base
             }
         }
 
+        if(!empty($hasChunks)){
+            MassUpdate::updatePublicData($this->getEntityType(), [
+                "chunkId" => $chunkId,
+                "total" => $total,
+                "totalChunks" => count($chunks)
+            ]);
+        }
+
         return $this
             ->dispatchEvent('afterMassUpdate', new Event(['data' => $data, 'service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids]]))
             ->getArgument('result');
+    }
+
+    public function getMassUpdatedItemsCount(string $chunkId)
+    {
+        $queueItems = $this->getEntityManager()->getConnection()
+            ->createQueryBuilder()
+            ->from('queue_item')
+            ->select('id, status, data, created_at')
+            ->where('data LIKE :chunkId')
+            ->andWhere('data LIKE :entityType')
+            ->andWhere('service_name=:serviceName')
+            ->setParameter('chunkId','%'.$chunkId.'%', ParameterType::STRING)
+            ->setParameter('entityType','%'.$this->entityType.'%', ParameterType::STRING)
+            ->setParameter('serviceName','MassUpdate', ParameterType::STRING)
+            ->fetchAllAssociative();
+
+        $totalItems = 0;
+        $ids = [];
+        foreach ($queueItems as $queueItem){
+            $data = json_decode($queueItem['data'], true);
+            if($queueItem['status'] === 'Success'){
+                $totalItems += $data['totalItemsInChunk'];
+            }else{
+                $ids = array_merge($ids, array_keys($data['ids']));
+            }
+        }
+        if(count($ids) > 0){
+            $table = Util::toUnderScore($this->entityType);
+            $conn = $this->getEntityManager()->getConnection();
+            $result = $conn
+                ->createQueryBuilder()
+                ->from($conn->quoteIdentifier($table))
+                ->select('COUNT(*) as total')
+                ->where('id IN (:ids)')
+                ->andWhere('modified_at >= :date')
+                ->setParameter('date', $queueItem['created_at'], ParameterType::STRING)
+                ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+                ->fetchAssociative();
+
+            $totalItems += $result['total'];
+        }
+
+        if($totalItems === $data['total']){
+            MassUpdate::updatePublicData($data['entityType'], null);
+        }
+
+        return ['total' => $totalItems];
     }
 
     public function massRemove(array $params)
@@ -2350,13 +2414,16 @@ class Record extends Base
             $massDeleteChunkSize = $this->getConfig()->get('massDeleteChunkSize', 3000);
             $position = 0;
             $chunks = array_chunk($ids, $massDeleteChunkSize);
-            \Espo\Services\MassDelete::updatePublicData($this->entityType, null);
+            $chunkId = 'chunk_'.Util::generateId();
+            $hasChunks = count($chunks) > 1 ;
             foreach ($chunks as $part => $chunk) {
                 $jobData = [
                     'entityType' => $this->getEntityType(),
+                    'chunkId' => $chunkId,
                     'ids'        => [],
                     'total'      =>  $total,
                     'totalChunks'=> count($chunks),
+                    'totalItemsInChunk' => count($chunk),
                     'part'       => $part,
                     'chunkSize'  => $massDeleteChunkSize,
                     'last'       => !isset($chunks[$part + 1])
@@ -2377,9 +2444,63 @@ class Record extends Base
             }
         }
 
+        if(!empty($hasChunks)){
+            MassDelete::updatePublicData($this->getEntityType(), [
+                "chunkId" => $chunkId,
+                "total" => $total,
+                "totalChunks" => count($chunks)
+            ]);
+        }
+
         return $this
             ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids]]))
             ->getArgument('result');
+    }
+
+    public function getMassDeletedItemsCount(string $chunkId)
+    {
+        $queueItems = $this->getEntityManager()->getConnection()
+            ->createQueryBuilder()
+            ->from('queue_item')
+            ->select('id, status, data')
+            ->where('data LIKE :chunkId')
+            ->andWhere('data LIKE :entityType')
+            ->andWhere('service_name=:serviceName')
+            ->setParameter('chunkId','%'.$chunkId.'%', ParameterType::STRING)
+            ->setParameter('entityType','%'.$this->entityType.'%', ParameterType::STRING)
+            ->setParameter('serviceName','MassDelete', ParameterType::STRING)
+            ->fetchAllAssociative();
+
+        $totalItems = 0;
+        $ids = [];
+        foreach ($queueItems as $queueItem){
+            $data = json_decode($queueItem['data'], true);
+            if($queueItem['status'] === 'Success'){
+                $totalItems += $data['totalItemsInChunk'];
+            }else{
+                $ids = array_merge($ids, array_keys($data['ids']));
+            }
+        }
+        if(count($ids) > 0){
+            $table = Util::toUnderScore($this->entityType);
+            $conn = $this->getEntityManager()->getConnection();
+            $result = $conn
+                ->createQueryBuilder()
+                ->from($conn->quoteIdentifier($table))
+                ->select('COUNT(*) as total')
+                ->where('id IN (:ids)')
+                ->andWhere('deleted=:true')
+                ->setParameter('true', true, ParameterType::BOOLEAN)
+                ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+                ->fetchAssociative();
+            $totalItems += $result['total'];
+        }
+
+        if($totalItems === $data['total']){
+            MassDelete::updatePublicData($data['entityType'], null);
+        }
+
+        return ['total' => $totalItems];
     }
 
     public function massRestore(array $params)

@@ -577,6 +577,32 @@ class Record extends Base
         return $result;
     }
 
+    public function actionGetMassUpdatedItemsCount($params, $data, $request)
+    {
+        if (!$request->isGet() || !$request->get('chunkId')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getMassUpdatedItemsCount($request->get('chunkId'));
+    }
+
+    public function actionGetMassDeletedItemsCount($params, $data, $request)
+    {
+        if (!$request->isGet() || !$request->get('chunkId')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getMassDeletedItemsCount($request->get('chunkId'));
+    }
+
     protected function prepareWhereQuery($where)
     {
         if (is_string($where)) {

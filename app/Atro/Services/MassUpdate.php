@@ -22,7 +22,7 @@ class MassUpdate extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids']) || empty($data['input'])) {
+        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids']) || empty($data['input']) || empty($data['totalChunks'])) {
             return false;
         }
 
@@ -34,41 +34,52 @@ class MassUpdate extends QueueManagerBase
             $input = json_decode(json_encode($data['input']));
             $input->_isMassUpdate = true;
 
-            $publicData = DataManager::getPublicData('massUpdate');
+            if($data['totalChunks'] === 1){
+                $publicData = DataManager::getPublicData('massUpdate');
 
-            $massUpdateData = $publicData[$entityType] ?? ['total' => $data['total'], 'updated' => 0];
+                $massUpdateData = $publicData[$entityType] ?? ['total' => $data['total'], 'updated' => 0];
 
-            if (empty($publicData[$entityType]['updated'])) {
-                $this->updateMassUpdatePublicData($entityType, $massUpdateData);
-            }
-
-            try {
-                $service->updateEntity($id, $input);
-            } catch (NotModified $e) {
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error("Update {$data['entityType']} '$id' failed: {$e->getMessage()}");
-            }
-
-            $updated = $position + 1;
-            if ($massUpdateData['updated'] < $updated) {
-                $massUpdateData['updated'] = $updated;
-                if ($massUpdateData['updated'] === $massUpdateData['total'] || !empty($data['last'])) {
-                    $massUpdateData['done'] = Util::generateId();
+                if(empty($publicData[$entityType]['updated'])){
+                    $massUpdateData = ['total' => $data['total'], 'updated' => 0];
+                    self::updatePublicData($entityType, $massUpdateData);
                 }
-                $this->updateMassUpdatePublicData($entityType, $massUpdateData);
+
+                $this->execute($service, $id, $input, $data['entityType']);
+                $updated = $position + 1;
+
+                if ($massUpdateData['updated'] < $updated) {
+                    $massUpdateData['updated'] = $updated;
+                    if ($massUpdateData['updated'] === $massUpdateData['total'] ) {
+                        $massUpdateData['done'] = Util::generateId();
+                    }
+                    self::updatePublicData($entityType, $massUpdateData);
+                }
+            }else{
+                $this->execute($service, $id, $input, $data['entityType']);
             }
+
         }
 
         return true;
     }
 
-    protected function updateMassUpdatePublicData(string $entityType, array $data): void
+    public static function updatePublicData(string $entityType, ?array $data): void
     {
         $publicData = DataManager::getPublicData('massUpdate');
-        if (empty($publicData[$entityType])) {
-            $publicData[$entityType] = [];
+        if (empty($publicData)) {
+            $publicData = [];
         }
+        $publicData[$entityType] = $data;
+        DataManager::pushPublicData('massUpdate', $publicData);
+    }
 
-        DataManager::pushPublicData('massUpdate', array_merge($publicData[$entityType], $data));
+    public function execute($service, $id, $input, $entityType): void
+    {
+        try {
+            $service->updateEntity($id, $input);
+        } catch (NotModified $e) {
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("Update {$entityType} '$id' failed: {$e->getMessage()}");
+        }
     }
 }

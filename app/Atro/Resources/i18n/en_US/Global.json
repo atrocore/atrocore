@@ -408,8 +408,7 @@
     "massRestoreZeroResult": "Nothing got restore",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
-    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
-    "massDeletingFromToEnded": "{entityType} items from {from} to {to} have been deleted on a total of {total} to delete"
+    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
   },
   "boolFilters": {
     "onlyActive": "Active",
