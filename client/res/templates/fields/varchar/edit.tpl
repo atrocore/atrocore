@@ -1,6 +1,6 @@
 {{#if unitFieldName}}
 <div class="unit-group input-group {{#if params.maxLength}}no-margin{{/if}}">
-<input type="text" class="unit-input form-control {{#if params.maxLength}}with-text-length{{/if}}" name="{{name}}" value="{{value}}" autocomplete="off" placeholder="{{#if isNull}}{{{translate 'Null'}}}{{/if}}">
+<input type="text" class="unit-input form-control {{#if params.maxLength}}with-text-length{{/if}}" name="{{name}}" value="{{value}}" autocomplete="off"  placeholder="{{#if isNull}}Null{{else}}{{{translate 'None' }}}{{/if}}">
     <div class="unit-select">
         <select name="{{unitFieldName}}" class="form-control">
             {{{options unitList unitValue translatedOptions=unitListTranslates}}}

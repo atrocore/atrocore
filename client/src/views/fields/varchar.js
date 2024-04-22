@@ -64,18 +64,23 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 let isNullValue = this.$el.find('input.main-element').attr('placeholder') === 'Null'
                 if(e.keyCode === 8){
                     // backspace
-                    if(!this.notNull && value === ""){
+                    if(value === ""  && !isNullValue){
+                        e.preventDefault()
+                        this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
+                        this.isEmptyValue = true;
+                    }
+                    if(!this.notNull && value === "" && !isNullValue){
                         e.preventDefault()
                         this.$el.find('input.main-element').attr('placeholder','Null')
                     }
-                }
-                if(e.keyCode === 32){
+                }else if(e.keyCode === 32){
                     // space
                     if(value === "" && isNullValue){
                         e.preventDefault()
-                        this.$el.find('input.main-element').attr('placeholder','None')
+                        this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
                     }
-
+                }else if(value === ""){
+                    this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
                 }
             }
         },
@@ -118,8 +123,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
             if (
                 this.model.get(this.name) !== null
-                &&
-                this.model.has(this.name)
+                && this.model.get(this.name) !== ''
+                && this.model.has(this.name)
             ) {
                 data.isNotEmpty = true;
             }
@@ -131,10 +136,6 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
                 }
-            }
-
-            if(['detail','list'].includes(this.mode) && this.model.get(this.name) === ""){
-                data['value'] = " ";
             }
 
             if(['detail','list'].includes(this.mode) && this.model.get(this.name)){
