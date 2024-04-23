@@ -21,7 +21,6 @@ use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\FilePathBuilder;
 use Espo\ORM\Entity;
-use Atro\Core\Utils\Thumbnail;
 
 class File extends Base
 {
@@ -130,14 +129,6 @@ class File extends Base
         if (!$this->getStorage($entity)->delete($entity)) {
             throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
         }
-
-        // delete thumbnails
-        foreach (['small', 'medium', 'large'] as $size) {
-            $thumbnailPath = $this->getThumbnail()->getPath($entity, $size);
-            if (!empty($thumbnailPath) && file_exists($thumbnailPath)) {
-                unlink($thumbnailPath);
-            }
-        }
     }
 
     public function getContents(FileEntity $file): string
@@ -175,17 +166,17 @@ class File extends Base
 
     public function getSmallThumbnailUrl(FileEntity $file): ?string
     {
-        return $this->getThumbnail()->getPath($file, 'small');
+        return $this->getStorage($file)->getThumbnail($file, 'small');
     }
 
     public function getMediumThumbnailUrl(FileEntity $file): ?string
     {
-        return $this->getThumbnail()->getPath($file, 'medium');
+        return $this->getStorage($file)->getThumbnail($file, 'medium');
     }
 
     public function getLargeThumbnailUrl(FileEntity $file): ?string
     {
-        return $this->getThumbnail()->getPath($file, 'large');
+        return $this->getStorage($file)->getThumbnail($file, 'large');
     }
 
     public function getStorage(FileEntity $file): FileStorageInterface
@@ -196,11 +187,6 @@ class File extends Base
     protected function getPathBuilder(): FilePathBuilder
     {
         return $this->getInjection('container')->get('filePathBuilder');
-    }
-
-    protected function getThumbnail(): Thumbnail
-    {
-        return $this->getInjection('container')->get(Thumbnail::class);
     }
 
     protected function getFileValidator(): FileValidator
