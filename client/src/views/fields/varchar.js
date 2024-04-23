@@ -130,7 +130,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
 
             data.valueIsSet = this.model.has(this.name);
-            data.isNull = this.model.get(this.name) === null;
+            data.isNull = this.model.get(this.name) === null || this.model.get(this.name) === undefined;
 
             if (this.mode === 'search') {
                 if (typeof this.searchParams.value === 'string') {
