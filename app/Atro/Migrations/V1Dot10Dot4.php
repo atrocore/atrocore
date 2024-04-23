@@ -30,7 +30,7 @@ class V1Dot10Dot4 extends Base
             $this->exec("ALTER TABLE file ADD data TEXT DEFAULT NULL");
             $this->exec("COMMENT ON COLUMN file.data IS '(DC2Type:jsonObject)'");
         } else {
-
+            $this->exec("ALTER TABLE file ADD data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
         }
     }
 
