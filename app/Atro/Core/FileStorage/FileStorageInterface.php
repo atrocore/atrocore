@@ -24,7 +24,7 @@ interface FileStorageInterface
      * Create file chunk on storage and return the list of the file chunks
      *
      * @param \stdClass $input
-     * @param Storage $storage
+     * @param Storage   $storage
      *
      * @return array
      */
@@ -37,6 +37,8 @@ interface FileStorageInterface
     public function delete(File $file): bool;
 
     public function getUrl(File $file): string;
+
+    public function getThumbnail(File $file, string $size): ?string;
 
     public function getContents(File $file): string;
 }
