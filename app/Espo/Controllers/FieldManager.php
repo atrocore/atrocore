@@ -71,8 +71,13 @@ class FieldManager extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
+        $arrData = get_object_vars($data);
+        if (isset($arrData['view'])) {
+            unset($arrData['view']);
+        }
+
         $fieldManager = $this->getContainer()->get('fieldManager');
-        $fieldManager->create($params['scope'], $data->name, get_object_vars($data));
+        $fieldManager->create($params['scope'], $data->name, $arrData);
 
         try {
             $this->getContainer()->get('dataManager')->rebuild($params['scope']);
@@ -114,6 +119,11 @@ class FieldManager extends \Espo\Core\Controllers\Base
             }
             unset($arrData['auditedLink']);
         }
+
+        if (isset($arrData['view'])) {
+            unset($arrData['view']);
+        }
+
         $fieldManager->update($params['scope'], $params['name'], $arrData);
 
         if (!empty($arrData['audited'])) {

@@ -1,34 +1,39 @@
 {
-   "params":[
-      {
-         "name": "foreignName",
-         "type": "enum",
-         "tooltip": true,
-         "view": "views/admin/field-manager/fields/foreign-name"
-      },
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name": "sortable",
-         "type": "bool",
-         "default": false,
-         "hidden": true
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "actualFields":[
-      "ids"
-   ],
-   "notActualFields":[
-      "names"
-   ],
-   "notCreatable": true,
-   "notSortable": true,
-   "filter": true
+  "params": [
+    {
+      "name": "foreignName",
+      "type": "enum",
+      "tooltip": true,
+      "view": "views/admin/field-manager/fields/foreign-name"
+    },
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "dropdown",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "sortable",
+      "type": "bool",
+      "default": false,
+      "hidden": true
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    }
+  ],
+  "actualFields": [
+    "ids"
+  ],
+  "notActualFields": [
+    "names"
+  ],
+  "notCreatable": true,
+  "notSortable": true,
+  "filter": true
 }

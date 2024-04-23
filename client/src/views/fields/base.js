@@ -814,6 +814,28 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return Espo[key];
         },
 
+        getLinkOptions(scope) {
+            if (!scope) {
+                return [];
+            }
+
+            let key = 'link_' + scope;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(scope, {
+                    offset: 0,
+                    maxSize: 100
+                }, {async: false}).then(res => {
+                    if (res.list) {
+                        Espo[key] = res.list;
+                    }
+                });
+            }
+
+            return Espo[key];
+        },
+
         getMeasureUnits(measureId) {
             if (!measureId) {
                 return [];

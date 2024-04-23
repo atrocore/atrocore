@@ -87,17 +87,25 @@ class Metadata extends AbstractListener
             }
 
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                if (!empty($fieldDefs['type']) && in_array($fieldDefs['type'], ['extensibleEnum', 'extensibleMultiEnum', 'measure']) && empty($fieldDefs['view'])) {
+                $dropdownTypes = ['extensibleEnum', 'extensibleMultiEnum', 'link', 'linkMultiple', 'measure'];
+                if (!empty($fieldDefs['type']) && in_array($fieldDefs['type'], $dropdownTypes) && empty($fieldDefs['view'])) {
                     if (!empty($fieldDefs['dropdown'])) {
-                        if ($fieldDefs['type'] == 'extensibleMultiEnum') {
-                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-multi-enum-dropdown';
-                        } else {
-                            if ($fieldDefs['type'] == 'extensibleEnum') {
-                                $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-enum-dropdown';
-                            } else {
-                                $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/measure-dropdown';
-                            }
+                        switch ($fieldDefs['type']) {
+                            case 'extensibleEnum':
+                                $viewType = 'extensible-enum';
+                                break;
+                            case 'extensibleMultiEnum':
+                                $viewType = 'extensible-multi-enum';
+                                break;
+                            case 'linkMultiple':
+                                $viewType = 'link-multiple';
+                                break;
+                            default:
+                                $viewType = $fieldDefs['type'];
+                                break;
                         }
+
+                        $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/$viewType-dropdown";
                     }
                 }
             }
@@ -1011,7 +1019,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array  $indexes
+     * @param array $indexes
      * @param string $fieldName
      *
      * @return array
