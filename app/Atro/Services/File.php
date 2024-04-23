@@ -32,10 +32,12 @@ class File extends Base
 
         $entity->set('extension', strtolower(array_pop($fileNameParts)));
         $entity->set('downloadUrl', $entity->getDownloadUrl());
-        $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
-        $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
-        $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
-        $entity->set('hasOpen', in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', [])));
+        if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {
+            $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
+            $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
+            $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
+            $entity->set('hasOpen', true);
+        }
     }
 
     public function createEntity($attachment)
@@ -163,7 +165,7 @@ class File extends Base
          */
         if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
             $old = $this->getRepository()->get($attachment->reupload);
-            if (!empty($old)){
+            if (!empty($old)) {
                 $this->getRepository()->deleteFile($old);
             }
 
