@@ -1,40 +1,30 @@
 /*
- * This file is part of EspoCRM and/or AtroCore.
+ * This file is part of premium software, which is NOT free.
+ * Copyright (c) AtroCore GmbH.
  *
- * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * This Software is the property of AtroCore GmbH and is
+ * protected by copyright law - it is NOT Freeware and can be used only in one
+ * project under a proprietary license, which is delivered along with this program.
+ * If not, see <https://atropim.com/eula> or <https://atrodam.com/eula>.
  *
- * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore GmbH.
+ * This Software is distributed as is, with LIMITED WARRANTY AND LIABILITY.
+ * Any unauthorised use of this Software without a valid license is
+ * a violation of the License Agreement.
  *
- * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * AtroCore as well as EspoCRM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
- * and "AtroCore" word.
+ * According to the terms of the license you shall not resell, sublicense,
+ * rent, lease, distribute or otherwise transfer rights or usage of this
+ * Software or its derivatives. You may modify the code of this Software
+ * for your own needs, if source code is provided.
  */
 
-Espo.define('views/fields/extensible-enum-dropdown', ['views/fields/colored-enum'], function (Dep) {
+Espo.define('views/fields/extensible-enum-dropdown', 'views/fields/link-dropdown', function (Dep) {
     return Dep.extend({
 
         setup: function () {
-           this.prepareOptionsList()
+            this.idName = this.name;
+            this.nameName = this.name + 'Name';
+            this.foreignScope = 'ExtensibleEnumOption';
+
             Dep.prototype.setup.call(this);
         },
 
