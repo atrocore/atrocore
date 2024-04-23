@@ -20880,8 +20880,31 @@ button.category:focus {
         margin: 0;
     }
 
-    .detail .panel-navigation {
-        display: none;
+    .detail .panel-navigation .nav > li > a {
+        padding: 5px 10px;
+    }
+
+    .bottom .panel .panel-heading {
+        display: flex;
+        flex-flow: row-reverse;
+        justify-content: space-between;
+    }
+
+    .bottom .panel .panel-title {
+        flex: 1;
+    }
+
+    .bottom .panel .panel-title .collapser {
+        position: relative;
+        top: -4px !important;
+    }
+
+    .bottom .panel .panel-title > .action {
+        display: inline-block;
+        max-width: calc(100% - 40px);
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     #header .navbar-right > li.progress-badge-container {
