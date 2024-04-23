@@ -1,8 +1,13 @@
 {
    "params":[
       {
+         "name": "notNull",
+         "type": "bool"
+      },
+      {
          "name":"default",
-         "type":"bool"
+         "type":"bool",
+         "view": "views/admin/field-manager/fields/bool/default"
       },
       {
          "name":"audited",
@@ -15,8 +20,5 @@
    ],
    "filter": true,
    "qbFilterType": "boolean",
-   "fieldDefs":{
-      "notNull": true
-   },
    "multilingual": true
 }

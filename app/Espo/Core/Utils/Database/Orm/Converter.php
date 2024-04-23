@@ -258,7 +258,15 @@ class Converter
                         break;
 
                     case 'bool':
-                        $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
+                        if ( $fieldName !== 'deleted' && !array_key_exists('notNull', $fieldParams)) {
+                            $fieldParams['notNull'] = true;
+                        }
+
+                        if(array_key_exists('notNull', $fieldParams) && $fieldParams['notNull'] === false){
+                            $fieldParams['default'] = null;
+                        }else{
+                            $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
+                        }
                         break;
                 }
             }

@@ -240,8 +240,8 @@ class FieldManagerController extends AbstractListener
         $data = $event->getArgument('data');
         $params = $event->getArgument('params');
 
-        if(($data->type !== 'varchar')
-            || !property_exists($data,'notNull')
+        if(
+            !property_exists($data,'notNull')
             || empty($data->notNull))
         {
             return;
@@ -253,11 +253,24 @@ class FieldManagerController extends AbstractListener
         $conn = $this->getEntityManager()
             ->getConnection();
 
-        $conn->createQueryBuilder()
-            ->update($conn->quoteIdentifier($table))
-            ->set($column, ':empty')
-            ->where("$column is NULL")
-            ->setParameter('empty','', ParameterType::STRING)
-            ->executeQuery();
+        if($data->type === 'varchar'){
+            $conn->createQueryBuilder()
+                ->update($conn->quoteIdentifier($table))
+                ->set($column, ':empty')
+                ->where("$column is NULL")
+                ->setParameter('empty','', ParameterType::STRING)
+                ->executeQuery();
+        }
+
+        if($data->type === 'bool'){
+            $conn->createQueryBuilder()
+                ->update($conn->quoteIdentifier($table))
+                ->set($column, ':defaultBool')
+                ->where("$column is NULL")
+                ->setParameter('defaultBool', !empty($data->default), ParameterType::STRING)
+                ->executeQuery();
+        }
+
+
     }
 }
