@@ -53,12 +53,6 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
         setup(){
             this.notNull = this.params?.notNull
                 ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? true;
-            this.params.options = ['','false','true'];
-            this.translatedOptions = {
-                '':'NULL',
-                'false': this.translate('No'),
-                'true': this.translate('Yes'),
-            }
         },
 
         data: function () {
@@ -66,14 +60,21 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             data.valueIsSet = this.model.has(this.name);
             data.notNull = this.notNull
             data.isNull = !this.model.get(this.name);
-            data.translatedOptions = this.translatedOptions
+            data.options = ['','false','true'];
+            data.translatedOptions = {
+                '':'NULL',
+                'false': this.translate('No'),
+                'true': this.translate('Yes'),
+            }
+
+
             return data;
         },
 
         fetch: function () {
             let value = null;
             if(this.notNull){
-                this.$el.find('input[name=' + this.name + ']').is(":checked");
+                value = this.$el.find('input[name=' + this.name + ']').is(":checked");
             }else{
                 let val = this.$el.find('[name="' + this.name + '"]').val();
                 value = val ? val==="true" : null;
