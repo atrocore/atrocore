@@ -33,10 +33,16 @@ class File extends Base
         $entity->set('extension', strtolower(array_pop($fileNameParts)));
         $entity->set('downloadUrl', $entity->getDownloadUrl());
         if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {
-            $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
-            $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
-            $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
             $entity->set('hasOpen', true);
+            if (!empty($entity->getSmallThumbnailUrl())) {
+                $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
+            }
+            if (!empty($entity->getMediumThumbnailUrl())) {
+                $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
+            }
+            if (!empty($entity->getLargeThumbnailUrl())) {
+                $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
+            }
         }
     }
 
