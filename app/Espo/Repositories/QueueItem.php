@@ -83,8 +83,6 @@ class QueueItem extends Base
             exec("kill -9 {$entity->get('pid')}");
         }
 
-        $this->preparePublicDataForMassDelete($entity);
-
         if (in_array($entity->get('status'), ['Success', 'Failed', 'Canceled'])) {
             $item = $this->where(['status' => ['Pending', 'Running']])->findOne();
             if (empty($item) && file_exists(QueueManager::FILE_PATH)) {
@@ -135,19 +133,6 @@ class QueueItem extends Base
         }
 
         return $dirPath . '/' . $fileName . '(' . $itemId . ')' . '.txt';
-    }
-
-    protected function preparePublicDataForMassDelete(Entity $entity): void
-    {
-        if ($entity->get('serviceName') !== 'MassDelete' || in_array($entity->get('status'), ['Pending', 'Running']) || empty($entity->get('data'))) {
-            return;
-        }
-
-        $data = json_decode(json_encode($entity->get('data')), true);
-
-        if(!empty($data['entityType']) && !empty($data['totalChunks']) && $data['totalChunks'] === 1){
-            \Espo\Services\MassDelete::updatePublicData($data['entityType'], null);
-        }
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])

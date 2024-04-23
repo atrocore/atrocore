@@ -35,49 +35,27 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\DataManager;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class MassDelete extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids']) || empty($data['totalChunks'])) {
+        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids'])) {
             return false;
         }
 
         $entityType = $data['entityType'];
-
         $service = $this->getContainer()->get('serviceFactory')->create($entityType);
 
-
-        foreach ($data['ids'] as $id => $position) {
-
-            if($data['totalChunks'] === 1){
-                $publicData = DataManager::getPublicData('massDelete');
-
-                $massDeleteData = $publicData[$entityType] ?? ['total' => $data['total'], 'deleted' => 0];
-
-                if(empty($publicData[$entityType]['deleted'])){
-                    $massDeleteData = ['total' => $data['total'], 'deleted' => 0];
-                    self::updatePublicData($entityType, $massDeleteData);
-                }
-
-                $this->execute($service, $id, $data['entityType']);
-                $deleted = $position + 1;
-
-                if ($massDeleteData['deleted'] < $deleted) {
-                    $massDeleteData['deleted'] = $deleted;
-                    if ($massDeleteData['deleted'] === $massDeleteData['total'] ) {
-                        $massDeleteData['done'] = Util::generateId();
-                    }
-                    self::updatePublicData($entityType, $massDeleteData);
-                }
-            }else{
-                $this->execute($service, $id, $data['entityType']);
+        foreach ($data['ids'] as $id) {
+            try {
+                $service->deleteEntity($id);
+            } catch (\Throwable $e) {
+                $message = "Delete {$entityType} '$id' failed: {$e->getTraceAsString()}";
+                $GLOBALS['log']->error($message);
+                $this->notify($message);
             }
-
         }
 
         return true;
@@ -88,15 +66,6 @@ class MassDelete extends QueueManagerBase
         return '';
     }
 
-    public static function updatePublicData(string $entityType, ?array $data): void
-    {
-        $publicData = DataManager::getPublicData('massDelete');
-        if (empty($publicData)) {
-            $publicData = [];
-        }
-        $publicData[$entityType] = $data;
-        DataManager::pushPublicData('massDelete', $publicData);
-    }
 
     protected function notify(string $message): void
     {
@@ -105,16 +74,5 @@ class MassDelete extends QueueManagerBase
         $notification->set('message', $message);
         $notification->set('userId', $this->getUser()->get('id'));
         $this->getEntityManager()->saveEntity($notification);
-    }
-
-    public function execute($service, $id, $entityType): void
-    {
-        try {
-            $service->deleteEntity($id);
-        } catch (\Throwable $e) {
-            $message = "Delete {$entityType} '$id' failed: {$e->getTraceAsString()}";
-            $GLOBALS['log']->error($message);
-            $this->notify($message);
-        }
     }
 }

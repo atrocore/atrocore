@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Atro\Core\Container;
+use Espo\Core\DataManager;
 use Espo\Core\Services\Base;
 use Espo\ORM\Entity;
 use Espo\Entities\QueueItem;
@@ -88,5 +89,15 @@ abstract class QueueManagerBase extends Base implements QueueManagerServiceInter
     protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
     {
         return $this->getInjection('language')->translate($label, $category, $scope);
+    }
+
+    public static function updatePublicData(string $massAction, string $entityType, ?array $data): void
+    {
+        $publicData = DataManager::getPublicData($massAction);
+        if (empty($publicData)) {
+            $publicData = [];
+        }
+        $publicData[$entityType] = $data;
+        DataManager::pushPublicData($massAction, $publicData);
     }
 }

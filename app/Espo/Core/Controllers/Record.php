@@ -577,30 +577,22 @@ class Record extends Base
         return $result;
     }
 
-    public function actionGetMassUpdatedItemsCount($params, $data, $request)
+    public function actionGetMassActionItemsCount($params, $data, $request)
     {
-        if (!$request->isGet() || !$request->get('chunkId')) {
+        if (!$request->isPost() || !property_exists($data, 'jobIds') || !property_exists($data, 'action')) {
             throw new BadRequest();
         }
 
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }
+        $params = [
+            "jobIds" => $data->jobIds,
+            "action" => $data->action
+        ];
 
-        return $this->getRecordService()->getMassUpdatedItemsCount($request->get('chunkId'));
-    }
+        return $this->getRecordService()->getMassActionItemsCount($params);
 
-    public function actionGetMassDeletedItemsCount($params, $data, $request)
-    {
-        if (!$request->isGet() || !$request->get('chunkId')) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->getMassDeletedItemsCount($request->get('chunkId'));
     }
 
     protected function prepareWhereQuery($where)
