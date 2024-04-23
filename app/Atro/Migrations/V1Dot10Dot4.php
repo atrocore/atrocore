@@ -29,8 +29,6 @@ class V1Dot10Dot4 extends Base
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE file ADD data TEXT DEFAULT NULL");
             $this->exec("COMMENT ON COLUMN file.data IS '(DC2Type:jsonObject)'");
-            $this->exec("ALTER TABLE file ADD foreign_id VARCHAR(255) DEFAULT NULL");
-            $this->exec("CREATE UNIQUE INDEX UNIQ_8C9F3610CD42CE46EB3B4E33 ON file (foreign_id, deleted)");
         } else {
 
         }

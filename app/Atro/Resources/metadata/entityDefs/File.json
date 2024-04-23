@@ -33,11 +33,6 @@
       "extensibleEnumId": "fileTags",
       "dropdown": false
     },
-    "foreignId": {
-      "type": "varchar",
-      "readOnly": true,
-      "unique": true
-    },
     "data": {
       "type": "jsonObject",
       "readOnly": true,
