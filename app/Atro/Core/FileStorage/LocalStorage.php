@@ -14,6 +14,7 @@ namespace Atro\Core\FileStorage;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
 use Atro\Entities\Storage;
@@ -354,6 +355,16 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function delete(File $file): bool
     {
+        /** @var Thumbnail $thumbnailCreator */
+        $thumbnailCreator = $this->container->get(Thumbnail::class);
+
+        // delete thumbnails
+        foreach (['small', 'medium', 'large'] as $size) {
+            if ($thumbnailCreator->hasThumbnail($file, $size)) {
+                unlink($thumbnailCreator->preparePath($file, $size));
+            }
+        }
+
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
             return $this->getFileManager()->removeFile($path);
@@ -395,6 +406,18 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $url .= "&id={$file->get('id')}";
 
         return $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $url;
+    }
+
+    public function getThumbnail(File $file, string $size): ?string
+    {
+        /** @var Thumbnail $thumbnailCreator */
+        $thumbnailCreator = $this->container->get(Thumbnail::class);
+
+        if ($thumbnailCreator->hasThumbnail($file, $size)) {
+            return $thumbnailCreator->preparePath($file, $size);
+        }
+
+        return $thumbnailCreator->getPath($file, $size);
     }
 
     protected function getConfig(): Config
