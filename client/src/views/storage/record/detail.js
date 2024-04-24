@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/connection/record/detail', 'views/record/detail', function (Dep) {
+Espo.define('views/storage/record/detail', 'views/record/detail', Dep => {
 
     return Dep.extend({
 
@@ -17,18 +17,18 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
 
             this.additionalButtons = [
                 {
-                    "action": "testConnection",
-                    "label": this.translate('testConnection', 'labels', 'Connection')
+                    "action": "scan",
+                    "label": this.translate('scan', 'labels', 'Storage')
                 }
             ];
         },
 
-        actionTestConnection() {
-            this.notify('Loading...');
-            this.ajaxPostRequest('Connection/action/testConnection', {id: this.model.get('id')}).then(() => {
-                this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
-            });
-        },
+        // actionTestConnection() {
+        //     this.notify('Loading...');
+        //     this.ajaxPostRequest('Connection/action/testConnection', {id: this.model.get('id')}).then(() => {
+        //         this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
+        //     });
+        // },
 
     });
 });
