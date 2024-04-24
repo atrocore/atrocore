@@ -63,7 +63,8 @@
     "Accounts": "Accounts",
     "Contacts": "Contacts",
     "Addresses": "Addresses",
-    "Currency": "Currency"
+    "Currency": "Currency",
+    "lists": "Lists"
   },
   "layouts": {
     "relationships": "Relation panels",
@@ -232,7 +233,8 @@
     "accounts": "Manage accounts",
     "contacts": "Manage contacts",
     "addresses": "Manage addresses",
-    "currency": "Configure currencies to be used"
+    "currency": "Configure currencies to be used",
+    "lists": "Manage your lists and their options for simple or multivalue lists."
   },
   "options": {
     "previewSize": {
