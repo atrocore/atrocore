@@ -258,14 +258,10 @@ class Converter
                         break;
 
                     case 'bool':
-                        if ( $fieldName !== 'deleted' && !array_key_exists('notNull', $fieldParams)) {
-                            $fieldParams['notNull'] = true;
-                        }
-
-                        if(array_key_exists('notNull', $fieldParams) && $fieldParams['notNull'] === false){
-                            $fieldParams['default'] = null;
-                        }else{
+                        if (!empty($fieldParams['notNull']) || $fieldName === 'deleted' ) {
                             $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
+                        } else if($fieldName !== null) {
+                            $fieldParams['default'] = null;
                         }
                         break;
                 }
@@ -457,9 +453,13 @@ class Converter
 
         $fieldDefs = $this->getInitValues($fieldParams);
 
-        if ($fieldParams['type'] === 'bool' && array_key_exists('default', $fieldParams)){
+        if ($fieldParams['type'] === 'bool' && array_key_exists('default', $fieldParams)) {
             $fieldDefs['default'] = !empty($fieldDefs['default']);
         }
+
+       if($fieldParams['type'] === 'bool' && !array_key_exists('notNull', $fieldParams)){
+           $fieldDefs['notNull'] = true;
+       }
 
         /** check if the field need to be saved in database    */
         if ( (isset($fieldParams['db']) && $fieldParams['db'] === false) ) {

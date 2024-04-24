@@ -3210,13 +3210,6 @@ class Record extends Base
                 $value = $entity->get($field);
             }
 
-            if ($params['type'] === 'bool') {
-                if (!empty($data->$field) !== !empty($value)) {
-                    return true;
-                }
-                continue 1;
-            }
-
             // strict type for NULL
             if (($data->$field === null && $value !== null) || ($data->$field !== null && $value === null)) {
                 return true;

@@ -253,21 +253,20 @@ class FieldManagerController extends AbstractListener
         $conn = $this->getEntityManager()
             ->getConnection();
 
+         $query= $conn->createQueryBuilder()
+                ->update($conn->quoteIdentifier($table));
+
         if($data->type === 'varchar'){
-            $conn->createQueryBuilder()
-                ->update($conn->quoteIdentifier($table))
-                ->set($column, ':empty')
+            $query->set($column, ':empty')
                 ->where("$column is NULL")
                 ->setParameter('empty','', ParameterType::STRING)
                 ->executeQuery();
         }
 
         if($data->type === 'bool'){
-            $conn->createQueryBuilder()
-                ->update($conn->quoteIdentifier($table))
-                ->set($column, ':defaultBool')
+            $query->set($column, ':defaultBool')
                 ->where("$column is NULL")
-                ->setParameter('defaultBool', !empty($data->default), ParameterType::STRING)
+                ->setParameter('defaultBool', !empty($data->default), ParameterType::BOOLEAN)
                 ->executeQuery();
         }
 

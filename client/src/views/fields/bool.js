@@ -53,21 +53,34 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
         setup(){
             this.notNull = this.params?.notNull
                 ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? true;
+
+            let defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default']);
+
+            if(this.model.isNew() && !this.notNull && defaultValue !== null){
+                this.model.set(this.name, defaultValue === true)
+            }
         },
 
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.valueIsSet = this.model.has(this.name);
             data.notNull = this.notNull
-            data.isNull = !this.model.get(this.name);
-            data.options = ['','false','true'];
-            data.translatedOptions = {
-                '':'NULL',
-                'false': this.translate('No'),
-                'true': this.translate('Yes'),
+            data.isNull = this.model.get(this.name) === null || this.model.get(this.name) === undefined;
+
+            if(['edit','search'].includes(this.mode)){
+                data.options = ['','false','true'];
+                data.translatedOptions = {
+                    '':'NULL',
+                    'false': this.translate('No'),
+                    'true': this.translate('Yes'),
+                }
+                if(data.isNull){
+                    data['value'] = '';
+                }
+                if(!this.notNull && !data.isNull){
+                    data['value'] = this.model.get(this.name).toString()
+                }
             }
-
-
             return data;
         },
 
@@ -89,8 +102,16 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
         },
 
         fetchSearch: function () {
+            let value = null;
+            if(this.notNull){
+                value = this.$element.get(0).checked;
+            }else{
+                let val = this.$element.get(0).value;
+                value = val ? val==="true" : null;
+            }
+
             var data = {
-                type: this.$element.get(0).checked ? 'isTrue' : 'isFalse',
+                type: value === null ? 'isNull' : (value ? 'isTrue': 'isFalse')
             };
             return data;
         },
