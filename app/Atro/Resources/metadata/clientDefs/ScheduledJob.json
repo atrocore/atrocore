@@ -1,33 +1,53 @@
 {
-    "controller": "controllers/record",
-    "relationshipPanels": {
-        "log": {
-            "readOnly": true,
-            "view": "views/scheduled-job/record/panels/log"
-        }
-    },
-    "recordViews":{
-        "list": "views/scheduled-job/record/list",
-        "detail": "views/scheduled-job/record/detail"
-    },
-    "views": {
-        "list": "views/scheduled-job/list"
-    },
-    "jobWithTargetList": [
-        "CheckEmailAccounts"
-    ],
-    "dynamicLogic": {
-       "fields": {
-           "job": {
-               "readOnly": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "id"
-                        }
-                    ]
-               }
-           }
-       }
+  "controller": "controllers/record",
+  "relationshipPanels": {
+    "log": {
+      "readOnly": true,
+      "view": "views/scheduled-job/record/panels/log"
     }
+  },
+  "recordViews": {
+    "list": "views/scheduled-job/record/list",
+    "detail": "views/scheduled-job/record/detail"
+  },
+  "views": {
+    "list": "views/scheduled-job/list"
+  },
+  "jobWithTargetList": [
+    "CheckEmailAccounts"
+  ],
+  "dynamicLogic": {
+    "fields": {
+      "job": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "storage": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "job",
+              "value": "ScanStorage"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "job",
+              "value": "ScanStorage"
+            }
+          ]
+        }
+      }
+    }
+  }
 }

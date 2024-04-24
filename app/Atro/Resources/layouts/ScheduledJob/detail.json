@@ -1,9 +1,32 @@
 [
-    {
-        "rows": [
-            [{"name": "job"}, {"name": "status"}],
-            [{"name": "name"}, false],
-            [{"name": "scheduling"}, false]
-        ]
-    }
+  {
+    "rows": [
+      [
+        {
+          "name": "job"
+        },
+        {
+          "name": "status"
+        }
+      ],
+      [
+        {
+          "name": "storage"
+        },
+        false
+      ],
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "scheduling"
+        },
+        false
+      ]
+    ]
+  }
 ]

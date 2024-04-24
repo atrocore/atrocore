@@ -29,8 +29,12 @@ class V1Dot10Dot4 extends Base
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE file ADD data TEXT DEFAULT NULL");
             $this->exec("COMMENT ON COLUMN file.data IS '(DC2Type:jsonObject)'");
+            $this->exec("ALTER TABLE scheduled_job ADD storage_id VARCHAR(24) DEFAULT NULL");
+            $this->exec("CREATE INDEX IDX_SCHEDULED_JOB_STORAGE_ID ON scheduled_job (storage_id, deleted)");
         } else {
             $this->exec("ALTER TABLE file ADD data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
+            $this->exec("ALTER TABLE scheduled_job ADD storage_id VARCHAR(24) DEFAULT NULL");
+            $this->exec("CREATE INDEX IDX_SCHEDULED_JOB_STORAGE_ID ON scheduled_job (storage_id, deleted)");
         }
     }
 
