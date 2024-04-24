@@ -24,6 +24,6 @@ class Storage extends Base
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->createScanJob((string)$data->id);
+        return $this->getRecordService()->createScanJob((string)$data->id, true);
     }
 }

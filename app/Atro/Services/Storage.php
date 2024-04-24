@@ -20,7 +20,7 @@ use Espo\Services\QueueManagerServiceInterface;
 
 class Storage extends Base implements QueueManagerServiceInterface
 {
-    public function createScanJob(string $storageId): bool
+    public function createScanJob(string $storageId, bool $manual): bool
     {
         $storage = $this->getEntity($storageId);
         if (empty($storage)) {
@@ -29,16 +29,23 @@ class Storage extends Base implements QueueManagerServiceInterface
 
         $name = $this->getInjection('language')->translate('scan', 'labels', 'Storage') . ' ' . $storage->get('name');
 
-        return $this->getInjection('queueManager')->push($name, 'Storage', ['storageId' => $storage->get('id'), 'storageName' => $storage->get('name')]);
+        return $this->getInjection('queueManager')->push($name, 'Storage', ['storageId' => $storage->get('id'), 'storageName' => $storage->get('name'), 'manual' => $manual]);
     }
 
     public function run(array $data = []): bool
     {
+        $storage = $this->getEntity($data['storageId']);
+        $this->getInjection('container')->get($storage->get('type') . 'Storage')->scan($storage);
+
         return true;
     }
 
     public function getNotificationMessage(Entity $queueItem): string
     {
+        if (!$queueItem->get('data')->manual) {
+            return '';
+        }
+
         return sprintf($this->getInjection('language')->translate('scanDone', 'labels', 'Storage'), $queueItem->get('data')->storageName);
     }
 
@@ -52,5 +59,6 @@ class Storage extends Base implements QueueManagerServiceInterface
         parent::init();
 
         $this->addDependency('queueManager');
+        $this->addDependency('container');
     }
 }
