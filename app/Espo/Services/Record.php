@@ -3106,6 +3106,26 @@ class Record extends Base
                 }
             }
 
+            foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $fieldName => $fieldDefs) {
+                if (!empty($fieldDefs['mandatoryToSelect'])) {
+                    if (empty($fieldDefs['type'])) {
+                        continue;
+                    }
+                    if ($fieldDefs['type'] === 'link') {
+                        if (!in_array("{$fieldName}Id", $attributeList)) {
+                            $attributeList[] = "{$fieldName}Id";
+                        }
+                        if (!in_array("{$fieldName}Name", $attributeList)) {
+                            $attributeList[] = "{$fieldName}Name";
+                        }
+                    } else {
+                        if (!in_array($fieldName, $attributeList)) {
+                            $attributeList[] = $fieldName;
+                        }
+                    }
+                }
+            }
+
             if (!empty($language = $this->getHeaderLanguage()) && $language !== 'main') {
                 $newAttributeList = [];
                 foreach ($attributeList as $field) {
