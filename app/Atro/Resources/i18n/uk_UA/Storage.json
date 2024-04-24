@@ -15,7 +15,8 @@
     }
   },
   "labels": {
-    "Create Storage": "Створити сховище"
+    "Create Storage": "Створити сховище",
+    "scan": "Сканувати"
   },
   "exceptions": {
     "storagePathNotUnique": "Шлях до сховища має бути унікальним.",

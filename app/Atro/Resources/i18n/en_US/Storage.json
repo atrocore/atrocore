@@ -15,7 +15,8 @@
     }
   },
   "labels": {
-    "Create Storage": "Create Storage"
+    "Create Storage": "Create Storage",
+    "scan": "Scan"
   },
   "exceptions": {
     "storagePathNotUnique": "Storage path should be unique.",

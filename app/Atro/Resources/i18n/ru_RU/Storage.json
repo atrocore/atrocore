@@ -15,7 +15,8 @@
     }
   },
   "labels": {
-    "Create Storage": "Создать хранилище"
+    "Create Storage": "Создать хранилище",
+    "scan": "Сканировать"
   },
   "exceptions": {
     "storagePathNotUnique": "Путь к хранилищу должен быть уникальным.",

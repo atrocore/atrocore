@@ -15,7 +15,8 @@
     }
   },
   "labels": {
-    "Create Storage": "Dateiablage erstellen"
+    "Create Storage": "Dateiablage erstellen",
+    "scan": "Scannen"
   },
   "exceptions": {
     "storagePathNotUnique": "Der Speicherpfad sollte eindeutig sein.",
