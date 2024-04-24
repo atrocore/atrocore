@@ -42,7 +42,5 @@ interface QueueManagerServiceInterface
 {
     public function run(array $data = []): bool;
 
-    public function setQueueItem(QueueItemEntity $qmItem): void;
-
     public function getNotificationMessage(Entity $queueItem): string;
 }

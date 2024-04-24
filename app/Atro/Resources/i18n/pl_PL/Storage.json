@@ -16,7 +16,8 @@
   },
   "labels": {
     "Create Storage": "Utwórz przechowywanie plików",
-    "scan": "Skanuj"
+    "scan": "Skanuj",
+    "scanDone": "Skanowanie magazynu „%s” zostało zakończone."
   },
   "exceptions": {
     "storagePathNotUnique": "Ścieżka zapisu powinna być unikalna.",

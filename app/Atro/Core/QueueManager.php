@@ -262,7 +262,9 @@ class QueueManager
 
         try {
             $service = $this->getServiceFactory()->create($item->get('serviceName'));
-            $service->setQueueItem($item);
+            if (method_exists($service, 'setQueueItem')) {
+                $service->setQueueItem($item);
+            }
             $service->run($data);
         } catch (\Throwable $e) {
             $this->setStatus($item, 'Failed', $e->getMessage());

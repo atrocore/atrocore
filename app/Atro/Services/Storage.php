@@ -13,13 +13,44 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
+use Espo\Services\QueueManagerServiceInterface;
 
-class Storage extends Base
+class Storage extends Base implements QueueManagerServiceInterface
 {
+    public function createScanJob(string $storageId): bool
+    {
+        $storage = $this->getEntity($storageId);
+        if (empty($storage)) {
+            throw new NotFound();
+        }
+
+        $name = $this->getInjection('language')->translate('scan', 'labels', 'Storage') . ' ' . $storage->get('name');
+
+        return $this->getInjection('queueManager')->push($name, 'Storage', ['storageId' => $storage->get('id'), 'storageName' => $storage->get('name')]);
+    }
+
+    public function run(array $data = []): bool
+    {
+        return true;
+    }
+
+    public function getNotificationMessage(Entity $queueItem): string
+    {
+        return sprintf($this->getInjection('language')->translate('scanDone', 'labels', 'Storage'), $queueItem->get('data')->storageName);
+    }
+
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         return [];
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('queueManager');
     }
 }

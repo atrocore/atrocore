@@ -23,12 +23,12 @@ Espo.define('views/storage/record/detail', 'views/record/detail', Dep => {
             ];
         },
 
-        // actionTestConnection() {
-        //     this.notify('Loading...');
-        //     this.ajaxPostRequest('Connection/action/testConnection', {id: this.model.get('id')}).then(() => {
-        //         this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
-        //     });
-        // },
+        actionScan() {
+            this.notify('Please wait...');
+            this.ajaxPostRequest('Storage/action/createScanJob', {id: this.model.get('id')}).success(() => {
+                this.notify(this.translate('jobCreated'), 'success');
+            });
+        },
 
     });
 });
