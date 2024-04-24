@@ -94,7 +94,7 @@ Espo.define('views/record/panel-navigation', 'view',
         isPanelClosed(name){
             let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? []
-            return scopePreferences['closed'].includes(name)
+            return (scopePreferences['closed'] || []).includes(name)
         },
     })
 );
