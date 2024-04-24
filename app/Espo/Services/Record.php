@@ -2528,10 +2528,6 @@ class Record extends Base
 
         $jobEnded = $totalItems === $data['total'] || empty($ids);
 
-        if($jobEnded){
-            QueueManagerBase::updatePublicData('mass'.ucfirst($params['action']), $data['entityType'], null);
-        }
-
         return ['total' => $totalItems, 'done' =>  $jobEnded];
     }
 
