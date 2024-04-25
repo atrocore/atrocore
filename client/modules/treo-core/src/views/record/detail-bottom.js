@@ -283,7 +283,8 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
 
                 if (p.label) {
-                    p.title = this.translate(p.label, 'labels', this.scope);
+                    let translated = this.translate(p.name)
+                    p.title =  translated === p.name ? p.label : translated;
                 } else {
                     p.title =  this.translate(p.name, 'links', this.scope);
                 }
@@ -339,7 +340,8 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 }
 
                 if (p.label) {
-                    p.title = this.translate(p.label, 'labels', this.scope);
+                    let translated = this.translate(p.name)
+                    p.title =  translated === p.name ? p.label : translated;
                 } else {
                     p.title = view.title;
                 }
