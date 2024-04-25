@@ -71,6 +71,11 @@
         "url": "#Settings/inputLanguage",
         "label": "multiLanguages",
         "description": "multiLanguagesSettings"
+      },
+      {
+        "url": "#ExtensibleEnum",
+        "label": "lists",
+        "description": "lists"
       }
     ],
     "order": 0

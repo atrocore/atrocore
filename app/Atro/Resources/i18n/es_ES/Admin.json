@@ -53,7 +53,8 @@
     "Roles": "Roles",
     "Accounts": "Cuenta",
     "Contacts": "Contactos",
-    "Addresses": "Direcciones"
+    "Addresses": "Direcciones",
+    "lists": "Listas"
   },
   "layouts": {
     "list": "Lista",
@@ -193,7 +194,8 @@
     "unit": "Units of measure settings",
     "accounts": "Cuentas de administración",
     "contacts": "Gestionar contactos",
-    "addresses": "Administrar direcciones"
+    "addresses": "Administrar direcciones",
+    "lists": "Gestione sus listas y sus opciones para listas simples o multivalor."
   },
   "options": {
     "previewSize": {
