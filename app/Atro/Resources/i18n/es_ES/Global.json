@@ -352,7 +352,8 @@
     "addRelation": "Add relation",
     "removeRelation": "Remove relation",
     "convertCurrency": "Convert Currency",
-    "restore": "Restaurar"
+    "restore": "Restaurar",
+    "delete": "Eliminar"
   },
   "fields": {
     "name": "Nombre",

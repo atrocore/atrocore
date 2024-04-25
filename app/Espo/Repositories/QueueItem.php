@@ -36,8 +36,13 @@ declare(strict_types=1);
 namespace Espo\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
+use Espo\Core\DataManager;
 use Espo\ORM\Entity;
-use Espo\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\Base;
+use Espo\Services\QueueManagerBase;
 use Espo\Services\QueueManagerServiceInterface;
 use Atro\Core\QueueManager;
 
@@ -83,7 +88,7 @@ class QueueItem extends Base
             exec("kill -9 {$entity->get('pid')}");
         }
 
-        $this->preparePublicDataForMassDelete($entity);
+        $this->preparePublicDataForMassAction($entity);
 
         if (in_array($entity->get('status'), ['Success', 'Failed', 'Canceled'])) {
             $item = $this->where(['status' => ['Pending', 'Running']])->findOne();
@@ -137,15 +142,38 @@ class QueueItem extends Base
         return $dirPath . '/' . $fileName . '(' . $itemId . ')' . '.txt';
     }
 
-    protected function preparePublicDataForMassDelete(Entity $entity): void
+    protected function preparePublicDataForMassAction(Entity $entity): void
     {
-        if ($entity->get('serviceName') !== 'MassDelete' || in_array($entity->get('status'), ['Pending', 'Running']) || empty($entity->get('data'))) {
+        if (!in_array($entity->get('serviceName'), ['MassDelete','MassRestore','MassUpdate'])){
+            return;
+        }
+
+        if(in_array($entity->get('status'), ['Pending', 'Running'])|| empty($entity->get('data'))){
             return;
         }
 
         $data = json_decode(json_encode($entity->get('data')), true);
-        if (!empty($data['entityType'])) {
-            \Espo\Services\MassDelete::updatePublicData($data['entityType'], null);
+
+        if(!empty($data['entityType'])){
+            $publicData = DataManager::getPublicData(lcfirst($entity->get('serviceName')));
+            if(!empty($publicData[$data['entityType']]['jobIds'])){
+                $jobIds = $publicData[$data['entityType']]['jobIds'];
+                $ongoingJob = $this->getConnection()
+                    ->createQueryBuilder()
+                    ->from('queue_item')
+                    ->select('id')
+                    ->where('id IN (:jobIds)')
+                    ->andWhere('status IN (:status)')
+                    ->andWhere('deleted=:false')
+                    ->setParameter('jobIds', $jobIds, Mapper::getParameterType($jobIds))
+                    ->setParameter('status', ['Pending','Running'], Connection::PARAM_STR_ARRAY)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchOne();
+
+                if(empty($ongoingJob)){
+                    QueueManagerBase::updatePublicData(lcfirst($entity->get('serviceName')), $data['entityType'], null);
+                }
+            }
         }
     }
 

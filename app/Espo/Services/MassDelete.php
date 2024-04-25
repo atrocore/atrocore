@@ -35,8 +35,6 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\DataManager;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class MassDelete extends QueueManagerBase
@@ -48,38 +46,16 @@ class MassDelete extends QueueManagerBase
         }
 
         $entityType = $data['entityType'];
-
         $service = $this->getContainer()->get('serviceFactory')->create($entityType);
 
-
-        foreach ($data['ids'] as $id => $position) {
-
-            $publicData = DataManager::getPublicData('massDelete');
-
-            $massDeleteData = $publicData[$entityType] ?? ['total' => $data['total'], 'deleted' => 0];
-
-            if(empty($publicData[$entityType]['deleted'])){
-                $massDeleteData = ['total' => $data['total'], 'deleted' => 0];
-                self::updatePublicData($entityType, $massDeleteData);
-            }
-
+        foreach ($data['ids'] as $id) {
             try {
                 $service->deleteEntity($id);
             } catch (\Throwable $e) {
-                $message = "Delete {$data['entityType']} '$id' failed: {$e->getTraceAsString()}";
+                $message = "Delete {$entityType} '$id' failed: {$e->getTraceAsString()}";
                 $GLOBALS['log']->error($message);
                 $this->notify($message);
             }
-
-            $deleted = $position + 1;
-            if ($massDeleteData['deleted'] < $deleted) {
-                $massDeleteData['deleted'] = $deleted;
-                if ($massDeleteData['deleted'] === $massDeleteData['total'] || !empty($data['last'])) {
-                    $massDeleteData['done'] = Util::generateId();
-                }
-                self::updatePublicData($entityType, $massDeleteData);
-            }
-
         }
 
         return true;
@@ -90,15 +66,6 @@ class MassDelete extends QueueManagerBase
         return '';
     }
 
-    public static function updatePublicData(string $entityType, ?array $data): void
-    {
-        $publicData = DataManager::getPublicData('massDelete');
-        if (empty($publicData)) {
-            $publicData = [];
-        }
-        $publicData[$entityType] = $data;
-        DataManager::pushPublicData('massDelete', $publicData);
-    }
 
     protected function notify(string $message): void
     {
