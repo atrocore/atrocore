@@ -6,7 +6,13 @@
     "inBackground": "Execute in Background",
     "usage": "Usage",
     "massAction": "Mass Action",
-    "display": "Display"
+    "display": "Display",
+    "actionsSet": "Actions Set",
+    "actions": "Actions"
+  },
+  "links": {
+    "actionsSet": "Actions Set",
+    "actions": "Actions"
   },
   "labels": {
     "Create Action": "Create Action",
@@ -26,6 +32,9 @@
     "display": {
       "dropdown": "Dropdown",
       "single": "Single"
+    },
+    "type": {
+      "set": "Action Set"
     }
   },
   "tooltips": {
