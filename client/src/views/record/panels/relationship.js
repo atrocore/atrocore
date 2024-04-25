@@ -773,6 +773,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 createAttributes.typeName = this.model.get('name');
             }
 
+            if (this.model.name === 'Storage') {
+                createAttributes.storageId = this.model.get('id');
+                createAttributes.storageName = this.model.get('name');
+            }
+
             this.notify('Loading...');
             this.createView('upload', 'views/file/modals/upload', {
                 scope: 'File',

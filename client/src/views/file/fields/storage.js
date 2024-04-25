@@ -16,7 +16,9 @@ Espo.define('views/file/fields/storage', 'views/fields/link',
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.setDefaultStorage(this.model.get('folderId') || '');
+            if (!this.model.get('storageId')) {
+                this.setDefaultStorage(this.model.get('folderId') || '');
+            }
             this.listenTo(this.model, 'change:folderId', () => {
                 this.setDefaultStorage(this.model.get('folderId') || '');
             });
