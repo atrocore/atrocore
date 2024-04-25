@@ -336,7 +336,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $chunks;
     }
 
-    public function deleteAllChunks(Storage $storage): void
+    public function deleteCache(Storage $storage): void
     {
         $this->getFileManager()->removeAllInDir($this->getChunksDir($storage));
     }

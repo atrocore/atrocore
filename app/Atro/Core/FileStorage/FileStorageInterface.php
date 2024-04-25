@@ -30,7 +30,7 @@ interface FileStorageInterface
      */
     public function createChunk(\stdClass $input, Storage $storage): array;
 
-    public function deleteAllChunks(Storage $storage): void;
+    public function deleteCache(Storage $storage): void;
 
     public function rename(File $file): bool;
 
