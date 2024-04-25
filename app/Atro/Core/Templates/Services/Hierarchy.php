@@ -189,7 +189,7 @@ class Hierarchy extends Record
             $offset = 0;
         }
 
-        $children = $this->getChildren($parentId, ['offset' => $offset, 'maxSize' => $index + $limit]);
+        $children = $this->getChildren($parentId, ['offset' => $offset, 'maxSize' => $index - $offset + $limit]);
         if (!empty($children['list'])) {
             foreach ($children['list'] as $v) {
                 $tree[$v['id']] = $v;
