@@ -774,6 +774,9 @@ class Metadata
                 foreach ($entityDefs['fields'] as $field => $fieldDefs) {
                     foreach ($fieldDefs as $param => $paramValue) {
                         if (in_array($param, $boolParameters) && $paramValue === false) {
+                            if(!empty($fieldDefs['type']) && $fieldDefs['type'] === 'bool' && $param === 'notNull' ){
+                                continue;
+                            }
                             unset($data['entityDefs'][$entityType]['fields'][$field][$param]);
                         }
                     }

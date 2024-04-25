@@ -574,6 +574,19 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->validateText($entity, $fieldName, $fieldData);
     }
 
+    protected function validateBool(Entity $entity, string $fieldName, array $fieldData): void{
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
+        if($entity->get($fieldName) !== null){
+            $entity->set($fieldName, !empty($entity->get($fieldName)));
+        } elseif (!isset($fieldData['notNull']) || $fieldData['notNull'] === true) {
+            $entity->set($fieldName, !empty($fieldData['default']));
+        }
+
+    }
+
     protected function getLanguage(): Language
     {
         return $this->getInjection('container')->get('language');

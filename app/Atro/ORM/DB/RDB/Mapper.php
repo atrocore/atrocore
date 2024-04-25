@@ -669,10 +669,6 @@ class Mapper implements MapperInterface
             }
         }
 
-        if ($type === IEntity::BOOL && $value === null) {
-            $value = false;
-        }
-
         return $value;
     }
 
