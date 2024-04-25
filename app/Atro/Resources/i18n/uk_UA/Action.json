@@ -6,7 +6,13 @@
     "inBackground": "Виконати у фоновому режимі",
     "usage": "Використання",
     "massAction": "Масова дія",
-    "display": "Відображання"
+    "display": "Відображання",
+    "actionsSet": "Набори дій",
+    "actions": "Дії"
+  },
+  "links": {
+    "actionsSet": "Набори дій",
+    "actions": "Дії"
   },
   "labels": {
     "Create Action": "Створити дію",
@@ -26,6 +32,9 @@
     "display": {
       "dropdown": "Спадний список",
       "single": "Поодиноко"
+    },
+    "type": {
+      "set": "Набір дій"
     }
   },
   "tooltips": {

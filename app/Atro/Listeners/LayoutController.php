@@ -71,4 +71,31 @@ class LayoutController extends AbstractListener
     {
         $this->modifyTranslationDetail($event);
     }
+
+    protected function modifyActionDetailSmall(Event $event): void
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        $result[0]['rows'][] = [['name' => 'ActionSetLinker__sortOrder'], ['name' => 'ActionSetLinker__isActive']];
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyActionListSmall(Event $event): void
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        $result[] = ['name' => 'ActionSetLinker__isActive'];
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyActionRelationships(Event $event): void
+    {
+        $result = Json::decode($event->getArgument('result'), true);
+
+        $result[] = ['name' => 'actions'];
+
+        $event->setArgument('result', Json::encode($result));
+    }
 }
