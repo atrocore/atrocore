@@ -64,7 +64,8 @@
        "Accounts":"Konta",
        "Contacts":"Kontakty",
        "Addresses":"Adresy",
-       "Currency":"Waluta"
+       "Currency":"Waluta",
+       "lists": "Listy"
     },
     "layouts":{
        "relationships":"Panele relacji",
@@ -233,7 +234,8 @@
        "accounts":"Zarządzaj kontami",
        "contacts":"Zarządzaj kontaktami",
        "addresses":"Zarządzaj adresami",
-       "currency":"Skonfiguruj używane waluty"
+       "currency":"Skonfiguruj używane waluty",
+       "lists": "Zarządzaj listami i ich opcjami dla list prostych lub wielowartościowych."
     },
     "options":{
        "previewSize":{

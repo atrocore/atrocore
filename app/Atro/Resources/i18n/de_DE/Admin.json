@@ -57,7 +57,8 @@
     "Accounts": "Konto",
     "Contacts": "Kontakte",
     "Addresses": "Adressen",
-    "Currency": "Währungen"
+    "Currency": "Währungen",
+    "lists": "Listen"
   },
   "logicalOperators": {
     "and": "UND",
@@ -214,7 +215,8 @@
     "accounts": "Konten verwalten",
     "contacts": "Kontakte verwalten",
     "addresses": "Adressen verwalten",
-    "currency": "Konfigurieren Sie die zu verwendenden Währungen"
+    "currency": "Konfigurieren Sie die zu verwendenden Währungen",
+    "lists": "Verwalten Sie Ihre Listen und deren Optionen für einfache oder mehrwertige Listen."
   },
   "options": {
     "previewSize": {

@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Atro\Core\Exceptions\NotUnique;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Services\Base;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
@@ -2255,62 +2256,17 @@ class Record extends Base
 
         $this->filterInput($data);
 
-        $ids = [];
-        if (array_key_exists('ids', $params) && is_array($params['ids'])) {
-            $ids = $params['ids'];
-        }
+        $params['action'] = 'update';
+        $params['maxActionCount'] =  $this->getConfig()->get('maxMassUpdateCount', 200);
+        $params['chunkSize'] = $this->getConfig()->get('massUpdateChunkSize', 2000);
+        $params['additionalJobData'] = [ "input" => clone $data];
 
-        if (array_key_exists('where', $params)) {
-            $repository = $this->getEntityManager()->getRepository($this->getEntityType());
-
-            $selectParams = $this->getSelectParams(['where' => $params['where']]);
-            $repository->handleSelectParams($selectParams);
-
-            $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
-
-            $ids = array_column($collection->toArray(), 'id');
-        }
-
-        $total = count($ids);
-        $maxMassUpdateCount = $this->getConfig()->get('maxMassUpdateCount', 200);
-
-        if ($total <= $maxMassUpdateCount) {
-            foreach ($ids as $id) {
-                try {
-                    $input = clone $data;
-                    $input->_isMassUpdate = true;
-                    $this->updateEntity($id, $input);
-                } catch (\Throwable $e) {
-                    $GLOBALS['log']->error("Update {$this->getEntityType()} '$id' failed: {$e->getMessage()}");
-                }
+        $ids = $this->executeMassAction($params, function($id) use($data){
+            try {
+                $this->updateEntity($id, $data);
+            } catch (NotModified $e) {
             }
-        } else {
-            $massUpdateChunkSize = $this->getConfig()->get('massUpdateChunkSize', 2000);
-            $position = 0;
-            $chunks = array_chunk($ids, $massUpdateChunkSize);
-            foreach ($chunks as $part => $chunk) {
-                $jobData = [
-                    'entityType' => $this->getEntityType(),
-                    'ids'        => [],
-                    'total'      => $total,
-                    'input'      => clone $data,
-                    'last'       => !isset($chunks[$part + 1])
-                ];
-                foreach ($chunk as $id) {
-                    $jobData['ids'][$id] = $position;
-                    $position++;
-                }
-
-                $name = $this->getInjection('language')->translate('massUpdate', 'massActions', 'Global') . ': ' . $this->getEntityType();
-                if ($part > 0) {
-                    $name .= " ($part)";
-                }
-
-                $this
-                    ->getInjection('queueManager')
-                    ->push($name, 'MassUpdate', $jobData);
-            }
-        }
+        });
 
         return $this
             ->dispatchEvent('afterMassUpdate', new Event(['data' => $data, 'service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids]]))
@@ -2320,61 +2276,16 @@ class Record extends Base
     public function massRemove(array $params)
     {
         $params = $this
-            ->dispatchEvent('beforeMassRemove', new Event(['params' => $params, 'service' => $this]))
+            ->dispatchEvent('beforeMassDelete', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
+        $params['action'] = 'delete';
+        $params['maxActionCount'] =  $this->getConfig()->get('maxMassDeleteCount', 300);
+        $params['chunkSize'] = $this->getConfig()->get('massDeleteChunkSize', 3000);
 
-        $ids = [];
-        if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
-            $ids = $params['ids'];
-        }
-
-        if (array_key_exists('where', $params)) {
-            $selectParams = $this->getSelectParams(['where' => $params['where']], true, true);
-
-            $repository = $this->getEntityManager()->getRepository($this->entityType);
-            $repository->handleSelectParams($selectParams);
-
-            $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
-            $ids = array_column($collection->toArray(), 'id');
-        }
-
-        $total = count($ids);
-        $maxMassDeleteCount = $this->getConfig()->get('maxMassDeleteCount', 300);
-
-        if ($total <= $maxMassDeleteCount) {
-            foreach ($ids as $id) {
-                $this->deleteEntity($id);
-            }
-        } else {
-            $massDeleteChunkSize = $this->getConfig()->get('massDeleteChunkSize', 3000);
-            $position = 0;
-            $chunks = array_chunk($ids, $massDeleteChunkSize);
-            \Espo\Services\MassDelete::updatePublicData($this->entityType, null);
-            foreach ($chunks as $part => $chunk) {
-                $jobData = [
-                    'entityType' => $this->getEntityType(),
-                    'ids'        => [],
-                    'total'      =>  $total,
-                    'totalChunks'=> count($chunks),
-                    'part'       => $part,
-                    'last'       => !isset($chunks[$part + 1])
-                ];
-                foreach ($chunk as $id) {
-                    $jobData['ids'][$id] = $position;
-                    $position++;
-                }
-
-                $name = $this->getInjection('language')->translate('remove', 'massActions', 'Global') . ': ' . $this->entityName;
-                if ($part > 0) {
-                    $name .= " ($part)";
-                }
-
-                $this
-                    ->getInjection('queueManager')
-                    ->push($name, 'MassDelete', $jobData);
-            }
-        }
+        $ids = $this->executeMassAction($params, function($id){
+            $this->deleteEntity($id);
+        });
 
         return $this
             ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids]]))
@@ -2391,21 +2302,13 @@ class Record extends Base
             return false;
         }
 
-        $name = $this->getInjection('language')->translate('restore', 'massActions', 'Global') . ': ' . $this->entityType;
+        $params['action'] = 'restore';
+        $params['maxActionCount'] =  $this->getConfig()->get('maxMassRestoreCount', 300);
+        $params['chunkSize'] = $this->getConfig()->get('massRestoreChunkSize', 3000);
 
-        $data = [
-            'entityType' => $this->entityType
-        ];
-        if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
-            $data['ids'] = $params['ids'];
-        }
-        if (array_key_exists('where', $params)) {
-            $data['where'] = $params['where'];
-        }
-
-        $this
-            ->getInjection('queueManager')
-            ->push($name, 'MassRestore', $data, 'High');
+        $this->executeMassAction($params, function($id){
+            $this->restoreEntity($id);
+        });
 
         return true;
     }
@@ -2569,6 +2472,63 @@ class Record extends Base
             }
         }
         return false;
+    }
+
+    public function getMassActionItemsCount(array $params)
+    {
+
+        $queueItems = $this->getEntityManager()->getConnection()
+            ->createQueryBuilder()
+            ->from('queue_item')
+            ->select('id, status, data, created_at')
+            ->where('id IN (:jobIds)')
+            ->setParameter('jobIds', $params['jobIds'], Mapper::getParameterType($params['jobIds']))
+            ->fetchAllAssociative();
+
+        $totalItems = 0;
+        $ids = [];
+        foreach ($queueItems as $queueItem){
+            $data = json_decode($queueItem['data'], true);
+            if($queueItem['status'] === 'Success'){
+                $totalItems += count($data['ids']);
+            }else if(in_array($queueItem['status'], ['Pending', 'Running'])){
+                $ids = array_merge($ids, $data['ids']);
+            }
+        }
+
+        if(count($ids) > 0){
+            $table = Util::toUnderScore($this->entityType);
+            $conn = $this->getEntityManager()->getConnection();
+            $query = $conn
+                ->createQueryBuilder()
+                ->from($conn->quoteIdentifier($table))
+                ->select('COUNT(*) as total')
+                ->where('id IN (:ids)')
+                ->setParameter('ids', $ids, Mapper::getParameterType($ids));
+
+            if($params['action'] === 'update'){
+                $query->andWhere('modified_at >= :date')
+                    ->setParameter('date', $queueItem['created_at'], ParameterType::STRING);
+            }
+
+            if($params['action'] === 'delete'){
+                $query->andWhere('deleted=:true')
+                    ->setParameter('true', true, ParameterType::BOOLEAN);
+            }
+
+            if($params['action'] === 'restore'){
+                $query->andWhere('deleted=:false')
+                    ->setParameter('false', false, ParameterType::BOOLEAN);
+            }
+
+            $result =  $query->fetchAssociative();
+
+            $totalItems += $result['total'];
+        }
+
+        $jobEnded = $totalItems === $data['total'] || empty($ids);
+
+        return ['total' => $totalItems, 'done' =>  $jobEnded];
     }
 
     protected function getLocaleId(): string
@@ -3504,5 +3464,80 @@ class Record extends Base
 
     protected function afterRestoreEntity($entity)
     {
+    }
+
+    protected function executeMassAction(array $params, \Closure $actionOperation)
+    {
+        $ids = [];
+
+        if (empty($params['action']) || empty($params['maxActionCount']) || empty($params['chunkSize'])) {
+            return [];
+        }
+
+        $action = $params['action'];
+        $maxActionCount = $params['maxActionCount'];
+        $chunkSize  = $params['chunkSize'];
+        $additionJobData = !empty($params['additionalJobData']) ? $params['additionalJobData'] : [];
+
+        if(!in_array($action, ['restore','delete','update'])){
+            return [];
+        }
+
+        if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
+            $ids = $params['ids'];
+        }
+
+        if (array_key_exists('where', $params)) {
+            $selectParams = $this->getSelectParams(['where' => $params['where']], true, true);
+
+            $repository = $this->getEntityManager()->getRepository($this->entityType);
+            $repository->handleSelectParams($selectParams);
+
+            $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
+            $ids = array_column($collection->toArray(), 'id');
+        }
+
+        $total = count($ids);
+
+        $jobIds = [];
+        if ($total <= $maxActionCount) {
+            foreach ($ids as $id) {
+                try {
+                    $actionOperation($id);
+                } catch (\Throwable $e) {
+                    $message = "{$action} {$this->getEntityType()} '$id' failed: {$e->getTraceAsString()}";
+                    $GLOBALS['log']->error($message);
+                }
+            }
+        } else {
+            $chunks = array_chunk($ids, $chunkSize);
+            foreach ($chunks as $part => $chunk) {
+
+                $jobData = array_merge($additionJobData, [
+                    'entityType' => $this->getEntityType(),
+                    'ids'        => $chunk,
+                    'total'      =>  $total,
+                    'totalChunks'=> count($chunks),
+                ]);
+
+                $name = $this->getInjection('language')->translate($action, 'massActions', 'Global')  . ': ' . $this->entityName;
+                if ($part > 0) {
+                    $name .= " ($part)";
+                }
+
+                $jobIds[] = $this
+                    ->getInjection('queueManager')
+                    ->createQueueItem($name, 'Mass'.ucfirst($action), $jobData);
+            }
+        }
+
+        if(!empty($jobIds)){
+            QueueManagerBase::updatePublicData('mass'.ucfirst($action), $this->getEntityType(), [
+                "jobIds" => $jobIds,
+                "total" => $total
+            ]);
+        }
+
+        return $ids;
     }
 }

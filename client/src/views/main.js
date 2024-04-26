@@ -40,6 +40,8 @@ Espo.define('views/main', 'view', function (Dep) {
 
         menu: null,
 
+        enableMassActions: ['restore','delete','update'],
+
         events: {
             'click .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -72,9 +74,7 @@ Espo.define('views/main', 'view', function (Dep) {
             }, this);
 
             this.updateLastUrl();
-            this.setupMassDeletingNotification();
-            this.setupMassRestoringNotification();
-            this.setupMassUpdatingNotification();
+            this.enableMassActions.forEach(action => this.setupMassActionNotification(action));
 
             $(document).on('click', '.show-hidden', function () {
                 let message = $(this).parent().find('textarea.hidden').val();
@@ -82,93 +82,60 @@ Espo.define('views/main', 'view', function (Dep) {
             });
         },
 
-        setupMassDeletingNotification: function () {
+        setupMassActionNotification: function (action) {
+            let intervals = {};
             this.listenTo(Backbone.Events, 'publicData', data => {
-                let locationHash = window.location.hash;
-
-                let hashScope = null;
-                if (locationHash === '#Admin/jobs') {
-                    hashScope = 'Job';
-                } else {
-                    hashScope = locationHash.split('/').shift().replace('#', '');
-                }
-
-                if (data.massDelete && hashScope === this.scope) {
-                    if (data.massDelete[this.scope]) {
-                        let scopeData = data.massDelete[this.scope];
-                        if (scopeData.done) {
-                            if (this.getStorage().get('massDeleteDoneHash', this.scope) !== scopeData.done) {
-                                this.getStorage().set('massDeleteDoneHash', this.scope, scopeData.done);
-                                Espo.Ui.notify(this.translate('Done'), 'success', 2000);
-                                if (this.collection) {
-                                    this.collection.fetch();
-                                }
+                let massActionKey = 'mass' + action.charAt(0).toUpperCase() + action.slice(1);
+                let hashScope = this.getHashScope();
+                if (data[massActionKey] && hashScope === this.scope) {
+                    if (data[massActionKey][this.scope]) {
+                        let scopeData = data[massActionKey][this.scope];
+                        if(scopeData['jobIds']){
+                            if(intervals[this.scope]){
+                               return;
                             }
-                        } else {
-                            Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total), null, 2000);
-                        }
-                    }
-                }
-            });
-        },
-        setupMassRestoringNotification: function () {
-            this.listenTo(Backbone.Events, 'publicData', data => {
-                let locationHash = window.location.hash;
+                            let data = scopeData;
+                            intervals[this.scope] = setInterval(() => {
+                                if(this.getHashScope() !== this.scope) return;
+                                this.ajaxPostRequest(
+                                    `${this.scope}/action/getMassActionItemsCount`,
+                                    {
+                                        "jobIds": data['jobIds'],
+                                        "action": action
+                                    }
+                                ).then((res) => {
+                                    if(this.getHashScope() !== this.scope) return;
+                                   if(res.done){
+                                       Espo.Ui.notify(this.translate('Done'), 'success', 2000);
+                                       if (this.collection) {
+                                           this.collection.fetch();
+                                       }
+                                       clearInterval(intervals[this.scope])
+                                       intervals[this.scope] = null
+                                   }else{
+                                       let label = massActionKey.slice(0, -1)+'ing'
+                                       Espo.Ui.notify(this.translate(label, 'messages', 'Global').replace('{{proceed}}', res.total).replace('{{total}}', data.total), null, 3000);
 
-                let hashScope = null;
-                if (locationHash === '#Admin/jobs') {
-                    hashScope = 'Job';
-                } else {
-                    hashScope = locationHash.split('/').shift().replace('#', '');
-                }
+                                   }
+                               })
+                            }, 3000)
 
-                if (data.massRestore && hashScope === this.scope) {
-                    if (data.massRestore[this.scope]) {
-                        let scopeData = data.massRestore[this.scope];
-                        if (scopeData.done) {
-                            if (this.getStorage().get('massRestoreDoneHash', this.scope) !== scopeData.done) {
-                                this.getStorage().set('massRestoreDoneHash', this.scope, scopeData.done);
-                                Espo.Ui.notify(this.translate('Done'), 'success', 2000);
-                                if (this.collection) {
-                                    this.collection.fetch();
-                                }
-                            }
-                        } else {
-                            Espo.Ui.notify(this.translate('massRestoring', 'messages', 'Global').replace('{{restored}}', scopeData.restored).replace('{{total}}', scopeData.total), null, 2000);
                         }
                     }
                 }
             });
         },
 
-        setupMassUpdatingNotification: function () {
-            this.listenTo(Backbone.Events, 'publicData', data => {
-                let locationHash = window.location.hash;
+        getHashScope(){
+            let locationHash = window.location.hash;
 
-                let hashScope = null;
-                if (locationHash === '#Admin/jobs') {
-                    hashScope = 'Job';
-                } else {
-                    hashScope = locationHash.split('/').shift().replace('#', '');
-                }
-
-                if (data.massUpdate && hashScope === this.scope) {
-                    if (data.massUpdate[this.scope]) {
-                        let scopeData = data.massUpdate[this.scope];
-                        if (scopeData.done) {
-                            if (this.getStorage().get('massUpdateDoneHash', this.scope) !== scopeData.done) {
-                                this.getStorage().set('massUpdateDoneHash', this.scope, scopeData.done);
-                                Espo.Ui.notify(this.translate('Done'), 'success', 2000);
-                                if (this.collection) {
-                                    this.collection.fetch();
-                                }
-                            }
-                        } else {
-                            Espo.Ui.notify(this.translate('massUpdating', 'messages', 'Global').replace('{{deleted}}', scopeData.updated).replace('{{total}}', scopeData.total), null, 2000);
-                        }
-                    }
-                }
-            });
+            let hashScope = null;
+            if (locationHash === '#Admin/jobs') {
+                hashScope = 'Job';
+            } else {
+                hashScope = locationHash.split('/').shift().replace('#', '');
+            }
+            return hashScope;
         },
 
         updateLastUrl: function () {

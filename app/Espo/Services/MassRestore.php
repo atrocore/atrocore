@@ -35,70 +35,28 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\DataManager;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class MassRestore extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if (empty($data['entityType'])) {
+        if (empty($data['entityType']) || empty($data['total']) || empty($data['ids'])) {
             return false;
         }
 
         $entityType = $data['entityType'];
+        $service = $this->getContainer()->get('serviceFactory')->create($entityType);
 
-        $ids = [];
-        if (array_key_exists('ids', $data) && !empty($data['ids']) && is_array($data['ids'])) {
-            $ids = $data['ids'];
-        }
-
-        if (array_key_exists('where', $data)) {
-            $selectManager = $this->getContainer()->get('selectManagerFactory')->create($entityType);
-            $selectParams = $selectManager->getSelectParams(['where' => $data['where']], true, true);
-
-            $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
-
-            $result = $this->getEntityManager()
-                ->getRepository($entityType)
-                ->getMapper()
-                ->select(
-                    $this->getEntityManager()->getRepository($entityType)->get(),
-                    array_merge($selectParams, ['select' => ['id']])
-                );
-
-            $ids = array_column($result,'id');
-        }
-
-        if (empty($ids)) {
-            return false;
-        }
-
-        $restored = 0;
-        $total = count($ids);
-
-        self::updatePublicData($entityType, ['restored' => $restored, 'total' => $total]);
-
-        $service = $this->getContainer()->get('serviceFactory')->create($data['entityType']);
-        $start = time();
-        foreach ($ids as $id) {
+        foreach ($data['ids'] as $id ) {
             try {
                 $service->restoreEntity($id);
-                $restored++;
-                if ((time() - $start) > 3) {
-                    self::updatePublicData($entityType, ['restored' => $restored, 'total' => $total]);
-                    $start = time();
-                }
             } catch (\Throwable $e) {
-                $message = "Restore {$data['entityType']} '$id' failed: {$e->getTraceAsString()}";
+                $message = "Restore {$entityType} '$id' failed: {$e->getTraceAsString()}";
                 $GLOBALS['log']->error($message);
                 $this->notify($message);
             }
         }
-
-        self::updatePublicData($entityType, ['restored' => $restored, 'total' => $total, 'done' => Util::generateId()]);
-        sleep(2);
 
         return true;
     }
@@ -106,16 +64,6 @@ class MassRestore extends QueueManagerBase
     public function getNotificationMessage(Entity $queueItem): string
     {
         return '';
-    }
-
-    public static function updatePublicData(string $entityType, ?array $data): void
-    {
-        $publicData = DataManager::getPublicData('massRestore');
-        if (empty($publicData)) {
-            $publicData = [];
-        }
-        $publicData[$entityType] = $data;
-        DataManager::pushPublicData('massRestore', $publicData);
     }
 
     protected function notify(string $message): void
