@@ -5,6 +5,11 @@
          "type": "bool"
       },
       {
+         "name": "required",
+         "type": "bool",
+         "view": "views/admin/field-manager/fields/bool/required"
+      },
+      {
          "name":"default",
          "type":"bool",
          "view": "views/admin/field-manager/fields/bool/default"
