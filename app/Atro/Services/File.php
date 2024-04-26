@@ -29,8 +29,7 @@ class File extends Base
         parent::prepareEntityForOutput($entity);
 
         $fileNameParts = explode('.', $entity->get('name'));
-
-        $entity->set('extension', strtolower(array_pop($fileNameParts)));
+        $entity->set('extension', strtolower(end($fileNameParts)));
         $entity->set('downloadUrl', $entity->getDownloadUrl());
         if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {
             $entity->set('hasOpen', true);
