@@ -446,11 +446,6 @@ class Converter
             return false;
         }
 
-        /** if defined 'notNull => false' and 'required => true', then remove 'notNull' */
-        if (isset($fieldParams['notNull']) && !$fieldParams['notNull'] && isset($fieldParams['required']) && $fieldParams['required']) {
-            unset($fieldParams['notNull']);
-        }
-
         $fieldDefs = $this->getInitValues($fieldParams);
 
         if ($fieldParams['type'] === 'bool' && array_key_exists('default', $fieldParams)) {
