@@ -16495,7 +16495,10 @@ label.attach-file-label > input.file {
 
 @media screen and (max-width: 767px) {
     .stick-sub {
-        margin-top: 0
+        position: unset;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none;
     }
 }
 
@@ -20915,6 +20918,14 @@ button.category:focus {
     .record .middle .panel-body,
     .record .bottom .panel-body {
         padding: 14px 0 0 0;
+    }
+
+    .list-container > .list > .table:not(.fixed-header-table) {
+        width: auto;
+    }
+
+    #main .catalog-tree-panel.catalog-tree-panel-hidden + .list-container {
+        overflow: unset !important;
     }
 
     .panel-body > div > .list {
