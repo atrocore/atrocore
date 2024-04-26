@@ -17,6 +17,11 @@ use Atro\Core\Migration\Base;
 
 class V1Dot10Dot5 extends Base
 {
+    public function getMigrationDateTime(): ?\DateTime
+    {
+        return new \DateTime('2024-04-25 00:00:00');
+    }
+
     public function up(): void
     {
         $fromSchema = $this->getCurrentSchema();
