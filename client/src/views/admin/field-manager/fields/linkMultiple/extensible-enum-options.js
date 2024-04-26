@@ -67,6 +67,11 @@ Espo.define('views/admin/field-manager/fields/linkMultiple/extensible-enum-optio
 
                         this.createView('valueField', 'views/record/detail-bottom', options, view => {
                             view.render();
+                            this.listenTo(view.model,'prepareAttributesForCreateRelated', function(params, link, prepareAttributeCallback){
+                                  prepareAttributeCallback({
+                                      "listMultilingual": view.model.get('multilingual')
+                                  })
+                            })
                             this.show();
                         });
                     });
