@@ -282,12 +282,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
 
                 p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
 
-                if (p.label) {
-                    let translated = this.translate(p.name)
-                    p.title =  translated === p.name ? p.label : translated;
-                } else {
-                    p.title =  this.translate(p.name, 'links', this.scope);
-                }
+                this.setPanelTitle(p);
 
                 this.panelList.push(p);
             }, this);
@@ -339,12 +334,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                     p.titleHtml = view.titleHtml;
                 }
 
-                if (p.label) {
-                    let translated = this.translate(p.name)
-                    p.title =  translated === p.name ? p.label : translated;
-                } else {
-                    p.title = view.title;
-                }
+                this.setPanelTitle(p);
 
                 this.listenTo(view, 'panel:rebuild', defs => {
                     this.clearView(defs.name);
@@ -450,8 +440,16 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                 }
             }, this);
             return fields;
+        },
+        setPanelTitle(panel) {
+            if (panel.label) {
+                let translated = this.translate(panel.name)
+                panel.title = translated === panel.name ? this.translate(panel.label, 'labels', this.scope) : translated;
+            } else {
+                panel.title = this.translate(panel.name, 'links', this.scope);
+            }
+            return panel;
         }
-
     });
 });
 
