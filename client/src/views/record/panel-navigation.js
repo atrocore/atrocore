@@ -89,6 +89,7 @@ Espo.define('views/record/panel-navigation', 'view',
             let offset = this.getParentView().$el.find(`.panel[data-name="${name}"]`).offset();
             let navbarHeight = $('#navbar .navbar-right').outerHeight() || 0;
             let navigationHeight = $('.record-buttons').innerHeight() || 0;
+            navigationHeight += $('.edit-buttons').innerHeight() || 0 ;
             $(window).scrollTop(offset.top - navbarHeight - navigationHeight + 5);
         },
         isPanelClosed(name){
