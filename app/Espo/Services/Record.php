@@ -2257,13 +2257,14 @@ class Record extends Base
         $this->filterInput($data);
 
         $params['action'] = 'update';
-        $params['maxActionCount'] =  $this->getConfig()->get('maxMassUpdateCount', 200);
+        $params['maxActionCount'] =  $this->getConfig()->get('maxMassUpdateCount', 20);
         $params['chunkSize'] = $this->getConfig()->get('massUpdateChunkSize', 2000);
         $params['additionalJobData'] = [ "input" => clone $data];
-
-        $ids = $this->executeMassAction($params, function($id) use($data){
+        $input = clone $data;
+        $input->_isMassUpdate = true;
+        $ids = $this->executeMassAction($params, function($id) use($input){
             try {
-                $this->updateEntity($id, $data);
+                $this->updateEntity($id,  $input);
             } catch (NotModified $e) {
             }
         });
