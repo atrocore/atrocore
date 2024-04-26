@@ -228,6 +228,11 @@ class ExtensibleEnumOption extends Base
     protected function getOptionName(): string
     {
         $language = \Espo\Core\Services\Base::getLanguagePrism();
+        if(empty($language)){
+            $language = $this->getInjection('container')
+                ->get('preferences')
+                ->get('language');
+        }
         if (!empty($language) && $language !== 'main') {
             if ($this->getConfig()->get('isMultilangActive') && in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
                 return Util::toCamelCase('name_' . strtolower($language));
