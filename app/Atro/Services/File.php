@@ -22,20 +22,27 @@ use Espo\ORM\Entity;
 
 class File extends Base
 {
-    protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName'];
+    protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName', 'data'];
 
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
         $fileNameParts = explode('.', $entity->get('name'));
-
-        $entity->set('extension', strtolower(array_pop($fileNameParts)));
+        $entity->set('extension', strtolower(end($fileNameParts)));
         $entity->set('downloadUrl', $entity->getDownloadUrl());
-        $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
-        $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
-        $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
-        $entity->set('hasOpen', in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', [])));
+        if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {
+            $entity->set('hasOpen', true);
+            if (!empty($entity->getSmallThumbnailUrl())) {
+                $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
+            }
+            if (!empty($entity->getMediumThumbnailUrl())) {
+                $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
+            }
+            if (!empty($entity->getLargeThumbnailUrl())) {
+                $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
+            }
+        }
     }
 
     public function createEntity($attachment)
@@ -163,7 +170,7 @@ class File extends Base
          */
         if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
             $old = $this->getRepository()->get($attachment->reupload);
-            if (!empty($old)){
+            if (!empty($old)) {
                 $this->getRepository()->deleteFile($old);
             }
 

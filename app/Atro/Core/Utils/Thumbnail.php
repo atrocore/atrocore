@@ -30,12 +30,8 @@ class Thumbnail
         $this->container = $container;
     }
 
-    public function getPath(FileEntity $file, string $size): ?string
+    public function preparePath(FileEntity $file, string $size): string
     {
-        if (!in_array($file->get('mimeType'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
-            return null;
-        }
-
         $thumbnailPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), DIRECTORY_SEPARATOR);
         if (!empty($file->get('thumbnailsPath'))) {
             $thumbnailPath .= DIRECTORY_SEPARATOR . trim($file->get('thumbnailsPath'));
@@ -48,9 +44,28 @@ class Thumbnail
 
         $thumbnailPath .= DIRECTORY_SEPARATOR . $name;
 
-        if (!file_exists($thumbnailPath)) {
+        return $thumbnailPath;
+    }
+
+    public function hasThumbnail(FileEntity $file, string $size): bool
+    {
+        return file_exists($this->preparePath($file, $size));
+    }
+
+    public function getPath(FileEntity $file, string $size, string $originFilePath = null): ?string
+    {
+        if (!in_array($file->get('mimeType'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
+            return null;
+        }
+
+        $thumbnailPath = $this->preparePath($file, $size);
+
+        if (!$this->hasThumbnail($file, $size)) {
+            if ($originFilePath === null) {
+                $originFilePath = $this->getImageFilePath($file);
+            }
             // create thumbnail if not exist
-            if (!$this->create($this->getImageFilePath($file), $size, $thumbnailPath)) {
+            if (!$this->create($originFilePath, $size, $thumbnailPath)) {
                 return null;
             }
         }

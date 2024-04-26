@@ -879,6 +879,16 @@ class PostUpdate
         $publicData['isNeedToUpdate'] = false;
         file_put_contents($publicDataFile, json_encode($publicData));
 
+        try {
+            /** @var EntityManager $em */
+            $em = self::$container->get('entityManager');
+            foreach ($em->getRepository('Storage')->find() as $storage) {
+                self::$container->get($storage->get('type') . 'Storage')->deleteCache($storage);
+            }
+        } catch (\Throwable $e) {
+            // ignore all
+        }
+
         self::renderLine('Done!');
         exit(0);
     }

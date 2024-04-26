@@ -8,6 +8,9 @@
       "rowActionsView": "views/record/row-actions/relationship-no-unlink"
     }
   },
+  "recordViews": {
+    "detail": "views/storage/record/detail"
+  },
   "dynamicLogic": {
     "fields": {
       "path": {
