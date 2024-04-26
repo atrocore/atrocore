@@ -83,51 +83,59 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         setupMassActionNotification: function (action) {
-            let interval;
+            let intervals = {};
             this.listenTo(Backbone.Events, 'publicData', data => {
-                let locationHash = window.location.hash;
                 let massActionKey = 'mass' + action.charAt(0).toUpperCase() + action.slice(1);
-
-                let hashScope = null;
-                if (locationHash === '#Admin/jobs') {
-                    hashScope = 'Job';
-                } else {
-                    hashScope = locationHash.split('/').shift().replace('#', '');
-                }
-
+                let hashScope = this.getHashScope();
                 if (data[massActionKey] && hashScope === this.scope) {
                     if (data[massActionKey][this.scope]) {
                         let scopeData = data[massActionKey][this.scope];
                         if(scopeData['jobIds']){
-                            if(interval){
+                            if(intervals[this.scope]){
                                return;
                             }
                             let data = scopeData;
-                            interval = setInterval(() => this.ajaxPostRequest(
-                                `${this.scope}/action/getMassActionItemsCount`,
-                                {
-                                    "jobIds": data['jobIds'],
-                                    "action": action
-                                }
-                            ).then((res) => {
-                               if(res.done){
-                                   Espo.Ui.notify(this.translate('Done'), 'success', 2000);
-                                   if (this.collection) {
-                                       this.collection.fetch();
-                                   }
-                                   clearInterval(interval)
-                                   interval = null
-                               }else{
-                                   let label = massActionKey.slice(0, -1)+'ing'
-                                   Espo.Ui.notify(this.translate(label, 'messages', 'Global').replace('{{proceed}}', res.total).replace('{{total}}', data.total), null, 3000);
+                            intervals[this.scope] = setInterval(() => {
+                                if(this.getHashScope() !== this.scope) return;
+                                this.ajaxPostRequest(
+                                    `${this.scope}/action/getMassActionItemsCount`,
+                                    {
+                                        "jobIds": data['jobIds'],
+                                        "action": action
+                                    }
+                                ).then((res) => {
+                                    if(this.getHashScope() !== this.scope) return;
+                                   if(res.done){
+                                       Espo.Ui.notify(this.translate('Done'), 'success', 2000);
+                                       if (this.collection) {
+                                           this.collection.fetch();
+                                       }
+                                       clearInterval(intervals[this.scope])
+                                       intervals[this.scope] = null
+                                   }else{
+                                       let label = massActionKey.slice(0, -1)+'ing'
+                                       Espo.Ui.notify(this.translate(label, 'messages', 'Global').replace('{{proceed}}', res.total).replace('{{total}}', data.total), null, 3000);
 
-                               }
-                           }), 3000)
+                                   }
+                               })
+                            }, 3000)
 
                         }
                     }
                 }
             });
+        },
+
+        getHashScope(){
+            let locationHash = window.location.hash;
+
+            let hashScope = null;
+            if (locationHash === '#Admin/jobs') {
+                hashScope = 'Job';
+            } else {
+                hashScope = locationHash.split('/').shift().replace('#', '');
+            }
+            return hashScope;
         },
 
         updateLastUrl: function () {
