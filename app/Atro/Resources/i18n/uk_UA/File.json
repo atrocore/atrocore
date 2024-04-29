@@ -34,7 +34,8 @@
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Розширення файлу не може бути змінено.",
-    "fileStorageCannotBeChanged": "Сховище не можна змінити.",
+    "fileStorageCannotBeChanged": "Сховище файлу не можна змінити.",
+    "fileFolderCannotBeChanged": "Папку файлу не можна змінити.",
     "fileCreateFailed": "Не вдалося створити файл.",
     "fileRenameFailed": "Не вдалося перейменувати файл.",
     "fileDeleteFailed": "Видалення файлу не вдалося.",
