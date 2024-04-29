@@ -120,7 +120,9 @@ class File extends Base
     {
         parent::beforeRemove($entity, $options);
 
-        $this->deleteFile($entity);
+        if (empty($options['keepFile'])) {
+            $this->deleteFile($entity);
+        }
     }
 
     public function deleteFile(FileEntity $entity): void

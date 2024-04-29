@@ -19,6 +19,9 @@
     "scan": "Scan",
     "scanDone": "Scanning of the Storage '%s' is completed."
   },
+  "messages": {
+    "unlinkAllFilesConfirmation": "All the files will be unlinked from records in the system and removed from the storage index. The files will not be deleted physically. Are you sure you want to proceed?"
+  },
   "exceptions": {
     "storagePathNotUnique": "Storage path should be unique.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
