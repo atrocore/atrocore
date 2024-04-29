@@ -353,6 +353,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return false;
     }
 
+    public function reupload(File $file): bool
+    {
+        return $this->delete($file) && $this->create($file);
+    }
+
     public function delete(File $file): bool
     {
         /** @var Thumbnail $thumbnailCreator */

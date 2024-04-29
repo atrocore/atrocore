@@ -34,6 +34,8 @@ interface FileStorageInterface
 
     public function rename(File $file): bool;
 
+    public function reupload(File $file): bool;
+
     public function delete(File $file): bool;
 
     public function getUrl(File $file): string;
