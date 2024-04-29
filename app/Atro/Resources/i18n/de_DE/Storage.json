@@ -19,6 +19,9 @@
     "scan": "Scannen",
     "scanDone": "Der Scan des Speichers „%s“ ist abgeschlossen."
   },
+  "messages": {
+    "unlinkAllFilesConfirmation": "Alle Dateien werden von den Datensätzen im System entkoppelt und aus dem Storage-Index entfernt. Die Dateien werden nicht physisch gelöscht. Sind Sie sicher, dass Sie fortfahren möchten?"
+  },
   "exceptions": {
     "storagePathNotUnique": "Der Speicherpfad sollte eindeutig sein.",
     "storageTypeCannotBeChanged": "Der Speichertyp kann nicht geändert werden.",

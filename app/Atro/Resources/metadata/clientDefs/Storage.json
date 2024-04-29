@@ -5,7 +5,8 @@
     "files": {
       "create": false,
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+      "view": "views/storage/record/panels/files"
     }
   },
   "recordViews": {
