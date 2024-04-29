@@ -112,7 +112,7 @@
           "conditionGroup": [
             {
               "type": "isNotEmpty",
-              "attribute": "hash"
+              "attribute": "createdAt"
             }
           ]
         }
