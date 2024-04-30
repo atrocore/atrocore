@@ -1,0 +1,103 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "set": {
+      "type": "link",
+      "readOnly": true
+    },
+    "action": {
+      "type": "link",
+      "readOnly": true
+    },
+    "parent": {
+      "type": "link",
+      "readOnly": true
+    },
+    "children": {
+      "type": "linkMultiple",
+      "readOnly": true
+    },
+    "state": {
+      "type": "enum",
+      "required": true,
+      "fontSize": 1,
+      "optionsIds": [
+        "Pending",
+        "Running",
+        "Done",
+        "Failed",
+        "Canceled"
+      ],
+      "options": [
+        "Pending",
+        "Running",
+        "Done",
+        "Failed",
+        "Canceled"
+      ],
+      "optionColors": [
+        "00AFFF",
+        "FFF677",
+        "BDFF92",
+        "FFCBC5",
+        "DDDDDD"
+      ],
+      "default": "Pending",
+      "readOnly": true
+    },
+    "stateMessage": {
+      "type": "text",
+      "readOnly": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
+    },
+    "start": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "end": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "sortOrder": {
+      "type": "autoincrement",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "set": {
+      "type": "belongsTo",
+      "foreign": "actionSetJobs",
+      "entity": "Action"
+    },
+    "action": {
+      "type": "belongsTo",
+      "entity": "Action"
+    },
+    "parent": {
+      "type": "belongsTo",
+      "foreign": "children",
+      "entity": "ActionSetJob"
+    },
+    "children": {
+      "type": "hasMany",
+      "foreign": "parent",
+      "entity": "ActionSetJob"
+    }
+  },
+  "collection": {
+    "sortBy": "sortOrder",
+    "asc": false
+  }
+}

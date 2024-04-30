@@ -51,14 +51,28 @@ class Set implements TypeInterface
             return false;
         }
 
-        /** @var Action $actionService */
-        $actionService = $this->getServiceFactory()->create('Action');
+        $first = null;
+        $parentId = null;
+
         foreach ($collection as $entity) {
-            try {
-                $actionService->executeNow($entity->get('actionId'), new \stdClass());
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error("Set Action failed: " . $e->getMessage());
+            $job = $this->getEntityManager()->getEntity('ActionSetJob');
+
+            $job->set('actionSetId', $action->get('id'));
+            $job->set('actionId', $entity->get('actionId'));
+            $job->set('state', 'Pending');
+            $job->set('parentId', $parentId);
+
+            $this->getEntityManager()->saveEntity($job);
+
+            if (empty($first)) {
+                $first = $job;
             }
+
+            $parentId = $job->get('id');
+        }
+
+        if (!empty($first)) {
+            $this->getEntityManager()->getRepository('ActionSetJob')->executeAction($first);
         }
 
         return true;

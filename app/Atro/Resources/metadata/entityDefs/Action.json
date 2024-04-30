@@ -91,6 +91,13 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "actionSetJobs": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -121,6 +128,11 @@
         "actionId",
         "setId"
       ]
+    },
+    "actionSetJobs": {
+      "type": "hasMany",
+      "foreign": "set",
+      "entity": "ActionSetJob"
     }
   },
   "collection": {
