@@ -42,25 +42,23 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
             },
             
             _createForm() {
-                this.createView("width", "views/fields/varchar-custom", {
+                this.createView("width", "views/fields/int", {
                     el    : `${this.options.el} .field[data-name="width"]`,
                     model : this.downloadModel,
                     name  : 'width',
                     mode  : 'edit',
                     params: {
-                        trim    : true,
-                        readOnly: false
+                        min: 0
                     }
                 });
                 
-                this.createView("height", "views/fields/varchar-custom", {
+                this.createView("height", "views/fields/int", {
                     el    : `${this.options.el} .field[data-name="height"]`,
                     model : this.downloadModel,
                     name  : 'height',
                     mode  : 'edit',
                     params: {
-                        trim    : true,
-                        readOnly: false
+                        min: 0
                     }
                 });
                 
@@ -98,15 +96,16 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                     mode : "edit",
                     prohibitedEmptyValue : true
                 });
-                
-                this.createView("quality", "views/fields/varchar", {
+
+                this.createView("quality", "views/fields/int", {
                     el    : `${this.options.el} .field[data-name="quality"]`,
                     model : this.downloadModel,
                     name  : 'quality',
                     mode  : 'edit',
+                    readOnly: false,
                     params: {
-                        trim    : true,
-                        readOnly: false
+                        min: 0,
+                        max: 100
                     }
                 });
                 
@@ -200,8 +199,8 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
             },
             
             _setScaleWidth(heightView, widthView) {
-                heightView.readOnly = true;
-                widthView.readOnly  = false;
+                heightView.setMode('detail');
+                widthView.setMode('edit');
                 
                 this.downloadModel.set("height", "");
                 if (!this.downloadModel.get("width")) {
@@ -210,8 +209,8 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
             },
             
             _setScaleHeight(heightView, widthView) {
-                heightView.readOnly = false;
-                widthView.readOnly  = true;
+                heightView.setMode('edit');
+                widthView.setMode('detail');
                 
                 this.downloadModel.set("width", "");
                 if (!this.downloadModel.get("height")) {
@@ -220,8 +219,8 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
             },
             
             _setScaleResize(heightView, widthView) {
-                heightView.readOnly = false;
-                widthView.readOnly  = false;
+                heightView.setMode('edit');
+                widthView.setMode('edit');
                 
                 if (!this.downloadModel.get("width")) {
                     this.downloadModel.set("width", this.model.get("width"));
@@ -235,9 +234,9 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                 let qualityView = this.getView("quality");
                 if (this.downloadModel.get("format") === "png") {
                     this.downloadModel.set("quality", 100);
-                    qualityView.setReadOnly();
+                    qualityView.setMode('detail');
                 } else {
-                    qualityView.setNotReadOnly();
+                    qualityView.setMode('edit');
                 }
                 
                 qualityView.reRender();
