@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Espo\Core\Templates\Repositories\Hierarchy;
+use Atro\Core\Templates\Repositories\Hierarchy;
 use Espo\ORM\Entity;
 
 class Folder extends Hierarchy

@@ -192,7 +192,7 @@ class RDB extends \Espo\ORM\Repository
             try {
                 $result = $this->getMapper()->insert($entity, !empty($options['ignoreDuplicate']));
             } catch (UniqueConstraintViolationException $e) {
-                throw new NotUnique('The record cannot be created due to database constraints.');
+                throw new NotUnique($e->getMessage());
             }
         } else {
             // run workflow method "can()" if it needs
@@ -241,7 +241,7 @@ class RDB extends \Espo\ORM\Repository
                 if (is_array($unique)) {
                     $sqlCondition = [];
                     foreach ($unique as $field) {
-                        if($field === 'deleted') continue;
+                        if ($field === 'deleted') continue;
                         $sqlCondition[] = $connection->quoteIdentifier(Util::toUnderScore($field)) . " = :{$field}_un";
                         $parameters["{$field}_un"] = $entity->get($field);
                     }
@@ -293,8 +293,10 @@ class RDB extends \Espo\ORM\Repository
             }
         }
 
-        foreach($metadata->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $keys => $indexes){
-            $result[] = array_map(function($index) {return Util::toCamelCase($index);},$indexes);
+        foreach ($metadata->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $keys => $indexes) {
+            $result[] = array_map(function ($index) {
+                return Util::toCamelCase($index);
+            }, $indexes);
         }
 
         return $result;
