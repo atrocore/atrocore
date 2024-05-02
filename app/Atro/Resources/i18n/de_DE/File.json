@@ -9,8 +9,7 @@
     "preview": "Vorschau",
     "hash": "Hash",
     "fileSize": "Dateigröße (Bytes)",
-    "fileMtime": "Datei-Änderungsdatum",
-    "private": "Privat"
+    "fileMtime": "Datei-Änderungsdatum"
   },
   "links": {
     "folder": "Ordner",
