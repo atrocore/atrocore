@@ -24,6 +24,7 @@ use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
 use Espo\Core\Utils\Config;
 use Espo\ORM\EntityManager;
+use Psr\Http\Message\StreamInterface;
 
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 {
@@ -394,6 +395,17 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         return $res . DIRECTORY_SEPARATOR . $file->$method("name");
+    }
+
+    public function getStream(File $file): StreamInterface
+    {
+        $filePath = $file->getFilePath();
+
+        $fileHandle = fopen($filePath, 'r');
+        $stream = \GuzzleHttp\Psr7\Utils::streamFor($fileHandle);
+//        fclose($fileHandle);
+
+        return $stream;
     }
 
     public function getUrl(File $file): string

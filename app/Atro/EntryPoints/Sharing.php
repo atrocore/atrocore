@@ -13,6 +13,7 @@ namespace Atro\EntryPoints;
 
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
+use Psr\Http\Message\StreamInterface;
 
 class Sharing extends AbstractEntryPoint
 {
@@ -52,13 +53,20 @@ class Sharing extends AbstractEntryPoint
             $this->getEntityManager()->saveEntity($sharing);
         }
 
+        /** @var StreamInterface $stream */
+        $stream = $this->getEntityManager()->getRepository('File')->getStorage($file)->getStream($file);
+
         header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
         header("Cache-Control: public");
-        header('Content-Type: ' . $file->get('mimeType'));
-        header("Content-Transfer-Encoding: Binary");
-        header('Content-Length: ' . $file->get('fileSize'));
+        header('Content-Type: application/octet-stream');
+        header("Content-Length: {$file->get('fileSize')}");
         header("Content-Disposition: attachment; filename={$file->get('name')}");
-        readfile($file->getFilePath());
+
+        $stream->rewind();
+        while (!$stream->eof()) {
+            echo $stream->read(4096);
+        }
+        $stream->close();
         exit;
     }
 }
