@@ -29,7 +29,8 @@
       "type": "int"
     },
     "used": {
-      "type": "int"
+      "type": "int",
+      "readOnly": true
     },
     "link": {
       "type": "url",

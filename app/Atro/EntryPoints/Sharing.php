@@ -11,6 +11,7 @@
 
 namespace Atro\EntryPoints;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
 use Psr\Http\Message\StreamInterface;
@@ -41,13 +42,13 @@ class Sharing extends AbstractEntryPoint
         }
 
         if (!empty($sharing->get('validTill')) && $sharing->get('validTill') < (new \DateTime())->format('Y-m-d H:i:s')) {
-            throw new NotFound();
+            throw new Forbidden();
         }
 
         if (!empty($sharing->get('allowedUsage'))) {
             $used = (int)$sharing->get('used');
             if ($used >= $sharing->get('allowedUsage')) {
-                throw new NotFound();
+                throw new Forbidden();
             }
             $sharing->set('used', $used + 1);
             $this->getEntityManager()->saveEntity($sharing);

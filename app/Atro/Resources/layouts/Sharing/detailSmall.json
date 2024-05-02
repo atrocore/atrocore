@@ -17,11 +17,17 @@
       ],
       [
         {
-          "name": "validTill"
+          "name": "allowedUsage"
         },
         {
-          "name": "allowedUsage"
+          "name": "used"
         }
+      ],
+      [
+        {
+          "name": "validTill"
+        },
+        false
       ],
       [
         {
