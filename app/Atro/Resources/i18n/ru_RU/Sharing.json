@@ -2,19 +2,11 @@
   "fields": {
     "active": "Активно",
     "available": "Доступно",
-    "entityType": "Тип сущности",
-    "entityId": "ID сущности",
-    "type": "Тип",
     "validTill": "Доступно до",
     "allowedUsage": "Разрешено использовать",
     "link": "Ссылка"
   },
   "labels": {
     "copiedToClipboard": "Скопировано в буфер обмена"
-  },
-  "options": {
-    "type": {
-      "download": "Скачать"
-    }
   }
 }

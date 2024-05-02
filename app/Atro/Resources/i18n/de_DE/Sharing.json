@@ -2,19 +2,11 @@
   "fields": {
     "active": "Aktiv",
     "available": "Nutzbar",
-    "entityType": "Entitätstyp",
-    "entityId": "Entitäts-ID",
-    "type": "Typ",
     "validTill": "Gültig bis",
     "allowedUsage": "Zulässige Nutzung",
     "link": "Link"
   },
   "labels": {
     "copiedToClipboard": "In die Zwischenablage kopiert"
-  },
-  "options": {
-    "type": {
-      "download": "Herunterladen"
-    }
   }
 }

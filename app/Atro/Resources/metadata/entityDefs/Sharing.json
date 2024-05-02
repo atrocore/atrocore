@@ -18,31 +18,9 @@
       "filterDisabled": true,
       "importDisabled": true
     },
-    "entityType": {
-      "type": "enum",
-      "required": true,
-      "default": "File",
-      "optionsIds": [
-        "File"
-      ],
-      "options": [
-        "File"
-      ]
-    },
-    "entityId": {
-      "type": "varchar",
+    "file": {
+      "type": "file",
       "required": true
-    },
-    "type": {
-      "type": "enum",
-      "required": true,
-      "default": "download",
-      "options": [
-        "download"
-      ],
-      "optionsIds": [
-        "download"
-      ]
     },
     "validTill": {
       "type": "datetime"

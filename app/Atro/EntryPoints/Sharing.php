@@ -33,6 +33,12 @@ class Sharing extends AbstractEntryPoint
             throw new NotFound();
         }
 
+        /** @var File $file */
+        $file = $sharing->get('file');
+        if (empty($file)) {
+            throw new NotFound();
+        }
+
         if (!empty($sharing->get('validTill')) && $sharing->get('validTill') < (new \DateTime())->format('Y-m-d H:i:s')) {
             throw new NotFound();
         }
@@ -46,26 +52,13 @@ class Sharing extends AbstractEntryPoint
             $this->getEntityManager()->saveEntity($sharing);
         }
 
-        $entity = $this->getEntityManager()->getRepository($sharing->get('entityType'))->get($sharing->get('entityId'));
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        switch ($sharing->get('type')) {
-            case 'download':
-                if ($entity instanceof File) {
-                    header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
-                    header("Cache-Control: public");
-                    header('Content-Type: ' . $entity->get('mimeType'));
-                    header("Content-Transfer-Encoding: Binary");
-                    header('Content-Length: ' . $entity->get('fileSize'));
-                    header("Content-Disposition: attachment; filename={$entity->get('name')}");
-                    readfile($entity->getFilePath());
-                    exit;
-                }
-                break;
-        }
-
-        throw new NotFound();
+        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+        header("Cache-Control: public");
+        header('Content-Type: ' . $file->get('mimeType'));
+        header("Content-Transfer-Encoding: Binary");
+        header('Content-Length: ' . $file->get('fileSize'));
+        header("Content-Disposition: attachment; filename={$file->get('name')}");
+        readfile($file->getFilePath());
+        exit;
     }
 }

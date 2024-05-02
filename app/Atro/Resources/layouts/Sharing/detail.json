@@ -9,15 +9,7 @@
       ],
       [
         {
-          "name": "entityType"
-        },
-        {
-          "name": "entityId"
-        }
-      ],
-      [
-        {
-          "name": "type"
+          "name": "file"
         },
         {
           "name": "link"
