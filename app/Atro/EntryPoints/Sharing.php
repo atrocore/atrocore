@@ -14,9 +14,8 @@ namespace Atro\EntryPoints;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
-use Psr\Http\Message\StreamInterface;
 
-class Sharing extends AbstractEntryPoint
+class Sharing extends Download
 {
     public static bool $authRequired = false;
 
@@ -54,20 +53,6 @@ class Sharing extends AbstractEntryPoint
             $this->getEntityManager()->saveEntity($sharing);
         }
 
-        /** @var StreamInterface $stream */
-        $stream = $this->getEntityManager()->getRepository('File')->getStorage($file)->getStream($file);
-
-        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
-        header("Cache-Control: public");
-        header('Content-Type: application/octet-stream');
-        header("Content-Length: {$file->get('fileSize')}");
-        header("Content-Disposition: attachment; filename={$file->get('name')}");
-
-        $stream->rewind();
-        while (!$stream->eof()) {
-            echo $stream->read(4096);
-        }
-        $stream->close();
-        exit;
+        $this->downloadByFileStream($file);
     }
 }
