@@ -41,6 +41,8 @@ class V1Dot10Dot9 extends Base
                 ->update('sharing')
                 ->set('file_id', 'entity_id')
                 ->where('deleted = :false')
+                ->andWhere('entity_type = :file')
+                ->setParameter('file', 'File')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->executeQuery();
         } catch (\Throwable $e) {
