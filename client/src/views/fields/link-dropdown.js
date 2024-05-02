@@ -19,6 +19,8 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
         foreignScope: null,
 
+        foreignName: null,
+
         originalName: null,
 
         setup: function () {
@@ -34,6 +36,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
             this.foreignScope = this.options.foreignScope || this.foreignScope;
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
+            this.foreignName = this.foreignName || this.params.foreignName || this.model.getFieldParam(this.name, 'foreignName') || 'name';
             this.originalName = this.name;
             this.name = this.idName;
 
@@ -60,7 +63,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             this.getLinkOptions(this.foreignScope).forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option.name || option.id;
+                    this.translatedOptions[option.id] = option[this.foreignName] || option.id;
                 }
             });
         },
