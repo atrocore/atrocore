@@ -403,7 +403,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $fileHandle = fopen($filePath, 'r');
         $stream = \GuzzleHttp\Psr7\Utils::streamFor($fileHandle);
-//        fclose($fileHandle);
 
         return $stream;
     }
