@@ -404,7 +404,15 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function getUrl(File $file): string
     {
-        return $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $this->getLocalPath($file);
+        $url = '?entryPoint=';
+        if (in_array($file->get('mimeType'), Image::TYPES)) {
+            $url .= 'image';
+        } else {
+            $url .= 'download';
+        }
+        $url .= "&id={$file->get('id')}";
+
+        return $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $url;
     }
 
     public function getThumbnail(File $file, string $size): ?string
