@@ -399,12 +399,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function getStream(File $file): StreamInterface
     {
-        $filePath = $file->getFilePath();
-
-        $fileHandle = fopen($filePath, 'r');
-        $stream = \GuzzleHttp\Psr7\Utils::streamFor($fileHandle);
-
-        return $stream;
+        return \GuzzleHttp\Psr7\Utils::streamFor(fopen($this->getLocalPath($file), 'r'));
     }
 
     public function getUrl(File $file): string
