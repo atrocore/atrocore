@@ -3540,22 +3540,29 @@ class Record extends Base
             }
         } else {
             if($total <= ($minChunkSize * $maxConcurrentJobs)){
-                $totalChunks =  ceil($total / $minChunkSize);
-                $chunkSize = ceil($total / $totalChunks);
+                $chunkSize = $minChunkSize;
             }else if($total >= ($minChunkSize * $maxConcurrentJobs) && $total <= ($maxChunkSize * $maxConcurrentJobs)){
                 $chunkSize = ceil($total / $maxConcurrentJobs);
             } else {
-                $totalChunks = ceil($total / $maxChunkSize);
-                $chunkSize = ceil($total / $totalChunks);
+                $chunkSize = $maxChunkSize;
             }
+
             $chunks = array_chunk($ids, $chunkSize);
+            $totalChunks = count($chunks);
+
+            if($totalChunks > 1 && count($chunks[$totalChunks - 1]) < $minChunkSize){
+               $lastChunk =  array_pop($chunks);
+               $totalChunks = count($chunks);
+               $chunks[$totalChunks -1] = array_merge($chunks[$totalChunks -1], $lastChunk);
+            }
+
             foreach ($chunks as $part => $chunk) {
 
                 $jobData = array_merge($additionJobData, [
                     'entityType' => $this->getEntityType(),
                     'total'      =>  $total,
                     'chunkSize'  => count($chunk),
-                    'totalChunks'=> count($chunks),
+                    'totalChunks'=> $totalChunks,
                     'ids'        => $chunk,
                 ]);
 
