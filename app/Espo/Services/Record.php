@@ -993,7 +993,7 @@ class Record extends Base
             return '';
         }
 
-        if (!isset($fieldDefs['options']) || !isset($fieldDefs['optionsIds']) || !empty($fieldDefs['relationVirtualField'])) {
+        if (empty($fieldDefs['options']) || empty($fieldDefs['optionsIds']) || !empty($fieldDefs['relationVirtualField'])) {
             return $value;
         }
 
