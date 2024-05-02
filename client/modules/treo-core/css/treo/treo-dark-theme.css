@@ -15548,6 +15548,11 @@ table.table > thead th > div > a {
     min-width: 100%;
 }
 
+.bottom .list-container > .list > .table:not(.fixed-header-table),
+#main .list-container > .list > .table:not(.fixed-header-table) {
+    width: auto;
+}
+
 .dashlet .list-container > .list > .table:not(.fixed-header-table) {
     width: auto;
 }
