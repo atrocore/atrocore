@@ -453,12 +453,12 @@
     "follow": "Abonnieren",
     "merge": "Zusammenführen",
     "cancel": "Stornieren",
-    "delete": "Löschen",
+    "delete": "Masse löschen",
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
-    "massUpdate": "Massenänderung",
+    "update": "Massenänderung",
     "export": "Exportieren",
-    "restore": "Wiederherstellen"
+    "restore": "Massenwiederherstellung"
   },
   "fields": {
     "connection": "Verbindung",
