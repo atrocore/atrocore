@@ -127,6 +127,15 @@ return [
     'cronMassUpdateMax'                     => 3000, // count of max massUpdate items for CRON
     'checkForConflicts'                     => true,
     'localeId'                              => '1',
-    'mainLanguage'                          => 'en_US'
+    'mainLanguage'                          => 'en_US',
+    'massUpdateMaxCountWithoutJob'          => 200,
+    'massUpdateMinChunkSize'                => 400,
+    'massUpdateMaxChunkSize'                => 3000,
+    'massDeleteMaxCountWithoutJob'          => 200,
+    'massDeleteMinChunkSize'                => 400,
+    'massDeleteMaxChunkSize'                => 3000,
+    'massRestoreMaxCountWithoutJob'          => 200,
+    'massRestoreMinChunkSize'                => 400,
+    'massRestoreMaxChunkSize'                => 3000,
 ];
 
