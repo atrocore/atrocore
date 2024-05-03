@@ -84,6 +84,7 @@ Espo.define('views/main', 'view', function (Dep) {
 
         setupMassActionNotification: function (action) {
             let intervals = {};
+            let requestIsOnGoing  = {};
             this.listenTo(Backbone.Events, 'publicData', data => {
                 let massActionKey = 'mass' + action.charAt(0).toUpperCase() + action.slice(1);
                 let hashScope = this.getHashScope();
@@ -94,16 +95,21 @@ Espo.define('views/main', 'view', function (Dep) {
                             if(intervals[this.scope]){
                                return;
                             }
-                            let data = scopeData;
                             intervals[this.scope] = setInterval(() => {
                                 if(this.getHashScope() !== this.scope) return;
+
+                                if(requestIsOnGoing[this.scope]) return;
+
+                                requestIsOnGoing[this.scope] = true
+
                                 this.ajaxPostRequest(
                                     `${this.scope}/action/getMassActionItemsCount`,
                                     {
-                                        "jobIds": data['jobIds'],
+                                        "jobIds": scopeData['jobIds'],
                                         "action": action
                                     }
                                 ).then((res) => {
+                                    requestIsOnGoing[this.scope] = false;
                                     if(this.getHashScope() !== this.scope) return;
                                    if(res.done){
                                        Espo.Ui.notify(this.translate('Done'), 'success', 2000);
@@ -114,11 +120,11 @@ Espo.define('views/main', 'view', function (Dep) {
                                        intervals[this.scope] = null
                                    }else{
                                        let label = massActionKey.slice(0, -1)+'ing'
-                                       Espo.Ui.notify(this.translate(label, 'messages', 'Global').replace('{{proceed}}', res.total).replace('{{total}}', data.total), null, 3000);
+                                       Espo.Ui.notify(this.translate(label, 'messages', 'Global').replace('{{proceed}}', res.total).replace('{{total}}', scopeData.total), null, 3000);
 
                                    }
                                })
-                            }, 3000)
+                            }, 1000)
 
                         }
                     }

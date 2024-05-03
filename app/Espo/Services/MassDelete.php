@@ -52,7 +52,7 @@ class MassDelete extends QueueManagerBase
             try {
                 $service->deleteEntity($id);
             } catch (\Throwable $e) {
-                $message = "Delete {$entityType} '$id' failed: {$e->getTraceAsString()}";
+                $message = "MassDelete {$entityType} '$id', failed: {$e->getMessage()}";
                 $GLOBALS['log']->error($message);
                 $this->notify($message);
             }

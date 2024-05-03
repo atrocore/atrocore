@@ -2257,8 +2257,9 @@ class Record extends Base
         $this->filterInput($data);
 
         $params['action'] = 'update';
-        $params['maxActionCount'] =  $this->getConfig()->get('maxMassUpdateCount', 20);
-        $params['chunkSize'] = $this->getConfig()->get('massUpdateChunkSize', 2000);
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
         $params['additionalJobData'] = [ "input" => clone $data];
         $input = clone $data;
         $input->_isMassUpdate = true;
@@ -2281,8 +2282,9 @@ class Record extends Base
             ->getArgument('params');
 
         $params['action'] = 'delete';
-        $params['maxActionCount'] =  $this->getConfig()->get('maxMassDeleteCount', 300);
-        $params['chunkSize'] = $this->getConfig()->get('massDeleteChunkSize', 3000);
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massDeleteMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massDeleteMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massDeleteMinChunkSize', 400);
 
         $ids = $this->executeMassAction($params, function($id){
             $this->deleteEntity($id);
@@ -2304,8 +2306,9 @@ class Record extends Base
         }
 
         $params['action'] = 'restore';
-        $params['maxActionCount'] =  $this->getConfig()->get('maxMassRestoreCount', 300);
-        $params['chunkSize'] = $this->getConfig()->get('massRestoreChunkSize', 3000);
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massRestoreMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massRestoreMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massRestoreMinChunkSize', 400);
 
         $this->executeMassAction($params, function($id){
             $this->restoreEntity($id);
@@ -2498,33 +2501,35 @@ class Record extends Base
         }
 
         if(count($ids) > 0){
+            $chunksIds = array_chunk($ids, 65000);
             $table = Util::toUnderScore($this->entityType);
             $conn = $this->getEntityManager()->getConnection();
-            $query = $conn
-                ->createQueryBuilder()
-                ->from($conn->quoteIdentifier($table))
-                ->select('COUNT(*) as total')
-                ->where('id IN (:ids)')
-                ->setParameter('ids', $ids, Mapper::getParameterType($ids));
+            foreach ($chunksIds as $chunkIds){
+                $query = $conn
+                    ->createQueryBuilder()
+                    ->from($conn->quoteIdentifier($table))
+                    ->select('COUNT(*) as total')
+                    ->where('id IN (:ids)')
+                    ->setParameter('ids', $chunkIds, Mapper::getParameterType($chunkIds));
 
-            if($params['action'] === 'update'){
-                $query->andWhere('modified_at >= :date')
-                    ->setParameter('date', $queueItem['created_at'], ParameterType::STRING);
+                if($params['action'] === 'update'){
+                    $query->andWhere('modified_at >= :date')
+                        ->setParameter('date', $queueItem['created_at'], ParameterType::STRING);
+                }
+
+                if($params['action'] === 'delete'){
+                    $query->andWhere('deleted=:true')
+                        ->setParameter('true', true, ParameterType::BOOLEAN);
+                }
+
+                if($params['action'] === 'restore'){
+                    $query->andWhere('deleted=:false')
+                        ->setParameter('false', false, ParameterType::BOOLEAN);
+                }
+
+                $result =  $query->fetchAssociative();
+                $totalItems += $result['total'];
             }
-
-            if($params['action'] === 'delete'){
-                $query->andWhere('deleted=:true')
-                    ->setParameter('true', true, ParameterType::BOOLEAN);
-            }
-
-            if($params['action'] === 'restore'){
-                $query->andWhere('deleted=:false')
-                    ->setParameter('false', false, ParameterType::BOOLEAN);
-            }
-
-            $result =  $query->fetchAssociative();
-
-            $totalItems += $result['total'];
         }
 
         $jobEnded = $totalItems === $data['total'] || empty($ids);
@@ -3491,14 +3496,17 @@ class Record extends Base
     {
         $ids = [];
 
-        if (empty($params['action']) || empty($params['maxActionCount']) || empty($params['chunkSize'])) {
+        if (empty($params['action']) || empty($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
             return [];
         }
 
         $action = $params['action'];
-        $maxActionCount = $params['maxActionCount'];
-        $chunkSize  = $params['chunkSize'];
+        $maxCountWithoutJob = $params['maxCountWithoutJob'];
+        $maxChunkSize = $params['maxChunkSize'];
+        $minChunkSize = $params['minChunkSize'];
         $additionJobData = !empty($params['additionalJobData']) ? $params['additionalJobData'] : [];
+        $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
+
 
         if(!in_array($action, ['restore','delete','update'])){
             return [];
@@ -3521,7 +3529,7 @@ class Record extends Base
         $total = count($ids);
 
         $jobIds = [];
-        if ($total <= $maxActionCount) {
+        if ($total <= $maxCountWithoutJob) {
             foreach ($ids as $id) {
                 try {
                     $actionOperation($id);
@@ -3531,14 +3539,31 @@ class Record extends Base
                 }
             }
         } else {
+            if($total <= ($minChunkSize * $maxConcurrentJobs)){
+                $chunkSize = $minChunkSize;
+            }else if($total >= ($minChunkSize * $maxConcurrentJobs) && $total <= ($maxChunkSize * $maxConcurrentJobs)){
+                $chunkSize = ceil($total / $maxConcurrentJobs);
+            } else {
+                $chunkSize = $maxChunkSize;
+            }
+
             $chunks = array_chunk($ids, $chunkSize);
+            $totalChunks = count($chunks);
+
+            if($totalChunks > 1 && count($chunks[$totalChunks - 1]) < $minChunkSize){
+               $lastChunk =  array_pop($chunks);
+               $totalChunks = count($chunks);
+               $chunks[$totalChunks -1] = array_merge($chunks[$totalChunks -1], $lastChunk);
+            }
+
             foreach ($chunks as $part => $chunk) {
 
                 $jobData = array_merge($additionJobData, [
                     'entityType' => $this->getEntityType(),
-                    'ids'        => $chunk,
                     'total'      =>  $total,
-                    'totalChunks'=> count($chunks),
+                    'chunkSize'  => count($chunk),
+                    'totalChunks'=> $totalChunks,
+                    'ids'        => $chunk,
                 ]);
 
                 $name = $this->getInjection('language')->translate($action, 'massActions', 'Global')  . ': ' . $this->entityName;
@@ -3548,7 +3573,7 @@ class Record extends Base
 
                 $jobIds[] = $this
                     ->getInjection('queueManager')
-                    ->createQueueItem($name, 'Mass'.ucfirst($action), $jobData);
+                    ->createQueueItem($name, 'Mass'.ucfirst($action), $jobData, 'Crucial');
             }
         }
 
