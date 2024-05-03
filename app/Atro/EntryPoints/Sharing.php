@@ -11,10 +11,11 @@
 
 namespace Atro\EntryPoints;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
 
-class Sharing extends AbstractEntryPoint
+class Sharing extends Download
 {
     public static bool $authRequired = false;
 
@@ -33,39 +34,25 @@ class Sharing extends AbstractEntryPoint
             throw new NotFound();
         }
 
-        if (!empty($sharing->get('validTill')) && $sharing->get('validTill') < (new \DateTime())->format('Y-m-d H:i:s')) {
+        /** @var File $file */
+        $file = $sharing->get('file');
+        if (empty($file)) {
             throw new NotFound();
+        }
+
+        if (!empty($sharing->get('validTill')) && $sharing->get('validTill') < (new \DateTime())->format('Y-m-d H:i:s')) {
+            throw new Forbidden();
         }
 
         if (!empty($sharing->get('allowedUsage'))) {
             $used = (int)$sharing->get('used');
             if ($used >= $sharing->get('allowedUsage')) {
-                throw new NotFound();
+                throw new Forbidden();
             }
             $sharing->set('used', $used + 1);
             $this->getEntityManager()->saveEntity($sharing);
         }
 
-        $entity = $this->getEntityManager()->getRepository($sharing->get('entityType'))->get($sharing->get('entityId'));
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        switch ($sharing->get('type')) {
-            case 'download':
-                if ($entity instanceof File) {
-                    header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
-                    header("Cache-Control: public");
-                    header('Content-Type: ' . $entity->get('mimeType'));
-                    header("Content-Transfer-Encoding: Binary");
-                    header('Content-Length: ' . $entity->get('fileSize'));
-                    header("Content-Disposition: attachment; filename={$entity->get('name')}");
-                    readfile($entity->getFilePath());
-                    exit;
-                }
-                break;
-        }
-
-        throw new NotFound();
+        $this->downloadByFileStream($file);
     }
 }

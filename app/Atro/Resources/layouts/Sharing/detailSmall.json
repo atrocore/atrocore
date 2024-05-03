@@ -9,15 +9,7 @@
       ],
       [
         {
-          "name": "entityType"
-        },
-        {
-          "name": "entityId"
-        }
-      ],
-      [
-        {
-          "name": "type"
+          "name": "file"
         },
         {
           "name": "link"
@@ -25,11 +17,17 @@
       ],
       [
         {
-          "name": "validTill"
+          "name": "allowedUsage"
         },
         {
-          "name": "allowedUsage"
+          "name": "used"
         }
+      ],
+      [
+        {
+          "name": "validTill"
+        },
+        false
       ],
       [
         {

@@ -2,19 +2,11 @@
 	"fields": {
 		"active": "Aktywny",
 		"available": "Dostępny",
-		"entityType": "Typ jednostki",
-		"entityId": "ID jednostki",
-		"type": "Typ",
 		"validTill": "Ważne do",
 		"allowedUsage": "Dozwolone użycie",
 		"link": "Link"
 	},
 	"labels": {
 		"copiedToClipboard": "Skopiowano do schowka"
-	},
-	"options": {
-		"type": {
-			"download": "Pobierz"
-		}
 	}
 }

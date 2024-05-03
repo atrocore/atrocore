@@ -16,6 +16,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
+use Psr\Http\Message\StreamInterface;
 
 class Download extends AbstractEntryPoint
 {
@@ -42,11 +43,29 @@ class Download extends AbstractEntryPoint
 
         if ($type === 'custom') {
             $path = $this->container->get(Custom::class)->convert($file, $_GET);
-        } else {
-            $path = $file->getDownloadUrl();
+            header("Location: $path", true, 302);
+            exit;
         }
 
-        header("Location: $path", true, 302);
+        $this->downloadByFileStream($file);
+    }
+
+    protected function downloadByFileStream(File $file): void
+    {
+        /** @var StreamInterface $stream */
+        $stream = $this->getEntityManager()->getRepository('File')->getStorage($file)->getStream($file);
+
+        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+        header("Cache-Control: public");
+        header('Content-Type: application/octet-stream');
+        header("Content-Length: {$file->get('fileSize')}");
+        header("Content-Disposition: attachment; filename={$file->get('name')}");
+
+        $stream->rewind();
+        while (!$stream->eof()) {
+            echo $stream->read(4096);
+        }
+        $stream->close();
         exit;
     }
 }

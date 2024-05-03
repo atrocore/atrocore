@@ -2,19 +2,12 @@
   "fields": {
     "active": "Active",
     "available": "Available",
-    "entityType": "Entity Type",
-    "entityId": "Entity ID",
-    "type": "Type",
     "validTill": "Valid Till",
     "allowedUsage": "Allowed Usage",
+    "used": "Used",
     "link": "Link"
   },
   "labels": {
     "copiedToClipboard": "Copied to clipboard"
-  },
-  "options": {
-    "type": {
-      "download": "Download"
-    }
   }
 }

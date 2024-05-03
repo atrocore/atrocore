@@ -42,7 +42,7 @@
       {
         "name": "sharing",
         "label": "Sharing",
-        "view": "views/record/panels/sharing"
+        "view": "views/file/record/panels/side/sharing"
       },
       {
         "name": "customDownload",

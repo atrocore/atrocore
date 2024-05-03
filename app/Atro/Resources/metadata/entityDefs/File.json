@@ -98,10 +98,6 @@
       "filterDisabled": true,
       "importDisabled": true
     },
-    "private": {
-      "type": "bool",
-      "default": false
-    },
     "mimeType": {
       "type": "varchar",
       "readOnly": true,

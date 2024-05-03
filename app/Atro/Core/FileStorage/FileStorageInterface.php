@@ -13,6 +13,7 @@ namespace Atro\Core\FileStorage;
 
 use Atro\Entities\File;
 use Atro\Entities\Storage;
+use Psr\Http\Message\StreamInterface;
 
 interface FileStorageInterface
 {
@@ -37,6 +38,8 @@ interface FileStorageInterface
     public function reupload(File $file): bool;
 
     public function delete(File $file): bool;
+
+    public function getStream(File $file): StreamInterface;
 
     public function getUrl(File $file): string;
 
