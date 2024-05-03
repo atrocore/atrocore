@@ -431,14 +431,14 @@
     "addRelation": "Add relation",
     "removeRelation": "Remove relation",
     "cancel": "Cancel",
-    "remove": "Remove",
+    "remove": "Mass Remove",
     "merge": "Merge",
-    "massUpdate": "Mass Update",
+    "update": "Mass Update",
     "export": "Export",
     "follow": "Follow",
     "unfollow": "Unfollow",
-    "restore": "Restore",
-    "delete": "Delete"
+    "restore": "Mass Restore",
+    "delete": "Mass Delete"
   },
   "fields": {
     "connection": "Connection",

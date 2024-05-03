@@ -424,10 +424,10 @@
     "all": "Усі"
   },
   "massActions": {
-    "remove": "Видалити",
+    "remove": "Видалення маси",
     "cancel": "Скасувати",
     "merge": "Об'єднати",
-    "massUpdate": "Оновити масово",
+    "update": "Масове оновлення",
     "export": "Експортувати",
     "follow": "Підписатися",
     "unfollow": "Відписатися",
@@ -436,8 +436,8 @@
     "removePartial": "Видалити (Part %s)",
     "addRelation": "Додати зв'язок",
     "removeRelation": "Видалити зв'язок",
-    "restore": "Відновлення",
-    "delete": "Видалити"
+    "restore": "Масове відновлення",
+    "delete": "Масове видалення"
   },
   "fields": {
     "connection": "З'єднання",
