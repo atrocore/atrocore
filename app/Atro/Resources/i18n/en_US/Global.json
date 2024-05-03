@@ -433,6 +433,7 @@
     "cancel": "Cancel",
     "remove": "Mass Remove",
     "merge": "Merge",
+    "massUpdate": "Mass Update",
     "update": "Mass Update",
     "export": "Export",
     "follow": "Follow",
