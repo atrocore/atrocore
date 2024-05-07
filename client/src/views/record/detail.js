@@ -1205,6 +1205,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         selected.push(option);
                     }
                 });
+                if(selected.length === 0){
+                    selected = [options[0]]
+                }
             }
 
             this.getStorage().set(filter.name, 'OverviewFilter', selected);
