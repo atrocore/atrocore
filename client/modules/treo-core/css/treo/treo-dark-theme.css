@@ -14682,6 +14682,15 @@ body > #header .navbar-brand span.home-icon {
     word-wrap: break-word
 }
 
+#header .nav.navbar-nav.navbar-right > li.queue-badge-container span.pause-icon,
+#header .header-right .queue-badge-container .pause-icon {
+    position: absolute;
+    top: 5%;
+    right: -5%;
+    z-index: 10;
+    color: #ef990e;
+}
+
 @media screen and (min-width: 768px) {
     #header .nav > li.more > .dropdown-menu {
         top: 0;
