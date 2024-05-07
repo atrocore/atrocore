@@ -1,5 +1,9 @@
 ![Logo](_assets/atrocore-logo.svg)
 
+> This repository is hosted on: https://gitlab.atrocore.com/atrocore/atrocore
+> Mirror: https://github.com/atrocore/atrocore
+
+
 ## What Is AtroCore? 
 
 AtroCore is an open-source software distributed under GPLv3 License for free.
