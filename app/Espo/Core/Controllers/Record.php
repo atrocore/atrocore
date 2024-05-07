@@ -588,7 +588,8 @@ class Record extends Base
         }
         $params = [
             "jobIds" => $data->jobIds,
-            "action" => $data->action
+            "action" => $data->action,
+            "previousCount" => $data->previousCount ?? 0
         ];
 
         return $this->getRecordService()->getMassActionItemsCount($params);

@@ -85,6 +85,7 @@ Espo.define('views/main', 'view', function (Dep) {
         setupMassActionNotification: function (action) {
             let intervals = {};
             let requestIsOnGoing  = {};
+            let currentCounts  = {};
             this.listenTo(Backbone.Events, 'publicData', data => {
                 let massActionKey = 'mass' + action.charAt(0).toUpperCase() + action.slice(1);
                 let hashScope = this.getHashScope();
@@ -97,6 +98,7 @@ Espo.define('views/main', 'view', function (Dep) {
                             }
                             intervals[this.scope] = setInterval(() => {
                                 if(this.getHashScope() !== this.scope) return;
+                                currentCounts[this.scope] = currentCounts[this.scope] ?? this.getStorage().get('previousCount', this.scope)
 
                                 if(requestIsOnGoing[this.scope]) return;
 
@@ -106,11 +108,14 @@ Espo.define('views/main', 'view', function (Dep) {
                                     `${this.scope}/action/getMassActionItemsCount`,
                                     {
                                         "jobIds": scopeData['jobIds'],
-                                        "action": action
+                                        "action": action,
+                                        "previousCount": currentCounts[this.scope] ?? 0
                                     }
                                 ).then((res) => {
                                     requestIsOnGoing[this.scope] = false;
                                     if(this.getHashScope() !== this.scope) return;
+                                    currentCounts[this.scope] = res.total;
+                                    this.getStorage().set('previousCount', this.scope, res.total)
                                    if(res.done){
                                        Espo.Ui.notify(this.translate('Done'), 'success', 2000);
                                        if (this.collection) {
@@ -118,14 +123,20 @@ Espo.define('views/main', 'view', function (Dep) {
                                        }
                                        clearInterval(intervals[this.scope])
                                        intervals[this.scope] = null
+                                       currentCounts[this.scope] = null
+                                       this.getStorage().clear('previousCount', this.scope)
                                    }else{
                                        let label = massActionKey.slice(0, -1)+'ing'
                                        Espo.Ui.notify(this.translate(label, 'messages', 'Global').replace('{{proceed}}', res.total).replace('{{total}}', scopeData.total), null, 3000);
 
                                    }
-                               })
+                               }).fail(e => {
+                                    requestIsOnGoing[this.scope] = false;
+                                })
                             }, 1000)
 
+                        }else{
+                            this.getStorage().clear('previousCount', this.scope)
                         }
                     }
                 }
