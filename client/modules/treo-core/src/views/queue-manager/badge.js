@@ -13,6 +13,8 @@ Espo.define('treo-core:views/queue-manager/badge', 'view',
 
         template: 'treo-core:queue-manager/badge',
 
+        $pauseIcon: null,
+
         events: {
             'click a[data-action="showQueue"]': function (e) {
                 if (!this.hasView('panel')) {
@@ -26,7 +28,19 @@ Espo.define('treo-core:views/queue-manager/badge', 'view',
             }
         },
 
+        setup() {
+            this.listenTo(Backbone.Events, 'publicData', data => {
+                if (data.qmPaused) {
+                    this.$pauseIcon?.removeClass('hidden');
+                } else {
+                    this.$pauseIcon?.addClass('hidden');
+                }
+            });
+        },
+
         afterRender() {
+            this.$pauseIcon = this.$el.find('.pause-icon');
+
             this.listenTo(Backbone, 'showQueuePanel', () => {
                 if (this.checkConditions()) {
                     this.showQueue();
