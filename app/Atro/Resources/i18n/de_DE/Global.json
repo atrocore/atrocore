@@ -451,15 +451,19 @@
     "removePartial": "Löschen (Anteil %s)",
     "unfollow": "Nicht abonnieren",
     "follow": "Abonnieren",
+    "remove": "Entfernen",
+    "massRemove": "Masse entfernene",
     "merge": "Zusammenführen",
     "cancel": "Stornieren",
-    "delete": "Masse löschen",
+    "delete": "Löschen",
+    "massDelete": "Masse löschen",
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
     "update": "Massenänderung",
     "massUpdate": "Massenänderung",
     "export": "Exportieren",
-    "restore": "Massenwiederherstellung"
+    "restore": "Wiederherstellen",
+    "massRestore": "Massenwiederherstellung"
   },
   "fields": {
     "connection": "Verbindung",

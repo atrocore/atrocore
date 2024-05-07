@@ -2491,44 +2491,52 @@ class Record extends Base
 
         $totalItems = 0;
         $ids = [];
+        $failedJobsIds = [];
         foreach ($queueItems as $queueItem){
             $data = json_decode($queueItem['data'], true);
             if($queueItem['status'] === 'Success'){
                 $totalItems += count($data['ids']);
             }else if(in_array($queueItem['status'], ['Pending', 'Running'])){
                 $ids = array_merge($ids, $data['ids']);
+            } else if(in_array($queueItem['status'], ['Failed', 'Canceled'])){
+                $failedJobsIds = array_merge($failedJobsIds, $data['ids']);
             }
         }
 
-        if(count($ids) > 0){
-            $chunksIds = array_chunk($ids, 65000);
+        $allIds = array_merge($ids, $failedJobsIds);
+        if(count($allIds) > 0){
+            $chunksIds = array_chunk($allIds, 65000);
             $table = Util::toUnderScore($this->entityType);
             $conn = $this->getEntityManager()->getConnection();
-            foreach ($chunksIds as $chunkIds){
-                $query = $conn
-                    ->createQueryBuilder()
-                    ->from($conn->quoteIdentifier($table))
-                    ->select('COUNT(*) as total')
-                    ->where('id IN (:ids)')
-                    ->setParameter('ids', $chunkIds, Mapper::getParameterType($chunkIds));
+            try{
+                foreach ($chunksIds as $chunkIds){
+                    $query = $conn
+                        ->createQueryBuilder()
+                        ->from($conn->quoteIdentifier($table))
+                        ->select('COUNT(*) as total')
+                        ->where('id IN (:ids)')
+                        ->setParameter('ids', $chunkIds, Mapper::getParameterType($chunkIds));
 
-                if($params['action'] === 'update'){
-                    $query->andWhere('modified_at >= :date')
-                        ->setParameter('date', $queueItem['created_at'], ParameterType::STRING);
+                    if($params['action'] === 'update'){
+                        $query->andWhere('modified_at >= :date')
+                            ->setParameter('date', $queueItem['created_at'], ParameterType::STRING);
+                    }
+
+                    if($params['action'] === 'delete'){
+                        $query->andWhere('deleted=:true')
+                            ->setParameter('true', true, ParameterType::BOOLEAN);
+                    }
+
+                    if($params['action'] === 'restore'){
+                        $query->andWhere('deleted=:false')
+                            ->setParameter('false', false, ParameterType::BOOLEAN);
+                    }
+
+                    $result =  $query->fetchAssociative();
+                    $totalItems += $result['total'];
                 }
-
-                if($params['action'] === 'delete'){
-                    $query->andWhere('deleted=:true')
-                        ->setParameter('true', true, ParameterType::BOOLEAN);
-                }
-
-                if($params['action'] === 'restore'){
-                    $query->andWhere('deleted=:false')
-                        ->setParameter('false', false, ParameterType::BOOLEAN);
-                }
-
-                $result =  $query->fetchAssociative();
-                $totalItems += $result['total'];
+            }catch (\Throwable $e){
+                $totalItems = !empty($params['previousCount']) ? $params['previousCount'] : $totalItems;
             }
         }
 

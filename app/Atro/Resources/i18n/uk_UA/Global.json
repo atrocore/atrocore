@@ -424,7 +424,8 @@
     "all": "Усі"
   },
   "massActions": {
-    "remove": "Видалення маси",
+    "remove": "Видалити",
+    "massRemove": "Видалення маси",
     "cancel": "Скасувати",
     "merge": "Об'єднати",
     "update": "Масове оновлення",
@@ -437,8 +438,10 @@
     "removePartial": "Видалити (Part %s)",
     "addRelation": "Додати зв'язок",
     "removeRelation": "Видалити зв'язок",
-    "restore": "Масове відновлення",
-    "delete": "Масове видалення"
+    "restore": "Відновити",
+    "massRestore": "Масове відновлення",
+    "delete": "Видалити",
+    "massDelete": "Масове видалення"
   },
   "fields": {
     "connection": "З'єднання",
