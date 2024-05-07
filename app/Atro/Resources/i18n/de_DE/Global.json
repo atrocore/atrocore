@@ -457,6 +457,7 @@
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
     "update": "Massenänderung",
+    "massUpdate": "Massenänderung",
     "export": "Exportieren",
     "restore": "Massenwiederherstellung"
   },
