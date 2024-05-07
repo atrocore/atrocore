@@ -116,7 +116,7 @@ Installation Guide is available [here](https://help.atrocore.com/installation-an
 
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
-## Ressources
+## Resources
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
 - Please visit our Help Center: https://help.atrocore.com/
