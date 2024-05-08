@@ -991,7 +991,8 @@
     "codeInvalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
     "editedByAnotherUser": "Der Datensatz [%s] wurde inzwischen geändert. Sie können die Seite <a href=\"javascript:\" onclick=\"location.reload();\">neu laden</a>, um die neuen Werte zu sehen, mit \"Abbrechen\" zur Bearbeitung zurückkehren oder mit \"Anwenden\" die Daten überschreiben. Möchten Sie die Daten überschreiben?",
     "dontMatchToPattern": "ert des Feldes \"{field}\" entspricht nicht dem Pattern \"{pattern}\".",
-    "notUniqueValue": "Der Datensatz kann aufgrund von Datenbankeinschränkungen nicht erstellt/aktualisiert werden."
+    "notUniqueValue": "Der Datensatz kann aufgrund von Datenbankeinschränkungen nicht erstellt/aktualisiert werden.",
+    "attributeDoesNotExist": "Das Attribut \"{Attribut}\" existiert nicht für die Entität \"{EntityType}\"."
   },
   "queryBuilderFilter": {
     "add_rule": "neue Regel",
