@@ -113,10 +113,10 @@ class Set implements TypeInterface
             ->findOne();
     }
 
-    public function checkQueueItem(Entity $entity)
+    public function checkQueueItem(Entity $entity): void
     {
         if ($entity->getEntityType() != 'QueueItem') {
-            return null;
+            return;
         }
 
         if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode($entity->get('data')), $matches)) {
