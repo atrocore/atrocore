@@ -35,8 +35,11 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Atro\ActionTypes\Set;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\ORM\DB\RDB\Mapper;
+use Atro\Services\Action;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
@@ -94,6 +97,41 @@ class QueueItem extends Base
             $item = $this->where(['status' => ['Pending', 'Running']])->findOne();
             if (empty($item) && file_exists(QueueManager::FILE_PATH)) {
                 unlink(QueueManager::FILE_PATH);
+            }
+        }
+
+        if ($entity->get('status') === 'Success') {
+            if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode($entity->get('data')), $matches)) {
+                return;
+            }
+
+            $actionSetLinkerId = $matches[1];
+
+            $current = $this->getEntityManager()->getEntity('ActionSetLinker', $actionSetLinkerId);
+
+            if (empty($current)) {
+                return;
+            }
+
+            $exist = $this
+                ->where([
+                    'status' => ['Pending', 'Running'],
+                    'data*' => '%"actionSetLinkerId":"' . $current->get('id') . '"%'
+                ])
+                ->find();
+
+            if (count($exist) == 0) {
+                $className = $this->getMetadata()->get(['action', 'types', 'set']);
+                if (empty($className)) {
+                    return;
+                }
+
+                /** @var Set $actionTypeService */
+                $actionTypeService = $this->getInjection('container')->get($className);
+
+                if (!empty($next = $actionTypeService->getNextAction($current))) {
+                    $actionTypeService->executeAction($next);
+                }
             }
         }
     }
