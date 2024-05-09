@@ -119,7 +119,7 @@ class Set implements TypeInterface
             return null;
         }
 
-        if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode((string)$entity->get('data')), $matches)) {
+        if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode($entity->get('data')), $matches)) {
             return;
         }
 
