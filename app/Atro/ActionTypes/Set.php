@@ -113,6 +113,38 @@ class Set implements TypeInterface
             ->findOne();
     }
 
+    public function checkQueueItem(Entity $entity)
+    {
+        if ($entity->getEntityType() != 'QueueItem') {
+            return null;
+        }
+
+        if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode((string)$entity->get('data')), $matches)) {
+            return;
+        }
+
+        $actionSetLinkerId = $matches[1];
+
+        $current = $this->getEntityManager()->getEntity('ActionSetLinker', $actionSetLinkerId);
+
+        if (empty($current)) {
+            return;
+        }
+
+        $exist = $this
+            ->getEntityManager()
+            ->getRepository('QueueItem')
+            ->where([
+                'status' => ['Pending', 'Running'],
+                'data*' => '%"actionSetLinkerId":"' . $current->get('id') . '"%'
+            ])
+            ->find();
+
+        if (count($exist) == 0 && !empty($next = $this->getNextAction($current))) {
+            $this->executeAction($next);
+        }
+    }
+
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');

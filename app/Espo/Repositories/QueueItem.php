@@ -100,39 +100,15 @@ class QueueItem extends Base
             }
         }
 
-        if ($entity->get('status') === 'Success') {
-            if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode((string)$entity->get('data')), $matches)) {
+        if (in_array($entity->get('status'), ['Success', 'Failed'])) {
+            $className = $this->getMetadata()->get(['action', 'types', 'set']);
+            if (empty($className)) {
                 return;
             }
 
-            $actionSetLinkerId = $matches[1];
-
-            $current = $this->getEntityManager()->getEntity('ActionSetLinker', $actionSetLinkerId);
-
-            if (empty($current)) {
-                return;
-            }
-
-            $exist = $this
-                ->where([
-                    'status' => ['Pending', 'Running'],
-                    'data*' => '%"actionSetLinkerId":"' . $current->get('id') . '"%'
-                ])
-                ->find();
-
-            if (count($exist) == 0) {
-                $className = $this->getMetadata()->get(['action', 'types', 'set']);
-                if (empty($className)) {
-                    return;
-                }
-
-                /** @var Set $actionTypeService */
-                $actionTypeService = $this->getInjection('container')->get($className);
-
-                if (!empty($next = $actionTypeService->getNextAction($current))) {
-                    $actionTypeService->executeAction($next);
-                }
-            }
+            /** @var Set $actionTypeService */
+            $actionTypeService = $this->getInjection('container')->get($className);
+            $actionTypeService->checkQueueItem($entity);
         }
     }
 
