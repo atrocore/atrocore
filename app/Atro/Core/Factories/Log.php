@@ -35,6 +35,9 @@ class Log implements Factory
             case 'NOTICE':
                 $levelCode = Logger::NOTICE;
                 break;
+            case 'WARNING':
+                $levelCode = Logger::WARNING;
+                break;
             case 'ERROR':
                 $levelCode = Logger::ERROR;
                 break;
