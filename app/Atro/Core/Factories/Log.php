@@ -15,6 +15,7 @@ namespace Atro\Core\Factories;
 
 use Atro\Core\Container;
 use Atro\Core\Factories\FactoryInterface as Factory;
+use Atro\Core\Monolog\Handler\AtroHandler;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler;
 use Espo\Core\Utils\Log\Monolog\Handler\StreamHandler;
@@ -67,7 +68,9 @@ class Log implements Factory
         }
 
         $log->pushHandler($handler);
-
+        if ($config->get('logger.sendToAtro', true)) {
+            $log->pushHandler(new AtroHandler($levelCode));
+        }
         $errorHandler = new ErrorHandler($log);
         $errorHandler->registerExceptionHandler([], false);
         $errorHandler->registerErrorHandler([], false);
