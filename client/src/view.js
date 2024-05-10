@@ -251,7 +251,16 @@ Espo.define('view', [], function () {
         generateEntityUrl(scope, id){
             let select = []
             let fieldDefs = this.getMetadata().get('entityDefs.'+scope+'.fields')
+            let links = this.getMetadata().get('entityDefs.'+scope+'.links')
             let nonComparableFields = this.getMetadata().get('scopes.'+scope+'.nonComparableFields') ?? []
+            let entityHasNameField = (entityType) =>{
+                if(!entityType){
+                    return  false;
+                }
+                let fieldDefs = this.getMetadata().get('entityDefs.'+entityType+'.fields');
+                return !!fieldDefs.name;
+            }
+
             Object.entries(fieldDefs).forEach(([field, fieldDef]) =>{
                 if(nonComparableFields.includes(field)){
                     return;
@@ -268,13 +277,24 @@ Espo.define('view', [], function () {
 
                 if(fieldDef.type === 'link'){
                     select.push(field+'Id');
-                    select.push(field+'Name');
+                    if(entityHasNameField(links[field]?.entity)){
+                        select.push(field+'Name');
+                    }
                     return;
                 }
 
                 if(fieldDef.type === 'linkMultiple'){
                     select.push(field+'Ids');
-                    select.push(field+'Names');
+                   if(entityHasNameField(links[field]?.entity)){
+                        select.push(field+'Names');
+                    }
+                    return;
+                }
+
+                if(fieldDef.type === 'file'){
+                    select.push(field+'Id');
+                    select.push(field+'Name');
+                    select.push(field+'PathsData');
                     return;
                 }
 
