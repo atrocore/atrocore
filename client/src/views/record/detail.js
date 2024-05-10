@@ -1125,7 +1125,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 entityType: this.entityType,
                 buttonList: this.buttonList,
                 buttonEditList: this.buttonEditList,
-                dropdownItemList: this.dropdownItemList,
+                dropdownItemList: this.isDropdownItemListEmpty() ? [] : this.dropdownItemList,
                 dropdownEditItemList: this.dropdownEditItemList,
                 dropdownItemListEmpty: this.isDropdownItemListEmpty(),
                 buttonsDisabled: this.buttonsDisabled,
@@ -1297,6 +1297,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         isDropdownItemListEmpty: function () {
+            if (!this.model.id) {
+                return true;
+            }
+
             if (this.dropdownItemList.length === 0) {
                 return true;
             }
