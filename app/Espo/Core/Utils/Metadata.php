@@ -233,7 +233,7 @@ class Metadata
 
         if (property_exists($data, 'entityDefs')) {
             foreach ($data->entityDefs as $entityType => $entityDefs) {
-                if (!property_exists($entityDefs, 'fields') || property_exists($entityDefs->fields, 'id')) {
+                if (!is_object($entityDefs) || !property_exists($entityDefs, 'fields') || !is_object($entityDefs->fields) || property_exists($entityDefs->fields, 'id')) {
                     continue;
                 }
 
