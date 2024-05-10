@@ -29,6 +29,9 @@ class Log implements Factory
         $config = $container->get('config');
 
         switch ($config->get('logger.level', 'WARNING')) {
+            case 'DEBUG':
+                $levelCode = Logger::DEBUG;
+                break;
             case 'INFO':
                 $levelCode = Logger::INFO;
                 break;
@@ -51,7 +54,7 @@ class Log implements Factory
                 $levelCode = Logger::EMERGENCY;
                 break;
             default:
-                $levelCode = Logger::DEBUG;
+                $levelCode = Logger::WARNING;
         }
 
         $log = new Logger('Log');
