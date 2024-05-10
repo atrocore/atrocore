@@ -30,14 +30,14 @@
       {
         "name": "preview",
         "label": "Preview",
-        "view": "views/file/fields/preview"
+        "view": "views/file/record/panels/side/preview"
       }
     ],
     "detail": [
       {
         "name": "preview",
         "label": "Preview",
-        "view": "views/file/fields/preview"
+        "view": "views/file/record/panels/side/preview"
       },
       {
         "name": "sharing",
@@ -54,7 +54,7 @@
       {
         "name": "preview",
         "label": "Preview",
-        "view": "views/file/fields/preview"
+        "view": "views/file/record/panels/side/preview"
       },
       {
         "name": "sharing",

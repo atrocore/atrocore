@@ -36,6 +36,10 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
             };
         },
 
+        hasImagePreview() {
+            return (this.getMetadata().get('app.file.image.hasPreviewExtensions') || []).includes(this.model.get('extension'));
+        },
+
         getValueForDisplay: function () {
             if (this.mode === 'list') {
                 let id = this.model.get(this.idName);
@@ -43,10 +47,10 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
                     return false;
                 }
 
-                if (!(this.getMetadata().get('app.file.image.hasPreviewExtensions') || []).includes(this.model.get('extension')) || !this.getImageUrl(id, this.previewSize)) {
-                    return '<a href="' + this.getDownloadUrl(id) + '" target="_blank"><span class="fiv-cla fiv-icon-' + this.model.get('extension') + ' fiv-size-lg"></span></a>';
-                } else {
+                if (this.hasImagePreview() && this.getImageUrl(id, this.previewSize)) {
                     return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                } else {
+                    return '<a href="' + this.getDownloadUrl(id) + '" target="_blank"><span class="fiv-cla fiv-icon-' + this.model.get('extension') + ' fiv-size-lg"></span></a>';
                 }
             }
         },
