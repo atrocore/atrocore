@@ -69,7 +69,7 @@ class Log implements Factory
 
         $log->pushHandler($handler);
         if ($config->get('logger.sendToAtro', true)) {
-            $log->pushHandler(new AtroHandler($levelCode));
+            $log->pushHandler(new AtroHandler($levelCode, (string)$config->get('appId')));
         }
         $errorHandler = new ErrorHandler($log);
         $errorHandler->registerExceptionHandler([], false);

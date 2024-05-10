@@ -19,8 +19,31 @@ use Monolog\Handler\AbstractProcessingHandler;
 
 class AtroHandler extends AbstractProcessingHandler
 {
+    protected string $instanceId;
+
+    public function __construct($level, string $instanceId)
+    {
+        parent::__construct($level);
+
+        $this->instanceId = $instanceId;
+    }
+
     protected function write(array $record): void
     {
+        $url = "https://reporting.atrocore.com/push.php";
+        $postData = [
+            'message'    => $record['message'],
+            'level'      => $record['level'],
+            'instanceId' => $this->instanceId
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($ch);
+        curl_close($ch);
     }
 
     public function getDefaultFormatter(): FormatterInterface
