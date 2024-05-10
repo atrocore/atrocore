@@ -297,7 +297,8 @@
     "mobileTextFilterPlaceholder": "Tippe und absende...",
     "Apply filter": "Filter anwenden",
     "Reset filter": "Filter zurücksetzen",
-    "Dashboard": "Dashboard"
+    "Dashboard": "Dashboard",
+    "provideFeedback": "Feedback geben"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
