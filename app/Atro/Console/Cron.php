@@ -169,14 +169,17 @@ class Cron extends AbstractConsole
                                     'instance'   => [
                                         'phpVersion'     => phpversion(),
                                         'databaseDriver' => $this->getConfig()->get('database.driver'),
-                                        'composerConfig' => file_get_contents('composer.json'),
                                         'modules'        => [
                                             'Core' => Composer::getCoreVersion()
-                                        ]
+                                        ],
+                                        'composerConfig' => file_exists('composer.json') ? json_decode(file_get_contents('composer.json'), true) : null
                                     ],
                                 ];
+
                                 foreach ($this->getContainer()->get('moduleManager')->getModules() as $id => $module) {
-                                    $postData['instance']['modules'][$module->getName()] = $module->getVersion();
+                                    if (!empty($module->getName())) {
+                                        $postData['instance']['modules'][$module->getName()] = $module->getVersion();
+                                    }
                                 }
 
                                 $ch = curl_init();
