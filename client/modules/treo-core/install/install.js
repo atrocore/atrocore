@@ -27,7 +27,10 @@ $(function () {
                     if (translations instanceof Object) {
                         this.model.set({translate: translations});
 
-                        let languageAndLicenseStep = new LanguageAndLicenseStep({model: generalModel, parentEl: this.$el});
+                        let languageAndLicenseStep = new LanguageAndLicenseStep({
+                            model: generalModel,
+                            parentEl: this.$el
+                        });
                     } else {
                         reject(new Error('Unsuccessful attempt to download translations'))
                     }
@@ -392,7 +395,8 @@ $(function () {
             let data = {
                 username: this.$el.find('#username').val(),
                 password: this.$el.find('#password').val(),
-                confirmPassword: this.$el.find('#confirmPassword').val()
+                confirmPassword: this.$el.find('#confirmPassword').val(),
+                reportingEnabled: this.$el.find('#reporting-enabled').is(':checked')
             };
             this.model.set({adminSettings: data});
         },
@@ -422,7 +426,8 @@ $(function () {
             let data = {
                 username: this.model.get('adminSettings').username,
                 password: this.model.get('adminSettings').password,
-                confirmPassword: this.model.get('adminSettings').confirmPassword
+                confirmPassword: this.model.get('adminSettings').confirmPassword,
+                reportingEnabled: this.model.get('adminSettings').reportingEnabled
             };
             return $.ajax({
                 url: 'api/v1/Installer/createAdmin',

@@ -14,6 +14,7 @@
     "requiredSettings": "Required Settings",
     "chooseYourLanguage": "Choose your language",
     "acceptTheAgreement": "I accept the agreement",
+    "reportingEnabled": "Send anonymous error reports for faster problem identification and resolution",
     "dbSystem": "Database System",
     "hostName": "Host Name",
     "databaseName": "Database Name",
