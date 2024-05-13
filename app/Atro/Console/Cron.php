@@ -152,33 +152,36 @@ class Cron extends AbstractConsole
                 $fileName = $tmpDir . DIRECTORY_SEPARATOR . $file;
 
                 Util::createDir($tmpDir);
-                rename($originalFileName, $fileName);
+                if (file_exists($originalFileName)) {
+                    rename($originalFileName, $fileName);
+                    $handle = fopen($fileName, "r");
+                    if ($handle) {
+                        while (($line = fgets($handle)) !== false) {
+                            $record = @json_decode($line, true);
+                            if (is_array($record)) {
+                                $url = "https://reporting.atrocore.com/push.php";
+                                $postData = [
+                                    'message'    => $record['message'],
+                                    'level'      => $record['level'],
+                                    'datetime'   => $record['datetime'],
+                                    'instanceId' => (string)$this->getConfig()->get('appId')
+                                ];
 
-                $handle = fopen($fileName, "r");
-                if ($handle) {
-                    while (($line = fgets($handle)) !== false) {
-                        $record = @json_decode($line, true);
-                        if (is_array($record)) {
-                            $url = "https://reporting.atrocore.com/push.php";
-                            $postData = [
-                                'message'    => $record['message'],
-                                'level'      => $record['level'],
-                                'datetime'   => $record['datetime'],
-                                'instanceId' => (string)$this->getConfig()->get('appId')
-                            ];
-
-                            $ch = curl_init();
-                            curl_setopt($ch, CURLOPT_URL, $url);
-                            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-                            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
-                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                            curl_exec($ch);
-                            curl_close($ch);
+                                $ch = curl_init();
+                                curl_setopt($ch, CURLOPT_URL, $url);
+                                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+                                curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                curl_exec($ch);
+                                curl_close($ch);
+                            }
                         }
+                        fclose($handle);
                     }
-                    fclose($handle);
+                    if (file_exists($fileName)) {
+                        unlink($fileName);
+                    }
                 }
-                unlink($fileName);
             }
         }
     }
