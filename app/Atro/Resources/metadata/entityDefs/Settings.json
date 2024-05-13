@@ -33,6 +33,11 @@
       "type": "bool",
       "default": true
     },
+    "reportingEnabled": {
+      "type": "bool",
+      "default": true,
+      "tooltip": true
+    },
     "recordsPerPage": {
       "type": "int",
       "min": 50,

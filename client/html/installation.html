@@ -56,7 +56,7 @@
                 width: 100%;
                 resize: none
             }
-            #license-agree {
+            #license-agree, #reporting-enabled {
                 margin: -2px 0 0;
             }
             .loader {
@@ -222,6 +222,12 @@
                 <div class="form-group">
                     <label for="confirmPassword"><%= translate.labels.confirmYourPassword %> *</label>
                     <input type="password" class="form-control" id="confirmPassword">
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="cell cell-website col-sm-12 form-group">
+                    <input class="btn btn-default" type="checkbox" name="reporting-enabled" id="reporting-enabled" value="1" checked>
+                    <label class="point-lbl" for="reporting-enabled"><%= translate.labels.reportingEnabled %></label>
                 </div>
             </div>
             <div class="col-sm-12">

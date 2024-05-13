@@ -107,7 +107,6 @@ class Util
      * @param string $dir
      *
      * @return array
-     * @deprecated please, use \Espo\Core\Utils\File\Manager instead
      */
     public static function scanDir(string $dir): array
     {
