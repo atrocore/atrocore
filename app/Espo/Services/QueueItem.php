@@ -67,7 +67,7 @@ class QueueItem extends Base
         }
 
         // delete forever
-        $daysToDeleteForever = $days + 14;
+        $daysToDeleteForever = $days + $this->getConfig()->get('queueItemsDeletedMaxDays', 14);;
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb
             ->delete('queue_item')

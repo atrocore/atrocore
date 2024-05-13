@@ -27,7 +27,7 @@ class ScheduledJobLogRecord extends Record
         }
 
         // delete forever
-        $daysToDeleteForever = $days + 14;
+        $daysToDeleteForever = $days + $this->getConfig()->get('scheduledJobLogsDeletedMaxDays', 14);
         $connection = $this->getEntityManager()->getConnection();
         $connection->createQueryBuilder()
             ->delete('scheduled_job_log_record')
