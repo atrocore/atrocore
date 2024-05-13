@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\Application;
+use Atro\Core\Monolog\Handler\ReportingHandler;
 use Atro\Core\QueueManager;
+use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 
 /**
@@ -108,6 +110,9 @@ class Cron extends AbstractConsole
 
         // run cron jobs
         $this->runCronManager();
+
+        // send reports
+        $this->sendReports();
     }
 
     /**
@@ -119,6 +124,63 @@ class Cron extends AbstractConsole
         $auth->useNoAuth();
 
         $this->getContainer()->get('cronManager')->run();
+    }
+
+    protected function sendReports(): void
+    {
+        if (!$this->getConfig()->get('logger.reportingEnabled', true)) {
+            return;
+        }
+        $dir = ReportingHandler::REPORTING_PATH;
+        $tmpDir = 'data/reporting-tmp';
+
+        while (is_dir($dir) && true) {
+            $files = Util::scanDir($dir);
+            if (empty($files[0])) {
+                break;
+            }
+
+            $file = $files[0];
+
+            $currentDate = new \DateTime();
+            $reportDate = new \DateTime(str_replace('.log', '', $file));
+            $interval = $reportDate->diff($currentDate);
+            $diffInMinutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
+
+            if ($diffInMinutes > 1) {
+                $originalFileName = $dir . DIRECTORY_SEPARATOR . $file;
+                $fileName = $tmpDir . DIRECTORY_SEPARATOR . $file;
+
+                Util::createDir($tmpDir);
+                rename($originalFileName, $fileName);
+
+                $handle = fopen($fileName, "r");
+                if ($handle) {
+                    while (($line = fgets($handle)) !== false) {
+                        $record = @json_decode($line, true);
+                        if (is_array($record)) {
+                            $url = "https://reporting.atrocore.com/push.php";
+                            $postData = [
+                                'message'    => $record['message'],
+                                'level'      => $record['level'],
+                                'datetime'   => $record['datetime'],
+                                'instanceId' => (string)$this->getConfig()->get('appId')
+                            ];
+
+                            $ch = curl_init();
+                            curl_setopt($ch, CURLOPT_URL, $url);
+                            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+                            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            curl_exec($ch);
+                            curl_close($ch);
+                        }
+                    }
+                    fclose($handle);
+                }
+                unlink($fileName);
+            }
+        }
     }
 
     /**
