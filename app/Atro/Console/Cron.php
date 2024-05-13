@@ -18,6 +18,7 @@ use Atro\Core\Monolog\Handler\ReportingHandler;
 use Atro\Core\QueueManager;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
+use Espo\Services\Composer;
 
 /**
  * Cron console
@@ -126,7 +127,7 @@ class Cron extends AbstractConsole
         $this->getContainer()->get('cronManager')->run();
     }
 
-    protected function sendReports(): void
+    public function sendReports(): void
     {
         if (!$this->getConfig()->get('reportingEnabled', true)) {
             return;
@@ -164,8 +165,19 @@ class Cron extends AbstractConsole
                                     'message'    => $record['message'],
                                     'level'      => $record['level'],
                                     'datetime'   => $record['datetime'],
-                                    'instanceId' => (string)$this->getConfig()->get('appId')
+                                    'instanceId' => (string)$this->getConfig()->get('appId'),
+                                    'instance'   => [
+                                        'phpVersion'     => phpversion(),
+                                        'databaseDriver' => $this->getConfig()->get('database.driver'),
+                                        'composerConfig' => file_get_contents('composer.json'),
+                                        'modules'        => [
+                                            'Core' => Composer::getCoreVersion()
+                                        ]
+                                    ],
                                 ];
+                                foreach ($this->getContainer()->get('moduleManager')->getModules() as $id => $module) {
+                                    $postData['instance']['modules'][$module->getName()] = $module->getVersion();
+                                }
 
                                 $ch = curl_init();
                                 curl_setopt($ch, CURLOPT_URL, $url);
