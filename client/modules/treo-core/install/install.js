@@ -395,8 +395,7 @@ $(function () {
             let data = {
                 username: this.$el.find('#username').val(),
                 password: this.$el.find('#password').val(),
-                confirmPassword: this.$el.find('#confirmPassword').val(),
-                reportingEnabled: this.$el.find('#reporting-enabled').is(':checked')
+                confirmPassword: this.$el.find('#confirmPassword').val()
             };
             this.model.set({adminSettings: data});
         },
@@ -427,7 +426,7 @@ $(function () {
                 username: this.model.get('adminSettings').username,
                 password: this.model.get('adminSettings').password,
                 confirmPassword: this.model.get('adminSettings').confirmPassword,
-                reportingEnabled: this.model.get('adminSettings').reportingEnabled
+                reportingEnabled: this.$el.find('#reporting-enabled').is(':checked')
             };
             return $.ajax({
                 url: 'api/v1/Installer/createAdmin',
