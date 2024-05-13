@@ -3028,15 +3028,15 @@ class Record extends Base
         }
 
         if ($passedAttributeList) {
-//            foreach ($passedAttributeList as $attribute) {
-//                if (!$seed->hasAttribute($attribute)) {
-//                    throw new BadRequest(str_replace(
-//                        ['{entityType}', '{attribute}'],
-//                        [$this->getEntityType(), $attribute],
-//                        $this->getInjection('language')->translate('attributeDoesNotExist', 'exceptions')
-//                    ));
-//                }
-//            }
+            foreach ($passedAttributeList as $attribute) {
+                if (!$seed->hasAttribute($attribute)) {
+                    throw new BadRequest(str_replace(
+                        ['{entityType}', '{attribute}'],
+                        [$this->getEntityType(), $attribute],
+                        $this->getInjection('language')->translate('attributeDoesNotExist', 'exceptions')
+                    ));
+                }
+            }
             $attributeList = [];
             if (!in_array('id', $passedAttributeList)) {
                 $attributeList[] = 'id';
