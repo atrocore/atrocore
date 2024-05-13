@@ -28,7 +28,9 @@
         {
           "name": "aclStrictMode"
         },
-        false
+        {
+          "name": "reportingEnabled"
+        }
       ],
       [
         {

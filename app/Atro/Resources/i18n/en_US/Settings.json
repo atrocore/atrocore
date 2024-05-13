@@ -1,5 +1,6 @@
 {
   "fields": {
+    "reportingEnabled": "Send anonymous error reports",
     "fileNameRegexPattern": "Filename Regex Pattern",
     "variables": "Variables",
     "locale": "Default Locale",
@@ -90,6 +91,7 @@
     }
   },
   "tooltips": {
+    "reportingEnabled": "Anonymous error reports will be send to AtroCore for faster problem identification and resolution.",
     "fileNameRegexPattern": "To enable only small letters with max. 24-symbol length use \"/^[a-z]{1,24}$/\".",
     "isStreamSide": "If enabled: Stream panel will be shown in side.",
     "isStreamPanelFirst": "If enabled: Stream panel will be shown right after overview.",
