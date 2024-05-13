@@ -314,7 +314,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.getMetadata().get(['clientDefs', this.entityType, 'showCompareAction'])) {
-                if (this.getAcl().check(this.entityType, 'create')) {
+                if (this.getAcl().check(this.entityType, 'create') && this.mode !== 'edit') {
                     let exists = false;
 
                     for (const item of (this.dropdownItemList || [])) {
