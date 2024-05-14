@@ -290,7 +290,7 @@ class Metadata
             return;
         }
 
-        if (!empty($this->container->get('memoryStorage')->get('ignorePushUiHandler'))){
+        if (!empty($this->container->get('memoryStorage')->get('ignorePushUiHandler'))) {
             return;
         }
 
@@ -418,19 +418,18 @@ class Metadata
 
     protected function addAdditionalFieldsObj($data)
     {
-        if (!isset($data->entityDefs)) {
+        if (!isset($data->entityDefs) || !is_object($data->entityDefs)) {
             return $data;
         }
 
         $fieldDefinitionList = Util::objectToArray($data->fields);
 
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
-            if (!isset($entityDefsItem->fields)) {
+            if (!isset($entityDefsItem->fields) || !is_object($entityDefsItem->fields)) {
                 continue;
             }
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
                 $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
-
                 if (!$additionalFields) {
                     continue;
                 }
@@ -774,7 +773,7 @@ class Metadata
                 foreach ($entityDefs['fields'] as $field => $fieldDefs) {
                     foreach ($fieldDefs as $param => $paramValue) {
                         if (in_array($param, $boolParameters) && $paramValue === false) {
-                            if(!empty($fieldDefs['type']) && $fieldDefs['type'] === 'bool' && $param === 'notNull' ){
+                            if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'bool' && $param === 'notNull') {
                                 continue;
                             }
                             unset($data['entityDefs'][$entityType]['fields'][$field][$param]);

@@ -55,7 +55,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             (this.selected || []).forEach(function (value) {
                 itemHtmlList.push(this.getItemHtml(value));
             }, this);
-            let isNull = this.model.get(this.name) === null || this.model.get(this.name) === undefined;
+
             return _.extend({
                 selected: this.selected,
                 translatedOptions: this.translatedOptions,
@@ -63,8 +63,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 itemHtmlList: itemHtmlList,
                 isEmpty: (this.selected || []).length === 0,
                 valueIsSet: this.model.has(this.name),
-                maxItemLength: this.maxItemLength,
-                isNull
+                maxItemLength: this.maxItemLength
             }, Dep.prototype.data.call(this));
         },
 

@@ -63,8 +63,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 data.value = value = this.model.get(this.name + 'OptionId');
             }
 
-            data.isNull = this.model.get(this.name) === null || this.model.get(this.name) === undefined;
-
             if (
                 value !== null
                 &&

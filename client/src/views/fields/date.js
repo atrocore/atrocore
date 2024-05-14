@@ -61,7 +61,6 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 this.searchData.dateValueTo = this.getDateTime().toDisplayDate(this.searchParams.dateValueTo);
             }
             data.dateValue = this.getDateStringValue();
-            data.isNull = this.model.get(this.name) === null || this.model.get(this.name) === undefined;
             return data;
         },
 
