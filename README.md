@@ -1,5 +1,11 @@
 ![Logo](_assets/atrocore-logo.svg)
 
+This repository is hosted on: https://gitlab.atrocore.com/atrocore/atrocore
+
+GitHub mirror: https://github.com/atrocore/atrocore
+
+> This repository is hosted by GitLab, we use GitHub to host its mirror. 
+
 ## What Is AtroCore? 
 
 AtroCore is an open-source software distributed under GPLv3 License for free.
@@ -110,7 +116,7 @@ Installation Guide is available [here](https://help.atrocore.com/installation-an
 
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
-## Ressources
+## Resources
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
 - Please visit our Help Center: https://help.atrocore.com/

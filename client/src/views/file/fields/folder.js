@@ -14,6 +14,10 @@ Espo.define('views/file/fields/folder', 'views/fields/link',
         setup() {
             Dep.prototype.setup.call(this);
 
+            if (this.model.get('reupload')) {
+                this.setReadOnly(true);
+            }
+
             if (this.mode === 'edit') {
                 const selectedFolderId = this.getStorage().get('selectedNodeId', 'File') || null;
                 if (selectedFolderId && this.model.isNew()) {

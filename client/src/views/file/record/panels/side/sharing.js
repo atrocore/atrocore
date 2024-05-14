@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/panels/sharing', 'views/record/panels/relationship', function (Dep) {
+Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relationship', Dep => {
 
     return Dep.extend({
 
@@ -50,12 +50,7 @@ Espo.define('views/record/panels/sharing', 'views/record/panels/relationship', f
                 collection.where = [
                     {
                         "type": "equals",
-                        "attribute": "entityType",
-                        "value": this.scope
-                    },
-                    {
-                        "type": "equals",
-                        "attribute": "entityId",
+                        "attribute": "fileId",
                         "value": this.model.get('id')
                     }
                 ];
@@ -123,9 +118,8 @@ Espo.define('views/record/panels/sharing', 'views/record/panels/relationship', f
             this.createView('quickCreate', viewName, {
                 scope: 'Sharing',
                 attributes: {
-                    entityType: this.scope,
-                    entityId: this.model.get('id'),
-                    type: "download"
+                    fileId: this.model.get('id'),
+                    fileName: this.model.get('name')
                 },
             }, function (view) {
                 view.render();

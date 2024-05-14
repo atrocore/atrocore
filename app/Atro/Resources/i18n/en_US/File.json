@@ -10,7 +10,6 @@
     "hash": "Hash",
     "fileSize": "File Size (bytes)",
     "fileMtime": "File Modification Date",
-    "private": "Private",
     "url": "URL"
   },
   "links": {
@@ -35,7 +34,8 @@
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",
-    "fileStorageCannotBeChanged": "The Storage cannot be changed.",
+    "fileStorageCannotBeChanged": "The File Storage cannot be changed.",
+    "fileFolderCannotBeChanged": "The File Folder cannot be changed.",
     "fileCreateFailed": "File create has been failed.",
     "fileRenameFailed": "File rename has been failed.",
     "fileDeleteFailed": "File delete has been failed.",

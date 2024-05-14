@@ -314,7 +314,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.getMetadata().get(['clientDefs', this.entityType, 'showCompareAction'])) {
-                if (this.getAcl().check(this.entityType, 'create')) {
+                if (this.getAcl().check(this.entityType, 'create') && this.mode !== 'edit') {
                     let exists = false;
 
                     for (const item of (this.dropdownItemList || [])) {
@@ -1125,7 +1125,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 entityType: this.entityType,
                 buttonList: this.buttonList,
                 buttonEditList: this.buttonEditList,
-                dropdownItemList: this.dropdownItemList,
+                dropdownItemList: this.isDropdownItemListEmpty() ? [] : this.dropdownItemList,
                 dropdownEditItemList: this.dropdownEditItemList,
                 dropdownItemListEmpty: this.isDropdownItemListEmpty(),
                 buttonsDisabled: this.buttonsDisabled,
@@ -1205,6 +1205,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         selected.push(option);
                     }
                 });
+                if(selected.length === 0){
+                    selected = [options[0]]
+                }
             }
 
             this.getStorage().set(filter.name, 'OverviewFilter', selected);
@@ -1294,6 +1297,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         isDropdownItemListEmpty: function () {
+            if (!this.model.id) {
+                return true;
+            }
+
             if (this.dropdownItemList.length === 0) {
                 return true;
             }

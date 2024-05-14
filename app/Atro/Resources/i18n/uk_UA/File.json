@@ -9,8 +9,7 @@
     "preview": "Попередній перегляд",
     "hash": "Хеш",
     "fileSize": "Розмір файлу (байт)",
-    "fileMtime": "Дата зміни файлу",
-    "private": "Приватний"
+    "fileMtime": "Дата зміни файлу"
   },
   "links": {
     "folder": "Папка",
@@ -34,7 +33,8 @@
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Розширення файлу не може бути змінено.",
-    "fileStorageCannotBeChanged": "Сховище не можна змінити.",
+    "fileStorageCannotBeChanged": "Сховище файлу не можна змінити.",
+    "fileFolderCannotBeChanged": "Папку файлу не можна змінити.",
     "fileCreateFailed": "Не вдалося створити файл.",
     "fileRenameFailed": "Не вдалося перейменувати файл.",
     "fileDeleteFailed": "Видалення файлу не вдалося.",

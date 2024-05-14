@@ -432,13 +432,17 @@
     "removeRelation": "Remove relation",
     "cancel": "Cancel",
     "remove": "Remove",
+    "massRemove": "Mass Remove",
     "merge": "Merge",
     "massUpdate": "Mass Update",
+    "update": "Mass Update",
     "export": "Export",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "restore": "Restore",
-    "delete": "Delete"
+    "massRestore": "Mass Restore",
+    "delete": "Delete",
+    "massDelete": "Mass Delete"
   },
   "fields": {
     "connection": "Connection",
@@ -1082,7 +1086,8 @@
     "notDashletService": "Service %s must implement Dashlet Interface",
     "editedByAnotherUser": "The data set [%s] has been changed in the meantime. You can <a href=\"javascript:\" onclick=\"location.reload();\">reload the page</a> to see the new values, return to editing by pressing \"Cancel\" or overwrite the data by pressing \"Apply\". Do you want to overwrite the data?",
     "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
-    "notUniqueValue": "The record cannot be created/updated due to database constraints."
+    "notUniqueValue": "The record cannot be created/updated due to database constraints.",
+    "attributeDoesNotExist": "Attribute \"{attribute}\" does not exist on the entity \"{entityType}\"."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

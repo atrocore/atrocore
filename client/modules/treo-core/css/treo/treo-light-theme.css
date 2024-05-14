@@ -15289,6 +15289,11 @@ table.table > thead th {
   min-width: 100%;
 }
 
+.bottom .list-container > .list > .table:not(.fixed-header-table),
+#main .list-container > .list > .table:not(.fixed-header-table) {
+  width: auto;
+}
+
 .dashlet .list-container > .list > .table:not(.fixed-header-table) {
     width: auto;
 }
@@ -22744,6 +22749,15 @@ ul.dropdown-menu > li.checkbox {
 
 #header .navbar > .navbar-header > a.navbar-brand, #header .navbar > .navbar-header > a.navbar-brand:active {
   color: #111111;
+}
+
+#header .nav.navbar-nav.navbar-right > li.queue-badge-container span.pause-icon,
+#header .header-right .queue-badge-container .pause-icon {
+  position: absolute;
+  top: 5%;
+  right: -5%;
+  z-index: 10;
+  color: #ef990e;
 }
 
 @media screen and (min-width: 768px) {

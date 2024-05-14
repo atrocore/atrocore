@@ -2,9 +2,6 @@
 	{{#if type}}
 	<div class="field-type">{{type}}</div>
 	{{/if}}
-	<div class="field-private">
-		<i class="fa {{#if private}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
-	</div>
 	<div class="actions">{{{rowActions}}}</div>
 	<div class="field-preview">
 		{{#if hasIcon}}

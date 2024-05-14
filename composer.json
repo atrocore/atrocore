@@ -32,7 +32,8 @@
     "symfony/workflow": "<=6.0.10",
     "phpseclib/phpseclib": "^3.0",
     "caxy/php-htmldiff": "^0.1.14",
-    "lazzard/php-ftp-client": "~1.7.0"
+    "lazzard/php-ftp-client": "~1.7.0",
+    "guzzlehttp/psr7": "^2.6.2"
   },
   "conflict": {
     "atrocore/pim": "<1.7.25"

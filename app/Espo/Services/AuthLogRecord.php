@@ -82,7 +82,7 @@ class AuthLogRecord extends Record
         }
 
         // delete forever
-        $daysToDeleteForever = $days + 14;
+        $daysToDeleteForever = $days + $this->getConfig()->get('authLogsDeletedMaxDays', 14);
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb
             ->delete('auth_log_record')

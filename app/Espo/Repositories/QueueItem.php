@@ -35,8 +35,11 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Atro\ActionTypes\Set;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\ORM\DB\RDB\Mapper;
+use Atro\Services\Action;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
@@ -95,6 +98,17 @@ class QueueItem extends Base
             if (empty($item) && file_exists(QueueManager::FILE_PATH)) {
                 unlink(QueueManager::FILE_PATH);
             }
+        }
+
+        if (in_array($entity->get('status'), ['Success', 'Failed'])) {
+            $className = $this->getMetadata()->get(['action', 'types', 'set']);
+            if (empty($className)) {
+                return;
+            }
+
+            /** @var Set $actionTypeService */
+            $actionTypeService = $this->getInjection('container')->get($className);
+            $actionTypeService->checkQueueItem($entity);
         }
     }
 

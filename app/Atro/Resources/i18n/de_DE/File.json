@@ -9,8 +9,7 @@
     "preview": "Vorschau",
     "hash": "Hash",
     "fileSize": "Dateigröße (Bytes)",
-    "fileMtime": "Datei-Änderungsdatum",
-    "private": "Privat"
+    "fileMtime": "Datei-Änderungsdatum"
   },
   "links": {
     "folder": "Ordner",
@@ -35,6 +34,7 @@
   "exceptions": {
     "fileExtensionCannotBeChanged": "Die Dateierweiterung kann nicht geändert werden.",
     "fileStorageCannotBeChanged": "Der Speicherplatz kann nicht geändert werden.",
+    "fileFolderCannotBeChanged": "Der Dateiordner kann nicht geändert werden.",
     "fileCreateFailed": "Das Erstellen der Datei ist fehlgeschlagen.",
     "fileRenameFailed": "Die Umbenennung der Datei ist fehlgeschlagen.",
     "fileDeleteFailed": "Das Löschen der Datei ist fehlgeschlagen.",

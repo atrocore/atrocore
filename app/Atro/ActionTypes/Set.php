@@ -15,6 +15,7 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Services\Action;
 use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
@@ -39,29 +40,109 @@ class Set implements TypeInterface
 
     public function executeNow(Entity $action, \stdClass $input): bool
     {
-        $collection = $this->getEntityManager()->getRepository('ActionSetLinker')
+        $linker = $this->getEntityManager()->getRepository('ActionSetLinker')
             ->where([
                 'setId'    => $action->get('id'),
                 'isActive' => true
             ])
             ->order('sortOrder', 'ASC')
-            ->find();
+            ->findOne();
 
-        if (empty($collection[0])) {
+        if (empty($linker)) {
+            return false;
+        }
+
+        $this->executeAction($linker);
+
+        return true;
+    }
+
+    /**
+     * @param Entity $current
+     *
+     * @return bool
+     *
+     * @throws \Atro\Core\Exceptions\Error
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    public function executeAction(Entity $current): bool
+    {
+        if ($current->getEntityType() != 'ActionSetLinker') {
+            return false;
+        }
+
+        if (empty($action = $current->get('action'))) {
             return false;
         }
 
         /** @var Action $actionService */
         $actionService = $this->getServiceFactory()->create('Action');
-        foreach ($collection as $entity) {
-            try {
-                $actionService->executeNow($entity->get('actionId'), new \stdClass());
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error("Set Action failed: " . $e->getMessage());
-            }
+
+        try {
+            $input = new \stdClass();
+            $input->actionSetLinkerId = $current->get('id');
+
+            $actionService->executeNow($action->get('id'), $input);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("Set Action failed: " . $e->getMessage());
+            return false;
+        }
+
+        if (empty($action->get('inBackground')) && !empty($next = $this->getNextAction($current))) {
+            return $this->executeAction($next);
         }
 
         return true;
+    }
+
+    public function getNextAction(Entity $entity): ?Entity
+    {
+        if ($entity->getEntityType() != 'ActionSetLinker') {
+            return null;
+        }
+
+        return $this
+            ->getEntityManager()
+            ->getRepository('ActionSetLinker')
+            ->where([
+                'setId'    => $entity->get('setId'),
+                'sortOrder>' => $entity->get('sortOrder'),
+                'isActive' => true
+            ])
+            ->order('sortOrder', 'ASC')
+            ->findOne();
+    }
+
+    public function checkQueueItem(Entity $entity): void
+    {
+        if ($entity->getEntityType() != 'QueueItem') {
+            return;
+        }
+
+        if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode($entity->get('data')), $matches)) {
+            return;
+        }
+
+        $actionSetLinkerId = $matches[1];
+
+        $current = $this->getEntityManager()->getEntity('ActionSetLinker', $actionSetLinkerId);
+
+        if (empty($current)) {
+            return;
+        }
+
+        $exist = $this
+            ->getEntityManager()
+            ->getRepository('QueueItem')
+            ->where([
+                'status' => ['Pending', 'Running'],
+                'data*' => '%"actionSetLinkerId":"' . $current->get('id') . '"%'
+            ])
+            ->find();
+
+        if (count($exist) == 0 && !empty($next = $this->getNextAction($current))) {
+            $this->executeAction($next);
+        }
     }
 
     protected function getEntityManager(): EntityManager

@@ -69,7 +69,7 @@ class Notification extends \Espo\Services\Record
         }
 
         // delete forever
-        $daysToDeleteForever = $days + 14;
+        $daysToDeleteForever = $days + $this->getConfig()->get('notificationsDeletedMaxDays', 14);
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb
             ->delete('notification')

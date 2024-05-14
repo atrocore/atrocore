@@ -30,40 +30,28 @@ class File extends Base
 
         $this->prepareThumbnailsPath($entity);
 
+        // validate via type
+        $this->validateByType($entity);
+
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('storageId')) {
                 throw new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File'));
             }
 
-            if ($entity->isAttributeChanged('name')) {
-                if ($this->isExtensionChanged($entity)) {
-                    throw new BadRequest($this->getInjection('language')->translate('fileExtensionCannotBeChanged', 'exceptions', 'File'));
+            if (!empty($entity->_input) && !empty($entity->_input->reupload)) {
+                if ($entity->isAttributeChanged('folderId')) {
+                    throw new BadRequest($this->getInjection('language')->translate('fileFolderCannotBeChanged', 'exceptions', 'File'));
                 }
-
-                if (!$this->isNameValid($entity)) {
-                    throw new BadRequest(
-                        sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $this->getConfig()->get('fileNameRegexPattern'))
-                    );
+                // recreate origin file
+                if (!$this->getStorage($entity)->reupload($entity)) {
+                    throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
                 }
-
-                if (!$this->getStorage($entity)->rename($entity)) {
-                    throw new BadRequest($this->getInjection('language')->translate('fileRenameFailed', 'exceptions', 'File'));
+            } else {
+                if ($entity->isAttributeChanged('name')) {
+                    $this->rename($entity);
                 }
             }
         } else {
-            // create origin file
-            if (empty($options['scanning']) && !$this->getStorage($entity)->create($entity)) {
-                throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
-            }
-        }
-
-        // validate via type
-        if ($entity->isAttributeChanged('typeId') && !empty($entity->get('typeId'))) {
-            $fileType = $this->getEntityManager()->getRepository('FileType')->get($entity->get('typeId'));
-            $this->getFileValidator()->validateFile($fileType, $entity, true);
-        }
-
-        if ($entity->isNew()) {
             // assign the file type automatically
             if (empty($entity->get('typeId'))) {
                 $fileTypes = $this->getEntityManager()->getRepository('FileType')
@@ -77,6 +65,11 @@ class File extends Base
                     }
                 }
             }
+
+            // create origin file
+            if (empty($options['scanning']) && !$this->getStorage($entity)->create($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
+            }
         }
     }
 
@@ -89,6 +82,31 @@ class File extends Base
                 $thumbnailsDirPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/');
                 $file->set('thumbnailsPath', $this->getPathBuilder()->createPath($thumbnailsDirPath . DIRECTORY_SEPARATOR));
             }
+        }
+    }
+
+    public function rename(FileEntity $file): void
+    {
+        if ($this->isExtensionChanged($file)) {
+            throw new BadRequest($this->getInjection('language')->translate('fileExtensionCannotBeChanged', 'exceptions', 'File'));
+        }
+
+        if (!$this->isNameValid($file)) {
+            throw new BadRequest(
+                sprintf($this->getInjection('language')->translate('fileNameNotValidByUserRegex', 'exceptions', 'File'), $this->getConfig()->get('fileNameRegexPattern'))
+            );
+        }
+
+        if (!$this->getStorage($file)->rename($file)) {
+            throw new BadRequest($this->getInjection('language')->translate('fileRenameFailed', 'exceptions', 'File'));
+        }
+    }
+
+    public function validateByType(FileEntity $file): void
+    {
+        if (!empty($file->get('typeId'))) {
+            $fileType = $this->getEntityManager()->getRepository('FileType')->get($file->get('typeId'));
+            $this->getFileValidator()->validateFile($fileType, $file, true);
         }
     }
 
@@ -120,7 +138,9 @@ class File extends Base
     {
         parent::beforeRemove($entity, $options);
 
-        $this->deleteFile($entity);
+        if (empty($options['keepFile'])) {
+            $this->deleteFile($entity);
+        }
     }
 
     public function deleteFile(FileEntity $entity): void

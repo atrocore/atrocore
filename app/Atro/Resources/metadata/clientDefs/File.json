@@ -30,19 +30,19 @@
       {
         "name": "preview",
         "label": "Preview",
-        "view": "views/file/fields/preview"
+        "view": "views/file/record/panels/side/preview"
       }
     ],
     "detail": [
       {
         "name": "preview",
         "label": "Preview",
-        "view": "views/file/fields/preview"
+        "view": "views/file/record/panels/side/preview"
       },
       {
         "name": "sharing",
         "label": "Sharing",
-        "view": "views/record/panels/sharing"
+        "view": "views/file/record/panels/side/sharing"
       },
       {
         "name": "customDownload",
@@ -54,7 +54,7 @@
       {
         "name": "preview",
         "label": "Preview",
-        "view": "views/file/fields/preview"
+        "view": "views/file/record/panels/side/preview"
       },
       {
         "name": "sharing",
@@ -112,7 +112,7 @@
           "conditionGroup": [
             {
               "type": "isNotEmpty",
-              "attribute": "hash"
+              "attribute": "createdAt"
             }
           ]
         }

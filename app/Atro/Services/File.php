@@ -150,7 +150,12 @@ class File extends Base
 
     protected function createFileEntity(\stdClass $attachment)
     {
-        $entity = parent::createEntity($attachment);
+        if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
+            $attachment->id = $attachment->reupload;
+            $entity = parent::updateEntity($attachment->id, $attachment);
+        } else {
+            $entity = parent::createEntity($attachment);
+        }
 
         if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return $entity;
@@ -163,34 +168,6 @@ class File extends Base
             if (!empty($duplicate)) {
                 $result['duplicate'] = $duplicate->toArray();
             }
-        }
-
-        /**
-         * If reupload
-         */
-        if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
-            $old = $this->getRepository()->get($attachment->reupload);
-            if (!empty($old)) {
-                $this->getRepository()->deleteFile($old);
-            }
-
-            // delete forever old record from DB
-            $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->delete('file')
-                ->where('id=:id')
-                ->setParameter('id', $attachment->reupload)
-                ->executeQuery();
-
-            // update ID for new file
-            $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->update('file')
-                ->set('id', ':id')
-                ->where('id=:newId')
-                ->setParameter('id', $attachment->reupload)
-                ->setParameter('newId', $result['id'])
-                ->executeQuery();
-
-            $result['id'] = $attachment->reupload;
         }
 
         return $result;

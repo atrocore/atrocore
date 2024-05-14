@@ -84,6 +84,10 @@ class Thumbnail
             return false;
         }
 
+        if ($this->isPdf($originFilePath)) {
+            $originFilePath = $this->createImageFromPdf($originFilePath);
+        }
+
         try {
             $image = new ImageResize($originFilePath);
         } catch (ImageResizeException $e) {
@@ -104,16 +108,12 @@ class Thumbnail
 
     protected function getImageFilePath(FileEntity $file): string
     {
-        if ($this->isPdf($file)) {
-            return $this->createImageFromPdf($file->getFilePath());
-        }
-
         return $file->getFilePath();
     }
 
-    protected function isPdf(FileEntity $file): bool
+    protected function isPdf(string $fileName): bool
     {
-        $parts = explode('.', $file->get('name'));
+        $parts = explode('.', $fileName);
 
         return strtolower(array_pop($parts)) === 'pdf';
     }

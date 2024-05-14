@@ -2,7 +2,7 @@
   "entity": true,
   "layouts": true,
   "tab": true,
-  "acl": false,
+  "acl": true,
   "customizable": false,
   "stream": false,
   "disabled": false,

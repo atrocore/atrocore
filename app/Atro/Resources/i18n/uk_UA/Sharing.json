@@ -2,19 +2,12 @@
   "fields": {
     "active": "Активно",
     "available": "Доступно",
-    "entityType": "Тип сутності",
-    "entityId": "ID сутності",
-    "type": "Тип",
     "validTill": "Доступно до",
     "allowedUsage": "Дозволено використовувати",
+    "used": "Використано",
     "link": "Посилання"
   },
   "labels": {
     "copiedToClipboard": "Скопійовано в буфер обміну"
-  },
-  "options": {
-    "type": {
-      "download": "Завантажити"
-    }
   }
 }

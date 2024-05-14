@@ -213,6 +213,7 @@ class Installer extends HasContainer
 
             // set installed
             $this->getConfig()->set('isInstalled', true);
+            $this->getConfig()->set('reportingEnabled', !empty($params['reportingEnabled']));
             $this->getConfig()->save();
         } catch (\Exception $e) {
             $GLOBALS['log']->error('Installer Error: ' . $e->getMessage() . ' | ' . $e->getTraceAsString());

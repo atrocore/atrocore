@@ -20,6 +20,36 @@ use Espo\Services\QueueManagerServiceInterface;
 
 class Storage extends Base implements QueueManagerServiceInterface
 {
+    public function unlinkAllFiles(string $storageId): bool
+    {
+        /** @var \Atro\Repositories\File $repo */
+        $repo = $this->getEntityManager()->getRepository('File');
+
+        $offset = 0;
+        $limit = 5000;
+
+        while (true) {
+            $files = $repo
+                ->where(['storageId' => $storageId])
+                ->limit($offset, $limit)
+                ->find();
+
+            if (empty($files[0])) {
+                break;
+            }
+
+            $offset = $offset + $limit;
+
+            foreach ($files as $file) {
+                if ($this->getAcl()->check($file, 'delete')) {
+                    $this->getEntityManager()->removeEntity($file, ['keepFile' => true]);
+                }
+            }
+        }
+
+        return true;
+    }
+
     public function createScanJob(string $storageId, bool $manual): bool
     {
         $storage = $this->getEntity($storageId);
