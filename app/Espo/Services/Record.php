@@ -3031,9 +3031,9 @@ class Record extends Base
             foreach ($passedAttributeList as $attribute) {
                 if (!$seed->hasAttribute($attribute)) {
                     throw new BadRequest(str_replace(
-                        ['{entityType}', '{attribute}'],
+                        ['{entityType}', '{field}'],
                         [$this->getEntityType(), $attribute],
-                        $this->getInjection('language')->translate('attributeDoesNotExist', 'exceptions')
+                        $this->getInjection('language')->translate('fieldDoesNotExist', 'exceptions')
                     ));
                 }
             }
