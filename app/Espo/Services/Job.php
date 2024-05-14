@@ -67,7 +67,7 @@ class Job extends Record
         }
 
         // delete forever
-        $daysToDeleteForever = $days + 14;
+        $daysToDeleteForever = $days + $this->getConfig()->get('jobsDeletedMaxDays', 14);
         $connection = $this->getEntityManager()->getConnection();
         $connection->createQueryBuilder()
             ->delete('job')

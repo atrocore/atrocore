@@ -86,7 +86,7 @@ class ActionHistoryRecord extends Record
         }
 
         // delete forever
-        $daysToDeleteForever = $days + 14;
+        $daysToDeleteForever = $days + $this->getConfig()->get('actionHistoryDeletedMaxDays', 14);
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb
             ->delete('action_history_record')
