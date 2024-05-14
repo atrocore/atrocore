@@ -103,7 +103,7 @@ Espo.define('views/file/record/plate', 'views/record/list',
         },
 
         getSelectAttributeList(callback) {
-            callback(['name', 'code', 'private', 'code', 'type', 'fileType', 'modifiedAt']);
+            callback(['name', 'type', 'modifiedAt']);
         },
 
         getRowContainerHtml(id) {
