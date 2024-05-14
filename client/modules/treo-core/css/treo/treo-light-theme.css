@@ -23363,3 +23363,7 @@ code.hljs {
   border: 1px dashed #bbb;
   opacity: .7
 }
+
+.text-gray{
+  color: #999;
+}

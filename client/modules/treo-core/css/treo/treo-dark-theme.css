@@ -22952,3 +22952,7 @@ div.list-kanban > div > table .item .panel .form-group {
     border: 1px dashed #bbb;
     opacity: .7
 }
+
+.text-gray{
+    color: #999;
+}

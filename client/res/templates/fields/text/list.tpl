@@ -4,4 +4,6 @@
     {{else}}
         <span class="complex-text">{{complexText value}}</span>
     {{/if}}
+{{else}}
+{{#if isNull}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}<span class="pre-label"> </span>{{/if}}
 {{/if}}

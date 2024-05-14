@@ -256,7 +256,7 @@ class FieldManagerController extends AbstractListener
          $query= $conn->createQueryBuilder()
                 ->update($conn->quoteIdentifier($table));
 
-        if($data->type === 'varchar'){
+        if(in_array($data->type, ['varchar', 'text', 'wysiwyg'])){
             $query->set($column, ':empty')
                 ->where("$column is NULL")
                 ->setParameter('empty','', ParameterType::STRING)

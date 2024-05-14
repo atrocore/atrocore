@@ -181,7 +181,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 name: this.name,
                 defs: this.defs,
                 params: this.params,
-                value: this.getValueForDisplay()
+                value: this.getValueForDisplay(),
+                isNull: this.model.get(this.name) === null || this.model.get(this.name) === undefined
             };
             if (this.mode === 'search') {
                 data.searchParams = this.searchParams;

@@ -2,6 +2,6 @@
 {{#if idValue}}
 {{#if value}}{{value}}{{else}}{{translate 'None'}}{{/if}}
 {{else}}
-    {{translate 'None'}}
+    {{#if isNull}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}<span class="pre-label"> </span>{{/if}}
 {{/if}}
 </a>
