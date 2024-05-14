@@ -316,7 +316,7 @@
     "Apply filter": "Застосувати фільтри",
     "Reset filter": "Скинути фільтри",
     "Dashboard": "Панелі віджетів",
-    "provideFeedback": "Зворотній зв'язок"
+    "Provide Feedback": "Зворотній зв'язок"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",

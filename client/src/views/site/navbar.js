@@ -472,7 +472,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             list.push({
                 action: 'openFeedbackModal',
-                label: this.getLanguage().translate('provideFeedback')
+                label: this.getLanguage().translate('Provide Feedback')
             });
 
             list.push({

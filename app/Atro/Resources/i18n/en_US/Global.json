@@ -317,7 +317,7 @@
     "Apply filter": "Apply filter",
     "Reset filter": "Reset filter",
     "Dashboard": "Dashboard",
-    "provideFeedback": "Provide Feedback"
+    "Provide Feedback": "Provide Feedback"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

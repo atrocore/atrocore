@@ -298,7 +298,7 @@
     "Apply filter": "Filter anwenden",
     "Reset filter": "Filter zurücksetzen",
     "Dashboard": "Dashboard",
-    "provideFeedback": "Feedback geben"
+    "Provide Feedback": "Feedback geben"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
