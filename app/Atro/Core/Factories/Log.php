@@ -68,7 +68,7 @@ class Log implements Factory
         }
 
         $log->pushHandler($handler);
-        if ($config->get('reportingEnabled', true)) {
+        if ($config->get('reportingEnabled', false)) {
             $log->pushHandler(new ReportingHandler($levelCode, (string)$config->get('appId')));
         }
         $errorHandler = new ErrorHandler($log);

@@ -129,9 +129,10 @@ class Cron extends AbstractConsole
 
     public function sendReports(): void
     {
-        if (!$this->getConfig()->get('reportingEnabled', true)) {
+        if (!$this->getConfig()->get('reportingEnabled', false)) {
             return;
         }
+
         $dir = ReportingHandler::REPORTING_PATH;
         $tmpDir = 'data/reporting-tmp';
 
