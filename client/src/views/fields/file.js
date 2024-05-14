@@ -65,6 +65,21 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 }, function (view) {
                     view.render();
                 });
+            },
+
+            'click a[data-action="showVideoPreview"]': function (e) {
+                e.preventDefault();
+
+                var id = this.model.get(this.idName);
+                this.createView('video-preview', 'views/modals/video-preview', {
+                    id: id,
+                    model: this.model,
+                    name: this.model.get(this.nameName),
+                    fileId: this.model.get(this.idName),
+                    url: this.getDownloadUrl(id)
+                }, function (view) {
+                    view.render();
+                });
             }
         },
 
@@ -144,9 +159,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         hasPreview: function (name) {
             const hasPreviewExtensions = this.getMetadata().get('app.file.image.hasPreviewExtensions') || [];
-            const fileExt = (name || '').split('.').pop().toLowerCase();
+            return $.inArray(this.getFileExtension(name), hasPreviewExtensions) !== -1;
+        },
 
-            return $.inArray(fileExt, hasPreviewExtensions) !== -1;
+        hasVideoPlayer: function (name) {
+            return (this.getMetadata().get('app.file.video.hasVideoPlayerExtensions') || []).includes(this.getFileExtension(name));
         },
 
         getValueForDisplay: function () {
@@ -161,6 +178,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 let html = '';
                 if (this.hasPreview(name) && this.getImageUrl(id, this.previewSize)) {
                     html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                } else if (this.hasVideoPlayer(name)) {
+                    html += `<div class="attachment-preview"><a data-action="showVideoPreview" href="${this.getDownloadUrl(id)}"><span class="fiv-cla fiv-icon-${this.getFileExtension(name)} fiv-size-lg"></span></a></div>`;
                 }
                 html += '<div style="padding-top: 5px;white-space: nowrap"><a href="' + this.getDownloadUrl(id) + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" title="' + name + '">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
 
@@ -170,6 +189,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         getFilePathsData: function () {
             return this.model.get(this.namePathsData);
+        },
+
+        getFileExtension: function (name) {
+            return (name || '').split('.').pop().toLowerCase();
         },
 
         isCalledForList: function () {
