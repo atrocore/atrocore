@@ -88,7 +88,7 @@
   },
   "collection": {
     "sortBy": "createdAt",
-    "asc": true
+    "asc": false
   },
   "indexes": {
     "createdAt": {
