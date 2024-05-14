@@ -109,11 +109,11 @@ class Cron extends AbstractConsole
         // find and close queue item that doe not running
         $this->closeFailedQueueItems();
 
-        // run cron jobs
-        $this->runCronManager();
-
         // send reports
         $this->sendReports();
+
+        // run cron jobs
+        $this->runCronManager();
     }
 
     /**
@@ -153,8 +153,7 @@ class Cron extends AbstractConsole
                 $fileName = $tmpDir . DIRECTORY_SEPARATOR . $file;
 
                 Util::createDir($tmpDir);
-                if (file_exists($originalFileName)) {
-                    rename($originalFileName, $fileName);
+                if (file_exists($originalFileName) && rename($originalFileName, $fileName)) {
                     $handle = fopen($fileName, "r");
                     if ($handle) {
                         while (($line = fgets($handle)) !== false) {
