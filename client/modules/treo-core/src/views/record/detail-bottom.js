@@ -260,7 +260,7 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                     p.view = bottomPanelOptions ? 'views/record/panels/bottom' : 'views/record/panels/relationship';
                 }
 
-                p.canClose = this.canClose
+                p.canClose = p.canClose ?? this.canClose
                 p.order = 5;
                 if(p.hiddenPerDefault === true
                     && !this.isPanelHiddenPerDefault(p.name)){
