@@ -153,7 +153,7 @@ class Cron extends AbstractConsole
                 $fileName = $tmpDir . DIRECTORY_SEPARATOR . $file;
 
                 Util::createDir($tmpDir);
-                if (file_exists($originalFileName) && rename($originalFileName, $fileName)) {
+                if (file_exists($originalFileName) && is_dir($tmpDir) && rename($originalFileName, $fileName)) {
                     $handle = fopen($fileName, "r");
                     if ($handle) {
                         while (($line = fgets($handle)) !== false) {
