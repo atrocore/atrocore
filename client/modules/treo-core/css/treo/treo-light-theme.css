@@ -14743,6 +14743,10 @@ body > #header .navbar-brand span.home-icon {
     right: 34px;
     width: 34px;
   }
+  #header .navbar-right .quick-create-container.open > ul.dropdown-menu {
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
   #header .navbar-right .menu-container {
     position: fixed;
     top: 0;
