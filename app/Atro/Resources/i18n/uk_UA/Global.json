@@ -315,7 +315,8 @@
     "mobileTextFilterPlaceholder": "Натисніть Enter...",
     "Apply filter": "Застосувати фільтри",
     "Reset filter": "Скинути фільтри",
-    "Dashboard": "Панелі віджетів"
+    "Dashboard": "Панелі віджетів",
+    "Provide Feedback": "Зворотній зв'язок"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",

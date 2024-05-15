@@ -316,7 +316,8 @@
     "mobileTextFilterPlaceholder": "Type and press Enter...",
     "Apply filter": "Apply filter",
     "Reset filter": "Reset filter",
-    "Dashboard": "Dashboard"
+    "Dashboard": "Dashboard",
+    "Provide Feedback": "Provide Feedback"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

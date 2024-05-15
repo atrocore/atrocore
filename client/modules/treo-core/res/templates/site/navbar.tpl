@@ -108,6 +108,11 @@
                     {{/each}}
                 </ul>
             </li>
+            <li class="open-feedback-dialog hidden-xs">
+                <a href="javascript:" class="action notifications-button" data-action="openFeedbackModal">
+                    <i class="fas fa-comment"></i>
+                </a>
+            </li>
             {{#if lastViewed}}
             <li class="dropdown hidden-xs last-viewed-badge-container">
                 {{{lastViewedBadge}}}
@@ -127,6 +132,7 @@
             <li class="dropdown notifications-badge-container hidden-xs">
                 {{{notificationsBadge}}}
             </li>
+
             {{#if globalSearch}}
             <li class="nav navbar-nav navbar-form global-search-container">
                 {{{globalSearch}}}

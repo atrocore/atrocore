@@ -23367,3 +23367,20 @@ code.hljs {
   border: 1px dashed #bbb;
   opacity: .7
 }
+
+.feedbackContainer a {
+  z-index:10;
+  position: absolute;
+  top: 20px;
+  left: 10px;
+}
+
+.feedbackContainer a span {
+  font-size: 35px;
+}
+
+.feedbackContainer iframe {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
