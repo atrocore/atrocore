@@ -33,9 +33,6 @@
 
 namespace Espo\Controllers;
 
-use Atro\Core\Exceptions\Error,
-    \ Atro\Core\Exceptions\Forbidden;
-
 class GlobalSearch extends \Espo\Core\Controllers\Base
 {
     public function actionSearch($params, $data, $request)
