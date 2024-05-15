@@ -69,6 +69,10 @@ class Config
 
     protected $customStylesheetDir = 'css/treo/';
 
+    protected $customHeadScriptsDir = 'js/atro/';
+
+    protected $customHeadScriptsFilename = 'atro-head-scripts.js';
+
     protected $customStyleFields = [
         'navigationManuBackgroundColor',
         'navigationMenuFontColor',
@@ -417,6 +421,7 @@ class Config
         $data = array_merge($this->loadConfig(), $this->loadLocales(), $this->loadInterfaceLocales());
 
         $data = $this->prepareStylesheetConfigForOutput($data);
+        $data = $this->prepareCustomHeadScriptsForOutput($data);
 
         $restrictedConfig  = $data;
         foreach($this->getRestrictItems($isAdmin) as $name) {
@@ -451,6 +456,7 @@ class Config
         }
 
         $values = $this->prepareStylesheetConfigForSave($values);
+        $values = $this->prepareCustomHeadScriptsForSave($values);
 
         return $this->set($values);
     }
@@ -484,6 +490,17 @@ class Config
         return rtrim($this->get('siteUrl'), '/');
     }
 
+    public function getCustomHeadScripts(): ?string
+    {
+        $path = $this->getCustomHeadScriptsPath();
+
+        if (!empty($path) && file_exists($path)) {
+            return file_get_contents($path);
+        }
+
+        return null;
+    }
+
     protected function prepareStylesheetConfigForOutput(array $data): array
     {
         $theme = $this->get('theme');
@@ -503,6 +520,13 @@ class Config
                 $data[$item] = $themeData[$item];
             }
         }
+
+        return $data;
+    }
+
+    protected function prepareCustomHeadScriptsForOutput(array $data): array
+    {
+        $data['customHeadCode'] = $this->getCustomHeadScripts();
 
         return $data;
     }
@@ -537,6 +561,22 @@ class Config
         return $data;
     }
 
+    protected function prepareCustomHeadScriptsForSave(array $data): array
+    {
+        // create custom head scripts file
+        if (isset($data['customHeadCode'])) {
+            Util::createDir($this->customHeadScriptsDir);
+
+            $path = $this->getCustomHeadScriptsPath();
+
+            file_put_contents($path, $data['customHeadCode']);
+            $data['customHeadCodePath'] = $path;
+        }
+        unset($data['customHeadCode']);
+
+        return $data;
+    }
+
     protected function getCustomStylesheetFilename(): ?string
     {
         return $this->getMetadata()->get(['themes', $this->get('theme'), 'customStylesheetName']);
@@ -545,6 +585,11 @@ class Config
     protected function getCustomStylesheetPath(): string
     {
         return $this->customStylesheetDir . $this->getCustomStylesheetFilename();
+    }
+
+    protected function getCustomHeadScriptsPath(): string
+    {
+        return $this->customHeadScriptsDir . $this->customHeadScriptsFilename;
     }
 
     protected function getMetadata(): Metadata

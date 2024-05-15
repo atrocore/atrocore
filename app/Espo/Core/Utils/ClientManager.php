@@ -137,6 +137,13 @@ class ClientManager
         } else {
             $html = str_replace('{{customStylesheet}}', '', $html);
         }
+
+        if (!empty($customHeadCode = $this->getConfig()->getCustomHeadScripts())) {
+            $html = str_replace('{{customHeadCode}}', $customHeadCode, $html);
+        } else {
+            $html = str_replace('{{customHeadCode}}', '', $html);
+        }
+
         if ($isDeveloperMode) {
             $html = str_replace('{{useCacheInDeveloperMode}}', $this->getConfig()->get('useCacheInDeveloperMode') ? 'true' : 'false', $html);
         }

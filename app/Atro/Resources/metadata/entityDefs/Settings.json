@@ -355,6 +355,14 @@
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
       "noLoad": true
+    },
+    "customHeadCode": {
+      "type": "text",
+      "tooltip": true
+    },
+    "customHeadCodePath": {
+      "type": "varchar",
+      "readOnly": true
     }
   },
   "links": {
