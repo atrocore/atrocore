@@ -6,12 +6,18 @@
     "fields": "Fields",
     "relationships": "Relation panels",
     "conditionsType": "Conditions Type",
-    "conditions": "Conditions"
+    "conditions": "Conditions",
+    "triggerAction": "Trigger Action",
+    "triggerFields": "Trigger Fields"
   },
   "options": {
     "conditionsType": {
       "basic": "Basic",
       "script": "Script"
+    },
+    "triggerAction": {
+      "onChange": "On Field Change",
+      "onFocus": "On Field Focus "
     }
   },
   "exceptions": {

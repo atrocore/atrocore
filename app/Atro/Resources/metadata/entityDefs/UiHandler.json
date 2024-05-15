@@ -14,6 +14,23 @@
       "required": true,
       "dropdown": true
     },
+    "triggerAction": {
+      "type": "multiEnum",
+      "required": true,
+      "optionsIds": [
+        "onChange",
+        "onFocus"
+      ],
+      "options": [
+        "onChange",
+        "onFocus"
+      ]
+    },
+    "triggerFields": {
+      "type": "array",
+      "view": "views/fields/entity-fields",
+      "required": false
+    },
     "entityType": {
       "type": "varchar",
       "view": "views/fields/entity-type",
