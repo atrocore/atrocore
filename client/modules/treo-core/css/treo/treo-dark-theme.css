@@ -14999,6 +14999,11 @@ body > #header .navbar-brand span.home-icon {
         width: 34px
     }
 
+    #header .navbar-right .quick-create-container.open > ul.dropdown-menu {
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+    }
+
     #header .navbar-right .menu-container {
         position: fixed;
         top: 0;
