@@ -14743,6 +14743,10 @@ body > #header .navbar-brand span.home-icon {
     right: 34px;
     width: 34px;
   }
+  #header .navbar-right .quick-create-container.open > ul.dropdown-menu {
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
   #header .navbar-right .menu-container {
     position: fixed;
     top: 0;
@@ -23366,4 +23370,21 @@ code.hljs {
 
 .text-gray{
   color: #999;
+}
+
+.feedbackContainer a {
+  z-index:10;
+  position: absolute;
+  top: 20px;
+  left: 10px;
+}
+
+.feedbackContainer a span {
+  font-size: 35px;
+}
+
+.feedbackContainer iframe {
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }

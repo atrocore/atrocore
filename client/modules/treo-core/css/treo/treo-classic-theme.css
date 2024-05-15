@@ -14936,6 +14936,11 @@ body > #header .navbar-brand span.home-icon {
         width: 34px
     }
 
+    #header .navbar-right .quick-create-container.open > ul.dropdown-menu {
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+    }
+
     #header .navbar-right .menu-container {
         position: fixed;
         top: 0;
@@ -22930,4 +22935,28 @@ div.list-kanban > div > table .item .panel .form-group {
 
 .text-gray{
     color: #999;
+}
+
+.feedbackContainer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    padding: 0 !important;
+}
+
+.feedbackContainer a {
+    z-index:10;
+    position: absolute;
+    top: 20px;
+    left: 10px;
+}
+
+.feedbackContainer a span {
+    font-size: 35px;
+}
+
+.feedbackContainer iframe {
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }
