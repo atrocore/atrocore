@@ -24,6 +24,8 @@ class V1Dot10Dot14 extends Base
 
             $columns = $this->createCustomColumns($metadata);
             $this->importCustomFieldsValues($columns);
+
+            $this->updateComposer('atrocore/core', '^1.10.14');
         }
     }
 
