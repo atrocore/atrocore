@@ -22958,6 +22958,10 @@ div.list-kanban > div > table .item .panel .form-group {
     opacity: .7
 }
 
+.text-gray{
+    color: #999;
+}
+
 .feedbackContainer a {
     z-index:10;
     position: absolute;

@@ -6,6 +6,11 @@
       "default": false
     },
     {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
       "name": "measure",
       "type": "link",
       "entity": "Measure",

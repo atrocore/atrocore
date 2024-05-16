@@ -22933,6 +22933,10 @@ div.list-kanban > div > table .item .panel .form-group {
     opacity: .7
 }
 
+.text-gray{
+    color: #999;
+}
+
 .feedbackContainer {
     position: relative;
     height: 100%;
@@ -22956,4 +22960,3 @@ div.list-kanban > div > table .item .panel .form-group {
     height: 100%;
     width: 100%;
 }
-
