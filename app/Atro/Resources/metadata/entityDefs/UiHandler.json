@@ -39,16 +39,10 @@
       "view": "views/ui-handler/fields/entity-relationships"
     },
     "conditionsType": {
-      "type": "enum",
+      "type": "extensibleEnum",
+      "extensibleEnumId": "conditions_type",
       "required": true,
-      "optionsIds": [
-        "basic",
-        "script"
-      ],
-      "options": [
-        "basic",
-        "script"
-      ]
+      "dropdown": true
     },
     "hash": {
       "type": "varchar",

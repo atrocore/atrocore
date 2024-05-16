@@ -8,12 +8,6 @@
     "conditionsType": "Konditionstyp",
     "conditions": "Konditionen"
   },
-  "options": {
-    "conditionsType": {
-      "basic": "Basic",
-      "script": "Skript"
-    }
-  },
   "exceptions": {
     "systemHandler": "Der Handler '%s' wird vom System benötigt und kann nicht geändert oder gelöscht werden."
   },

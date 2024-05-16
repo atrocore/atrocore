@@ -75,5 +75,19 @@
     "name": "Delivery",
     "code": "delivery",
     "sortOrder": 20
+  },
+  {
+    "id": "basic",
+    "extensibleEnumIds": ["update_type", "conditions_type"],
+    "name": "Basic",
+    "code": "basic",
+    "sortOrder": 0
+  },
+  {
+    "id": "script",
+    "extensibleEnumIds": ["update_type", "conditions_type"],
+    "name": "Script",
+    "code": "script",
+    "sortOrder": 10
   }
 ]

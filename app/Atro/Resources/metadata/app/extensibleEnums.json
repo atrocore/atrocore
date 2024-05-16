@@ -28,5 +28,15 @@
     "id": "fileTags",
     "name": "File Tags",
     "multilingual": false
+  },
+  {
+    "id": "update_type",
+    "name": "Update Type",
+    "multilingual": false
+  },
+  {
+    "id": "conditions_type",
+    "name": "Conditions Type",
+    "multilingual": false
   }
 ]
