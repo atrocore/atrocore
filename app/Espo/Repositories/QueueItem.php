@@ -39,7 +39,6 @@ use Atro\ActionTypes\Set;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\ORM\DB\RDB\Mapper;
-use Atro\Services\Action;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
@@ -53,6 +52,38 @@ class QueueItem extends Base
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if (!$entity->isNew() && $entity->isAttributeChanged('status')) {
+            $transitions = [
+                "Running"  => [
+                    "Pending"
+                ],
+                "Success"  => [
+                    "Running"
+                ],
+                "Canceled" => [
+                    "Pending",
+                    "Running"
+                ],
+                "Failed"   => [
+                    "Pending",
+                    "Running"
+                ],
+                "Pending"  => [
+                    "Success",
+                    "Canceled",
+                    "Failed"
+                ]
+            ];
+
+            if (!isset($transitions[$entity->get('status')])) {
+                throw new Error("Unknown status '{$entity->get('status')}'.");
+            }
+
+            if (!in_array($entity->getFetched('status'), $transitions[$entity->get('status')])) {
+                throw new Error("It is impossible to change the status from '{$entity->getFetched('status')}' to '{$entity->get('status')}'.");
+            }
+        }
+
         // update sort order
         if ($entity->isNew()) {
             $sortOrder = time() - (new \DateTime('2023-01-01'))->getTimestamp();
@@ -158,19 +189,19 @@ class QueueItem extends Base
 
     protected function preparePublicDataForMassAction(Entity $entity): void
     {
-        if (!in_array($entity->get('serviceName'), ['MassDelete','MassRestore','MassUpdate'])){
+        if (!in_array($entity->get('serviceName'), ['MassDelete', 'MassRestore', 'MassUpdate'])) {
             return;
         }
 
-        if(in_array($entity->get('status'), ['Pending', 'Running'])|| empty($entity->get('data'))){
+        if (in_array($entity->get('status'), ['Pending', 'Running']) || empty($entity->get('data'))) {
             return;
         }
 
         $data = json_decode(json_encode($entity->get('data')), true);
 
-        if(!empty($data['entityType'])){
+        if (!empty($data['entityType'])) {
             $publicData = DataManager::getPublicData(lcfirst($entity->get('serviceName')));
-            if(!empty($publicData[$data['entityType']]['jobIds'])){
+            if (!empty($publicData[$data['entityType']]['jobIds'])) {
                 $jobIds = $publicData[$data['entityType']]['jobIds'];
                 $ongoingJob = $this->getConnection()
                     ->createQueryBuilder()
@@ -180,11 +211,11 @@ class QueueItem extends Base
                     ->andWhere('status IN (:status)')
                     ->andWhere('deleted=:false')
                     ->setParameter('jobIds', $jobIds, Mapper::getParameterType($jobIds))
-                    ->setParameter('status', ['Pending','Running'], Connection::PARAM_STR_ARRAY)
+                    ->setParameter('status', ['Pending', 'Running'], Connection::PARAM_STR_ARRAY)
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchOne();
 
-                if(empty($ongoingJob)){
+                if (empty($ongoingJob)) {
                     QueueManagerBase::updatePublicData(lcfirst($entity->get('serviceName')), $data['entityType'], null);
                 }
             }
