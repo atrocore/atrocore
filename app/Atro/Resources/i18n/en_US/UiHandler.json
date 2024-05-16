@@ -3,11 +3,11 @@
     "isActive": "Active",
     "type": "Type",
     "entityType": "Entity",
-    "fields": "Fields",
+    "fields": "Target  Fields",
     "relationships": "Relation panels",
     "conditionsType": "Conditions Type",
     "conditions": "Conditions",
-    "triggerAction": "Trigger Action",
+    "triggerAction": "Trigger",
     "triggerFields": "Trigger Fields"
   },
   "options": {
@@ -16,7 +16,7 @@
       "script": "Script"
     },
     "triggerAction": {
-      "onChange": "On Field Change",
+      "onChange": "On Field Load/Change",
       "onFocus": "On Field Focus "
     }
   },

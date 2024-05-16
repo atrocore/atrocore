@@ -23,21 +23,21 @@
   {
     "id": "ui_visible",
     "extensibleEnumId": "ui_handler_type",
-    "name": "Visible",
+    "name": "Make Visible",
     "code": "visible",
     "sortOrder": 0
   },
   {
     "id": "ui_required",
     "extensibleEnumId": "ui_handler_type",
-    "name": "Required",
+    "name": "Make Required",
     "code": "required",
     "sortOrder": 10
   },
   {
     "id": "ui_read_only",
     "extensibleEnumId": "ui_handler_type",
-    "name": "Read-only",
+    "name": "Make Read-only",
     "code": "readOnly",
     "sortOrder": 20
   },

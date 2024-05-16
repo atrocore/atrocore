@@ -31,6 +31,36 @@ class V1Dot10Dot15 extends Base
             $this->exec("ALTER TABLE ui_handler ADD trigger_action LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
             $this->exec("ALTER TABLE ui_handler ADD trigger_fields LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
         }
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('ui_handler')
+            ->set('trigger_action', ':val')
+            ->setParameter('val', '["onChange"]')
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('extensible_enum_option')
+            ->set('name', ':name')
+            ->where('id = :id')
+            ->setParameter('name', 'Make Visible')
+            ->setParameter('id', 'ui_visible')
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('extensible_enum_option')
+            ->set('name', ':name')
+            ->where('id = :id')
+            ->setParameter('name', 'Make Required')
+            ->setParameter('id', 'ui_required')
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('extensible_enum_option')
+            ->set('name', ':name')
+            ->where('id = :id')
+            ->setParameter('name', 'Make Read-only')
+            ->setParameter('id', 'ui_read_only')
+            ->executeQuery();
     }
 
     public function down(): void
