@@ -471,6 +471,15 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             });
 
             list.push({
+                action: 'openFeedbackModal',
+                label: this.getLanguage().translate('Provide Feedback')
+            });
+
+            list.push({
+                divider: true
+            });
+
+            list.push({
                 link: '#logout',
                 label: this.getLanguage().translate('Log Out')
             });
@@ -529,6 +538,13 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 });
             });
         },
+        actionOpenFeedbackModal(data, el){
+            this.notify('Loading...')
+            this.createView('feedbackDialog','views/modals/feedback',{}, view => {
+                view.render()
+                setTimeout(() => this.notify(false),2000)
+            })
+        }
 
     });
 
