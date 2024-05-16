@@ -49,13 +49,6 @@
     "sortOrder": 10
   },
   {
-    "id": "ui_on_focus",
-    "extensibleEnumId": "ui_trigger",
-    "name": "On Focus",
-    "code": "ui_on_focus",
-    "sortOrder": 20
-  },
-  {
     "id": "supplier",
     "extensibleEnumId": "role",
     "name": "Supplier",
