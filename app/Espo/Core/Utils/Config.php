@@ -71,7 +71,7 @@ class Config
 
     protected $customHeadCodeDir = 'code/atro/';
 
-    protected $customHeadCodeFilename = 'atro-head-code.txt';
+    protected $customHeadCodeFilename = 'atro-head-code.html';
 
     protected $customStyleFields = [
         'navigationManuBackgroundColor',
