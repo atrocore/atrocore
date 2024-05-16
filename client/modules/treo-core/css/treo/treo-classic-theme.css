@@ -22130,6 +22130,18 @@ code.became, span.became {
     overflow-x: auto;
 }
 
+.file-link {
+    padding-top: 5px;
+    white-space: nowrap;
+}
+
+code.was .file-link,
+span.was .file-link,
+code.became .file-link,
+span.became .file-link {
+    display: inline-block
+}
+
 @media screen and (max-width: 768px) {
     .content {
         position: relative;

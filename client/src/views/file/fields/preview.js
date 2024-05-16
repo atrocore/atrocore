@@ -40,6 +40,10 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
             return (this.getMetadata().get('app.file.image.hasPreviewExtensions') || []).includes(this.model.get('extension'));
         },
 
+        hasVideoPlayer: function () {
+            return (this.getMetadata().get('app.file.video.hasVideoPlayerExtensions') || []).includes(this.model.get('extension'));
+        },
+
         getValueForDisplay: function () {
             if (this.mode === 'list') {
                 let id = this.model.get(this.idName);
@@ -50,7 +54,7 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
                 if (this.hasImagePreview() && this.getImageUrl(id, this.previewSize)) {
                     return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
                 } else {
-                    return '<a href="' + this.getDownloadUrl(id) + '" target="_blank"><span class="fiv-cla fiv-icon-' + this.model.get('extension') + ' fiv-size-lg"></span></a>';
+                    return '<a' + (this.hasVideoPlayer() ? ' data-action="showVideoPreview"' : '') + ' href="' + this.getDownloadUrl(id) + '"><span class="fiv-cla fiv-icon-' + this.model.get('extension') + ' fiv-size-lg"></span></a>';
                 }
             }
         },
