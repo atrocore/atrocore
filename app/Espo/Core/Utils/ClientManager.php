@@ -138,7 +138,7 @@ class ClientManager
             $html = str_replace('{{customStylesheet}}', '', $html);
         }
 
-        if (!empty($customHeadCode = $this->getConfig()->getCustomHeadScripts())) {
+        if (!empty($customHeadCode = $this->getConfig()->getCustomHeadCode())) {
             $html = str_replace('{{customHeadCode}}', $customHeadCode, $html);
         } else {
             $html = str_replace('{{customHeadCode}}', '', $html);
