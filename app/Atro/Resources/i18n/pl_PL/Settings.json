@@ -77,7 +77,8 @@
     "success": "Sukces",
     "notice": "Ogłoszenie",
     "information": "Informacja",
-    "error": "Błąd"
+    "error": "Błąd",
+    "customHeadCode": "Kod Head"
   },
   "links": {
     "variables": "Zmienne"
@@ -105,7 +106,8 @@
     "authTokenPreventConcurrent": "Użytkownicy nie będą mogli być zalogowani na kilku urządzeniach jednocześnie.",
     "emailAddressIsOptedOutByDefault": "Tworząc nowy rekord, adres e-mail będzie oznaczony jako zrezygnowany.",
     "cleanupDeletedRecords": "Usunięte rekordy zostaną usunięte z bazy danych po pewnym czasie.",
-    "customStylesheetPath": "Twoje niestandardowe style CSS zostaną zapisane w tym pliku. Możesz w nim również dokonywać zmian bezpośrednio."
+    "customStylesheetPath": "Twoje niestandardowe style CSS zostaną zapisane w tym pliku. Możesz w nim również dokonywać zmian bezpośrednio.",
+    "customHeadCode": "Dodaj kod na końcu znacznika <head>. Atrocore nie weryfikuje niestandardowego kodu, więc upewnij się, że sprawdziłeś swój kod przed opublikowaniem."
   },
   "labels": {
     "confirmLocaleChanges": "Jeśli język zostanie usunięty, wszystkie dane wcześniej wprowadzone w polach wielojęzycznych dla tej lokalizacji zostaną automatycznie usunięte za pomocą <a href=\"/#ScheduledJob\" target=\"_blank\">zadania cron</a>.",
@@ -126,7 +128,8 @@
     "Connecting": "Łączenie...",
     "Activities": "Aktywności",
     "Admin Notifications": "Powiadomienia dla administratora",
-    "Theme Configuration": "Konfiguracja motywu"
+    "Theme Configuration": "Konfiguracja motywu",
+    "Custom Code": "Kod niestandardowy"
   },
   "messages": {
     "languageMustBeSelected": "Należy wybrać przynajmniej jeden język."

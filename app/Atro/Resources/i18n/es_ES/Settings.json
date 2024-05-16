@@ -73,7 +73,8 @@
     "notice": "Aviso",
     "information": "Información",
     "error": "Error",
-    "locale": "Localización por defecto"
+    "locale": "Localización por defecto",
+    "customHeadCode": "Código de la Head"
   },
   "tooltips": {
     "recordsPerPage": "Número de registros a mostrar inicialmente en las vistas.",
@@ -91,7 +92,8 @@
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
     "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
-    "customStylesheetPath": "Sus estilos CSS personalizados se escribirán en este archivo. También puede realizar cambios en él directamente."
+    "customStylesheetPath": "Sus estilos CSS personalizados se escribirán en este archivo. También puede realizar cambios en él directamente.",
+    "customHeadCode": "Añade el código al final de la etiqueta <head>. Atrocore no valida el código personalizado por ti, así que asegúrate de comprobar tu código antes de publicarlo."
   },
   "labels": {
     "System": "Sistema",
@@ -110,7 +112,8 @@
     "notAllowByContentAndName": "Not allow, check by file name + file content",
     "allow": "Allow",
     "SMTP": "SMTP",
-    "Theme Configuration": "Configuración del tema"
+    "Theme Configuration": "Configuración del tema",
+    "Custom Code": "Código personalizado"
   },
   "messages": {
     "languageMustBeSelected": "At least one language should be selected."
