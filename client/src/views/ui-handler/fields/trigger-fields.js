@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/ui-handler/fields/entity-fields', 'views/fields/entity-fields', Dep => {
+Espo.define('views/ui-handler/fields/trigger-fields', 'views/fields/entity-fields', Dep => {
 
     return Dep.extend({
 

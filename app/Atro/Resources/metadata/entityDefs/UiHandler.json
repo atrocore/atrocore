@@ -22,7 +22,7 @@
     },
     "triggerFields": {
       "type": "array",
-      "view": "views/ui-handler/fields/entity-fields",
+      "view": "views/ui-handler/fields/trigger-fields",
       "required": false
     },
     "entityType": {
@@ -32,7 +32,7 @@
     },
     "fields": {
       "type": "array",
-      "view": "views/fields/entity-fields"
+      "view": "views/ui-handler/fields/target-fields"
     },
     "relationships": {
       "type": "array",
