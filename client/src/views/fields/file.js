@@ -166,6 +166,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             return (this.getMetadata().get('app.file.video.hasVideoPlayerExtensions') || []).includes(this.getFileExtension(name));
         },
 
+        isParentNoteUpdatedType: function () {
+            const parentView = this.getParentView();
+            return parentView && (parentView.messageName ?? null) === 'updateFromToThis';
+        },
+
         getValueForDisplay: function () {
             if (this.mode === 'detail' || this.mode === 'list') {
                 let id = this.model.get(this.idName);
@@ -178,7 +183,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 let html = '';
                 if (this.hasPreview(name) && this.getImageUrl(id, this.previewSize)) {
                     html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
-                } else if (this.hasVideoPlayer(name)) {
+                } else if (this.hasVideoPlayer(name) && !this.isParentNoteUpdatedType()) {
                     html += `<div class="attachment-preview"><a data-action="showVideoPreview" href="${this.getDownloadUrl(id)}"><span class="fiv-cla fiv-icon-${this.getFileExtension(name)} fiv-size-lg"></span></a></div>`;
                 }
                 html += '<div style="padding-top: 5px;white-space: nowrap"><a href="' + this.getDownloadUrl(id) + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" title="' + name + '">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
