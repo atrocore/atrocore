@@ -186,7 +186,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 } else if (this.hasVideoPlayer(name) && !this.isParentNoteUpdatedType()) {
                     html += `<div class="attachment-preview"><a data-action="showVideoPreview" href="${this.getDownloadUrl(id)}"><span class="fiv-cla fiv-icon-${this.getFileExtension(name)} fiv-size-lg"></span></a></div>`;
                 }
-                html += '<div style="padding-top: 5px;white-space: nowrap"><a href="' + this.getDownloadUrl(id) + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" title="' + name + '">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
+                html += '<div class="file-link"><a href="' + this.getDownloadUrl(id) + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" title="' + name + '">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
 
                 return html;
             }
