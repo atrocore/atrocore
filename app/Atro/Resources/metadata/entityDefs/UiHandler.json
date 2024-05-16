@@ -62,6 +62,18 @@
       "type": "wysiwyg",
       "view": "views/fields/conditions-container"
     },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

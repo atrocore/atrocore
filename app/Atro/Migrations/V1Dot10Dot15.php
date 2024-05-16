@@ -26,9 +26,12 @@ class V1Dot10Dot15 extends Base
             $this->exec("ALTER TABLE ui_handler ADD trigger_action VARCHAR(255) DEFAULT NULL");
             $this->exec("ALTER TABLE ui_handler ADD trigger_fields TEXT DEFAULT NULL");
             $this->exec("COMMENT ON COLUMN ui_handler.trigger_fields IS '(DC2Type:jsonArray)'");
+            $this->exec("ALTER TABLE ui_handler ADD data TEXT DEFAULT NULL");
+            $this->exec("COMMENT ON COLUMN ui_handler.data IS '(DC2Type:jsonObject)'");
         } else {
             $this->exec("ALTER TABLE ui_handler ADD trigger_action VARCHAR(255) DEFAULT NULL");
             $this->exec("ALTER TABLE ui_handler ADD trigger_fields LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
+            $this->exec("ALTER TABLE ui_handler ADD data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
         }
 
         $this->getConnection()->createQueryBuilder()
