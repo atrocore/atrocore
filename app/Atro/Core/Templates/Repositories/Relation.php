@@ -174,6 +174,19 @@ class Relation extends RDB
         }
 
         $this->updateModifiedAtForRelatedEntity($entity);
+
+        if(!empty($this->getHierarchicalEntity())
+            && empty($this->getMetadata()->get(['scopes', $this->getHierarchicalEntity(), 'multiParents']))
+        ){
+                $table = strtolower($this->getHierarchicalEntity()).'_hierarchy';
+                $this->getConnection()->createQueryBuilder()
+                    ->delete($this->getConnection()->quoteIdentifier($table))
+                    ->where('entity_id=:entityId AND parent_id <> :parentId')
+                    ->setParameter('entityId', $entity->get('entityId'))
+                    ->setParameter('parentId', $entity->get('parentId'))
+                    ->executeQuery();
+        }
+
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
