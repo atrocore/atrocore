@@ -24,14 +24,11 @@ Espo.define('views/ui-handler/fields/entity-fields', 'views/fields/entity-fields
             Dep.prototype.afterRender.call(this);
 
             if (this.mode !== 'list') {
-
-                // console.log(this.model.get('triggerAction').includes(''))
-
-                // if (this.model.get('type') === 'ui_visible') {
-                //     this.$el.parent().show();
-                // } else {
-                //     this.$el.parent().hide();
-                // }
+                if (this.model.get('triggerAction') === 'ui_on_focus') {
+                    this.$el.parent().show();
+                } else {
+                    this.$el.parent().hide();
+                }
             }
         },
 
