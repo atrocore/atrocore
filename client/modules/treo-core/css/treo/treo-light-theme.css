@@ -23368,6 +23368,13 @@ code.hljs {
   opacity: .7
 }
 
+.feedbackContainer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: 0 !important;
+}
+
 .feedbackContainer a {
   z-index:10;
   position: absolute;
