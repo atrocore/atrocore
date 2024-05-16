@@ -23,19 +23,18 @@ class V1Dot10Dot15 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("ALTER TABLE ui_handler ADD trigger_action TEXT DEFAULT NULL");
+            $this->exec("ALTER TABLE ui_handler ADD trigger_action VARCHAR(255) DEFAULT NULL");
             $this->exec("ALTER TABLE ui_handler ADD trigger_fields TEXT DEFAULT NULL");
-            $this->exec("COMMENT ON COLUMN ui_handler.trigger_action IS '(DC2Type:jsonArray)'");
             $this->exec("COMMENT ON COLUMN ui_handler.trigger_fields IS '(DC2Type:jsonArray)'");
         } else {
-            $this->exec("ALTER TABLE ui_handler ADD trigger_action LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
+            $this->exec("ALTER TABLE ui_handler ADD trigger_action VARCHAR(255) DEFAULT NULL");
             $this->exec("ALTER TABLE ui_handler ADD trigger_fields LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
         }
 
         $this->getConnection()->createQueryBuilder()
             ->update('ui_handler')
             ->set('trigger_action', ':val')
-            ->setParameter('val', '["onChange"]')
+            ->setParameter('val', 'ui_on_change')
             ->executeQuery();
 
         $this->getConnection()->createQueryBuilder()

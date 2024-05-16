@@ -10,6 +10,11 @@
     "multilingual": false
   },
   {
+    "id": "ui_trigger",
+    "name": "UI Trigger",
+    "multilingual": false
+  },
+  {
     "id": "role",
     "name": "Role",
     "multilingual": false

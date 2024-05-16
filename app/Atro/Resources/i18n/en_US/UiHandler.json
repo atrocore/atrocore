@@ -3,8 +3,8 @@
     "isActive": "Active",
     "type": "Type",
     "entityType": "Entity",
-    "fields": "Target  Fields",
-    "relationships": "Relation panels",
+    "fields": "Target Fields",
+    "relationships": "Target Relation panels",
     "conditionsType": "Conditions Type",
     "conditions": "Conditions",
     "triggerAction": "Trigger",
@@ -14,10 +14,6 @@
     "conditionsType": {
       "basic": "Basic",
       "script": "Script"
-    },
-    "triggerAction": {
-      "onChange": "On Field Load/Change",
-      "onFocus": "On Field Focus "
     }
   },
   "exceptions": {

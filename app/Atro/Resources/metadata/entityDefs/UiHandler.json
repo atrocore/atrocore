@@ -15,20 +15,14 @@
       "dropdown": true
     },
     "triggerAction": {
-      "type": "multiEnum",
+      "type": "extensibleEnum",
+      "extensibleEnumId": "ui_trigger",
       "required": true,
-      "optionsIds": [
-        "onChange",
-        "onFocus"
-      ],
-      "options": [
-        "onChange",
-        "onFocus"
-      ]
+      "dropdown": true
     },
     "triggerFields": {
       "type": "array",
-      "view": "views/fields/entity-fields",
+      "view": "views/ui-handler/fields/entity-fields",
       "required": false
     },
     "entityType": {

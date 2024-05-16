@@ -42,6 +42,20 @@
     "sortOrder": 20
   },
   {
+    "id": "ui_on_change",
+    "extensibleEnumId": "ui_trigger",
+    "name": "On Load/Change",
+    "code": "ui_on_change",
+    "sortOrder": 10
+  },
+  {
+    "id": "ui_on_focus",
+    "extensibleEnumId": "ui_trigger",
+    "name": "On Focus",
+    "code": "ui_on_focus",
+    "sortOrder": 20
+  },
+  {
     "id": "supplier",
     "extensibleEnumId": "role",
     "name": "Supplier",

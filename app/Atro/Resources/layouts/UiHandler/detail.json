@@ -21,15 +21,15 @@
         {
           "name": "entityType"
         },
-        false
+        {
+          "name": "triggerAction"
+        }
       ],
       [
         {
-          "name": "triggerAction"
-        },
-        {
           "name": "triggerFields"
-        }
+        },
+        false
       ],
       [
         {

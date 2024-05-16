@@ -85,7 +85,7 @@ class RegenerateUiHandlers extends AbstractConsole
                         'hash'           => md5("{$entityType}{$field}{$type}"),
                         'entityType'     => $entityType,
                         'fields'         => [$field],
-                        'triggerAction'  => ['onChange'],
+                        'triggerAction'  => 'ui_on_change',
                         'type'           => $typeId,
                         'conditionsType' => 'basic',
                         'conditions'     => json_encode($fieldData),
