@@ -29,7 +29,6 @@
     "yzalis/identicon": "~2.0.0",
     "zordius/lightncandy": "~0.21",
     "symfony/event-dispatcher": "<=6.1.0",
-    "symfony/workflow": "<=6.0.10",
     "phpseclib/phpseclib": "^3.0",
     "caxy/php-htmldiff": "^0.1.14",
     "lazzard/php-ftp-client": "~1.7.0",
