@@ -17,7 +17,8 @@
     "followCreatedEntities": "Auto-follow created records",
     "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
     "scopeColorsDisabled": "Disable scope colors",
-    "tabColorsDisabled": "Disable tab icons colors"
+    "tabColorsDisabled": "Disable tab icons colors",
+    "hideFeedbackIcon": "Hide feedback icon"
   },
   "links": {
   },

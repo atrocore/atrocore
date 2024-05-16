@@ -53,6 +53,12 @@
             ],
             [
                 {
+                    "name": "hideFeedbackIcon"
+                },
+                false
+            ],
+            [
+                {
                     "name": "dashboardLayout",
                     "fullWidth": true
                 }

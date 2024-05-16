@@ -17,7 +17,8 @@
     "followCreatedEntityTypeList": "Автоматично підписатися на створені записи конкретних типів об'єктів",
     "scopeColorsDisabled": "Відключити кольори меж",
     "tabColorsDisabled": "Вимкнути кольори вкладок",
-    "assignmentNotifications": "Notifications upon assignment"
+    "assignmentNotifications": "Notifications upon assignment",
+    "hideFeedbackIcon": "Приховати іконку зворотнього зв'язку"
   },
   "links": {
   },
