@@ -108,9 +108,9 @@
                     {{/each}}
                 </ul>
             </li>
-            <li class="open-feedback-dialog hidden-xs">
+            <li class="openFeedbackDialog hidden-xs">
                 <a href="javascript:" class="action notifications-button" data-action="openFeedbackModal">
-                    <i class="fas fa-comment"></i>
+                    <img src="client/img/feedback-testimonial-icon.svg" class="">
                 </a>
             </li>
             {{#if lastViewed}}
