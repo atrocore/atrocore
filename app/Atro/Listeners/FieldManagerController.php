@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
@@ -256,10 +257,17 @@ class FieldManagerController extends AbstractListener
          $query= $conn->createQueryBuilder()
                 ->update($conn->quoteIdentifier($table));
 
-        if($data->type === 'varchar'){
-            $query->set($column, ':empty')
+        if(in_array($data->type, ['varchar', 'url', 'text', 'wysiwyg'])){
+            $query->set($column, ':default')
                 ->where("$column is NULL")
-                ->setParameter('empty','', ParameterType::STRING)
+                ->setParameter('default',$value = $data->default ?? '', Mapper::getParameterType($value))
+                ->executeQuery();
+        }
+
+        if(in_array($data->type, ['int', 'float'])){
+            $query->set($column, ':default')
+                ->where("$column is NULL")
+                ->setParameter('default',$value = $data->default ?? 0, Mapper::getParameterType($value))
                 ->executeQuery();
         }
 

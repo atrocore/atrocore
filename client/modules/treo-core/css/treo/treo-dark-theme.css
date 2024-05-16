@@ -22137,6 +22137,18 @@ code.became, span.became {
     overflow-x: auto;
 }
 
+.file-link {
+    padding-top: 5px;
+    white-space: nowrap;
+}
+
+code.was .file-link,
+span.was .file-link,
+code.became .file-link,
+span.became .file-link {
+    display: inline-block
+}
+
 @media screen and (max-width: 768px) {
     .content {
         position: relative;
@@ -22965,6 +22977,10 @@ div.list-kanban > div > table .item .panel .form-group {
     padding: 0 !important;
 }
 
+.text-gray{
+    color: #999;
+}
+
 .feedbackContainer a {
     z-index:10;
     position: absolute;
@@ -22982,7 +22998,7 @@ div.list-kanban > div > table .item .panel .form-group {
     width: 100%;
 }
 
-.openFeedbackDialog  a img{
+.openFeedbackDialog  a img {
     width: 20px;
     height: 20px;
     margin-bottom: 5px;

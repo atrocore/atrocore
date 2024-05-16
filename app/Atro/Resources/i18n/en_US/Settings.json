@@ -77,7 +77,8 @@
     "success": "Success",
     "notice": "Notice",
     "information": "Information",
-    "error": "Error"
+    "error": "Error",
+    "customHeadCode": "Head Code"
   },
   "links": {
     "variables": "Variables"
@@ -107,7 +108,8 @@
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
     "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
-    "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too."
+    "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too.",
+    "customHeadCode": "Add code at the end of the <head> tag. Atrocore doesn't validate custom code for you, so be sure to check your code before publishing."
   },
   "labels": {
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",
@@ -128,7 +130,8 @@
     "Connecting": "Connecting...",
     "Activities": "Activities",
     "Admin Notifications": "Admin Notifications",
-    "Theme Configuration": "Theme Configuration"
+    "Theme Configuration": "Theme Configuration",
+    "Custom Code": "Custom Code"
   },
   "messages": {
     "languageMustBeSelected": "At least one language should be selected."
