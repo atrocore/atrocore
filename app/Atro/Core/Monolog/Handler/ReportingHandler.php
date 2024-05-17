@@ -64,7 +64,7 @@ class ReportingHandler extends AbstractProcessingHandler
         return json_encode(
             [
                 'level'    => $record['level'],
-                'message'  => $record['formatted'],
+                'message'  => $record['formatted']['message'],
                 'datetime' => $record['datetime']->format('Y-m-d H:i:s T')
             ]
         );

@@ -162,7 +162,7 @@ class Cron extends AbstractConsole
                             if (is_array($record)) {
                                 $url = "https://reporting.atrocore.com/push.php";
                                 $postData = [
-                                    'message'    => $record['message']['message'],
+                                    'message'    => $record['message'],
                                     'level'      => $record['level'],
                                     'datetime'   => $record['datetime'],
                                     'instanceId' => (string)$this->getConfig()->get('appId'),
