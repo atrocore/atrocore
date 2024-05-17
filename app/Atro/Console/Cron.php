@@ -149,7 +149,7 @@ class Cron extends AbstractConsole
             $interval = $reportDate->diff($currentDate);
             $diffInMinutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
 
-            if ($diffInMinutes > 1) {
+            if ($diffInMinutes >= 1) {
                 $originalFileName = $dir . DIRECTORY_SEPARATOR . $file;
                 $fileName = $tmpDir . DIRECTORY_SEPARATOR . $file;
 
@@ -162,7 +162,7 @@ class Cron extends AbstractConsole
                             if (is_array($record)) {
                                 $url = "https://reporting.atrocore.com/push.php";
                                 $postData = [
-                                    'message'    => $record['message'],
+                                    'message'    => $record['message']['message'],
                                     'level'      => $record['level'],
                                     'datetime'   => $record['datetime'],
                                     'instanceId' => (string)$this->getConfig()->get('appId'),
@@ -187,7 +187,7 @@ class Cron extends AbstractConsole
                                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
                                 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
                                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                curl_exec($ch);
+                                $res = curl_exec($ch);
                                 curl_close($ch);
                             }
                         }
@@ -197,6 +197,8 @@ class Cron extends AbstractConsole
                         @unlink($fileName);
                     }
                 }
+            } else {
+                break;
             }
         }
     }
