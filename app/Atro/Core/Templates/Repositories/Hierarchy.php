@@ -616,15 +616,6 @@ class Hierarchy extends RDB
             if (in_array($foreign->get('id'), $this->getChildrenRecursivelyArray($entity->get('id')))) {
                 throw new BadRequest("Child record cannot be chosen as a parent.");
             }
-
-            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
-                $parents = $entity->get('parents');
-                if (!empty($parents) && count($parents) > 0) {
-                    foreach ($parents as $parent) {
-                        $this->unrelate($entity, 'parents', $parent);
-                    }
-                }
-            }
         }
 
         if ($relationName === 'children') {
@@ -634,15 +625,6 @@ class Hierarchy extends RDB
             $foreign = is_string($foreign) ? $this->get($foreign) : $foreign;
             if (in_array($foreign->get('id'), $this->getParentsRecursivelyArray($entity->get('id')))) {
                 throw new BadRequest("Parent record cannot be chosen as a child.");
-            }
-
-            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
-                $parents = $foreign->get('parents');
-                if (!empty($parents) && count($parents) > 0) {
-                    foreach ($parents as $parent) {
-                        $this->unrelate($foreign, 'parents', $parent);
-                    }
-                }
             }
         }
     }
