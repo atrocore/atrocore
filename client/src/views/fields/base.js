@@ -550,6 +550,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'edit') {
                 this.$element.on('change', function () {
                     this.trigger('change');
+                    this.model.trigger('changeField', this.name);
+                }.bind(this));
+                this.$element.on('focus', function () {
+                    this.trigger('focus');
+                    this.model.trigger('focusField', this.name);
                 }.bind(this));
             }
         },
