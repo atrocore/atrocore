@@ -326,7 +326,7 @@ class Metadata
 
             $data = [];
             foreach ($res as $v) {
-                if (!isset($mapper[$v['type']])) {
+                if (!isset($mapper[$v['type']]) || empty($v['trigger_action'])) {
                     continue;
                 }
 
