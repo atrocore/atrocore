@@ -386,7 +386,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
         },
 
         processUiHandler: function (type, field) {
-            this.uiHandler.process(this.model, type, field);
+            this.uiHandler.process(type, field);
         },
 
         initDependancy: function () {

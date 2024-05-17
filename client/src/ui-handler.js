@@ -18,7 +18,7 @@ Espo.define('ui-handler', [], function () {
 
     _.extend(UiHandler.prototype, {
 
-        process: function (model, type, field) {
+        process: function (type, field) {
             let preparedTriggerType = type === 'onLoad' ? 'onChange' : type;
 
             // console.log(this.defs, type, preparedTriggerType, field)
@@ -63,7 +63,15 @@ Espo.define('ui-handler', [], function () {
 
                     if (rule.type === 'setValue' && execute) {
                         if (rule.updateType === 'basic') {
-                            model.set(rule.updateData);
+                            if (!rule.overwrite) {
+                                $.each(rule.updateData, (field, value) => {
+                                    if (this.recordView.model.get(field) === null) {
+                                        this.recordView.model.set(field, value);
+                                    }
+                                });
+                            } else {
+                                this.recordView.model.set(rule.updateData);
+                            }
                         } else if (rule.updateType === 'script') {
                             let updateDate = null;
                             try {
@@ -72,7 +80,7 @@ Espo.define('ui-handler', [], function () {
                             } catch (error) {
                             }
                             if (updateDate) {
-                                model.set(updateDate);
+                                this.recordView.model.set(updateDate);
                             }
                         }
                     }
