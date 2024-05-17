@@ -21,8 +21,6 @@ Espo.define('ui-handler', [], function () {
         process: function (type, field) {
             let preparedTriggerType = type === 'onLoad' ? 'onChange' : type;
 
-            // console.log(this.defs, type, preparedTriggerType, field)
-
             this.defs.forEach(rule => {
                 if (rule.triggerAction === preparedTriggerType && (rule.triggerFields.length === 0 || rule.triggerFields.includes(field))) {
                     let execute = false;
