@@ -60,6 +60,22 @@ Espo.define('ui-handler', [], function () {
                             this[methodName](panelName);
                         });
                     }
+
+                    if (rule.type === 'setValue' && execute) {
+                        if (rule.updateType === 'basic') {
+                            model.set(rule.updateData);
+                        } else if (rule.updateType === 'script') {
+                            let updateDate = null;
+                            try {
+                                let contents = this.twig.twig({data: rule.updateData}).render({entity: this.recordView.model.attributes});
+                                updateDate = jQuery.parseJSON(contents);
+                            } catch (error) {
+                            }
+                            if (updateDate) {
+                                model.set(updateDate);
+                            }
+                        }
+                    }
                 }
             });
         },

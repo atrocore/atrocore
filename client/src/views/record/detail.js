@@ -1460,7 +1460,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
             this.initDependancy();
 
-            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || {}, this.uiHandler);
+            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
             this.initUiHandler();
 
             this.setupFieldLevelSecurity();
