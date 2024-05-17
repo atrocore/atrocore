@@ -23,23 +23,30 @@
   {
     "id": "ui_visible",
     "extensibleEnumId": "ui_handler_type",
-    "name": "Visible",
+    "name": "Make Visible",
     "code": "visible",
     "sortOrder": 0
   },
   {
     "id": "ui_required",
     "extensibleEnumId": "ui_handler_type",
-    "name": "Required",
+    "name": "Make Required",
     "code": "required",
     "sortOrder": 10
   },
   {
     "id": "ui_read_only",
     "extensibleEnumId": "ui_handler_type",
-    "name": "Read-only",
+    "name": "Make Read-only",
     "code": "readOnly",
     "sortOrder": 20
+  },
+  {
+    "id": "ui_on_change",
+    "extensibleEnumId": "ui_trigger",
+    "name": "On Load/Change",
+    "code": "ui_on_change",
+    "sortOrder": 10
   },
   {
     "id": "supplier",
@@ -68,5 +75,19 @@
     "name": "Delivery",
     "code": "delivery",
     "sortOrder": 20
+  },
+  {
+    "id": "basic",
+    "extensibleEnumIds": ["update_type", "conditions_type"],
+    "name": "Basic",
+    "code": "basic",
+    "sortOrder": 0
+  },
+  {
+    "id": "script",
+    "extensibleEnumIds": ["update_type", "conditions_type"],
+    "name": "Script",
+    "code": "script",
+    "sortOrder": 10
   }
 ]

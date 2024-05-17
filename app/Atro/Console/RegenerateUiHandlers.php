@@ -74,7 +74,7 @@ class RegenerateUiHandlers extends AbstractConsole
                             $typeId = null;
                     }
 
-                    if (empty($typeId)){
+                    if (empty($typeId)) {
                         continue;
                     }
 
@@ -85,6 +85,7 @@ class RegenerateUiHandlers extends AbstractConsole
                         'hash'           => md5("{$entityType}{$field}{$type}"),
                         'entityType'     => $entityType,
                         'fields'         => [$field],
+                        'triggerAction'  => 'ui_on_change',
                         'type'           => $typeId,
                         'conditionsType' => 'basic',
                         'conditions'     => json_encode($fieldData),

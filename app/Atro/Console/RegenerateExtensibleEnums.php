@@ -51,7 +51,7 @@ class RegenerateExtensibleEnums extends AbstractConsole
             }
         }
 
-        foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions'], []) as  $extensibleEnumOptionData) {
+        foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions'], []) as $extensibleEnumOptionData) {
             $extensibleEnumOption = $em->getRepository('ExtensibleEnumOption')->get($extensibleEnumOptionData['id']);
 
             if (empty($extensibleEnumOption)) {
@@ -66,26 +66,30 @@ class RegenerateExtensibleEnums extends AbstractConsole
                 }
             }
 
-            $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')
-                ->where([
-                    "extensibleEnumId" => $extensibleEnumOptionData['extensibleEnumId'],
-                    "extensibleEnumOptionId" => $extensibleEnumOptionData['id']
-                ])
-                ->findOne();
+            $extensibleEnumIds = $extensibleEnumOptionData['extensibleEnumIds'] ?? [$extensibleEnumOptionData['extensibleEnumId']];
 
-            if(!empty($eeeeo)){
-                continue;
-            }
+            foreach ($extensibleEnumIds as $extensibleEnumId) {
+                $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')
+                    ->where([
+                        "extensibleEnumId"       => $extensibleEnumId,
+                        "extensibleEnumOptionId" => $extensibleEnumOptionData['id']
+                    ])
+                    ->findOne();
 
-            $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
-            $eeeeo->set('extensibleEnumId', $extensibleEnumOptionData['extensibleEnumId']);
-            $eeeeo->set('extensibleEnumOptionId', $extensibleEnumOptionData['id']);
-            $eeeeo->set('sorting', $extensibleEnumOptionData['sortOrder']);
+                if (!empty($eeeeo)) {
+                    continue;
+                }
 
-            try {
-                $em->saveEntity($eeeeo);
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error("ExtensibleEnumExtensibleEnumOption generation failed: {$e->getMessage()}");
+                $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
+                $eeeeo->set('extensibleEnumId', $extensibleEnumId);
+                $eeeeo->set('extensibleEnumOptionId', $extensibleEnumOptionData['id']);
+                $eeeeo->set('sorting', $extensibleEnumOptionData['sortOrder']);
+
+                try {
+                    $em->saveEntity($eeeeo);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("ExtensibleEnumExtensibleEnumOption generation failed: {$e->getMessage()}");
+                }
             }
         }
     }

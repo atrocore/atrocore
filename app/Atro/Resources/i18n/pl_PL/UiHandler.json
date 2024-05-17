@@ -6,7 +6,9 @@
 		"fields": "Pola",
 		"relationships": "Panele relacji",
 		"conditionsType": "Typ warunków",
-		"conditions": "Warunki"
+		"conditions": "Warunki",
+		"triggerAction": "Wyzwalacz",
+		"triggerFields": "Pola wyzwalania"
 	},
 	"options": {
 		"conditionsType": {

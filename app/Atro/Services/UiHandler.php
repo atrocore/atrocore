@@ -18,7 +18,7 @@ use Espo\ORM\Entity;
 
 class UiHandler extends Base
 {
-    protected $mandatorySelectAttributeList = ["conditionsType", "conditions"];
+    protected $mandatorySelectAttributeList = ["conditionsType", "conditions", "data"];
 
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
