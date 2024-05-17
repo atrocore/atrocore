@@ -149,7 +149,7 @@ class Cron extends AbstractConsole
             $interval = $reportDate->diff($currentDate);
             $diffInMinutes = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
 
-            if ($diffInMinutes >= 1) {
+            if ($diffInMinutes > 1) {
                 $originalFileName = $dir . DIRECTORY_SEPARATOR . $file;
                 $fileName = $tmpDir . DIRECTORY_SEPARATOR . $file;
 
