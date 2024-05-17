@@ -1,38 +1,16 @@
-/*
- * This file is part of EspoCRM and/or AtroCore.
+/**
+ * AtroCore Software
  *
- * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
  *
- * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore GmbH.
- *
- * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * AtroCore as well as EspoCRM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
- * and "AtroCore" word.
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('dynamic-logic', [], function () {
+Espo.define('ui-handler', [], function () {
 
-    var DynamicLogic = function (defs, recordView, twig) {
+    var UiHandler = function (defs, recordView, twig) {
         this.defs = defs || {};
         this.recordView = recordView;
         this.twig = twig;
@@ -44,68 +22,71 @@ Espo.define('dynamic-logic', [], function () {
         this.originalOptions = {};
     }
 
-    _.extend(DynamicLogic.prototype, {
+    _.extend(UiHandler.prototype, {
 
-        process: function () {
-            var fields = this.defs.fields || {};
-            Object.keys(fields).forEach(function (field) {
-                var item = (fields[field] || {});
-                this.fieldTypeList.forEach(function (type) {
-                    if (!(type in item)) return;
-                    if (!item[type]) return;
-                    var typeItem = (item[type] || {});
+        process: function (model, type, field) {
 
-                    if (!typeItem.type) return;
+            console.log(this.defs, type);
 
-                    var result = false;
-                    if (typeItem.type === 'basic' && typeItem.conditionGroup) {
-                        result = this.checkConditionGroup(typeItem.conditionGroup);
-                    } else if (typeItem.type === 'script' && typeItem.script) {
-                        var contents = 'false';
-                        try {
-                            contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
-                        } catch (error) {
-                        }
-                        result = ['true', '1'].includes(contents.trim());
-                    }
-                    var methodName;
-                    if (result) {
-                        methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
-                    } else {
-                        methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
-                    }
-                    this[methodName](field);
-                }, this);
-            }, this);
-
-            var links = this.defs.links || {};
-            Object.keys(links).forEach(function (link) {
-                this.processLink(link);
-            }, this);
-
-            var panels = this.defs.panels || {};
-            Object.keys(panels).forEach(function (panel) {
-                this.panelTypeList.forEach(function (type) {
-                    this.processPanel(panel, type);
-                }, this);
-            }, this);
-
-            var options = this.defs.options || {};
-            Object.keys(options).forEach(function (field) {
-                var itemList = options[field] || [];
-                var isMet = false;
-                for (var i in itemList) {
-                    var item = itemList[i];
-                    if (this.checkConditionGroup(item.conditionGroup)) {
-                        this.setOptionList(field, item.optionList || []);
-                        isMet = true;
-                        break;
-                    }
-                }
-                if (!isMet) {
-                    this.resetOptionList(field);
-                }
-            }, this);
+            // var fields = this.defs.fields || {};
+            // Object.keys(fields).forEach(function (field) {
+            //     var item = (fields[field] || {});
+            //     this.fieldTypeList.forEach(function (type) {
+            //         if (!(type in item)) return;
+            //         if (!item[type]) return;
+            //         var typeItem = (item[type] || {});
+            //
+            //         if (!typeItem.type) return;
+            //
+            //         var result = false;
+            //         if (typeItem.type === 'basic' && typeItem.conditionGroup) {
+            //             result = this.checkConditionGroup(typeItem.conditionGroup);
+            //         } else if (typeItem.type === 'script' && typeItem.script) {
+            //             var contents = 'false';
+            //             try {
+            //                 contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
+            //             } catch (error) {
+            //             }
+            //             result = ['true', '1'].includes(contents.trim());
+            //         }
+            //         var methodName;
+            //         if (result) {
+            //             methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
+            //         } else {
+            //             methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
+            //         }
+            //         this[methodName](field);
+            //     }, this);
+            // }, this);
+            //
+            // var links = this.defs.links || {};
+            // Object.keys(links).forEach(function (link) {
+            //     this.processLink(link);
+            // }, this);
+            //
+            // var panels = this.defs.panels || {};
+            // Object.keys(panels).forEach(function (panel) {
+            //     this.panelTypeList.forEach(function (type) {
+            //         this.processPanel(panel, type);
+            //     }, this);
+            // }, this);
+            //
+            // var options = this.defs.options || {};
+            // Object.keys(options).forEach(function (field) {
+            //     var itemList = options[field] || [];
+            //     var isMet = false;
+            //     for (var i in itemList) {
+            //         var item = itemList[i];
+            //         if (this.checkConditionGroup(item.conditionGroup)) {
+            //             this.setOptionList(field, item.optionList || []);
+            //             isMet = true;
+            //             break;
+            //         }
+            //     }
+            //     if (!isMet) {
+            //         this.resetOptionList(field);
+            //     }
+            // }, this);
         },
 
         processLink: function (panel) {
@@ -316,6 +297,6 @@ Espo.define('dynamic-logic', [], function () {
 
     });
 
-    return DynamicLogic;
+    return UiHandler;
 });
 
