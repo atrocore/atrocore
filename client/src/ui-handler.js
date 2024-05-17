@@ -14,127 +14,54 @@ Espo.define('ui-handler', [], function () {
         this.defs = defs || {};
         this.recordView = recordView;
         this.twig = twig;
-
-        this.fieldTypeList = ['visible', 'required', 'readOnly'];
-        this.panelTypeList = ['visible'];
-
-        this.optionsDirtyMap = {};
-        this.originalOptions = {};
     }
 
     _.extend(UiHandler.prototype, {
 
         process: function (model, type, field) {
+            let preparedTriggerType = type === 'onLoad' ? 'onChange' : type;
 
-            console.log(this.defs, type);
+            // console.log(this.defs, type, preparedTriggerType, field)
 
-            // var fields = this.defs.fields || {};
-            // Object.keys(fields).forEach(function (field) {
-            //     var item = (fields[field] || {});
-            //     this.fieldTypeList.forEach(function (type) {
-            //         if (!(type in item)) return;
-            //         if (!item[type]) return;
-            //         var typeItem = (item[type] || {});
-            //
-            //         if (!typeItem.type) return;
-            //
-            //         var result = false;
-            //         if (typeItem.type === 'basic' && typeItem.conditionGroup) {
-            //             result = this.checkConditionGroup(typeItem.conditionGroup);
-            //         } else if (typeItem.type === 'script' && typeItem.script) {
-            //             var contents = 'false';
-            //             try {
-            //                 contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
-            //             } catch (error) {
-            //             }
-            //             result = ['true', '1'].includes(contents.trim());
-            //         }
-            //         var methodName;
-            //         if (result) {
-            //             methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
-            //         } else {
-            //             methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
-            //         }
-            //         this[methodName](field);
-            //     }, this);
-            // }, this);
-            //
-            // var links = this.defs.links || {};
-            // Object.keys(links).forEach(function (link) {
-            //     this.processLink(link);
-            // }, this);
-            //
-            // var panels = this.defs.panels || {};
-            // Object.keys(panels).forEach(function (panel) {
-            //     this.panelTypeList.forEach(function (type) {
-            //         this.processPanel(panel, type);
-            //     }, this);
-            // }, this);
-            //
-            // var options = this.defs.options || {};
-            // Object.keys(options).forEach(function (field) {
-            //     var itemList = options[field] || [];
-            //     var isMet = false;
-            //     for (var i in itemList) {
-            //         var item = itemList[i];
-            //         if (this.checkConditionGroup(item.conditionGroup)) {
-            //             this.setOptionList(field, item.optionList || []);
-            //             isMet = true;
-            //             break;
-            //         }
-            //     }
-            //     if (!isMet) {
-            //         this.resetOptionList(field);
-            //     }
-            // }, this);
-        },
+            this.defs.forEach(rule => {
+                if (rule.triggerAction === preparedTriggerType && (rule.triggerFields.length === 0 || rule.triggerFields.includes(field))) {
+                    let execute = false;
+                    if (rule.conditions.type === 'basic') {
+                        execute = this.checkConditionGroup(rule.conditions.conditionGroup);
+                    } else if (rule.conditions.type === 'script') {
+                        var contents = 'false';
+                        try {
+                            contents = this.twig.twig({data: rule.conditions.script}).render({entity: this.recordView.model.attributes});
+                        } catch (error) {
+                        }
+                        execute = ['true', '1'].includes(contents.trim());
+                    }
 
-        processLink: function (panel) {
-            const type = 'visible';
+                    if (['visible', 'required', 'readOnly'].includes(rule.type) && rule.targetFields) {
+                        let methodName;
+                        if (execute) {
+                            methodName = 'makeField' + Espo.Utils.upperCaseFirst(rule.type) + 'True';
+                        } else {
+                            methodName = 'makeField' + Espo.Utils.upperCaseFirst(rule.type) + 'False';
+                        }
+                        rule.targetFields.forEach(field => {
+                            this[methodName](field);
+                        });
+                    }
 
-            var links = this.defs.links || {};
-            var item = (links[panel] || {});
-
-            if (!(type in item)) return;
-
-            var typeItem = (item[type] || {});
-
-            var result = false;
-            if (typeItem.type === 'basic' && typeItem.conditionGroup) {
-                result = this.checkConditionGroup(typeItem.conditionGroup);
-            } else if (typeItem.type === 'script' && typeItem.script) {
-                var contents = 'false';
-                try {
-                    contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
-                } catch (error) {
+                    if (['visible'].includes(rule.type) && rule.targetPanels) {
+                        let methodName;
+                        if (execute) {
+                            methodName = 'makePanel' + Espo.Utils.upperCaseFirst(rule.type) + 'True';
+                        } else {
+                            methodName = 'makePanel' + Espo.Utils.upperCaseFirst(rule.type) + 'False';
+                        }
+                        rule.targetPanels.forEach(panelName => {
+                            this[methodName](panelName);
+                        });
+                    }
                 }
-                result = ['true', '1'].includes(contents.trim());
-            }
-
-            var methodName;
-            if (result) {
-                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
-            } else {
-                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
-            }
-            this[methodName](panel);
-        },
-
-        processPanel: function (panel, type) {
-            var panels = this.defs.panels || {};
-            var item = (panels[panel] || {});
-
-            if (!(type in item)) return;
-            var typeItem = (item[type] || {});
-            if (!typeItem.conditionGroup) return;
-            var result = this.checkConditionGroup(typeItem.conditionGroup);
-            var methodName;
-            if (result) {
-                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
-            } else {
-                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
-            }
-            this[methodName](panel);
+            });
         },
 
         checkConditionGroup: function (data, type) {
@@ -144,7 +71,7 @@ Espo.define('ui-handler', [], function () {
 
             var result = false;
             if (type === 'and') {
-                list =  data || [];
+                list = data || [];
                 result = true;
                 for (var i in list) {
                     if (!this.checkCondition(list[i])) {
@@ -153,7 +80,7 @@ Espo.define('ui-handler', [], function () {
                     }
                 }
             } else if (type === 'or') {
-                list =  data || [];
+                list = data || [];
                 for (var i in list) {
                     if (this.checkCondition(list[i])) {
                         result = true;
@@ -253,14 +180,6 @@ Espo.define('ui-handler', [], function () {
                 }
             }
             return false;
-        },
-
-        setOptionList: function (field, optionList) {
-            this.recordView.setFieldOptionList(field, optionList);
-        },
-
-        resetOptionList: function (field) {
-            this.recordView.resetFieldOptionList(field);
         },
 
         makeFieldVisibleTrue: function (field) {
