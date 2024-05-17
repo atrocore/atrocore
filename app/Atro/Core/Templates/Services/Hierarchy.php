@@ -550,6 +550,17 @@ class Hierarchy extends Record
         $result = parent::linkEntity($id, $link, $foreignId);
         $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
 
+        $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'entity']);
+        $foreignLink = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'foreign']);
+
+        if(!empty($foreignEntity) && !empty($foreignLink)){
+            $service = $this->getServiceFactory()
+                ->create($foreignEntity);
+            if(method_exists($service, 'createPseudoTransactionLinkJobs')){
+                $service->createPseudoTransactionLinkJobs($foreignId, $foreignLink, $id);
+            }
+        }
+
         return $result;
     }
 
@@ -857,6 +868,11 @@ class Hierarchy extends Record
 
     public function createPseudoTransactionLinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
+            return;
+        }
+
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
             return;
         }
