@@ -58,12 +58,13 @@ class ReportingHandler extends AbstractProcessingHandler
     {
         if (strlen($record['message']) > $this->maxErrorMessageLength) {
             $record['message'] = substr($record['message'], 0, $this->maxErrorMessageLength) . '...';
+            $record['formatted'] = $this->getFormatter()->format($record);
         }
 
         return json_encode(
             [
                 'level'    => $record['level'],
-                'message'  => $record['message'],
+                'message'  => $record['formatted'],
                 'datetime' => $record['datetime']->format('Y-m-d H:i:s T')
             ]
         );
