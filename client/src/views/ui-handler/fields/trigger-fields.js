@@ -8,37 +8,23 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/ui-handler/fields/entity-relationships', 'views/fields/entity-relationships', Dep => {
+Espo.define('views/ui-handler/fields/trigger-fields', 'views/fields/entity-fields', Dep => {
 
     return Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:type', () => {
+            this.listenTo(this.model, 'change:triggerAction', () => {
                 this.reRender();
             });
-        },
-
-        prepareEnumOptions() {
-            Dep.prototype.prepareEnumOptions.call(this);
-
-            // push attribute tabs
-            if (this.getEntityType() === 'Product') {
-                (this.getMetadata().get(['clientDefs', 'Product', 'bottomPanels', 'detail']) || []).forEach(item => {
-                    if (item.tabId) {
-                        this.params.options.push(item.name);
-                        this.translatedOptions[item.name] = item.label;
-                    }
-                })
-            }
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode !== 'list') {
-                if (this.model.get('type') === 'ui_visible') {
+                if (this.model.get('triggerAction') === 'ui_on_focus') {
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();

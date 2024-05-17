@@ -3,16 +3,12 @@
     "isActive": "Active",
     "type": "Type",
     "entityType": "Entity",
-    "fields": "Fields",
-    "relationships": "Relation panels",
+    "fields": "Target Fields",
+    "relationships": "Target Relation panels",
     "conditionsType": "Conditions Type",
-    "conditions": "Conditions"
-  },
-  "options": {
-    "conditionsType": {
-      "basic": "Basic",
-      "script": "Script"
-    }
+    "conditions": "Conditions",
+    "triggerAction": "Trigger",
+    "triggerFields": "Trigger Fields"
   },
   "exceptions": {
     "systemHandler": "The '%s' Handler is required by the system and cannot be changed or deleted."

@@ -6,13 +6,9 @@
     "fields": "Поля",
     "relationships": "Панелі зв'язків",
     "conditionsType": "Тип умови",
-    "conditions": "Умови"
-  },
-  "options": {
-    "conditionsType": {
-      "basic": "Базовий",
-      "script": "Скрипт"
-    }
+    "conditions": "Умови",
+    "triggerAction": "Тригер",
+    "triggerFields": "Тригерні поля"
   },
   "exceptions": {
     "systemHandler": "Обробник '%s' обов'язковий для системи і не може бути змінений чи видалений."

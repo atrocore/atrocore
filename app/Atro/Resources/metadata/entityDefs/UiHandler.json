@@ -14,6 +14,17 @@
       "required": true,
       "dropdown": true
     },
+    "triggerAction": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "ui_trigger",
+      "required": true,
+      "dropdown": true
+    },
+    "triggerFields": {
+      "type": "array",
+      "view": "views/ui-handler/fields/trigger-fields",
+      "required": false
+    },
     "entityType": {
       "type": "varchar",
       "view": "views/fields/entity-type",
@@ -21,23 +32,17 @@
     },
     "fields": {
       "type": "array",
-      "view": "views/fields/entity-fields"
+      "view": "views/ui-handler/fields/target-fields"
     },
     "relationships": {
       "type": "array",
       "view": "views/ui-handler/fields/entity-relationships"
     },
     "conditionsType": {
-      "type": "enum",
+      "type": "extensibleEnum",
+      "extensibleEnumId": "conditions_type",
       "required": true,
-      "optionsIds": [
-        "basic",
-        "script"
-      ],
-      "options": [
-        "basic",
-        "script"
-      ]
+      "dropdown": true
     },
     "hash": {
       "type": "varchar",
@@ -56,6 +61,18 @@
     "conditions": {
       "type": "wysiwyg",
       "view": "views/fields/conditions-container"
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "createdAt": {
       "type": "datetime",
@@ -88,7 +105,7 @@
   },
   "collection": {
     "sortBy": "createdAt",
-    "asc": true
+    "asc": false
   },
   "indexes": {
     "createdAt": {

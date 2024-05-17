@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/ui-handler/fields/entity-relationships', 'views/fields/entity-relationships', Dep => {
+Espo.define('views/ui-handler/fields/target-fields', 'views/fields/entity-fields', Dep => {
 
     return Dep.extend({
 
@@ -20,25 +20,11 @@ Espo.define('views/ui-handler/fields/entity-relationships', 'views/fields/entity
             });
         },
 
-        prepareEnumOptions() {
-            Dep.prototype.prepareEnumOptions.call(this);
-
-            // push attribute tabs
-            if (this.getEntityType() === 'Product') {
-                (this.getMetadata().get(['clientDefs', 'Product', 'bottomPanels', 'detail']) || []).forEach(item => {
-                    if (item.tabId) {
-                        this.params.options.push(item.name);
-                        this.translatedOptions[item.name] = item.label;
-                    }
-                })
-            }
-        },
-
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode !== 'list') {
-                if (this.model.get('type') === 'ui_visible') {
+                if (['ui_required', 'ui_visible', 'ui_read_only'].includes(this.model.get('type'))) {
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();

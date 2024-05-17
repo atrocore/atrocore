@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic', 'lib!Twig'], function (Dep, ViewRecordHelper, DynamicLogic) {
+Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'lib!Twig'], function (Dep, ViewRecordHelper, UiHandler) {
 
     return Dep.extend({
 
@@ -46,7 +46,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic',
 
         dependencyDefs: {},
 
-        dynamicLogicDefs: {},
+        uiHandlerDefs: {},
 
         fieldList: null,
 
@@ -350,7 +350,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic',
             }, this);
 
             this.initDependancy();
-            this.initDynamicLogic();
+            this.initUiHandler();
         },
 
         setInitalAttributeValue: function (attribute, value) {
@@ -372,23 +372,21 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic',
             this.model.set(this.attributes);
         },
 
-        initDynamicLogic: function () {
-            this.dynamicLogicDefs = Espo.Utils.clone(this.dynamicLogicDefs || {});
-            this.dynamicLogicDefs.fields = Espo.Utils.clone(this.dynamicLogicDefs.fields);
-            this.dynamicLogicDefs.panels = Espo.Utils.clone(this.dynamicLogicDefs.panels);
+        initUiHandler: function () {
+            this.uiHandlerDefs = Espo.Utils.clone(this.uiHandlerDefs || {});
+            this.uiHandler = new UiHandler(this.uiHandlerDefs, this, Twig);
 
-            this.dynamicLogic = new DynamicLogic(this.dynamicLogicDefs, this, Twig);
-
-            this.listenTo(this.model, 'change', this.processDynamicLogic, this);
-            this.processDynamicLogic();
+            this.processUiHandler('onLoad', null);
+            this.listenTo(this.model, 'changeField', fieldName => {
+                this.processUiHandler('onChange', fieldName);
+            });
+            this.listenTo(this.model, 'focusField', fieldName => {
+                this.processUiHandler('onFocus', fieldName);
+            });
         },
 
-        processDynamicLogic: function () {
-            this.dynamicLogic.process();
-        },
-
-        applyDependancy: function () {
-            this._handleDependencyAttributes();
+        processUiHandler: function (type, field) {
+            this.uiHandler.process(type, field);
         },
 
         initDependancy: function () {

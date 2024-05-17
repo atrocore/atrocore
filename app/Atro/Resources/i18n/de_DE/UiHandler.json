@@ -6,13 +6,9 @@
     "fields": "Felder",
     "relationships": "Relations-Paneele",
     "conditionsType": "Konditionstyp",
-    "conditions": "Konditionen"
-  },
-  "options": {
-    "conditionsType": {
-      "basic": "Basic",
-      "script": "Skript"
-    }
+    "conditions": "Konditionen",
+    "triggerAction": "Auslöser",
+    "triggerFields": "Auslösende Felder"
   },
   "exceptions": {
     "systemHandler": "Der Handler '%s' wird vom System benötigt und kann nicht geändert oder gelöscht werden."

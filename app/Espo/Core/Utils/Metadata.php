@@ -270,10 +270,10 @@ class Metadata
             $this->dataManager->setCacheData('metadata', $this->objData);
         }
 
-        $this->loadUiHandlers();
-
         $data = $this->getEventManager()->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]))->getArgument('data');
         $data = $this->getEventManager()->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))->getArgument('data');
+
+        $this->loadUiHandlers($data);
 
         $this->clearMetadata($data);
 
@@ -284,7 +284,7 @@ class Metadata
         $this->clearingMetadata();
     }
 
-    protected function loadUiHandlers(): void
+    protected function loadUiHandlers(array &$metadata): void
     {
         if (!$this->container->get('config')->get('isInstalled', false)) {
             return;
@@ -317,17 +317,25 @@ class Metadata
                 $res = [];
             }
 
+            $mapper = [
+                'ui_read_only' => 'readOnly',
+                'ui_visible'   => 'visible',
+                'ui_required'  => 'required',
+                'ui_set_value' => 'setValue',
+            ];
+
             $data = [];
             foreach ($res as $v) {
-                switch ($v['type']) {
-                    case 'ui_read_only':
-                        $type = 'readOnly';
+                if (!isset($mapper[$v['type']]) || empty($v['trigger_action'])) {
+                    continue;
+                }
+
+                switch ($v['trigger_action']) {
+                    case 'ui_on_change':
+                        $triggerAction = 'onChange';
                         break;
-                    case 'ui_visible':
-                        $type = 'visible';
-                        break;
-                    case 'ui_required':
-                        $type = 'required';
+                    case 'ui_on_focus':
+                        $triggerAction = 'onFocus';
                         break;
                     default:
                         continue 2;
@@ -343,26 +351,42 @@ class Metadata
                     $conditions['script'] = (string)$v['conditions'];
                 }
 
-                $fields = @json_decode((string)$v['fields'], true);
-                if (!empty($fields)) {
-                    foreach ($fields as $field) {
-                        $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$field][$type] = $conditions;
-                    }
+                $row = [];
+                $row['type'] = $mapper[$v['type']];
+                $row['triggerAction'] = $triggerAction;
+                $row['triggerFields'] = @json_decode((string)$v['trigger_fields'], true);
+                $row['conditions'] = $conditions;
+
+                switch ($row['type']) {
+                    case 'readOnly':
+                    case 'visible':
+                    case 'required':
+                        $row['targetFields'] = @json_decode((string)$v['fields'], true);
+                        $row['targetPanels'] = @json_decode((string)$v['relationships'], true);
+                        break;
+                    case 'setValue':
+                        $parsedData = @json_decode($v['data'], true);
+                        $row['updateType'] = $parsedData['field']['updateType'] ?? null;
+                        $row['overwrite'] = !empty($parsedData['field']['overwrite']);
+                        switch ($parsedData['field']['updateType']) {
+                            case 'basic':
+                                $row['updateData'] = $parsedData['fieldData'];
+                                break;
+                            case 'script':
+                                $row['updateData'] = $parsedData['field']['updateScript'];
+                                break;
+                        }
+                        break;
                 }
 
-                $links = @json_decode((string)$v['relationships'], true);
-                if (!empty($links)) {
-                    foreach ($links as $link) {
-                        $data['clientDefs'][$v['entity_type']]['dynamicLogic']['links'][$link][$type] = $conditions;
-                    }
-                }
+                $data['clientDefs'][$v['entity_type']]['uiHandler'][] = $row;
             }
             file_put_contents($file, json_encode($data));
         } else {
             $data = json_decode(file_get_contents($file), true);
         }
 
-        $this->objData = Util::merge($this->objData, $data);
+        $metadata = Util::merge($metadata, $data);
     }
 
     protected function loadData()

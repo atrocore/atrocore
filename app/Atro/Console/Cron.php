@@ -187,7 +187,7 @@ class Cron extends AbstractConsole
                                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
                                 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
                                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                curl_exec($ch);
+                                $res = curl_exec($ch);
                                 curl_close($ch);
                             }
                         }
@@ -197,6 +197,8 @@ class Cron extends AbstractConsole
                         @unlink($fileName);
                     }
                 }
+            } else {
+                break;
             }
         }
     }

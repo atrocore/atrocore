@@ -108,7 +108,13 @@ class PostUpdate
 
             self::onSuccess();
         } catch (\Throwable $e) {
-            self::renderLine('Failed! ' . $e->getMessage());
+            $message = "Failed! {$e->getMessage()}";
+            $trace = $e->getTrace();
+            if (!empty($trace[0])){
+                $message .= ' ' . json_encode($trace[0]);
+            }
+
+            self::renderLine($message);
 
             self::renderLine('Restoring database');
             exec(self::getPhpBin() . " composer.phar restore --force --auto 2>/dev/null");
