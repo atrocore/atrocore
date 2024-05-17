@@ -273,7 +273,7 @@ class Metadata
         $data = $this->getEventManager()->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]))->getArgument('data');
         $data = $this->getEventManager()->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))->getArgument('data');
 
-        $this->loadUiHandlers();
+        $this->loadUiHandlers($data);
 
         $this->clearMetadata($data);
 
@@ -284,7 +284,7 @@ class Metadata
         $this->clearingMetadata();
     }
 
-    protected function loadUiHandlers(): void
+    protected function loadUiHandlers(array &$metadata): void
     {
         if (!$this->container->get('config')->get('isInstalled', false)) {
             return;
@@ -386,7 +386,7 @@ class Metadata
             $data = json_decode(file_get_contents($file), true);
         }
 
-        $this->objData = Util::merge($this->objData, $data);
+        $metadata = Util::merge($metadata, $data);
     }
 
     protected function loadData()
