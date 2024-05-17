@@ -15,6 +15,7 @@ namespace Atro\Console;
 
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class RegenerateMeasures extends AbstractConsole
 {
@@ -67,6 +68,8 @@ class RegenerateMeasures extends AbstractConsole
                 if ($unit->get('measureId') === 'currency') {
                     $this->calculateMultiplier($unit);
                 }
+            } catch (UniqueConstraintViolationException $e) {
+                // do nothing
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error("Unit generation failed: {$e->getMessage()}");
             }
