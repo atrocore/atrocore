@@ -800,7 +800,7 @@
     "languageFilter": {
       "allLanguages": "Alle Sprachen",
       "main": "Hauptsprache",
-      "unilingual": "Unisprachlich"
+      "unilingual": "Einsprachig"
     },
     "varcharSearchRanges": {
       "equals": "Gleich",
