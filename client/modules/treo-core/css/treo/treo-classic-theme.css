@@ -22972,3 +22972,10 @@ div.list-kanban > div > table .item .panel .form-group {
     height: 100%;
     width: 100%;
 }
+
+.openFeedbackDialog  a img {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 5px;
+}
+

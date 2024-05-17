@@ -23380,6 +23380,13 @@ code.hljs {
   opacity: .7
 }
 
+.feedbackContainer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: 0 !important;
+}
+
 .text-gray{
   color: #999;
 }
@@ -23399,4 +23406,10 @@ code.hljs {
   position: absolute;
   height: 100%;
   width: 100%;
+}
+
+.openFeedbackDialog  a img {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 5px;
 }

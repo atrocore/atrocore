@@ -16,7 +16,8 @@
     "followCreatedEntities": "Eigene Einträge abonnieren",
     "followCreatedEntityTypeList": "Der Benutzer abonniert erstellten Einträge bestimmter Entitätstypen",
     "scopeColorsDisabled": "Bereichsfarben deaktivieren",
-    "tabColorsDisabled": "Tabfarben deaktivieren"
+    "tabColorsDisabled": "Tabfarben deaktivieren",
+    "hideFeedbackIcon": "Feedback-Icon ausblenden"
   },
   "labels": {
     "Notifications": "Benachrichtigungen",

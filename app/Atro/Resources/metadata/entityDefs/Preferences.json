@@ -116,6 +116,9 @@
         },
         "closedPanelOptions": {
             "type": "jsonObject"
+        },
+        "hideFeedbackIcon": {
+            "type": "bool"
         }
     }
 }

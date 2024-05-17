@@ -47,7 +47,8 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 enableQuickCreate: this.quickCreateList.length > 0,
                 userName: this.getUser().get('name'),
                 userId: this.getUser().id,
-                logoSrc: this.getLogoSrc()
+                logoSrc: this.getLogoSrc(),
+                hideFeedbackIcon: !!this.getPreferences().get('hideFeedbackIcon')
             };
         },
 
