@@ -22984,7 +22984,7 @@ div.list-kanban > div > table .item .panel .form-group {
 .feedbackContainer a {
     z-index:10;
     position: absolute;
-    top: 20px;
+    top: 5px;
     left: 10px;
 }
 
@@ -22996,10 +22996,4 @@ div.list-kanban > div > table .item .panel .form-group {
     position: absolute;
     height: 100%;
     width: 100%;
-}
-
-.openFeedbackDialog  a img {
-    width: 20px;
-    height: 20px;
-    margin-bottom: 5px;
 }
