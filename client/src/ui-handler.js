@@ -14,6 +14,21 @@ Espo.define('ui-handler', [], function () {
         this.defs = defs || {};
         this.recordView = recordView;
         this.twig = twig;
+        this.twigTemplateData = {
+            entity: this.recordView.model.attributes,
+            isNew: function (entity) {
+                return !(entity.id)
+            },
+            getEntity: function (entityName, entityId) {
+                let res = null;
+                this.ajaxGetRequest(`${entityName}/${entityId}?silent=true`, null, {async: false}).success(entity => {
+                    res = entity;
+                }).error(response => {
+                    console.log('getEntity function failed', response);
+                });
+                return res;
+            }.bind(this.recordView)
+        };
     }
 
     _.extend(UiHandler.prototype, {
@@ -30,7 +45,7 @@ Espo.define('ui-handler', [], function () {
                     } else if (rule.conditions.type === 'script') {
                         var contents = 'false';
                         try {
-                            contents = this.twig.twig({data: rule.conditions.script}).render({entity: this.recordView.model.attributes});
+                            contents = this.twig.twig({data: rule.conditions.script}).render(this.twigTemplateData);
                         } catch (error) {
                         }
                         execute = ['true', '1'].includes(contents.trim());
@@ -74,7 +89,7 @@ Espo.define('ui-handler', [], function () {
                         } else if (rule.updateType === 'script') {
                             let updateDate = null;
                             try {
-                                let contents = this.twig.twig({data: rule.updateData}).render({entity: this.recordView.model.attributes});
+                                let contents = this.twig.twig({data: rule.updateData}).render(this.twigTemplateData);
                                 updateDate = jQuery.parseJSON(contents);
                             } catch (error) {
                             }
