@@ -187,7 +187,8 @@ class Cron extends AbstractConsole
                                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
                                 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
                                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                $res = curl_exec($ch);
+                                curl_setopt($ch, CURLOPT_TIMEOUT_MS, 100);
+                                curl_exec($ch);
                                 curl_close($ch);
                             }
                         }
