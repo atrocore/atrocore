@@ -111,7 +111,7 @@
             {{#unless hideFeedbackIcon}}
             <li class="openFeedbackDialog hidden-xs">
                 <a href="javascript:" class="action notifications-button" data-action="openFeedbackModal" title="{{translate 'Provide Feedback'}}">
-                    <img src="client/img/feedback-testimonial-icon.svg" class="">
+                    <i class="fas fa-comment"></i>
                 </a>
             </li>
             {{/unless}}
