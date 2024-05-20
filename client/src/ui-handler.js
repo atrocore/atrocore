@@ -27,6 +27,42 @@ Espo.define('ui-handler', [], function () {
                     console.log('getEntity function failed', response);
                 });
                 return res;
+            }.bind(this.recordView),
+            findRecord: function (entityName, where) {
+                let res = null;
+                if (entityName && where) {
+                    this.ajaxGetRequest(entityName, {
+                        where: where,
+                        offset: 0,
+                        maxSize: 1,
+                        silent: "true"
+                    }, {async: false}).success(response => {
+                        if (response.list && response.list[0]) {
+                            res = response.list[0];
+                        }
+                    }).error(response => {
+                        console.log('findRecord function failed', response);
+                    });
+                }
+                return res;
+            }.bind(this.recordView),
+            findRecords: function (entityName, where, offset = 0, limit = 200) {
+                let res = null;
+                if (entityName && where) {
+                    this.ajaxGetRequest(entityName, {
+                        where: where,
+                        offset: offset,
+                        maxSize: limit,
+                        silent: "true"
+                    }, {async: false}).success(response => {
+                        if (response.list) {
+                            res = response.list;
+                        }
+                    }).error(response => {
+                        console.log('findRecords function failed', response);
+                    });
+                }
+                return res;
             }.bind(this.recordView)
         };
     }
