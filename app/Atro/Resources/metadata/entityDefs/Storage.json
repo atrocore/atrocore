@@ -33,9 +33,9 @@
       "type": "linkMultiple",
       "noLoad": true
     },
-    "folders": {
-      "type": "linkMultiple",
-      "noLoad": true
+    "folder": {
+      "type": "link",
+      "required": true
     },
     "createdAt": {
       "type": "datetime",
@@ -52,9 +52,8 @@
       "foreign": "storage",
       "entity": "File"
     },
-    "folders": {
-      "type": "hasMany",
-      "relationName": "FolderStorage",
+    "folder": {
+      "type": "belongsTo",
       "foreign": "storages",
       "entity": "Folder"
     },
