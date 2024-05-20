@@ -91,8 +91,7 @@
     },
     "storages": {
       "type": "hasMany",
-      "relationName": "FolderStorage",
-      "foreign": "folders",
+      "foreign": "folder",
       "entity": "Storage"
     },
     "createdBy": {
