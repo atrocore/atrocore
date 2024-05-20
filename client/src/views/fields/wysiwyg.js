@@ -141,7 +141,6 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             data.useIframe = this.useIframe;
             data.isPlain = this.model.has('isHtml') && !this.model.get('isHtml');
-
             return data;
         },
 
