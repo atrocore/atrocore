@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Atro\Core\Exceptions\NotUnique;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -69,7 +70,7 @@ class RegenerateMeasures extends AbstractConsole
                     $this->calculateMultiplier($unit);
                 }
             } catch (UniqueConstraintViolationException $e) {
-                // do nothing
+            } catch (NotUnique $e) {
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error("Unit generation failed: {$e->getMessage()}");
             }
