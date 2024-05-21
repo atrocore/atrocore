@@ -178,7 +178,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.clearLink();
                 });
                 this.addActionHandler('createLink', function () {
-                    const attributes = _.extend((this.getCreateAttributes() || {}), {_createFromEntity: this.model.name});
+                    const attributes = _.extend((this.getCreateAttributes() || {}), {_createFromEntity: this.model.name, _createFromEntityId: this.model.get('id')});
                     this.notify('Loading...');
                     this.createView('quickCreate', 'views/modals/edit', {
                         scope: this.foreignScope,
