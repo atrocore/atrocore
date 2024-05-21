@@ -178,11 +178,12 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.clearLink();
                 });
                 this.addActionHandler('createLink', function () {
+                    const attributes = _.extend((this.getCreateAttributes() || {}), {_createFromEntity: this.model.name});
                     this.notify('Loading...');
                     this.createView('quickCreate', 'views/modals/edit', {
                         scope: this.foreignScope,
                         fullFormDisabled: true,
-                        attributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        attributes: (this.mode === 'edit') ? attributes : null,
                     }, view => {
                         view.once('after:render', () => {
                             this.notify(false);
