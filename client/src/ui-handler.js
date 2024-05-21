@@ -136,7 +136,29 @@ Espo.define('ui-handler', [], function () {
                     }
                 }
             });
+
+            if (preparedTriggerType === 'onChange') {
+                Object.keys((this.defs.panels || {})).forEach(panel => {
+                    this.processPanel(panel);
+                });
+            }
         },
+
+        processPanel: function (panel) {
+            var panels = this.defs.panels || {};
+            var item = (panels[panel] || {});
+
+            if (!(type in item)) return;
+            var typeItem = (item[type] || {});
+            if (!typeItem.conditionGroup) return;
+
+            if (this.checkConditionGroup(typeItem.conditionGroup)) {
+                this.makePanelVisibleTrue(panel);
+            } else {
+                this.makePanelVisibleFalse(panel);
+            }
+        },
+
 
         checkConditionGroup: function (data, type) {
             type = type || 'and';

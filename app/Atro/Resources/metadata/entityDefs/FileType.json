@@ -12,7 +12,7 @@
     },
     "priority": {
       "type": "int",
-      "notNull": true,
+      "notNull": false,
       "default": 10,
       "min": 0
     },

@@ -1874,12 +1874,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 panel.rows = [];
 
                 if (simplifiedLayout[p].dynamicLogicVisible) {
-                    if (this.dynamicLogic) {
-                        this.dynamicLogic.defs.panels = this.dynamicLogic.defs.panels || {};
-                        this.dynamicLogic.defs.panels[panel.name] = {
+                    if (this.uiHandler) {
+                        this.uiHandler.defs.panels = this.uiHandler.defs.panels || {};
+                        this.uiHandler.defs.panels[panel.name] = {
                             visible: simplifiedLayout[p].dynamicLogicVisible
                         };
-                        this.dynamicLogic.processPanel(panel.name, 'visible');
+                        this.uiHandler.processPanel(panel.name);
                     }
                 }
 
