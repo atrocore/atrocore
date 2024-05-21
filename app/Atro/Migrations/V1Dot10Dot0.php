@@ -127,7 +127,7 @@ class V1Dot10Dot0 extends Base
             ->setParameter('priority', 0, ParameterType::INTEGER)
             ->executeQuery();
 
-        $this->exec("ALTER TABLE file_type ALTER priority SET NOT NULL");
+//        $this->exec("ALTER TABLE file_type ALTER priority SET NOT NULL");
 
         self::createDefaultStorage($this->getConnection());
 
