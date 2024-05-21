@@ -19,6 +19,15 @@ use Espo\ORM\Entity;
 
 class FileType extends Base
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('priority') === null) {
+            $entity->set('priority', 0);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         foreach ($this->getMetadata()->get('entityDefs') as $entityName => $entityDefs) {
