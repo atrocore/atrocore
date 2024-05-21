@@ -32,13 +32,58 @@ class Storage extends Base
             }
         }
 
-        if ($entity->get('path') !== null) {
-            $existed = $this
-                ->where(['path' => $entity->get('path'), 'id!=' => $entity->get('id')])
-                ->findOne();
+        if ($entity->get('type') === "local") {
+            echo '<pre>';
+            print_r('123');
+            die();
+            if (empty($entity->get('path'))) {
+                throw new BadRequest("Path is required.");
+            }
+            if ($entity->isAttributeChanged('path')) {
+                $exists = $this
+                    ->where(['type' => "local", 'id!=' => $entity->get('id')])
+                    ->find();
 
-            if (!empty($existed)) {
-                throw new BadRequest($this->translate('storagePathNotUnique', 'exceptions', 'Storage'));
+                $escapedPrefix = preg_quote($entity->get('path'), '/');
+
+                // Build the regular expression pattern
+                $pattern = '/^' . $escapedPrefix . '/';
+
+
+                $result = preg_grep($pattern, array_column($exists->toArray(), 'path'));
+
+                echo '<pre>';
+                print_r($pattern);
+                die();
+
+                foreach ($exists as $exist) {
+                    if (preg_match($pattern, (string)$exist->get('path'))) {
+                        echo '<pre>';
+                        print_r($exist->toArray());
+                        die();
+                    }
+                }
+
+                echo '<pre>';
+                print_r('123');
+                die();
+
+                // Your array of strings
+                $array = ['upload/files', 'upload/vol-1', 'upload/files/foo'];
+
+// Regular expression to match strings that start with 'upload/files'
+                $pattern = '/^upload\/files/';
+
+// Use preg_grep to filter the array
+                $result = preg_grep($pattern, $array);
+
+                echo '<pre>';
+                print_r($exists->toArray());
+                die();
+
+                if (!empty($existed)) {
+                    throw new BadRequest($this->translate('storagePathNotUnique', 'exceptions', 'Storage'));
+                }
             }
         }
     }
