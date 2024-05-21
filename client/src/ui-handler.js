@@ -145,6 +145,7 @@ Espo.define('ui-handler', [], function () {
         },
 
         processPanel: function (panel) {
+            const type = 'visible';
             var panels = this.defs.panels || {};
             var item = (panels[panel] || {});
 
