@@ -365,7 +365,7 @@ class Metadata
                         $row['targetPanels'] = @json_decode((string)$v['relationships'], true);
                         break;
                     case 'setValue':
-                        $parsedData = @json_decode($v['data'], true);
+                        $parsedData = @json_decode((string)$v['data'], true);
                         $row['updateType'] = $parsedData['field']['updateType'] ?? null;
                         $row['overwrite'] = !empty($parsedData['field']['overwrite']);
                         switch ($parsedData['field']['updateType']) {
