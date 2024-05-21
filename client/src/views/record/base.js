@@ -46,7 +46,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
 
         dependencyDefs: {},
 
-        uiHandlerDefs: {},
+        uiHandlerDefs: [],
 
         fieldList: null,
 
@@ -373,7 +373,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
         },
 
         initUiHandler: function () {
-            this.uiHandlerDefs = Espo.Utils.clone(this.uiHandlerDefs || {});
+            this.uiHandlerDefs = Espo.Utils.clone(this.uiHandlerDefs || []);
             this.uiHandler = new UiHandler(this.uiHandlerDefs, this, Twig);
 
             this.processUiHandler('onLoad', null);
