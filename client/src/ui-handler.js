@@ -16,6 +16,7 @@ Espo.define('ui-handler', [], function () {
         this.twig = twig;
         this.twigTemplateData = {
             entity: this.recordView.model.attributes,
+            entityFrom: this.recordView.model.attributes._entityFrom || null,
             isNew: function (entity) {
                 return !(entity.id)
             },
