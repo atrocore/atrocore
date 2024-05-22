@@ -35,192 +35,148 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
     return Dep.extend({
 
         checkAccessGlobal: function () {
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
-            return false;
+            return this.getUser().isAdmin();
         },
 
         index: function () {
-            this.main('views/admin/index', null);
+            this.main('views/admin/index');
         },
 
         layouts: function (options) {
-            var scope = options.scope || null;
-            var type = options.type || null;
-
-            this.main('views/admin/layouts/index', {scope: scope, type: type});
+            const { scope, type } = options;
+            this.main('views/admin/layouts/index', { scope, type });
         },
 
         fieldManager: function (options) {
-            var scope = options.scope || null;
-            var field = options.field || null;
-
-            this.main('views/admin/field-manager/index', {scope: scope, field: field});
+            const { scope, field } = options;
+            this.main('views/admin/field-manager/index', { scope, field });
         },
 
         entityManager: function (options) {
-            var scope = options.scope || null;
-
-            this.main('views/admin/entity-manager/index', {scope: scope});
+            const { scope } = options;
+            this.main('views/admin/entity-manager/index', { scope });
         },
 
         linkManager: function (options) {
-            var scope = options.scope || null;
-
-            this.main('views/admin/link-manager/index', {scope: scope});
+            const { scope } = options;
+            this.main('views/admin/link-manager/index', { scope });
         },
 
         getSettingsModel: function () {
-            var model = this.getConfig().clone();
+            const model = this.getConfig().clone();
             model.defs = this.getConfig().defs;
-
             return model;
         },
 
-        settings: function () {
-            var model = this.getSettingsModel();
-
+        loadSettingsView: function (view, model, headerTemplate, recordView) {
             model.once('sync', function () {
                 model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/settings',
-                    recordView: 'views/admin/settings'
+                this.main(view, {
+                    model,
+                    headerTemplate,
+                    recordView
                 });
             }, this);
             model.fetch();
         },
 
-        moduleSettings: function (options) {
-            let id = options.id;
-            let view = id.replaceAll('_', '/');
+        settings: function () {
+            const model = this.getSettingsModel();
+            this.loadSettingsView('views/settings/edit', model, 'admin/settings/headers/settings', 'views/admin/settings');
+        },
 
-            let model = this.getSettingsModel();
+        moduleSettings: function (options) {
+            const { id } = options;
+            const view = id.replaceAll('_', '/');
+            const model = this.getSettingsModel();
             model.once('sync', function () {
                 model.id = id;
-                this.main(view, {model: model});
+                this.main(view, { model });
             }, this);
             model.fetch();
         },
 
         notifications: function () {
-            var model = this.getSettingsModel();
-
-            model.once('sync', function () {
-                model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/notifications',
-                    recordView: 'views/admin/notifications'
-                });
-            }, this);
-            model.fetch();
+            const model = this.getSettingsModel();
+            this.loadSettingsView('views/settings/edit', model, 'admin/settings/headers/notifications', 'views/admin/notifications');
         },
 
         outboundEmails: function () {
-            var model = this.getSettingsModel();
-
-            model.once('sync', function () {
-                model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/outbound-emails',
-                    recordView: 'views/admin/outbound-emails'
-                });
-            }, this);
-            model.fetch();
+            const model = this.getSettingsModel();
+            this.loadSettingsView('views/settings/edit', model, 'admin/settings/headers/outbound-emails', 'views/admin/outbound-emails');
         },
 
         authTokens: function () {
-            this.collectionFactory.create('AuthToken', function (collection) {
-                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+            this.collectionFactory.create('AuthToken', (collection) => {
+                const searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
                 searchManager.loadStored();
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
                 this.main('views/admin/auth-token/list', {
                     scope: 'AuthToken',
-                    collection: collection,
-                    searchManager: searchManager
+                    collection,
+                    searchManager
                 });
             }, this);
         },
 
         authLog: function () {
-            this.collectionFactory.create('AuthLogRecord', function (collection) {
-                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+            this.collectionFactory.create('AuthLogRecord', (collection) => {
+                const searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
                 searchManager.loadStored();
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
                 this.main('views/admin/auth-log-record/list', {
                     scope: 'AuthLogRecord',
-                    collection: collection,
-                    searchManager: searchManager
+                    collection,
+                    searchManager
                 });
             }, this);
         },
 
         jobs: function () {
-            this.collectionFactory.create('Job', function (collection) {
-                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+            this.collectionFactory.create('Job', (collection) => {
+                const searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
                 searchManager.loadStored();
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
                 this.main('views/admin/job/list', {
                     scope: 'Job',
-                    collection: collection,
-                    searchManager: searchManager,
+                    collection,
+                    searchManager
                 });
             }, this);
         },
 
         userInterface: function () {
-            var model = this.getSettingsModel();
-
-            model.once('sync', function () {
-                model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/user-interface',
-                    recordView: 'views/admin/user-interface'
-                });
-            }, this);
-            model.fetch();
+            const model = this.getSettingsModel();
+            this.loadSettingsView('views/settings/edit', model, 'admin/settings/headers/user-interface', 'views/admin/user-interface');
         },
 
         authentication: function () {
-            var model = this.getSettingsModel();
-
-            model.once('sync', function () {
-                model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/authentication',
-                    recordView: 'views/admin/authentication'
-                });
-            }, this);
-            model.fetch();
+            const model = this.getSettingsModel();
+            this.loadSettingsView('views/settings/edit', model, 'admin/settings/headers/authentication', 'views/admin/authentication');
         },
 
-        clearCache: function (options) {
-            var master = this.get('master');
+        clearCache: function () {
+            const master = this.get('master');
             Espo.Ui.notify(master.translate('Please wait...'));
             this.getRouter().navigate('#Admin');
             $.ajax({
                 url: 'Admin/clearCache',
                 type: 'POST',
-                success: function () {
-                    var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
+                success: () => {
+                    const msg = master.translate('Cache has been cleared', 'labels', 'Admin');
                     Espo.Ui.success(msg);
-                }.bind(this)
+                }
             });
         },
 
-        rebuildDb: function (options) {
-            let master = this.get('master');
+        rebuildDb: function () {
+            const master = this.get('master');
             this.getRouter().navigate('#Admin');
             Espo.Ui.confirm(master.translate('rebuildDb', 'messages', 'Admin'), {
                 confirmText: master.translate('Apply'),
@@ -235,6 +191,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 });
             });
         }
+
     });
 
 });
