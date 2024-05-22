@@ -366,7 +366,10 @@ class Metadata
                         break;
                     case 'setValue':
                         $parsedData = @json_decode((string)$v['data'], true);
-                        $row['updateType'] = $parsedData['field']['updateType'] ?? null;
+                        if (empty($parsedData['field']['updateType'])) {
+                            continue 2;
+                        }
+                        $row['updateType'] = $parsedData['field']['updateType'];
                         $row['overwrite'] = !empty($parsedData['field']['overwrite']);
                         switch ($parsedData['field']['updateType']) {
                             case 'basic':
