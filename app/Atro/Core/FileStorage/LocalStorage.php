@@ -90,6 +90,23 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
 
+        // remove files from other storages
+        $otherStorages = $this->getEntityManager()->getRepository('Storage')
+            ->where([
+                'id!=' => $storage->get('id'),
+                'type' => 'local'
+            ])
+            ->find();
+        foreach ($otherStorages as $otherStorage) {
+            foreach ($files as $k => $file) {
+                if (strpos($file, $otherStorage->get('path')) === 0) {
+                    unset($files[$k]);
+                }
+            }
+        }
+
+        $files = array_values($files);
+
         $ids = [];
 
         foreach (array_chunk($files, $limit) as $chunk) {
