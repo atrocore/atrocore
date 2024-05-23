@@ -24,6 +24,7 @@
   },
   "exceptions": {
     "storagePathNotUnique": "Шлях до сховища має бути унікальним.",
+    "storagePathContainFilesFromAnotherStorage": "Неправильний шлях до сховища. Є файли, які належать до іншого сховища.",
     "storageTypeCannotBeChanged": "Тип сховища не можна змінити.",
     "storagePathCannotBeChanged": "Шлях до сховища не можна змінити.",
     "storageWithFilesCannotBeRemoved": "Видалення заборонено. Є файли, які належать до цього Сховища."

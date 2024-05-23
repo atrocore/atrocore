@@ -15,6 +15,8 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Storage extends Base
@@ -32,59 +34,48 @@ class Storage extends Base
             }
         }
 
-        if ($entity->get('type') === "local") {
-            echo '<pre>';
-            print_r('123');
-            die();
-            if (empty($entity->get('path'))) {
-                throw new BadRequest("Path is required.");
-            }
-            if ($entity->isAttributeChanged('path')) {
-                $exists = $this
-                    ->where(['type' => "local", 'id!=' => $entity->get('id')])
-                    ->find();
+        if ($entity->get('type') === 'local') {
+            $this->validateLocalPath($entity);
+        }
+    }
 
-                $escapedPrefix = preg_quote($entity->get('path'), '/');
+    protected function validateLocalPath(Entity $entity): void
+    {
+        if ($entity->get('type') !== 'local') {
+            return;
+        }
 
-                // Build the regular expression pattern
-                $pattern = '/^' . $escapedPrefix . '/';
+        if (empty($entity->get('path'))) {
+            throw new BadRequest("Path cannot be empty.");
+        }
 
+        $existed = $this
+            ->where([
+                'path' => $entity->get('path'),
+                'id!=' => $entity->get('id')
+            ])
+            ->findOne();
+        if (!empty($existed)) {
+            throw new BadRequest($this->translate('storagePathNotUnique', 'exceptions', 'Storage'));
+        }
 
-                $result = preg_grep($pattern, array_column($exists->toArray(), 'path'));
+        $regexp = Converter::isPgSQL($this->getConnection()) ? '~' : 'REGEXP';
 
-                echo '<pre>';
-                print_r($pattern);
-                die();
+        $record = $this->getConnection()->createQueryBuilder()
+            ->select("f.id, CONCAT(s.path, '/', f.path) as file_path")
+            ->from('file', 'f')
+            ->innerJoin('f', 'storage', 's', 's.id=f.storage_id')
+            ->where('f.deleted=:false')
+            ->andWhere('s.deleted=:false')
+            ->andWhere('s.type=:local')
+            ->andWhere("CONCAT(s.path, '/', f.path) $regexp :regExp")
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('local', 'local')
+            ->setParameter('regExp', "^{$entity->get('path')}")
+            ->fetchAssociative();
 
-                foreach ($exists as $exist) {
-                    if (preg_match($pattern, (string)$exist->get('path'))) {
-                        echo '<pre>';
-                        print_r($exist->toArray());
-                        die();
-                    }
-                }
-
-                echo '<pre>';
-                print_r('123');
-                die();
-
-                // Your array of strings
-                $array = ['upload/files', 'upload/vol-1', 'upload/files/foo'];
-
-// Regular expression to match strings that start with 'upload/files'
-                $pattern = '/^upload\/files/';
-
-// Use preg_grep to filter the array
-                $result = preg_grep($pattern, $array);
-
-                echo '<pre>';
-                print_r($exists->toArray());
-                die();
-
-                if (!empty($existed)) {
-                    throw new BadRequest($this->translate('storagePathNotUnique', 'exceptions', 'Storage'));
-                }
-            }
+        if (!empty($record)) {
+            throw new BadRequest($this->translate('storagePathContainFilesFromAnotherStorage', 'exceptions', 'Storage'));
         }
     }
 

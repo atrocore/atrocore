@@ -24,6 +24,7 @@
   },
   "exceptions": {
     "storagePathNotUnique": "Der Speicherpfad sollte eindeutig sein.",
+    "storagePathContainFilesFromAnotherStorage": "Speicherpfad falsch. Es gibt Dateien, die zu einem anderen Speicher gehören.",
     "storageTypeCannotBeChanged": "Der Speichertyp kann nicht geändert werden.",
     "storagePathCannotBeChanged": "Der Speicherpfad kann nicht geändert werden.",
     "storageWithFilesCannotBeRemoved": "Löschen ist nicht erlaubt. Es gibt Dateien, die zu diesem Speicher gehören."

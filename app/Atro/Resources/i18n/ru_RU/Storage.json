@@ -24,6 +24,7 @@
   },
   "exceptions": {
     "storagePathNotUnique": "Путь к хранилищу должен быть уникальным.",
+    "storagePathContainFilesFromAnotherStorage": "Неверный путь к хранилищу. Есть файлы, которые принадлежат другому хранилищу.",
     "storageTypeCannotBeChanged": "Тип хранения изменить нельзя.",
     "storagePathCannotBeChanged": "Путь хранения изменить нельзя.",
     "storageWithFilesCannotBeRemoved": "Удаление запрещено. Существуют файлы, принадлежащие этому хранилищу."

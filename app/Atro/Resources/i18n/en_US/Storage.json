@@ -24,6 +24,7 @@
   },
   "exceptions": {
     "storagePathNotUnique": "Storage path should be unique.",
+    "storagePathContainFilesFromAnotherStorage": "Storage path wrong. There are files that belong to a different Storage.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
     "storagePathCannotBeChanged": "Storage Path cannot be changed.",
     "storageWithFilesCannotBeRemoved": "Delete is not allowed. There are files that belong to this Storage."
