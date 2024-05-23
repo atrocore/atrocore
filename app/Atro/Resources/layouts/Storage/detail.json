@@ -21,10 +21,16 @@
       ],
       [
         {
+          "name": "priority"
+        },
+        false
+      ],
+      [
+        {
           "name": "path"
         },
         {
-          "name": "priority"
+          "name": "syncFolders"
         }
       ]
     ]

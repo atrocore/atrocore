@@ -34,9 +34,7 @@ class Storage extends Base
             }
         }
 
-        if ($entity->get('type') === 'local') {
-            $this->validateLocalPath($entity);
-        }
+        $this->validateLocalPath($entity);
     }
 
     protected function validateLocalPath(Entity $entity): void
@@ -62,15 +60,17 @@ class Storage extends Base
         $regexp = Converter::isPgSQL($this->getConnection()) ? '~' : 'REGEXP';
 
         $record = $this->getConnection()->createQueryBuilder()
-            ->select("f.id, CONCAT(s.path, '/', f.path) as file_path")
+            ->select("f.id, s.name, CONCAT(s.path, '/', f.path) as file_path")
             ->from('file', 'f')
             ->innerJoin('f', 'storage', 's', 's.id=f.storage_id')
             ->where('f.deleted=:false')
             ->andWhere('s.deleted=:false')
             ->andWhere('s.type=:local')
+            ->andWhere('s.id!=:id')
             ->andWhere("CONCAT(s.path, '/', f.path) $regexp :regExp")
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('local', 'local')
+            ->setParameter('id', $entity->get('id'))
             ->setParameter('regExp', "^{$entity->get('path')}")
             ->fetchAssociative();
 
