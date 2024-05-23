@@ -98,15 +98,16 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             ])
             ->find();
         foreach ($otherStorages as $otherStorage) {
-            foreach ($files as $k => $file) {
-                if (strpos($file, $otherStorage->get('path')) === 0) {
-                    unset($files[$k]);
+            if (strlen($otherStorage->get('path')) > strlen($storage->get('path'))) {
+                foreach ($files as $k => $file) {
+                    if (strpos($file, $otherStorage->get('path')) === 0) {
+                        unset($files[$k]);
+                    }
                 }
             }
         }
 
         $files = array_values($files);
-
         $ids = [];
 
         foreach (array_chunk($files, $limit) as $chunk) {
