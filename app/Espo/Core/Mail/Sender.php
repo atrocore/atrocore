@@ -80,6 +80,7 @@ class Sender
 
         $factory = new EsmtpTransportFactory;
 
+        $scheme = in_array($this->config->get('smtpSecurity'), ['SSL', 'TLS']) ? ($this->config->get('smtpPort') === 465 ? 'smtps' : 'smtp') : '';
         $this->transport = $factory->create(new Dsn(
             'smtp',
             $this->config->get('smtpServer') ?? '',
