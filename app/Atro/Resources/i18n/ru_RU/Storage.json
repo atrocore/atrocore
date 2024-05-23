@@ -3,7 +3,8 @@
     "type": "Тип",
     "path": "Путь",
     "files": "Файлы",
-    "folders": "Папки"
+    "folders": "Папки",
+    "syncFolders": "Синхронизация папок"
   },
   "links": {
     "files": "Файлы",

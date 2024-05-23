@@ -23,6 +23,9 @@
       "maxLength": 300,
       "unique": true
     },
+    "syncFolders": {
+      "type": "bool"
+    },
     "priority": {
       "type": "int",
       "notNull": true,

@@ -46,6 +46,19 @@
           ]
         }
       },
+      "syncFolders": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "local"
+              ]
+            }
+          ]
+        }
+      },
       "type": {
         "readOnly": {
           "conditionGroup": [

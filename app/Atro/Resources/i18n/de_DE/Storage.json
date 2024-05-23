@@ -3,7 +3,8 @@
     "type": "Typ",
     "path": "Pfad",
     "files": "Dateien",
-    "folders": "Ordner"
+    "folders": "Ordner",
+    "syncFolders": "Sync-Ordner"
   },
   "links": {
     "files": "Dateien",

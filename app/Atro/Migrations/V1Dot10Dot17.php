@@ -27,6 +27,12 @@ class V1Dot10Dot17 extends Base
         $this->exec("ALTER TABLE storage ADD folder_id VARCHAR(24) DEFAULT NULL");
         $this->exec("CREATE INDEX IDX_STORAGE_FOLDER_ID ON storage (folder_id, deleted)");
 
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE storage ADD sync_folders BOOLEAN DEFAULT 'false' NOT NULL");
+        } else {
+            $this->exec("ALTER TABLE storage ADD sync_folders TINYINT(1) DEFAULT '0' NOT NULL");
+        }
+
         try {
             $records = $this->getConnection()->createQueryBuilder()
                 ->select('*')
