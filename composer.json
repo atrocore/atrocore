@@ -24,7 +24,6 @@
     "atrocore/slim": "~2.6.2",
     "atrocore/compatibilities": "1.0.6",
     "dragonmantank/cron-expression": "~1.0.3",
-    "laminas/laminas-mail": "~2.16.0",
     "monolog/monolog": "~2.8.0",
     "yzalis/identicon": "~2.0.0",
     "zordius/lightncandy": "~0.21",
@@ -32,7 +31,8 @@
     "phpseclib/phpseclib": "^3.0",
     "caxy/php-htmldiff": "^0.1.14",
     "lazzard/php-ftp-client": "~1.7.0",
-    "guzzlehttp/psr7": "^2.6.2"
+    "guzzlehttp/psr7": "^2.6.2",
+    "symfony/mailer": "~7.0.7"
   },
   "conflict": {
     "atrocore/pim": "<1.7.25"
