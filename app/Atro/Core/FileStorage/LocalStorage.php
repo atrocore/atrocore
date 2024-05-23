@@ -244,13 +244,33 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $results;
     }
 
+    public static function buildPathViaFileFolders(File $file): string
+    {
+        $folders = [];
+        if (!empty($folder = $file->get('folder'))) {
+            array_unshift($folders, $folder->get('name'));
+            while (true) {
+                $parents = $folder->get('parents');
+                if (empty($parents[0])) {
+                    break;
+                }
+                $folder = $parents[0];
+                array_unshift($folders, $folder->get('name'));
+            }
+        };
+
+        return implode('/', $folders);
+    }
+
     public function create(File $file): bool
     {
         $result = false;
 
         $input = $file->_input ?? new \stdClass();
 
-        $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
+        $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
+
+        $file->set('path', $storage->get('syncFolders') ? self::buildPathViaFileFolders($file) : $this->getPathBuilder()->createPath($storage->get('path') . DIRECTORY_SEPARATOR));
         $fileName = $this->getLocalPath($file);
 
         // create folders for new file
@@ -267,8 +287,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
          * Create via chunks
          */
         if (!$result && property_exists($input, 'allChunks')) {
-            $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
-
             $chunkDirPath = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
 
             // create file via chunks

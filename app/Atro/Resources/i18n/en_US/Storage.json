@@ -15,6 +15,9 @@
       "local": "Local (Linux)"
     }
   },
+  "tooltips": {
+    "syncFolders": "If checked, the physical folder structure in the storage will be synchronized with our system, otherwise files will be stored using our system-specific folder structure."
+  },
   "labels": {
     "Create Storage": "Create Storage",
     "scan": "Scan",

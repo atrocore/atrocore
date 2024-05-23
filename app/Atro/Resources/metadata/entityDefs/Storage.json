@@ -24,7 +24,8 @@
       "unique": true
     },
     "syncFolders": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "priority": {
       "type": "int",
