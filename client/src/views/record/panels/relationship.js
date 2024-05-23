@@ -569,7 +569,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
-            let attributes = {};
+            let attributes = {_entityFrom: _.extend(this.model.attributes, {_entityName: this.model.name})};
             this.model.trigger('prepareAttributesForCreateRelated', attributes, link, preparedAttributes => {
                 attributes = preparedAttributes;
             });

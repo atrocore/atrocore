@@ -16,6 +16,7 @@ Espo.define('ui-handler', [], function () {
         this.twig = twig;
         this.twigTemplateData = {
             entity: this.recordView.model.attributes,
+            entityFrom: this.recordView.model.attributes._entityFrom || null,
             isNew: function (entity) {
                 return !(entity.id)
             },
@@ -72,6 +73,9 @@ Espo.define('ui-handler', [], function () {
         process: function (type, field) {
             let preparedTriggerType = type === 'onLoad' ? 'onChange' : type;
 
+            this.twigTemplateData['triggerType'] = type;
+            this.twigTemplateData['triggerField'] = field;
+
             this.defs.forEach(rule => {
                 let triggerFields = rule.triggerFields || [];
                 if (rule.triggerAction === preparedTriggerType && (triggerFields.length === 0 || triggerFields.includes(field))) {
@@ -83,20 +87,28 @@ Espo.define('ui-handler', [], function () {
                         try {
                             contents = this.twig.twig({data: rule.conditions.script}).render(this.twigTemplateData);
                         } catch (error) {
+                            console.log(error)
                         }
                         execute = ['true', '1'].includes(contents.trim());
                     }
 
-                    if (['visible', 'required', 'readOnly'].includes(rule.type) && rule.targetFields) {
-                        let methodName;
-                        if (execute) {
-                            methodName = 'makeField' + Espo.Utils.upperCaseFirst(rule.type) + 'True';
-                        } else {
-                            methodName = 'makeField' + Espo.Utils.upperCaseFirst(rule.type) + 'False';
+                    if (['visible', 'required', 'readOnly'].includes(rule.type)) {
+                        if (rule.targetFields) {
+                            let methodName;
+                            if (execute) {
+                                methodName = 'makeField' + Espo.Utils.upperCaseFirst(rule.type) + 'True';
+                            } else {
+                                methodName = 'makeField' + Espo.Utils.upperCaseFirst(rule.type) + 'False';
+                            }
+                            rule.targetFields.forEach(field => {
+                                this[methodName](field);
+                            });
                         }
-                        rule.targetFields.forEach(field => {
-                            this[methodName](field);
-                        });
+                    } else {
+                        let methodName = 'execute' + Espo.Utils.upperCaseFirst(rule.type);
+                        if (execute && typeof this[methodName] === "function") {
+                            this[methodName](rule);
+                        }
                     }
 
                     if (['visible'].includes(rule.type) && rule.targetPanels) {
@@ -109,30 +121,6 @@ Espo.define('ui-handler', [], function () {
                         rule.targetPanels.forEach(panelName => {
                             this[methodName](panelName);
                         });
-                    }
-
-                    if (rule.type === 'setValue' && execute) {
-                        if (rule.updateType === 'basic') {
-                            if (!rule.overwrite) {
-                                $.each(rule.updateData, (field, value) => {
-                                    if (this.recordView.model.get(field) === null) {
-                                        this.recordView.model.set(field, value);
-                                    }
-                                });
-                            } else {
-                                this.recordView.model.set(rule.updateData);
-                            }
-                        } else if (rule.updateType === 'script') {
-                            let updateDate = null;
-                            try {
-                                let contents = this.twig.twig({data: rule.updateData}).render(this.twigTemplateData);
-                                updateDate = jQuery.parseJSON(contents);
-                            } catch (error) {
-                            }
-                            if (updateDate) {
-                                this.recordView.model.set(updateDate);
-                            }
-                        }
                     }
                 }
             });
