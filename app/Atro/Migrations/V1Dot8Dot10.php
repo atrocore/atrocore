@@ -23,7 +23,7 @@ class V1Dot8Dot10 extends Base
         $this->addColumn($toSchema, 'address', 'contact_name', ['type' => 'string', 'default' => null]);
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            $this->getPDO()->exec($sql);
+            $this->exec($sql);
         }
     }
 
@@ -35,7 +35,15 @@ class V1Dot8Dot10 extends Base
         $this->dropColumn($toSchema, 'address', 'contact_name');
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            $this->getPDO()->exec($sql);
+            $this->exec($sql);
         };
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }
