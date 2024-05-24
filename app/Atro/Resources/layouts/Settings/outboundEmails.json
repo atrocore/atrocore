@@ -47,7 +47,9 @@
         {
           "name": "outboundEmailFromName"
         },
-        false
+        {
+          "name": "disableEmailDelivery"
+        }
       ]
     ]
   }

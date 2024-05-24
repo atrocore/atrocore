@@ -23,6 +23,7 @@
     "emailAddress": "Email",
     "smtpPassword": "Password",
     "outboundEmailFromName": "From Name",
+    "disableEmailDelivery": "Disable email delivery",
     "outboundEmailFromAddress": "From Address",
     "recordsPerPage": "Records Per Page",
     "recordsPerPageSmall": "Records Per Page (Small)",
