@@ -22,7 +22,7 @@ class V1Dot11Dot0 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-05-21 12:00:00');
+        return new \DateTime('2024-05-25 12:00:00');
     }
 
     public function up(): void
@@ -48,8 +48,6 @@ class V1Dot11Dot0 extends Base
             $this->exec("CREATE UNIQUE INDEX UNIQ_8B5ADE4E162CB942EB3B4E33 ON file_folder_linker (folder_id, deleted)");
             $this->exec("CREATE UNIQUE INDEX UNIQ_8B5ADE4E93CB796CEB3B4E33 ON file_folder_linker (file_id, deleted)");
         }
-
-        $this->getConnection()->createQueryBuilder()->delete('file_folder_linker')->executeQuery();
 
         $this->createFoldersItems();
         $this->createFilesItems();
@@ -87,6 +85,11 @@ class V1Dot11Dot0 extends Base
 
     public function createFoldersItems(): void
     {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('file_folder_linker')
+            ->where('folder_id IS NOT NULL')
+            ->executeQuery();
+
         $records = $this->getConnection()->createQueryBuilder()
             ->select('f.*, h.parent_id')
             ->from('folder', 'f')
@@ -95,6 +98,8 @@ class V1Dot11Dot0 extends Base
             ->andWhere('f.deleted=:false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
+
+        $duplicates = [];
 
         foreach ($records as $record) {
             try {
@@ -110,41 +115,41 @@ class V1Dot11Dot0 extends Base
                     ->setParameter('folderId', (string)$record['id'])
                     ->executeQuery();
             } catch (UniqueConstraintViolationException $e) {
-                $newName = $record['name'] . ' (' . Util::generateId() . ')';
+                $duplicates["{$record['parent_id']}_{$record['name']}"][] = $record;
+            }
+        }
 
+        foreach ($duplicates as $rows) {
+            foreach ($rows as $k => $row) {
+                $newName = $row['name'] . '(' . ($k + 1) . ')';
                 $this->getConnection()->createQueryBuilder()
                     ->update('folder')
                     ->set('name', ':name')
                     ->where('id=:id')
-                    ->setParameter('id', $record['id'])
+                    ->setParameter('id', $row['id'])
                     ->setParameter('name', $newName)
                     ->executeQuery();
-
-                try {
-                    $this->getConnection()->createQueryBuilder()
-                        ->insert('file_folder_linker')
-                        ->setValue('id', ':id')
-                        ->setValue('name', ':name')
-                        ->setValue('parent_id', ':parentId')
-                        ->setValue('folder_id', ':folderId')
-                        ->setParameter('id', Util::generateId())
-                        ->setParameter('name', $newName)
-                        ->setParameter('parentId', (string)$record['parent_id'])
-                        ->setParameter('folderId', (string)$record['id'])
-                        ->executeQuery();
-                } catch (\Throwable $e) {
-
-                }
             }
+        }
+
+        if (!empty($duplicates)) {
+            $this->createFoldersItems();
         }
     }
 
     public function createFilesItems(): void
     {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('file_folder_linker')
+            ->where('file_id IS NOT NULL')
+            ->executeQuery();
+
         $records = $this->getConnection()->createQueryBuilder()
-            ->select('*')
-            ->from('file')
-            ->where('deleted=:false')
+            ->select('f.*, s.path as storage_path')
+            ->from('file', 'f')
+            ->innerJoin('f', 'storage', 's', 'f.storage_id=s.id')
+            ->where('f.deleted=:false')
+            ->andWhere('s.deleted=:false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
@@ -162,34 +167,32 @@ class V1Dot11Dot0 extends Base
                     ->setParameter('fileId', (string)$record['id'])
                     ->executeQuery();
             } catch (UniqueConstraintViolationException $e) {
+                $duplicates["{$record['folder_id']}_{$record['name']}"][] = $record;
+            }
+        }
+
+        foreach ($duplicates as $rows) {
+            foreach ($rows as $k => $row) {
                 $parts = explode('.', $record['name']);
                 $ext = array_pop($parts);
-                $newName = implode('.', $parts) . ' (' . Util::generateId() . ').' . $ext;
+                $newName = implode('.', $parts) . '(' . ($k + 1) . ').' . $ext;
 
                 $this->getConnection()->createQueryBuilder()
                     ->update('file')
                     ->set('name', ':name')
                     ->where('id=:id')
-                    ->setParameter('id', $record['id'])
+                    ->setParameter('id', $row['id'])
                     ->setParameter('name', $newName)
                     ->executeQuery();
 
-                try {
-                    $this->getConnection()->createQueryBuilder()
-                        ->insert('file_folder_linker')
-                        ->setValue('id', ':id')
-                        ->setValue('name', ':name')
-                        ->setValue('parent_id', ':parentId')
-                        ->setValue('file_id', ':fileId')
-                        ->setParameter('id', Util::generateId())
-                        ->setParameter('name', $newName)
-                        ->setParameter('parentId', (string)$record['folder_id'])
-                        ->setParameter('fileId', (string)$record['id'])
-                        ->executeQuery();
-                } catch (\Throwable $e) {
+                $filePath = $row['storage_path'] . DIRECTORY_SEPARATOR . $row['path'];
 
-                }
+                @rename($filePath . DIRECTORY_SEPARATOR . $record['name'], $filePath . DIRECTORY_SEPARATOR . $newName);
             }
+        }
+
+        if (!empty($duplicates)) {
+            $this->createFilesItems();
         }
     }
 
