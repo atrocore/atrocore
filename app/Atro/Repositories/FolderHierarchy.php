@@ -22,32 +22,40 @@ class FolderHierarchy extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        $folder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
-        if (!empty($folder)) {
-            $folder->set('hash', Folder::createFolderHash($folder->get('name'), $entity->get('parentId')));
-            try {
-                $this->getEntityManager()->saveEntity($folder);
-            } catch (UniqueConstraintViolationException $e) {
-                throw new NotUnique($this->getInjection('language')->translate('suchFolderNameCannotBeUsed', 'exceptions', 'Folder'));
-            }
-        }
-
         parent::beforeSave($entity, $options);
+
+        $this->updateItem($entity);
     }
 
-    protected function beforeRemove(Entity $entity, array $options = [])
+    protected function afterRemove(Entity $entity, array $options = [])
     {
-        $folder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
-        if (!empty($folder)) {
-            $folder->set('hash', Folder::createFolderHash($folder->get('name'), null));
-            try {
-                $this->getEntityManager()->saveEntity($folder);
-            } catch (UniqueConstraintViolationException $e) {
-                throw new NotUnique($this->getInjection('language')->translate('suchFolderNameCannotBeUsed', 'exceptions', 'Folder'));
-            }
-        }
+        $this->removeItem($entity);
 
-        parent::beforeRemove($entity, $options);
+        parent::afterRemove($entity, $options);
+    }
+
+    public function updateItem(Entity $entity): void
+    {
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->update('file_folder_linker')
+            ->set('parent_id', ':parentId')
+            ->where('folder_id=:folderId')
+            ->setParameter('parentId', (string)$entity->get('parentId'))
+            ->setParameter('folderId', (string)$entity->get('entityId'));
+        try {
+            $qb->executeQuery();
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
+    public function removeItem(Entity $entity): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('file_folder_linker')
+            ->where('folder_id=:folderId')
+            ->setParameter('folderId', $entity->get('entityId'))
+            ->executeQuery();
     }
 
     protected function init()

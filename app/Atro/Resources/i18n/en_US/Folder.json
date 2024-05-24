@@ -10,8 +10,5 @@
   },
   "labels": {
     "Create Folder": "Create Folder"
-  },
-  "exceptions": {
-    "suchFolderNameCannotBeUsed": "File or Folder with such name already exist."
   }
 }

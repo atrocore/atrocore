@@ -49,6 +49,8 @@ class V1Dot11Dot0 extends Base
             $this->exec("CREATE UNIQUE INDEX UNIQ_8B5ADE4E93CB796CEB3B4E33 ON file_folder_linker (file_id, deleted)");
         }
 
+        $this->getConnection()->createQueryBuilder()->delete('file_folder_linker')->executeQuery();
+
         $this->createFoldersItems();
         $this->createFilesItems();
 
@@ -118,17 +120,21 @@ class V1Dot11Dot0 extends Base
                     ->setParameter('name', $newName)
                     ->executeQuery();
 
-                $this->getConnection()->createQueryBuilder()
-                    ->insert('file_folder_linker')
-                    ->setValue('id', ':id')
-                    ->setValue('name', ':name')
-                    ->setValue('parent_id', ':parentId')
-                    ->setValue('folder_id', ':folderId')
-                    ->setParameter('id', Util::generateId())
-                    ->setParameter('name', $newName)
-                    ->setParameter('parentId', (string)$record['parent_id'])
-                    ->setParameter('folderId', (string)$record['id'])
-                    ->executeQuery();
+                try {
+                    $this->getConnection()->createQueryBuilder()
+                        ->insert('file_folder_linker')
+                        ->setValue('id', ':id')
+                        ->setValue('name', ':name')
+                        ->setValue('parent_id', ':parentId')
+                        ->setValue('folder_id', ':folderId')
+                        ->setParameter('id', Util::generateId())
+                        ->setParameter('name', $newName)
+                        ->setParameter('parentId', (string)$record['parent_id'])
+                        ->setParameter('folderId', (string)$record['id'])
+                        ->executeQuery();
+                } catch (\Throwable $e) {
+
+                }
             }
         }
     }
@@ -168,17 +174,21 @@ class V1Dot11Dot0 extends Base
                     ->setParameter('name', $newName)
                     ->executeQuery();
 
-                $this->getConnection()->createQueryBuilder()
-                    ->insert('file_folder_linker')
-                    ->setValue('id', ':id')
-                    ->setValue('name', ':name')
-                    ->setValue('parent_id', ':parentId')
-                    ->setValue('file_id', ':fileId')
-                    ->setParameter('id', Util::generateId())
-                    ->setParameter('name', $newName)
-                    ->setParameter('parentId', (string)$record['folder_id'])
-                    ->setParameter('fileId', (string)$record['id'])
-                    ->executeQuery();
+                try {
+                    $this->getConnection()->createQueryBuilder()
+                        ->insert('file_folder_linker')
+                        ->setValue('id', ':id')
+                        ->setValue('name', ':name')
+                        ->setValue('parent_id', ':parentId')
+                        ->setValue('file_id', ':fileId')
+                        ->setParameter('id', Util::generateId())
+                        ->setParameter('name', $newName)
+                        ->setParameter('parentId', (string)$record['folder_id'])
+                        ->setParameter('fileId', (string)$record['id'])
+                        ->executeQuery();
+                } catch (\Throwable $e) {
+
+                }
             }
         }
     }

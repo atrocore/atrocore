@@ -23,8 +23,8 @@
     "Note": "Note",
     "Notification": "Notification",
     "Pricing": "Pricing",
-    "Measure": "Measure",
-    "Unit": "Unit",
+    "Measure": "Measure","
+    "Unit": "Unit","
     "QueueItem": "Queue Item",
     "TreoStore": "Store",
     "User": "User",
@@ -1059,6 +1059,7 @@
     "cd": "cd"
   },
   "exceptions": {
+    "suchItemNameCannotBeUsedHere": "A File or Folder with such name already exists here. Please select a different folder or change the name.",
     "colorDepthValidationFailed": "Color depth of this file is not allowed.",
     "colorSpaceValidationFailed": "Color space of this file is not allowed.",
     "fileExtensionValidationFailed": "Use only files with next extensions: %s.",
