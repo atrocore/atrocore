@@ -4,6 +4,14 @@
       "type": "varchar",
       "notNull": true
     },
+    "folderId": {
+      "type": "varchar",
+      "unique": true
+    },
+    "fileId": {
+      "type": "varchar",
+      "unique": true
+    },
     "name": {
       "type": "varchar",
       "notNull": true
@@ -15,5 +23,19 @@
       "parent_id",
       "name"
     ]
+  },
+  "indexes": {
+    "folderIdx": {
+      "columns": [
+        "parentId",
+        "folderId"
+      ]
+    },
+    "fileIdx": {
+      "columns": [
+        "parentId",
+        "fileId"
+      ]
+    }
   }
 }

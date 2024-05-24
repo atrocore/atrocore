@@ -15,6 +15,8 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class Folder extends Hierarchy
@@ -30,22 +32,63 @@ class Folder extends Hierarchy
             $entity->set('code', null);
         }
 
-        if ($entity->isAttributeChanged('name')) {
-            $entity->set('hash', self::createFolderHash($entity->get('name'), $entity->getParentId()));
+        if ($entity->isNew()) {
+            $this->createItem($entity);
+        } elseif ($entity->isAttributeChanged('name')) {
+            $this->updateItem($entity);
         }
 
         parent::beforeSave($entity, $options);
     }
 
-    public function save(Entity $entity, array $options = [])
+    protected function afterRemove(Entity $entity, array $options = [])
     {
-        try {
-            $result = parent::save($entity, $options);
-        } catch (NotUnique $e) {
-            throw new NotUnique($this->getInjection('language')->translate('suchFolderNameCannotBeUsed', 'exceptions', 'Folder'));
-        }
+        $this->removeItem($entity);
 
-        return $result;
+        parent::afterRemove($entity, $options);
+    }
+
+    public function createItem(Entity $entity): void
+    {
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->insert('file_folder_linker')
+            ->setValue('id', ':id')
+            ->setValue('name', ':name')
+            ->setValue('parent_id', ':parentId')
+            ->setValue('folder_id', ':folderId')
+            ->setParameter('id', Util::generateId())
+            ->setParameter('name', $entity->get('name'))
+            ->setParameter('parentId', '')
+            ->setParameter('folderId', $entity->get('id'));
+        try {
+            $qb->executeQuery();
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
+    public function updateItem(Entity $entity): void
+    {
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->update('file_folder_linker')
+            ->set('name', ':name')
+            ->where('folder_id=:folderId')
+            ->setParameter('name', $entity->get('name'))
+            ->setParameter('folderId', $entity->get('id'));
+        try {
+            $qb->executeQuery();
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
+    public function removeItem(Entity $entity): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('file_folder_linker')
+            ->where('folder_id=:folderId')
+            ->setParameter('folderId', $entity->get('id'))
+            ->executeQuery();
     }
 
     protected function init()
