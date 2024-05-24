@@ -1059,7 +1059,7 @@
     "cd": "cd"
   },
   "exceptions": {
-    "suchItemNameCannotBeUsedHere": "A File or Folder with such name already exists here. Please select a different folder or change the name.",
+    "suchItemNameCannotBeUsedHere": "A folder/file with such a name already exists in the destination folder. Please choose another folder or change the name and try again.",
     "colorDepthValidationFailed": "Color depth of this file is not allowed.",
     "colorSpaceValidationFailed": "Color space of this file is not allowed.",
     "fileExtensionValidationFailed": "Use only files with next extensions: %s.",
