@@ -240,6 +240,22 @@ class File extends Base
             ->executeQuery();
     }
 
+    public function validateItemName(FileEntity $file): void
+    {
+        $exist = $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from('file_folder_linker')
+            ->where('name=:name')
+            ->andWhere('parent_id=:parentId')
+            ->setParameter('name', $file->get('name'))
+            ->setParameter('parentId', $file->get('folderId') ?? '')
+            ->fetchAssociative();
+
+        if (!empty($exist)) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
     public function getDownloadUrl(FileEntity $file): string
     {
         return $this->getStorage($file)->getUrl($file);

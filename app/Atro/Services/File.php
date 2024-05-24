@@ -91,6 +91,8 @@ class File extends Base
             );
         }
 
+        $this->getRepository()->validateItemName($entity);
+
         /** @var FileStorageInterface $storage */
         $storage = $this->getInjection('container')->get($storageEntity->get('type') . 'Storage');
 
