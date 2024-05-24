@@ -25,6 +25,10 @@ class Storage extends Base
     {
         parent::beforeSave($entity, $options);
 
+        if ($entity->get('folderId') === null) {
+            $entity->set('folderId', '');
+        }
+
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('type')) {
                 throw new BadRequest($this->translate('storageTypeCannotBeChanged', 'exceptions', 'Storage'));
@@ -59,8 +63,8 @@ class Storage extends Base
 
         $regexp = Converter::isPgSQL($this->getConnection()) ? '~' : 'REGEXP';
 
-        $record = $this->getConnection()->createQueryBuilder()
-            ->select("f.id, s.name, CONCAT(s.path, '/', f.path) as file_path")
+        $records = $this->getConnection()->createQueryBuilder()
+            ->select("f.id, s.name, s.path, CONCAT(s.path, '/', f.path) as file_path")
             ->from('file', 'f')
             ->innerJoin('f', 'storage', 's', 's.id=f.storage_id')
             ->where('f.deleted=:false')
@@ -72,10 +76,12 @@ class Storage extends Base
             ->setParameter('local', 'local')
             ->setParameter('id', $entity->get('id'))
             ->setParameter('regExp', "^{$entity->get('path')}")
-            ->fetchAssociative();
+            ->fetchAllAssociative();
 
-        if (!empty($record)) {
-            throw new BadRequest($this->translate('storagePathContainFilesFromAnotherStorage', 'exceptions', 'Storage'));
+        foreach ($records as $record) {
+            if (strlen($record['path']) < strlen($entity->get('path'))) {
+                throw new BadRequest($this->translate('storagePathContainFilesFromAnotherStorage', 'exceptions', 'Storage'));
+            }
         }
     }
 

@@ -69,5 +69,11 @@
   "collection": {
     "sortBy": "priority",
     "asc": false
+  },
+  "uniqueIndexes": {
+    "unique_folder": [
+      "deleted",
+      "folder_id"
+    ]
   }
 }

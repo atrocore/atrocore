@@ -49,6 +49,20 @@ class V1Dot11Dot0 extends Base
             $this->exec("CREATE UNIQUE INDEX UNIQ_8B5ADE4E93CB796CEB3B4E33 ON file_folder_linker (file_id, deleted)");
         }
 
+        $this->getConnection()->createQueryBuilder()
+            ->delete('storage')
+            ->where('deleted=:true')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('storage')
+            ->set('folder_id', '')
+            ->where('folder_id IS NULL')
+            ->executeQuery();
+
+        $this->getPDO()->exec("CREATE UNIQUE INDEX IDX_STORAGE_UNIQUE_FOLDER ON storage (deleted, folder_id)");
+
         $this->createFoldersItems();
         $this->createFilesItems();
 
