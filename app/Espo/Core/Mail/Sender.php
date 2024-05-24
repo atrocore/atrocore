@@ -39,13 +39,12 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\QueueManager;
 use Espo\Core\Utils\Config;
 use Espo\ORM\EntityManager;
-use Laminas\Mail\Storage\Imap;
-use Laminas\Mime\Message as MimeMessage;
-use Laminas\Mime\Part as MimePart;
-use Laminas\Mail\Message;
-use Laminas\Mail\Transport\Smtp as SmtpTransport;
-use Laminas\Mail\Transport\SmtpOptions;
-use Laminas\Mime\Mime;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Transport\Dsn;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransportFactory;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 
 class Sender
 {
@@ -59,15 +58,16 @@ class Sender
      */
     private $queueManager;
 
-    /**
-     * @var SmtpTransport
-     */
-    private $transport;
 
     /**
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * @var Transport
+     */
+    private $transport;
 
     /**
      * Sender constructor.
@@ -77,26 +77,18 @@ class Sender
         $this->config = $config;
         $this->queueManager = $queueManager;
         $this->entityManager = $entityManager;
-        $this->transport = new SmtpTransport();
 
-        $opts = [
-            'name'              => $this->config->get('smtpLocalHostName', gethostname()),
-            'host'              => $this->config->get('smtpServer'),
-            'port'              => $this->config->get('smtpPort'),
-            'connection_config' => []
-        ];
+        $factory = new EsmtpTransportFactory;
 
-        if ($this->config->get('smtpAuth')) {
-            $opts['connection_class'] = $this->config->get('smtpAuthMechanism', 'login');
-            $opts['connection_config']['username'] = $this->config->get('smtpUsername');
-            $opts['connection_config']['password'] = $this->config->get('smtpPassword');
-        }
+        $scheme = in_array($this->config->get('smtpSecurity'), ['SSL', 'TLS']) ? ($this->config->get('smtpPort') === 465 ? 'smtps' : 'smtp') : '';
+        $this->transport = $factory->create(new Dsn(
+            'smtp',
+            $this->config->get('smtpServer') ?? '',
+            $this->config->get('smtpUsername') ?? null,
+            $this->config->get('smtpPassword') ?? null,
+            $this->config->get('smtpPort') ?? null,
+        ));
 
-        if ($this->config->get('smtpSecurity')) {
-            $opts['connection_config']['ssl'] = strtolower($this->config->get('smtpSecurity'));
-        }
-
-        $this->transport->setOptions(new SmtpOptions($opts));
     }
 
     public function sendByJob(array $emailData, array $params = []): void
@@ -125,104 +117,67 @@ class Sender
             throw new Error('From Email is not specified.');
         }
 
-        $sender = new \Laminas\Mail\Header\Sender();
-        $sender->setAddress($fromEmail);
+        $email = (new Email())->from($fromEmail);
 
         $fromName = $this->config->get('outboundEmailFromName', $fromEmail);
         if (array_key_exists('fromName', $emailData)) {
             $fromName = $emailData['fromName'];
         }
-
-        $message = new Message();
-        $message->addFrom(trim($fromEmail), $fromName);
-        $message->getHeaders()->addHeader($sender);
+        $email->from(new Address($fromEmail, $fromName));
 
         if (!empty($params['replyToAddress'])) {
             $replyToName = null;
             if (!empty($params['replyToName'])) {
                 $replyToName = $params['replyToName'];
             }
-            $message->setReplyTo($params['replyToAddress'], $replyToName);
+            $email->replyTo(new Address($params['replyToAddress'], $replyToName));
         }
 
         if (!empty($emailData['to'])) {
             foreach (explode(';', $emailData['to']) as $address) {
-                $message->addTo(trim($address));
+                $email->addTo(trim($address));
             }
         }
 
         if (!empty($emailData['cc'])) {
             foreach (explode(';', $emailData['cc']) as $address) {
-                $message->addCC(trim($address));
+                $email->addCc(trim($address));
             }
         }
 
         if (!empty($emailData['bcc'])) {
             foreach (explode(';', $emailData['bcc']) as $address) {
-                $message->addBCC(trim($address));
+                $email->addBcc(trim($address));
             }
         }
 
         if (!empty($emailData['replyTo'])) {
             foreach (explode(';', $emailData['replyTo']) as $address) {
-                $message->addReplyTo(trim($address));
+                $email->addReplyTo(trim($address));
             }
         }
 
-        $message->setSubject($emailData['subject']);
+        $email->subject($emailData['subject']);
 
         $bodyPlain = !empty($emailData['body']) ? $emailData['body'] : '';
 
         if (!empty($emailData['isHtml'])) {
-            $html = new MimePart($bodyPlain);
-            $html->type = Mime::TYPE_HTML; // $html->type = 'text/html; charset=utf-8';
-            $html->charset = 'utf-8';
-
-            $body = new MimeMessage();
-            $body->setParts([$html]);
+           $email->html($bodyPlain);
         } else {
-            $text = new MimePart($this->prepareBodyPlain($bodyPlain));
-            $text->type = Mime::TYPE_TEXT;
-            $text->charset = 'utf-8';
-
-            $body = new MimeMessage();
-            $body->setParts([$text]);
+           $email->text($this->prepareBodyPlain($bodyPlain));
         }
 
-        $emailAttachments = [];
         if (!empty($emailData['attachments'])) {
-            $attachments = $this->entityManager->getRepository('Attachment')->where(['id' => $emailData['attachments']])->find();
+            $attachments = $this->entityManager->getRepository('File')->where(['id' => $emailData['attachments']])->find();
             foreach ($attachments as $attachment) {
-                $emailAttachment = new MimePart(fopen($attachment->getFilePath(), 'r'));
-                $emailAttachment->type = $attachment->get('type');
-                $emailAttachment->filename = $attachment->get('name');
-                $emailAttachment->disposition = Mime::DISPOSITION_ATTACHMENT;
-                $emailAttachment->encoding = Mime::ENCODING_BASE64;
-
-                $body->addPart($emailAttachment);
+              $email->attachFromPath($attachment->getFilePath(), $attachment->get('name'), $attachment->get('mimeType'));
             }
         }
 
-        $message->setBody($body);
-        $message->setEncoding('UTF-8');
-
         try {
-            $this->transport->send($message);
+            $this->transport->send($email, Envelope::create($email));
         } catch (\Exception $e) {
             throw new Error($e->getMessage(), 500);
-        }
-
-        // add sent email to "Sent" folder
-        if (!empty($emailData['addToSentFolder'])) {
-            $storage = new Imap([
-                'host'     => $this->config->get('imapHostName', $this->config->get('smtpServer')),
-                'user'     => $this->config->get('imapUsername', $this->config->get('smtpUsername')),
-                'password' => $this->config->get('imapPassword', $this->config->get('smtpPassword')),
-                'port'     => $this->config->get('imapPort', 993),
-                'ssl'      => $this->config->get('imapSecurity', 'ssl'),
-            ]);
-            $storage->selectFolder($this->config->get('imapSentFolder', 'Sent'));
-            $storage->appendMessage($message->toString());
         }
     }
 
