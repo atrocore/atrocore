@@ -42,20 +42,6 @@
       "type": "linkMultiple",
       "noLoad": true
     },
-    "hash": {
-      "type": "varchar",
-      "trim": true,
-      "unique": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

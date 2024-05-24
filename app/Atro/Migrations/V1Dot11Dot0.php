@@ -30,16 +30,16 @@ class V1Dot11Dot0 extends Base
         $this->exec("ALTER TABLE storage ADD folder_id VARCHAR(24) DEFAULT NULL");
         $this->exec("CREATE INDEX IDX_STORAGE_FOLDER_ID ON storage (folder_id, deleted)");
 
-        $this->exec("ALTER TABLE folder ADD hash VARCHAR(255) DEFAULT NULL");
-        $this->exec("CREATE UNIQUE INDEX UNIQ_ECA209CDD1B862B8EB3B4E33 ON folder (hash, deleted)");
-
-        self::updateFoldersHash($this->getConnection());
-
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE storage ADD sync_folders BOOLEAN DEFAULT 'false' NOT NULL");
+            $this->exec("CREATE TABLE file_folder_linker (id VARCHAR(24) NOT NULL, name VARCHAR(255) NOT NULL, deleted BOOLEAN DEFAULT 'false', parent_id VARCHAR(255) NOT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE UNIQUE INDEX IDX_FILE_FOLDER_LINKER_UNIQUE_ITEM ON file_folder_linker (deleted, parent_id, name)");
         } else {
             $this->exec("ALTER TABLE storage ADD sync_folders TINYINT(1) DEFAULT '0' NOT NULL");
+            $this->exec("CREATE TABLE file_folder_linker (id VARCHAR(24) NOT NULL, name VARCHAR(255) NOT NULL, deleted TINYINT(1) DEFAULT '0', parent_id VARCHAR(255) NOT NULL, UNIQUE INDEX IDX_FILE_FOLDER_LINKER_UNIQUE_ITEM (deleted, parent_id, name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
+
+        self::updateFoldersHash($this->getConnection());
 
         try {
             $records = $this->getConnection()->createQueryBuilder()
