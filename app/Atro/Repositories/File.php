@@ -36,6 +36,9 @@ class File extends Base
         // validate via type
         $this->validateByType($entity);
 
+        // validate file name
+        $this->validateItemName($entity);
+
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('storageId')) {
                 throw new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File'));
@@ -242,17 +245,22 @@ class File extends Base
 
     public function validateItemName(FileEntity $file): void
     {
-        $exist = $this->getConnection()->createQueryBuilder()
-            ->select('*')
-            ->from('file_folder_linker')
-            ->where('name=:name')
-            ->andWhere('parent_id=:parentId')
-            ->setParameter('name', $file->get('name'))
-            ->setParameter('parentId', $file->get('folderId') ?? '')
-            ->fetchAssociative();
+        if ($file->isNew() || $file->isAttributeChanged('name') || $file->isAttributeChanged('folderId')) {
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('file_folder_linker')
+                ->where('name=:name')
+                ->andWhere('parent_id=:parentId')
+                ->setParameter('name', $file->get('name'))
+                ->setParameter('parentId', $file->get('folderId') ?? '');
 
-        if (!empty($exist)) {
-            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            if (!$file->isNew()) {
+                $qb->andWhere('id!=:id')->setParameter('id', $file->get('id'));
+            }
+
+            if (!empty($qb->fetchAssociative())) {
+                throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            }
         }
     }
 
