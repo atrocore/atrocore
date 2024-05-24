@@ -110,6 +110,9 @@
     "smtpPassword": {
       "type": "password"
     },
+    "disableEmailDelivery": {
+      "type": "bool"
+    },
     "tabList": {
       "type": "array",
       "view": "views/settings/fields/tab-list"

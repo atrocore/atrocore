@@ -14,6 +14,7 @@
     "emailAddress": "Correo electrónico",
     "smtpPassword": "Contraseña",
     "outboundEmailFromName": "De (nombre):",
+    "disableEmailDelivery": "Desactivar el envío de correo electrónico",
     "outboundEmailFromAddress": "De (email)",
     "recordsPerPage": "Registros por página",
     "recordsPerPageSmall": "Registros por página (pequeño)",

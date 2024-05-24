@@ -18,6 +18,7 @@
     "emailAddress": "E-Mail",
     "smtpPassword": "Passwort",
     "outboundEmailFromName": "Absendername",
+    "disableEmailDelivery": "E-Mail-Zustellung deaktivieren",
     "outboundEmailFromAddress": "Absenderadresse",
     "recordsPerPage": "Datensätze pro Seite",
     "recordsPerPageSmall": "Datensätze pro Seite (Klein)",

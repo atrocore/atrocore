@@ -82,7 +82,7 @@ class Sender
 
         $scheme = in_array($this->config->get('smtpSecurity'), ['SSL', 'TLS']) ? ($this->config->get('smtpPort') === 465 ? 'smtps' : 'smtp') : '';
         $this->transport = $factory->create(new Dsn(
-            'smtp',
+            $scheme,
             $this->config->get('smtpServer') ?? '',
             $this->config->get('smtpUsername') ?? null,
             $this->config->get('smtpPassword') ?? null,
@@ -104,6 +104,11 @@ class Sender
      */
     public function send(array $emailData, array $params = []): void
     {
+        if($this->config->get('disableEmailDelivery') === true){
+            $GLOBALS['log']->alert('Outbound emails: Email delivery is deactivated.');
+            return;
+        }
+
         if (empty($emailData['subject']) || empty($emailData['to'])) {
             throw new Error('Subject and emailTo is required.');
         }
