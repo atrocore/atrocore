@@ -13,12 +13,17 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Doctrine\DBAL\ParameterType;
-use Espo\Core\Templates\Repositories\Hierarchy;
+use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\Templates\Repositories\Hierarchy;
 use Espo\ORM\Entity;
 
 class Folder extends Hierarchy
 {
+    public static function createFolderHash(?string $name, ?string $parentId): string
+    {
+        return md5("{$name}_{$parentId}");
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('code') === '') {
@@ -26,29 +31,27 @@ class Folder extends Hierarchy
         }
 
         if ($entity->isAttributeChanged('name')) {
-            $entity->set('hash', $this->prepareFolderHash($entity->get('id'), $entity->get('name')));
+            $entity->set('hash', self::createFolderHash($entity->get('name'), $entity->getParentId()));
         }
 
         parent::beforeSave($entity, $options);
     }
 
-    public function prepareFolderHash(string $folderId, string $folderName = null): string
+    public function save(Entity $entity, array $options = [])
     {
-        $record = $this->getConnection()->createQueryBuilder()
-            ->select('f.*, h.parent_id')
-            ->from('folder', 'f')
-            ->leftJoin('f', 'folder_hierarchy', 'h', 'f.id=h.entity_id')
-            ->where('f.deleted=:false')
-            ->andWhere('f.deleted=:false')
-            ->andWhere('f.id=:id')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('id', $folderId)
-            ->fetchAssociative();
-
-        if (!$folderName) {
-            $folderName = $record['name'];
+        try {
+            $result = parent::save($entity, $options);
+        } catch (NotUnique $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchFolderNameCannotBeUsed', 'exceptions', 'Folder'));
         }
 
-        return md5("{$folderName}_{$record['parent_id']}");
+        return $result;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

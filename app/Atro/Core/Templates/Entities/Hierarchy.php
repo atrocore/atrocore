@@ -17,4 +17,19 @@ use Espo\Core\ORM\Entity;
 
 class Hierarchy extends Entity
 {
+    public function getParentId(): ?string
+    {
+        $parentId = null;
+
+        if (!empty($parentsIds = $this->get('parentsIds'))) {
+            $parentId = array_shift($parentsIds);
+        } else {
+            $parents = $this->get('parents');
+            if (!empty($parents[0])) {
+                $parentId = $parents[0]->get('id');
+            }
+        }
+
+        return $parentId;
+    }
 }

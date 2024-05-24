@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Entities;
 
-use Atro\Core\Templates\Entities\Base;
+use Atro\Core\Templates\Entities\Hierarchy;
 
-class Folder extends Base
+class Folder extends Hierarchy
 {
     protected $entityType = "Folder";
 }
