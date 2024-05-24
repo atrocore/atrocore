@@ -50,6 +50,10 @@ class File extends Base
                     throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
                 }
             } else {
+                if ($entity->isAttributeChanged('name') || $entity->isAttributeChanged('folderId')) {
+                    $this->updateItem($entity);
+                }
+
                 if ($entity->isAttributeChanged('name')) {
                     $this->rename($entity);
                 }
@@ -69,16 +73,12 @@ class File extends Base
                 }
             }
 
+            $this->createItem($entity);
+
             // create origin file
             if (empty($options['scanning']) && !$this->getStorage($entity)->create($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
             }
-        }
-
-        if ($entity->isNew()) {
-            $this->createItem($entity);
-        } elseif ($entity->isAttributeChanged('name') || $entity->isAttributeChanged('folderId')) {
-            $this->updateItem($entity);
         }
     }
 
