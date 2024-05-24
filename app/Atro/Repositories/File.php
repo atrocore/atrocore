@@ -14,12 +14,15 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Core\FileValidator;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\FilePathBuilder;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class File extends Base
@@ -70,6 +73,12 @@ class File extends Base
             if (empty($options['scanning']) && !$this->getStorage($entity)->create($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
             }
+        }
+
+        if ($entity->isNew()) {
+            $this->createItem($entity);
+        } elseif ($entity->isAttributeChanged('name') || $entity->isAttributeChanged('folderId')) {
+            $this->updateItem($entity);
         }
     }
 
@@ -143,6 +152,13 @@ class File extends Base
         }
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $this->removeItem($entity);
+
+        parent::afterRemove($entity, $options);
+    }
+
     public function deleteFile(FileEntity $entity): void
     {
         // delete origin file
@@ -177,6 +193,51 @@ class File extends Base
                 'large'  => $this->getLargeThumbnailUrl($file)
             ],
         ];
+    }
+
+    public function createItem(Entity $entity): void
+    {
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->insert('file_folder_linker')
+            ->setValue('id', ':id')
+            ->setValue('name', ':name')
+            ->setValue('parent_id', ':parentId')
+            ->setValue('file_id', ':fileId')
+            ->setParameter('id', Util::generateId())
+            ->setParameter('name', $entity->get('name'))
+            ->setParameter('parentId', $entity->get('folderId') ?? '')
+            ->setParameter('fileId', $entity->get('id'));
+        try {
+            $qb->executeQuery();
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
+    public function updateItem(Entity $entity): void
+    {
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->update('file_folder_linker')
+            ->set('name', ':name')
+            ->set('parent_id', ':parentId')
+            ->where('file_id=:fileId')
+            ->setParameter('name', $entity->get('name'))
+            ->setParameter('parentId', $entity->get('folderId') ?? '')
+            ->setParameter('fileId', $entity->get('id'));
+        try {
+            $qb->executeQuery();
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
+    public function removeItem(Entity $entity): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('file_folder_linker')
+            ->where('file_id=:fileId')
+            ->setParameter('fileId', $entity->get('id'))
+            ->executeQuery();
     }
 
     public function getDownloadUrl(FileEntity $file): string

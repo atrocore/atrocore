@@ -32,13 +32,13 @@ class Folder extends Hierarchy
             $entity->set('code', null);
         }
 
+        parent::beforeSave($entity, $options);
+
         if ($entity->isNew()) {
             $this->createItem($entity);
         } elseif ($entity->isAttributeChanged('name')) {
             $this->updateItem($entity);
         }
-
-        parent::beforeSave($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
