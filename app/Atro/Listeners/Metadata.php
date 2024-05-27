@@ -62,6 +62,9 @@ class Metadata extends AbstractListener
 
         $this->prepareExtensibleEnum($data);
 
+        // multiParents is mandatory disabled for Folder
+        $data['scopes']['Folder']['multiParents'] = false;
+
         $event->setArgument('data', $data);
     }
 
@@ -1019,7 +1022,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array $indexes
+     * @param array  $indexes
      * @param string $fieldName
      *
      * @return array
