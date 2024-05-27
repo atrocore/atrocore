@@ -26,26 +26,25 @@ class Folder extends Hierarchy
 {
     public function getFolderStorage(string $folderId): StorageEntity
     {
-        $folder = $this->get($folderId);
-        if (empty($folder)) {
-            throw new NotFound();
-        }
-
-        $rowFolder = $folder;
         while (true) {
+            $folder = $this->get($folderId);
+            if (empty($folder)) {
+                throw new NotFound();
+            }
+
             $storage = $this->getEntityManager()->getRepository('Storage')
-                ->where(['folderId' => $rowFolder->get('id')])
+                ->where(['folderId' => $folderId])
                 ->findOne();
             if (!empty($storage)) {
                 return $storage;
             }
 
-            $parent = $rowFolder->getParent();
+            $parent = $folder->getParent();
             if (empty($parent)) {
                 break;
             }
 
-            $rowFolder = $parent;
+            $folderId = $parent->get('id');
         }
 
         throw new Error("No Storage found.");
