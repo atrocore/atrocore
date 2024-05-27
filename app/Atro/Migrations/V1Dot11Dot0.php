@@ -53,32 +53,18 @@ class V1Dot11Dot0 extends Base
         $this->createFoldersItems();
         $this->createFilesItems();
 
-        try {
-            $records = $this->getConnection()->createQueryBuilder()
-                ->select('*')
-                ->from('folder_storage')
-                ->where('deleted=:false')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
-        } catch (\Throwable $e) {
-            $records = [];
-        }
-
-        foreach ($records as $record) {
-            $this->getConnection()->createQueryBuilder()
-                ->update('storage')
-                ->set('folder_id', ':folderId')
-                ->where('id=:storageId')
-                ->setParameter('folderId', $record['folder_id'])
-                ->setParameter('storageId', $record['storage_id'])
-                ->executeQuery();
-        }
-
         $this->getConnection()->createQueryBuilder()
             ->update('storage')
             ->set('folder_id', '')
-            ->where('folder_id IS NULL')
-            ->andWhere('deleted=:false')
+            ->where('id=:storageId')
+            ->setParameter('storageId', 'a_base')
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('storage')
+            ->set('is_active', ':false')
+            ->where('id!=:storageId')
+            ->setParameter('storageId', 'a_base')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
 
