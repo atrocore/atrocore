@@ -21,6 +21,12 @@
           "name": "description"
         },
         false
+      ],
+      [
+        {
+          "name": "parent"
+        },
+        false
       ]
     ]
   }

@@ -16,7 +16,8 @@
         "Hierarchy"
       ],
       "mandatoryHiddenForEntity": [
-        "Folder"
+        "Folder",
+        "Category"
       ],
       "default": true
     },
