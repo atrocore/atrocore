@@ -53,13 +53,7 @@ class File extends Base
             return $this->createFileViaUrl($attachment, $url);
         }
 
-        // set default storage on create
-        if (!property_exists($attachment, 'storageId')) {
-            $default = $this->getServiceFactory()->create('Folder')->getDefaultStorage('');
-            if (!empty($default['id'])) {
-                $attachment->storageId = $default['id'];
-            }
-        }
+        $attachment->storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($attachment->folderId ?? '')->get('id');
 
         // for single upload
         if (!property_exists($attachment, 'piecesCount')) {

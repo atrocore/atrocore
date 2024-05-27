@@ -21,12 +21,6 @@
       ],
       [
         {
-          "name": "priority"
-        },
-        false
-      ],
-      [
-        {
           "name": "path"
         },
         {

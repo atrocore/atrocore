@@ -27,12 +27,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "priority": {
-      "type": "int",
-      "notNull": true,
-      "default": 10,
-      "min": 0
-    },
     "files": {
       "type": "linkMultiple",
       "noLoad": true

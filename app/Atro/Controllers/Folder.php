@@ -14,21 +14,7 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Templates\Controllers\Hierarchy;
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 
 class Folder extends Hierarchy
 {
-    public function actionDefaultStorage($params, $data, $request)
-    {
-        if (!$request->isGet()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->getDefaultStorage((string)$request->get('id'));
-    }
 }

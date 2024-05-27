@@ -13,17 +13,42 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\Entities\Storage as StorageEntity;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class Folder extends Hierarchy
 {
-    public static function createFolderHash(?string $name, ?string $parentId): string
+    public function getFolderStorage(string $folderId): StorageEntity
     {
-        return md5("{$name}_{$parentId}");
+        $folder = $this->get($folderId);
+        if (empty($folder)) {
+            throw new NotFound();
+        }
+
+        $rowFolder = $folder;
+        while (true) {
+            $storage = $this->getEntityManager()->getRepository('Storage')
+                ->where(['folderId' => $rowFolder->get('id')])
+                ->findOne();
+            if (!empty($storage)) {
+                return $storage;
+            }
+
+            $parent = $rowFolder->getParent();
+            if (empty($parent)) {
+                break;
+            }
+
+            $rowFolder = $parent;
+        }
+
+        throw new Error("No Storage found.");
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

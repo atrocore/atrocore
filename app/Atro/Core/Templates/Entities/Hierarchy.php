@@ -32,4 +32,20 @@ class Hierarchy extends Entity
 
         return $parentId;
     }
+
+    public function getParent(): ?Hierarchy
+    {
+        $parent = null;
+
+        if (!empty($parentsIds = $this->get('parentsIds'))) {
+            $parent = $this->getEntityManager()->getRepository($this->entityType)->get(array_shift($parentsIds));
+        } else {
+            $parents = $this->get('parents');
+            if (!empty($parents[0])) {
+                $parent = $parents[0];
+            }
+        }
+
+        return $parent;
+    }
 }
