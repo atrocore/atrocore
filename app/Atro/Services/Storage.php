@@ -16,6 +16,7 @@ namespace Atro\Services;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\Xattr;
 use Espo\ORM\Entity;
 use Espo\Services\QueueManagerServiceInterface;
 
@@ -53,6 +54,11 @@ class Storage extends Base implements QueueManagerServiceInterface
 
     public function createScanJob(string $storageId, bool $manual): bool
     {
+        $xattr = new Xattr();
+        if (!$xattr->hasServerExtensions()) {
+            throw new BadRequest("Xattr extension is not installed and the attr command is not available. See documentation for details.");
+        }
+
         $storage = $this->getEntity($storageId);
         if (empty($storage)) {
             throw new NotFound();
