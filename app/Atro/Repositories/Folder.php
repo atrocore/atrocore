@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Entities\Storage as StorageEntity;
+use Atro\Entities\Folder as FolderEntity;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -71,11 +72,49 @@ class Folder extends Hierarchy
         }
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        // delete all files inside folder
+        $this->deleteFiles($entity);
+
+        // delete children folders
+        $this->deleteChildrenFolders($entity);
+
+        parent::beforeRemove($entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->removeItem($entity);
 
         parent::afterRemove($entity, $options);
+    }
+
+    public function deleteFiles(FolderEntity $folder): void
+    {
+        while (true) {
+            $files = $this->getEntityManager()->getRepository('File')
+                ->where(['folderId' => $folder->get('id')])
+                ->limit(0, 20000)
+                ->find();
+
+            if (empty($files[0])) {
+                break;
+            }
+            foreach ($files as $file) {
+                $this->getEntityManager()->removeEntity($file);
+            }
+        }
+    }
+
+    public function deleteChildrenFolders(FolderEntity $folder): void
+    {
+        $children = $folder->get('children');
+        if (!empty($children[0])) {
+            foreach ($children as $child) {
+                $this->getEntityManager()->removeEntity($child);
+            }
+        }
     }
 
     public function createItem(Entity $entity): void
