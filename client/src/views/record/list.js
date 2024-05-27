@@ -1062,7 +1062,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (list) {
                     if (!this.hasHorizontalScroll() || $(window).width() < 768) {
                         $('.fixed-scrollbar').css('display', 'none');
-                        // $('td[data-name="buttons"]').removeClass('fixed-button');
                     } else {
                         $('.fixed-scrollbar').css('display', 'block');
                         $('td[data-name="buttons"]').addClass('fixed-button');
