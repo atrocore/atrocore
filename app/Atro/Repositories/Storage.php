@@ -39,6 +39,24 @@ class Storage extends Base
         }
 
         $this->validateLocalPath($entity);
+
+        if ($entity->isAttributeChanged('folderId')) {
+            $file = $this->getEntityManager()->getRepository('File')
+                ->where(['folderId' => $entity->get('folderId')])
+                ->findOne();
+
+            if (!empty($file)) {
+                throw new BadRequest($this->translate('folderInUse', 'exceptions', 'Storage'));
+            }
+
+            $file = $this->getEntityManager()->getRepository('File')
+                ->where(['storageId' => $entity->get('id')])
+                ->findOne();
+
+            if (!empty($file)) {
+                throw new BadRequest($this->translate('storageHasFiles', 'exceptions', 'Storage'));
+            }
+        }
     }
 
     protected function validateLocalPath(Entity $entity): void
