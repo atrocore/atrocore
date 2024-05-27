@@ -41,6 +41,12 @@ class Folder extends Hierarchy
 
             $parent = $folder->getParent();
             if (empty($parent)) {
+                $storage = $this->getEntityManager()->getRepository('Storage')
+                    ->where(['folderId' => ''])
+                    ->findOne();
+                if (!empty($storage)) {
+                    return $storage;
+                }
                 break;
             }
 

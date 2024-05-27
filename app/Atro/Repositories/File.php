@@ -44,6 +44,13 @@ class File extends Base
                 throw new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File'));
             }
 
+            if ($entity->isAttributeChanged('folderId')) {
+                $storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('folderId') ?? '')->get('id');
+                if ($storageId !== $entity->get('storageId')) {
+                    throw new BadRequest($this->getInjection('language')->translate('fileCannotBeMovedToAnotherStorage', 'exceptions', 'File'));
+                }
+            }
+
             if (!empty($entity->_input) && !empty($entity->_input->reupload)) {
                 if ($entity->isAttributeChanged('folderId')) {
                     throw new BadRequest($this->getInjection('language')->translate('fileFolderCannotBeChanged', 'exceptions', 'File'));
