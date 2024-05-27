@@ -186,13 +186,12 @@ class RDB extends \Espo\ORM\Repository
         }
         if ($entity->isNew() && !$entity->isSaved()) {
             try {
-                $result = $this->getMapper()->insert($entity, !empty($options['ignoreDuplicate']));
+                $result = $this->insertEntity($entity, !empty($options['ignoreDuplicate']));
             } catch (UniqueConstraintViolationException $e) {
                 throw new NotUnique('The record cannot be created due to database constraints.');
             }
         } else {
-
-            $result = $this->getMapper()->update($entity);
+            $result = $this->updateEntity($entity);
         }
         if ($result) {
             $entity->setIsSaved(true);
@@ -216,6 +215,16 @@ class RDB extends \Espo\ORM\Repository
         $entity->setAsNotBeingSaved();
 
         return $result;
+    }
+
+    protected function insertEntity(Entity $entity, bool $ignoreDuplicate): bool
+    {
+        return $this->getMapper()->insert($entity, $ignoreDuplicate);
+    }
+
+    protected function updateEntity(Entity $entity): bool
+    {
+        return $this->getMapper()->update($entity);
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -300,8 +309,7 @@ class RDB extends \Espo\ORM\Repository
     public function remove(Entity $entity, array $options = [])
     {
         $this->beforeRemove($entity, $options);
-        $entity->set('deleted', true);
-        $result = $this->getMapper()->update($entity);
+        $result = $this->deleteEntity($entity);
         if ($result) {
             $this->afterRemove($entity, $options);
         }
@@ -314,6 +322,13 @@ class RDB extends \Espo\ORM\Repository
         $entity->id = $id;
 
         return $this->getMapper()->delete($entity);
+    }
+
+    protected function deleteEntity(Entity $entity): bool
+    {
+        $entity->set('deleted', true);
+
+        return $this->getMapper()->update($entity);
     }
 
     /**
