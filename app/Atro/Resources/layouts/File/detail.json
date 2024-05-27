@@ -21,9 +21,7 @@
         {
           "name": "folder"
         },
-        {
-          "name": "storage"
-        }
+        false
       ],
       [
         {
