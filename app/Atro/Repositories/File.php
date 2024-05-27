@@ -106,35 +106,51 @@ class File extends Base
 
     public function save(Entity $entity, array $options = [])
     {
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = $this->getPDO()->inTransaction();
+
+        if (!$inTransaction) {
+            $this->getPDO()->beginTransaction();
+        }
 
         try {
             $res = parent::save($entity, $options);
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
-        $this->getEntityManager()->getPDO()->commit();
+        if ($inTransaction) {
+            $this->getPDO()->commit();
+        }
 
         return $res;
     }
 
-    public function remove(Entity $entity, array $options = [])
+    protected function deleteEntity(Entity $entity): bool
     {
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = $this->getPDO()->inTransaction();
+
+        if (!$inTransaction) {
+            $this->getPDO()->beginTransaction();
+        }
 
         try {
-            $res = parent::remove($entity, $options);
+            $res = parent::deleteEntity($entity);
             if ($res) {
                 $this->removeItem($entity);
             }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getPDO()->rollBack();
+            }
             throw $e;
         }
 
-        $this->getEntityManager()->getPDO()->commit();
+        if ($inTransaction) {
+            $this->getPDO()->commit();
+        }
 
         return $res;
     }
