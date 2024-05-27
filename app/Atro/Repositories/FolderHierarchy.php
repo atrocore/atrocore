@@ -39,6 +39,7 @@ class FolderHierarchy extends Relation
 
         if (!$inTransaction) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {
@@ -67,6 +68,7 @@ class FolderHierarchy extends Relation
 
         if (!$inTransaction) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {
@@ -94,6 +96,7 @@ class FolderHierarchy extends Relation
 
         if (!$inTransaction) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {

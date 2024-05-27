@@ -110,6 +110,7 @@ class File extends Base
 
         if (!$inTransaction) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {
@@ -134,6 +135,7 @@ class File extends Base
 
         if (!$inTransaction) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {

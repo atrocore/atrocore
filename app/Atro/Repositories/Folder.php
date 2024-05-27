@@ -72,6 +72,7 @@ class Folder extends Hierarchy
 
         if (!$inTransaction) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {
@@ -100,6 +101,7 @@ class Folder extends Hierarchy
 
         if (!$inTransaction) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {
@@ -127,6 +129,7 @@ class Folder extends Hierarchy
 
         if (!$inTransaction) {
             $this->getPDO()->beginTransaction();
+            $inTransaction = true;
         }
 
         try {
