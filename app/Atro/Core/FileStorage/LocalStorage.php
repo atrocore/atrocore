@@ -93,8 +93,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         // remove files from other storages
         $otherStorages = $this->getEntityManager()->getRepository('Storage')
             ->where([
-                'id!=' => $storage->get('id'),
-                'type' => 'local'
+                'id!='     => $storage->get('id'),
+                'type'     => 'local',
+                'isActive' => true
             ])
             ->find();
         foreach ($otherStorages as $otherStorage) {

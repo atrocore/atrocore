@@ -34,7 +34,7 @@ class Folder extends Hierarchy
             }
 
             $storage = $this->getEntityManager()->getRepository('Storage')
-                ->where(['folderId' => $folderId])
+                ->where(['folderId' => $folderId, 'isActive' => true])
                 ->findOne();
             if (!empty($storage)) {
                 return $storage;
@@ -43,7 +43,7 @@ class Folder extends Hierarchy
             $parent = $folder->getParent($fromDbOnly);
             if (empty($parent)) {
                 $storage = $this->getEntityManager()->getRepository('Storage')
-                    ->where(['folderId' => ''])
+                    ->where(['folderId' => '', 'isActive' => true])
                     ->findOne();
                 if (!empty($storage)) {
                     return $storage;

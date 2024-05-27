@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
@@ -57,6 +58,10 @@ class Storage extends Base implements QueueManagerServiceInterface
             throw new NotFound();
         }
 
+        if (empty($storage->get('isActive'))) {
+            throw new BadRequest('The Storage is not active.');
+        }
+
         $name = $this->getInjection('language')->translate('scan', 'labels', 'Storage') . ' ' . $storage->get('name');
 
         return $this->getInjection('queueManager')->push($name, 'Storage', ['storageId' => $storage->get('id'), 'storageName' => $storage->get('name'), 'manual' => $manual]);
@@ -65,6 +70,9 @@ class Storage extends Base implements QueueManagerServiceInterface
     public function run(array $data = []): bool
     {
         $storage = $this->getEntity($data['storageId']);
+        if (empty($storage->get('isActive'))) {
+            return false;
+        }
         $this->getInjection('container')->get($storage->get('type') . 'Storage')->scan($storage);
 
         return true;
