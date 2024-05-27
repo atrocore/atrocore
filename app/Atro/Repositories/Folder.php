@@ -25,7 +25,7 @@ use Espo\ORM\Entity;
 
 class Folder extends Hierarchy
 {
-    public function getFolderStorage(string $folderId): StorageEntity
+    public function getFolderStorage(string $folderId, bool $fromDbOnly = false): StorageEntity
     {
         while (true) {
             $folder = $this->get($folderId);
@@ -40,7 +40,7 @@ class Folder extends Hierarchy
                 return $storage;
             }
 
-            $parent = $folder->getParent();
+            $parent = $folder->getParent($fromDbOnly);
             if (empty($parent)) {
                 $storage = $this->getEntityManager()->getRepository('Storage')
                     ->where(['folderId' => ''])

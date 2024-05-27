@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Relation;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -22,9 +23,33 @@ class FolderHierarchy extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        parent::beforeSave($entity, $options);
+        $folderStorageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId') ?? '', true)->get('id');
+        $parentFolderStorageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('parentId') ?? '', true)->get('id');
 
-        $this->updateItem($entity);
+        if ($folderStorageId !== $parentFolderStorageId) {
+            throw new BadRequest($this->getInjection('language')->translate('fileCannotBeMovedToAnotherStorage', 'exceptions', 'File'));
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
+    public function save(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+
+        try {
+            $res = parent::save($entity, $options);
+            if ($res) {
+                $this->updateItem($entity);
+            }
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        $this->getEntityManager()->getPDO()->commit();
+
+        return $res;
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

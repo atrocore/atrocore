@@ -17,11 +17,11 @@ use Espo\Core\ORM\Entity;
 
 class Hierarchy extends Entity
 {
-    public function getParentId(): ?string
+    public function getParentId(bool $fromDbOnly = false): ?string
     {
         $parentId = null;
 
-        if (!empty($parentsIds = $this->get('parentsIds'))) {
+        if (!$fromDbOnly && !empty($parentsIds = $this->get('parentsIds'))) {
             $parentId = array_shift($parentsIds);
         } else {
             $parents = $this->get('parents');
@@ -33,11 +33,11 @@ class Hierarchy extends Entity
         return $parentId;
     }
 
-    public function getParent(): ?Hierarchy
+    public function getParent(bool $fromDbOnly = false): ?Hierarchy
     {
         $parent = null;
 
-        if (!empty($parentsIds = $this->get('parentsIds'))) {
+        if (!$fromDbOnly && !empty($parentsIds = $this->get('parentsIds'))) {
             $parent = $this->getEntityManager()->getRepository($this->entityType)->get(array_shift($parentsIds));
         } else {
             $parents = $this->get('parents');
