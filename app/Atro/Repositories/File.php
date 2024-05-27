@@ -104,6 +104,41 @@ class File extends Base
         }
     }
 
+    public function save(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+
+        try {
+            $res = parent::save($entity, $options);
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        $this->getEntityManager()->getPDO()->commit();
+
+        return $res;
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+
+        try {
+            $res = parent::remove($entity, $options);
+            if ($res) {
+                $this->removeItem($entity);
+            }
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        $this->getEntityManager()->getPDO()->commit();
+
+        return $res;
+    }
+
     public function rename(FileEntity $file): void
     {
         if ($this->isExtensionChanged($file)) {
@@ -160,13 +195,6 @@ class File extends Base
         if (empty($options['keepFile'])) {
             $this->deleteFile($entity);
         }
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $this->removeItem($entity);
-
-        parent::afterRemove($entity, $options);
     }
 
     public function deleteFile(FileEntity $entity): void

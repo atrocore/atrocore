@@ -72,6 +72,41 @@ class Folder extends Hierarchy
         }
     }
 
+    public function save(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+
+        try {
+            $res = parent::save($entity, $options);
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        $this->getEntityManager()->getPDO()->commit();
+
+        return $res;
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+
+        try {
+            $res = parent::remove($entity, $options);
+            if ($res) {
+                $this->removeItem($entity);
+            }
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        $this->getEntityManager()->getPDO()->commit();
+
+        return $res;
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         // delete all files inside folder
@@ -81,13 +116,6 @@ class Folder extends Hierarchy
         $this->deleteChildrenFolders($entity);
 
         parent::beforeRemove($entity, $options);
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $this->removeItem($entity);
-
-        parent::afterRemove($entity, $options);
     }
 
     public function deleteFiles(FolderEntity $folder): void
