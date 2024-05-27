@@ -15,6 +15,9 @@
       "types": [
         "Hierarchy"
       ],
+      "mandatoryHiddenForEntity": [
+        "Folder"
+      ],
       "default": true
     },
     "dragAndDrop": {
