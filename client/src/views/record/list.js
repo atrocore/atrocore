@@ -1062,7 +1062,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (list) {
                     if (!this.hasHorizontalScroll() || $(window).width() < 768) {
                         $('.fixed-scrollbar').css('display', 'none');
-                        $('td[data-name="buttons"]').removeClass('fixed-button');
                     } else {
                         $('.fixed-scrollbar').css('display', 'block');
                         $('td[data-name="buttons"]').addClass('fixed-button');
@@ -1427,7 +1426,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 let fullTable = list.find('.full-table');
                 let scroll = this.getParentView().$el.siblings('.panel-scroll');
 
-                if (fixedTableHeader.length && fullTable.length) {
+                if (fullTable.length) {
                     if (scroll.length) {
                         scroll.scrollLeft(0);
                         scroll.addClass('hidden');
@@ -1454,32 +1453,33 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }
                     }.bind(this));
 
-                    if (this.hasHorizontalScroll()) {
-                        fixedTableHeader.addClass('table-scrolled');
-                        fullTable.addClass('table-scrolled');
+                    fixedTableHeader.addClass('table-scrolled');
+                    fullTable.addClass('table-scrolled');
 
-                        let rowsButtons = this.$el.find('td[data-name="buttons"]');
-                        let rowsButtonsPosition = list.width() - 35;
-                        if ($(window).outerWidth() > 768 && rowsButtons.length) {
-                            rowsButtons.addClass('fixed-button');
+                    let rowsButtons = this.$el.find('td[data-name="buttons"]');
+                    let rowsButtonsPosition = list.width() - 35;
+                    if ($(window).outerWidth() > 768 && rowsButtons.length) {
+                        rowsButtons.addClass('fixed-button');
 
-                            rowsButtons.css('left', rowsButtonsPosition);
-                        }
+                        rowsButtons.css('left', rowsButtonsPosition);
+                    }
 
-                        let prevScrollLeft = 0;
+                    let prevScrollLeft = 0;
 
-                        list.off('scroll');
-                        list.on('scroll', () => {
-                            if (prevScrollLeft !== list.scrollLeft()) {
-                                let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
-                                fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
+                    list.off('scroll');
+                    list.on('scroll', () => {
+                        if (prevScrollLeft !== list.scrollLeft()) {
+                            let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
+                            fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
 
-                                if ($(window).outerWidth() > 768 && rowsButtons.hasClass('fixed-button')) {
-                                    rowsButtons.css('left', rowsButtonsPosition + list.scrollLeft());
-                                }
+                            if ($(window).outerWidth() > 768 && rowsButtons.hasClass('fixed-button')) {
+                                rowsButtons.css('left', rowsButtonsPosition + list.scrollLeft());
                             }
-                            prevScrollLeft = list.scrollLeft();
-                        });
+                        }
+                        prevScrollLeft = list.scrollLeft();
+                    });
+
+                    if (this.hasHorizontalScroll()) {
 
                         // custom scroll for relationship panels
                         if (scroll.length) {
