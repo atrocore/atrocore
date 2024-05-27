@@ -53,9 +53,7 @@ Espo.define('views/admin/entity-manager/fields/bool-for-type', 'views/fields/boo
             Dep.prototype.setup.call(this);
 
             let types = this.options.defs.types ?? this.getMetadata().get(`app.additionalEntityParams.fields.${this.name}.types`);
-            let mandatoryHiddenForEntity = this.options.defs.mandatoryHiddenForEntity ?? this.getMetadata().get(`app.additionalEntityParams.fields.${this.name}.mandatoryHiddenForEntity`, []);
-
-            if (types && types.includes(this.model.get('type')) && !mandatoryHiddenForEntity.includes(this.model.get('name'))) {
+            if (types && types.includes(this.model.get('type'))) {
                 this.show();
             } else {
                 this.hide();

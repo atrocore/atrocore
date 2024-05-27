@@ -13,12 +13,6 @@
       "layoutDetailDisabled": true,
       "noLoad": true
     },
-    "parent": {
-      "type": "link",
-      "entity": "Folder",
-      "notStorable": true,
-      "filterDisabled": true
-    },
     "parents": {
       "type": "linkMultiple",
       "view": "views/fields/hierarchy-parents",

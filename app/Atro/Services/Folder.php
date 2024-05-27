@@ -29,27 +29,4 @@ class Folder extends Hierarchy
 
         return parent::findLinkedEntities($id, $link, $params);
     }
-
-    protected function handleInput(\stdClass $data, ?string $id = null): void
-    {
-        if (property_exists($data, 'parentId')) {
-            $data->parentsIds = [$data->parentId];
-            if (property_exists($data, 'parentName')) {
-                $data->parentsNames = json_decode(json_encode([$data->parentId => $data->parentName]));
-            }
-        }
-
-        parent::handleInput($data, $id);
-    }
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        $parentId = $entity->get('parentsIds')[0] ?? null;
-        if (!empty($parentId)) {
-            $entity->set('parentId', $parentId);
-            $entity->set('parentName', $entity->get('parentsNames')->{$parentId} ?? null);
-        }
-
-        parent::prepareEntityForOutput($entity);
-    }
 }
