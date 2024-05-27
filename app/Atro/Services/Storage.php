@@ -54,11 +54,6 @@ class Storage extends Base implements QueueManagerServiceInterface
 
     public function createScanJob(string $storageId, bool $manual): bool
     {
-        $xattr = new Xattr();
-        if (!$xattr->hasServerExtensions()) {
-            throw new BadRequest("Xattr extension is not installed and the attr command is not available. See documentation for details.");
-        }
-
         $storage = $this->getEntity($storageId);
         if (empty($storage)) {
             throw new NotFound();
@@ -66,6 +61,13 @@ class Storage extends Base implements QueueManagerServiceInterface
 
         if (empty($storage->get('isActive'))) {
             throw new BadRequest('The Storage is not active.');
+        }
+
+        if ($storage->get('type') === 'local') {
+            $xattr = new Xattr();
+            if (!$xattr->hasServerExtensions()) {
+                throw new BadRequest("Xattr extension is not installed and the attr command is not available. See documentation for details.");
+            }
         }
 
         $name = $this->getInjection('language')->translate('scan', 'labels', 'Storage') . ' ' . $storage->get('name');
@@ -79,6 +81,7 @@ class Storage extends Base implements QueueManagerServiceInterface
         if (empty($storage->get('isActive'))) {
             return false;
         }
+
         $this->getInjection('container')->get($storage->get('type') . 'Storage')->scan($storage);
 
         return true;
