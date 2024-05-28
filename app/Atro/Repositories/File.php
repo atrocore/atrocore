@@ -106,9 +106,9 @@ class File extends Base
 
     public function save(Entity $entity, array $options = [])
     {
-        $inTransaction = $this->getPDO()->inTransaction();
+        $inTransaction = false;
 
-        if (!$inTransaction) {
+        if (!$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
         }
@@ -131,9 +131,9 @@ class File extends Base
 
     protected function deleteEntity(Entity $entity): bool
     {
-        $inTransaction = $this->getPDO()->inTransaction();
+        $inTransaction = false;
 
-        if (!$inTransaction) {
+        if (!$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
         }
@@ -253,18 +253,15 @@ class File extends Base
 
     public function createItem(Entity $entity): void
     {
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->insert('file_folder_linker')
-            ->setValue('id', ':id')
-            ->setValue('name', ':name')
-            ->setValue('parent_id', ':parentId')
-            ->setValue('file_id', ':fileId')
-            ->setParameter('id', Util::generateId())
-            ->setParameter('name', $entity->get('name'))
-            ->setParameter('parentId', $entity->get('folderId') ?? '')
-            ->setParameter('fileId', $entity->get('id'));
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
+        $fileFolderLinker->set([
+            'name'     => $entity->get('name'),
+            'parentId' => $entity->get('folderId') ?? '',
+            'fileId'   => $entity->get('id')
+        ]);
+
         try {
-            $qb->executeQuery();
+            $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
             throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
@@ -272,16 +269,19 @@ class File extends Base
 
     public function updateItem(Entity $entity): void
     {
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->update('file_folder_linker')
-            ->set('name', ':name')
-            ->set('parent_id', ':parentId')
-            ->where('file_id=:fileId')
-            ->setParameter('name', $entity->get('name'))
-            ->setParameter('parentId', $entity->get('folderId') ?? '')
-            ->setParameter('fileId', $entity->get('id'));
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+            ->where(['fileId' => $entity->get('id')])
+            ->findOne();
+
+        if (empty($fileFolderLinker)) {
+            return;
+        }
+
+        $fileFolderLinker->set('name', $entity->get('name'));
+        $fileFolderLinker->set('parentId', $entity->get('folderId') ?? '');
+
         try {
-            $qb->executeQuery();
+            $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
             throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
@@ -289,11 +289,15 @@ class File extends Base
 
     public function removeItem(Entity $entity): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->delete('file_folder_linker')
-            ->where('file_id=:fileId')
-            ->setParameter('fileId', $entity->get('id'))
-            ->executeQuery();
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+            ->where(['fileId' => $entity->get('id')])
+            ->findOne();
+
+        if (empty($fileFolderLinker)) {
+            return;
+        }
+
+        $this->getEntityManager()->removeEntity($fileFolderLinker);
     }
 
     public function validateItemName(FileEntity $file): void

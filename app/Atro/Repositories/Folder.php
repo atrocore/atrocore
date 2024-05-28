@@ -126,9 +126,9 @@ class Folder extends Hierarchy
 
     public function save(Entity $entity, array $options = [])
     {
-        $inTransaction = $this->getPDO()->inTransaction();
+        $inTransaction = false;
 
-        if (!$inTransaction) {
+        if (!$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
         }
@@ -151,9 +151,9 @@ class Folder extends Hierarchy
 
     public function remove(Entity $entity, array $options = [])
     {
-        $inTransaction = $this->getPDO()->inTransaction();
+        $inTransaction = false;
 
-        if (!$inTransaction) {
+        if (!$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
         }
