@@ -15,7 +15,6 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
-use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -62,7 +61,7 @@ class Hierarchy extends RDB
                 ->createQueryBuilder()
                 ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
                 ->set('deleted', ':deleted')
-                ->setParameter('deleted', true, Mapper::getParameterType(true))
+                ->setParameter('deleted', true, ParameterType::BOOLEAN)
                 ->where('entity_id = :entityId')
                 ->orWhere('parent_id = :entityId')
                 ->setParameter('entityId', $entity->get('id'))
@@ -78,7 +77,7 @@ class Hierarchy extends RDB
             ->createQueryBuilder()
             ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
             ->set('deleted', ':deleted')
-            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->setParameter('deleted', false, ParameterType::BOOLEAN)
             ->where('entity_id = :entityId')
             ->orWhere('parent_id = :entityId')
             ->setParameter('entityId', $entity->get('id'))
@@ -401,10 +400,10 @@ class Hierarchy extends RDB
             $qb->setMaxResults($maxSize);
         }
 
-        $qb->setParameter('deleted', false, Mapper::getParameterType(false));
+        $qb->setParameter('deleted', false, ParameterType::BOOLEAN);
 
         if (!empty($parentId)) {
-            $qb->setParameter('parentId', $parentId, Mapper::getParameterType($parentId));
+            $qb->setParameter('parentId', $parentId);
         }
 
         return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());
@@ -443,10 +442,10 @@ class Hierarchy extends RDB
                 ->andWhere('h.parent_id = :parentId');
         }
 
-        $qb->setParameter('deleted', false, Mapper::getParameterType(false));
+        $qb->setParameter('deleted', false, ParameterType::BOOLEAN);
 
         if (!empty($parentId)) {
-            $qb->setParameter('parentId', $parentId, Mapper::getParameterType($parentId));
+            $qb->setParameter('parentId', $parentId);
         }
 
         return (int)$qb->fetchAssociative()['count'];
@@ -648,7 +647,7 @@ class Hierarchy extends RDB
             ->leftJoin('r', $this->tableName, 'm', 'r.parent_id = m.id')
             ->where('r.deleted = :false')
             ->andWhere('m.deleted = :false')
-            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->andWhere('r.entity_id = :entityId')
             ->setParameter('entityId', $id)
             ->fetchAllAssociative();
@@ -670,7 +669,7 @@ class Hierarchy extends RDB
             ->leftJoin('r', $this->tableName, 'm', 'r.entity_id = m.id')
             ->where('r.deleted = :false')
             ->andWhere('m.deleted = :false')
-            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->andWhere('r.parent_id = :parentId')
             ->setParameter('parentId', $id)
             ->fetchAllAssociative();
@@ -724,14 +723,14 @@ class Hierarchy extends RDB
                 $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
                     ->andWhere('h.parent_id = :parentId')
                     ->orderBy('h.hierarchy_sort_order')
-                    ->setParameter('parentId', $parentId, Mapper::getParameterType($parentId));
+                    ->setParameter('parentId', $parentId);
 
                 if (!$withDeleted) {
                     $qb->andWhere('h.deleted = :deleted');
                 }
             }
             if (!$withDeleted) {
-                $qb->setParameter('deleted', false, Mapper::getParameterType(false));
+                $qb->setParameter('deleted', false, ParameterType::BOOLEAN);
             }
         };
         $result = $this->getMapper()->select($this->entityFactory->create($this->entityName), $selectParams);
@@ -759,14 +758,14 @@ class Hierarchy extends RDB
             } else {
                 $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
                     ->andWhere('h.parent_id = :parentId')
-                    ->setParameter('parentId', $parentId, Mapper::getParameterType($parentId));
+                    ->setParameter('parentId', $parentId);
 
                 if (!$withDeleted) {
                     $qb->andWhere('h.deleted = :deleted');
                 }
             }
             if (!$withDeleted) {
-                $qb->setParameter('deleted', false, Mapper::getParameterType(false));
+                $qb->setParameter('deleted', false, ParameterType::BOOLEAN);
             }
         };
         $result = $this->getMapper()->count($this->entityFactory->create($this->entityName), $selectParams);
