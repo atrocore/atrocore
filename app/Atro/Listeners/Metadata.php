@@ -679,12 +679,24 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope]['fields']['parents']['mandatoryToSelect'] = true;
                 $data['entityDefs'][$scope]['fields']['parents']['noLoad'] = false;
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"           => "link",
-                    "notStorable"    => true,
-                    "entity"         => $scope,
-                    "filterDisabled" => true,
-                    "emHidden"       => true
+                    "type"        => "link",
+                    "notStorable" => true,
+                    "entity"      => $scope,
+                    "emHidden"    => true
                 ];
+
+                $data['entityDefs'][$scope]['fields']['parents'] = [
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "massUpdateDisabled"        => true,
+                    "filterDisabled"            => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                    "emHidden"                  => true
+                ];
+                $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
             }
         }
 
