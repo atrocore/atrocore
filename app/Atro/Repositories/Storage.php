@@ -64,18 +64,23 @@ class Storage extends Base
             if (!empty($folder)) {
                 throw new BadRequest($this->translate('storageHasFolders', 'exceptions', 'Storage'));
             }
+        }
+    }
 
-            // relate all children folders with storage
-            $children = $this->getEntityManager()->getRepository('Folder')->getChildrenArray($entity->get('folderId'));
-            foreach (array_column($children, 'id') as $folderId) {
-                $this->getConnection()->createQueryBuilder()
-                    ->update('folder')
-                    ->set('storage_id', ':storageId')
-                    ->where('id=:id')
-                    ->setParameter('storageId', $entity->get('id'))
-                    ->setParameter('id', $folderId)
-                    ->executeQuery();
-            }
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        // relate all children folders with storage
+        $children = $this->getEntityManager()->getRepository('Folder')->getChildrenArray($entity->get('folderId'));
+        foreach (array_merge([$entity->get('folderId')], array_column($children, 'id')) as $folderId) {
+            $this->getConnection()->createQueryBuilder()
+                ->update('folder')
+                ->set('storage_id', ':storageId')
+                ->where('id=:id')
+                ->setParameter('storageId', $entity->get('id'))
+                ->setParameter('id', $folderId)
+                ->executeQuery();
         }
     }
 
