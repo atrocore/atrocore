@@ -8,6 +8,7 @@
   "disabled": false,
   "type": "Hierarchy",
   "multiParents": false,
+  "multiParentsDisabled": true,
   "dragAndDrop": true,
   "fieldValueInheritance": false,
   "relationInheritance": false,
