@@ -403,6 +403,10 @@ class EntityManager
             throw new Error('Entity [' . $name . '] does not exist.');
         }
 
+        if (!empty($data['multiParents']) && !empty($this->getMetadata()->get(['scopes', $name, 'multiParentsDisabled']))) {
+            throw new BadRequest("The entity '$name' is blocked from having multiple parents.");
+        }
+
         if (isset($data['stream']) || isset($data['disabled'])) {
             $scopeData = array();
             if (isset($data['stream'])) {
