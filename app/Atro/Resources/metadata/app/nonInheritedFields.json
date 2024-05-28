@@ -11,6 +11,7 @@
   "assignedUser",
   "teams",
   "assignedAccounts",
+  "parent",
   "parents",
   "children",
   "followers"
