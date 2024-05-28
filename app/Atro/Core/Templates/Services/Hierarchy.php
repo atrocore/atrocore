@@ -685,9 +685,14 @@ class Hierarchy extends Record
     {
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
             if (property_exists($data, 'parentId')) {
-                $data->parentsIds = [$data->parentId];
-                if (property_exists($data, 'parentName')) {
-                    $data->parentsNames = json_decode(json_encode([$data->parentId => $data->parentName]));
+                if (empty($data->parentId)) {
+                    $data->parentsIds = [];
+                    $data->parentsNames = new \stdClass();
+                } else {
+                    $data->parentsIds = [$data->parentId];
+                    if (property_exists($data, 'parentName')) {
+                        $data->parentsNames = json_decode(json_encode([$data->parentId => $data->parentName]));
+                    }
                 }
             }
         }

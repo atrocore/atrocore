@@ -685,7 +685,7 @@ class Metadata extends AbstractListener
                     "emHidden"    => true
                 ];
 
-                $data['entityDefs'][$scope]['fields']['parents'] = [
+                $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'], [
                     "layoutListDisabled"        => true,
                     "layoutListSmallDisabled"   => true,
                     "layoutDetailDisabled"      => true,
@@ -695,11 +695,10 @@ class Metadata extends AbstractListener
                     "importDisabled"            => true,
                     "exportDisabled"            => true,
                     "emHidden"                  => true
-                ];
+                ]);
                 $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
             }
         }
-
 
         return $data;
     }
