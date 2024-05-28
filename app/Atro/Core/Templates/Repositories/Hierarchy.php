@@ -235,15 +235,17 @@ class Hierarchy extends RDB
 
     public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->delete($this->hierarchyTableName)
-            ->andWhere('entity_id = :entityId')
-            ->setParameter('entityId', $entityId)
-            ->executeQuery();
+        /** @var Relation $relationRepository */
+        $relationRepository = $this->getEntityManager()->getRepository(ucfirst(Util::toCamelCase($this->hierarchyTableName)));
 
         if (!empty($parentId)) {
-            $parent = $this->get($parentId);
-            $this->relate($parent, 'children', $this->get($entityId));
+            $entity = $relationRepository->where(['entityId' => $entityId])->findOne();
+            if (empty($entity)) {
+                $entity = $relationRepository->get();
+                $entity->set('entityId', $entityId);
+            }
+            $entity->set('parentId', $parentId);
+            $this->getEntityManager()->saveEntity($entity);
         }
 
         $ids = array_column($this->getChildrenArray($parentId, false), 'id');
@@ -262,29 +264,22 @@ class Hierarchy extends RDB
             $sortedIds = array_merge([$entityId], $ids);
         }
 
+        $collection = [];
+        if (empty($parentId)) {
+            foreach ($this->where(['id' => $sortedIds])->find() as $v) {
+                $collection[$v->get('id')] = $v;
+            }
+        } else {
+            foreach ($relationRepository->where(['entityId' => $sortedIds])->find() as $v) {
+                $collection[$v->get('entityId')] = $v;
+            }
+        }
+
         foreach ($sortedIds as $k => $id) {
             $sortOrder = $k * 10;
-            if (empty($parentId)) {
-                $this->getConnection()->createQueryBuilder()
-                    ->update($this->tableName)
-                    ->set('sort_order', ':sortOrder')
-                    ->setParameter('sortOrder', $sortOrder)
-                    ->andWhere('id = :id')
-                    ->setParameter('id', $id)
-                    ->andWhere('deleted = :false')
-                    ->setParameter('false', false, Mapper::getParameterType(false))
-                    ->executeQuery();
-            } else {
-                $this->getConnection()->createQueryBuilder()
-                    ->update($this->hierarchyTableName)
-                    ->set('hierarchy_sort_order', ':sortOrder')
-                    ->setParameter('sortOrder', $sortOrder)
-                    ->andWhere('entity_id = :entityId')
-                    ->setParameter('entityId', $id)
-                    ->andWhere('deleted = :false')
-                    ->setParameter('false', false, Mapper::getParameterType(false))
-                    ->executeQuery();
-            }
+            $entity = $collection[$id];
+            $entity->set('sortOrder', $sortOrder);
+            $this->getEntityManager()->saveEntity($entity);
         }
     }
 
@@ -381,7 +376,8 @@ class Hierarchy extends RDB
                 $expr->notIn(
                     'e.id',
                     "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
-                ))
+                )
+            )
                 ->orderBy('e.sort_order')
                 ->addOrderBy("e.$sortBy", $sortOrder);
         } else {
@@ -713,7 +709,8 @@ class Hierarchy extends RDB
                     $expr->notIn(
                         "$tableAlias.id",
                         "SELECT entity_id FROM $quotedHierarchyTableName qh" . (!$withDeleted ? " WHERE qh.deleted = :deleted" : "")
-                    ))
+                    )
+                )
                     ->orderBy("$tableAlias.sort_order")
                     ->addOrderBy("$tableAlias.$sortBy", $sortOrder)
                     ->addOrderBy("$tableAlias.id");
