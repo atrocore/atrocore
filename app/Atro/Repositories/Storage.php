@@ -65,8 +65,8 @@ class Storage extends Base
                 throw new BadRequest($this->translate('storageHasFolders', 'exceptions', 'Storage'));
             }
 
+            // relate all children folders with storage
             $children = $this->getEntityManager()->getRepository('Folder')->getChildrenArray($entity->get('folderId'));
-
             foreach (array_column($children, 'id') as $folderId) {
                 $this->getConnection()->createQueryBuilder()
                     ->update('folder')

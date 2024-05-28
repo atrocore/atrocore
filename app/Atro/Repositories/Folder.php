@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
@@ -21,24 +20,21 @@ use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Entities\Storage as StorageEntity;
 use Atro\Entities\Folder as FolderEntity;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class Folder extends Hierarchy
 {
     public function getFolderStorage(string $folderId, bool $fromDbOnly = false): StorageEntity
     {
-        echo '<pre>';
-        print_r('getFolderStorage');
-        die();
-
         while (true) {
             $folder = $this->get($folderId);
             if (empty($folder)) {
                 throw new NotFound();
             }
 
-            $storage = $folder->get('storage');
+            $storage = $this->getEntityManager()->getRepository('Storage')
+                ->where(['folderId' => $folderId])
+                ->findOne();
             if (!empty($storage)) {
                 return $storage;
             }
@@ -46,7 +42,7 @@ class Folder extends Hierarchy
             $parent = $folder->getParent($fromDbOnly);
             if (empty($parent)) {
                 $storage = $this->getEntityManager()->getRepository('Storage')
-                    ->where(['folderId' => '', 'isActive' => true])
+                    ->where(['folderId' => ''])
                     ->findOne();
                 if (!empty($storage)) {
                     return $storage;
@@ -73,94 +69,14 @@ class Folder extends Hierarchy
             } else {
                 $entity->set('storageId', $parent->get('storageId'));
             }
+            $this->createItem($entity);
+        } else {
+            if ($entity->isAttributeChanged('name')) {
+                $this->updateItem($entity);
+            }
         }
 
         parent::beforeSave($entity, $options);
-    }
-
-    protected function insertEntity(Entity $entity, bool $ignoreDuplicate): bool
-    {
-        $inTransaction = $this->getPDO()->inTransaction();
-
-        if (!$inTransaction) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
-        try {
-            $res = parent::insertEntity($entity, $ignoreDuplicate);
-            if ($res) {
-                $this->createItem($entity);
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getPDO()->rollBack();
-            }
-
-            throw $e;
-        }
-
-        if ($inTransaction) {
-            $this->getPDO()->commit();
-        }
-
-        return $res;
-    }
-
-    protected function updateEntity(Entity $entity): bool
-    {
-        $inTransaction = $this->getPDO()->inTransaction();
-
-        if (!$inTransaction) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
-        try {
-            $res = parent::updateEntity($entity);
-            if ($res && $entity->isAttributeChanged('name')) {
-                $this->updateItem($entity);
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        if ($inTransaction) {
-            $this->getPDO()->commit();
-        }
-
-        return $res;
-    }
-
-    protected function deleteEntity(Entity $entity): bool
-    {
-        $inTransaction = $this->getPDO()->inTransaction();
-
-        if (!$inTransaction) {
-            $this->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-
-        try {
-            $res = parent::deleteEntity($entity);
-            if ($res) {
-                $this->removeItem($entity);
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getPDO()->rollBack();
-            }
-            throw $e;
-        }
-
-        if ($inTransaction) {
-            $this->getPDO()->commit();
-        }
-
-        return $res;
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -172,6 +88,13 @@ class Folder extends Hierarchy
         $this->deleteChildrenFolders($entity);
 
         parent::beforeRemove($entity, $options);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->removeItem($entity);
     }
 
     public function deleteFiles(FolderEntity $folder): void
@@ -201,20 +124,67 @@ class Folder extends Hierarchy
         }
     }
 
+    public function save(Entity $entity, array $options = [])
+    {
+        $inTransaction = $this->getPDO()->inTransaction();
+
+        if (!$inTransaction) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
+        try {
+            $res = parent::save($entity, $options);
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        if ($inTransaction) {
+            $this->getPDO()->commit();
+        }
+
+        return $res;
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        $inTransaction = $this->getPDO()->inTransaction();
+
+        if (!$inTransaction) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
+        try {
+            $res = parent::remove($entity, $options);
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        if ($inTransaction) {
+            $this->getPDO()->commit();
+        }
+
+        return $res;
+    }
+
     public function createItem(Entity $entity): void
     {
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->insert('file_folder_linker')
-            ->setValue('id', ':id')
-            ->setValue('name', ':name')
-            ->setValue('parent_id', ':parentId')
-            ->setValue('folder_id', ':folderId')
-            ->setParameter('id', Util::generateId())
-            ->setParameter('name', $entity->get('name'))
-            ->setParameter('parentId', '')
-            ->setParameter('folderId', $entity->get('id'));
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
+        $fileFolderLinker->set([
+            'name'     => $entity->get('name'),
+            'parentId' => $entity->get('parentsIds')[0] ?? '',
+            'folderId' => $entity->get('id')
+        ]);
+
         try {
-            $qb->executeQuery();
+            $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
             throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
@@ -222,14 +192,18 @@ class Folder extends Hierarchy
 
     public function updateItem(Entity $entity): void
     {
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->update('file_folder_linker')
-            ->set('name', ':name')
-            ->where('folder_id=:folderId')
-            ->setParameter('name', $entity->get('name'))
-            ->setParameter('folderId', $entity->get('id'));
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+            ->where(['folderId' => $entity->get('id')])
+            ->findOne();
+
+        if (empty($fileFolderLinker)) {
+            return;
+        }
+
+        $fileFolderLinker->set('name', $entity->get('name'));
+
         try {
-            $qb->executeQuery();
+            $this->getEntityManager()->saveEntity($fileFolderLinker);
         } catch (UniqueConstraintViolationException $e) {
             throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
         }
@@ -237,11 +211,15 @@ class Folder extends Hierarchy
 
     public function removeItem(Entity $entity): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->delete('file_folder_linker')
-            ->where('folder_id=:folderId')
-            ->setParameter('folderId', $entity->get('id'))
-            ->executeQuery();
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+            ->where(['folderId' => $entity->get('id')])
+            ->findOne();
+
+        if (empty($fileFolderLinker)) {
+            return;
+        }
+
+        $this->getEntityManager()->removeEntity($fileFolderLinker);
     }
 
     protected function init()
