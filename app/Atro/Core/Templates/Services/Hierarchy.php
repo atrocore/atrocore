@@ -714,8 +714,6 @@ class Hierarchy extends Record
             if (!empty($entity->get('parentId'))) {
                 $entity->set('parentName', $entity->get('parentsNames')->{$entity->get('parentId')} ?? null);
             }
-            $entity->clear('parentsIds');
-            $entity->clear('parentsNames');
         }
 
         if (empty($this->getMemoryStorage()->get('exportJobId'))) {
