@@ -427,7 +427,12 @@ class Hierarchy extends Record
         $entity = parent::createEntity($attachment);
 
         // run inherit all for child relations
-        if ((!property_exists($attachment, '_duplicatingEntityId') || empty($attachment->_duplicatingEntityId)) && !empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
+        if ((!property_exists($attachment, '_duplicatingEntityId') || empty($attachment->_duplicatingEntityId)) && !empty($entity)
+            && !empty(
+            $this->getMetadata()->get(
+                ['scopes', $entity->getEntityType(), 'relationInheritance']
+            )
+            )) {
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links']) as $link => $linkDefs) {
                 $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
                 if (!empty($relationName) && !in_array($link, $this->getRepository()->getUnInheritedRelations())) {
@@ -553,10 +558,10 @@ class Hierarchy extends Record
         $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'entity']);
         $foreignLink = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'foreign']);
 
-        if(!empty($foreignEntity) && !empty($foreignLink)){
+        if (!empty($foreignEntity) && !empty($foreignLink)) {
             $service = $this->getServiceFactory()
                 ->create($foreignEntity);
-            if(method_exists($service, 'createPseudoTransactionLinkJobs')){
+            if (method_exists($service, 'createPseudoTransactionLinkJobs')) {
                 $service->createPseudoTransactionLinkJobs($foreignId, $foreignLink, $id);
             }
         }
@@ -676,6 +681,20 @@ class Hierarchy extends Record
         }
     }
 
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+            if (property_exists($data, 'parentId')) {
+                $data->parentsIds = [$data->parentId];
+                if (property_exists($data, 'parentName')) {
+                    $data->parentsNames = json_decode(json_encode([$data->parentId => $data->parentName]));
+                }
+            }
+        }
+
+        parent::handleInput($data, $id);
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -683,6 +702,15 @@ class Hierarchy extends Record
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
             || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return;
+        }
+
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+            $entity->set('parentId', $entity->get('parentsIds')[0] ?? null);
+            if (!empty($entity->get('parentId'))) {
+                $entity->set('parentName', $entity->get('parentsNames')->{$entity->get('parentId')} ?? null);
+            }
+            $entity->clear('parentsIds');
+            $entity->clear('parentsNames');
         }
 
         if (empty($this->getMemoryStorage()->get('exportJobId'))) {
