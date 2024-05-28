@@ -29,6 +29,7 @@
   "exceptions": {
     "folderInUse": "The folder is already in use. Please select a folder that does not contain files.",
     "storageHasFiles": "The Storage already contains files, so you can't change the folder.",
+    "storageHasFolders": "The Storage already contains folders.",
     "storagePathNotUnique": "Storage path should be unique.",
     "storagePathContainFilesFromAnotherStorage": "Storage path wrong. There are files that belong to a different Storage.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",

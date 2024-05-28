@@ -28,6 +28,10 @@ class Folder extends Hierarchy
 {
     public function getFolderStorage(string $folderId, bool $fromDbOnly = false): StorageEntity
     {
+        echo '<pre>';
+        print_r('getFolderStorage');
+        die();
+
         while (true) {
             $folder = $this->get($folderId);
             if (empty($folder)) {
@@ -62,9 +66,12 @@ class Folder extends Hierarchy
             $entity->set('code', null);
         }
 
-        if (!$entity->isNew()) {
-            if ($entity->isAttributeChanged('storageId')) {
-                throw new BadRequest($this->getInjection('language')->translate('folderStorageCannotBeChanged', 'exceptions', 'Folder'));
+        if ($entity->isNew()) {
+            $parent = $entity->getParent();
+            if (empty($parent)) {
+                $entity->set('storageId', $this->getFolderStorage('')->get('id'));
+            } else {
+                $entity->set('storageId', $parent->get('storageId'));
             }
         }
 

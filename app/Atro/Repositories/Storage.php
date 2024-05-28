@@ -56,6 +56,26 @@ class Storage extends Base
             if (!empty($file)) {
                 throw new BadRequest($this->translate('storageHasFiles', 'exceptions', 'Storage'));
             }
+
+            $folder = $this->getEntityManager()->getRepository('Folder')
+                ->where(['storageId' => $entity->get('id')])
+                ->findOne();
+
+            if (!empty($folder)) {
+                throw new BadRequest($this->translate('storageHasFolders', 'exceptions', 'Storage'));
+            }
+
+            $children = $this->getEntityManager()->getRepository('Folder')->getChildrenArray($entity->get('folderId'));
+
+            foreach (array_column($children, 'id') as $folderId) {
+                $this->getConnection()->createQueryBuilder()
+                    ->update('folder')
+                    ->set('storage_id', ':storageId')
+                    ->where('id=:id')
+                    ->setParameter('storageId', $entity->get('id'))
+                    ->setParameter('id', $folderId)
+                    ->executeQuery();
+            }
         }
     }
 
