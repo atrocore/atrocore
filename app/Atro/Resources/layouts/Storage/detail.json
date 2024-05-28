@@ -15,9 +15,7 @@
         {
           "name": "type"
         },
-        {
-          "name": "folder"
-        }
+        false
       ],
       [
         {

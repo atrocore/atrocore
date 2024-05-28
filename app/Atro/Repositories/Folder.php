@@ -33,9 +33,7 @@ class Folder extends Hierarchy
                 throw new NotFound();
             }
 
-            $storage = $this->getEntityManager()->getRepository('Storage')
-                ->where(['folderId' => $folderId, 'isActive' => true])
-                ->findOne();
+            $storage = $folder->get('storage');
             if (!empty($storage)) {
                 return $storage;
             }

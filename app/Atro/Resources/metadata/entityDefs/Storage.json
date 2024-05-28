@@ -27,13 +27,13 @@
       "type": "bool",
       "tooltip": true
     },
-    "files": {
+    "folders": {
       "type": "linkMultiple",
       "noLoad": true
     },
-    "folder": {
-      "type": "link",
-      "required": false
+    "files": {
+      "type": "linkMultiple",
+      "noLoad": true
     },
     "createdAt": {
       "type": "datetime",
@@ -45,15 +45,15 @@
     }
   },
   "links": {
+    "folders": {
+      "type": "hasMany",
+      "foreign": "storage",
+      "entity": "Folder"
+    },
     "files": {
       "type": "hasMany",
       "foreign": "storage",
       "entity": "File"
-    },
-    "folder": {
-      "type": "belongsTo",
-      "foreign": "storages",
-      "entity": "Folder"
     },
     "createdBy": {
       "type": "belongsTo",
@@ -63,11 +63,5 @@
   "collection": {
     "sortBy": "priority",
     "asc": false
-  },
-  "uniqueIndexes": {
-    "unique_folder": [
-      "deleted",
-      "folder_id"
-    ]
   }
 }
