@@ -10,5 +10,8 @@
   },
   "labels": {
     "Create Folder": "Create Folder"
+  },
+  "exceptions": {
+    "folderStorageCannotBeChanged": "The Folder Storage cannot be changed."
   }
 }

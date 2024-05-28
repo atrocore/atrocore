@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
@@ -59,6 +60,12 @@ class Folder extends Hierarchy
     {
         if ($entity->get('code') === '') {
             $entity->set('code', null);
+        }
+
+        if (!$entity->isNew()) {
+            if ($entity->isAttributeChanged('storageId')) {
+                throw new BadRequest($this->getInjection('language')->translate('folderStorageCannotBeChanged', 'exceptions', 'Folder'));
+            }
         }
 
         parent::beforeSave($entity, $options);
