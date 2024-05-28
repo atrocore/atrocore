@@ -27,6 +27,9 @@
       "type": "bool",
       "tooltip": true
     },
+    "folder": {
+      "type": "link"
+    },
     "folders": {
       "type": "linkMultiple",
       "noLoad": true
@@ -45,6 +48,10 @@
     }
   },
   "links": {
+    "folder": {
+      "type": "belongsTo",
+      "entity": "Folder"
+    },
     "folders": {
       "type": "hasMany",
       "foreign": "storage",
@@ -63,5 +70,11 @@
   "collection": {
     "sortBy": "priority",
     "asc": false
+  },
+  "uniqueIndexes": {
+    "unique_folder": [
+      "deleted",
+      "folder_id"
+    ]
   }
 }

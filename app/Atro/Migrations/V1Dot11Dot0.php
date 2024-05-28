@@ -27,6 +27,10 @@ class V1Dot11Dot0 extends Base
 
     public function up(): void
     {
+        $this->exec("ALTER TABLE storage ADD folder_id VARCHAR(24) DEFAULT NULL");
+        $this->exec("CREATE INDEX IDX_STORAGE_FOLDER_ID ON storage (folder_id, deleted)");
+        $this->exec("CREATE UNIQUE INDEX IDX_STORAGE_UNIQUE_FOLDER ON storage (deleted, folder_id)");
+
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE storage ADD sync_folders BOOLEAN DEFAULT 'false' NOT NULL");
             $this->exec(

@@ -26,9 +26,7 @@
         {
           "name": "parents"
         },
-        {
-          "name": "storage"
-        }
+        false
       ]
     ]
   }

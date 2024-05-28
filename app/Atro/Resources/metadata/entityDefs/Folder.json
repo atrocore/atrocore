@@ -40,7 +40,7 @@
     },
     "storage": {
       "type": "link",
-      "required": true
+      "readOnly": true
     },
     "createdAt": {
       "type": "datetime",

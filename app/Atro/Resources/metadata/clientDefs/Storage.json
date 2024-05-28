@@ -2,6 +2,11 @@
   "controller": "controllers/record",
   "iconClass": "fas fa-hdd",
   "relationshipPanels": {
+    "folders": {
+      "create": false,
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+    },
     "files": {
       "create": false,
       "select": false,
