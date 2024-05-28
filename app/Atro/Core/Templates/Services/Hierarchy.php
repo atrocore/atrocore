@@ -627,27 +627,12 @@ class Hierarchy extends Record
             return parent::deleteEntity($id);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $result = parent::deleteEntity($id);
-            foreach ($this->getRepository()->getChildrenRecursivelyArray($id) as $childId) {
-                parent::deleteEntity($childId);
-            }
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
+        $childrenIds = $this->getRepository()->getChildrenRecursivelyArray($id);
+        while (!empty($childrenIds)) {
+            parent::deleteEntity(array_pop($childrenIds));
         }
 
-        return $result;
+        return parent::deleteEntity($id);
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void

@@ -574,6 +574,17 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 attributes = preparedAttributes;
             });
 
+            if (this.getMetadata().get(['scopes', scope, 'type']) === 'Hierarchy') {
+                if (foreignLink === 'parents' && !this.getMetadata().get(['scopes', scope, 'multiParents'])) {
+                    if (this.model.get('id')) {
+                        attributes.parentId = this.model.get('id');
+                    }
+                    if (this.model.get('name')) {
+                        attributes.parentName = this.model.get('name');
+                    }
+                }
+            }
+
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
                 scope: scope,
