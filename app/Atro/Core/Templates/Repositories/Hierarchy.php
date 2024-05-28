@@ -238,14 +238,17 @@ class Hierarchy extends RDB
         /** @var Relation $relationRepository */
         $relationRepository = $this->getEntityManager()->getRepository(ucfirst(Util::toCamelCase($this->hierarchyTableName)));
 
+        $entity = $relationRepository->where(['entityId' => $entityId])->findOne();
+
         if (!empty($parentId)) {
-            $entity = $relationRepository->where(['entityId' => $entityId])->findOne();
             if (empty($entity)) {
                 $entity = $relationRepository->get();
                 $entity->set('entityId', $entityId);
             }
             $entity->set('parentId', $parentId);
             $this->getEntityManager()->saveEntity($entity);
+        } else {
+            $this->getEntityManager()->removeEntity($entity);
         }
 
         $ids = array_column($this->getChildrenArray($parentId, false), 'id');
@@ -266,10 +269,12 @@ class Hierarchy extends RDB
 
         $collection = [];
         if (empty($parentId)) {
+            $field = 'sortOrder';
             foreach ($this->where(['id' => $sortedIds])->find() as $v) {
                 $collection[$v->get('id')] = $v;
             }
         } else {
+            $field = 'hierarchySortOrder';
             foreach ($relationRepository->where(['entityId' => $sortedIds])->find() as $v) {
                 $collection[$v->get('entityId')] = $v;
             }
@@ -278,7 +283,7 @@ class Hierarchy extends RDB
         foreach ($sortedIds as $k => $id) {
             $sortOrder = $k * 10;
             $entity = $collection[$id];
-            $entity->set('sortOrder', $sortOrder);
+            $entity->set($field, $sortOrder);
             $this->getEntityManager()->saveEntity($entity);
         }
     }
@@ -304,19 +309,19 @@ class Hierarchy extends RDB
 
     public function updateHierarchySortOrder(string $parentId, array $ids): void
     {
+        /** @var Relation $relationRepository */
+        $relationRepository = $this->getEntityManager()->getRepository(ucfirst(Util::toCamelCase($this->hierarchyTableName)));
+
+        $collection = [];
+        foreach ($relationRepository->where(['parentId' => $parentId, 'entityId' => $ids])->find() as $v) {
+            $collection[$v->get('entityId')] = $v;
+        }
+
         foreach ($ids as $k => $id) {
             $sortOrder = $k * 10;
-            $this->getConnection()->createQueryBuilder()
-                ->update($this->hierarchyTableName)
-                ->set('hierarchy_sort_order', ':sortOrder')
-                ->setParameter('sortOrder', $sortOrder)
-                ->where('parent_id = :parentId')
-                ->setParameter('parentId', $parentId)
-                ->andWhere('entity_id = :entityId')
-                ->setParameter('entityId', $id)
-                ->andWhere('deleted = :false')
-                ->setParameter('false', false, Mapper::getParameterType(false))
-                ->executeQuery();
+            $entity = $collection[$id];
+            $entity->set('hierarchySortOrder', $sortOrder);
+            $this->getEntityManager()->saveEntity($entity);
         }
     }
 
