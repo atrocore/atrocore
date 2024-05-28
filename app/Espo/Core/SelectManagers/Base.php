@@ -1130,9 +1130,64 @@ class Base
         return $result;
     }
 
+    protected function modifyPartForHierarchy(array &$item): void
+    {
+        if (isset($item['attribute']) && $item['attribute'] === 'parentId') {
+            switch ($item['type']) {
+                case 'equals':
+                    $item = [
+                        'type'      => 'linkedWith',
+                        'attribute' => 'parents',
+                        'value'     => [$item['value']]
+                    ];
+                    break;
+                case 'in':
+                    $item = [
+                        'type'      => 'linkedWith',
+                        'attribute' => 'parents',
+                        'value'     => $item['value']
+                    ];
+                    break;
+                case 'notEquals':
+                    $item = [
+                        'type'      => 'notLinkedWith',
+                        'attribute' => 'parents',
+                        'value'     => [$item['value']]
+                    ];
+                    break;
+                case 'notIn':
+                    $item = [
+                        'type'      => 'notLinkedWith',
+                        'attribute' => 'parents',
+                        'value'     => $item['value']
+                    ];
+                    break;
+                case 'isNull':
+                    $item = [
+                        'type'      => 'isNotLinked',
+                        'attribute' => 'parents'
+                    ];
+                    break;
+                case 'isNotNull':
+                    $item = [
+                        'type'      => 'isLinked',
+                        'attribute' => 'parents'
+                    ];
+                    break;
+            }
+        }
+    }
+
     protected function getWherePart($item, &$result = null)
     {
         $part = [];
+
+        $entityType = $this->getMetadata()->get(['scopes', $this->entityType, 'type']);
+
+        $method = "modifyPartFor{$entityType}";
+        if (method_exists($this, $method)) {
+            $this->$method($item);
+        }
 
         $attribute = null;
         if (!empty($item['field'])) { // for backward compatibility
@@ -1180,6 +1235,17 @@ class Base
 
         if (!empty($item['type'])) {
             $type = $item['type'];
+
+            // non of
+            //  (
+            //                    [type] => notLinkedWith
+            //                    [attribute] => parents
+            //                    [value] => Array
+            //                        (
+            //                            [0] => q66542c85805652b5
+            //                        )
+            //
+            //                )
 
             switch ($type) {
                 case 'innerSql':
