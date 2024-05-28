@@ -891,6 +891,10 @@ class PostUpdate
             foreach ($em->getRepository('Storage')->find() as $storage) {
                 self::$container->get($storage->get('type') . 'Storage')->deleteCache($storage);
             }
+
+            if (self::$container->get('metadata')->isModuleInstalled('Import')) {
+                self::$container->get('serviceFactory')->create('ImportTypeSimple')->clearCache();
+            }
         } catch (\Throwable $e) {
             // ignore all
         }
