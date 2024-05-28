@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Relation;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -21,19 +22,27 @@ use Espo\ORM\Entity;
 
 class FolderHierarchy extends Relation
 {
-//    protected function beforeSave(Entity $entity, array $options = [])
-//    {
-////        $folderStorageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId') ?? '', true)->get('id');
-////        $parentFolderStorageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('parentId') ?? '', true)->get('id');
-////
-////        if ($folderStorageId !== $parentFolderStorageId) {
-////            throw new BadRequest($this->getInjection('language')->translate('fileCannotBeMovedToAnotherStorage', 'exceptions', 'File'));
-////        }
-//
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        $parentFolder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('parentId'));
+        if (empty($parentFolder)){
+            $parentStorageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage('', true)->get('id');
+        }else{
+            $parentStorageId = $parentFolder->get('storageId');
+        }
+
+        $currentFolder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
+
+        if ($parentStorageId !== $currentFolder->get('storageId')) {
+            throw new BadRequest($this->getInjection('language')->translate('fileCannotBeMovedToAnotherStorage', 'exceptions', 'File'));
+        }
+
+
+
 //        $this->updateItem($entity);
-//
-//        parent::beforeSave($entity, $options);
-//    }
+
+        parent::beforeSave($entity, $options);
+    }
 //
 //    public function save(Entity $entity, array $options = [])
 //    {
@@ -130,11 +139,11 @@ class FolderHierarchy extends Relation
 //            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
 //        }
 //    }
-//
-//    protected function init()
-//    {
-//        parent::init();
-//
-//        $this->addDependency('language');
-//    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
+    }
 }
