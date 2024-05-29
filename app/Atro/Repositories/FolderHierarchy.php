@@ -33,11 +33,13 @@ class FolderHierarchy extends Relation
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        $parentStorage = $this->getEntityManager()->getRepository('Folder')->getRootStorage();
-        $entityStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId'));
+        if (empty($options['ignoreValidation'])) {
+            $parentStorage = $this->getEntityManager()->getRepository('Folder')->getRootStorage();
+            $entityStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId'));
 
-        if ($parentStorage->get('id') !== $entityStorage->get('id')) {
-            throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
+            if ($parentStorage->get('id') !== $entityStorage->get('id')) {
+                throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
+            }
         }
 
         parent::beforeRemove($entity, $options);

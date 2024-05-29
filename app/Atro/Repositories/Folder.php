@@ -102,18 +102,22 @@ class Folder extends Hierarchy
         // delete children folders
         $this->deleteChildrenFolders($entity);
 
-        if (!$this->getStorage($entity)->deleteFolder($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
-        }
-
         parent::beforeRemove($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        parent::afterRemove($entity, $options);
-
         $this->removeItem($entity);
+
+        if (!$this->getStorage($entity)->deleteFolder($entity)) {
+            throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+        }
+
+        foreach ($this->getEntityManager()->getRepository('FolderHierarchy')->where(['entityId' => $entity->get('id')])->find() as $folderHierarchy) {
+            $this->getEntityManager()->removeEntity($folderHierarchy, ['ignoreValidation' => true]);
+        }
+
+        parent::afterRemove($entity, $options);
     }
 
     public function deleteFiles(FolderEntity $folder): void
