@@ -784,9 +784,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 createAttributes.typeName = this.model.get('name');
             }
 
-            if (this.model.name === 'Storage') {
-                createAttributes.storageId = this.model.get('id');
-                createAttributes.storageName = this.model.get('name');
+            if (this.model.name === 'Storage' && this.model.get('folderId')) {
+                createAttributes.folderId = this.model.get('folderId');
+                createAttributes.folderName = this.model.get('folderName');
             }
 
             this.notify('Loading...');
