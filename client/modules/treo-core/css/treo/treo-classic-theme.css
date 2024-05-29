@@ -15453,17 +15453,26 @@ table.table > thead th > div > a {
     }
 
     .list > table td.fixed-button:last-child {
-        display: flex;
         position: absolute;
         top: 3px;
         left: 0;
         border: 0;
-        width: 28px;
-        height: 28px;
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 50%;
+        padding: 0;
+    }
+
+    .list > table td.fixed-button:last-child > .list-row-buttons {
+        display: flex;
+        flex-flow: row nowrap;
         justify-content: center;
         align-items: center;
+    }
+
+    .list > table td.fixed-button:last-child > .list-row-buttons > .dropdown-toggle {
+        width: 28px;
+        height: 28px;
+        border: 0;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
     }
 
     .fixed-scrollbar {
@@ -15471,6 +15480,13 @@ table.table > thead th > div > a {
         position: fixed;
         overflow-x: scroll;
         bottom: 0;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .list > table td.cell[data-name="buttons"] > .list-row-buttons {
+        display: flex;
+        flex-flow: row nowrap;
     }
 }
 

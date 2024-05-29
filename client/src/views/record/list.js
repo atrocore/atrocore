@@ -1457,11 +1457,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     fullTable.addClass('table-scrolled');
 
                     let rowsButtons = this.$el.find('td[data-name="buttons"]');
-                    let rowsButtonsPosition = list.width() - 35;
                     if ($(window).outerWidth() > 768 && rowsButtons.length) {
                         rowsButtons.addClass('fixed-button');
-
-                        rowsButtons.css('left', rowsButtonsPosition);
+                        rowsButtons.each(function () {
+                            $(this).css('left', list.width() - $(this).width() - 5)
+                        });
                     }
 
                     let prevScrollLeft = 0;
@@ -1473,7 +1473,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
 
                             if ($(window).outerWidth() > 768 && rowsButtons.hasClass('fixed-button')) {
-                                rowsButtons.css('left', rowsButtonsPosition + list.scrollLeft());
+                                rowsButtons.each(function () {
+                                    $(this).css('left', list.scrollLeft() + list.width() - $(this).width() - 5)
+                                });
                             }
                         }
                         prevScrollLeft = list.scrollLeft();
@@ -1487,7 +1489,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                             scroll.css({width: list.width(), display: 'block'});
                             scroll.find('div').css('width', fullTable.width());
-                            rowsButtons.css('left', scroll.scrollLeft() + rowsButtonsPosition);
+                            rowsButtons.each(function () {
+                                $(this).css('left', scroll.scrollLeft() + list.width() - $(this).width() - 5)
+                            });
 
                             this.listenTo(this.collection, 'sync', function () {
                                 if (!this.hasHorizontalScroll()) {
@@ -1497,7 +1501,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                             scroll.on('scroll', () => {
                                 fullTable.css('left', -1 * scroll.scrollLeft());
-                                rowsButtons.css('left', scroll.scrollLeft() + rowsButtonsPosition);
+                                rowsButtons.each(function () {
+                                    $(this).css('left', scroll.scrollLeft() + list.width() - $(this).width() - 5)
+                                });
                             });
 
                             if ($(window).width() < 768) {
