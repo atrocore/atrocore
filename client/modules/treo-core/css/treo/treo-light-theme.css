@@ -15028,6 +15028,7 @@ div.list-kanban {
   background-color: #fafafa;
   margin-left: -14px;
   width: calc(100% + 29px);
+  overflow-x: auto;
 }
 
 div.list-kanban > div.kanban-head-container,
