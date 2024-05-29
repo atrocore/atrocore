@@ -21,7 +21,6 @@ use Atro\Entities\File;
 use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
-use Atro\Entities\FolderHierarchy;
 use Doctrine\DBAL\Connection;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;

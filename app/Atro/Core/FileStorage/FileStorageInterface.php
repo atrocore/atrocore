@@ -13,7 +13,6 @@ namespace Atro\Core\FileStorage;
 
 use Atro\Entities\File;
 use Atro\Entities\Folder;
-use Atro\Entities\FolderHierarchy;
 use Atro\Entities\Storage;
 use Psr\Http\Message\StreamInterface;
 
