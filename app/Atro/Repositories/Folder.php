@@ -25,36 +25,33 @@ use Espo\ORM\Entity;
 
 class Folder extends Hierarchy
 {
-    public function getFolderStorage(string $folderId): StorageEntity
+    public function getRootStorage(): StorageEntity
     {
-        while (true) {
-            $folder = $this->get($folderId);
-            if (empty($folder)) {
-                throw new NotFound();
-            }
-
-            $storage = $this->getEntityManager()->getRepository('Storage')
-                ->where(['folderId' => $folderId])
-                ->findOne();
-            if (!empty($storage)) {
-                return $storage;
-            }
-
-            $parent = $folder->getParent();
-            if (empty($parent)) {
-                $storage = $this->getEntityManager()->getRepository('Storage')
-                    ->where(['folderId' => ''])
-                    ->findOne();
-                if (!empty($storage)) {
-                    return $storage;
-                }
-                break;
-            }
-
-            $folderId = $parent->get('id');
+        $storage = $this->getEntityManager()->getRepository('Storage')->where(['folderId' => ''])->findOne();
+        if (empty($storage)) {
+            throw new Error("No Storage found.");
         }
 
-        throw new Error("No Storage found.");
+        return $storage;
+    }
+
+    public function getFolderStorage(string $folderId): StorageEntity
+    {
+        if (empty($folderId)) {
+            return $this->getRootStorage();
+        }
+
+        $folder = $this->get($folderId);
+        if (empty($folder)) {
+            throw new NotFound("Folder '{$folderId}' does not exist.");
+        }
+
+        $storage = $folder->get('storage');
+        if (empty($storage)) {
+            throw new NotFound("Storage '{$folder->get('storageId')}' does not exist.");
+        }
+
+        return $storage;
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -66,7 +63,7 @@ class Folder extends Hierarchy
         if ($entity->isNew()) {
             $parent = $entity->getParent();
             if (empty($parent)) {
-                $entity->set('storageId', $this->getFolderStorage('')->get('id'));
+                $entity->set('storageId', $this->getRootStorage()->get('id'));
             } else {
                 $entity->set('storageId', $parent->get('storageId'));
             }

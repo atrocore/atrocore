@@ -13,7 +13,6 @@ namespace Atro\Migrations;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;

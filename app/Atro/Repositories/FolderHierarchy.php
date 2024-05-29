@@ -24,121 +24,21 @@ class FolderHierarchy extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        $parentFolder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('parentId'));
-        if (empty($parentFolder)){
-            $parentStorageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage('', true)->get('id');
-        }else{
-            $parentStorageId = $parentFolder->get('storageId');
-        }
-
-        $currentFolder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
-
-        if ($parentStorageId !== $currentFolder->get('storageId')) {
-            throw new BadRequest($this->getInjection('language')->translate('fileCannotBeMovedToAnotherStorage', 'exceptions', 'File'));
-        }
-
-
-
-//        $this->updateItem($entity);
+//        $parentFolder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('parentId'));
+//        if (empty($parentFolder)){
+//            $parentStorageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage('', true)->get('id');
+//        }else{
+//            $parentStorageId = $parentFolder->get('storageId');
+//        }
+//
+//        $currentFolder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
+//
+//        if ($parentStorageId !== $currentFolder->get('storageId')) {
+//            throw new BadRequest($this->getInjection('language')->translate('fileCannotBeMovedToAnotherStorage', 'exceptions', 'File'));
+//        }
 
         parent::beforeSave($entity, $options);
     }
-//
-//    public function save(Entity $entity, array $options = [])
-//    {
-//        $inTransaction = $this->getPDO()->inTransaction();
-//
-//        if (!$inTransaction) {
-//            $this->getPDO()->beginTransaction();
-//            $inTransaction = true;
-//        }
-//
-//        try {
-//            $res = parent::save($entity, $options);
-//        } catch (\Throwable $e) {
-//            if ($inTransaction) {
-//                $this->getPDO()->rollBack();
-//            }
-//            throw $e;
-//        }
-//
-//        if ($inTransaction) {
-//            $this->getPDO()->commit();
-//        }
-//
-//        return $res;
-//    }
-//
-//    protected function afterRemove(Entity $entity, array $options = [])
-//    {
-//        parent::afterRemove($entity, $options);
-//
-//        $this->removeItem($entity);
-//    }
-//
-//    public function remove(Entity $entity, array $options = [])
-//    {
-//        $inTransaction = $this->getPDO()->inTransaction();
-//
-//        if (!$inTransaction) {
-//            $this->getPDO()->beginTransaction();
-//            $inTransaction = true;
-//        }
-//
-//        try {
-//            $res = parent::remove($entity, $options);
-//        } catch (\Throwable $e) {
-//            if ($inTransaction) {
-//                $this->getPDO()->rollBack();
-//            }
-//            throw $e;
-//        }
-//
-//        if ($inTransaction) {
-//            $this->getPDO()->commit();
-//        }
-//
-//        return $res;
-//    }
-//
-//    public function updateItem(Entity $entity): void
-//    {
-//        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
-//            ->where(['folderId' => $entity->get('entityId')])
-//            ->findOne();
-//
-//        if (empty($fileFolderLinker)) {
-//            $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
-//            $fileFolderLinker->set('folderId', $entity->get('entityId'));
-//        }
-//
-//        $fileFolderLinker->set('parentId', $entity->get('parentId'));
-//
-//        try {
-//            $this->getEntityManager()->saveEntity($fileFolderLinker);
-//        } catch (UniqueConstraintViolationException $e) {
-//            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
-//        }
-//    }
-//
-//    public function removeItem(Entity $entity): void
-//    {
-//        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
-//            ->where(['folderId' => $entity->get('entityId')])
-//            ->findOne();
-//
-//        if (empty($fileFolderLinker)) {
-//            return;
-//        }
-//
-//        $fileFolderLinker->set('parentId', '');
-//
-//        try {
-//            $this->getEntityManager()->saveEntity($fileFolderLinker);
-//        } catch (UniqueConstraintViolationException $e) {
-//            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
-//        }
-//    }
 
     protected function init()
     {
