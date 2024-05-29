@@ -18,4 +18,15 @@ use Atro\Core\Templates\Entities\Hierarchy;
 class Folder extends Hierarchy
 {
     protected $entityType = "Folder";
+
+    protected ?Storage $storage = null;
+
+    public function getStorage(): Storage
+    {
+        if (!$this->storage === null) {
+            $this->storage = $this->getEntityManager()->getRepository('Storage')->get($this->get('storageId'));
+        }
+
+        return $this->storage;
+    }
 }

@@ -19,6 +19,17 @@ class File extends Base
 {
     protected $entityType = "File";
 
+    protected ?Storage $storage = null;
+
+    public function getStorage(): Storage
+    {
+        if (!$this->storage === null) {
+            $this->storage = $this->getEntityManager()->getRepository('Storage')->get($this->get('storageId'));
+        }
+
+        return $this->storage;
+    }
+
     public function getContents(): string
     {
         return $this->getEntityManager()->getRepository($this->entityType)->getContents($this);

@@ -271,12 +271,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $input = $file->_input ?? new \stdClass();
 
-        $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
+        if ($file->getStorage()->get('syncFolders')) {
+            $file->set('path', $this->getPathBuilder()->createPath($file->getStorage()->get('path') . DIRECTORY_SEPARATOR));
+        }
 
-        $file->set(
-            'path',
-            $storage->get('syncFolders') ? self::buildPathViaFileFolders($file->get('folder')) : $this->getPathBuilder()->createPath($storage->get('path') . DIRECTORY_SEPARATOR)
-        );
         $fileName = $this->getLocalPath($file);
 
         // create folders for new file
@@ -293,7 +291,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
          * Create via chunks
          */
         if (!$result && property_exists($input, 'allChunks')) {
-            $chunkDirPath = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
+            $chunkDirPath = $this->getChunksDir($file->getStorage()) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
 
             // create file via chunks
             $f = fopen($fileName, 'a+');
@@ -356,13 +354,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function createFolder(Folder $folder): bool
     {
-        $storage = $this->getEntityManager()->getRepository('Storage')->get($folder->get('storageId'));
-
-        if (!$storage->get('syncFolders')) {
+        if (!$folder->getStorage()->get('syncFolders')) {
             return true;
         }
 
-        $folderName = self::buildFullPath($storage, self::buildPathViaFileFolders($folder));
+        $folderName = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder));
 
         // create folder
         $this->getFileManager()->mkdir($folderName, 0777, true);
@@ -417,17 +413,16 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function renameFolder(Folder $folder): bool
     {
-        $storage = $this->getEntityManager()->getRepository('Storage')->get($folder->get('storageId'));
-        if (!$storage->get('syncFolders')) {
+        if (!$folder->getStorage()->get('syncFolders')) {
             return true;
         }
 
-        $folderNameFrom = self::buildFullPath($storage, self::buildPathViaFileFolders($folder, true));
+        $folderNameFrom = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder, true));
         if (!file_exists($folderNameFrom)) {
             return true;
         }
 
-        $folderNameTo = self::buildFullPath($storage, self::buildPathViaFileFolders($folder));
+        $folderNameTo = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder));
 
         return rename($folderNameFrom, $folderNameTo);
     }
@@ -459,13 +454,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function deleteFolder(Folder $folder): bool
     {
-        $storage = $this->getEntityManager()->getRepository('Storage')->get($folder->get('storageId'));
-
-        if (!$storage->get('syncFolders')) {
+        if (!$folder->getStorage()->get('syncFolders')) {
             return true;
         }
 
-        $folderName = self::buildFullPath($storage, self::buildPathViaFileFolders($folder));
+        $folderName = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder));
         if (!file_exists($folderName)) {
             return true;
         }
