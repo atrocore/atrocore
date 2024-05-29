@@ -86,7 +86,7 @@ class File extends Base
             $this->createItem($entity);
 
             // create origin file
-            if (empty($options['scanning']) && !$this->getStorage($entity)->create($entity)) {
+            if (empty($options['scanning']) && !$this->getStorage($entity)->createFile($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
             }
         }
@@ -169,7 +169,7 @@ class File extends Base
             );
         }
 
-        if (!$this->getStorage($file)->rename($file)) {
+        if (!$this->getStorage($file)->renameFile($file)) {
             throw new BadRequest($this->getInjection('language')->translate('fileRenameFailed', 'exceptions', 'File'));
         }
     }
@@ -218,7 +218,7 @@ class File extends Base
     public function deleteFile(FileEntity $entity): void
     {
         // delete origin file
-        if (!$this->getStorage($entity)->delete($entity)) {
+        if (!$this->getStorage($entity)->deleteFile($entity)) {
             throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
         }
     }

@@ -377,7 +377,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     /**
      * @inheritDoc
      */
-    public function createFileChunk(\stdClass $input, Storage $storage): array
+    public function createChunk(\stdClass $input, Storage $storage): array
     {
         $path = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
 
@@ -427,9 +427,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return rename($folderNameFrom, $folderNameTo);
     }
 
-    public function reuploadFile(File $file): bool
+    public function reupload(File $file): bool
     {
-        return $this->delete($file) && $this->create($file);
+        return $this->deleteFile($file) && $this->createFile($file);
     }
 
     public function deleteFile(File $file): bool
@@ -466,7 +466,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $this->getFileManager()->removeDir($folderName);
     }
 
-    public function getFileContents(File $file): string
+    public function getContents(File $file): string
     {
         return file_get_contents($this->getLocalPath($file));
     }
@@ -483,12 +483,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return self::buildFullPath($file->getStorage(), $file->$method('path')) . DIRECTORY_SEPARATOR . $file->$method("name");
     }
 
-    public function getFileStream(File $file): StreamInterface
+    public function getStream(File $file): StreamInterface
     {
         return \GuzzleHttp\Psr7\Utils::streamFor(fopen($this->getLocalPath($file), 'r'));
     }
 
-    public function getFileUrl(File $file): string
+    public function getUrl(File $file): string
     {
         $url = '?entryPoint=';
         if (in_array($file->get('mimeType'), Image::TYPES)) {
@@ -501,7 +501,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $url;
     }
 
-    public function getFileThumbnail(File $file, string $size): ?string
+    public function getThumbnail(File $file, string $size): ?string
     {
         /** @var Thumbnail $thumbnailCreator */
         $thumbnailCreator = $this->container->get(Thumbnail::class);
