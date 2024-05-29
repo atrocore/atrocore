@@ -343,7 +343,9 @@ class File extends Base
 
     public function getStorage(FileEntity $file): FileStorageInterface
     {
-        return $this->getInjection('container')->get($file->get('storage')->get('type') . 'Storage');
+        $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
+
+        return $this->getInjection('container')->get($storage->get('type') . 'Storage');
     }
 
     protected function getPathBuilder(): FilePathBuilder

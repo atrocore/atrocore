@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Entities\Storage as StorageEntity;
 use Atro\Entities\Folder as FolderEntity;
@@ -68,9 +69,17 @@ class Folder extends Hierarchy
                 $entity->set('storageId', $parent->get('storageId'));
             }
             $this->createItem($entity);
+
+            // create origin file
+            if (empty($options['scanning']) && !$this->getStorage($entity)->createFolder($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('folderCreateFailed', 'exceptions', 'Folder'));
+            }
         } else {
             if ($entity->isAttributeChanged('name')) {
                 $this->updateItem($entity);
+                if (!$this->getStorage($entity)->renameFolder($entity)) {
+                    throw new BadRequest($this->getInjection('language')->translate('folderRenameFailed', 'exceptions', 'File'));
+                }
             }
         }
 
@@ -92,6 +101,10 @@ class Folder extends Hierarchy
 
         // delete children folders
         $this->deleteChildrenFolders($entity);
+
+        if (!$this->getStorage($entity)->deleteFolder($entity)) {
+            throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+        }
 
         parent::beforeRemove($entity, $options);
     }
@@ -228,10 +241,18 @@ class Folder extends Hierarchy
         $this->getEntityManager()->removeEntity($fileFolderLinker);
     }
 
+    public function getStorage(FolderEntity $folder): FileStorageInterface
+    {
+        $storage = $this->getEntityManager()->getRepository('Storage')->get($folder->get('storageId'));
+
+        return $this->getInjection('container')->get($storage->get('type') . 'Storage');
+    }
+
     protected function init()
     {
         parent::init();
 
+        $this->addDependency('container');
         $this->addDependency('language');
     }
 }

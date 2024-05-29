@@ -12,6 +12,7 @@
 namespace Atro\Core\FileStorage;
 
 use Atro\Entities\File;
+use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Psr\Http\Message\StreamInterface;
 
@@ -20,6 +21,8 @@ interface FileStorageInterface
     public function scan(Storage $storage): void;
 
     public function create(File $file): bool;
+
+    public function createFolder(Folder $folder): bool;
 
     /**
      * Create file chunk on storage and return the list of the file chunks
@@ -35,9 +38,13 @@ interface FileStorageInterface
 
     public function rename(File $file): bool;
 
+    public function renameFolder(Folder $folder): bool;
+
     public function reupload(File $file): bool;
 
     public function delete(File $file): bool;
+
+    public function deleteFolder(Folder $folder): bool;
 
     public function getStream(File $file): StreamInterface;
 

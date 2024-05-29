@@ -17,6 +17,7 @@ use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
+use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
@@ -349,6 +350,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $result;
     }
 
+    public function createFolder(Folder $folder): bool
+    {
+        return false;
+    }
+
     public function getChunksDir(Storage $storage): string
     {
         return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
@@ -391,6 +397,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return false;
     }
 
+    public function renameFolder(Folder $folder): bool
+    {
+        return false;
+    }
+
     public function reupload(File $file): bool
     {
         return $this->delete($file) && $this->create($file);
@@ -414,6 +425,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         return true;
+    }
+
+    public function deleteFolder(Folder $folder): bool
+    {
+        return false;
     }
 
     public function getContents(File $file): string

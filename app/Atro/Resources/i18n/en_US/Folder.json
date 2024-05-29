@@ -12,6 +12,9 @@
     "Create Folder": "Create Folder"
   },
   "exceptions": {
-    "folderStorageCannotBeChanged": "The Folder Storage cannot be changed."
+    "folderStorageCannotBeChanged": "The Folder Storage cannot be changed.",
+    "folderCreateFailed": "Folder creation has been failed.",
+    "folderRenameFailed": "Folder renaming has been failed.",
+    "folderDeleteFailed": "Folder deleting has been failed."
   }
 }
