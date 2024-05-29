@@ -49,6 +49,9 @@ class File extends Base
                 if ($storageId !== $entity->get('storageId')) {
                     throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
                 }
+                if (!$this->getStorage($entity)->moveFile($entity)) {
+                    throw new BadRequest($this->getInjection('language')->translate('fileMoveFailed', 'exceptions', 'File'));
+                }
             }
 
             if (!empty($entity->_input) && !empty($entity->_input->reupload)) {

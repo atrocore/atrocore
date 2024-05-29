@@ -247,7 +247,7 @@ class Hierarchy extends RDB
             $entity->set('parentId', $parentId);
             $this->getEntityManager()->saveEntity($entity);
         } else {
-            $this->getEntityManager()->removeEntity($entity);
+            $this->getEntityManager()->removeEntity($entity, ['move' => true]);
         }
 
         $ids = array_column($this->getChildrenArray($parentId, false), 'id');

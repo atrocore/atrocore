@@ -15,6 +15,7 @@
     "folderStorageCannotBeChanged": "The Folder Storage cannot be changed.",
     "folderCreateFailed": "Folder creation has been failed.",
     "folderRenameFailed": "Folder renaming has been failed.",
+    "folderMoveFailed": "Folder moving has been failed.",
     "folderDeleteFailed": "Folder deleting has been failed."
   }
 }

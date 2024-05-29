@@ -13,6 +13,7 @@ namespace Atro\Core\FileStorage;
 
 use Atro\Entities\File;
 use Atro\Entities\Folder;
+use Atro\Entities\FolderHierarchy;
 use Atro\Entities\Storage;
 use Psr\Http\Message\StreamInterface;
 
@@ -38,7 +39,11 @@ interface FileStorageInterface
 
     public function renameFile(File $file): bool;
 
+    public function moveFile(File $file): bool;
+
     public function renameFolder(Folder $folder): bool;
+
+    public function moveFolder(string $entityId, string $wasParentId, string $becameParentId): bool;
 
     public function reupload(File $file): bool;
 

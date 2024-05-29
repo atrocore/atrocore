@@ -438,14 +438,19 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return rename($folderNameFrom, $folderNameTo);
     }
 
-    public function moveFolder(FolderHierarchy $folderHierarchy): bool
+    public function moveFolder(string $entityId, string $wasParentId, string $becameParentId): bool
     {
-        $repo = $this->getEntityManager()->getRepository('Folder');
+        /** @var \Atro\Repositories\Folder $folderRepo */
+        $folderRepo = $this->getEntityManager()->getRepository('Folder');
 
-        $folder = $repo->get($folderHierarchy->get('entityId'));
+        $folder = $folderRepo->get($entityId);
 
-        $parentPathWas = empty($folderHierarchy->getFetched('parentId')) ? '' : self::buildPathViaFileFolders($repo->get($folderHierarchy->getFetched('parentId')));
-        $parentPathBecame = empty($folderHierarchy->get('parentId')) ? '' : self::buildPathViaFileFolders($repo->get($folderHierarchy->get('parentId')));
+        if (!$folder->getStorage()->get('syncFolders')) {
+            return true;
+        }
+
+        $parentPathWas = empty($wasParentId) ? '' : self::buildPathViaFileFolders($folderRepo->get($wasParentId));
+        $parentPathBecame = empty($becameParentId) ? '' : self::buildPathViaFileFolders($folderRepo->get($becameParentId));
 
         $folderNameFrom = self::buildFullPath($folder->getStorage(), $parentPathWas . DIRECTORY_SEPARATOR . $folder->get('name'));
         if (!file_exists($folderNameFrom)) {
