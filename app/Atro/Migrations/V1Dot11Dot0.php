@@ -56,10 +56,13 @@ class V1Dot11Dot0 extends Base
         $this->createFoldersItems();
         $this->createFilesItems();
 
+        V1Dot10Dot0::createDefaultStorage($this->getConnection());
+
         $this->getConnection()->createQueryBuilder()
             ->update('storage')
-            ->set('folder_id', '')
+            ->set('folder_id', ':empty')
             ->where('id=:storageId')
+            ->setParameter('empty', '')
             ->setParameter('storageId', 'a_base')
             ->executeQuery();
 
@@ -67,6 +70,14 @@ class V1Dot11Dot0 extends Base
             ->update('storage')
             ->set('is_active', ':false')
             ->where('id!=:storageId')
+            ->setParameter('storageId', 'a_base')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('folder')
+            ->set('storage_id', ':storageId')
+            ->where('deleted=:false')
             ->setParameter('storageId', 'a_base')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
