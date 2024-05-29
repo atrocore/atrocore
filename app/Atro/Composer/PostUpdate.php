@@ -906,13 +906,6 @@ class PostUpdate
         exit(0);
     }
 
-    public static function testSuccess(): void
-    {
-        self::$container = (new App())->getContainer();
-
-        self::onSuccess();
-    }
-
     private static function isChanged(): bool
     {
         $composerDiff = self::getComposerDiff();
