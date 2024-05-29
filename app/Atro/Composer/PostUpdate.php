@@ -895,6 +895,13 @@ class PostUpdate
             // ignore all
         }
 
+        try {
+            if (class_exists('\Import\Services\ImportTypeSimple')) {
+                \Import\Services\ImportTypeSimple::clearCache();
+            }
+        } catch (\Throwable $e) {
+        }
+
         self::renderLine('Done!');
         exit(0);
     }
