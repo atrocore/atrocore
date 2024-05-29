@@ -20,7 +20,7 @@ interface FileStorageInterface
 {
     public function scan(Storage $storage): void;
 
-    public function create(File $file): bool;
+    public function createFile(File $file): bool;
 
     public function createFolder(Folder $folder): bool;
 
@@ -32,25 +32,25 @@ interface FileStorageInterface
      *
      * @return array
      */
-    public function createChunk(\stdClass $input, Storage $storage): array;
+    public function createFileChunk(\stdClass $input, Storage $storage): array;
 
     public function deleteCache(Storage $storage): void;
 
-    public function rename(File $file): bool;
+    public function renameFile(File $file): bool;
 
     public function renameFolder(Folder $folder): bool;
 
-    public function reupload(File $file): bool;
+    public function reuploadFile(File $file): bool;
 
-    public function delete(File $file): bool;
+    public function deleteFile(File $file): bool;
 
     public function deleteFolder(Folder $folder): bool;
 
-    public function getStream(File $file): StreamInterface;
+    public function getFileStream(File $file): StreamInterface;
 
-    public function getUrl(File $file): string;
+    public function getFileUrl(File $file): string;
 
-    public function getThumbnail(File $file, string $size): ?string;
+    public function getFileThumbnail(File $file, string $size): ?string;
 
-    public function getContents(File $file): string;
+    public function getFileContents(File $file): string;
 }
