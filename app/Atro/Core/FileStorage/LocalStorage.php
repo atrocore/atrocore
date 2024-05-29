@@ -13,6 +13,7 @@ namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\Xattr;
@@ -20,6 +21,7 @@ use Atro\Entities\File;
 use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
+use Atro\Entities\FolderHierarchy;
 use Doctrine\DBAL\Connection;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
@@ -411,6 +413,15 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return false;
     }
 
+    public function moveFile(File $file): bool
+    {
+        if (!$file->getStorage()->get('syncFolders')) {
+            return true;
+        }
+
+        return $this->renameFile($file);
+    }
+
     public function renameFolder(Folder $folder): bool
     {
         if (!$folder->getStorage()->get('syncFolders')) {
@@ -423,6 +434,25 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         $folderNameTo = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder));
+
+        return rename($folderNameFrom, $folderNameTo);
+    }
+
+    public function moveFolder(FolderHierarchy $folderHierarchy): bool
+    {
+        $repo = $this->getEntityManager()->getRepository('Folder');
+
+        $folder = $repo->get($folderHierarchy->get('entityId'));
+
+        $parentPathWas = empty($folderHierarchy->getFetched('parentId')) ? '' : self::buildPathViaFileFolders($repo->get($folderHierarchy->getFetched('parentId')));
+        $parentPathBecame = empty($folderHierarchy->get('parentId')) ? '' : self::buildPathViaFileFolders($repo->get($folderHierarchy->get('parentId')));
+
+        $folderNameFrom = self::buildFullPath($folder->getStorage(), $parentPathWas . DIRECTORY_SEPARATOR . $folder->get('name'));
+        if (!file_exists($folderNameFrom)) {
+            return false;
+        }
+
+        $folderNameTo = self::buildFullPath($folder->getStorage(), $parentPathBecame . DIRECTORY_SEPARATOR . $folder->get('name'));
 
         return rename($folderNameFrom, $folderNameTo);
     }
@@ -476,7 +506,15 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $method = $fetched ? 'getFetched' : 'get';
 
         if ($file->getStorage()->get('syncFolders')) {
-            $folderPath = !empty($folder = $file->get('folder')) ? self::buildPathViaFileFolders($folder) : '';
+            $folderId = $file->$method('folderId');
+            if (!empty($folderId)) {
+                $folder = $this->getEntityManager()->getRepository('Folder')->get($folderId);
+                if (empty($folder)) {
+                    throw new NotFound("Folder '$folderId' not found.");
+                }
+            }
+
+            $folderPath = !empty($folder) ? self::buildPathViaFileFolders($folder) : '';
             return self::buildFullPath($file->getStorage(), $folderPath) . DIRECTORY_SEPARATOR . $file->$method("name");
         }
 
