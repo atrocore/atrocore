@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Doctrine\DBAL\ParameterType;
@@ -30,6 +31,9 @@ class Storage extends Base
         }
 
         if (!$entity->isNew()) {
+            if ($entity->isAttributeChanged('syncFolders')) {
+                throw new Forbidden();
+            }
             if ($entity->isAttributeChanged('type')) {
                 throw new BadRequest($this->translate('storageTypeCannotBeChanged', 'exceptions', 'Storage'));
             }
