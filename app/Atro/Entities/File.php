@@ -23,7 +23,7 @@ class File extends Base
 
     public function getStorage(): Storage
     {
-        if (!$this->storage === null) {
+        if ($this->storage === null) {
             $this->storage = $this->getEntityManager()->getRepository('Storage')->get($this->get('storageId'));
         }
 
