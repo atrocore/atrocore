@@ -47,7 +47,7 @@ class File extends Base
             if ($entity->isAttributeChanged('folderId')) {
                 $storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('folderId') ?? '')->get('id');
                 if ($storageId !== $entity->get('storageId')) {
-                    throw new BadRequest($this->getInjection('language')->translate('fileCannotBeMovedToAnotherStorage', 'exceptions', 'File'));
+                    throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
                 }
             }
 

@@ -14,30 +14,33 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Relation;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\ORM\Entity;
 
 class FolderHierarchy extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-//        $parentFolder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('parentId'));
-//        if (empty($parentFolder)){
-//            $parentStorageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage('', true)->get('id');
-//        }else{
-//            $parentStorageId = $parentFolder->get('storageId');
-//        }
-//
-//        $currentFolder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
-//
-//        if ($parentStorageId !== $currentFolder->get('storageId')) {
-//            throw new BadRequest($this->getInjection('language')->translate('fileCannotBeMovedToAnotherStorage', 'exceptions', 'File'));
-//        }
+        $parentStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('parentId'));
+        $entityStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId'));
+
+        if ($parentStorage->get('id') !== $entityStorage->get('id')) {
+            throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
+        }
 
         parent::beforeSave($entity, $options);
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        $parentStorage = $this->getEntityManager()->getRepository('Folder')->getRootStorage();
+        $entityStorage = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('entityId'));
+
+        if ($parentStorage->get('id') !== $entityStorage->get('id')) {
+            throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
+        }
+
+        parent::beforeRemove($entity, $options);
     }
 
     protected function init()
