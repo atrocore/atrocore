@@ -674,8 +674,31 @@ class Metadata extends AbstractListener
 
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'parents');
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'children');
-        }
 
+            if (empty($data['scopes'][$scope]['multiParents'])) {
+                $data['entityDefs'][$scope]['fields']['parents']['mandatoryToSelect'] = true;
+                $data['entityDefs'][$scope]['fields']['parents']['noLoad'] = false;
+                $data['entityDefs'][$scope]['fields']['parent'] = [
+                    "type"        => "link",
+                    "notStorable" => true,
+                    "entity"      => $scope,
+                    "emHidden"    => true
+                ];
+
+                $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'], [
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "massUpdateDisabled"        => true,
+                    "filterDisabled"            => true,
+                    "importDisabled"            => true,
+                    "exportDisabled"            => true,
+                    "emHidden"                  => true
+                ]);
+                $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
+            }
+        }
 
         return $data;
     }
@@ -1019,7 +1042,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array $indexes
+     * @param array  $indexes
      * @param string $fieldName
      *
      * @return array

@@ -30,7 +30,9 @@
                 }
             ],
             [
-                false,
+                {
+                    "name": "parent"
+                },
                 {
                     "name": "sortOrder"
                 }

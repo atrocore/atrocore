@@ -52,8 +52,10 @@ Espo.define('views/admin/entity-manager/fields/bool-for-type', 'views/fields/boo
         afterRender() {
             Dep.prototype.setup.call(this);
 
+            let hide = this.name === 'multiParents' && this.getMetadata().get(['scopes', this.model.get('name'), 'multiParentsDisabled']);
+
             let types = this.options.defs.types ?? this.getMetadata().get(`app.additionalEntityParams.fields.${this.name}.types`);
-            if (types && types.includes(this.model.get('type'))) {
+            if (!hide && types && types.includes(this.model.get('type'))) {
                 this.show();
             } else {
                 this.hide();
