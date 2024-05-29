@@ -15251,17 +15251,26 @@ table.table > thead th {
   }
 
   .list > table td.fixed-button:last-child {
-    display: flex;
     position: absolute;
     top: 3px;
     left: 0;
     border: 0;
-    width: 28px;
-    height: 28px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
+    padding: 0;
+  }
+
+  .list > table td.fixed-button:last-child > .list-row-buttons {
+    display: flex;
+    flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
+  }
+
+  .list > table td.fixed-button:last-child > .list-row-buttons > .dropdown-toggle {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
   }
 
   .fixed-scrollbar {
@@ -15269,6 +15278,13 @@ table.table > thead th {
     position: fixed;
     overflow-x: scroll;
     bottom: 0;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .list > table td.cell[data-name="buttons"] > .list-row-buttons {
+    display: flex;
+    flex-flow: row nowrap;
   }
 }
 
@@ -15685,7 +15701,6 @@ ul.dropdown-menu > li > a > .check-icon + div {
 
 table.table > tbody td > .list-row-buttons button {
   position: relative;
-  margin-top: 2px;
 }
 
 .list-row-buttons span.caret {
@@ -15797,10 +15812,6 @@ select[multiple].input-sm {
   padding-left: 14px !important;
 }
 
-.panel-body > div > .list > table td:last-child, .panel-body > div > .list > table th:last-child {
-  padding-right: 14px;
-}
-
 .modal-body > div > .list {
   margin-left: -14px;
   margin-right: -14px;
@@ -15821,10 +15832,6 @@ select[multiple].input-sm {
 
 #main > .list-container > .list > table td:first-child, #main > .list-container > .list > table th:first-child {
   padding-left: 15px;
-}
-
-#main > .list-container > .list > table td:last-child, #main > .list-container > .list > table th:last-child {
-  padding-right: 15px;
 }
 
 .panel-body > .no-margin {
@@ -16063,12 +16070,6 @@ table.no-margin {
 
 .list > table td.cell[data-name="buttons"] {
   overflow: visible;
-}
-
-td.cell[data-name="buttons"] > .btn-group {
-  margin-top: -8px;
-  margin-bottom: -8px;
-  margin-right: -10px;
 }
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
@@ -19581,10 +19582,6 @@ table.table > thead th > div > a {
   #main .catalog-tree-panel.catalog-tree-panel-hidden + .list-container {
     margin-left: 25px;
     width: calc(100% - 25px);
-    overflow-x: scroll;
-  }
-  #main .catalog-tree-panel + .list-container {
-      overflow-x: scroll ;
   }
   #main .catalog-tree-panel + .list-container.hidden-catalog-tree-panel {
     margin-left: 25px;
@@ -19606,6 +19603,14 @@ table.table > thead th > div > a {
 @media screen and (min-width: 768px) {
   #main .catalog-tree-panel > .category-panel {
     min-height: 100%;
+  }
+
+  .table > tbody > tr {
+    border-top: 1px solid #e8eced;
+  }
+
+  .table > tbody > tr.active {
+    background: #e8eced;
   }
 }
 
@@ -21129,10 +21134,6 @@ span.became .file-link {
 .field .link-container .list-group-item .key-array-unit-symbol .unit-symbol {
   width: 50%;
   display: inline-block;
-}
-
-td.cell[data-name="buttons"] > .btn-group {
-  margin-right: -8px;
 }
 
 .no-margin {

@@ -15,6 +15,7 @@
     "emailAddress": "Адреса ел. пошти",
     "smtpPassword": "Пароль",
     "outboundEmailFromName": "Ім'я відправника",
+    "disableEmailDelivery": "Вимкнути доставку електронної пошти",
     "outboundEmailFromAddress": "Адреса відправника",
     "recordsPerPage": "Записів на сторінку",
     "recordsPerPageSmall": "Записів на сторінку (стислий вигляд)",

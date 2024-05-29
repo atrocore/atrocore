@@ -19,33 +19,25 @@ class Hierarchy extends Entity
 {
     public function getParentId(): ?string
     {
-        $parentId = null;
-
-        if (!empty($parentsIds = $this->get('parentsIds'))) {
-            $parentId = array_shift($parentsIds);
-        } else {
-            $parents = $this->get('parents');
-            if (!empty($parents[0])) {
-                $parentId = $parents[0]->get('id');
-            }
+        $parentsIds = $this->get('parentsIds');
+        if (is_array($parentsIds)) {
+            return $parentsIds[0] ?? null;
         }
 
-        return $parentId;
+        $parents = $this->get('parents');
+
+        return !empty($parents[0]) ? $parents[0]->get('id') : null;
     }
 
     public function getParent(): ?Hierarchy
     {
-        $parent = null;
-
-        if (!empty($parentsIds = $this->get('parentsIds'))) {
-            $parent = $this->getEntityManager()->getRepository($this->entityType)->get(array_shift($parentsIds));
-        } else {
-            $parents = $this->get('parents');
-            if (!empty($parents[0])) {
-                $parent = $parents[0];
-            }
+        $parentsIds = $this->get('parentsIds');
+        if (is_array($parentsIds)) {
+            return !empty($parentsIds[0]) ? $this->getEntityManager()->getRepository($this->entityType)->get($parentsIds[0]) : null;
         }
 
-        return $parent;
+        $parents = $this->get('parents');
+
+        return !empty($parents[0]) ? $parents[0] : null;
     }
 }

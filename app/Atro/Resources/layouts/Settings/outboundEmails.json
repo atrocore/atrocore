@@ -12,15 +12,7 @@
       ],
       [
         {
-          "name": "smtpAuth"
-        },
-        {
           "name": "smtpSecurity"
-        }
-      ],
-      [
-        {
-          "name": "smtpAuthMechanism"
         },
         false
       ],
@@ -55,7 +47,9 @@
         {
           "name": "outboundEmailFromName"
         },
-        false
+        {
+          "name": "disableEmailDelivery"
+        }
       ]
     ]
   }

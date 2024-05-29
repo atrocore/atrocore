@@ -3101,6 +3101,13 @@ class Record extends Base
                         if (!in_array("{$fieldName}Name", $attributeList)) {
                             $attributeList[] = "{$fieldName}Name";
                         }
+                    } elseif ($fieldDefs['type'] === 'linkMultiple') {
+                        if (!in_array("{$fieldName}Ids", $attributeList)) {
+                            $attributeList[] = "{$fieldName}Ids";
+                        }
+                        if (!in_array("{$fieldName}Names", $attributeList)) {
+                            $attributeList[] = "{$fieldName}Names";
+                        }
                     } else {
                         if (!in_array($fieldName, $attributeList)) {
                             $attributeList[] = $fieldName;
