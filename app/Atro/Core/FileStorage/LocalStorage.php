@@ -246,18 +246,19 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $results;
     }
 
-    public static function buildPathViaFileFolders(?Folder $folder): string
+    public static function buildPathViaFileFolders(?Folder $folder, bool $fetched = false): string
     {
         $folders = [];
         if (!empty($folder)) {
-            array_unshift($folders, $folder->get('name'));
+            $method = $fetched ? 'getFetched' : 'get';
+            array_unshift($folders, $folder->$method('name'));
             while (true) {
                 $parent = $folder->getParent();
                 if (empty($parent)) {
                     break;
                 }
                 $folder = $parent;
-                array_unshift($folders, $folder->get('name'));
+                array_unshift($folders, $folder->$method('name'));
             }
         };
 
@@ -272,7 +273,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
 
-        $file->set('path', $storage->get('syncFolders') ? self::buildPathViaFileFolders($file->get('folder')) : $this->getPathBuilder()->createPath($storage->get('path') . DIRECTORY_SEPARATOR));
+        $file->set(
+            'path',
+            $storage->get('syncFolders') ? self::buildPathViaFileFolders($file->get('folder')) : $this->getPathBuilder()->createPath($storage->get('path') . DIRECTORY_SEPARATOR)
+        );
         $fileName = $this->getLocalPath($file);
 
         // create folders for new file
@@ -358,7 +362,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             return true;
         }
 
-        $folderName = trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::buildPathViaFileFolders($folder);
+        $folderName = self::buildFullPath($storage, self::buildPathViaFileFolders($folder));
 
         // create folder
         $this->getFileManager()->mkdir($folderName, 0777, true);
@@ -413,7 +417,19 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function renameFolder(Folder $folder): bool
     {
-        return false;
+        $storage = $this->getEntityManager()->getRepository('Storage')->get($folder->get('storageId'));
+        if (!$storage->get('syncFolders')) {
+            return true;
+        }
+
+        $folderNameFrom = self::buildFullPath($storage, self::buildPathViaFileFolders($folder, true));
+        if (!file_exists($folderNameFrom)) {
+            return true;
+        }
+
+        $folderNameTo = self::buildFullPath($storage, self::buildPathViaFileFolders($folder));
+
+        return rename($folderNameFrom, $folderNameTo);
     }
 
     public function reupload(File $file): bool
@@ -449,7 +465,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             return true;
         }
 
-        $folderName = trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::buildPathViaFileFolders($folder);
+        $folderName = self::buildFullPath($storage, self::buildPathViaFileFolders($folder));
         if (!file_exists($folderName)) {
             return true;
         }
@@ -503,6 +519,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         return $thumbnailCreator->getPath($file, $size);
+    }
+
+    protected static function buildFullPath(Storage $storage, string $path): string
+    {
+        return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $path;
     }
 
     protected function getConfig(): Config
