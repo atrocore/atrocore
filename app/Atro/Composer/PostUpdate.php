@@ -891,16 +891,26 @@ class PostUpdate
             foreach ($em->getRepository('Storage')->find() as $storage) {
                 self::$container->get($storage->get('type') . 'Storage')->deleteCache($storage);
             }
-
-            if (self::$container->get('metadata')->isModuleInstalled('Import')) {
-                self::$container->get('serviceFactory')->create('ImportTypeSimple')->clearCache();
-            }
         } catch (\Throwable $e) {
             // ignore all
         }
 
+        try {
+            if (class_exists('\Import\Services\ImportTypeSimple')) {
+                \Import\Services\ImportTypeSimple::clearCache();
+            }
+        } catch (\Throwable $e) {
+        }
+
         self::renderLine('Done!');
         exit(0);
+    }
+
+    public static function testSuccess(): void
+    {
+        self::$container = (new App())->getContainer();
+
+        self::onSuccess();
     }
 
     private static function isChanged(): bool
