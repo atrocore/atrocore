@@ -475,13 +475,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     {
         $method = $fetched ? 'getFetched' : 'get';
 
-        $res = trim($file->get('storage')->get('path'), DIRECTORY_SEPARATOR);
-
-        if (!empty(trim($file->$method('path'), DIRECTORY_SEPARATOR))) {
-            $res .= DIRECTORY_SEPARATOR . trim($file->$method('path'));
+        if ($file->getStorage()->get('syncFolders')) {
+            $folderPath = !empty($folder = $file->get('folder')) ? self::buildPathViaFileFolders($folder) : '';
+            return self::buildFullPath($file->getStorage(), $folderPath) . DIRECTORY_SEPARATOR . $file->$method("name");
         }
 
-        return $res . DIRECTORY_SEPARATOR . $file->$method("name");
+        return self::buildFullPath($file->getStorage(), $file->$method('path')) . DIRECTORY_SEPARATOR . $file->$method("name");
     }
 
     public function getStream(File $file): StreamInterface
@@ -516,7 +515,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     protected static function buildFullPath(Storage $storage, string $path): string
     {
-        return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $path;
+        $res = trim($storage->get('path'), DIRECTORY_SEPARATOR);
+        if (!empty($path)) {
+            $res .= DIRECTORY_SEPARATOR . $path;
+        }
+
+        return $res;
     }
 
     protected function getConfig(): Config
