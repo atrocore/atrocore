@@ -1045,6 +1045,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 list.scrollLeft($bar.scrollLeft());
             });
             $bar.data("status", "off");
+            if (this.hasHorizontalScroll() && $(window).width() >= 768) {
+                $bar.css('display', 'block');
+            }
 
             var fixSize = function () {
                 var $container = $bar.parent();
