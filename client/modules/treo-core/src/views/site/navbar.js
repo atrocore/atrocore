@@ -251,15 +251,11 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             } else {
                 var $tabs = this.$el.find('ul.tabs');
 
-                var minHeight = $tabs.height() + navbarStaticItemsHeight;
-
                 var $more = $tabs.find('li.more > ul');
 
                 if ($more.children().size() === 0) {
                     $more.parent().addClass('hidden');
                 }
-
-                $('body').css('minHeight', minHeight + 'px');
 
                 var updateSizeForVertical = function () {
                     var windowHeight = window.innerHeight;
@@ -274,6 +270,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         $more.css('max-height', windowHeight + 'px');
                     }
 
+                    var minHeight = $tabs.height() + navbarStaticItemsHeight;
+                    $('body').css('minHeight', minHeight + 'px');
                 }.bind(this);
 
                 $(window).on('resize.navbar', function() {
