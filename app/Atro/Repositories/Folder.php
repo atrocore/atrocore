@@ -199,7 +199,7 @@ class Folder extends Hierarchy
 
     public function createItem(Entity $entity): void
     {
-        if (!empty($entity->getParentId())) {
+        if ($entity->getParentId() !== null) {
             return;
         }
 

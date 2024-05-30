@@ -33,12 +33,17 @@ class FolderHierarchy extends Relation
         }
 
         if ($entity->isNew()) {
-            $this->createItem($entity);
+            $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+                ->where(['folderId' => $entity->get('entityId')])
+                ->findOne();
+            if (!empty($fileFolderLinker)) {
+                $this->updateItem($entity);
+            } else {
+                $this->createItem($entity);
+            }
         } else {
             $this->updateItem($entity);
         }
-
-        // додати валідацію унікальних назв
 
         parent::beforeSave($entity, $options);
 
