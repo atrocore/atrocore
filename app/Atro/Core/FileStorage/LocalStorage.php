@@ -583,6 +583,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                     $entityData['folderId'] = $xattr->get($fileInfo['dirname'], 'atroId');
                 } else {
                     $entityData['path'] = ltrim($fileInfo['dirname'], trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
+                    $entityData['folderId'] = $storage->get('folderId');
                 }
 
                 $id = $xattr->get($fileName, 'atroId');
