@@ -24,6 +24,7 @@
     "scanDone": "Scanning of the Storage '%s' is completed."
   },
   "messages": {
+    "unlinkAllFoldersConfirmation": "All the folders will be unlinked from records in the system and removed from the storage index. The folders will not be deleted physically. Are you sure you want to proceed?",
     "unlinkAllFilesConfirmation": "All the files will be unlinked from records in the system and removed from the storage index. The files will not be deleted physically. Are you sure you want to proceed?"
   },
   "exceptions": {

@@ -22,6 +22,36 @@ use Espo\Services\QueueManagerServiceInterface;
 
 class Storage extends Base implements QueueManagerServiceInterface
 {
+    public function unlinkAllFolders(string $storageId): bool
+    {
+        /** @var \Atro\Repositories\Folder $repo */
+        $repo = $this->getEntityManager()->getRepository('Folder');
+
+        $offset = 0;
+        $limit = 5000;
+
+        while (true) {
+            $folders = $repo
+                ->where(['storageId' => $storageId])
+                ->limit($offset, $limit)
+                ->find();
+
+            if (empty($folders[0])) {
+                break;
+            }
+
+            $offset = $offset + $limit;
+
+            foreach ($folders as $folder) {
+                if ($this->getAcl()->check($folder, 'delete')) {
+                    $this->getEntityManager()->removeEntity($folder, ['keepFolder' => true]);
+                }
+            }
+        }
+
+        return true;
+    }
+
     public function unlinkAllFiles(string $storageId): bool
     {
         /** @var \Atro\Repositories\File $repo */

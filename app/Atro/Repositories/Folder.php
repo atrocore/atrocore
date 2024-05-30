@@ -109,8 +109,10 @@ class Folder extends Hierarchy
     {
         $this->removeItem($entity);
 
-        if (!$this->getStorage($entity)->deleteFolder($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+        if (empty($options['keepFolder'])) {
+            if (!$this->getStorage($entity)->deleteFolder($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+            }
         }
 
         foreach ($this->getEntityManager()->getRepository('FolderHierarchy')->where(['entityId' => $entity->get('id')])->find() as $folderHierarchy) {
