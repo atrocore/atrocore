@@ -24,7 +24,6 @@ use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
 use Espo\Core\Utils\Config;
@@ -166,7 +165,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         return true;
     }
-    
+
     public function createChunk(\stdClass $input, Storage $storage): array
     {
         $path = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
