@@ -466,7 +466,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         foreach ($foldersData as $folderData) {
-            if ($exists[$folderData['id']]) {
+            if (isset($exists[$folderData['id']])) {
                 $entity = $exists[$folderData['id']];
             } else {
                 $entity = $folderRepository->get();
