@@ -14,6 +14,7 @@ namespace Atro\Core\FileStorage;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\Xattr;
@@ -22,9 +23,12 @@ use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Util;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Psr\Http\Message\StreamInterface;
 
@@ -56,6 +60,16 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         if (!$xattr->hasServerExtensions()) {
             throw new \Error("Xattr extension is not installed and the attr command is not available. See documentation for details.");
         }
+
+        $otherStorages = $this->getEntityManager()->getRepository('Storage')
+            ->where([
+                'id!='     => $storage->get('id'),
+                'type'     => 'local',
+                'isActive' => true
+            ])
+            ->find();
+
+        $this->scanFolders($storage, $otherStorages, $xattr);
 
         $limit = 20000;
 
@@ -93,13 +107,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
 
         // remove files from other storages
-        $otherStorages = $this->getEntityManager()->getRepository('Storage')
-            ->where([
-                'id!='     => $storage->get('id'),
-                'type'     => 'local',
-                'isActive' => true
-            ])
-            ->find();
         foreach ($otherStorages as $otherStorage) {
             if (strlen($otherStorage->get('path')) > strlen($storage->get('path'))) {
                 foreach ($files as $k => $file) {
@@ -111,15 +118,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         $files = array_values($files);
-
-//        echo '<pre>';
-//        print_r($files);
-//        die();
-
-
-//        if ($file->getStorage()->get('syncFolders')) {
-//            $file->set('path', $this->getPathBuilder()->createPath($file->getStorage()->get('path') . DIRECTORY_SEPARATOR));
-//        }
 
         $ids = [];
 
@@ -237,6 +235,101 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
     }
 
+    public function scanFolders(Storage $storage, EntityCollection $otherStorages, Xattr $xattr): void
+    {
+        if (empty($storage->get('syncFolders'))) {
+            return;
+        }
+
+        // scan real folders
+        $dirs = $this->getDirs(trim($storage->get('path'), DIRECTORY_SEPARATOR));
+        foreach ($otherStorages as $otherStorage) {
+            if (strlen($otherStorage->get('path')) > strlen($storage->get('path'))) {
+                foreach ($dirs as $k => $dir) {
+                    if (strpos($dir, $otherStorage->get('path')) === 0) {
+                        unset($dirs[$k]);
+                    }
+                }
+            }
+        }
+        $dirs = array_values($dirs);
+
+        // prepare entity data
+        $foldersData = [];
+        foreach ($dirs as $dir) {
+            $parts = explode(DIRECTORY_SEPARATOR, $dir);
+            $dirName = array_pop($parts);
+
+            $id = $xattr->get($dir, 'atroId');
+
+            $entityData = [
+                'id'       => $id ?? Util::generateId(),
+                'name'     => $dirName,
+                '_dirName' => $dir
+            ];
+
+            $foldersData[] = $entityData;
+        }
+
+        $prefixToRemove = $storage->get('path') . DIRECTORY_SEPARATOR;
+
+        // prepare parents
+        foreach ($foldersData as $k => $row) {
+            $preparedPath = substr($row['_dirName'], strlen($prefixToRemove));
+            if ($preparedPath === $row['name']) {
+                $foldersData[$k]['parentId'] = $storage->get('folderId') ?? '';
+            } else {
+                $pathParts = explode(DIRECTORY_SEPARATOR, $row['_dirName']);
+                array_pop($pathParts);
+                $checkPath = implode(DIRECTORY_SEPARATOR, $pathParts);
+
+                foreach ($foldersData as $v) {
+                    if ($v['_dirName'] === $checkPath) {
+                        $foldersData[$k]['parentId'] = $v['id'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        $folderRepository = $this->getEntityManager()->getRepository('Folder');
+
+        $exists = [];
+        foreach ($folderRepository->where(['id' => array_column($foldersData, 'id')])->find() as $folderEntity) {
+            $exists[$folderEntity->get('id')] = $folderEntity;
+        }
+
+        foreach ($foldersData as $folderData) {
+            if ($exists[$folderData['id']]) {
+                $entity = $exists[$folderData['id']];
+            } else {
+                $entity = $folderRepository->get();
+                $entity->id = $folderData['id'];
+                $entity->set('storageId', $storage->get('id'));
+            }
+            $entity->set('name', $folderData['name']);
+            if (!empty($folderData['parentId'])) {
+                $entity->set('parentsIds', [$folderData['parentId']]);
+            }
+
+            try {
+                $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
+                $xattr->set($folderData['_dirName'], 'atroId', $entity->get('id'));
+            } catch (NotUnique $e) {
+                $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+                    ->where([
+                        'parentId'   => $folderData['parentId'],
+                        'folderId!=' => null,
+                        'name'       => $entity->get('name')
+                    ])
+                    ->findOne();
+                if (!empty($fileFolderLinker)) {
+                    $xattr->set($folderData['_dirName'], 'atroId', $fileFolderLinker->get('folderId'));
+                }
+            }
+        }
+    }
+
     public function getDirFiles(string $dir, &$results = []): array
     {
         if (is_dir($dir)) {
@@ -250,6 +343,25 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                     $results[] = $path;
                 } elseif (is_dir($path)) {
                     $this->getDirFiles($path, $results);
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    public function getDirs(string $dir, &$results = []): array
+    {
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $value) {
+                if ($value === "." || $value === "..") {
+                    continue;
+                }
+
+                $path = $dir . DIRECTORY_SEPARATOR . $value;
+                if (is_dir($path)) {
+                    $results[] = $path;
+                    $this->getDirs($path, $results);
                 }
             }
         }
@@ -464,11 +576,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         $parentPathWas = empty($wasParentId) ? '' : self::buildFolderPath($folderRepo->get($wasParentId));
-        if (!empty($parentPathWas)){
+        if (!empty($parentPathWas)) {
             $parentPathWas .= DIRECTORY_SEPARATOR;
         }
         $parentPathBecame = empty($becameParentId) ? '' : self::buildFolderPath($folderRepo->get($becameParentId));
-        if (!empty($parentPathBecame)){
+        if (!empty($parentPathBecame)) {
             $parentPathBecame .= DIRECTORY_SEPARATOR;
         }
 
