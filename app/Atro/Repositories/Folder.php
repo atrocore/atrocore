@@ -199,10 +199,14 @@ class Folder extends Hierarchy
 
     public function createItem(Entity $entity): void
     {
+        if (!empty($entity->getParentId())) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
         $fileFolderLinker->set([
             'name'     => $entity->get('name'),
-            'parentId' => $entity->get('parentsIds')[0] ?? '',
+            'parentId' => '',
             'folderId' => $entity->get('id')
         ]);
 

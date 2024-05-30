@@ -44,8 +44,10 @@ class RefreshStoragesItems extends AbstractConsole
             ->select('f.*, h.parent_id')
             ->from('folder', 'f')
             ->leftJoin('f', 'folder_hierarchy', 'h', 'f.id=h.entity_id')
+            ->leftJoin('h', 'folder', 'f1', 'f1.id=h.parent_id')
             ->where('f.deleted=:false')
             ->andWhere('f.deleted=:false')
+            ->andWhere('f1.deleted=:false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
