@@ -15352,7 +15352,8 @@ div.list-kanban > div > table th > div:before {
 }
 
 div.list-kanban > div > table th:last-child > div:before, div.list-kanban > div > table th:last-child > div:after {
-    border-color: transparent transparent transparent transparent !important
+    border-color: transparent transparent transparent transparent !important;
+    border: 0;
 }
 
 div.list-kanban > div > table td.group-column {
@@ -22756,7 +22757,7 @@ div.list-kanban > div > table td.group-column {
 .kanban-columns-container table.kanban-columns tbody tr.kanban-row td.group-column {
     overflow-x: hidden;
     overflow-y: auto;
-    min-width: 272px;
+    min-width: 270px;
     border-radius: 5px;
     padding: 5px 5px 5px 5px;
     box-shadow: 0 0 10px rgba(0,0,0,.2);
@@ -22768,7 +22769,7 @@ div.list-kanban > div > table td.group-column {
     overflow: inherit;
 }
 .list-kanban .kanban-head-container table.kanban-head thead tr.kanban-row th.group-header {
-    min-width: 272px;
+    min-width: 270px;
 }
 .kanban-avatar {
     padding-right: 3px;
