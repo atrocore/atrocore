@@ -41,7 +41,7 @@ class File extends Base
 
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('storageId')) {
-                throw new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File'));
+                throw (new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File')))->setDataItem('skipOnScan', true);
             }
 
             if ($entity->isAttributeChanged('folderId')) {

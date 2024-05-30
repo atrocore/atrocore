@@ -12,6 +12,7 @@
 namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
@@ -201,13 +202,19 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             foreach ($toCreate as $entityData) {
                 $entity = $fileRepo->get();
                 $entity->set($entityData);
-                $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
+                $this->createFileViaScan($entity);
                 $xattr->set($entityData['_fileName'], 'atroId', $entity->get('id'));
                 $ids[] = $entity->get('id');
             }
 
             foreach ($toUpdate as $entity) {
-                $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
+                try {
+                    $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
+                } catch (BadRequest $e) {
+                    if (empty($e->getDataItem('skipOnScan'))) {
+                        throw $e;
+                    }
+                }
             }
         }
 
@@ -336,6 +343,20 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                     $xattr->set($folderData['_dirName'], 'atroId', $fileFolderLinker->get('folderId'));
                 }
             }
+        }
+    }
+
+    protected function createFileViaScan(File $file): void
+    {
+        try {
+            $this->getEntityManager()->saveEntity($file, ['scanning' => true]);
+        } catch (NotUnique $e) {
+            $parts = explode('.', $file->get('name'));
+            $ext = array_pop($parts);
+            $from = $this->getLocalPath($file);
+            $file->set('name', implode('.', $parts) . '_.' . $ext);
+            rename($from, $this->getLocalPath($file));
+            $this->createFileViaScan($file);
         }
     }
 
