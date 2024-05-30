@@ -15088,6 +15088,7 @@ div.list-kanban > div > table th > div:before {
 
 div.list-kanban > div > table th:last-child > div:before, div.list-kanban > div > table th:last-child > div:after {
   border-color: transparent transparent transparent transparent !important;
+  border: 0;
 }
 
 div.list-kanban > div > table td.group-column {
