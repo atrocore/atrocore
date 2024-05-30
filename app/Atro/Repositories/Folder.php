@@ -92,7 +92,7 @@ class Folder extends Hierarchy
             ->where(['folderId' => $entity->get('id')])
             ->findOne();
 
-        if (!empty($storage)) {
+        if (empty($options['keepFolder']) && !empty($storage)) {
             throw new BadRequest("Storage '{$storage->get('name')}' uses this folder.");
         }
 
