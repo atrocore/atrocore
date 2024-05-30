@@ -148,7 +148,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
                 $entityData = [
                     'name'      => $fileInfo['basename'],
-                    'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
                     'fileSize'  => filesize($fileName),
                     'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
                     'hash'      => $this->getFileManager()->md5File($fileName),
@@ -156,6 +155,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                     'storageId' => $storage->get('id'),
                     '_fileName' => $fileName
                 ];
+
+                if (!empty($storage->get('syncFolders'))) {
+                    $entityData['folderId'] = $xattr->get($fileInfo['dirname'], 'atroId');
+                } else {
+                    $entityData['path'] = ltrim($fileInfo['dirname'], trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
+                }
 
                 $id = $xattr->get($fileName, 'atroId');
                 if (empty($id)) {
