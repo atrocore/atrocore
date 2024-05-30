@@ -70,7 +70,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             ->find();
 
         $this->scanFolders($storage, $otherStorages, $xattr);
+        $this->scanFiles($storage, $otherStorages, $xattr);
+    }
 
+    public function scanFiles(Storage $storage, EntityCollection $otherStorages, Xattr $xattr): void
+    {
         $limit = 20000;
 
         /** @var \Atro\Repositories\File $fileRepo */
