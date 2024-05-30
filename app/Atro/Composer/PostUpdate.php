@@ -781,7 +781,9 @@ class PostUpdate
                     'to'      => null
                 ];
             } elseif ($package['version'] != $newData[$package['name']]['version']) {
-                $id = $newData[$package['name']]['extra']['treoId'] === 'Treo' ? 'Atro' : $newData[$package['name']]['extra']['treoId'];
+                $id = $newData[$package['name']]['extra']['treoId'] === 'Treo'
+                    ? 'Atro'
+                    : $newData[$package['name']]['extra']['treoId'];
                 $result['update'][$id] = [
                     'id'      => $id,
                     'package' => $newData[$package['name']],
