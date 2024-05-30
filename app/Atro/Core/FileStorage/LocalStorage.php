@@ -262,7 +262,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $folders = [];
         if (!empty($folder)) {
             $method = $fetched ? 'getFetched' : 'get';
-            array_unshift($folders, $folder->$method('name'));
+            if ($folder->get('id') !== $folder->getStorage()->get('folderId')) {
+                array_unshift($folders, $folder->$method('name'));
+            }
             while (true) {
                 $parent = $folder->getParent();
                 if (empty($parent)) {
@@ -462,14 +464,20 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         $parentPathWas = empty($wasParentId) ? '' : self::buildFolderPath($folderRepo->get($wasParentId));
+        if (!empty($parentPathWas)){
+            $parentPathWas .= DIRECTORY_SEPARATOR;
+        }
         $parentPathBecame = empty($becameParentId) ? '' : self::buildFolderPath($folderRepo->get($becameParentId));
+        if (!empty($parentPathBecame)){
+            $parentPathBecame .= DIRECTORY_SEPARATOR;
+        }
 
-        $folderNameFrom = self::buildFullPath($folder->getStorage(), $parentPathWas . DIRECTORY_SEPARATOR . $folder->get('name'));
+        $folderNameFrom = self::buildFullPath($folder->getStorage(), $parentPathWas . $folder->get('name'));
         if (!file_exists($folderNameFrom)) {
             return false;
         }
 
-        $folderNameTo = self::buildFullPath($folder->getStorage(), $parentPathBecame . DIRECTORY_SEPARATOR . $folder->get('name'));
+        $folderNameTo = self::buildFullPath($folder->getStorage(), $parentPathBecame . $folder->get('name'));
 
         return rename($folderNameFrom, $folderNameTo);
     }
