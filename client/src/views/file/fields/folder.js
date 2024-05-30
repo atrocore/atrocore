@@ -19,12 +19,16 @@ Espo.define('views/file/fields/folder', 'views/fields/link',
             }
 
             if (this.mode === 'edit') {
-                const selectedFolderId = this.getStorage().get('selectedNodeId', 'File') || null;
-                if (selectedFolderId && this.model.isNew()) {
-                    this.ajaxGetRequest(`Folder/${selectedFolderId}?silent=true`).success(folder => {
-                        this.model.set('folderId', folder.id);
-                        this.model.set('folderName', folder.name);
-                    });
+                if (this.model.isNew()) {
+                    if (window.location.hash === '#File') {
+                        const selectedFolderId = this.getStorage().get('selectedNodeId', 'File') || null;
+                        if (selectedFolderId) {
+                            this.ajaxGetRequest(`Folder/${selectedFolderId}?silent=true`).success(folder => {
+                                this.model.set('folderId', folder.id);
+                                this.model.set('folderName', folder.name);
+                            });
+                        }
+                    }
                 }
             }
         },

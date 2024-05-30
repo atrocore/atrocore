@@ -111,6 +111,16 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         $files = array_values($files);
+
+//        echo '<pre>';
+//        print_r($files);
+//        die();
+
+
+//        if ($file->getStorage()->get('syncFolders')) {
+//            $file->set('path', $this->getPathBuilder()->createPath($file->getStorage()->get('path') . DIRECTORY_SEPARATOR));
+//        }
+
         $ids = [];
 
         foreach (array_chunk($files, $limit) as $chunk) {
@@ -247,7 +257,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $results;
     }
 
-    public static function buildPathViaFileFolders(?Folder $folder, bool $fetched = false): string
+    public static function buildFolderPath(?Folder $folder, bool $fetched = false): string
     {
         $folders = [];
         if (!empty($folder)) {
@@ -259,7 +269,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                     break;
                 }
                 $folder = $parent;
-                array_unshift($folders, $folder->$method('name'));
+
+                if ($folder->get('id') !== $folder->getStorage()->get('folderId')) {
+                    array_unshift($folders, $folder->$method('name'));
+                }
             }
         };
 
@@ -359,7 +372,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             return true;
         }
 
-        $folderName = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder));
+        $folderName = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder));
 
         // create folder
         $this->getFileManager()->mkdir($folderName, 0777, true);
@@ -427,12 +440,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             return true;
         }
 
-        $folderNameFrom = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder, true));
+        $folderNameFrom = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder, true));
         if (!file_exists($folderNameFrom)) {
             return true;
         }
 
-        $folderNameTo = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder));
+        $folderNameTo = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder));
 
         return rename($folderNameFrom, $folderNameTo);
     }
@@ -448,8 +461,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             return true;
         }
 
-        $parentPathWas = empty($wasParentId) ? '' : self::buildPathViaFileFolders($folderRepo->get($wasParentId));
-        $parentPathBecame = empty($becameParentId) ? '' : self::buildPathViaFileFolders($folderRepo->get($becameParentId));
+        $parentPathWas = empty($wasParentId) ? '' : self::buildFolderPath($folderRepo->get($wasParentId));
+        $parentPathBecame = empty($becameParentId) ? '' : self::buildFolderPath($folderRepo->get($becameParentId));
 
         $folderNameFrom = self::buildFullPath($folder->getStorage(), $parentPathWas . DIRECTORY_SEPARATOR . $folder->get('name'));
         if (!file_exists($folderNameFrom)) {
@@ -492,12 +505,14 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             return true;
         }
 
-        $folderName = self::buildFullPath($folder->getStorage(), self::buildPathViaFileFolders($folder));
+        $folderName = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder));
         if (!file_exists($folderName)) {
             return true;
         }
 
-        return $this->getFileManager()->removeDir($folderName);
+        $this->getFileManager()->removeAllInDir($folderName);
+
+        return true;
     }
 
     public function getContents(File $file): string
@@ -518,7 +533,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 }
             }
 
-            $folderPath = !empty($folder) ? self::buildPathViaFileFolders($folder) : '';
+            $folderPath = !empty($folder) ? self::buildFolderPath($folder) : '';
             return self::buildFullPath($file->getStorage(), $folderPath) . DIRECTORY_SEPARATOR . $file->$method("name");
         }
 
@@ -555,7 +570,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $thumbnailCreator->getPath($file, $size);
     }
 
-    protected static function buildFullPath(Storage $storage, string $path): string
+    protected static function buildFullPath(Storage $storage, ?string $path): string
     {
         $res = trim($storage->get('path'), DIRECTORY_SEPARATOR);
         if (!empty($path)) {
