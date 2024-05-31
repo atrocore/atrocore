@@ -88,21 +88,19 @@ class Folder extends Hierarchy
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        if (empty($options['keepFolder'])) {
-            $storage = $this->getEntityManager()->getRepository('Storage')
-                ->where(['folderId' => $entity->get('id')])
-                ->findOne();
+        $storage = $this->getEntityManager()->getRepository('Storage')
+            ->where(['folderId' => $entity->get('id')])
+            ->findOne();
 
-            if (!empty($storage)) {
-                throw new BadRequest("Storage '{$storage->get('name')}' uses this folder.");
-            }
-
-            // delete all files inside folder
-            $this->deleteFiles($entity);
-
-            // delete children folders
-            $this->deleteChildrenFolders($entity);
+        if (!empty($storage)) {
+            throw new BadRequest("Storage '{$storage->get('name')}' uses this folder.");
         }
+
+        // delete all files inside folder
+        $this->deleteFiles($entity);
+
+        // delete children folders
+        $this->deleteChildrenFolders($entity);
 
         parent::beforeRemove($entity, $options);
     }
@@ -111,10 +109,8 @@ class Folder extends Hierarchy
     {
         $this->removeItem($entity);
 
-        if (empty($options['keepFolder'])) {
-            if (!$this->getStorage($entity)->deleteFolder($entity)) {
-                throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
-            }
+        if (!$this->getStorage($entity)->deleteFolder($entity)) {
+            throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
         }
 
         /** @var FolderHierarchy $folderHierarchyRepository */

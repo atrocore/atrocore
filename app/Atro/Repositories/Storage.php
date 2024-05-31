@@ -132,20 +132,78 @@ class Storage extends Base
         }
     }
 
-    protected function beforeRemove(Entity $entity, array $options = [])
+    protected function afterRemove(Entity $entity, array $options = [])
     {
-        $e = $this->getEntityManager()->getRepository('File')
-            ->select(['id'])
-            ->where([
-                'storageId' => $entity->get('id')
-            ])
-            ->findOne();
+        parent::afterRemove($entity, $options);
 
-        if (!empty($e)) {
-            throw new BadRequest($this->translate('storageWithFilesCannotBeRemoved', 'exceptions', 'Storage'));
+        $this->unlinkAllFolders($entity->get('id'));
+        $this->unlinkAllFiles($entity->get('id'));
+    }
+
+    public function unlinkAllFolders(string $storageId): void
+    {
+        while (true) {
+            $foldersIds = $this->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('folder')
+                ->where('storage_id=:storageId')
+                ->setFirstResult(0)
+                ->setMaxResults(20000)
+                ->setParameter('storageId', $storageId)
+                ->fetchFirstColumn();
+
+            if (empty($foldersIds)) {
+                break;
+            }
+
+            $this->getConnection()->createQueryBuilder()
+                ->delete('file_folder_linker')
+                ->where('folder_id IN (:foldersIds)')
+                ->setParameter('foldersIds', $foldersIds, $this->getConnection()::PARAM_STR_ARRAY)
+                ->executeQuery();
+
+            $this->getConnection()->createQueryBuilder()
+                ->delete('folder_hierarchy')
+                ->where('entity_id IN (:foldersIds) OR parent_id IN (:foldersIds)')
+                ->setParameter('foldersIds', $foldersIds, $this->getConnection()::PARAM_STR_ARRAY)
+                ->executeQuery();
+
+            $this->getConnection()->createQueryBuilder()
+                ->delete('folder')
+                ->where('id IN (:foldersIds)')
+                ->setParameter('foldersIds', $foldersIds, $this->getConnection()::PARAM_STR_ARRAY)
+                ->executeQuery();
         }
+    }
 
-        parent::beforeRemove($entity, $options);
+    public function unlinkAllFiles(string $storageId): void
+    {
+        while (true) {
+            $filesIds = $this->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('file')
+                ->where('storage_id=:storageId')
+                ->setFirstResult(0)
+                ->setMaxResults(20000)
+                ->setParameter('storageId', $storageId)
+                ->fetchFirstColumn();
+
+            if (empty($filesIds)) {
+                break;
+            }
+
+            $this->getConnection()->createQueryBuilder()
+                ->delete('file_folder_linker')
+                ->where('file_id IN (:filesIds)')
+                ->setParameter('filesIds', $filesIds, $this->getConnection()::PARAM_STR_ARRAY)
+                ->executeQuery();
+
+            $this->getConnection()->createQueryBuilder()
+                ->delete('file')
+                ->where('id IN (:filesIds)')
+                ->setParameter('filesIds', $filesIds, $this->getConnection()::PARAM_STR_ARRAY)
+                ->executeQuery();
+        }
     }
 
     protected function init()

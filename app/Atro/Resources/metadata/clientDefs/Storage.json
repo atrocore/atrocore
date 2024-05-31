@@ -5,14 +5,12 @@
     "folders": {
       "create": false,
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
-      "view": "views/storage/record/panels/folders"
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
     },
     "files": {
       "create": false,
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
-      "view": "views/storage/record/panels/files"
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
     }
   },
   "recordViews": {

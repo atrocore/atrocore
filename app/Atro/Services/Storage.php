@@ -44,7 +44,7 @@ class Storage extends Base implements QueueManagerServiceInterface
 
             foreach ($folders as $folder) {
                 if ($this->getAcl()->check($folder, 'delete')) {
-                    $this->getEntityManager()->removeEntity($folder, ['keepFolder' => true]);
+                    $this->getEntityManager()->removeEntity($folder);
                 }
             }
         }
@@ -74,7 +74,7 @@ class Storage extends Base implements QueueManagerServiceInterface
 
             foreach ($files as $file) {
                 if ($this->getAcl()->check($file, 'delete')) {
-                    $this->getEntityManager()->removeEntity($file, ['keepFile' => true]);
+                    $this->getEntityManager()->removeEntity($file);
                 }
             }
         }

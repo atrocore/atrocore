@@ -23,10 +23,6 @@
     "scan": "Scan",
     "scanDone": "Scanning of the Storage '%s' is completed."
   },
-  "messages": {
-    "unlinkAllFoldersConfirmation": "All the folders will be unlinked from records in the system and removed from the storage index. The folders will not be deleted physically. Are you sure you want to proceed?",
-    "unlinkAllFilesConfirmation": "All the files will be unlinked from records in the system and removed from the storage index. The files will not be deleted physically. Are you sure you want to proceed?"
-  },
   "exceptions": {
     "itemCannotBeMovedToAnotherStorage": "The file or the folder cannot be moved between storages.",
     "folderInUse": "The folder is already in use. Please select a folder that does not contain files.",
@@ -35,7 +31,6 @@
     "storagePathNotUnique": "Storage path should be unique.",
     "storagePathContainFilesFromAnotherStorage": "Storage path wrong. There are files that belong to a different Storage.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
-    "storagePathCannotBeChanged": "Storage Path cannot be changed.",
-    "storageWithFilesCannotBeRemoved": "Delete is not allowed. There are files that belong to this Storage."
+    "storagePathCannotBeChanged": "Storage Path cannot be changed."
   }
 }
