@@ -88,19 +88,21 @@ class Folder extends Hierarchy
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        $storage = $this->getEntityManager()->getRepository('Storage')
-            ->where(['folderId' => $entity->get('id')])
-            ->findOne();
+        if (empty($options['keepFolder'])) {
+            $storage = $this->getEntityManager()->getRepository('Storage')
+                ->where(['folderId' => $entity->get('id')])
+                ->findOne();
 
-        if (empty($options['keepFolder']) && !empty($storage)) {
-            throw new BadRequest("Storage '{$storage->get('name')}' uses this folder.");
+            if (!empty($storage)) {
+                throw new BadRequest("Storage '{$storage->get('name')}' uses this folder.");
+            }
+
+            // delete all files inside folder
+            $this->deleteFiles($entity);
+
+            // delete children folders
+            $this->deleteChildrenFolders($entity);
         }
-
-        // delete all files inside folder
-        $this->deleteFiles($entity);
-
-        // delete children folders
-        $this->deleteChildrenFolders($entity);
 
         parent::beforeRemove($entity, $options);
     }
@@ -115,7 +117,13 @@ class Folder extends Hierarchy
             }
         }
 
-        foreach ($this->getEntityManager()->getRepository('FolderHierarchy')->where(['entityId' => $entity->get('id')])->find() as $folderHierarchy) {
+        /** @var FolderHierarchy $folderHierarchyRepository */
+        $folderHierarchyRepository = $this->getEntityManager()->getRepository('FolderHierarchy');
+
+        foreach ($folderHierarchyRepository->where(['entityId' => $entity->get('id')])->find() as $folderHierarchy) {
+            $this->getEntityManager()->removeEntity($folderHierarchy, ['ignoreValidation' => true]);
+        }
+        foreach ($folderHierarchyRepository->where(['parentId' => $entity->get('id')])->find() as $folderHierarchy) {
             $this->getEntityManager()->removeEntity($folderHierarchy, ['ignoreValidation' => true]);
         }
 
