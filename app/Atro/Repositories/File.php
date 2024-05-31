@@ -67,7 +67,7 @@ class File extends Base
                     $this->updateItem($entity);
                 }
 
-                if ($entity->isAttributeChanged('name')) {
+                if ($entity->isAttributeChanged('name') && empty($options['scanning'])) {
                     $this->rename($entity);
                 }
             }

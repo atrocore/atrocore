@@ -622,14 +622,14 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             foreach ($toCreate as $entityData) {
                 $entity = $fileRepo->get();
                 $entity->set($entityData);
-                $this->createFileViaScan($entity);
+                $this->saveFileViaScan($entity);
                 $xattr->set($entityData['_fileName'], 'atroId', $entity->get('id'));
                 $ids[] = $entity->get('id');
             }
 
             foreach ($toUpdate as $entity) {
                 try {
-                    $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
+                    $this->saveFileViaScan($entity);
                 } catch (BadRequest $e) {
                     if (empty($e->getDataItem('skipOnScan'))) {
                         throw $e;
@@ -671,7 +671,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
     }
 
-    protected function createFileViaScan(File $file): void
+    protected function saveFileViaScan(File $file): void
     {
         try {
             $this->getEntityManager()->saveEntity($file, ['scanning' => true]);
@@ -681,7 +681,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             $from = $this->getLocalPath($file);
             $file->set('name', implode('.', $parts) . '_.' . $ext);
             rename($from, $this->getLocalPath($file));
-            $this->createFileViaScan($file);
+            $this->saveFileViaScan($file);
         }
     }
 
