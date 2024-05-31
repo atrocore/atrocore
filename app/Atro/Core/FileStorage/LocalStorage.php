@@ -555,10 +555,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
             foreach ($chunk as $fileName) {
                 $fileInfo = pathinfo($fileName);
-                // ignore system file
-                if ($fileInfo['basename'] === 'lastCreated') {
-                    continue;
-                }
+
                 // ignore chunks
                 if (strpos($fileInfo['dirname'], self::CHUNKS_DIR) !== false) {
                     continue;
