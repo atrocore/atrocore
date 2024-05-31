@@ -17,7 +17,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 
-class V1Dot10Dot29 extends Base
+class V1Dot11Dot0 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
