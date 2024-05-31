@@ -580,7 +580,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 ];
 
                 if (!empty($storage->get('syncFolders'))) {
-                    $entityData['folderId'] = $xattr->get($fileInfo['dirname'], 'atroId');
+                    $entityData['folderId'] = $xattr->get($fileInfo['dirname'], 'atroId') ?? $storage->get('folderId');
                 } else {
                     $entityData['path'] = ltrim($fileInfo['dirname'], trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
                     $entityData['folderId'] = $storage->get('folderId');
