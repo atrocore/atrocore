@@ -21,7 +21,12 @@ class Extension extends Base
 {
     public function validate(File $file): bool
     {
-        return in_array(strtolower(pathinfo($file->get('name'))['extension']), array_map('strtolower', $this->rule->get('extension')));
+        $pathInfo = pathinfo($file->get('name'));
+        if (empty($pathInfo['extension'])) {
+            return false;
+        }
+
+        return in_array(strtolower($pathInfo['extension']), array_map('strtolower', $this->rule->get('extension')));
     }
 
     public function onValidateFail()
