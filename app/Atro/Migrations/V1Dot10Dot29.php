@@ -129,7 +129,7 @@ class V1Dot10Dot29 extends Base
 
         foreach ($duplicates as $rows) {
             foreach ($rows as $row) {
-                $newName = $row['name'] . '_';
+                $newName = $row['name'] . '(' . $row['id'] . ')';
                 $this->getConnection()->createQueryBuilder()
                     ->update('folder')
                     ->set('name', ':name')
@@ -183,7 +183,7 @@ class V1Dot10Dot29 extends Base
             foreach ($rows as $row) {
                 $parts = explode('.', $record['name']);
                 $ext = array_pop($parts);
-                $newName = implode('.', $parts) . '_.' . $ext;
+                $newName = implode('.', $parts) . '(' . $row['id'] . ').' . $ext;
 
                 $this->getConnection()->createQueryBuilder()
                     ->update('file')
