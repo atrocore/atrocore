@@ -17,11 +17,11 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 
-class V1Dot11Dot0 extends Base
+class V1Dot10Dot27 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-05-25 12:00:00');
+        return new \DateTime('2024-05-31 12:00:00');
     }
 
     public function up(): void
@@ -83,7 +83,7 @@ class V1Dot11Dot0 extends Base
 
 //        $this->exec("DROP TABLE folder_storage");
 
-        $this->updateComposer('atrocore/core', '^1.11.0');
+        $this->updateComposer('atrocore/core', '^1.10.27');
     }
 
     public function down(): void
@@ -128,8 +128,8 @@ class V1Dot11Dot0 extends Base
         }
 
         foreach ($duplicates as $rows) {
-            foreach ($rows as $k => $row) {
-                $newName = $row['name'] . '(' . ($k + 1) . ')';
+            foreach ($rows as $row) {
+                $newName = $row['name'] . '_';
                 $this->getConnection()->createQueryBuilder()
                     ->update('folder')
                     ->set('name', ':name')
@@ -180,10 +180,10 @@ class V1Dot11Dot0 extends Base
         }
 
         foreach ($duplicates as $rows) {
-            foreach ($rows as $k => $row) {
+            foreach ($rows as $row) {
                 $parts = explode('.', $record['name']);
                 $ext = array_pop($parts);
-                $newName = implode('.', $parts) . '(' . ($k + 1) . ').' . $ext;
+                $newName = implode('.', $parts) . '_.' . $ext;
 
                 $this->getConnection()->createQueryBuilder()
                     ->update('file')
