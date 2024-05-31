@@ -43,6 +43,17 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $this->container = $container;
     }
 
+    public static function parseInputFileContent(string $fileContent): string
+    {
+        $arr = explode(',', $fileContent);
+        $contents = '';
+        if (count($arr) > 1) {
+            $contents = $arr[1];
+        }
+
+        return base64_decode($contents);
+    }
+
     public function scan(Storage $storage): void
     {
         $xattr = new Xattr();
@@ -349,17 +360,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         return $thumbnailCreator->getPath($file, $size);
-    }
-
-    protected static function parseInputFileContent(string $fileContent): string
-    {
-        $arr = explode(',', $fileContent);
-        $contents = '';
-        if (count($arr) > 1) {
-            $contents = $arr[1];
-        }
-
-        return base64_decode($contents);
     }
 
     protected static function buildFullPath(Storage $storage, ?string $path): string
