@@ -11,10 +11,15 @@
 
 declare(strict_types=1);
 
-namespace Atro\Controllers;
+namespace Atro\Repositories;
 
-use Atro\Core\Templates\Controllers\Hierarchy;
+use Atro\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
 
-class Folder extends Hierarchy
+class FileFolderLinker extends Base
 {
+    protected function deleteEntity(Entity $entity): bool
+    {
+        return $this->deleteFromDb($entity->get('id'));
+    }
 }

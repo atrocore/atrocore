@@ -3,7 +3,8 @@
     "type": "Type",
     "path": "Path",
     "files": "Files",
-    "folders": "Folders"
+    "folders": "Folders",
+    "syncFolders": "Sync Folders"
   },
   "links": {
     "files": "Files",
@@ -14,18 +15,22 @@
       "local": "Local (Linux)"
     }
   },
+  "tooltips": {
+    "syncFolders": "If checked, the physical folder structure in the storage will be synchronized with our system, otherwise files will be stored using our system-specific folder structure."
+  },
   "labels": {
     "Create Storage": "Create Storage",
     "scan": "Scan",
     "scanDone": "Scanning of the Storage '%s' is completed."
   },
-  "messages": {
-    "unlinkAllFilesConfirmation": "All the files will be unlinked from records in the system and removed from the storage index. The files will not be deleted physically. Are you sure you want to proceed?"
-  },
   "exceptions": {
+    "itemCannotBeMovedToAnotherStorage": "The file or the folder cannot be moved between storages.",
+    "folderInUse": "The folder is already in use. Please select a folder that does not contain files.",
+    "storageHasFiles": "The Storage already contains files, so you can't change the folder.",
+    "storageHasFolders": "The Storage already contains folders.",
     "storagePathNotUnique": "Storage path should be unique.",
+    "storagePathContainFilesFromAnotherStorage": "Storage path wrong. There are files that belong to a different Storage.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
-    "storagePathCannotBeChanged": "Storage Path cannot be changed.",
-    "storageWithFilesCannotBeRemoved": "Delete is not allowed. There are files that belong to this Storage."
+    "storagePathCannotBeChanged": "Storage Path cannot be changed."
   }
 }

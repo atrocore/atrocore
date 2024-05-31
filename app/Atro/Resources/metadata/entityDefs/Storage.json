@@ -23,17 +23,18 @@
       "maxLength": 300,
       "unique": true
     },
-    "priority": {
-      "type": "int",
-      "notNull": true,
-      "default": 10,
-      "min": 0
+    "syncFolders": {
+      "type": "bool",
+      "tooltip": true
     },
-    "files": {
+    "folder": {
+      "type": "link"
+    },
+    "folders": {
       "type": "linkMultiple",
       "noLoad": true
     },
-    "folders": {
+    "files": {
       "type": "linkMultiple",
       "noLoad": true
     },
@@ -47,16 +48,19 @@
     }
   },
   "links": {
+    "folder": {
+      "type": "belongsTo",
+      "entity": "Folder"
+    },
+    "folders": {
+      "type": "hasMany",
+      "foreign": "storage",
+      "entity": "Folder"
+    },
     "files": {
       "type": "hasMany",
       "foreign": "storage",
       "entity": "File"
-    },
-    "folders": {
-      "type": "hasMany",
-      "relationName": "FolderStorage",
-      "foreign": "storages",
-      "entity": "Folder"
     },
     "createdBy": {
       "type": "belongsTo",
@@ -66,5 +70,11 @@
   "collection": {
     "sortBy": "priority",
     "asc": false
+  },
+  "uniqueIndexes": {
+    "unique_folder": [
+      "deleted",
+      "folder_id"
+    ]
   }
 }

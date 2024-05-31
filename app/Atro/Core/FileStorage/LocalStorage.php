@@ -12,17 +12,23 @@
 namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Thumbnail;
 use Atro\Core\Utils\Xattr;
 use Atro\Entities\File;
+use Atro\Entities\Folder;
 use Atro\Entities\Storage;
 use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Util;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Psr\Http\Message\StreamInterface;
 
@@ -37,17 +43,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $this->container = $container;
     }
 
-    public static function parseInputFileContent(string $fileContent): string
-    {
-        $arr = explode(',', $fileContent);
-        $contents = '';
-        if (count($arr) > 1) {
-            $contents = $arr[1];
-        }
-
-        return base64_decode($contents);
-    }
-
     public function scan(Storage $storage): void
     {
         $xattr = new Xattr();
@@ -55,184 +50,28 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             throw new \Error("Xattr extension is not installed and the attr command is not available. See documentation for details.");
         }
 
-        $limit = 20000;
+        $otherStorages = $this->getEntityManager()->getRepository('Storage')
+            ->where([
+                'id!='     => $storage->get('id'),
+                'type'     => 'local',
+                'isActive' => true
+            ])
+            ->find();
 
-        /** @var \Atro\Repositories\File $fileRepo */
-        $fileRepo = $this->getEntityManager()->getRepository('File');
-
-        /**
-         * Mark stored file
-         */
-        $offset = 0;
-        while (true) {
-            $files = $fileRepo
-                ->where(['storageId' => $storage->get('id')])
-                ->limit($offset, $limit)
-                ->order('id')
-                ->find();
-
-            if (empty($files[0])) {
-                break;
-            }
-            $offset += $limit;
-
-            /** @var File $file */
-            foreach ($files as $file) {
-                $filePath = $file->getFilePath();
-                if (!file_exists($filePath)) {
-                    $this->getEntityManager()->removeEntity($file);
-                } else {
-                    $xattr = new Xattr();
-                    $xattr->set($filePath, 'atroId', $file->id);
-                }
-            }
-        }
-
-        $files = $this->getDirFiles(trim($storage->get('path'), '/'));
-
-        $ids = [];
-
-        foreach (array_chunk($files, $limit) as $chunk) {
-            $toCreate = [];
-            $toUpdate = [];
-            $toUpdateByFile = [];
-
-            foreach ($chunk as $fileName) {
-                $fileInfo = pathinfo($fileName);
-                // ignore system file
-                if ($fileInfo['basename'] === 'lastCreated') {
-                    continue;
-                }
-                // ignore chunks
-                if (strpos($fileInfo['dirname'], self::CHUNKS_DIR) !== false) {
-                    continue;
-                }
-
-                // ignore .tmp dir
-                if (strpos($fileInfo['dirname'], '.tmp') !== false) {
-                    continue;
-                }
-
-                $entityData = [
-                    'name'      => $fileInfo['basename'],
-                    'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
-                    'fileSize'  => filesize($fileName),
-                    'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
-                    'hash'      => $this->getFileManager()->md5File($fileName),
-                    'mimeType'  => mime_content_type($fileName),
-                    'storageId' => $storage->get('id'),
-                    '_fileName' => $fileName
-                ];
-
-                $id = $xattr->get($fileName, 'atroId');
-                if (empty($id)) {
-                    $toCreate[] = $entityData;
-                } else {
-                    $toUpdateByFile[$id] = $entityData;
-                }
-            }
-
-            if (!empty($toUpdateByFile)) {
-                $exists = [];
-                foreach ($fileRepo->where(['id' => array_keys($toUpdateByFile)])->find() as $v) {
-                    $exists[$v->get('id')] = $v;
-                }
-                foreach ($toUpdateByFile as $k => $v) {
-                    if (isset($exists[$k])) {
-                        $existEntity = $exists[$k];
-                        $skip = true;
-                        foreach ($v as $field => $val) {
-                            if ($field !== '_fileName' && $existEntity->get($field) !== $val) {
-                                $skip = false;
-                            }
-                        }
-
-                        $ids[] = $k;
-
-                        if (!$skip) {
-                            $toUpdate[$k] = $exists[$k];
-                            $toUpdate[$k]->set($v);
-                            $toUpdate[$k]->_fileName = $v['_fileName'];
-                        }
-                    } else {
-                        $toCreate[] = $v;
-                    }
-                }
-            }
-
-            foreach ($toCreate as $entityData) {
-                $entity = $fileRepo->get();
-                $entity->set($entityData);
-                $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
-                $xattr->set($entityData['_fileName'], 'atroId', $entity->get('id'));
-                $ids[] = $entity->get('id');
-            }
-
-            foreach ($toUpdate as $entity) {
-                $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
-            }
-        }
-
-        $offset = 0;
-        while (true) {
-            $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('id')
-                ->from('file')
-                ->where('storage_id=:storageId')
-                ->setFirstResult($offset)
-                ->setMaxResults($limit)
-                ->orderBy('created_at', 'ASC')
-                ->setParameter('storageId', $storage->get('id'))
-                ->fetchFirstColumn();
-
-            if (empty($res[0])) {
-                break;
-            }
-
-            $offset += $limit;
-
-            $diff = array_diff($res, $ids);
-            if (!empty($diff)) {
-                foreach (array_chunk($diff, 20000) as $chunk) {
-                    $this->getEntityManager()->getConnection()->createQueryBuilder()
-                        ->delete('file')
-                        ->where('storage_id = :storageId')
-                        ->andWhere('id IN (:ids)')
-                        ->setParameter('storageId', $storage->get('id'))
-                        ->setParameter('ids', $chunk, Connection::PARAM_STR_ARRAY)
-                        ->executeQuery();
-                }
-            }
-        }
+        $this->scanFolders($storage, $otherStorages, $xattr);
+        $this->scanFiles($storage, $otherStorages, $xattr);
     }
 
-    public function getDirFiles(string $dir, &$results = []): array
-    {
-        if (is_dir($dir)) {
-            foreach (scandir($dir) as $value) {
-                if ($value === "." || $value === "..") {
-                    continue;
-                }
-
-                $path = $dir . DIRECTORY_SEPARATOR . $value;
-                if (is_file($path)) {
-                    $results[] = $path;
-                } elseif (is_dir($path)) {
-                    $this->getDirFiles($path, $results);
-                }
-            }
-        }
-
-        return $results;
-    }
-
-    public function create(File $file): bool
+    public function createFile(File $file): bool
     {
         $result = false;
 
         $input = $file->_input ?? new \stdClass();
 
-        $file->set('path', $this->getPathBuilder()->createPath($file->get('storage')->get('path') . DIRECTORY_SEPARATOR));
+        if ($file->getStorage()->get('syncFolders')) {
+            $file->set('path', $this->getPathBuilder()->createPath($file->getStorage()->get('path') . DIRECTORY_SEPARATOR));
+        }
+
         $fileName = $this->getLocalPath($file);
 
         // create folders for new file
@@ -249,9 +88,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
          * Create via chunks
          */
         if (!$result && property_exists($input, 'allChunks')) {
-            $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
-
-            $chunkDirPath = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
+            $chunkDirPath = $this->getChunksDir($file->getStorage()) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
 
             // create file via chunks
             $f = fopen($fileName, 'a+');
@@ -312,14 +149,23 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return $result;
     }
 
-    public function getChunksDir(Storage $storage): string
+    public function createFolder(Folder $folder): bool
     {
-        return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
+        if (!$folder->getStorage()->get('syncFolders')) {
+            return true;
+        }
+
+        $folderName = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder));
+
+        // create folder
+        $this->getFileManager()->mkdir($folderName, 0777, true);
+
+        $xattr = new Xattr();
+        $xattr->set($folderName, 'atroId', $folder->id);
+
+        return true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function createChunk(\stdClass $input, Storage $storage): array
     {
         $path = $this->getChunksDir($storage) . DIRECTORY_SEPARATOR . $input->fileUniqueHash;
@@ -342,7 +188,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $this->getFileManager()->removeAllInDir($this->getChunksDir($storage));
     }
 
-    public function rename(File $file): bool
+    public function renameFile(File $file): bool
     {
         $from = $this->getLocalPath($file, true);
         $to = $this->getLocalPath($file);
@@ -354,12 +200,67 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return false;
     }
 
-    public function reupload(File $file): bool
+    public function moveFile(File $file): bool
     {
-        return $this->delete($file) && $this->create($file);
+        if (!$file->getStorage()->get('syncFolders')) {
+            return true;
+        }
+
+        return $this->renameFile($file);
     }
 
-    public function delete(File $file): bool
+    public function renameFolder(Folder $folder): bool
+    {
+        if (!$folder->getStorage()->get('syncFolders')) {
+            return true;
+        }
+
+        $folderNameFrom = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder, true));
+        if (!file_exists($folderNameFrom)) {
+            return true;
+        }
+
+        $folderNameTo = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder));
+
+        return rename($folderNameFrom, $folderNameTo);
+    }
+
+    public function moveFolder(string $entityId, string $wasParentId, string $becameParentId): bool
+    {
+        /** @var \Atro\Repositories\Folder $folderRepo */
+        $folderRepo = $this->getEntityManager()->getRepository('Folder');
+
+        $folder = $folderRepo->get($entityId);
+
+        if (!$folder->getStorage()->get('syncFolders')) {
+            return true;
+        }
+
+        $parentPathWas = empty($wasParentId) ? '' : self::buildFolderPath($folderRepo->get($wasParentId));
+        if (!empty($parentPathWas)) {
+            $parentPathWas .= DIRECTORY_SEPARATOR;
+        }
+        $parentPathBecame = empty($becameParentId) ? '' : self::buildFolderPath($folderRepo->get($becameParentId));
+        if (!empty($parentPathBecame)) {
+            $parentPathBecame .= DIRECTORY_SEPARATOR;
+        }
+
+        $folderNameFrom = self::buildFullPath($folder->getStorage(), $parentPathWas . $folder->get('name'));
+        if (!file_exists($folderNameFrom)) {
+            return false;
+        }
+
+        $folderNameTo = self::buildFullPath($folder->getStorage(), $parentPathBecame . $folder->get('name'));
+
+        return rename($folderNameFrom, $folderNameTo);
+    }
+
+    public function reupload(File $file): bool
+    {
+        return $this->deleteFile($file) && $this->createFile($file);
+    }
+
+    public function deleteFile(File $file): bool
     {
         /** @var Thumbnail $thumbnailCreator */
         $thumbnailCreator = $this->container->get(Thumbnail::class);
@@ -379,6 +280,22 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         return true;
     }
 
+    public function deleteFolder(Folder $folder): bool
+    {
+        if (!$folder->getStorage()->get('syncFolders')) {
+            return true;
+        }
+
+        $folderName = self::buildFullPath($folder->getStorage(), self::buildFolderPath($folder));
+        if (!file_exists($folderName)) {
+            return true;
+        }
+
+        $this->getFileManager()->removeAllInDir($folderName);
+
+        return true;
+    }
+
     public function getContents(File $file): string
     {
         return file_get_contents($this->getLocalPath($file));
@@ -388,13 +305,20 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
     {
         $method = $fetched ? 'getFetched' : 'get';
 
-        $res = trim($file->get('storage')->get('path'), DIRECTORY_SEPARATOR);
+        if ($file->getStorage()->get('syncFolders')) {
+            $folderId = $file->$method('folderId');
+            if (!empty($folderId)) {
+                $folder = $this->getEntityManager()->getRepository('Folder')->get($folderId);
+                if (empty($folder)) {
+                    throw new NotFound("Folder '$folderId' not found.");
+                }
+            }
 
-        if (!empty(trim($file->$method('path'), DIRECTORY_SEPARATOR))) {
-            $res .= DIRECTORY_SEPARATOR . trim($file->$method('path'));
+            $folderPath = !empty($folder) ? self::buildFolderPath($folder) : '';
+            return self::buildFullPath($file->getStorage(), $folderPath) . DIRECTORY_SEPARATOR . $file->$method("name");
         }
 
-        return $res . DIRECTORY_SEPARATOR . $file->$method("name");
+        return self::buildFullPath($file->getStorage(), $file->$method('path')) . DIRECTORY_SEPARATOR . $file->$method("name");
     }
 
     public function getStream(File $file): StreamInterface
@@ -425,6 +349,379 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         }
 
         return $thumbnailCreator->getPath($file, $size);
+    }
+
+    protected static function parseInputFileContent(string $fileContent): string
+    {
+        $arr = explode(',', $fileContent);
+        $contents = '';
+        if (count($arr) > 1) {
+            $contents = $arr[1];
+        }
+
+        return base64_decode($contents);
+    }
+
+    protected static function buildFullPath(Storage $storage, ?string $path): string
+    {
+        $res = trim($storage->get('path'), DIRECTORY_SEPARATOR);
+        if (!empty($path)) {
+            $res .= DIRECTORY_SEPARATOR . $path;
+        }
+
+        return $res;
+    }
+
+    protected static function buildFolderPath(?Folder $folder, bool $fetched = false): string
+    {
+        $folders = [];
+        if (!empty($folder)) {
+            $method = $fetched ? 'getFetched' : 'get';
+            if ($folder->get('id') !== $folder->getStorage()->get('folderId')) {
+                array_unshift($folders, $folder->$method('name'));
+            }
+            while (true) {
+                $parent = $folder->getParent();
+                if (empty($parent)) {
+                    break;
+                }
+                $folder = $parent;
+
+                if ($folder->get('id') !== $folder->getStorage()->get('folderId')) {
+                    array_unshift($folders, $folder->$method('name'));
+                }
+            }
+        };
+
+        return implode('/', $folders);
+    }
+
+    protected function getChunksDir(Storage $storage): string
+    {
+        return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
+    }
+
+    protected function scanFolders(Storage $storage, EntityCollection $otherStorages, Xattr $xattr): void
+    {
+        if (empty($storage->get('syncFolders'))) {
+            return;
+        }
+
+        // scan real folders
+        $dirs = $this->getStorageDirs(trim($storage->get('path'), DIRECTORY_SEPARATOR));
+        foreach ($otherStorages as $otherStorage) {
+            if (strlen($otherStorage->get('path')) > strlen($storage->get('path'))) {
+                foreach ($dirs as $k => $dir) {
+                    if (strpos($dir, $otherStorage->get('path')) === 0) {
+                        unset($dirs[$k]);
+                    }
+                }
+            }
+        }
+        $dirs = array_values($dirs);
+
+        // prepare entity data
+        $foldersData = [];
+        foreach ($dirs as $dir) {
+            $parts = explode(DIRECTORY_SEPARATOR, $dir);
+            $dirName = array_pop($parts);
+
+            $id = $xattr->get($dir, 'atroId');
+
+            $entityData = [
+                'id'       => $id ?? Util::generateId(),
+                'name'     => $dirName,
+                '_dirName' => $dir
+            ];
+
+            $foldersData[] = $entityData;
+        }
+
+        $prefixToRemove = $storage->get('path') . DIRECTORY_SEPARATOR;
+
+        // prepare parents
+        foreach ($foldersData as $k => $row) {
+            $preparedPath = substr($row['_dirName'], strlen($prefixToRemove));
+            if ($preparedPath === $row['name']) {
+                $foldersData[$k]['parentId'] = $storage->get('folderId') ?? '';
+            } else {
+                $pathParts = explode(DIRECTORY_SEPARATOR, $row['_dirName']);
+                array_pop($pathParts);
+                $checkPath = implode(DIRECTORY_SEPARATOR, $pathParts);
+
+                foreach ($foldersData as $v) {
+                    if ($v['_dirName'] === $checkPath) {
+                        $foldersData[$k]['parentId'] = $v['id'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        $folderRepository = $this->getEntityManager()->getRepository('Folder');
+
+        $exists = [];
+        foreach ($folderRepository->where(['id' => array_column($foldersData, 'id')])->find() as $folderEntity) {
+            $exists[$folderEntity->get('id')] = $folderEntity;
+        }
+
+        foreach ($foldersData as $folderData) {
+            if (isset($exists[$folderData['id']])) {
+                $entity = $exists[$folderData['id']];
+            } else {
+                $entity = $folderRepository->get();
+                $entity->id = $folderData['id'];
+                $entity->set('storageId', $storage->get('id'));
+            }
+            $entity->set('name', $folderData['name']);
+            if (!empty($folderData['parentId'])) {
+                $entity->set('parentsIds', [$folderData['parentId']]);
+            }
+
+            try {
+                $this->getEntityManager()->saveEntity($entity, ['scanning' => true]);
+                $xattr->set($folderData['_dirName'], 'atroId', $entity->get('id'));
+            } catch (NotUnique $e) {
+                $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+                    ->where([
+                        'parentId'   => $folderData['parentId'],
+                        'folderId!=' => null,
+                        'name'       => $entity->get('name')
+                    ])
+                    ->findOne();
+                if (!empty($fileFolderLinker)) {
+                    $xattr->set($folderData['_dirName'], 'atroId', $fileFolderLinker->get('folderId'));
+                }
+            }
+        }
+    }
+
+    protected function scanFiles(Storage $storage, EntityCollection $otherStorages, Xattr $xattr): void
+    {
+        $limit = 20000;
+
+        /** @var \Atro\Repositories\File $fileRepo */
+        $fileRepo = $this->getEntityManager()->getRepository('File');
+
+        /**
+         * Mark stored file
+         */
+        $offset = 0;
+        while (true) {
+            $files = $fileRepo
+                ->where(['storageId' => $storage->get('id')])
+                ->limit($offset, $limit)
+                ->order('id')
+                ->find();
+
+            if (empty($files[0])) {
+                break;
+            }
+            $offset += $limit;
+
+            /** @var File $file */
+            foreach ($files as $file) {
+                $filePath = $file->getFilePath();
+                if (!file_exists($filePath)) {
+                    $this->getEntityManager()->removeEntity($file);
+                } else {
+                    $xattr = new Xattr();
+                    $xattr->set($filePath, 'atroId', $file->id);
+                }
+            }
+        }
+
+        $files = $this->getStorageFiles(trim($storage->get('path'), '/'));
+
+        // remove files from other storages
+        foreach ($otherStorages as $otherStorage) {
+            if (strlen($otherStorage->get('path')) > strlen($storage->get('path'))) {
+                foreach ($files as $k => $file) {
+                    if (strpos($file, $otherStorage->get('path')) === 0) {
+                        unset($files[$k]);
+                    }
+                }
+            }
+        }
+
+        $files = array_values($files);
+
+        $ids = [];
+
+        foreach (array_chunk($files, $limit) as $chunk) {
+            $toCreate = [];
+            $toUpdate = [];
+            $toUpdateByFile = [];
+
+            foreach ($chunk as $fileName) {
+                $fileInfo = pathinfo($fileName);
+
+                // ignore chunks
+                if (strpos($fileInfo['dirname'], self::CHUNKS_DIR) !== false) {
+                    continue;
+                }
+
+                // ignore .tmp dir
+                if (strpos($fileInfo['dirname'], '.tmp') !== false) {
+                    continue;
+                }
+
+                $entityData = [
+                    'name'      => $fileInfo['basename'],
+                    'fileSize'  => filesize($fileName),
+                    'fileMtime' => gmdate("Y-m-d H:i:s", filemtime($fileName)),
+                    'hash'      => $this->getFileManager()->md5File($fileName),
+                    'mimeType'  => mime_content_type($fileName),
+                    'storageId' => $storage->get('id'),
+                    '_fileName' => $fileName
+                ];
+
+                if (!empty($storage->get('syncFolders'))) {
+                    $entityData['folderId'] = $xattr->get($fileInfo['dirname'], 'atroId') ?? $storage->get('folderId');
+                } else {
+                    $entityData['path'] = ltrim($fileInfo['dirname'], trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
+                    $entityData['folderId'] = $storage->get('folderId');
+                }
+
+                $id = $xattr->get($fileName, 'atroId');
+                if (empty($id)) {
+                    $toCreate[] = $entityData;
+                } else {
+                    $toUpdateByFile[$id] = $entityData;
+                }
+            }
+
+            if (!empty($toUpdateByFile)) {
+                $exists = [];
+                foreach ($fileRepo->where(['id' => array_keys($toUpdateByFile)])->find() as $v) {
+                    $exists[$v->get('id')] = $v;
+                }
+                foreach ($toUpdateByFile as $k => $v) {
+                    if (isset($exists[$k])) {
+                        $existEntity = $exists[$k];
+                        $skip = true;
+                        foreach ($v as $field => $val) {
+                            if ($field !== '_fileName' && $existEntity->get($field) !== $val) {
+                                $skip = false;
+                            }
+                        }
+
+                        $ids[] = $k;
+
+                        if (!$skip) {
+                            $toUpdate[$k] = $exists[$k];
+                            $toUpdate[$k]->set($v);
+                            $toUpdate[$k]->_fileName = $v['_fileName'];
+                        }
+                    } else {
+                        $toCreate[] = $v;
+                    }
+                }
+            }
+
+            foreach ($toCreate as $entityData) {
+                $entity = $fileRepo->get();
+                $entity->set($entityData);
+                $this->saveFileViaScan($entity);
+                $xattr->set($entityData['_fileName'], 'atroId', $entity->get('id'));
+                $ids[] = $entity->get('id');
+            }
+
+            foreach ($toUpdate as $entity) {
+                try {
+                    $this->saveFileViaScan($entity);
+                } catch (BadRequest $e) {
+                    if (empty($e->getDataItem('skipOnScan'))) {
+                        throw $e;
+                    }
+                }
+            }
+        }
+
+        $offset = 0;
+        while (true) {
+            $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('file')
+                ->where('storage_id=:storageId')
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->orderBy('created_at', 'ASC')
+                ->setParameter('storageId', $storage->get('id'))
+                ->fetchFirstColumn();
+
+            if (empty($res[0])) {
+                break;
+            }
+
+            $offset += $limit;
+
+            $diff = array_diff($res, $ids);
+            if (!empty($diff)) {
+                foreach (array_chunk($diff, 20000) as $chunk) {
+                    $this->getEntityManager()->getConnection()->createQueryBuilder()
+                        ->delete('file')
+                        ->where('storage_id = :storageId')
+                        ->andWhere('id IN (:ids)')
+                        ->setParameter('storageId', $storage->get('id'))
+                        ->setParameter('ids', $chunk, Connection::PARAM_STR_ARRAY)
+                        ->executeQuery();
+                }
+            }
+        }
+    }
+
+    protected function saveFileViaScan(File $file): void
+    {
+        try {
+            $this->getEntityManager()->saveEntity($file, ['scanning' => true]);
+        } catch (NotUnique $e) {
+            $parts = explode('.', $file->get('name'));
+            $ext = array_pop($parts);
+            $from = $this->getLocalPath($file);
+            $file->set('name', implode('.', $parts) . '_.' . $ext);
+            rename($from, $this->getLocalPath($file));
+            $this->saveFileViaScan($file);
+        }
+    }
+
+    protected function getStorageFiles(string $dir, &$results = []): array
+    {
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $value) {
+                if ($value === "." || $value === "..") {
+                    continue;
+                }
+
+                $path = $dir . DIRECTORY_SEPARATOR . $value;
+                if (is_file($path)) {
+                    $results[] = $path;
+                } elseif (is_dir($path)) {
+                    $this->getStorageFiles($path, $results);
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    protected function getStorageDirs(string $dir, &$results = []): array
+    {
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $value) {
+                if ($value === "." || $value === "..") {
+                    continue;
+                }
+
+                $path = $dir . DIRECTORY_SEPARATOR . $value;
+                if (is_dir($path)) {
+                    $results[] = $path;
+                    $this->getStorageDirs($path, $results);
+                }
+            }
+        }
+
+        return $results;
     }
 
     protected function getConfig(): Config

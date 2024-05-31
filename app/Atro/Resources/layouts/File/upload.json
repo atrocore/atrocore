@@ -12,14 +12,8 @@
           "name": "folder"
         },
         {
-          "name": "storage"
-        }
-      ],
-      [
-        {
           "name": "tags"
-        },
-        false
+        }
       ]
     ]
   }

@@ -126,8 +126,7 @@
     },
     "storage": {
       "type": "link",
-      "view": "views/file/fields/storage",
-      "required": true
+      "readOnly": true
     },
     "folder": {
       "type": "link",

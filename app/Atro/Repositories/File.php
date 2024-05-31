@@ -14,12 +14,15 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Core\FileValidator;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\FilePathBuilder;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class File extends Base
@@ -33,9 +36,22 @@ class File extends Base
         // validate via type
         $this->validateByType($entity);
 
+        // validate file name
+        $this->validateItemName($entity);
+
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('storageId')) {
-                throw new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File'));
+                throw (new BadRequest($this->getInjection('language')->translate('fileStorageCannotBeChanged', 'exceptions', 'File')))->setDataItem('skipOnScan', true);
+            }
+
+            if ($entity->isAttributeChanged('folderId')) {
+                $storageId = $this->getEntityManager()->getRepository('Folder')->getFolderStorage($entity->get('folderId') ?? '')->get('id');
+                if ($storageId !== $entity->get('storageId')) {
+                    throw new BadRequest($this->getInjection('language')->translate('itemCannotBeMovedToAnotherStorage', 'exceptions', 'Storage'));
+                }
+                if (!$this->getStorage($entity)->moveFile($entity)) {
+                    throw new BadRequest($this->getInjection('language')->translate('fileMoveFailed', 'exceptions', 'File'));
+                }
             }
 
             if (!empty($entity->_input) && !empty($entity->_input->reupload)) {
@@ -47,7 +63,11 @@ class File extends Base
                     throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
                 }
             } else {
-                if ($entity->isAttributeChanged('name')) {
+                if ($entity->isAttributeChanged('name') || $entity->isAttributeChanged('folderId')) {
+                    $this->updateItem($entity);
+                }
+
+                if ($entity->isAttributeChanged('name') && empty($options['scanning'])) {
                     $this->rename($entity);
                 }
             }
@@ -66,8 +86,10 @@ class File extends Base
                 }
             }
 
+            $this->createItem($entity);
+
             // create origin file
-            if (empty($options['scanning']) && !$this->getStorage($entity)->create($entity)) {
+            if (empty($options['scanning']) && !$this->getStorage($entity)->createFile($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
             }
         }
@@ -85,6 +107,59 @@ class File extends Base
         }
     }
 
+    public function save(Entity $entity, array $options = [])
+    {
+        $inTransaction = false;
+
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
+        try {
+            $res = parent::save($entity, $options);
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        if ($inTransaction) {
+            $this->getPDO()->commit();
+        }
+
+        return $res;
+    }
+
+    protected function deleteEntity(Entity $entity): bool
+    {
+        $inTransaction = false;
+
+        if (!$this->getPDO()->inTransaction()) {
+            $this->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
+        try {
+            $res = parent::deleteEntity($entity);
+            if ($res) {
+                $this->removeItem($entity);
+            }
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        if ($inTransaction) {
+            $this->getPDO()->commit();
+        }
+
+        return $res;
+    }
+
     public function rename(FileEntity $file): void
     {
         if ($this->isExtensionChanged($file)) {
@@ -97,7 +172,7 @@ class File extends Base
             );
         }
 
-        if (!$this->getStorage($file)->rename($file)) {
+        if (!$this->getStorage($file)->renameFile($file)) {
             throw new BadRequest($this->getInjection('language')->translate('fileRenameFailed', 'exceptions', 'File'));
         }
     }
@@ -138,15 +213,13 @@ class File extends Base
     {
         parent::beforeRemove($entity, $options);
 
-        if (empty($options['keepFile'])) {
-            $this->deleteFile($entity);
-        }
+        $this->deleteFile($entity);
     }
 
     public function deleteFile(FileEntity $entity): void
     {
         // delete origin file
-        if (!$this->getStorage($entity)->delete($entity)) {
+        if (!$this->getStorage($entity)->deleteFile($entity)) {
             throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
         }
     }
@@ -179,6 +252,76 @@ class File extends Base
         ];
     }
 
+    public function createItem(Entity $entity): void
+    {
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
+        $fileFolderLinker->set([
+            'name'     => $entity->get('name'),
+            'parentId' => $entity->get('folderId') ?? '',
+            'fileId'   => $entity->get('id')
+        ]);
+
+        try {
+            $this->getEntityManager()->saveEntity($fileFolderLinker);
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
+    public function updateItem(Entity $entity): void
+    {
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+            ->where(['fileId' => $entity->get('id')])
+            ->findOne();
+
+        if (empty($fileFolderLinker)) {
+            return;
+        }
+
+        $fileFolderLinker->set('name', $entity->get('name'));
+        $fileFolderLinker->set('parentId', $entity->get('folderId') ?? '');
+
+        try {
+            $this->getEntityManager()->saveEntity($fileFolderLinker);
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
+    public function removeItem(Entity $entity): void
+    {
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
+            ->where(['fileId' => $entity->get('id')])
+            ->findOne();
+
+        if (empty($fileFolderLinker)) {
+            return;
+        }
+
+        $this->getEntityManager()->removeEntity($fileFolderLinker);
+    }
+
+    public function validateItemName(FileEntity $file): void
+    {
+        if ($file->isNew() || $file->isAttributeChanged('name') || $file->isAttributeChanged('folderId')) {
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('file_folder_linker')
+                ->where('name=:name')
+                ->andWhere('parent_id=:parentId')
+                ->setParameter('name', $file->get('name'))
+                ->setParameter('parentId', $file->get('folderId') ?? '');
+
+            if (!$file->isNew()) {
+                $qb->andWhere('id!=:id')->setParameter('id', $file->get('id'));
+            }
+
+            if (!empty($qb->fetchAssociative())) {
+                throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+            }
+        }
+    }
+
     public function getDownloadUrl(FileEntity $file): string
     {
         return $this->getStorage($file)->getUrl($file);
@@ -201,7 +344,9 @@ class File extends Base
 
     public function getStorage(FileEntity $file): FileStorageInterface
     {
-        return $this->getInjection('container')->get($file->get('storage')->get('type') . 'Storage');
+        $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
+
+        return $this->getInjection('container')->get($storage->get('type') . 'Storage');
     }
 
     protected function getPathBuilder(): FilePathBuilder

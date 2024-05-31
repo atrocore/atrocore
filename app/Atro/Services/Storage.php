@@ -13,13 +13,45 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\Xattr;
 use Espo\ORM\Entity;
 use Espo\Services\QueueManagerServiceInterface;
 
 class Storage extends Base implements QueueManagerServiceInterface
 {
+    public function unlinkAllFolders(string $storageId): bool
+    {
+        /** @var \Atro\Repositories\Folder $repo */
+        $repo = $this->getEntityManager()->getRepository('Folder');
+
+        $offset = 0;
+        $limit = 5000;
+
+        while (true) {
+            $folders = $repo
+                ->where(['storageId' => $storageId])
+                ->limit($offset, $limit)
+                ->find();
+
+            if (empty($folders[0])) {
+                break;
+            }
+
+            $offset = $offset + $limit;
+
+            foreach ($folders as $folder) {
+                if ($this->getAcl()->check($folder, 'delete')) {
+                    $this->getEntityManager()->removeEntity($folder);
+                }
+            }
+        }
+
+        return true;
+    }
+
     public function unlinkAllFiles(string $storageId): bool
     {
         /** @var \Atro\Repositories\File $repo */
@@ -42,7 +74,7 @@ class Storage extends Base implements QueueManagerServiceInterface
 
             foreach ($files as $file) {
                 if ($this->getAcl()->check($file, 'delete')) {
-                    $this->getEntityManager()->removeEntity($file, ['keepFile' => true]);
+                    $this->getEntityManager()->removeEntity($file);
                 }
             }
         }
@@ -57,6 +89,17 @@ class Storage extends Base implements QueueManagerServiceInterface
             throw new NotFound();
         }
 
+        if (empty($storage->get('isActive'))) {
+            throw new BadRequest('The Storage is not active.');
+        }
+
+        if ($storage->get('type') === 'local') {
+            $xattr = new Xattr();
+            if (!$xattr->hasServerExtensions()) {
+                throw new BadRequest("Xattr extension is not installed and the attr command is not available. See documentation for details.");
+            }
+        }
+
         $name = $this->getInjection('language')->translate('scan', 'labels', 'Storage') . ' ' . $storage->get('name');
 
         return $this->getInjection('queueManager')->push($name, 'Storage', ['storageId' => $storage->get('id'), 'storageName' => $storage->get('name'), 'manual' => $manual]);
@@ -65,6 +108,10 @@ class Storage extends Base implements QueueManagerServiceInterface
     public function run(array $data = []): bool
     {
         $storage = $this->getEntity($data['storageId']);
+        if (empty($storage->get('isActive'))) {
+            return false;
+        }
+
         $this->getInjection('container')->get($storage->get('type') . 'Storage')->scan($storage);
 
         return true;

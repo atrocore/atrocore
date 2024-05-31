@@ -30,7 +30,7 @@ class ScanStorages extends AbstractConsole
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 
-        foreach ($em->getRepository('Storage')->find() as $storage) {
+        foreach ($em->getRepository('Storage')->where(['isActive' => true])->find() as $storage) {
             try {
                 $this->getContainer()->get($storage->get('type') . 'Storage')->scan($storage);
                 self::show("Storage '{$storage->get('name')}' has been scanned successfully.", self::SUCCESS);

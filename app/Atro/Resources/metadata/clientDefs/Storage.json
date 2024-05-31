@@ -2,11 +2,15 @@
   "controller": "controllers/record",
   "iconClass": "fas fa-hdd",
   "relationshipPanels": {
+    "folders": {
+      "create": false,
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+    },
     "files": {
       "create": false,
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
-      "view": "views/storage/record/panels/files"
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
     }
   },
   "recordViews": {
@@ -42,6 +46,27 @@
               "value": [
                 "local"
               ]
+            }
+          ]
+        }
+      },
+      "syncFolders": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "local"
+              ]
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }

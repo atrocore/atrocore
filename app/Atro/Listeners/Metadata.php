@@ -62,6 +62,9 @@ class Metadata extends AbstractListener
 
         $this->prepareExtensibleEnum($data);
 
+        // multiParents is mandatory disabled for Folder
+        $data['scopes']['Folder']['multiParents'] = false;
+
         $event->setArgument('data', $data);
     }
 

@@ -13,20 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Entities;
 
-use Atro\Core\Templates\Entities\Hierarchy;
+use Atro\Core\Templates\Entities\Relation;
 
-class Folder extends Hierarchy
+class FolderHierarchy extends Relation
 {
-    protected $entityType = "Folder";
-
-    protected ?Storage $storage = null;
-
-    public function getStorage(): Storage
-    {
-        if ($this->storage === null) {
-            $this->storage = $this->getEntityManager()->getRepository('Storage')->get($this->get('storageId'));
-        }
-
-        return $this->storage;
-    }
+    protected $entityType = "FolderHierarchy";
 }

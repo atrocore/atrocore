@@ -44,7 +44,7 @@ use Espo\ORM\Metadata;
 class FilePathBuilder
 {
     const UPLOAD = 'upload';
-    const LAST_CREATED = "lastCreated";
+    const LAST_CREATED = "data/.file-random-path";
 
     /**
      * @var Container
@@ -97,11 +97,11 @@ class FilePathBuilder
      */
     protected function getFromFile(string $baseFolder, ?string $type = null)
     {
-        if (!file_exists($baseFolder . self::LAST_CREATED)) {
+        if (!file_exists(self::LAST_CREATED)) {
             return null;
         }
 
-        $content = json_decode(file_get_contents($baseFolder . self::LAST_CREATED), true);
+        $content = json_decode(file_get_contents(self::LAST_CREATED), true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             return null;
@@ -133,7 +133,7 @@ class FilePathBuilder
 
         return $this
             ->getFileManager()
-            ->putContents($baseFolder . self::LAST_CREATED, json_encode($data, JSON_PRETTY_PRINT));
+            ->putContents(self::LAST_CREATED, json_encode($data, JSON_PRETTY_PRINT));
     }
 
     /**

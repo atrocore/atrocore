@@ -3,7 +3,8 @@
     "type": "Тип",
     "path": "Шлях",
     "files": "Файли",
-    "folders": "Папки"
+    "folders": "Папки",
+    "syncFolders": "Синхронізувати папки"
   },
   "links": {
     "files": "Файли",
@@ -19,13 +20,10 @@
     "scan": "Сканувати",
     "scanDone": "Сканування сховища «%s» завершено."
   },
-  "messages": {
-    "unlinkAllFilesConfirmation": "Всі файли будуть від'єднані від записів у системі та вилучені з індексу сховища. Фізично файли не будуть видалені. Ви впевнені, що хочете продовжити?"
-  },
   "exceptions": {
     "storagePathNotUnique": "Шлях до сховища має бути унікальним.",
+    "storagePathContainFilesFromAnotherStorage": "Неправильний шлях до сховища. Є файли, які належать до іншого сховища.",
     "storageTypeCannotBeChanged": "Тип сховища не можна змінити.",
-    "storagePathCannotBeChanged": "Шлях до сховища не можна змінити.",
-    "storageWithFilesCannotBeRemoved": "Видалення заборонено. Є файли, які належать до цього Сховища."
+    "storagePathCannotBeChanged": "Шлях до сховища не можна змінити."
   }
 }

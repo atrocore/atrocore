@@ -964,6 +964,7 @@
     "list": "Liste"
   },
   "exceptions": {
+    "suchItemNameCannotBeUsedHere": "Ein(e) Ordner/Datei mit einem solchen Namen existiert bereits im Zielordner. Bitte wählen Sie einen anderen Ordner oder ändern Sie den Namen und versuchen Sie es erneut.",
     "colorDepthValidationFailed": "Die Farbtiefe dieses Dateien ist nicht zulässig.",
     "colorSpaceValidationFailed": "Der Farbraum dieses Dateien ist nicht zulässig.",
     "fileExtensionValidationFailed": "Nutzen Sie die Dateien nur mit folgenden Erweiterungen: %s.",

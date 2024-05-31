@@ -22,7 +22,6 @@
   "exceptions": {
     "storagePathNotUnique": "Ścieżka zapisu powinna być unikalna.",
     "storageTypeCannotBeChanged": "Typu nie można zmienić.",
-    "storagePathCannotBeChanged": "Ścieżka nie może zostać zmieniona.",
-    "storageWithFilesCannotBeRemoved": "Usuwanie jest niedozwolone. Istnieją pliki należące do tego magazynu."
+    "storagePathCannotBeChanged": "Ścieżka nie może zostać zmieniona."
   }
 }

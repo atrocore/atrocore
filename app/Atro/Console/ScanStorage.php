@@ -34,6 +34,10 @@ class ScanStorage extends AbstractConsole
             self::show('No such Storage found!', self::ERROR, true);
         }
 
+        if (empty($storage->get('isActive'))) {
+            self::show('The Storage is not active.', self::ERROR, true);
+        }
+
         try {
             $this->getContainer()->get($storage->get('type') . 'Storage')->scan($storage);
             self::show("Storage '{$storage->get('name')}' has been scanned successfully.", self::SUCCESS);

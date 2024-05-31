@@ -16,7 +16,7 @@
     "parents": {
       "type": "linkMultiple",
       "view": "views/fields/hierarchy-parents",
-      "noLoad": true
+      "noLoad": false
     },
     "hidden": {
       "type": "bool",
@@ -38,9 +38,9 @@
       "type": "linkMultiple",
       "noLoad": true
     },
-    "storages": {
-      "type": "linkMultiple",
-      "noLoad": true
+    "storage": {
+      "type": "link",
+      "readOnly": true
     },
     "createdAt": {
       "type": "datetime",
@@ -89,9 +89,8 @@
       "foreign": "folder",
       "entity": "File"
     },
-    "storages": {
-      "type": "hasMany",
-      "relationName": "FolderStorage",
+    "storage": {
+      "type": "belongsTo",
       "foreign": "folders",
       "entity": "Storage"
     },

@@ -3,7 +3,8 @@
     "type": "Тип",
     "path": "Путь",
     "files": "Файлы",
-    "folders": "Папки"
+    "folders": "Папки",
+    "syncFolders": "Синхронизация папок"
   },
   "links": {
     "files": "Файлы",
@@ -19,13 +20,10 @@
     "scan": "Сканировать",
     "scanDone": "Сканирование хранилища «%s» завершено."
   },
-  "messages": {
-    "unlinkAllFilesConfirmation": "Все файлы будут отсоединены от записей в системе и удалены из индекса хранения. Файлы не будут удалены физически. Вы уверены, что хотите продолжить?"
-  },
   "exceptions": {
     "storagePathNotUnique": "Путь к хранилищу должен быть уникальным.",
+    "storagePathContainFilesFromAnotherStorage": "Неверный путь к хранилищу. Есть файлы, которые принадлежат другому хранилищу.",
     "storageTypeCannotBeChanged": "Тип хранения изменить нельзя.",
-    "storagePathCannotBeChanged": "Путь хранения изменить нельзя.",
-    "storageWithFilesCannotBeRemoved": "Удаление запрещено. Существуют файлы, принадлежащие этому хранилищу."
+    "storagePathCannotBeChanged": "Путь хранения изменить нельзя."
   }
 }

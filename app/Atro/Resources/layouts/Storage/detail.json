@@ -15,14 +15,16 @@
         {
           "name": "type"
         },
-        false
+        {
+          "name": "folder"
+        }
       ],
       [
         {
           "name": "path"
         },
         {
-          "name": "priority"
+          "name": "syncFolders"
         }
       ]
     ]

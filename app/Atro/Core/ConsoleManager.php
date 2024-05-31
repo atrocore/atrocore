@@ -112,6 +112,7 @@ class ConsoleManager
             "daemon <name> <id>"           => Console\Daemon::class,
             "check updates"                => Console\CheckUpdates::class,
             "pt --run"                     => Console\PseudoTransactionManager::class,
+            "storages --refresh-items"     => Console\RefreshStoragesItems::class,
             "storages --scan"              => Console\ScanStorages::class,
             "storage <id> --scan"          => Console\ScanStorage::class,
         ];

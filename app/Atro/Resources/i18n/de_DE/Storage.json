@@ -3,7 +3,8 @@
     "type": "Typ",
     "path": "Pfad",
     "files": "Dateien",
-    "folders": "Ordner"
+    "folders": "Ordner",
+    "syncFolders": "Ordner synchronisieren"
   },
   "links": {
     "files": "Dateien",
@@ -19,13 +20,10 @@
     "scan": "Scannen",
     "scanDone": "Der Scan des Speichers „%s“ ist abgeschlossen."
   },
-  "messages": {
-    "unlinkAllFilesConfirmation": "Alle Dateien werden von den Datensätzen im System entkoppelt und aus dem Storage-Index entfernt. Die Dateien werden nicht physisch gelöscht. Sind Sie sicher, dass Sie fortfahren möchten?"
-  },
   "exceptions": {
     "storagePathNotUnique": "Der Speicherpfad sollte eindeutig sein.",
+    "storagePathContainFilesFromAnotherStorage": "Speicherpfad falsch. Es gibt Dateien, die zu einem anderen Speicher gehören.",
     "storageTypeCannotBeChanged": "Der Speichertyp kann nicht geändert werden.",
-    "storagePathCannotBeChanged": "Der Speicherpfad kann nicht geändert werden.",
-    "storageWithFilesCannotBeRemoved": "Löschen ist nicht erlaubt. Es gibt Dateien, die zu diesem Speicher gehören."
+    "storagePathCannotBeChanged": "Der Speicherpfad kann nicht geändert werden."
   }
 }

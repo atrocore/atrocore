@@ -27,17 +27,4 @@ class Storage extends Base
 
         return $this->getRecordService()->createScanJob((string)$data->id, true);
     }
-
-    public function actionUnlinkAllFiles($params, $data, $request)
-    {
-        if (!$request->isPost() || !property_exists($data, 'id') || empty($data->id)) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check('File', 'delete')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->unlinkAllFiles((string)$data->id);
-    }
 }

@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Core\Utils;
 
+use Atro\Composer\PostUpdate;
 use Atro\Core\Container;
 use Atro\Entities\File as FileEntity;
+use Composer\Composer;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
@@ -120,9 +122,10 @@ class Thumbnail
 
     protected function createImageFromPdf(string $pdfPath): string
     {
-        $dirPath = explode(DIRECTORY_SEPARATOR, $pdfPath);
-        array_pop($dirPath);
-        $dirPath = implode(DIRECTORY_SEPARATOR, $dirPath);
+        $dirPath = $this->getFolderPathOfPdfImage($pdfPath);
+        if (!is_dir($dirPath)){
+            $this->getFileManager()->mkdir($dirPath, 0777, true);
+        }
 
         $original = $dirPath . '/page-1.png';
         if (!file_exists($original)) {
@@ -136,6 +139,11 @@ class Thumbnail
         }
 
         return $original;
+    }
+
+    protected function getFolderPathOfPdfImage(string $name): string
+    {
+        return PostUpdate::PDF_IMAGE_DIR . DIRECTORY_SEPARATOR . md5($name);
     }
 
     protected function getMetadata(): Metadata

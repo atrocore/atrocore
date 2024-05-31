@@ -23,6 +23,12 @@
           "name": "description"
         },
         false
+      ],
+      [
+        {
+          "name": "parents"
+        },
+        false
       ]
     ]
   }
