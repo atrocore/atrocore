@@ -17,7 +17,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 
-class V1Dot10Dot27 extends Base
+class V1Dot10Dot29 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -83,7 +83,7 @@ class V1Dot10Dot27 extends Base
 
 //        $this->exec("DROP TABLE folder_storage");
 
-        $this->updateComposer('atrocore/core', '^1.10.27');
+        $this->updateComposer('atrocore/core', '^1.10.29');
     }
 
     public function down(): void
