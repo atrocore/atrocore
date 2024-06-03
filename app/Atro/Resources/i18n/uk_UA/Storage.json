@@ -3,8 +3,7 @@
     "type": "Тип",
     "path": "Шлях",
     "files": "Файли",
-    "folders": "Папки",
-    "syncFolders": "Синхронізувати папки"
+    "folders": "Папки"
   },
   "links": {
     "files": "Файли",
@@ -19,11 +18,5 @@
     "Create Storage": "Створити сховище",
     "scan": "Сканувати",
     "scanDone": "Сканування сховища «%s» завершено."
-  },
-  "exceptions": {
-    "storagePathNotUnique": "Шлях до сховища має бути унікальним.",
-    "storagePathContainFilesFromAnotherStorage": "Неправильний шлях до сховища. Є файли, які належать до іншого сховища.",
-    "storageTypeCannotBeChanged": "Тип сховища не можна змінити.",
-    "storagePathCannotBeChanged": "Шлях до сховища не можна змінити."
   }
 }

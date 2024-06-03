@@ -5,7 +5,7 @@
     "files": "Files",
     "folder": "Mounted Folder",
     "folders": "Folders",
-    "syncFolders": "Sync Folders"
+    "syncFolders": "Maintain file and folder structure"
   },
   "links": {
     "files": "Files",
@@ -17,7 +17,7 @@
     }
   },
   "tooltips": {
-    "syncFolders": "If checked, the physical folder structure in the storage will be synchronized with our system, otherwise files will be stored using our system-specific folder structure."
+    "syncFolders": "If checked, the physical file and folder structure in the storage will be the same as in the system. It means that only one file/folder with similar name can be stored in the same path."
   },
   "labels": {
     "Create Storage": "Create Storage",
@@ -29,7 +29,7 @@
     "folderInUse": "Only an empty folder can be selected as mounted folder.",
     "storageHasItems": "Mounted folder cannot be changed for not empty storage.",
     "storagePathNotUnique": "Storage path should be unique.",
-    "storagePathContainFilesFromAnotherStorage": "Storage path wrong. There are folders/files, that belong to a different Storage.",
+    "storagePathContainFilesFromAnotherStorage": "The folder tree started by the selected storage path cannot contain folders/files associated with another storage.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
     "storagePathCannotBeChanged": "Storage Path cannot be changed."
   }

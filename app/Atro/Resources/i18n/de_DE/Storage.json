@@ -3,8 +3,9 @@
     "type": "Typ",
     "path": "Pfad",
     "files": "Dateien",
+    "folder": "Eingebundener Ordner",
     "folders": "Ordner",
-    "syncFolders": "Ordner synchronisieren"
+    "syncFolders": "Datei- und Ordnerstruktur beibehalten"
   },
   "links": {
     "files": "Dateien",
@@ -15,15 +16,21 @@
       "local": "Lokal (Linux)"
     }
   },
+  "tooltips": {
+    "syncFolders": "Wenn aktiviert, entspricht die physische Datei- und Ordnerstruktur im Storage der des Systems. Das bedeutet, dass nur eine Datei/Ordner mit ähnlichem Namen im gleichen Pfad gespeichert werden kann."
+  },
   "labels": {
-    "Create Storage": "Dateiablage erstellen",
+    "Create Storage": "Storage erstellen",
     "scan": "Scannen",
-    "scanDone": "Der Scan des Speichers „%s“ ist abgeschlossen."
+    "scanDone": "Das Scannen des Storages ist zu '%s' abgeschlossen."
   },
   "exceptions": {
-    "storagePathNotUnique": "Der Speicherpfad sollte eindeutig sein.",
-    "storagePathContainFilesFromAnotherStorage": "Speicherpfad falsch. Es gibt Dateien, die zu einem anderen Speicher gehören.",
-    "storageTypeCannotBeChanged": "Der Speichertyp kann nicht geändert werden.",
-    "storagePathCannotBeChanged": "Der Speicherpfad kann nicht geändert werden."
+    "itemCannotBeMovedToAnotherStorage": "Ordner/Dateien können nicht zwischen Storages verschoben werden.",
+    "folderInUse": "Es kann nur ein leerer Ordner als gemounteter Ordner ausgewählt werden.",
+    "storageHasItems": "Eingehängte Ordner können bei nicht leerem Storage nicht geändert werden.",
+    "storagePathNotUnique": "Der Storage-Pfad sollte eindeutig sein.",
+    "storagePathContainFilesFromAnotherStorage": "Die Ordnerstruktur, die durch den ausgewählten Speicherpfad gestartet wird, kann keine Ordner/Dateien enthalten, die mit einem anderen Storage verbunden sind.",
+    "storageTypeCannotBeChanged": "Der Storage-Typ kann nicht geändert werden.",
+    "storagePathCannotBeChanged": "Der Storage-Pfad kann nicht geändert werden."
   }
 }

@@ -18,10 +18,5 @@
     "Create Storage": "Utwórz przechowywanie plików",
     "scan": "Skanuj",
     "scanDone": "Skanowanie magazynu „%s” zostało zakończone."
-  },
-  "exceptions": {
-    "storagePathNotUnique": "Ścieżka zapisu powinna być unikalna.",
-    "storageTypeCannotBeChanged": "Typu nie można zmienić.",
-    "storagePathCannotBeChanged": "Ścieżka nie może zostać zmieniona."
   }
 }

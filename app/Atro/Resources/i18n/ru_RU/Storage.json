@@ -3,8 +3,7 @@
     "type": "Тип",
     "path": "Путь",
     "files": "Файлы",
-    "folders": "Папки",
-    "syncFolders": "Синхронизация папок"
+    "folders": "Папки"
   },
   "links": {
     "files": "Файлы",
@@ -19,11 +18,5 @@
     "Create Storage": "Создать хранилище",
     "scan": "Сканировать",
     "scanDone": "Сканирование хранилища «%s» завершено."
-  },
-  "exceptions": {
-    "storagePathNotUnique": "Путь к хранилищу должен быть уникальным.",
-    "storagePathContainFilesFromAnotherStorage": "Неверный путь к хранилищу. Есть файлы, которые принадлежат другому хранилищу.",
-    "storageTypeCannotBeChanged": "Тип хранения изменить нельзя.",
-    "storagePathCannotBeChanged": "Путь хранения изменить нельзя."
   }
 }
