@@ -13,9 +13,9 @@
   },
   "exceptions": {
     "folderStorageCannotBeChanged": "The Folder Storage cannot be changed.",
-    "folderCreateFailed": "Folder creation has been failed.",
-    "folderRenameFailed": "Folder renaming has been failed.",
-    "folderMoveFailed": "Folder moving has been failed.",
-    "folderDeleteFailed": "Folder deleting has been failed."
+    "folderCreateFailed": "Folder creation failed.",
+    "folderRenameFailed": "Folder renaming failed.",
+    "folderMoveFailed": "Folder moving failed.",
+    "folderDeleteFailed": "Folder deleting failed."
   }
 }
