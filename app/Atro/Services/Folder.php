@@ -36,41 +36,9 @@ class Folder extends Hierarchy
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
-        $records = $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('fh.parent_id, f1.name as parent_name, fh.entity_id, f.name as entity_name')
-            ->from('folder_hierarchy', 'fh')
-            ->innerJoin('fh', 'folder', 'f', 'f.id=fh.entity_id')
-            ->innerJoin('fh', 'folder', 'f1', 'f1.id=fh.parent_id')
-            ->where('fh.deleted=:false')
-            ->andWhere('f.deleted=:false')
-            ->andWhere('f1.deleted=:false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
-
-        $hierarchyData = [];
-        foreach ($records as $record) {
-            $hierarchyData[$record['entity_id']] = $record;
-        }
-
         foreach ($collection as $entity) {
-            $path = [];
-
-            $id = $entity->get('id');
-            while (true) {
-                if (!isset($hierarchyData[$id]) || $hierarchyData[$id]['parent_id'] === $hierarchyData[$id]['entity_id']) {
-                    break;
-                }
-                $path[] = [
-                    'id'         => $hierarchyData[$id]['entity_id'],
-                    'name'       => $hierarchyData[$id]['entity_name'],
-                    'parentId'   => $hierarchyData[$id]['parent_id'],
-                    'parentName' => $hierarchyData[$id]['parent_name'],
-                ];
-                $id = $hierarchyData[$id]['parent_id'];
-            }
-
             $entity->_pathPrepared = true;
-            $entity->set('folderPath', $path);
+            $entity->set('folderPath', $this->getRepository()->getFolderHierarchyData($entity->get('id')));
         }
     }
 
@@ -79,11 +47,11 @@ class Folder extends Hierarchy
         parent::prepareEntityForOutput($entity);
 
         if (empty($entity->_pathPrepared)) {
-            $path = [];
+            $folderPath = [];
 
             $current = clone $entity;
             while (!empty($parent = $current->getParent())) {
-                $path[] = [
+                $folderPath[] = [
                     'id'         => $current->get('id'),
                     'name'       => $current->get('name'),
                     'parentId'   => $parent->get('id'),
@@ -92,7 +60,7 @@ class Folder extends Hierarchy
                 $current = $parent;
             }
 
-            $entity->set('folderPath', $path);
+            $entity->set('folderPath', $folderPath);
         }
     }
 }
