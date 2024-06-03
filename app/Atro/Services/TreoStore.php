@@ -151,6 +151,11 @@ class TreoStore extends Base
             if (is_array($versions)) {
                 foreach ($versions as $version => $row) {
                     if (!empty($row['extra']['treoId'])) {
+                        if($treoId !== $row['extra']['treoId'] && !empty($currentRepository) && $currentRepository === $repository){
+                            $data[$row['extra']['treoId']] = $data[$treoId];
+                            unset($data[$treoId]);
+                        }
+                        $currentRepository = $repository;
                         $treoId = $row['extra']['treoId'];
                         $version = strtolower($version);
                         if (preg_match_all('/^v\d+.\d+.\d+$/', $version, $matches)
