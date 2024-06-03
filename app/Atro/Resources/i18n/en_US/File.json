@@ -36,10 +36,10 @@
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",
     "fileStorageCannotBeChanged": "The File Storage cannot be changed.",
     "fileFolderCannotBeChanged": "The File Folder cannot be changed.",
-    "fileCreateFailed": "File creating has been failed.",
-    "fileMoveFailed": "File moving has been failed.",
-    "fileRenameFailed": "File renaming has been failed.",
-    "fileDeleteFailed": "File deleting has been failed.",
+    "fileCreateFailed": "File creating failed.",
+    "fileMoveFailed": "File moving failed.",
+    "fileRenameFailed": "File renaming failed.",
+    "fileDeleteFailed": "File deleting failed.",
     "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'."
   }
 }

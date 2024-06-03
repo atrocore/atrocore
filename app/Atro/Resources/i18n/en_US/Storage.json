@@ -3,6 +3,7 @@
     "type": "Type",
     "path": "Path",
     "files": "Files",
+    "folder": "Mounted Folder",
     "folders": "Folders",
     "syncFolders": "Sync Folders"
   },
@@ -24,12 +25,11 @@
     "scanDone": "Scanning of the Storage '%s' is completed."
   },
   "exceptions": {
-    "itemCannotBeMovedToAnotherStorage": "The file or the folder cannot be moved between storages.",
-    "folderInUse": "The folder is already in use. Please select a folder that does not contain files.",
-    "storageHasFiles": "The Storage already contains files, so you can't change the folder.",
-    "storageHasFolders": "The Storage already contains folders.",
+    "itemCannotBeMovedToAnotherStorage": "Folder/File cannot be moved between storages.",
+    "folderInUse": "Only an empty folder can be selected as mounted folder.",
+    "storageHasItems": "Mounted folder cannot be changed for not empty storage.",
     "storagePathNotUnique": "Storage path should be unique.",
-    "storagePathContainFilesFromAnotherStorage": "Storage path wrong. There are files that belong to a different Storage.",
+    "storagePathContainFilesFromAnotherStorage": "Storage path wrong. There are folders/files, that belong to a different Storage.",
     "storageTypeCannotBeChanged": "Storage Type cannot be changed.",
     "storagePathCannotBeChanged": "Storage Path cannot be changed."
   }
