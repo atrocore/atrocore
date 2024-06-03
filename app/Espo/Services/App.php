@@ -61,7 +61,7 @@ class App extends Base
         $connection = $this->getEntityManager()->getConnection();
         $tables = $connection->createSchemaManager()->listTableNames();
         foreach ($tables as $table) {
-            if($table == 'file'){
+            if($table == 'attachment'){
                 continue 1;
             }
 
