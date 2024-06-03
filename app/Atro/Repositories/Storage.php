@@ -53,12 +53,20 @@ class Storage extends Base
                 throw new BadRequest($this->translate('folderInUse', 'exceptions', 'Storage'));
             }
 
+            $folderHierarchy = $this->getEntityManager()->getRepository('FolderHierarchy')
+                ->where(['parentId' => $entity->get('folderId')])
+                ->findOne();
+
+            if (!empty($folderHierarchy)) {
+                throw new BadRequest($this->translate('folderInUse', 'exceptions', 'Storage'));
+            }
+
             $file = $this->getEntityManager()->getRepository('File')
                 ->where(['storageId' => $entity->get('id')])
                 ->findOne();
 
             if (!empty($file)) {
-                throw new BadRequest($this->translate('storageHasFiles', 'exceptions', 'Storage'));
+                throw new BadRequest($this->translate('storageHasItems', 'exceptions', 'Storage'));
             }
 
             $folder = $this->getEntityManager()->getRepository('Folder')
@@ -66,7 +74,7 @@ class Storage extends Base
                 ->findOne();
 
             if (!empty($folder)) {
-                throw new BadRequest($this->translate('storageHasFolders', 'exceptions', 'Storage'));
+                throw new BadRequest($this->translate('storageHasItems', 'exceptions', 'Storage'));
             }
         }
     }
