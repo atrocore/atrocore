@@ -186,12 +186,16 @@ class V1Dot9Dot12 extends Base
         // update hash
         $offset = 0;
         while (true) {
-            $entities = $this->getConnection()->createQueryBuilder()
-                ->from('address')
-                ->select('*')
-                ->setMaxResults($limit)
-                ->setFirstResult($offset)
-                ->fetchAllAssociative();
+            try {
+                $entities = $this->getConnection()->createQueryBuilder()
+                    ->from('address')
+                    ->select('*')
+                    ->setMaxResults($limit)
+                    ->setFirstResult($offset)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $entities = [];
+            }
 
             if (empty($entities)) {
                 break;
@@ -214,13 +218,17 @@ class V1Dot9Dot12 extends Base
         }
 
         // remove all values with same hash
-        $duplicates = $this->getConnection()
-            ->createQueryBuilder()
-            ->from('address')
-            ->select("hash")
-            ->groupBy("hash")
-            ->having('count(*)>1')
-            ->fetchAllAssociative();
+        try {
+            $duplicates = $this->getConnection()
+                ->createQueryBuilder()
+                ->from('address')
+                ->select("hash")
+                ->groupBy("hash")
+                ->having('count(*)>1')
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $duplicates = [];
+        }
 
         foreach ($duplicates as $duplicate) {
             $records = $this->getConnection()
