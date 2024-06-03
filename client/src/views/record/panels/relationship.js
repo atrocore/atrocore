@@ -82,6 +82,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+            this.readOnly = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.link, 'readOnly'], false)
+
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
@@ -122,6 +124,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 let relationEntityName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
                 canSelect = this.getAcl().check(relationEntityName, 'create');
                 canUnlink = this.getAcl().check(relationEntityName, 'delete');
+            }
+
+            if(this.readOnly){
+                canUnlink = false;
+                canSelect = false
             }
 
             if (!canUnlink) {
@@ -270,7 +277,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         layoutName: layoutName,
                         listLayout: listLayout,
                         checkboxes: false,
-                        rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                        rowActionsView: (this.defs.readOnly || this.readOnly)? false : (this.defs.rowActionsView || this.rowActionsView),
                         rowActionsColumnWidth: this.rowActionsColumnWidth,
                         buttonsDisabled: true,
                         el: this.options.el + ' .list-container',
