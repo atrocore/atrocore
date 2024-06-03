@@ -72,19 +72,23 @@ class V1Dot9Dot12 extends Base
             $offset = $offset + $limit;
 
             foreach ($entities as $entity) {
-                $this->getConnection()->createQueryBuilder()
-                    ->insert('address_account')
-                    ->values(
-                        [
-                            'account_id' => '?',
-                            'address_id' => '?',
-                            'id'         => '?'
-                        ]
-                    )
-                    ->setParameter(0, $entity['account_id'])
-                    ->setParameter(1, $entity['id'])
-                    ->setParameter(2, Util::generateId())
-                    ->executeStatement();
+                try {
+                    $this->getConnection()->createQueryBuilder()
+                        ->insert('address_account')
+                        ->values(
+                            [
+                                'account_id' => '?',
+                                'address_id' => '?',
+                                'id'         => '?'
+                            ]
+                        )
+                        ->setParameter(0, $entity['account_id'])
+                        ->setParameter(1, $entity['id'])
+                        ->setParameter(2, Util::generateId())
+                        ->executeStatement();
+                } catch (\Throwable $e) {
+
+                }
             }
         }
 
