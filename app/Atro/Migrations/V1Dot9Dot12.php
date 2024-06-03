@@ -54,14 +54,17 @@ class V1Dot9Dot12 extends Base
         }
         // create records in address_account
         while (true) {
-
-            $entities = $this->getConnection()->createQueryBuilder()
-                ->from('address')
-                ->select('id', 'account_id')
-                ->where("account_id is not null")
-                ->setMaxResults($limit)
-                ->setFirstResult($offset)
-                ->fetchAllAssociative();
+            try {
+                $entities = $this->getConnection()->createQueryBuilder()
+                    ->from('address')
+                    ->select('id', 'account_id')
+                    ->where("account_id is not null")
+                    ->setMaxResults($limit)
+                    ->setFirstResult($offset)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $entities = [];
+            }            
 
             if (empty($entities)) {
                 break;
