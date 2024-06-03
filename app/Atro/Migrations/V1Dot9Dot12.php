@@ -103,13 +103,17 @@ class V1Dot9Dot12 extends Base
         $offset = 0;
         while (true) {
 
-            $entities = $this->getConnection()->createQueryBuilder()
-                ->from('contact')
-                ->select('*')
-                ->where("street is not null or zip is not null or city is not null or country is not null or country_code is not null")
-                ->setMaxResults($limit)
-                ->setFirstResult($offset)
-                ->fetchAllAssociative();
+            try {
+                $entities = $this->getConnection()->createQueryBuilder()
+                    ->from('contact')
+                    ->select('*')
+                    ->where("street is not null or zip is not null or city is not null or country is not null or country_code is not null")
+                    ->setMaxResults($limit)
+                    ->setFirstResult($offset)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $entities = [];
+            }
 
             if (empty($entities)) {
                 break;
