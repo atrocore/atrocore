@@ -2007,23 +2007,11 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
+        $this->getRepository()->relate($entity, $link, $foreignEntity, null, [
+            "pseudoTransactionId" => $this->getPseudoTransactionId(),
+            'pseudoTransactionManager' => $this->getPseudoTransactionManager()
+        ]);
 
-        $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
-
-        $input = new \stdClass();
-        $input->{$keySet['nearKey']} = $entity->get('id');
-        $input->{$keySet['distantKey']} = $foreignEntity->get('id');
-
-        /* @var $relService \Atro\Core\Templates\Services\Relation */
-        $relService = $this->getServiceFactory()->create(ucfirst($relationName));
-        if ($this->isPseudoTransaction()) {
-            $relService->setPseudoTransactionId($this->getPseudoTransactionId());
-        }
-        try {
-            $relService->createEntity($input);
-        } catch (NotUnique $e) {
-        }
 
         return $this
             ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'service' => $this, 'entity' => $entity, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
@@ -2103,27 +2091,10 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
-        $relEntityType = ucfirst($relationName);
-
-        $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
-
-        $relEntity = $this->getEntityManager()->getRepository($relEntityType)
-            ->where([
-                $keySet['nearKey']    => $entity->get('id'),
-                $keySet['distantKey'] => $foreignEntity->get('id')
-            ])
-            ->findOne();
-
-        if (!empty($relEntity)) {
-            /* @var $relService \Atro\Core\Templates\Services\Relation */
-            $relService = $this->getServiceFactory()->create($relEntityType);
-            if ($this->isPseudoTransaction()) {
-                $relService->setPseudoTransactionId($this->getPseudoTransactionId());
-            }
-
-            $result = $relService->deleteEntity($relEntity->get('id'));
-        }
+        $result = $this->getRepository()->unrelate($entity, $link, $foreignEntity, [
+            "pseudoTransactionId" => $this->getPseudoTransactionId(),
+            'pseudoTransactionManager' => $this->getPseudoTransactionManager()
+        ]);
 
         return $this
             ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => $result]))
