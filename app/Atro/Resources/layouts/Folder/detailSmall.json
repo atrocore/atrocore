@@ -12,21 +12,21 @@
       ],
       [
         {
-          "name": "sortOrder"
+          "name": "parent"
         },
         {
-          "name": "parent"
+          "name": "folderPath"
         }
       ],
       [
         {
-          "name": "description"
+          "name": "sortOrder"
         },
         false
       ],
       [
         {
-          "name": "parents"
+          "name": "description"
         },
         false
       ]

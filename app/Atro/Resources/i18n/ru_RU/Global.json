@@ -408,6 +408,7 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "folderPath": "Путь папки",
     "connection": "Соединение",
     "tags": "Теги",
     "hidden": "Скрытый",

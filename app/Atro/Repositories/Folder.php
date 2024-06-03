@@ -209,6 +209,15 @@ class Folder extends Hierarchy
             return;
         }
 
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
         $fileFolderLinker->set([
             'name'     => $entity->get('name'),
@@ -225,6 +234,15 @@ class Folder extends Hierarchy
 
     public function updateItem(Entity $entity): void
     {
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
             ->where(['folderId' => $entity->get('id')])
             ->findOne();
@@ -244,6 +262,15 @@ class Folder extends Hierarchy
 
     public function removeItem(Entity $entity): void
     {
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
             ->where(['folderId' => $entity->get('id')])
             ->findOne();

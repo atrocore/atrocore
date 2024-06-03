@@ -445,6 +445,7 @@
     "massDelete": "Масове видалення"
   },
   "fields": {
+    "folderPath": "Шлях папки",
     "connection": "З'єднання",
     "tags": "Теги",
     "hidden": "Приховано",
