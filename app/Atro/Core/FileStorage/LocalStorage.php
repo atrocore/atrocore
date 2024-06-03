@@ -222,7 +222,13 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function renameFolder(Folder $folder): bool
     {
-        if (!$folder->getStorage()->get('syncFolders')) {
+        $storage = $folder->getStorage();
+
+        if (!$storage->get('syncFolders')) {
+            return true;
+        }
+
+        if ($storage->get('folderId') === $folder->get('id')) {
             return true;
         }
 
