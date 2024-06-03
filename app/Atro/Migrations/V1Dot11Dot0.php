@@ -13,15 +13,13 @@ namespace Atro\Migrations;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
 
 class V1Dot11Dot0 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-05-31 12:00:00');
+        return new \DateTime('2024-06-04 12:00:00');
     }
 
     public function up(): void
@@ -52,9 +50,6 @@ class V1Dot11Dot0 extends Base
         $this->exec("ALTER TABLE folder ADD storage_id VARCHAR(24) DEFAULT NULL");
         $this->exec("CREATE INDEX IDX_FOLDER_STORAGE_ID ON folder (storage_id, deleted)");
 
-        $this->createFoldersItems();
-        $this->createFilesItems();
-
         V1Dot10Dot0::createDefaultStorage($this->getConnection());
 
         $this->getConnection()->createQueryBuilder()
@@ -83,125 +78,12 @@ class V1Dot11Dot0 extends Base
 
 //        $this->exec("DROP TABLE folder_storage");
 
-        $this->updateComposer('atrocore/core', '^1.10.29');
+        $this->updateComposer('atrocore/core', '^1.11.0');
     }
 
     public function down(): void
     {
         throw new Error('Downgrade is prohibited.');
-    }
-
-    public function createFoldersItems(): void
-    {
-        $this->getConnection()->createQueryBuilder()
-            ->delete('file_folder_linker')
-            ->where('folder_id IS NOT NULL')
-            ->executeQuery();
-
-        $records = $this->getConnection()->createQueryBuilder()
-            ->select('f.*, h.parent_id')
-            ->from('folder', 'f')
-            ->leftJoin('f', 'folder_hierarchy', 'h', 'f.id=h.entity_id')
-            ->where('f.deleted=:false')
-            ->andWhere('f.deleted=:false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
-
-        $duplicates = [];
-
-        foreach ($records as $record) {
-            try {
-                $this->getConnection()->createQueryBuilder()
-                    ->insert('file_folder_linker')
-                    ->setValue('id', ':id')
-                    ->setValue('name', ':name')
-                    ->setValue('parent_id', ':parentId')
-                    ->setValue('folder_id', ':folderId')
-                    ->setParameter('id', Util::generateId())
-                    ->setParameter('name', (string)$record['name'])
-                    ->setParameter('parentId', (string)$record['parent_id'])
-                    ->setParameter('folderId', (string)$record['id'])
-                    ->executeQuery();
-            } catch (UniqueConstraintViolationException $e) {
-                $duplicates["{$record['parent_id']}_{$record['name']}"][] = $record;
-            }
-        }
-
-        foreach ($duplicates as $rows) {
-            foreach ($rows as $row) {
-                $newName = $row['name'] . '(' . $row['id'] . ')';
-                $this->getConnection()->createQueryBuilder()
-                    ->update('folder')
-                    ->set('name', ':name')
-                    ->where('id=:id')
-                    ->setParameter('id', $row['id'])
-                    ->setParameter('name', $newName)
-                    ->executeQuery();
-            }
-        }
-
-        if (!empty($duplicates)) {
-            $this->createFoldersItems();
-        }
-    }
-
-    public function createFilesItems(): void
-    {
-        $this->getConnection()->createQueryBuilder()
-            ->delete('file_folder_linker')
-            ->where('file_id IS NOT NULL')
-            ->executeQuery();
-
-        $records = $this->getConnection()->createQueryBuilder()
-            ->select('f.*, s.path as storage_path')
-            ->from('file', 'f')
-            ->innerJoin('f', 'storage', 's', 'f.storage_id=s.id')
-            ->where('f.deleted=:false')
-            ->andWhere('s.deleted=:false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
-
-        foreach ($records as $record) {
-            try {
-                $this->getConnection()->createQueryBuilder()
-                    ->insert('file_folder_linker')
-                    ->setValue('id', ':id')
-                    ->setValue('name', ':name')
-                    ->setValue('parent_id', ':parentId')
-                    ->setValue('file_id', ':fileId')
-                    ->setParameter('id', Util::generateId())
-                    ->setParameter('name', (string)$record['name'])
-                    ->setParameter('parentId', (string)$record['folder_id'])
-                    ->setParameter('fileId', (string)$record['id'])
-                    ->executeQuery();
-            } catch (UniqueConstraintViolationException $e) {
-                $duplicates["{$record['folder_id']}_{$record['name']}"][] = $record;
-            }
-        }
-
-        foreach ($duplicates as $rows) {
-            foreach ($rows as $row) {
-                $parts = explode('.', $record['name']);
-                $ext = array_pop($parts);
-                $newName = implode('.', $parts) . '(' . $row['id'] . ').' . $ext;
-
-                $this->getConnection()->createQueryBuilder()
-                    ->update('file')
-                    ->set('name', ':name')
-                    ->where('id=:id')
-                    ->setParameter('id', $row['id'])
-                    ->setParameter('name', $newName)
-                    ->executeQuery();
-
-                $filePath = $row['storage_path'] . DIRECTORY_SEPARATOR . $row['path'];
-
-                @rename($filePath . DIRECTORY_SEPARATOR . $record['name'], $filePath . DIRECTORY_SEPARATOR . $newName);
-            }
-        }
-
-        if (!empty($duplicates)) {
-            $this->createFilesItems();
-        }
     }
 
     protected function exec(string $sql): void
