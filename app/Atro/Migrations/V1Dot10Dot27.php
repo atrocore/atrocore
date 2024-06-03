@@ -78,7 +78,7 @@ class V1Dot10Dot27 extends Base
 
 //        $this->exec("DROP TABLE folder_storage");
 
-        $this->updateComposer('atrocore/core', '^1.11.0');
+        $this->updateComposer('atrocore/core', '^1.10.27');
     }
 
     public function down(): void
