@@ -31,7 +31,9 @@ class File extends Base
 
         foreach ($collection as $entity) {
             $entity->_pathPrepared = true;
-            $entity->set('folderPath', $this->getEntityManager()->getRepository('Folder')->getFolderHierarchyData($entity->get('folderId')));
+            if (!empty($entity->get('folderId'))) {
+                $entity->set('folderPath', $this->getEntityManager()->getRepository('Folder')->getFolderHierarchyData($entity->get('folderId')));
+            }
         }
     }
 

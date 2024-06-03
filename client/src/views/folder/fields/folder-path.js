@@ -22,6 +22,9 @@ Espo.define('views/folder/fields/folder-path', 'views/fields/varchar',
 
             const path = [];
             if (pathData.length > 0) {
+                if (this.model.name === 'File') {
+                    path.unshift(`<a href="/#Folder/view/${pathData[0].id}">${pathData[0].name}</a>`);
+                }
                 pathData.forEach(item => {
                     path.unshift(`<a href="/#Folder/view/${item.parentId}">${item.parentName}</a>`);
                 });
