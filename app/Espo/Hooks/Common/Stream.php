@@ -85,6 +85,10 @@ class Stream extends \Espo\Core\Hooks\Base
 
     public function afterRemove(Entity $entity)
     {
+        if($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation') {
+            $this->handledStreamForRelationEntity($entity, 'Unrelate');
+        }
+
         if ($this->checkHasStream($entity)) {
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
         }
@@ -185,6 +189,10 @@ class Stream extends \Espo\Core\Hooks\Base
         }
 
         $entityType = $entity->getEntityType();
+
+        if($this->getMetadata()->get(['scopes', $entityType, 'type']) === 'Relation') {
+            $this->handledStreamForRelationEntity($entity);
+        }
 
         if ($this->checkHasStream($entity)) {
 
@@ -334,92 +342,49 @@ class Stream extends \Espo\Core\Hooks\Base
 
     public function afterRelate(Entity $entity, array $options = array(), array $data = array())
     {
-        $entityType = $entity->getEntityType();
-        if (
-            empty($options['noStream']) && empty($options['silent']) &&
-            $this->getMetadata()->get(['scopes', $entityType, 'object'])
-        ) {
-            if (empty($data['relationName']) || empty($data['foreignEntity']) || !($data['foreignEntity'] instanceof Entity)) {
-                return;
-            }
-            $link = $data['relationName'];
-            $foreignEntity = $data['foreignEntity'];
-
-            if (
-                $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])
-            ) {
-
-                $note = $this->getEntityManager()->getEntity('Note');
-                $note->set(array(
-                    'type' => 'Relate',
-                    'parentId' => $entity->id,
-                    'parentType' => $entityType,
-                    'relatedId' => $foreignEntity->id,
-                    'relatedType' => $foreignEntity->getEntityType()
-                ));
-                $this->getEntityManager()->saveEntity($note);
-
-            }
-
-            $foreignLink = $entity->getRelationParam($link, 'foreign');
-            if ($this->getMetadata()->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
-                $note = $this->getEntityManager()->getEntity('Note');
-                $note->set(array(
-                    'type' => 'Relate',
-                    'parentId' => $foreignEntity->id,
-                    'parentType' => $foreignEntity->getEntityType(),
-                    'relatedId' => $entity->id,
-                    'relatedType' => $entityType
-                ));
-                $this->getEntityManager()->saveEntity($note);
-            }
-        }
     }
 
     public function afterUnrelate(Entity $entity, array $options = array(), array $data = array())
     {
+    }
+
+    protected function handledStreamForRelationEntity(Entity $entity, string $type= 'Relate') : void
+    {
         $entityType = $entity->getEntityType();
-
-        if (
-            empty($options['noStream']) && empty($options['silent']) &&
-            $this->getMetadata()->get(['scopes', $entityType, 'object'])
-        ) {
-
-            if (empty($data['relationName']) || empty($data['foreignEntity']) || !($data['foreignEntity'] instanceof Entity)) {
-                return;
+        $relationFields = $this->getEntityManager()->getRepository($entityType)->getRelationFields();
+        $links = [];
+        foreach ($relationFields as $relationField) {
+            $foreignEntity = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $relationField, 'entity']);
+            foreach ($this->getMetadata()->get(['entityDefs', $foreignEntity, 'links']) as $link => $linkDefs){
+                if(!empty($linkDefs['relationName']) && ucfirst($linkDefs['relationName']) === $entityType) {
+                    $links[$relationField] = $link;
+                }
             }
-            $link = $data['relationName'];
-            $foreignEntity = $data['foreignEntity'];
+        }
+        if(!empty($links[$relationFields[0]])){
 
+            $this->processRelationEntityNote($entity->get($relationFields[0]), $entity->get($relationFields[1]), $links[$relationFields[0]], $type);
+        }
+        if(!empty($links[$relationFields[1]])){
 
-            if (
-                $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])
-            ) {
+            $this->processRelationEntityNote($entity->get($relationFields[1]), $entity->get($relationFields[0]), $links[$relationFields[1]], $type);
+        }
+    }
+    protected function processRelationEntityNote(Entity $entity, Entity $foreignEntity, $link, $type = 'Relate') : void
+    {
 
-                $note = $this->getEntityManager()->getEntity('Note');
-                $note->set(array(
-                    'type' => 'Unrelate',
-                    'parentId' => $entity->id,
-                    'parentType' => $entityType,
-                    'relatedId' => $foreignEntity->id,
-                    'relatedType' => $foreignEntity->getEntityType()
-                ));
-                $this->getEntityManager()->saveEntity($note);
+        $entityType = $entity->getEntityType();
+        if ($this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])) {
 
-            }
-
-            $foreignLink = $entity->getRelationParam($link, 'foreign');
-            if ($this->getMetadata()->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
-                $note = $this->getEntityManager()->getEntity('Note');
-                $note->set(array(
-                    'type' => 'Unrelate',
-                    'parentId' => $foreignEntity->id,
-                    'parentType' => $foreignEntity->getEntityType(),
-                    'relatedId' => $entity->id,
-                    'relatedType' => $entityType
-                ));
-                $this->getEntityManager()->saveEntity($note);
-            }
+            $note = $this->getEntityManager()->getEntity('Note');
+            $note->set(array(
+                'type' => $type,
+                'parentId' => $entity->id,
+                'parentType' => $entityType,
+                'relatedId' => $foreignEntity->id,
+                'relatedType' => $foreignEntity->getEntityType()
+            ));
+            $this->getEntityManager()->saveEntity($note);
         }
     }
 
