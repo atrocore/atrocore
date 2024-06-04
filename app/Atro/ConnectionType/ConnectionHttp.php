@@ -18,7 +18,7 @@ use Atro\Core\Exceptions\BadRequest;
 
 class ConnectionHttp extends AbstractConnection implements HttpConnectionInterface
 {
-    public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): HttpResponseDTO
+    public function request(string $url, string $method = 'GET', array $headers = [], string $body = null, bool $validate = true): HttpResponseDTO
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -35,7 +35,7 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($httpCode < 200 || $httpCode >= 300) {
+        if (!empty($validate) && ($httpCode < 200 || $httpCode >= 300)) {
             throw new BadRequest("Response Code: $httpCode Body: $output");
         }
 
