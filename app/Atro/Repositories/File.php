@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
@@ -349,31 +350,53 @@ class File extends Base
         }
     }
 
-    public function getDownloadUrl(FileEntity $file): string
+    public function getDownloadUrl(FileEntity $file): ?string
     {
-        return $this->getStorage($file)->getUrl($file);
+        try {
+            $url = $this->getStorage($file)->getUrl($file);
+        } catch (BadRequest|NotFound $e) {
+            $url = null;
+        }
+
+        return $url;
     }
 
     public function getSmallThumbnailUrl(FileEntity $file): ?string
     {
-        return $this->getStorage($file)->getThumbnail($file, 'small');
+        try {
+            $url = $this->getStorage($file)->getThumbnail($file, 'small');
+        } catch (BadRequest|NotFound $e) {
+            $url = null;
+        }
+
+        return $url;
     }
 
     public function getMediumThumbnailUrl(FileEntity $file): ?string
     {
-        return $this->getStorage($file)->getThumbnail($file, 'medium');
+        try {
+            $url = $this->getStorage($file)->getThumbnail($file, 'medium');
+        } catch (BadRequest|NotFound $e) {
+            $url = null;
+        }
+
+        return $url;
     }
 
     public function getLargeThumbnailUrl(FileEntity $file): ?string
     {
-        return $this->getStorage($file)->getThumbnail($file, 'large');
+        try {
+            $url = $this->getStorage($file)->getThumbnail($file, 'large');
+        } catch (BadRequest|NotFound $e) {
+            $url = null;
+        }
+
+        return $url;
     }
 
     public function getStorage(FileEntity $file): FileStorageInterface
     {
-        $storage = $this->getEntityManager()->getRepository('Storage')->get($file->get('storageId'));
-
-        return $this->getInjection('container')->get($storage->get('type') . 'Storage');
+        return $this->getEntityManager()->getRepository('Storage')->getFileStorage($file->get('storageId'));
     }
 
     protected function getPathBuilder(): FilePathBuilder
