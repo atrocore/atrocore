@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Templates\Services\Hierarchy;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class Folder extends Hierarchy
 {
@@ -28,5 +30,37 @@ class Folder extends Hierarchy
         }
 
         return parent::findLinkedEntities($id, $link, $params);
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        foreach ($collection as $entity) {
+            $entity->_pathPrepared = true;
+            $entity->set('folderPath', $this->getRepository()->getFolderHierarchyData($entity->get('id')));
+        }
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if (empty($entity->_pathPrepared)) {
+            $folderPath = [];
+
+            $current = clone $entity;
+            while (!empty($parent = $current->getParent())) {
+                $folderPath[] = [
+                    'id'         => $current->get('id'),
+                    'name'       => $current->get('name'),
+                    'parentId'   => $parent->get('id'),
+                    'parentName' => $parent->get('name'),
+                ];
+                $current = $parent;
+            }
+
+            $entity->set('folderPath', $folderPath);
+        }
     }
 }

@@ -133,6 +133,16 @@
       "view": "views/file/fields/folder",
       "required": false
     },
+    "folderPath": {
+      "type": "jsonObject",
+      "view": "views/folder/fields/folder-path",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "path": {
       "type": "varchar",
       "maxLength": 300,

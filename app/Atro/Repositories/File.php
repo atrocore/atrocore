@@ -261,6 +261,15 @@ class File extends Base
 
     public function createItem(Entity $entity): void
     {
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
         $fileFolderLinker->set([
             'name'     => $entity->get('name'),
@@ -277,6 +286,15 @@ class File extends Base
 
     public function updateItem(Entity $entity): void
     {
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
             ->where(['fileId' => $entity->get('id')])
             ->findOne();
@@ -297,6 +315,15 @@ class File extends Base
 
     public function removeItem(Entity $entity): void
     {
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
             ->where(['fileId' => $entity->get('id')])
             ->findOne();

@@ -13,7 +13,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 
 class V1Dot9Dot12 extends Base
@@ -54,14 +54,17 @@ class V1Dot9Dot12 extends Base
         }
         // create records in address_account
         while (true) {
-
-            $entities = $this->getConnection()->createQueryBuilder()
-                ->from('address')
-                ->select('id', 'account_id')
-                ->where("account_id is not null")
-                ->setMaxResults($limit)
-                ->setFirstResult($offset)
-                ->fetchAllAssociative();
+            try {
+                $entities = $this->getConnection()->createQueryBuilder()
+                    ->from('address')
+                    ->select('id', 'account_id')
+                    ->where("account_id is not null")
+                    ->setMaxResults($limit)
+                    ->setFirstResult($offset)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $entities = [];
+            }            
 
             if (empty($entities)) {
                 break;
@@ -69,19 +72,23 @@ class V1Dot9Dot12 extends Base
             $offset = $offset + $limit;
 
             foreach ($entities as $entity) {
-                $this->getConnection()->createQueryBuilder()
-                    ->insert('address_account')
-                    ->values(
-                        [
-                            'account_id' => '?',
-                            'address_id' => '?',
-                            'id'         => '?'
-                        ]
-                    )
-                    ->setParameter(0, $entity['account_id'])
-                    ->setParameter(1, $entity['id'])
-                    ->setParameter(2, Util::generateId())
-                    ->executeStatement();
+                try {
+                    $this->getConnection()->createQueryBuilder()
+                        ->insert('address_account')
+                        ->values(
+                            [
+                                'account_id' => '?',
+                                'address_id' => '?',
+                                'id'         => '?'
+                            ]
+                        )
+                        ->setParameter(0, $entity['account_id'])
+                        ->setParameter(1, $entity['id'])
+                        ->setParameter(2, Util::generateId())
+                        ->executeStatement();
+                } catch (\Throwable $e) {
+
+                }
             }
         }
 
@@ -96,13 +103,17 @@ class V1Dot9Dot12 extends Base
         $offset = 0;
         while (true) {
 
-            $entities = $this->getConnection()->createQueryBuilder()
-                ->from('contact')
-                ->select('*')
-                ->where("street is not null or zip is not null or city is not null or country is not null or country_code is not null")
-                ->setMaxResults($limit)
-                ->setFirstResult($offset)
-                ->fetchAllAssociative();
+            try {
+                $entities = $this->getConnection()->createQueryBuilder()
+                    ->from('contact')
+                    ->select('*')
+                    ->where("street is not null or zip is not null or city is not null or country is not null or country_code is not null")
+                    ->setMaxResults($limit)
+                    ->setFirstResult($offset)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $entities = [];
+            }
 
             if (empty($entities)) {
                 break;
@@ -175,12 +186,16 @@ class V1Dot9Dot12 extends Base
         // update hash
         $offset = 0;
         while (true) {
-            $entities = $this->getConnection()->createQueryBuilder()
-                ->from('address')
-                ->select('*')
-                ->setMaxResults($limit)
-                ->setFirstResult($offset)
-                ->fetchAllAssociative();
+            try {
+                $entities = $this->getConnection()->createQueryBuilder()
+                    ->from('address')
+                    ->select('*')
+                    ->setMaxResults($limit)
+                    ->setFirstResult($offset)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $entities = [];
+            }
 
             if (empty($entities)) {
                 break;
@@ -203,13 +218,17 @@ class V1Dot9Dot12 extends Base
         }
 
         // remove all values with same hash
-        $duplicates = $this->getConnection()
-            ->createQueryBuilder()
-            ->from('address')
-            ->select("hash")
-            ->groupBy("hash")
-            ->having('count(*)>1')
-            ->fetchAllAssociative();
+        try {
+            $duplicates = $this->getConnection()
+                ->createQueryBuilder()
+                ->from('address')
+                ->select("hash")
+                ->groupBy("hash")
+                ->having('count(*)>1')
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $duplicates = [];
+        }
 
         foreach ($duplicates as $duplicate) {
             $records = $this->getConnection()

@@ -93,6 +93,15 @@ class FolderHierarchy extends Relation
     {
         $folder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
 
+        $storage = $folder->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
         $fileFolderLinker->set([
             'name'     => $folder->get('name'),
@@ -117,6 +126,18 @@ class FolderHierarchy extends Relation
             return;
         }
 
+        $folder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
+
+        $storage = $folder->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
+
         $fileFolderLinker->set('parentId', $entity->get('parentId'));
 
         try {
@@ -133,6 +154,17 @@ class FolderHierarchy extends Relation
             ->findOne();
 
         if (empty($fileFolderLinker)) {
+            return;
+        }
+
+        $folder = $this->getEntityManager()->getRepository('Folder')->get($entity->get('entityId'));
+
+        $storage = $folder->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
             return;
         }
 

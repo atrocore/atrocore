@@ -21,7 +21,9 @@
         {
           "name": "folder"
         },
-        false
+        {
+          "name": "folderPath"
+        }
       ],
       [
         {

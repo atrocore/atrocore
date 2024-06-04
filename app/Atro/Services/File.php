@@ -19,10 +19,23 @@ use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class File extends Base
 {
     protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName', 'data'];
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        foreach ($collection as $entity) {
+            $entity->_pathPrepared = true;
+            if (!empty($entity->get('folderId'))) {
+                $entity->set('folderPath', $this->getEntityManager()->getRepository('Folder')->getFolderHierarchyData($entity->get('folderId')));
+            }
+        }
+    }
 
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -42,6 +55,22 @@ class File extends Base
             if (!empty($entity->getLargeThumbnailUrl())) {
                 $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
             }
+        }
+
+        if (empty($entity->_pathPrepared)) {
+            $folderPath = [];
+            if (!empty($current = $entity->get('folder'))) {
+                while (!empty($parent = $current->getParent())) {
+                    $folderPath[] = [
+                        'id'         => $current->get('id'),
+                        'name'       => $current->get('name'),
+                        'parentId'   => $parent->get('id'),
+                        'parentName' => $parent->get('name'),
+                    ];
+                    $current = $parent;
+                }
+            }
+            $entity->set('folderPath', $folderPath);
         }
     }
 

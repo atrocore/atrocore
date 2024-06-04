@@ -22,10 +22,58 @@ use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Entities\Storage as StorageEntity;
 use Atro\Entities\Folder as FolderEntity;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Folder extends Hierarchy
 {
+    protected ?array $hierarchyData = null;
+
+    public function getAllHierarchyData(): array
+    {
+        if ($this->hierarchyData === null) {
+            $records = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('fh.parent_id, f1.name as parent_name, fh.entity_id, f.name as entity_name')
+                ->from('folder_hierarchy', 'fh')
+                ->innerJoin('fh', 'folder', 'f', 'f.id=fh.entity_id')
+                ->innerJoin('fh', 'folder', 'f1', 'f1.id=fh.parent_id')
+                ->where('fh.deleted=:false')
+                ->andWhere('f.deleted=:false')
+                ->andWhere('f1.deleted=:false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            $this->hierarchyData = [];
+            foreach ($records as $record) {
+                $this->hierarchyData[$record['entity_id']] = $record;
+            }
+        }
+
+        return $this->hierarchyData;
+    }
+
+    public function getFolderHierarchyData(string $folderId): array
+    {
+        $hierarchyData = $this->getAllHierarchyData();
+
+        $path = [];
+        $id = $folderId;
+        while (true) {
+            if (!isset($hierarchyData[$id]) || $hierarchyData[$id]['parent_id'] === $hierarchyData[$id]['entity_id']) {
+                break;
+            }
+            $path[] = [
+                'id'         => $hierarchyData[$id]['entity_id'],
+                'name'       => $hierarchyData[$id]['entity_name'],
+                'parentId'   => $hierarchyData[$id]['parent_id'],
+                'parentName' => $hierarchyData[$id]['parent_name'],
+            ];
+            $id = $hierarchyData[$id]['parent_id'];
+        }
+
+        return $path;
+    }
+
     public function getRootStorage(): StorageEntity
     {
         $storage = $this->getEntityManager()->getRepository('Storage')->where(['folderId' => ''])->findOne();
@@ -209,6 +257,15 @@ class Folder extends Hierarchy
             return;
         }
 
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
         $fileFolderLinker->set([
             'name'     => $entity->get('name'),
@@ -225,6 +282,15 @@ class Folder extends Hierarchy
 
     public function updateItem(Entity $entity): void
     {
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
             ->where(['folderId' => $entity->get('id')])
             ->findOne();
@@ -244,6 +310,15 @@ class Folder extends Hierarchy
 
     public function removeItem(Entity $entity): void
     {
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
         $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')
             ->where(['folderId' => $entity->get('id')])
             ->findOne();

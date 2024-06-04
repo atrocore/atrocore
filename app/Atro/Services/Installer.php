@@ -329,7 +329,10 @@ class Installer extends HasContainer
             [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]
         );
 
-        $pdo->exec("CREATE DATABASE " . $dbSettings['dbname']);
+        try {
+            $pdo->exec("CREATE DATABASE " . $dbSettings['dbname']);
+        } catch (\Throwable $e) {
+        }
     }
 
     protected function getFileManager(): FileManager

@@ -467,6 +467,7 @@
     "massRestore": "Massenwiederherstellung"
   },
   "fields": {
+    "path": "Ordner Pfad",
     "connection": "Verbindung",
     "tags": "Tags",
     "hidden": "Versteckt",

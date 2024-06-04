@@ -13,6 +13,9 @@
     "name": "folder"
   },
   {
+    "name": "folderPath"
+  },
+  {
     "name": "mimeType"
   },
   {
