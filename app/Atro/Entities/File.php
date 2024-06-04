@@ -40,7 +40,7 @@ class File extends Base
         return $this->getEntityManager()->getRepository($this->entityType)->getFilePath($this);
     }
 
-    public function getDownloadUrl(): string
+    public function getDownloadUrl(): ?string
     {
         return $this->getEntityManager()->getRepository($this->entityType)->getDownloadUrl($this);
     }
