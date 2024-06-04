@@ -332,16 +332,13 @@ class Folder extends Hierarchy
 
     public function getStorage(FolderEntity $folder): FileStorageInterface
     {
-        $storage = $this->getEntityManager()->getRepository('Storage')->get($folder->get('storageId'));
-
-        return $this->getInjection('container')->get($storage->get('type') . 'Storage');
+        return $this->getEntityManager()->getRepository('Storage')->getFileStorage($folder->get('storageId'));
     }
 
     protected function init()
     {
         parent::init();
 
-        $this->addDependency('container');
         $this->addDependency('language');
     }
 }

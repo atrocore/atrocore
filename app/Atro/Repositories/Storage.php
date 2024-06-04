@@ -15,6 +15,8 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Doctrine\DBAL\ParameterType;
@@ -22,6 +24,20 @@ use Espo\ORM\Entity;
 
 class Storage extends Base
 {
+    public function getFileStorage(string $storageId): FileStorageInterface
+    {
+        $storage = $this->getEntityManager()->getRepository('Storage')->get($storageId);
+        if (empty($storage)) {
+            throw new NotFound("Storage '{$storageId}' does not exist.");
+        }
+
+        if (empty($storage->get('isActive'))) {
+            throw new BadRequest("Storage '{$storage->get('name')}' is not active.");
+        }
+
+        return $this->getInjection('container')->get($storage->get('type') . 'Storage');
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
@@ -218,6 +234,7 @@ class Storage extends Base
     {
         parent::init();
 
+        $this->addDependency('container');
         $this->addDependency('language');
     }
 
