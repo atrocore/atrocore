@@ -43,17 +43,20 @@ class File extends Base
 
         $fileNameParts = explode('.', $entity->get('name'));
         $entity->set('extension', strtolower(end($fileNameParts)));
-        $entity->set('downloadUrl', $entity->getDownloadUrl());
-        if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {
-            $entity->set('hasOpen', true);
-            if (!empty($entity->getSmallThumbnailUrl())) {
-                $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
-            }
-            if (!empty($entity->getMediumThumbnailUrl())) {
-                $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
-            }
-            if (!empty($entity->getLargeThumbnailUrl())) {
-                $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
+
+        if (!empty($downloadUrl = $entity->getDownloadUrl())) {
+            $entity->set('downloadUrl', $downloadUrl);
+            if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {
+                $entity->set('hasOpen', true);
+                if (!empty($entity->getSmallThumbnailUrl())) {
+                    $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
+                }
+                if (!empty($entity->getMediumThumbnailUrl())) {
+                    $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
+                }
+                if (!empty($entity->getLargeThumbnailUrl())) {
+                    $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
+                }
             }
         }
 
