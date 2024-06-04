@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
+use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\FileValidator;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
@@ -226,6 +227,12 @@ class File extends Base
 
     public function getContents(FileEntity $file): string
     {
+        if ($file->isNew()) {
+            $input = $file->_input ?? new \stdClass();
+            if (property_exists($input, 'fileContents')) {
+                return LocalStorage::parseInputFileContent((string)$input->fileContents);
+            }
+        }
         return $this->getStorage($file)->getContents($file);
     }
 

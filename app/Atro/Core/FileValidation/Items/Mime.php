@@ -16,12 +16,13 @@ namespace Atro\Core\FileValidation\Items;
 use Atro\Core\FileValidation\Base;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Entities\File;
+use finfo;
 
 class Mime extends Base
 {
     public function validate(File $file): bool
     {
-        $mimeType = (string)mime_content_type($file->getFilePath());
+        $mimeType = (new finfo(FILEINFO_MIME_TYPE))->buffer($file->getContents());
 
         if ($this->rule->get('validateBy') == 'List') {
             return in_array($mimeType, $this->rule->get('mimeList'));

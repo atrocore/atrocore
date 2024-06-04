@@ -21,7 +21,7 @@ class Scale extends Base
 {
     public function validate(File $file): bool
     {
-        list ($width, $height) = getimagesize($file->getFilePath());
+        list ($width, $height) = getimagesizefromstring($file->getContents());
 
         return $width > $this->rule->get('minWidth') && $height > $this->rule->get('minHeight');
     }
