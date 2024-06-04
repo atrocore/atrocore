@@ -23,7 +23,6 @@ use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\FilePathBuilder;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class File extends Base
