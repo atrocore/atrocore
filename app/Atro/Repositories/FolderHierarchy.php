@@ -84,9 +84,8 @@ class FolderHierarchy extends Relation
     public function getStorage(FolderHierarchyEntity $folderHierarchy): FileStorageInterface
     {
         $folder = $this->getEntityManager()->getRepository('Folder')->get($folderHierarchy->get('entityId'));
-        $storage = $this->getEntityManager()->getRepository('Storage')->get($folder->get('storageId'));
 
-        return $this->getInjection('container')->get($storage->get('type') . 'Storage');
+        return $this->getEntityManager()->getRepository('Storage')->getFileStorage($folder->get('storageId'));
     }
 
     public function createItem(Entity $entity): void
