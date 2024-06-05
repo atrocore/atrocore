@@ -35,6 +35,7 @@ use Psr\Http\Message\StreamInterface;
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 {
     public const CHUNKS_DIR = '.chunks';
+    public const TMP_DIR = '.tmp';
 
     protected Container $container;
 
@@ -562,16 +563,6 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             foreach ($chunk as $fileName) {
                 $fileInfo = pathinfo($fileName);
 
-                // ignore chunks
-                if (strpos($fileInfo['dirname'], self::CHUNKS_DIR) !== false) {
-                    continue;
-                }
-
-                // ignore .tmp dir
-                if (strpos($fileInfo['dirname'], '.tmp') !== false) {
-                    continue;
-                }
-
                 $entityData = [
                     'name'      => $fileInfo['basename'],
                     'fileSize'  => filesize($fileName),
@@ -703,7 +694,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 if (is_file($path)) {
                     $results[] = $path;
                 } elseif (is_dir($path)) {
-                    $this->getStorageFiles($path, $results);
+                    if (!in_array($value, [self::CHUNKS_DIR, self::TMP_DIR])) {
+                        $this->getStorageFiles($path, $results);
+                    }
                 }
             }
         }
@@ -720,6 +713,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 }
 
                 $path = $dir . DIRECTORY_SEPARATOR . $value;
+
+                if (in_array($value, [self::CHUNKS_DIR, self::TMP_DIR])) {
+                    continue;
+                }
+
                 if (is_dir($path)) {
                     $results[] = $path;
                     $this->getStorageDirs($path, $results);
