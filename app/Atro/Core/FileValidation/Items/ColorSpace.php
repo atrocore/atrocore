@@ -36,7 +36,8 @@ class ColorSpace extends Base
 
     public function validate(File $file): bool
     {
-        $img = new \Imagick($file->getFilePath());
+        $img = new \Imagick();
+        $img->readImageBlob($file->getContents());
 
         $colorSpace = $img->getImageColorspace();
 

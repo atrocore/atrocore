@@ -21,7 +21,8 @@ class ColorDepth extends Base
 {
     public function validate(File $file): bool
     {
-        $img = new \Imagick($file->getFilePath());
+        $img = new \Imagick();
+        $img->readImageBlob($file->getContents());
 
         return in_array($img->getImageDepth(), $this->rule->get('colorDepth'));
     }
