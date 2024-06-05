@@ -1746,17 +1746,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let list = [];
             this.listLayout.forEach(function (item) {
                 if (!item.name) return;
-                var field = item.name;
-                var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                const field = item.name;
+                const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
                 if (!fieldType) return;
                 this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
-                    list.push(attribute);
-                    if (fieldType === 'linkMultiple' && attribute === field + 'Ids') {
-                        let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'foreignName']);
-                        if (foreignName && foreignName !== 'name') {
+                    if (fieldType === 'linkMultiple') {
+                        const foreignName = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'foreignName']);
+                        if (attribute === field + 'Ids' && foreignName && foreignName !== 'name') {
                             list.push(field);
+                        } else if (attribute === field + 'Names' && !foreignName) {
+                            return;
                         }
                     }
+
+                    list.push(attribute);
                 }, this);
             }, this);
 
