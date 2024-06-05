@@ -21,7 +21,8 @@ class Quality extends Base
 {
     public function validate(File $file): bool
     {
-        $img = new \Imagick($file->getFilePath());
+        $img = new \Imagick();
+        $img->readImageBlob($file->getContents());
         $quality = $img->getImageCompressionQuality();
 
         if ($img->getImageMimeType() !== "image/jpeg") {

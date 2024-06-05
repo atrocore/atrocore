@@ -21,9 +21,9 @@ class Ratio extends Base
 {
     public function validate(File $file): bool
     {
-        $imageParams = getimagesize($file->getFilePath());
+        list ($width, $height) = getimagesizefromstring($file->getContents());
 
-        return ($imageParams[0] / $imageParams[1]) == $this->rule->get('ratio');
+        return ($width / $height) == $this->rule->get('ratio');
     }
 
     public function onValidateFail()
