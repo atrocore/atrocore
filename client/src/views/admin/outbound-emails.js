@@ -36,25 +36,6 @@ Espo.define('views/admin/outbound-emails', 'views/settings/record/edit', functio
 
         layoutName: 'outboundEmails',
 
-        dependencyDefs: {
-            'smtpAuth': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['smtpUsername', 'smtpPassword', 'smtpAuthMechanism']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['smtpUsername', 'smtpPassword', 'smtpAuthMechanism']
-                    }
-                ]
-            }
-        },
-
         setup: function () {
             Dep.prototype.setup.call(this);
         },
