@@ -52,6 +52,10 @@ class Application
             define('CORE_PATH', dirname(dirname(__DIR__)));
         }
 
+        if (!defined('ROOT_PATH')) {
+            define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
+        }
+
         // set timezone
         date_default_timezone_set('UTC');
 
