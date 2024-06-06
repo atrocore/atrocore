@@ -22,12 +22,6 @@ class Entity extends AbstractListener
     public function beforeSave(Event $event): void
     {
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeSave', $event);
-
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
-            $this
-                ->createHook(Common\NextNumber::class)
-                ->beforeSave($event->getArgument('entity'), $event->getArgument('options'));
-        }
     }
 
     public function afterSave(Event $event): void

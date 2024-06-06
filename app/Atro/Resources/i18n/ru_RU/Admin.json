@@ -131,7 +131,6 @@
     "sourceList": "Список источников",
     "tooltipText": "Текст подсказки",
     "prefix": "Префикс",
-    "nextNumber": "Следующий номер",
     "padLength": "Определенная длина",
     "disableFormatting": "Отключить форматирование",
     "dynamicLogicVisible": "Условия, которые делают поле видимым",

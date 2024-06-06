@@ -140,7 +140,6 @@
     "tooltipText": "Texto de la ayuda",
     "tooltipLink": "Url de ayuda",
     "prefix": "Prefijo",
-    "nextNumber": "Siguiente Número",
     "padLength": "Longitud del relleno",
     "disableFormatting": "Desactivar formateo",
     "dynamicLogicVisible": "Condiciones para hacer el campo visible",

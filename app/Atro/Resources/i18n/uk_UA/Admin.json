@@ -140,7 +140,6 @@
     "tooltipText": "Текст підказки",
     "tooltipLink": "Url довідки",
     "prefix": "Префікс",
-    "nextNumber": "Наступний номер",
     "padLength": "Визначена довжина",
     "disableFormatting": "Відключити форматування",
     "dynamicLogicVisible": "Умови, які роблять поле видимим",
