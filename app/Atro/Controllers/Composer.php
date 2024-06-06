@@ -15,7 +15,7 @@ namespace Atro\Controllers;
 
 use Atro\Core\Exceptions;
 use Espo\Core\Utils\Json;
-use Espo\Services\Composer as ComposerService;
+use Atro\Services\Composer as ComposerService;
 use Slim\Http\Request;
 
 class Composer extends AbstractController

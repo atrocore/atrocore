@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\SelectManagers;
 
 use Espo\Core\SelectManagers\Base;
-use Espo\Services\Composer;
+use Atro\Services\Composer;
 
 class TreoStore extends Base
 {

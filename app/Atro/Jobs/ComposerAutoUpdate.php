@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Espo\Services\Composer;
+use Atro\Services\Composer;
 
 /**
  * Class ComposerAutoUpdate

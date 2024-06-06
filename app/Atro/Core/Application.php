@@ -22,7 +22,7 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\ORM\EntityManager;
-use Espo\Services\Composer;
+use Atro\Services\Composer;
 
 class Application
 {
