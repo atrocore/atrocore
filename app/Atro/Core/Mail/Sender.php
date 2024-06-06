@@ -31,7 +31,10 @@ class Sender
 
     private EntityManager $entityManager;
 
-    private Transport $transport;
+    /**
+     * @var Transport
+     */
+    private $transport;
 
     /**
      * Sender constructor.
