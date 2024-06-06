@@ -14,11 +14,10 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Services\Installer as InstallerService;
-use Espo\Core\Controllers\Base;
 use Atro\Core\Exceptions;
 use Slim\Http\Request;
 
-class Installer extends Base
+class Installer extends AbstractController
 {
     public function actionGetTranslations($params, $data, Request $request): array
     {
@@ -30,7 +29,7 @@ class Installer extends Base
         /** @var InstallerService $installer */
         $installer = $this->getService('Installer');
 
-        // check if is install
+        // check if is installed
         if ($installer->isInstalled()) {
             throw new Exceptions\Forbidden();
         }

@@ -13,13 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Controllers;
 
-use Espo\Core\Controllers\Base;
 use Atro\Core\Exceptions;
 use Espo\Core\Utils\Language;
 use Espo\Services\DashletInterface;
 use Slim\Http\Request;
 
-class Dashlet extends Base
+class Dashlet extends AbstractController
 {
     public function actionGetDashlet($params, $data, Request $request): array
     {

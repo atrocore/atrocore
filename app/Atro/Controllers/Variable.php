@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Controllers;
 
-use Espo\Core\Controllers\Base;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 
-class Variable extends Base
+class Variable extends AbstractController
 {
     public function actionList($params, $data, $request)
     {

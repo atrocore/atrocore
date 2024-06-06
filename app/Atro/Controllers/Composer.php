@@ -13,13 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Controllers;
 
-use Espo\Core\Controllers\Base;
 use Atro\Core\Exceptions;
 use Espo\Core\Utils\Json;
 use Espo\Services\Composer as ComposerService;
 use Slim\Http\Request;
 
-class Composer extends Base
+class Composer extends AbstractController
 {
     public function actionRunUpdate($params, $data, Request $request): bool
     {

@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Controllers;
 
-use Espo\Core\Controllers\Base;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 
-class MassActions extends Base
+class MassActions extends AbstractController
 {
     public function actionUpsert($params, $data, $request)
     {
