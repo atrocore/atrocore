@@ -52,8 +52,8 @@ class Application
             define('CORE_PATH', dirname(dirname(__DIR__)));
         }
 
-        if (!defined('ROOT_PATH')) {
-            define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
+        if (!defined('VENDOR_PATH')) {
+            define('VENDOR_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
         }
 
         // set timezone
