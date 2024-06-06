@@ -28,15 +28,9 @@ class Application
 {
     public const COMPOSER_LOG_FILE = 'data/composer.log';
 
-    /**
-     * @var null|array
-     */
-    protected static $urls = null;
+    protected static ?array $urls = null;
 
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected Container $container;
 
     /**
      * Is system updating?
