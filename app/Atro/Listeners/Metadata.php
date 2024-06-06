@@ -258,6 +258,7 @@ class Metadata extends AbstractListener
                     "type"        => "belongsTo",
                     "entity"      => "Unit",
                     "skipOrmDefs" => !empty($fieldDefs['notStorable']),
+                    'layoutRelationshipsDisabled' => true,
                 ];
 
                 if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
