@@ -34,6 +34,8 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
 
     return Dep.extend({
 
+        listTemplate: 'admin/field-manager/fields/dynamic-logic-conditions/detail',
+
         detailTemplate: 'admin/field-manager/fields/dynamic-logic-conditions/detail',
 
         editTemplate: 'admin/field-manager/fields/dynamic-logic-conditions/edit',
