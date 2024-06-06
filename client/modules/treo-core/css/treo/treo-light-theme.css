@@ -23395,12 +23395,19 @@ code.hljs {
 .feedbackContainer a {
   z-index:10;
   position: absolute;
-  top: 5px;
-  left: 10px;
+  bottom: 7px;
+  right: 25px;
+  background-color: black;
+  opacity: 0.7;
+  padding: 10px;
+  border-radius: 5px;
+  min-width: 2rem;
+  line-height: 1.25rem;
 }
 
 .feedbackContainer a span {
-  font-size: 35px;
+  font-size: 25px;
+  color: white;
 }
 
 .feedbackContainer iframe {
