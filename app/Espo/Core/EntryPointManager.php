@@ -103,11 +103,7 @@ class EntryPointManager
         }
         $entryPoint = new $className($this->container);
 
-        // dispatch an event
-        $event = $this
-            ->getContainer()
-            ->get('eventManager')
-            ->dispatch('EntryPoint', 'run', new Event(['name' => $name, 'data' => $data]));
+        $event = $this->getEventManager()->dispatch('EntryPoint', 'run', new Event(['name' => $name, 'data' => $data]));
 
         $entryPoint->run($event->getArgument('data'));
     }
@@ -128,6 +124,10 @@ class EntryPointManager
         return false;
     }
 
+    protected function getEventManager(): \Atro\Core\EventManager\Manager
+    {
+        return $this->getContainer()->get('eventManager');
+    }
 
     protected function init()
     {
