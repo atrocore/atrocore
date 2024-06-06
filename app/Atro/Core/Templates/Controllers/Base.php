@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Controllers;
 
-use Espo\Core\Controllers\Record;
+use Atro\Controllers\AbstractRecordController;
 
-class Base extends Record
+class Base extends AbstractRecordController
 {
 }

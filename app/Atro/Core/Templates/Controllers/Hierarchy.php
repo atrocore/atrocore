@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Controllers;
 
-use Espo\Core\Controllers\Record;
+use Atro\Controllers\AbstractRecordController;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 
-class Hierarchy extends Record
+class Hierarchy extends AbstractRecordController
 {
     public function actionInheritAllForChildren($params, $data, $request): bool
     {
