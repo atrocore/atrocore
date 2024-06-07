@@ -111,7 +111,7 @@ class PostUpdate
         } catch (\Throwable $e) {
             $message = "Failed! {$e->getMessage()}";
             $trace = $e->getTrace();
-            if (!empty($trace[0])){
+            if (!empty($trace[0])) {
                 $message .= ' ' . json_encode($trace[0]);
             }
 
@@ -388,7 +388,7 @@ class PostUpdate
 
         foreach (self::getComposerLockPackages() as $row) {
             // prepare module name
-            $moduleName = $row['extra']['treoId'];
+            $moduleName = $row['extra']['atroId'] ?? $row['extra']['treoId'];
 
             // prepare class name
             $className = "\\$moduleName\\Module";
@@ -418,7 +418,7 @@ class PostUpdate
             $data = json_decode(file_get_contents($path), true);
             if (!empty($packages = $data['packages'])) {
                 foreach ($packages as $package) {
-                    if (!empty($package['extra']['treoId'])) {
+                    if (!empty($package['extra']['atroId']) || !empty($package['extra']['treoId'])) {
                         $result[$package['name']] = $package;
                     }
                 }
@@ -773,18 +773,24 @@ class PostUpdate
         $newData = self::getComposerLockPackages();
 
         foreach ($oldData as $package) {
-            $id = $package['extra']['treoId'] === 'Treo' ? 'Atro' : $package['extra']['treoId'];
+            $moduleId = $package['extra']['atroId'] ?? $package['extra']['treoId'];
+            if ($moduleId === 'Treo') {
+                $moduleId = 'Atro';
+            }
             if (!isset($newData[$package['name']])) {
-                $result['delete'][$id] = [
-                    'id'      => $id,
+                $result['delete'][$moduleId] = [
+                    'id'      => $moduleId,
                     'package' => $package,
                     'from'    => null,
                     'to'      => null
                 ];
             } elseif ($package['version'] != $newData[$package['name']]['version']) {
-                $id = $newData[$package['name']]['extra']['treoId'] === 'Treo' ? 'Atro' : $newData[$package['name']]['extra']['treoId'];
-                $result['update'][$id] = [
-                    'id'      => $id,
+                $moduleId = $newData[$package['name']]['extra']['atroId'] ?? $newData[$package['name']]['extra']['treoId'];
+                if ($moduleId === 'Treo') {
+                    $moduleId = 'Atro';
+                }
+                $result['update'][$moduleId] = [
+                    'id'      => $moduleId,
                     'package' => $newData[$package['name']],
                     'from'    => $package['version'],
                     'to'      => $newData[$package['name']]['version']
@@ -793,8 +799,9 @@ class PostUpdate
         }
         foreach ($newData as $package) {
             if (!isset($oldData[$package['name']])) {
-                $result['install'][$package['extra']['treoId']] = [
-                    'id'      => $package['extra']['treoId'],
+                $moduleId = $package['extra']['atroId'] ?? $package['extra']['treoId'];
+                $result['install'][$moduleId] = [
+                    'id'      => $moduleId,
                     'package' => $package,
                     'from'    => null,
                     'to'      => null

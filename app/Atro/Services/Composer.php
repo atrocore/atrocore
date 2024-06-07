@@ -397,7 +397,8 @@ class Composer extends HasContainer
     public function getLatestVersion(string $moduleId): string
     {
         foreach ($this->packages as $row) {
-            if ($row['treoId'] === $moduleId && !empty($row['versions'])) {
+            $id = $row['atroId'] ?? $row['treoId'];
+            if ($id === $moduleId && !empty($row['versions'])) {
                 $latest = array_shift($row['versions']);
                 return $latest['version'];
             }
@@ -409,7 +410,8 @@ class Composer extends HasContainer
     public function getUsage(string $moduleId): ?string
     {
         foreach ($this->packages as $row) {
-            if ($row['treoId'] === $moduleId && !empty($row['usage'])) {
+            $id = $row['atroId'] ?? $row['treoId'];
+            if ($id === $moduleId && !empty($row['usage'])) {
                 return $row['usage'];
             }
         }
@@ -420,7 +422,8 @@ class Composer extends HasContainer
     public function getExpirationDate(string $moduleId): ?string
     {
         foreach ($this->packages as $row) {
-            if ($row['treoId'] === $moduleId && !empty($row['expirationDate'])) {
+            $id = $row['atroId'] ?? $row['treoId'];
+            if ($id === $moduleId && !empty($row['expirationDate'])) {
                 return $row['expirationDate'];
             }
         }
@@ -523,7 +526,9 @@ class Composer extends HasContainer
             $composer = json_decode(file_get_contents('composer.lock'), true);
             if (!empty($composer['packages'])) {
                 foreach ($composer['packages'] as $v) {
-                    if ($v['name'] == $packageId && !empty($v['extra']['treoId'])) {
+                    if ($v['name'] == $packageId && !empty($v['extra']['atroId'])) {
+                        return $v['extra']['atroId'];
+                    } elseif ($v['name'] == $packageId && !empty($v['extra']['treoId'])) {
                         return $v['extra']['treoId'];
                     }
                 }

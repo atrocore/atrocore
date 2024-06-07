@@ -177,6 +177,9 @@ class Manager
             $data = json_decode(file_get_contents(Composer::$composerLock), true);
             if (!empty($data['packages'])) {
                 foreach ($data['packages'] as $package) {
+                    if (!empty($package['extra']['atroId']) && $package['extra']['atroId'] == $id) {
+                        return $package;
+                    }
                     if (!empty($package['extra']['treoId']) && $package['extra']['treoId'] == $id) {
                         return $package;
                     }

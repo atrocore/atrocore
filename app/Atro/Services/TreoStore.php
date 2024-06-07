@@ -24,9 +24,9 @@ class TreoStore extends Base
         $this->updateStoreData();
 
         $params['where'][] = [
-            "type" => "notEquals",
+            "type"      => "notEquals",
             "attribute" => 'id',
-            "value" => 'Connector'
+            "value"     => 'Connector'
         ];
 
         return parent::findEntities($params);
@@ -74,7 +74,7 @@ class TreoStore extends Base
                 ->setValue('description', ':description')
                 ->setValue('tags', ':tags')
                 ->setParameters([
-                    'id'          => $package['treoId'],
+                    'id'          => $package['atroId'] ?? $package['treoId'],
                     'packageId'   => $package['packageId'],
                     'url'         => $package['url'],
                     'status'      => $package['status'],
@@ -156,8 +156,14 @@ class TreoStore extends Base
         foreach ($packages['packages'] as $repository => $versions) {
             if (is_array($versions)) {
                 foreach ($versions as $version => $row) {
-                    if (!empty($row['extra']['treoId'])) {
-                        $treoId = $row['extra']['treoId'];
+                    $id = null;
+                    if (!empty($row['extra']['atroId'])) {
+                        $id = $row['extra']['atroId'];
+                    } elseif (!empty($row['extra']['treoId'])) {
+                        $id = $row['extra']['treoId'];
+                    }
+
+                    if (!empty($id)) {
                         $version = strtolower($version);
                         if (preg_match_all('/^v\d+.\d+.\d+$/', $version, $matches)
                             || preg_match_all('/^v\d+.\d+.\d+-rc\d+$/', $version, $matches)
@@ -173,14 +179,14 @@ class TreoStore extends Base
                             }
 
                             // push
-                            $data[$treoId][$version] = $row;
+                            $data[$id][$version] = $row;
                         }
                     }
                 }
             }
         }
 
-        foreach ($data as $treoId => $rows) {
+        foreach ($data as $atroId => $rows) {
             // find max version
             $versions = array_keys($rows);
             natsort($versions);
@@ -195,10 +201,10 @@ class TreoStore extends Base
 
             // prepare item
             $item = [
-                'treoId'         => $treoId,
+                'atroId'         => $atroId,
                 'packageId'      => $rows[$max]['name'],
                 'url'            => $rows[$max]['source']['url'],
-                'name'           => !empty($rows[$max]['extra']['name']) ? $rows[$max]['extra']['name'] : $treoId,
+                'name'           => !empty($rows[$max]['extra']['name']) ? $rows[$max]['extra']['name'] : $atroId,
                 'description'    => !empty($rows[$max]['extra']['description']) ? $rows[$max]['extra']['description'] : '',
                 'tags'           => $tags,
                 'status'         => $status,
@@ -216,7 +222,7 @@ class TreoStore extends Base
 
             // push
             if (empty($item['deprecated'])) {
-                $result[$treoId] = $item;
+                $result[$atroId] = $item;
             }
         }
 
