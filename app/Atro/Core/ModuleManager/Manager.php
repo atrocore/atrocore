@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\ModuleManager;
 
 use Atro\Core\Container;
-use Espo\Services\Composer;
+use Atro\Services\Composer;
 
 /**
  * Class Manager

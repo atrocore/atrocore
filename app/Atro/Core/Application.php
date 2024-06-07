@@ -22,21 +22,15 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\ORM\EntityManager;
-use Espo\Services\Composer;
+use Atro\Services\Composer;
 
 class Application
 {
     public const COMPOSER_LOG_FILE = 'data/composer.log';
 
-    /**
-     * @var null|array
-     */
-    protected static $urls = null;
+    protected static ?array $urls = null;
 
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected Container $container;
 
     /**
      * Is system updating?
@@ -56,6 +50,10 @@ class Application
         // define path to core app
         if (!defined('CORE_PATH')) {
             define('CORE_PATH', dirname(dirname(__DIR__)));
+        }
+
+        if (!defined('VENDOR_PATH')) {
+            define('VENDOR_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
         }
 
         // set timezone

@@ -17,7 +17,7 @@ use Atro\Core\Application;
 use Atro\Core\PseudoTransactionManager;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-use Espo\Services\Composer;
+use Atro\Services\Composer;
 use Atro\Core\QueueManager;
 
 /**

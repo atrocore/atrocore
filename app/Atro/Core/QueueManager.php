@@ -13,15 +13,15 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Atro\DTO\QueueItemDTO;
-use Atro\Core\Exceptions\NotUnique as Duplicate;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotUnique as Duplicate;
+use Atro\DTO\QueueItemDTO;
+use Atro\Repositories\QueueItem as Repository;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\System;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Orm\EntityManager;
-use Espo\Repositories\QueueItem as Repository;
 use Espo\Services\QueueManagerServiceInterface;
 
 class QueueManager
@@ -301,7 +301,7 @@ class QueueManager
         return $this->container->get('serviceFactory');
     }
 
-    protected function getRepository(): \Espo\Repositories\QueueItem
+    protected function getRepository(): \Atro\Repositories\QueueItem
     {
         return $this->getEntityManager()->getRepository('QueueItem');
     }
