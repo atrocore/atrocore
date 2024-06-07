@@ -80,7 +80,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $input = $file->_input ?? new \stdClass();
 
-        if ($file->getStorage()->get('syncFolders')) {
+        if (!$file->getStorage()->get('syncFolders')) {
             $file->set('path', $this->getPathBuilder()->createPath($file->getStorage()->get('path') . DIRECTORY_SEPARATOR));
         }
 
