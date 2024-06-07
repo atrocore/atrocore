@@ -508,7 +508,7 @@ class PostUpdate
             self::renderLine('Creating main config');
 
             // get default data
-            $data = include 'vendor/atrocore/core/app/Espo/Core/defaults/config.php';
+            $data = include 'vendor/atrocore/atrocore-legacy/app/Espo/Core/defaults/config.php';
 
             $data['passwordSalt'] = mb_substr(md5((string)time()), 0, 9);
 
