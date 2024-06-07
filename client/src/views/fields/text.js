@@ -50,9 +50,9 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         seeMoreText: false,
 
-        rowsDefault: 10,
-
         rowsMin: 2,
+
+        rowsMax: 10,
 
         seeMoreDisabled: false,
 
@@ -75,14 +75,15 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.params.rows = this.params.rows || this.rowsDefault;
+            this.params.rowsMin = this.params.rowsMin || this.rowsMin;
+            this.params.rowsMax = this.params.rowsMax || this.rowsMax;
             this.detailMaxLength = this.params.lengthOfCut || this.detailMaxLength;
             this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
             this.useDisabledTextareaInViewMode = this.options.useDisabledTextareaInViewMode || this.params.useDisabledTextareaInViewMode || this.useDisabledTextareaInViewMode;
             this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled || this.autoHeightDisabled;
 
-            if (this.params.rows < this.rowsMin) {
-                this.rowsMin = this.params.rows;
+            if (this.params.rowsMax < this.params.rowsMin) {
+                this.params.rowsMin = this.params.rowsMax;
             }
         },
 
@@ -113,14 +114,14 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             }
             if (this.mode === 'edit') {
                 if (this.autoHeightDisabled) {
-                    data.rows = this.params.rows;
+                    data.rows = this.params.rowsMax;
                 } else {
-                    data.rows = this.rowsMin;
+                    data.rows = this.params.rowsMin;
                 }
             }
 
             if (this.mode === 'detail' && this.useDisabledTextareaInViewMode) {
-                data.rows = this.params.rows;
+                data.rows = this.params.rowsMin;
             }
 
             data.valueIsSet = this.model.has(this.name);
@@ -180,13 +181,13 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             if (scrollHeight > clientHeight + 1) {
                 var rows = this.$element.prop('rows');
 
-                if (this.params.rows && rows >= this.params.rows) return;
+                if (this.params.rowsMax && rows >= this.params.rowsMax) return;
 
                 this.$element.attr('rows', rows + 1);
                 this.controlTextareaHeight(clientHeight);
             }
             if (this.$element.val().length === 0) {
-                this.$element.attr('rows', this.rowsMin);
+                this.$element.attr('rows', this.params.rowsMin);
             }
         },
 
@@ -242,12 +243,17 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                     this.controlTextareaHeight();
                 }.bind(this));
             }
+
+            if (['detail', 'list'].includes(this.mode) && !this.autoHeightDisabled) {
+                this.$element = this.$el.find('[name="' + this.name + '"]');
+                this.controlTextareaHeight();
+            }
         },
 
         fetch: function () {
             var data = {};
             data[this.name] = this.$element ? this.$element.val() : null;
-            if(data[this.name]==='') data[this.name]=null;
+            if (data[this.name] === '') data[this.name] = null;
             return data;
         },
 

@@ -28,7 +28,13 @@
          "tooltip": true
       },
       {
-         "name": "rows",
+         "name": "rowsMin",
+         "type": "int",
+         "default": 2,
+         "min": 1
+      },
+      {
+         "name": "rowsMax",
          "type": "int",
          "default": 10,
          "min": 1
