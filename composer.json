@@ -42,8 +42,7 @@
       "": [
         "../../../data/migrations/",
         "../../../data/module-manager-events/"
-      ],
-      "Espo\\Custom": "../../../custom/"
+      ]
     },
     "psr-4": {
       "Atro\\": "app/Atro/"
