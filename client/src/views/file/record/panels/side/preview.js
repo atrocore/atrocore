@@ -30,5 +30,8 @@ Espo.define('views/file/record/panels/side/preview', 'views/file/fields/preview'
             }
         },
 
+        fetch() {
+            return {};
+        }
     })
 );
