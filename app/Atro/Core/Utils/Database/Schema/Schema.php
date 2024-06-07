@@ -145,7 +145,7 @@ class Schema
         $methods = array('beforeRebuild', 'afterRebuild');
 
         $this->classParser->setAllowedMethods($methods);
-        $rebuildActions = $this->classParser->getData(['corePath' => CORE_PATH . '/Espo/Core/Utils/Database/Schema/rebuildActions']);
+        $rebuildActions = $this->classParser->getData(['corePath' => VENDOR_PATH . '/atrocore-legacy/app/Espo/Core/Utils/Database/Schema/rebuildActions']);
 
         $classes = array();
         foreach ($rebuildActions as $actionName => $actionClass) {
