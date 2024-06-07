@@ -46,8 +46,7 @@
       "Espo\\Custom": "../../../custom/"
     },
     "psr-4": {
-      "Atro\\": "app/Atro/",
-      "Espo\\": "app/Espo/"
+      "Atro\\": "app/Atro/"
     }
   },
   "extra": {
