@@ -61,6 +61,23 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             }
         },
 
+        setupSearch() {
+            Dep.prototype.setupSearch.call(this);
+
+            let value = null;
+            if (this.searchParams && 'type' in this.searchParams) {
+                if (this.searchParams.type === 'isTrue') {
+                    value = 'true'
+                }
+
+                if (this.searchParams.type === 'isFalse') {
+                    value = 'false'
+                }
+            }
+
+            this.model.set(this.name, value);
+        },
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.valueIsSet = this.model.has(this.name);
