@@ -67,11 +67,15 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             let value = null;
             if (this.searchParams && 'type' in this.searchParams) {
                 if (this.searchParams.type === 'isTrue') {
-                    value = 'true'
+                    value = 'true';
                 }
 
                 if (this.searchParams.type === 'isFalse') {
-                    value = 'false'
+                    if ('fieldParams' in this.searchParams && this.searchParams.fieldParams.isAttribute) {
+                        value = 'false';
+                    } else {
+                        value = null;
+                    }
                 }
             }
 
