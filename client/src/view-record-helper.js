@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -47,6 +46,7 @@ Espo.define('view-record-helper', [], function () {
         this.hiddenPanels = {};
 
         this.fieldOptionListMap = {};
+        this.fieldDisabledOptionListMap = {};
     };
 
     _.extend(ViewRecordHelper.prototype, {
@@ -129,8 +129,38 @@ Espo.define('view-record-helper', [], function () {
 
         hasFieldOptionList: function (field) {
             return (field in this.fieldOptionListMap);
-        }
+        },
 
+        hasFieldDisabledOptionList: function (field) {
+            return (field in this.fieldDisabledOptionListMap);
+        },
+
+        getFieldDisabledOptionList: function (field) {
+            return this.fieldDisabledOptionListMap[field] || [];
+        },
+
+        setFieldAddDisabledOptions: function (field, list) {
+            if (!this.fieldDisabledOptionListMap[field]) {
+                this.fieldDisabledOptionListMap[field] = [];
+            }
+
+            list.forEach(item => {
+                if (!this.fieldDisabledOptionListMap[field].includes(item)) {
+                    this.fieldDisabledOptionListMap[field].push(item)
+                }
+            })
+        },
+        setFieldRemoveDisabledOptions: function (field, list) {
+            if (!this.fieldDisabledOptionListMap[field]) {
+                this.fieldDisabledOptionListMap[field] = [];
+            }
+
+            list.forEach(item => {
+                if (this.fieldDisabledOptionListMap[field].includes(item)) {
+                    this.fieldDisabledOptionListMap[field].splice(this.fieldDisabledOptionListMap[field].indexOf(item), 1)
+                }
+            })
+        },
     });
 
     return ViewRecordHelper;

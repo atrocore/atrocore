@@ -43,25 +43,37 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
         boolFilterData: {
             onlyForExtensibleEnum() {
                 return this.getExtensibleEnumId();
+            },
+            isNot() {
+                return this.disabledOptions
             }
         },
+
+        disabledOptions: [],
 
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.idsName = this.name;
 
+            this.disabledOptions = [];
+            this.selectBoolFilterList = ['onlyForExtensibleEnum'];
+
             this.foreignScope = 'ExtensibleEnumOption';
 
-            if(this.options.customBoolFilterData){
+            if (this.options.customBoolFilterData) {
                 this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
             }
 
-            if(this.options.customSelectBoolFilters){
+            if (this.options.customSelectBoolFilters) {
                 this.options.customSelectBoolFilters.forEach(item => {
                     if (!this.selectBoolFilterList.includes(item)) {
                         this.selectBoolFilterList.push(item);
                     }
                 });
+            }
+
+            if (this.options.disabledOptionList) {
+                this.disableOptions(this.options.disabledOptionList)
             }
 
             Dep.prototype.setup.call(this);
@@ -127,6 +139,18 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             return res;
         },
 
+        disableOptions(list) {
+            this.disabledOptions = list || []
+            if (this.disabledOptions.length === 0) {
+                if (this.selectBoolFilterList.includes('isNot')) {
+                    this.selectBoolFilterList.splice(this.selectBoolFilterList.indexOf('isNot'), 1)
+                }
+            } else {
+                if (!this.selectBoolFilterList.includes('isNot')) {
+                    this.selectBoolFilterList.push('isNot')
+                }
+            }
+        },
 
         fetchSearch: function () {
             let type = this.$el.find('select.search-type').val();

@@ -148,6 +148,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList);
             }
+            if (this.options.disabledOptionList) {
+                this.disableOptions(this.options.disabledOptionList)
+            }
 
             this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
 
@@ -218,6 +221,22 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 });
                 this.params.options = options;
             }
+        },
+
+        disableOptions: function (disabledOptionList) {
+            if (!this.originalOptionList) {
+                this.originalOptionList = this.params.options;
+            }
+
+            const options = []
+            this.originalOptionList.forEach(option => {
+                if (disabledOptionList.includes(option)) {
+                    return
+                }
+                options.push(option)
+            })
+
+            this.setOptionList(options)
         },
 
         setOptionList: function (optionList) {
