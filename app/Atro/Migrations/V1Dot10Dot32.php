@@ -31,7 +31,7 @@ class V1Dot10Dot32 extends Base
                     continue;
                 }
 
-                $customDefs = json_decode(file_get_contents("$path/$file"), true);
+                $customDefs = @json_decode(file_get_contents("$path/$file"), true);
 
                 if (!empty($customDefs['fields'])) {
                     $toUpdate = false;
