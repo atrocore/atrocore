@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\NotModified;
-use Espo\Services\QueueManagerBase;
+use Atro\Services\QueueManagerBase;
 
 class MassUpdate extends QueueManagerBase
 {

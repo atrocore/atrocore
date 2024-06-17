@@ -26,12 +26,7 @@
       "view": "views/ui-handler/fields/trigger-fields",
       "required": false
     },
-    "disabledOptions": {
-      "type": "array",
-      "filterDisabled": true,
-      "view": "views/ui-handler/fields/disabled-options",
-      "required": false
-    },
+
     "entityType": {
       "type": "varchar",
       "view": "views/fields/entity-type",

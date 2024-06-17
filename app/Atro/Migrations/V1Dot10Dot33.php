@@ -30,16 +30,16 @@ class V1Dot10Dot33 extends Base
         }
     }
 
+    public function down(): void
+    {
+        $this->exec("ALTER TABLE ui_handler DROP disabled_options");
+    }
+
     protected function exec(string $query): void
     {
         try {
             $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
         }
-    }
-
-    public function down(): void
-    {
-        throw new Error('Downgrade is prohibited.');
     }
 }
