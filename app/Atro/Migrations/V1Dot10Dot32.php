@@ -19,7 +19,7 @@ class V1Dot10Dot32 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-06-07 13:00:00');
+        return new \DateTime('2024-06-17 13:00:00');
     }
 
     public function up(): void
