@@ -23,8 +23,11 @@ class V1Dot10Dot33 extends Base
 
     public function up(): void
     {
-        $this->exec("ALTER TABLE ui_handler ADD disabled_options TEXT DEFAULT NULL; COMMENT ON COLUMN ui_handler.disabled_options IS '(DC2Type:jsonArray)'");
-
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE ui_handler ADD disabled_options TEXT DEFAULT NULL; COMMENT ON COLUMN ui_handler.disabled_options IS '(DC2Type:jsonArray)'");
+        } else {
+            $this->exec("ALTER TABLE ui_handler ADD disabled_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)';");
+        }
     }
 
     protected function exec(string $query): void
