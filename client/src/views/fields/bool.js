@@ -102,6 +102,16 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
                     data['value'] = this.model.get(this.name).toString()
                 }
             }
+
+            if(this.mode === 'search'){
+                let value = '';
+                value = data.searchParams?.type === 'isNull' ? '' : data.searchParams?.type === 'isTrue';
+                if(!this.notNull){
+                    value = value.toString();
+                }
+                data['value'] = value
+            }
+
             return data;
         },
 
