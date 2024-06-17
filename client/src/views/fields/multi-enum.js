@@ -260,7 +260,6 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                         list[i] = '';
                     }
                 }
-                console.log(data);
                 data[this.name] = list.map(item => item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\'));
             }
 
