@@ -686,7 +686,9 @@ class Metadata extends AbstractListener
                     "type"        => "link",
                     "notStorable" => true,
                     "entity"      => $scope,
-                    "emHidden"    => true
+                    "emHidden"    => true,
+                    "exportDisabled" => true,
+                    "importDisabled" => true
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'], [
@@ -697,7 +699,6 @@ class Metadata extends AbstractListener
                     "massUpdateDisabled"        => true,
                     "filterDisabled"            => true,
                     "importDisabled"            => true,
-                    "exportDisabled"            => true,
                     "emHidden"                  => true
                 ]);
                 $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
