@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -21,7 +22,7 @@ class Connection extends Base
     public function get($id = null)
     {
         $entity = parent::get($id);
-        if (!empty($entity)){
+        if (!empty($entity)) {
             $this->setDataFields($entity);
         }
 
@@ -33,5 +34,18 @@ class Connection extends Base
         foreach ($entity->getDataFields() as $name => $value) {
             $entity->set($name, $value);
         }
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('type') === 'chatgpt') {
+            $chatgptConnection = $this->where(['type' => "chatgpt", 'id!=' => $entity->get('id')])
+                ->select(['id'])->findOne();
+            if (!empty($chatgptConnection)) {
+                throw new BadRequest($this->getLanguage()->translate("chatgptShouldBeUnique", "exceptions", $this->entityType));
+            }
+        }
+
+        parent::beforeSave($entity, $options);
     }
 }
