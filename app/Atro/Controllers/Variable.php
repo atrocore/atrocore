@@ -79,7 +79,7 @@ class Variable extends AbstractController
         return $this->getRecordService()->deleteEntity($params['id']);
     }
 
-    protected function getRecordService(): \Espo\Services\Variable
+    protected function getRecordService(): \Atro\Services\Variable
     {
         return $this->getService('Variable');
     }
