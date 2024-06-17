@@ -24,9 +24,6 @@ class V1Dot10Dot32 extends Base
 
     public function up(): void
     {
-        /** @var Metadata $metadata */
-        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
-
         $path = 'data/metadata/entityDefs';
         if (file_exists($path)) {
             foreach (scandir($path) as $file) {
@@ -39,7 +36,7 @@ class V1Dot10Dot32 extends Base
                 if (!empty($customDefs['fields'])) {
                     $toUpdate = false;
                     foreach ($customDefs['fields'] as $field => $fieldDefs) {
-                        if (!empty($fieldDefs['rows']) && $metadata->get(['entityDefs', explode('.', $file)[0], 'fields', $field, 'type']) === 'text') {
+                        if (!empty($fieldDefs['rows'])) {
                             $customDefs['fields'][$field]['rowsMax'] = $customDefs['fields'][$field]['rows'];
                             unset($customDefs['fields'][$field]['rows']);
                             $toUpdate = true;
