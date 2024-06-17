@@ -61,6 +61,7 @@
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",
     "connectionFailed": "Connection could not be established: %s",
-    "noSuchType": "No such connection type."
+    "noSuchType": "No such connection type.",
+    "chatgptShouldBeUnique": "There should be only one chatgpt connection"
   }
 }
