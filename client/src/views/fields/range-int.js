@@ -50,6 +50,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
             data.fromValue = this.model.get(this.fromField);
             data.toValue = this.model.get(this.toField);
+            data.isNull = (isNaN(data.fromValue) || data.fromValue === null) && (isNaN(data.toValue) || data.toValue === null)
 
             if (this.measureId) {
                 data.unitFieldName = this.unitFieldName;

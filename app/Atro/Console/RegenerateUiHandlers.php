@@ -60,6 +60,10 @@ class RegenerateUiHandlers extends AbstractConsole
                         continue;
                     }
 
+                    if ($type === 'disableOptions' && empty($fieldData['disabledOptions'])) {
+                        continue;
+                    }
+
                     switch ($type) {
                         case 'readOnly':
                             $typeId = 'ui_read_only';
@@ -69,6 +73,9 @@ class RegenerateUiHandlers extends AbstractConsole
                             break;
                         case 'required':
                             $typeId = 'ui_required';
+                            break;
+                        case 'disableOptions':
+                            $typeId = 'ui_disable_options';
                             break;
                         default:
                             $typeId = null;
@@ -91,6 +98,10 @@ class RegenerateUiHandlers extends AbstractConsole
                         'conditions'     => json_encode($fieldData),
                         'isActive'       => true
                     ]);
+
+                    if ($typeId === 'ui_disable_options') {
+                        $entity->set('disabledOptions', $fieldData['disabledOptions']);
+                    }
 
                     try {
                         $em->saveEntity($entity);

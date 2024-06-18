@@ -26,6 +26,7 @@
       "view": "views/ui-handler/fields/trigger-fields",
       "required": false
     },
+
     "entityType": {
       "type": "varchar",
       "view": "views/fields/entity-type",

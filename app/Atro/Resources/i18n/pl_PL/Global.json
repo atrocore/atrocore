@@ -1076,7 +1076,8 @@
     "notDashletService":"Usługa %s musi implementować interfejs Dashlet",
     "editedByAnotherUser":"Zestaw danych [%s] został zmieniony w międzyczasie. Możesz <a href=\"javascript:\" onclick=\"location.reload();\">odświeżyć stronę</a>, aby zobaczyć nowe wartości, wrócić do edycji, naciskając „Anuluj” lub nadpisać dane, naciskając „Zastosuj”. Czy chcesz nadpisać dane?",
     "dontMatchToPattern":"Wartość pola \"{field}\" nie odpowiada wzorowi \"{pattern}\".",
-    "notUniqueValue":"Rekord nie może zostać utworzony/zaktualizowany z powodu ograniczeń bazy danych."
+    "notUniqueValue":"Rekord nie może zostać utworzony/zaktualizowany z powodu ograniczeń bazy danych.",
+    "optionIsDisabled": "Element '%s' jest wyłączony dla pola '%s'."
 },
 "themes":{
     "TreoDarkTheme":"Motyw Treo Dark",

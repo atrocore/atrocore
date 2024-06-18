@@ -8,7 +8,8 @@
     "conditionsType": "Conditions Type",
     "conditions": "Conditions",
     "triggerAction": "Trigger",
-    "triggerFields": "Trigger Fields"
+    "triggerFields": "Trigger Fields",
+    "disabledOptions": "Disabled Options"
   },
   "exceptions": {
     "systemHandler": "The '%s' Handler is required by the system and cannot be changed or deleted."

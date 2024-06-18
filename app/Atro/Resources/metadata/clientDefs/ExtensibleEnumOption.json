@@ -3,10 +3,12 @@
   "iconClass": "fas fa-list",
   "boolFilterList": [
     "defaultOption",
-    "onlyForExtensibleEnum"
+    "onlyForExtensibleEnum",
+    "isNot"
   ],
   "hiddenBoolFilterList": [
     "defaultOption",
-    "onlyForExtensibleEnum"
+    "onlyForExtensibleEnum",
+    "isNot"
   ]
 }

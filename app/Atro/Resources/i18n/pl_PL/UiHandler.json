@@ -8,7 +8,8 @@
 		"conditionsType": "Typ warunków",
 		"conditions": "Warunki",
 		"triggerAction": "Wyzwalacz",
-		"triggerFields": "Pola wyzwalania"
+		"triggerFields": "Pola wyzwalania",
+		"disabledOptions": "Wyłączone opcje"
 	},
 	"options": {
 		"conditionsType": {

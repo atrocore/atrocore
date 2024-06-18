@@ -42,6 +42,13 @@
     "sortOrder": 20
   },
   {
+    "id": "ui_disable_options",
+    "extensibleEnumId": "ui_handler_type",
+    "name": "Make Options Disabled",
+    "code": "disableOptions",
+    "sortOrder": 30
+  },
+  {
     "id": "ui_on_change",
     "extensibleEnumId": "ui_trigger",
     "name": "On Load/Change",

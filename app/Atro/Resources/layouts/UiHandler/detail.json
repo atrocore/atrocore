@@ -41,6 +41,12 @@
       ],
       [
         {
+          "name": "disabledOptions"
+        },
+        false
+      ],
+      [
+        {
           "name": "conditionsType",
           "inlineEditDisabled": true
         },
