@@ -76,7 +76,8 @@ class File extends Base
             $path = $this->getFilePath();
         } else {
             // create copy of file in tmp dir
-            $stream = $this->getEntityManager()->getRepository('Storage')->getFileStorage($this)->getStream($this);
+            $storageInterface = $this->getEntityManager()->getContainer()->get($storage->get('type') . 'Storage');
+            $stream = $storageInterface->getStream($this);
             $path = $tmpDir . DIRECTORY_SEPARATOR . $this->get('name');
             $tmpFile = fopen($path, 'w');
             if ($tmpFile === false) {

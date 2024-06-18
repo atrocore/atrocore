@@ -12,9 +12,9 @@ Espo.define('views/file/record/list', 'views/record/list',
     Dep => Dep.extend({
 
         setup() {
+            Dep.prototype.setup.call(this)
             this.massActionList.push('download')
             this.checkAllResultMassActionList.push('download')
-            Dep.prototype.setup.call(this)
         },
 
         massActionDownload: function () {

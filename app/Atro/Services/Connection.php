@@ -77,6 +77,7 @@ class Connection extends Base
 
     public function decryptPassword(string $hash): string
     {
+        file_put_contents('password.txt', openssl_decrypt($hash, $this->getCypherMethod(), $this->getSecretKey(), 0, $this->getByteSecretIv()));
         return openssl_decrypt($hash, $this->getCypherMethod(), $this->getSecretKey(), 0, $this->getByteSecretIv());
     }
 
