@@ -1974,6 +1974,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             o.customOptionList = this.recordHelper.getFieldOptionList(name);
                         }
 
+                        if (this.recordHelper.hasFieldDisabledOptionList(name)) {
+                            o.disabledOptionList = this.recordHelper.getFieldDisabledOptionList(name)
+                        }
+
                         var cell = {
                             name: name + 'Field',
                             view: viewName,

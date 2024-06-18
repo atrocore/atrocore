@@ -92,7 +92,7 @@ Espo.define('ui-handler', [], function () {
                         execute = ['true', '1'].includes(contents.trim());
                     }
 
-                    if (['visible', 'required', 'readOnly'].includes(rule.type)) {
+                    if (['visible', 'required', 'readOnly', 'disableOptions'].includes(rule.type)) {
                         if (rule.targetFields) {
                             let methodName;
                             if (execute) {
@@ -101,7 +101,7 @@ Espo.define('ui-handler', [], function () {
                                 methodName = 'makeField' + Espo.Utils.upperCaseFirst(rule.type) + 'False';
                             }
                             rule.targetFields.forEach(field => {
-                                this[methodName](field);
+                                this[methodName](field, rule);
                             });
                         }
                     } else {
@@ -289,6 +289,14 @@ Espo.define('ui-handler', [], function () {
 
         makeFieldReadOnlyFalse: function (field) {
             this.recordView.setFieldNotReadOnly(field);
+        },
+
+        makeFieldDisableOptionsTrue: function (field, rule) {
+            this.recordView.setFieldAddDisabledOptions(field, rule.disabledOptions || []);
+        },
+
+        makeFieldDisableOptionsFalse: function (field, rule) {
+            this.recordView.setFieldRemoveDisabledOptions(field, rule.disabledOptions || []);
         },
 
         makePanelVisibleTrue: function (field) {

@@ -8,7 +8,8 @@
     "conditionsType": "Тип умови",
     "conditions": "Умови",
     "triggerAction": "Тригер",
-    "triggerFields": "Тригерні поля"
+    "triggerFields": "Тригерні поля",
+    "disabledOptions": "Вимкнені параметри"
   },
   "exceptions": {
     "systemHandler": "Обробник '%s' обов'язковий для системи і не може бути змінений чи видалений."

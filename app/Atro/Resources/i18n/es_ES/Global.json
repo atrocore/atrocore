@@ -873,7 +873,8 @@
     "notDashletService": "Service %s must implement Dashlet Interface",
     "editedByAnotherUser": "The data set [%s] has been changed in the meantime. You can <a href=\"javascript:\" onclick=\"location.reload();\">reload the page</a> to see the new values, return to editing by pressing \"Cancel\" or overwrite the data by pressing \"Apply\". Do you want to overwrite the data?",
     "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
-    "notUnique": "'%s' should have unique value."
+    "notUnique": "'%s' should have unique value.",
+    "optionIsDisabled": "El elemento '%s' está deshabilitado para el campo '%s'."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

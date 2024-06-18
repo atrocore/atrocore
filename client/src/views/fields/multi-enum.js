@@ -36,7 +36,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         type: 'multiEnum',
 
-        listTemplate: 'fields//array/list',
+        listTemplate: 'fields/array/list',
 
         detailTemplate: 'fields/array/detail',
 
@@ -44,8 +44,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         dragDrop: true,
 
-        events: {
-        },
+        events: {},
 
         data: function () {
             return _.extend({
@@ -69,7 +68,55 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 this.dragDrop = false;
             }
 
+            if (this.options.disabledOptionList) {
+                this.disableOptions(this.options.disabledOptionList)
+            }
+
             Dep.prototype.setup.call(this);
+        },
+
+        disableOptions: function (disabledOptionList) {
+            if (!this.originalOptionList) {
+                this.originalOptionList = this.params.options;
+            }
+
+            const options = []
+            this.originalOptionList.forEach(option => {
+                if (disabledOptionList.includes(option)) {
+                    return
+                }
+                options.push(option)
+            })
+
+            this.setOptionList(options)
+        },
+
+        setOptionList: function (optionList) {
+            if (!this.originalOptionList) {
+                this.originalOptionList = this.params.options;
+            }
+            this.params.options = Espo.Utils.clone(optionList);
+
+            if (this.mode == 'edit') {
+                if (this.isRendered()) {
+                    this.reRender();
+                    for (value of this.model.get(this.name) || []) {
+                        if (!(this.params.options || []).includes(value)) {
+                            this.trigger('change');
+                            break
+                        }
+                    }
+                } else {
+                    this.once('after:render', function () {
+                        for (value of this.model.get(this.name) || []) {
+                            if (!(this.params.options || []).includes(value)) {
+                                this.trigger('change');
+                                break
+                            }
+                        }
+                    }, this);
+                }
+            }
         },
 
         afterRender: function () {
@@ -127,6 +174,11 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     plugins.push('drag_drop');
                 }
 
+                let maxItems = this.options.maxItems || this.model.getFieldParam(this.name, 'maxItems')
+                if (!maxItems) {
+                    maxItems = null
+                }
+
                 var selectizeOptions = {
                     options: data,
                     delimiter: ':,:',
@@ -136,6 +188,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     searchField: ['label'],
                     placeholder: this.translate('click to add...'),
                     plugins: plugins,
+                    maxItems: maxItems,
                     score: function (search) {
                         var score = this.getScoreFunction(search);
                         search = search.toLowerCase();
@@ -197,8 +250,9 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             var data = {};
 
             if (typeof value !== 'undefined' && value !== null) {
+
                 var list = value.split(':,:');
-                if (list.length == 1 && list[0] == '') {
+                if (list.length === 1 && list[0] === '') {
                     list = [];
                 }
                 for (var i in list) {
@@ -206,7 +260,6 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                         list[i] = '';
                     }
                 }
-
                 data[this.name] = list.map(item => item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\'));
             }
 

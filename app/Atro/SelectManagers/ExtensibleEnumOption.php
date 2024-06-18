@@ -33,15 +33,24 @@ class ExtensibleEnumOption extends Base
         $this->addExtensibleEnumIdWhere($this->getBoolFilterParameter('onlyForExtensibleEnum'), $result);
     }
 
-    private function addExtensibleEnumIdWhere($extensibleEnumId, &$result){
-        $where =[[
-            "type" => "linkedWith",
+    protected function boolFilterIsNot(array &$result): void
+    {
+        $data = $this->getBoolFilterParameter('isNot');
+        if (!empty($data)) {
+            $result['whereClause'][] = ['id!=' => $data];
+        }
+    }
+
+    private function addExtensibleEnumIdWhere($extensibleEnumId, &$result)
+    {
+        $where = [[
+            "type"      => "linkedWith",
             "attribute" => "extensibleEnums",
-            "value" => [$extensibleEnumId]
-        ]] ;
+            "value"     => [$extensibleEnumId]
+        ]];
 
         $this->prepareRelationshipFilterField($where);
 
-        $result['whereClause'][] = $this->convertWhere($where,false,$result);
+        $result['whereClause'][] = $this->convertWhere($where, false, $result);
     }
 }

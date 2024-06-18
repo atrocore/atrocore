@@ -23,8 +23,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
 use Espo\ORM\Entity;
-use Espo\Services\QueueManagerBase;
-use Espo\Services\QueueManagerServiceInterface;
+use Atro\Services\QueueManagerBase;
+use Atro\Services\QueueManagerServiceInterface;
 
 class QueueItem extends Base
 {

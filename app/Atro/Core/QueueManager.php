@@ -22,7 +22,7 @@ use Espo\Core\Utils\System;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Orm\EntityManager;
-use Espo\Services\QueueManagerServiceInterface;
+use Atro\Services\QueueManagerServiceInterface;
 
 class QueueManager
 {

@@ -210,6 +210,28 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }
         },
 
+        setFieldAddDisabledOptions: function (name, list) {
+            this.recordHelper.setFieldAddDisabledOptions(name, list);
+            var view = this.getFieldView(name);
+
+            if (view) {
+                if ('disableOptions' in view) {
+                    view.disableOptions(this.recordHelper.getFieldDisabledOptionList(name));
+                }
+            }
+        },
+
+        setFieldRemoveDisabledOptions: function (name, list) {
+            this.recordHelper.setFieldRemoveDisabledOptions(name, list);
+
+            var view = this.getFieldView(name);
+            if (view) {
+                if ('disableOptions' in view) {
+                    view.disableOptions(this.recordHelper.getFieldDisabledOptionList(name));
+                }
+            }
+        },
+
         setFieldOptionList: function (name, list) {
             this.recordHelper.setFieldOptionList(name, list);
 
@@ -775,6 +797,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }
             if (this.recordHelper.hasFieldOptionList(name)) {
                 o.customOptionList = this.recordHelper.getFieldOptionList(name);
+            }
+            if (this.recordHelper.hasFieldDisabledOptionList(name)) {
+                o.disabledOptionList = this.recordHelper.getFieldDisabledOptionList(name)
             }
 
             var viewKey = name + 'Field';
