@@ -39,7 +39,7 @@ abstract class AbstractConnection
 
     protected function decryptPassword(string $hash): string
     {
-        return $this->container->get('serviceFactory')->create('Connection')->decryptPassword('WoBfPBOb0CoJNl5J1voQBl7qQy+TftB97Sba8yEmZ+8tSDSTnCXbWJePueGUcK0B');
+        return $this->container->get('serviceFactory')->create('Connection')->decryptPassword($hash);
     }
 
     protected function exception(string $name, string $scope = 'Connection'): string
