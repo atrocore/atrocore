@@ -464,7 +464,8 @@
     "massUpdate": "Massenänderung",
     "export": "Exportieren",
     "restore": "Wiederherstellen",
-    "massRestore": "Massenwiederherstellung"
+    "massRestore": "Massenwiederherstellung",
+    "download": "Nachladen"
   },
   "fields": {
     "path": "Ordner Pfad",

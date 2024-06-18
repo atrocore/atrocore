@@ -60,4 +60,22 @@ class File extends Base
 
         return $this->getRecordService()->createEntity($data);
     }
+
+    public function actionMassDownload($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        if (!property_exists($data, 'where')) {
+            throw new BadRequest();
+        }
+
+        $where = $this->prepareWhereQuery(json_decode(json_encode($data->where), true));
+
+        return $this->getRecordService()->massDownload($where);
+    }
 }

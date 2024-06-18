@@ -23,7 +23,8 @@
     "sort": "Sort",
     "retry": "Retry?",
     "uploaded": "uploaded",
-    "putUploadUrl": "Specify the URL to the file if you want to upload via URL"
+    "putUploadUrl": "Specify the URL to the file if you want to upload via URL",
+    "zipDownloadNotification": "You can <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">download</a> the file."
   },
   "messages": {
     "notAllFilesWereUploaded": "XX of YY files were not uploaded.",

@@ -353,7 +353,8 @@
     "removeRelation": "Remove relation",
     "convertCurrency": "Convert Currency",
     "restore": "Restaurar",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "download": "Descargar"
   },
   "fields": {
     "name": "Nombre",

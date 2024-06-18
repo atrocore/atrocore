@@ -437,7 +437,8 @@
     "export":"Eksport",
     "follow":"Śledź",
     "unfollow":"Wyłącz śledzenie",
-    "restore":"Przywróć"
+    "restore":"Przywróć",
+    "download": "Pobierać"
 },
 "fields":{
     "connection":"Połączenie",

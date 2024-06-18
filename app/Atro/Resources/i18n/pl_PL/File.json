@@ -22,7 +22,8 @@
     "sort": "Sortuj",
     "retry": "Ponowić próbę?",
     "uploaded": "przesłany",
-    "putUploadUrl": "Podaj adres URL pliku, jeśli chcesz przesłać go za pośrednictwem adresu URL"
+    "putUploadUrl": "Podaj adres URL pliku, jeśli chcesz przesłać go za pośrednictwem adresu URL",
+    "zipDownloadNotification": "Możesz <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">pobrać</a> plik."
   },
   "messages": {
     "notAllFilesWereUploaded": "Pliki XX of YY nie zostały przesłane.",

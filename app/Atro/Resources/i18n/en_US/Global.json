@@ -443,7 +443,8 @@
     "restore": "Restore",
     "massRestore": "Mass Restore",
     "delete": "Delete",
-    "massDelete": "Mass Delete"
+    "massDelete": "Mass Delete",
+    "download": "Download"
   },
   "fields": {
     "folderPath": "Folder Path",
