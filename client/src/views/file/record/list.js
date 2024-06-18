@@ -10,9 +10,12 @@
 
 Espo.define('views/file/record/list', 'views/record/list',
     Dep => Dep.extend({
-        massActionList: ['remove', 'merge', 'massUpdate', 'export', 'download'],
 
-        checkAllResultMassActionList: ['remove', 'massUpdate', 'export', 'download'],
+        setup() {
+            this.massActionList.push('download')
+            this.checkAllResultMassActionList.push('download')
+            Dep.prototype.setup.call(this)
+        },
 
         massActionDownload: function () {
             Espo.Ui.notify(this.translate('loading', 'messages'));
