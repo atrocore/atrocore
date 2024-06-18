@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Entities;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Entities\Base;
 
 class File extends Base
@@ -63,5 +64,31 @@ class File extends Base
     public function getPathsData(): array
     {
         return $this->getEntityManager()->getRepository($this->entityType)->getPathsData($this);
+    }
+
+    public function findOrCreateLocalFilePath($tmpDir): string
+    {
+        $storage = $this->getStorage();
+        if (empty($storage)) {
+            throw new BadRequest("File has no storage");
+        }
+        if ($storage->get('type') === 'local') {
+            $path = $this->getFilePath();
+        } else {
+            // create copy of file in tmp dir
+            $stream = $this->getEntityManager()->getRepository('Storage')->getFileStorage($this)->getStream($this);
+            $path = $tmpDir . DIRECTORY_SEPARATOR . $this->get('name');
+            $tmpFile = fopen($path, 'w');
+            if ($tmpFile === false) {
+                throw new \RuntimeException('Failed to open file for writing: ' . $path);
+            }
+            $stream->rewind();
+            while (!$stream->eof()) {
+                fwrite($tmpFile, $stream->read(8192));
+            }
+            fclose($tmpFile);
+        }
+
+        return $path;
     }
 }

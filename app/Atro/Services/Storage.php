@@ -18,7 +18,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\Xattr;
 use Espo\ORM\Entity;
-use Espo\Services\QueueManagerServiceInterface;
+use Atro\Services\QueueManagerServiceInterface;
 
 class Storage extends Base implements QueueManagerServiceInterface
 {

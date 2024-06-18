@@ -10,5 +10,6 @@
   "MassDelete": "\\Atro\\Services\\MassDelete",
   "ScheduledJob": "\\Espo\\Services\\ScheduledJob",
   "Composer": "\\Atro\\Services\\Composer",
-  "TreoStore": "\\Atro\\Services\\TreoStore"
+  "TreoStore": "\\Atro\\Services\\TreoStore",
+  "MassDownload": "\\Atro\\Services\\MassDownload"
 }

@@ -22,7 +22,8 @@
     "sort": "Sortieren",
     "retry": "Wiederholen?",
     "uploaded": "hochgeladen",
-    "putUploadUrl": "Geben Sie die URL der Datei an, wenn Sie sie per URL hochladen möchten"
+    "putUploadUrl": "Geben Sie die URL der Datei an, wenn Sie sie per URL hochladen möchten",
+    "zipDownloadNotification": "Sie können die Datei <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">herunterladen</a>."
   },
   "messages": {
     "notAllFilesWereUploaded": "XX von YY Dateien wurden nicht hochgeladen.",

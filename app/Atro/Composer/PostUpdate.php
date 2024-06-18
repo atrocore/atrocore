@@ -16,6 +16,7 @@ namespace Atro\Composer;
 use Atro\Core\Application;
 use Atro\Core\Container;
 use Atro\Core\Application as App;
+use Atro\Services\MassDownload;
 use Espo\Core\Utils\Language;
 use Espo\ORM\EntityManager;
 
@@ -909,6 +910,11 @@ class PostUpdate
             if (class_exists('\Import\Services\ImportTypeSimple')) {
                 \Import\Services\ImportTypeSimple::clearCache();
             }
+        } catch (\Throwable $e) {
+        }
+
+        try {
+            MassDownload::clearCache();
         } catch (\Throwable $e) {
         }
 

@@ -15,8 +15,10 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\Exceptions\Exception;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
+use Atro\Entities\QueueItem as QueueItemAlias;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -24,6 +26,7 @@ use Espo\ORM\EntityCollection;
 class File extends Base
 {
     protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName', 'folderId', 'data'];
+
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
@@ -199,6 +202,17 @@ class File extends Base
         }
 
         return $result;
+    }
+
+    public function massDownload(array $where): bool
+    {
+        $selectParams = $this->getSelectParams(['where' => $where]);
+        $this
+            ->getInjection('container')
+            ->get('queueManager')
+            ->createQueueItem('Download Files', 'MassDownload', ['selectParams' => $selectParams], 'High');
+
+        return true;
     }
 
     protected function init()

@@ -17,7 +17,8 @@
     "plate": "views/file/plate"
   },
   "recordViews": {
-    "detail": "views/file/record/detail"
+    "detail": "views/file/record/detail",
+    "list": "views/file/record/list"
   },
   "modalViews": {
     "select": "views/file/modals/select-records"
