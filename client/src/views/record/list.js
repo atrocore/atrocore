@@ -1117,8 +1117,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 $(window).trigger("scroll.fixed-scrollbar");
             }
 
-            this.changeDropDownPosition();
-
             if (this.dragableListRows && !((this.getParentView() || {}).defs || {}).readOnly) {
                 let allowed = true;
                 (this.collection.models || []).forEach(model => {
