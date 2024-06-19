@@ -1117,6 +1117,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 $(window).trigger("scroll.fixed-scrollbar");
             }
 
+            this.changeDropDownPosition();
+
             if (this.dragableListRows && !((this.getParentView() || {}).defs || {}).readOnly) {
                 let allowed = true;
                 (this.collection.models || []).forEach(model => {
@@ -1221,18 +1223,32 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return position;
         },
 
+        getPositionFromBottom(element) {
+            var rect = element.getBoundingClientRect();
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            var elementBottom = rect.bottom + scrollTop;
+            var parentBottom = document.documentElement.scrollHeight;
+
+            return parentBottom - elementBottom;
+        },
+
         changeDropDownPosition() {
             let el = this.$el;
             el.on('show.bs.dropdown', function (e) {
                 let target = e.relatedTarget;
+                if($(target).hasClass('actions-button')){
+                    return;
+                }
                 let menu = $(target).siblings('.dropdown-menu');
                 if (target && menu) {
                     let menuHeight = menu.height();
                     let positionTop = $(target).offset().top + $(target).outerHeight(true);
-
-                    if ((positionTop + menuHeight) > this.getHeightParentPosition()) {
+                    let positionBottom = this.getPositionFromBottom(target);
+                    if ((positionTop + menuHeight) > this.getHeightParentPosition() && positionBottom >= menuHeight) {
                         menu.css({
-                            'top': `-${menuHeight}px`
+                            'position': 'fixed',
+                            'top': `${positionTop}px`,
+                            'right': '5px'
                         });
                     }
                 }
