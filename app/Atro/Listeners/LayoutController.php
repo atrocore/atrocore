@@ -49,8 +49,8 @@ class LayoutController extends AbstractListener
     {
         $result = Json::decode($event->getArgument('result'), true);
 
-        foreach ($this->getConfig()->get('interfaceLocales', []) as $locale) {
-            $result[] = ['name' => Util::toCamelCase(strtolower($locale))];
+        foreach ($this->getConfig()->get('locales', []) as $locale) {
+            $result[] = ['name' => Util::toCamelCase(strtolower($locale['language']))];
         }
 
         $event->setArgument('result', Json::encode($result));
@@ -60,8 +60,8 @@ class LayoutController extends AbstractListener
     {
         $result = Json::decode($event->getArgument('result'), true);
 
-        foreach ($this->getConfig()->get('interfaceLocales', []) as $locale) {
-            $result[0]['rows'][] = [['name' => Util::toCamelCase(strtolower($locale)), 'fullWidth' => true]];
+        foreach ($this->getConfig()->get('locales', []) as $locale) {
+            $result[0]['rows'][] = [['name' => Util::toCamelCase(strtolower($locale['language'])), 'fullWidth' => true]];
         }
 
         $event->setArgument('result', Json::encode($result));
