@@ -1117,6 +1117,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 $(window).trigger("scroll.fixed-scrollbar");
             }
 
+            this.changeDropDownPosition();
+
             if (this.dragableListRows && !((this.getParentView() || {}).defs || {}).readOnly) {
                 let allowed = true;
                 (this.collection.models || []).forEach(model => {
@@ -1225,6 +1227,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let el = this.$el;
             el.on('show.bs.dropdown', function (e) {
                 let target = e.relatedTarget;
+                if($(target).hasClass('actions-button')){
+                    return;
+                }
                 let menu = $(target).siblings('.dropdown-menu');
                 if (target && menu) {
                     let menuHeight = menu.height();
@@ -1232,7 +1237,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                     if ((positionTop + menuHeight) > this.getHeightParentPosition()) {
                         menu.css({
-                            'top': `-${menuHeight}px`
+                            'position': 'fixed',
+                            'top': `${positionTop}px`,
+                            'right': '5px'
                         });
                     }
                 }
