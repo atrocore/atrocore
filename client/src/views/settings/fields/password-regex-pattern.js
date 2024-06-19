@@ -63,8 +63,26 @@ Espo.define('views/settings/fields/password-regex-pattern', 'views/fields/varcha
         },
 
         getTooltipText: function () {
-            // TODO: replace link by Translation entity link
-            return (Dep.prototype.getTooltipText.call(this) ?? '').replace('{message_link}', 'https://www.atrocore.com');
+            let link = null;
+            this.ajaxGetRequest(`Translation`, {
+                where: [
+                    {
+                        type: "equals",
+                        attribute: "name",
+                        value: 'User.messages.newPasswordInvalid'
+                    }
+                ]
+            }, {async: false}).then(res => {
+                if (res.list && Array.isArray(res.list) && res.list.length > 0) {
+                    link = `#Translation/edit/${res.list[0].id}`;
+                }
+            });
+
+            if (!link) {
+                console.error('Message User.messages.newPasswordInvalid is not available');
+            }
+
+            return (Dep.prototype.getTooltipText.call(this) ?? '').replace('{message_link}', link ?? '/');
         },
 
         validateRegexpValid: function () {
