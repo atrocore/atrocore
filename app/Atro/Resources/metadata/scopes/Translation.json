@@ -13,5 +13,6 @@
   "isCustom": false,
   "hasAssignedUser": false,
   "hasTeam": false,
-  "hasOwner": false
+  "hasOwner": false,
+  "emHidden": true
 }
