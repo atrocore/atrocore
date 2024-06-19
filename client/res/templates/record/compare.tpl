@@ -12,13 +12,13 @@
             <table class="table full-table table-striped table-fixed table-bordered-inside">
                 <thead>
                    <tr>
-                       <th></th>
+                       <th>{{ translate 'instance' scope='Synchronization' }}</th>
                        <th>
-                           {{translate 'currentModel' scope='Connector' category='labels'}}
+                           {{translate 'current' scope='Synchronization' category='labels'}}
                        </th>
                        {{#each distantModels}}
                            <th>
-                               {{translate 'otherFrom' scope='Connector' category='labels'}} {{_connection}}
+                              {{_connection}}
                            </th>
                        {{/each}}
                        <th width="25"></th>
@@ -46,10 +46,10 @@
                                         </button>
                                         <ul class="dropdown-menu pull-right">
                                             {{#if isLinkMultiple }}
-                                            <li> <a class="disabled panel-title">  {{translate 'quickCompare' scope='Connector'}}</a></li>
+                                            <li> <a class="disabled panel-title">  {{translate 'detailsComparison' scope='Synchronization'}}</a></li>
                                                 {{#each values }}
                                                     <li>
-                                                        <a href="#" class="action" data-action="quickCompare"
+                                                        <a href="#" class="action" data-action="detailsComparison"
                                                            data-scope="{{../foreignScope}}"
                                                            data-id="{{id}}">
                                                            {{ name }}
@@ -57,7 +57,7 @@
                                                     </li>
                                                 {{/each}}
                                             {{else}}
-                                            <li><a href="#" class="action" data-action="quickCompare" data-scope="{{foreignScope}}" data-id="{{foreignId}}">{{translate 'quickCompare' scope='Connector'}}</a></li>
+                                            <li><a href="#" class="action" data-action="detailsComparison" data-scope="{{foreignScope}}" data-id="{{foreignId}}">{{translate 'detailsComparison' scope='Synchronization'}}</a></li>
                                             {{/if}}
                                         </ul>
                                     </div>
@@ -86,12 +86,12 @@
                               </tr>
                               <tr>
                                   <th>
-                                      {{translate 'attribute' scope='Connector' category='labels'}} ({{translate 'channel' scope='Connector' category='labels'}}, {{translate 'language' scope='Connector' category='labels'}})
+                                      {{translate 'attribute' scope='Synchronization' category='labels'}} ({{translate 'channel' scope='Synchronization' category='labels'}}, {{translate 'language' scope='Synchronization' category='labels'}})
                                   </th>
-                                  <th>{{translate 'currentModel' scope='Connector' category='labels'}}</th>
+                                  <th>{{translate 'currentModel' scope='Synchronization' category='labels'}}</th>
                                   {{#each ../../../distantModels}}
                                       <th>
-                                          {{translate 'otherFrom' scope='Connector' category='labels'}} {{_connection}}
+                                          {{translate 'otherFrom' scope='Synchronization' category='labels'}} {{_connection}}
                                       </th>
                                   {{/each}}
                                    <th></th>
@@ -113,17 +113,17 @@
                                                 <span class="fas fa-ellipsis-v"></span>
                                             </button>
                                             <ul class="dropdown-menu pull-right">
-                                                <li> <a class="disabled panel-title">  {{translate 'QuickCompare' scope='Connector' category='labels'}}</a></li>
+                                                <li> <a class="disabled panel-title">  {{translate 'detailsComparison' scope='Synchronization' category='labels'}}</a></li>
                                                 <li>
-                                                    <a href="#" class="action" data-action="quickCompare"
+                                                    <a href="#" class="action" data-action="detailsComparison"
                                                        data-scope="Attribute"
                                                        data-id="{{attributeId}}">
-                                                        {{translate 'attribute' scope='Connector' category='labels'}}
+                                                        {{translate 'attribute' scope='Synchronization' category='labels'}}
                                                     </a>
                                                 </li>
                                                 {{#if showQuickCompare }}
                                                     <li>
-                                                        <a href="#" class="action" data-action="quickCompare"
+                                                        <a href="#" class="action" data-action="detailsComparison"
                                                            data-scope="ProductAttributeValue"
                                                            data-id="{{productAttributeId}}">
                                                             {{translate 'Value' scope='Attribute' category='labels'}}

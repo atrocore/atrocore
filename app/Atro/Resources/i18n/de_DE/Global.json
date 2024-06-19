@@ -298,7 +298,8 @@
     "Apply filter": "Filter anwenden",
     "Reset filter": "Filter zurücksetzen",
     "Dashboard": "Dashboard",
-    "Provide Feedback": "Feedback geben"
+    "Provide Feedback": "Feedback geben",
+    "Instance comparison": "Instanzvergleich"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

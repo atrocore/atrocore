@@ -183,7 +183,7 @@ Espo.define('views/record/compare','view', function (Dep) {
 
             }, this);
         },
-        actionQuickCompare(data){
+        actionDetailsComparison(data){
 
             this.notify('Loading...');
 

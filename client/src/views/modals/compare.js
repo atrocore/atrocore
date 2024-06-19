@@ -38,7 +38,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         setupRecord() {
             this.notify('Loading...');
-            this.ajaxGetRequest(`Connector/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
+            this.ajaxGetRequest(`Synchronization/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
                 this.notify(false);
                 var o = {
                     model: this.model,

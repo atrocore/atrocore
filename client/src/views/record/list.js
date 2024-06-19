@@ -2467,6 +2467,43 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
                 this.reRender();
             }
-        }
+        },
+
+        actionQuickCompare: function (data) {
+            data = data || {}
+            var id = data.id;
+            if (!id) return;
+            var model = null;
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+            if (!data.scope && !model) {
+                return;
+            }
+            if (!this.getAcl().check(data.scope, 'read')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+            this.notify('Loading...');
+
+            this.ajaxGetRequest(this.generateEntityUrl(data.scope, data.id), {}, {async: false}).success(res => {
+                const modalAttribute = res.list[0];
+                modalAttribute['_fullyLoaded'] = true;
+
+                this.getModelFactory().create(data.scope, function (model) {
+                    model.id = data.id;
+                    model.set(modalAttribute)
+                    this.createView('quickCompareDialog','views/modals/compare',{
+                        "model": model,
+                        "scope": data.scope,
+                        "mode":"details"
+                    }, function(dialog){
+                        dialog.render();
+                        this.notify(false)
+                        console.log('dialog','dialog')
+                    })
+                }, this);
+            }, this);
+        },
     });
 });

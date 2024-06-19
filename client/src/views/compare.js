@@ -63,8 +63,7 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
             } else {
                 arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
             }
-            arr.push(this.getLanguage().translate('Compare'));
-            arr.push(this.model.get('name'));
+            arr.push(this.getLanguage().translate('Instance comparison'));
 
             return this.buildHeaderHtml(arr);
         },
@@ -72,7 +71,7 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
         setupRecord(name = 'record') {
             this.notify('Loading...');
 
-            this.ajaxGetRequest(`Connector/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
+            this.ajaxGetRequest(`Synchronization/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
                 this.notify(false);
                 var o = {
                     model: this.model,
