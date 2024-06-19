@@ -1,0 +1,92 @@
+Espo.define('views/settings/fields/password-regex-pattern', 'views/fields/varchar', function (Dep) {
+    return Dep.extend({
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.validations.push('regexpValid');
+            this.applyDefaultValue();
+        },
+
+        applyDefaultValue: function () {
+            let defaultValue = this.model.defaults[this.name]
+            if (defaultValue == null) {
+                defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default'])
+            }
+
+            const value = this.getConfig().get(this.name, undefined);
+
+            if (value === undefined && defaultValue) {
+                this.model.set(this.name, defaultValue)
+            }
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            this.$el.on('keyup', e => {
+                let value = e.target.value ?? '';
+                if (value.startsWith('/')) {
+                    value = value.slice(1);
+                }
+
+                if (value.endsWith('/')) {
+                    value = value.slice(0, -1);
+                }
+
+                if (value) {
+                    this.model.set(this.name, `/${value}/`, { silent: true });
+                    e.target.value = `/${value}/`;
+                } else {
+                    this.model.set(this.name, '', { silent: true });
+                    e.target.value = '';
+                    return;
+                }
+
+                this.handleTextCursor(e.target);
+            }).on('mouseup', e => {
+                this.handleTextCursor(e.target);
+            });
+        },
+
+        handleTextCursor(target) {
+            if (target.selectionStart === target.value.length) {
+                target.selectionStart -= 1;
+                target.selectionEnd = target.selectionStart;
+            }
+
+            if (target.selectionStart === 0) {
+                target.selectionStart = 1;
+            }
+
+            if (target.selectionEnd === target.value.length) {
+                target.selectionEnd -= 1;
+            }
+        },
+
+        getTooltipText: function () {
+            // TODO: replace link by Translation entity link
+            return (Dep.prototype.getTooltipText.call(this) ?? '').replace('{message_link}', 'https://www.atrocore.com');
+        },
+
+        validateRegexpValid: function () {
+            let value = this.model.get(this.name);
+            if (!value) return false;
+
+            if (value.startsWith('/')) {
+                value = value.slice(1);
+            }
+
+            if (value.endsWith('/')) {
+                value = value.slice(0, -1);
+            }
+
+            try {
+                const regex = new RegExp(value);
+            } catch (e) {
+                this.showValidationMessage(this.translate('regexNotValid', 'exceptions', 'FieldManager'));
+                return true;
+            }
+
+            return false;
+        }
+    });
+});
