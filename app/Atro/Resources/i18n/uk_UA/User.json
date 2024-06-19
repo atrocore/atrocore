@@ -72,7 +72,8 @@
      "accountInfoEmailBody": "Ваші дані доступу n:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
      "passwordChangeLinkEmailSubject": "Надіслати запит на зміну пароля",
      "passwordChangeLinkEmailBody": "Ви можете змінити Ваш пароль за {link}. Термін дії цього унікального URL незабаром закінчиться.",
-     "setupSmtpBefore": "Вам необхідно встановити <a href=\"{url}\">SMTP settings</a> щоб дозволити системі надсилати пароль у емейлі."
+     "setupSmtpBefore": "Вам необхідно встановити <a href=\"{url}\">SMTP settings</a> щоб дозволити системі надсилати пароль у емейлі.",
+     "newPasswordInvalid": "Пароль має містити принаймні один символ, велику літеру та цифру, а його довжина має перевищувати 8 символів."
    },
    "options": {
      "gender": {
