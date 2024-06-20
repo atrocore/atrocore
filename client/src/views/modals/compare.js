@@ -41,12 +41,13 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.ajaxGetRequest(`Synchronization/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
                 this.notify(false);
                 var o = {
+                    el: '.modal-record #'+this.model.id,
                     model: this.model,
                     distantModelsAttribute: attr,
                     hideQuickMenu: true,
                     scope: this.scope
                 };
-                this.createView('modalRecord', this.recordView, o);
+                this.createView('modalRecord', this.recordView, o, view => view.render());
             })
 
         },

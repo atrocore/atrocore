@@ -79,7 +79,6 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
                     el: '#main > .'+name,
                     scope: this.scope
                 };
-
                 this.createView(name, this.recordView, o);
             })
 

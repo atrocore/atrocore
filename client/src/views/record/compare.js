@@ -50,7 +50,6 @@ Espo.define('views/record/compare','view', function (Dep) {
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
             this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
             this.hideQuickMenu = this.options.hideQuickMenu
-            this.firstEl = this.options.el.split(' ')[0];
         },
         setup(){
             this.notify('Loading...')
@@ -154,6 +153,7 @@ Espo.define('views/record/compare','view', function (Dep) {
         setupFieldsPanels(){
             this.createView('fieldsPanels', this.fieldsPanelsView, {
                 scope: this.scope,
+                model: this.model,
                 fieldsArr: this.fieldsArr,
                 distantModels: this.distantModelsAttribute,
                 el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
@@ -239,6 +239,6 @@ Espo.define('views/record/compare','view', function (Dep) {
         afterRender(){
            this.notify(false)
         },
-        addCustomRows(modelCurrent, modelOthers){},
+        afterModelsLoading(modelCurrent, modelOthers){},
     });
 });

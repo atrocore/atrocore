@@ -35,4 +35,9 @@
         {{/each}}
         </tbody>
 </table>
+<style>
+    .hidden-cell{
+        display:none !important;
+    }
+</style>
 
