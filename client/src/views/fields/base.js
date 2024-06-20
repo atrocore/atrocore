@@ -208,6 +208,21 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.template = this[property];
         },
 
+        getTooltipText() {
+            const tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
+            const tooltipDefaultTranslate = this.translate(this.name, 'tooltips', this.model.name);
+            const tooltipTextTranslate = this.translate(tooltipText, 'tooltips', this.model.name);
+            let tooltipTextValue = null;
+
+            if (tooltipText) {
+                tooltipTextValue = tooltipTextTranslate;
+            } else if (this.name !== (this.options.tooltipText || tooltipDefaultTranslate)) {
+                tooltipTextValue = this.options.tooltipText || tooltipDefaultTranslate;
+            }
+
+            return tooltipTextValue;
+        },
+
         init: function () {
             if (this.events) {
                 this.events = _.clone(this.events);
@@ -282,17 +297,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
                 const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipLink']);
-                let tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
-                const tooltipDefaultTranslate = this.translate(this.name, 'tooltips', this.model.name);
-                const tooltipTextTranslate = this.translate(tooltipText, 'tooltips', this.model.name);
-                let tooltipTextValue = null;
-
-                if (tooltipText) {
-                    tooltipTextValue = tooltipTextTranslate;
-                } else if (this.name != (this.options.tooltipText || tooltipDefaultTranslate)) {
-                    tooltipTextValue = this.options.tooltipText || tooltipDefaultTranslate;
-                }
-
+                const tooltipTextValue = this.getTooltipText();
                 const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>' : '';
 
                 this.once('after:render', function () {
