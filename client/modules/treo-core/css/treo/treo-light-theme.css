@@ -23420,6 +23420,7 @@ code.hljs {
   display: flex;
   align-items: center;
 }
+
 .form-group.horizontal .label-text{
-  margin-right: 5px;
+  margin-left: 5px;
 }

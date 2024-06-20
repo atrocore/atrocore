@@ -8,10 +8,10 @@
             {{/unless}}
             {{/if}}
             <div class="form-group horizontal">
+                <div class="field{{#if isAlignRight}} field-right-align{{/if}}{{#if isLarge}} field-large{{/if}}" data-name="{{name}}">{{{var key ../this}}}</div>
                 {{#if showLabel }}
                 <div class="label-text"> {{label}}</div>
                 {{/if}}
-                <div class="field{{#if isAlignRight}} field-right-align{{/if}}{{#if isLarge}} field-large{{/if}}" data-name="{{name}}">{{{var key ../this}}}</div>
             </div>
         </div>
         {{/each}}
