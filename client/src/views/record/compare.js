@@ -13,7 +13,9 @@ Espo.define('views/record/compare','view', function (Dep) {
     return Dep.extend({
         template: 'record/compare',
         panelDetailNavigation: null,
+        fieldsPanelsView: 'views/record/compare/fields-panels',
         buttonList: [],
+        fieldsArr: [],
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -95,32 +97,6 @@ Espo.define('views/record/compare','view', function (Dep) {
                         return;
                     }
 
-                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
-                    this.createView(field + 'Current', viewName, {
-                        el: this.firstEl +` [data-field="${field}"]  .current`,
-                        model: modelCurrent,
-                        readOnly: true,
-                        defs: {
-                            name: field,
-                            label: field + ' 11'
-                        },
-                        mode: 'detail',
-                        inlineEditDisabled: true,
-                    });
-
-                    modelOthers.forEach((model, index) => {
-                        this.createView(field + 'Other'+index, viewName, {
-                            el: this.firstEl+` [data-field="${field}"]  .other${index}`,
-                            model: model,
-                            readOnly: true,
-                            defs: {
-                                name: field
-                            },
-                            mode: 'detail',
-                            inlineEditDisabled: true,
-                        });
-                    })
-
                     let htmlTag = 'code';
 
                     if (type === 'color' || type === 'enum') {
@@ -147,8 +123,11 @@ Espo.define('views/record/compare','view', function (Dep) {
                     this.fieldsArr.push({
                         isField: true,
                         field: field,
+                        type: type,
                         label: fieldDef['label'] ?? field,
                         current: field + 'Current',
+                        modelCurrent: modelCurrent,
+                        modelOthers: modelOthers,
                         htmlTag: htmlTag,
                         others: modelOthers.map((element, index) => {
                             return  {other: field + 'Other'+index, index}
@@ -159,15 +138,26 @@ Espo.define('views/record/compare','view', function (Dep) {
                         showQuickCompare: showQuickCompare && this.hideQuickMenu !== true,
                         isLinkMultiple: isLinkMultiple,
                         values: values,
-                        different:  !this.areEquals(modelCurrent, modelOthers, field, fieldDef)
+                        different:  !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
+                        required: !!fieldDef['required']
                     });
 
                 }, this);
 
-                this.addCustomRows(modelCurrent, modelOthers);
-
+                this.afterModelsLoading(modelCurrent, modelOthers);
+                this.listenTo(this, 'after:render', () => {
+                    this.setupFieldsPanels();
+                });
             }, this)
 
+        },
+        setupFieldsPanels(){
+            this.createView('fieldsPanels', this.fieldsPanelsView, {
+                scope: this.scope,
+                fieldsArr: this.fieldsArr,
+                distantModels: this.distantModelsAttribute,
+                el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
+            }, view => view.render())
         },
         data (){
             return {
