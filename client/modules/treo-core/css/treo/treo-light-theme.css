@@ -23415,3 +23415,11 @@ code.hljs {
   height: 100%;
   width: 100%;
 }
+
+.form-group.horizontal {
+  display: flex;
+  align-items: center;
+}
+.form-group.horizontal .label-text{
+  margin-right: 5px;
+}
