@@ -1245,10 +1245,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     let positionTop = $(target).offset().top + $(target).outerHeight(true);
                     let positionBottom = this.getPositionFromBottom(target);
                     if ((positionTop + menuHeight) > this.getHeightParentPosition() && positionBottom >= menuHeight) {
+                        let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true);
                         menu.css({
                             'position': 'fixed',
                             'top': `${positionTop}px`,
-                            'right': '5px'
+                            'right':  `${rightOffset}px`
                         });
                     }
                 }
