@@ -80,7 +80,8 @@
     "information": "Information",
     "error": "Error",
     "customHeadCode": "Head Code",
-    "passwordRegexPattern": "Password Regex Pattern"
+    "passwordRegexPattern": "Password Regex Pattern",
+    "passwordExpireDays": "Password expiration period (in days)"
   },
   "links": {
     "variables": "Variables"
@@ -112,7 +113,8 @@
     "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
     "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too.",
     "customHeadCode": "Add code at the end of the <head> tag. Atrocore doesn't validate custom code for you, so be sure to check your code before publishing.",
-    "passwordRegexPattern": "Set password complexity rules using regular expression. \nTip: use groups like (?=.*\\d) to define required symbols. \n\nFollow this <a href=\"{message_link}\" target=\"_blank\">link</a> to update an validation error message."
+    "passwordRegexPattern": "Set password complexity rules using regular expression. \nTip: use groups like (?=.*\\d) to define required symbols. \n\nFollow this <a href=\"{message_link}\" target=\"_blank\">link</a> to update an validation error message.",
+    "passwordExpireDays": "Define the period (in days) after which users must update their password."
   },
   "labels": {
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",

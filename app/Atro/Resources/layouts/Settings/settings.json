@@ -48,8 +48,14 @@
         {
           "name": "fileNameRegexPattern"
         },
+        false
+      ],
+      [
         {
           "name": "passwordRegexPattern"
+        },
+        {
+          "name": "passwordExpireDays"
         }
       ]
     ]
