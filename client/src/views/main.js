@@ -119,7 +119,7 @@ Espo.define('views/main', 'view', function (Dep) {
                                    if(res.done){
                                        Espo.Ui.notify(this.translate('Done'), 'success', 2000);
                                        if (this.collection) {
-                                           this.collection.fetch();
+                                           this.collection.fetch({keepSelected: true});
                                        }
                                        clearInterval(intervals[this.scope])
                                        intervals[this.scope] = null
