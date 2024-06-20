@@ -133,7 +133,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
             if (!in_array($responseCode, [200, 201])) {
                 if (file_exists($fileName)) {
-                    unlink($fileName);
+                    @unlink($fileName);
                 }
                 throw new Error(sprintf("Download for '%s' failed.", $input->remoteUrl));
             }
@@ -286,7 +286,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         // delete thumbnails
         foreach (['small', 'medium', 'large'] as $size) {
             if ($thumbnailCreator->hasThumbnail($file, $size)) {
-                unlink($thumbnailCreator->preparePath($file, $size));
+                @unlink($thumbnailCreator->preparePath($file, $size));
             }
         }
 
