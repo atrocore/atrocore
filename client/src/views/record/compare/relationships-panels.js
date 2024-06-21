@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/compare/relationships-panels','views/record/detail-bottom', function (Dep) {
+Espo.define('views/record/compare/relationships-panels','view', function (Dep) {
     return Dep.extend({
         template: 'record/compare/relationships-panels',
         relationshipView: 'views/record/compare/relationship',
