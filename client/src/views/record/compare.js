@@ -14,6 +14,7 @@ Espo.define('views/record/compare','view', function (Dep) {
         template: 'record/compare',
         panelDetailNavigation: null,
         fieldsPanelsView: 'views/record/compare/fields-panels',
+        relationshipsPanelsView: 'views/record/compare/relationships-panels',
         buttonList: [],
         fieldsArr: [],
         events: {
@@ -111,11 +112,11 @@ Espo.define('views/record/compare','view', function (Dep) {
                             }
                         }) : null;
 
-                    let showQuickCompare = (modelCurrent.get(fieldId)  && type === "link")
+                    let showDetailsComparison = (modelCurrent.get(fieldId)  && type === "link")
                         || ((modelCurrent.get(fieldId)?.length ?? 0) > 0  && type === "linkMultiple")
-                    if(showQuickCompare){
+                    if(showDetailsComparison){
                         for (const other of modelOthers) {
-                            showQuickCompare = showQuickCompare && modelCurrent.get(fieldId)?.toString() === other.get(fieldId)?.toString();
+                            showDetailsComparison = showDetailsComparison && modelCurrent.get(fieldId)?.toString() === other.get(fieldId)?.toString();
                         }
                     }
 
@@ -134,7 +135,7 @@ Espo.define('views/record/compare','view', function (Dep) {
                         isLink: isLink ,
                         foreignScope: isLink ? this.links[field].entity : null,
                         foreignId: isLink ? modelCurrent.get(fieldId)?.toString() : null,
-                        showQuickCompare: showQuickCompare && this.hideQuickMenu !== true,
+                        showDetailsComparison: showDetailsComparison && this.hideQuickMenu !== true,
                         isLinkMultiple: isLinkMultiple,
                         values: values,
                         different:  !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
@@ -151,13 +152,43 @@ Espo.define('views/record/compare','view', function (Dep) {
 
         },
         setupFieldsPanels(){
+            this.notify('Loading...')
             this.createView('fieldsPanels', this.fieldsPanelsView, {
                 scope: this.scope,
                 model: this.model,
                 fieldsArr: this.fieldsArr,
                 distantModels: this.distantModelsAttribute,
                 el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
-            }, view => view.render())
+            }, view => {
+                view.render();
+                this.notify(false);
+                this.setupRelationshipsPanels()
+            })
+        },
+
+        setupRelationshipsPanels(){
+            this.notify('Loading...')
+
+            this.getHelper().layoutManager.get(this.scope, 'relationships', layout => {
+                let filtered = layout;
+                if(layout.filter(l => l.name === 'productAttributeValues').length){
+                    filtered = layout.filter(l => l.name !== 'productAttributeValues');
+                    filtered.push({
+                        'name': 'productAttributeValues'
+                    })
+                }
+                this.createView('relationshipsPanels', this.relationshipsPanelsView, {
+                    scope: this.scope,
+                    model: this.model.clone(),
+                    relationships: filtered,
+                    distantModels: this.distantModelsAttribute,
+                    el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
+                }, view => {
+                    this.notify(false)
+                    view.render();
+                })
+            });
+
         },
         data (){
             return {
@@ -173,30 +204,7 @@ Espo.define('views/record/compare','view', function (Dep) {
 
             }, this);
         },
-        actionDetailsComparison(data){
 
-            this.notify('Loading...');
-
-            this.ajaxGetRequest(this.generateEntityUrl(data.scope, data.id), {}, {async: false}).success(res => {
-                const modalAttribute = res.list[0];
-                modalAttribute['_fullyLoaded'] = true;
-
-                this.getModelFactory().create(data.scope, function (model) {
-                    model.id = data.id;
-                    model.set(modalAttribute)
-                    this.createView('dialog','views/modals/compare',{
-                        "model": model,
-                        "scope": data.scope,
-                        "mode":"details"
-                    }, function(dialog){
-                        dialog.render();
-                        this.notify(false)
-                        console.log('dialog','dialog')
-                    })
-                }, this);
-            }, this);
-
-        },
         areEquals(current, others, field, fieldDef){
             if(fieldDef['type'] === 'linkMultiple'){
                 const fieldId = field+'Ids';
@@ -240,5 +248,30 @@ Espo.define('views/record/compare','view', function (Dep) {
            this.notify(false)
         },
         afterModelsLoading(modelCurrent, modelOthers){},
+
+        actionDetailsComparison(data){
+
+            this.notify('Loading...');
+
+            this.ajaxGetRequest(this.generateEntityUrl(data.scope, data.id), {}, {async: false}).success(res => {
+                const modalAttribute = res.list[0];
+                modalAttribute['_fullyLoaded'] = true;
+
+                this.getModelFactory().create(data.scope, function (model) {
+                    model.id = data.id;
+                    model.set(modalAttribute)
+                    this.createView('dialog','views/modals/compare',{
+                        "model": model,
+                        "scope": data.scope,
+                        "mode":"details"
+                    }, function(dialog){
+                        dialog.render();
+                        this.notify(false)
+                        console.log('dialog','dialog')
+                    })
+                }, this);
+            }, this);
+
+        },
     });
 });

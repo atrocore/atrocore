@@ -13,7 +13,6 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
         template: 'record/compare/fields-panels',
         fieldListPanels: [],
         setup() {
-
             this.scope = this.options.scope;
             this.fieldsArr = this.options.fieldsArr;
             this.model = this.options.model;
@@ -59,18 +58,18 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
                 panel.fields.forEach(fieldData => {
                     let field = fieldData.field;
                     let model = fieldData.modelCurrent;
-                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
-                    this.createView(field + 'Current', viewName, {
-                        el: this.options.el +` [data-field="${field}"]  .current`,
-                        model: model,
-                        readOnly: true,
-                        defs: {
-                            name: field,
-                            label: field + ' 11'
-                        },
-                        mode: 'detail',
-                        inlineEditDisabled: true,
-                    });
+                        let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
+                        this.createView(field + 'Current', viewName, {
+                            el: this.options.el +` [data-field="${field}"]  .current`,
+                            model: model,
+                            readOnly: true,
+                            defs: {
+                                name: field,
+                                label: field + ' 11'
+                            },
+                            mode: 'detail',
+                            inlineEditDisabled: true,
+                        });
 
                     fieldData.modelOthers.forEach((model, index) => {
                         this.createView(field + 'Other'+index, viewName, {
@@ -125,5 +124,6 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
                 view.setDisabled(locked);
             }
         },
+
     })
 })
