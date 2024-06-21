@@ -69,6 +69,12 @@ Espo.define('views/record/kanban-item', 'view', function (Dep) {
                 };
 
                 var viewName = item.view || this.model.getFieldParam(name, 'view');
+
+                if(this.model.getFieldType(name) === 'bool'){
+                    o.showLabel = true;
+                    o.label = this.translate(name, 'fields', this.model.name)
+                }
+
                 if (!viewName) {
                     var type = this.model.getFieldType(name) || 'base';
                     viewName = this.getFieldManager().getViewName(type);
