@@ -12,5 +12,7 @@
     }
     .compare-panel{
         margin-bottom: 50px;
+        background-color: white;
+        width: 100%;
     }
 </style>

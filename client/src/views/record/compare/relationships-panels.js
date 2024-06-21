@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/compare/relationships-panels','view', function (Dep) {
+Espo.define('views/record/compare/relationships-panels','views/record/detail-bottom', function (Dep) {
     return Dep.extend({
         template: 'record/compare/relationships-panels',
         relationshipView: 'views/record/compare/relationship',
@@ -58,6 +58,7 @@ Espo.define('views/record/compare/relationships-panels','view', function (Dep) {
                     let relationshipView = panelData.defs.compareRecordsView
                         ?? this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', panelData.name, 'compareRecordsView'])
                         ?? this.relationshipView;
+
                     this.createView(panelData.name, relationshipView, o , view =>{
                         view.render();
                     })

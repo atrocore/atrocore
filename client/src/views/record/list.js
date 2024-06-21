@@ -1184,7 +1184,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         isHierarchical() {
-
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
                 && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
         },
@@ -1421,6 +1420,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         fullTableScroll() {
+
             let list = this.$el.find('.list');
             if (list.length) {
                 let fixedTableHeader = list.find('.fixed-header-table');
