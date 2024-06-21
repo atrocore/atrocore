@@ -125,6 +125,7 @@
     "notAllowByContentAndName": "Not allow, check by file name + file content",
     "allow": "Allow",
     "System": "System",
+    "Security": "Security",
     "Locale": "Locale",
     "SMTP": "SMTP",
     "Configuration": "Configuration",

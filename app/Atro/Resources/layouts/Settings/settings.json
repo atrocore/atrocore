@@ -26,17 +26,11 @@
       ],
       [
         {
-          "name": "aclStrictMode"
+          "name": "textFilterUseContainsForVarchar"
         },
         {
           "name": "reportingEnabled"
         }
-      ],
-      [
-        {
-          "name": "textFilterUseContainsForVarchar"
-        },
-        false
       ],
       [
         {
@@ -47,6 +41,17 @@
       [
         {
           "name": "fileNameRegexPattern"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "Security",
+    "rows": [
+      [
+        {
+          "name": "aclStrictMode"
         },
         false
       ],

@@ -111,6 +111,7 @@
     "notAllowByName": "Nicht zulassen, nach Dateinamen",
     "notAllowByContentAndName": "Nicht zulassen, nach Dateinamen + Dateiinhalt prüfen",
     "allow": "Zulassen",
+    "Security": "Sicherheit",
     "Locale": "Lokale Einstellungen",
     "Configuration": "Konfiguration",
     "In-app Notifications": "In-App Benachrichtigungen",
