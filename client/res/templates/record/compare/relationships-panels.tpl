@@ -6,17 +6,19 @@
               {{label}}
             </h4>
         </div>
-        <table class="table full-table table-striped table-fixed table-bordered" data-panel="{{name}}">
+     <div class="list" data-panel="{{name}}">
+     <table class="table full-table table-striped table-fixed table-scrolled table-bordered" >
              <thead>
              <tr>
                  <th>{{ translate 'instance' scope='Synchronization' }}</th>
                  <th>
                      {{translate 'current' scope='Synchronization' category='labels'}}
                  </th>
-
-                 <th>
-                     {{translate 'Other'}}
-                 </th>
+                 {{#each ../instanceNames}}
+                <th colspan="{{../columnCountCurrent}}" class="text-center">
+                    {{name}}
+                </th>
+                {{/each}}
                  <th width="25"></th>
              </tr>
              </thead>
@@ -29,6 +31,7 @@
                  </tr>
              </tbody>
          </table>
+</div>
         <div class="panel-scroll hidden">
             <div></div>
         </div>

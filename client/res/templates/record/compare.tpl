@@ -9,7 +9,30 @@
 
     <div class="row">
         <div class="compare-panel  list col-md-12" data-name="fieldsPanels">
-
+            <table class="table full-table table-striped table-fixed table-scrolled table-bordered" >
+                <thead>
+                <tr>
+                    <th>{{ translate 'instance' scope='Synchronization' }}</th>
+                    <th>
+                        {{translate 'current' scope='Synchronization' category='labels'}}
+                    </th>
+                    {{#each ../instanceNames}}
+                    <th class="text-center">
+                        {{name}}
+                    </th>
+                    {{/each}}
+                    <th width="25"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="list-row">
+                <td class="cell" colspan="3"> {{translate 'Loading...'}}</td>
+                </tr>
+                <tr class="list-row" >
+                    <td class="cell" colspan="3"> {{translate 'Loading...'}}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="compare-panel  list col-md-12" data-name="relationshipsPanels">
@@ -21,9 +44,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .compare-panel{
-        margin-bottom: 80px;
-    }
-</style>

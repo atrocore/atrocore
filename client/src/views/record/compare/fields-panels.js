@@ -16,6 +16,7 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
             this.scope = this.options.scope;
             this.fieldsArr = this.options.fieldsArr;
             this.model = this.options.model;
+            this.instanceNames = this.getMetadata().get(['app','comparableInstanceNames'])
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'detail', layout => {
                 if (layout && layout.length) {
@@ -50,7 +51,7 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
             return {
                 scope: this.scope,
                 fieldList: this.fieldListPanels,
-                distantModels: this.options.distantModels
+                instanceNames: this.instanceNames
             }
         },
         setupFieldList(){

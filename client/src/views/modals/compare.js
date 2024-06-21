@@ -38,12 +38,14 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         setupRecord() {
             this.notify('Loading...');
-            this.ajaxGetRequest(`Synchronization/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
+            this.ajaxGetRequest(`Synchronization/action/distantInstanceRequest`, {
+                uri: this.scope + '/' + this.model.id}).success(attr => {
                 this.notify(false);
                 var o = {
                     el: '.modal-record #'+this.model.id,
                     model: this.model,
                     distantModelsAttribute: attr,
+                    hideRelationShip: true,
                     hideQuickMenu: true,
                     scope: this.scope
                 };

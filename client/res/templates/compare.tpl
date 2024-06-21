@@ -10,4 +10,7 @@
     .compare-panel[data-name='relationshipsPanels'] table {
         margin-bottom: 50px;
     }
+    .compare-panel{
+        margin-bottom: 50px;
+    }
 </style>

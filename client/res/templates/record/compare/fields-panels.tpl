@@ -1,21 +1,21 @@
-
-<table class="table full-table table-striped table-fixed table-bordered-inside">
-    <thead>
+<div class="list">
+    <table class="table full-table table-striped table-scrolled table-bordered-inside">
+        <thead>
         <tr>
             <th>{{ translate 'instance' scope='Synchronization' }}</th>
             <th>
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
-            {{#each distantModels}}
+            {{#each instanceNames}}
             <th>
-                {{_connection}}
+                {{name}}
             </th>
             {{/each}}
             <th width="25" style="width:25px"></th>
         </tr>
 
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {{#each fieldList}}
         <tr>
             <td colspan="4"><h5>{{translate label category='labels' scope='Global'}}</h5></td>
@@ -62,8 +62,9 @@
         </tr>
         {{/each}}
         {{/each}}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 <style>
     .hidden-cell{
         display:none !important;

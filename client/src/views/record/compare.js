@@ -147,6 +147,9 @@ Espo.define('views/record/compare','view', function (Dep) {
                 this.afterModelsLoading(modelCurrent, modelOthers);
                 this.listenTo(this, 'after:render', () => {
                     this.setupFieldsPanels();
+                    if(this.options.hideRelationShip !== true){
+                        this.setupRelationshipsPanels()
+                    }
                 });
             }, this)
 
@@ -162,7 +165,6 @@ Espo.define('views/record/compare','view', function (Dep) {
             }, view => {
                 view.render();
                 this.notify(false);
-                this.setupRelationshipsPanels()
             })
         },
 
@@ -170,17 +172,10 @@ Espo.define('views/record/compare','view', function (Dep) {
             this.notify('Loading...')
 
             this.getHelper().layoutManager.get(this.scope, 'relationships', layout => {
-                let filtered = layout;
-                if(layout.filter(l => l.name === 'productAttributeValues').length){
-                    filtered = layout.filter(l => l.name !== 'productAttributeValues');
-                    filtered.push({
-                        'name': 'productAttributeValues'
-                    })
-                }
                 this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                     scope: this.scope,
-                    model: this.model.clone(),
-                    relationships: filtered,
+                    model: this.model,
+                    relationships: layout,
                     distantModels: this.distantModelsAttribute,
                     el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
                 }, view => {
@@ -253,25 +248,25 @@ Espo.define('views/record/compare','view', function (Dep) {
 
             this.notify('Loading...');
 
-            this.ajaxGetRequest(this.generateEntityUrl(data.scope, data.id), {}, {async: false}).success(res => {
-                const modalAttribute = res.list[0];
-                modalAttribute['_fullyLoaded'] = true;
+            this.getModelFactory().create(data.scope, (model) => {
+                model.id = data.id;
+                if (options.model) {
+                    model = options.model;
+                }
 
-                this.getModelFactory().create(data.scope, function (model) {
-                    model.id = data.id;
-                    model.set(modalAttribute)
+                this.listenToOnce(model, 'sync', function () {
                     this.createView('dialog','views/modals/compare',{
                         "model": model,
                         "scope": data.scope,
-                        "mode":"details"
+                        "mode":"details",
                     }, function(dialog){
                         dialog.render();
                         this.notify(false)
                         console.log('dialog','dialog')
                     })
                 }, this);
-            }, this);
-
+                model.fetch({main: true});
+            });
         },
     });
 });

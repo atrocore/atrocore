@@ -1,5 +1,4 @@
-
-<table class="table full-table table-striped table-fixed table-bordered" data-name="{{name}}">
+<table class="table full-table table-striped  table-fixed table-scrolled table-bordered" >
     <thead>
     <tr>
         <th >{{ translate 'instance' scope='Synchronization' }}</th>
@@ -8,21 +7,19 @@
         </th>
         {{#each instanceNames}}
         <th colspan="{{../columnCountCurrent}}" class="text-center">
-            {{this}}
+            {{name}}
         </th>
         {{/each}}
     </tr>
-
     </thead>
     <tbody>
-
     {{#each relationshipsFields}}
     <tr class="list-row" >
         <td class="cell">{{translate field scope=../scope category='fields'}}</td>
         {{#each currentViewKeys}}
-            <td class="cell" data-field="{{key}}">
-                {{{var key ../../this}}}
-            </td>
+        <td class="cell" data-field="{{key}}">
+            {{{var key ../../this}}}
+        </td>
         {{/each}}
         {{#each othersModelsKeyPerInstances}}
         {{#each this }}

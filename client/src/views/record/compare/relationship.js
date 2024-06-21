@@ -19,9 +19,12 @@ Espo.define('views/record/compare/relationship','view', function (Dep) {
             this.scope = this.options.scope;
             this.baseModel = this.options.model;
             this.relationship = this.options.relationship;
+            this.instanceNames = this.getMetadata().get(['app','comparableInstanceNames'])
             this.fields = [];
+           this.fetchModelsAndSetup();
+        },
+        fetchModelsAndSetup(){
             this.wait(true)
-
             this.getHelper().layoutManager.get(this.relationship.scope, 'listSmall', layout => {
                 if (layout && layout.length) {
                     let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.relationship.scope, 'read');

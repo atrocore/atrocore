@@ -2486,23 +2486,19 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
             this.notify('Loading...');
 
-            this.ajaxGetRequest(this.generateEntityUrl(data.scope, data.id), {}, {async: false}).success(res => {
-                const modalAttribute = res.list[0];
-                modalAttribute['_fullyLoaded'] = true;
-
-                this.getModelFactory().create(data.scope, function (model) {
-                    model.id = data.id;
-                    model.set(modalAttribute)
+            this.getModelFactory().create(data.scope, function (model) {
+                model.id = data.id;
+                this.listenToOnce(model, 'sync', function () {
                     this.createView('quickCompareDialog','views/modals/compare',{
                         "model": model,
                         "scope": data.scope,
-                        "mode":"details"
+                        "mode":"details",
                     }, function(dialog){
                         dialog.render();
                         this.notify(false)
-                        console.log('dialog','dialog')
                     })
                 }, this);
+                model.fetch({main: true});
             }, this);
         },
     });
