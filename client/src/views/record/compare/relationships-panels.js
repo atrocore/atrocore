@@ -12,13 +12,13 @@ Espo.define('views/record/compare/relationships-panels','view', function (Dep) {
     return Dep.extend({
         template: 'record/compare/relationships-panels',
         relationshipView: 'views/record/compare/relationship',
-        fieldListPanels: [],
         relationshipsPanels: [],
         setup() {
             Dep.prototype.setup.call(this);
             this.scope = this.options.scope;
             this.relationships = this.options.relationships
             this.model = this.options.model;
+            this.relationshipsPanels = [];
             this.instanceNames = this.getMetadata().get(['app','comparableInstanceNames'])
             this.nonComparableFields = this.getMetadata().get(['scopes', this.scope, 'nonComparableFields']) ?? [];
             let bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];

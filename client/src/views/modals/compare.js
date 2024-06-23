@@ -33,23 +33,25 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 name: 'fullView',
                 label: 'Full View'
             });
-            this.setupRecord()
+            this.listenTo(this, 'after:render', () => this.setupRecord())
         },
 
         setupRecord() {
             this.notify('Loading...');
             this.ajaxGetRequest(`Synchronization/action/distantInstanceRequest`, {
                 uri: this.scope + '/' + this.model.id}).success(attr => {
-                this.notify(false);
                 var o = {
-                    el: '.modal-record #'+this.model.id,
+                    el: this.options.el +' .modal-record',
                     model: this.model,
                     distantModelsAttribute: attr,
                     hideRelationShip: true,
                     hideQuickMenu: true,
                     scope: this.scope
                 };
-                this.createView('modalRecord', this.recordView, o, view => view.render());
+                this.createView('modalRecord', this.recordView, o, view => {
+                    view.render()
+                    this.notify(false)
+                });
             })
 
         },
@@ -66,6 +68,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 id: this.model.get('id'),
                 model: this.model
             });
+            this.actionClose();
         }
     });
 });

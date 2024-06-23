@@ -245,15 +245,9 @@ Espo.define('views/record/compare','view', function (Dep) {
         afterModelsLoading(modelCurrent, modelOthers){},
 
         actionDetailsComparison(data){
-
             this.notify('Loading...');
-
             this.getModelFactory().create(data.scope, (model) => {
                 model.id = data.id;
-                if (options.model) {
-                    model = options.model;
-                }
-
                 this.listenToOnce(model, 'sync', function () {
                     this.createView('dialog','views/modals/compare',{
                         "model": model,

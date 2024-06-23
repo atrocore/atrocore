@@ -124,7 +124,6 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
             if (view) {
                 view.setDisabled(locked);
             }
-        },
-
+        }
     })
 })
