@@ -35,17 +35,4 @@ class Connection extends Base
             $entity->set($name, $value);
         }
     }
-
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if ($entity->get('type') === 'chatgpt') {
-            $chatgptConnection = $this->where(['type' => "chatgpt", 'id!=' => $entity->get('id')])
-                ->select(['id'])->findOne();
-            if (!empty($chatgptConnection)) {
-                throw new BadRequest($this->getLanguage()->translate("chatgptShouldBeUnique", "exceptions", $this->entityType));
-            }
-        }
-
-        parent::beforeSave($entity, $options);
-    }
 }

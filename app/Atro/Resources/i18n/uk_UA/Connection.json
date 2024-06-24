@@ -15,7 +15,6 @@
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не встановлено.",
     "connectionFailed": "З'єднання не встановлено: %s",
-    "noSuchType": "Тип з'єднання не підтримується.",
-    "chatgptShouldBeUnique": "Має бути лише одне підключення chatgpt"
+    "noSuchType": "Тип з'єднання не підтримується."
   }
 }

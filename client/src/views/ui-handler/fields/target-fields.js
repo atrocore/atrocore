@@ -31,13 +31,19 @@ Espo.define('views/ui-handler/fields/target-fields', ['views/fields/entity-field
                         return
                     }
                 }
+                if (this.model.get('type') === 'ui_update_by_ai') {
+                    const type = this.getMetadata().get(['entityDefs', this.getEntityType(), 'fields', field, 'type'])
+                    if (!['varchar', 'text', 'wysiwyg'].includes(type) || field === 'id') {
+                        return
+                    }
+                }
                 this.params.options.push(field);
                 this.translatedOptions[field] = this.translate(field, 'fields', this.getEntityType());
             });
         },
 
         afterRender() {
-            if (this.model.get('type') === 'ui_disable_options') {
+            if (['ui_disable_options', 'ui_update_by_ai'].includes(this.model.get('type'))) {
                 this.options.maxItems = 1
             } else {
                 this.options.maxItems = null
@@ -46,7 +52,7 @@ Espo.define('views/ui-handler/fields/target-fields', ['views/fields/entity-field
             Dep.prototype.afterRender.call(this);
 
             if (this.mode !== 'list') {
-                if (['ui_required', 'ui_visible', 'ui_read_only', 'ui_disable_options'].includes(this.model.get('type'))) {
+                if (['ui_required', 'ui_visible', 'ui_read_only', 'ui_disable_options', 'ui_update_by_ai'].includes(this.model.get('type'))) {
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();

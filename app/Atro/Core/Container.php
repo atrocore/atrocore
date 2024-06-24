@@ -15,12 +15,12 @@ namespace Atro\Core;
 
 use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Factories\FactoryInterface as Factory;
-use Espo\Core\Interfaces\Injectable;
-use Espo\Entities\User;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
-use Espo\ORM\EntityManager;
 use Doctrine\DBAL\Connection;
+use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 
 class Container
 {
@@ -42,7 +42,6 @@ class Container
             Connection::class          => \Atro\Core\Factories\Connection::class,
             'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
             'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
-            'chatgpt'                  => \Atro\Core\ChatGpt\ChatGptClient::class,
             'log'                      => \Atro\Core\Factories\Log::class,
             'mailSender'               => \Atro\Core\Mail\Sender::class,
             'pdo'                      => \Atro\Core\Factories\Pdo::class,

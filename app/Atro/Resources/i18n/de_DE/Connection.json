@@ -7,23 +7,17 @@
     "user": "Benutzer",
     "password": "Passwort",
     "payload": "Nutzlast",
-    "loginUrl": "Anmelde-URL",
-    "openAiOrganizationId": "Organisations-ID",
-    "openAiApiKey": "API-Schlüssel",
-    "openAiModel": "Model",
-    "openAiTemperature": "Temperature"
+    "loginUrl": "Anmelde-URL"
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
     "testConnection": "Verbindung testen",
     "Create Connection": "Verbindung erstellen",
-    "cookie": "Cookie-Sitzung",
-    "chatgpt": "ChatGpt"
+    "cookie": "Cookie-Sitzung"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",
     "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
-    "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden",
-    "chatgptShouldBeUnique": "Es sollte nur eine ChatGPT-Verbindung bestehen"
+    "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden"
   }
 }
