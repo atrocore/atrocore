@@ -211,6 +211,16 @@
             "massUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "directAccessDisabled": true
+        },
+        "passwordUpdatedAt": {
+            "type": "datetime",
+            "readOnly": true,
+            "view": "views/user/fields/password-updated-at"
+        },
+        "passwordUpdatedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
         }
     },
     "links": {
@@ -232,6 +242,10 @@
             "layoutRelationshipsDisabled": true
         },
         "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "passwordUpdatedBy": {
             "type": "belongsTo",
             "entity": "User"
         },

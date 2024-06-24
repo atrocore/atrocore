@@ -25,7 +25,9 @@
     "passwordPreview": "Password Preview",
     "isSuperAdmin": "Is Super Admin",
     "lastAccess": "Last Access",
-    "type": "Type"
+    "type": "Type",
+    "passwordUpdatedAt": "Password Updated At",
+    "passwordUpdatedBy": "Password Updated By"
   },
   "links": {
     "teams": "Teams",

@@ -24,7 +24,9 @@
     "passwordPreview": "Passwortvorschau",
     "isSuperAdmin": "Ist Super-Admin",
     "lastAccess": "Letzter Zugriff",
-    "type": "Typ"
+    "type": "Typ",
+    "passwordUpdatedAt": "Passwort aktualisiert am",
+    "passwordUpdatedBy": "Passwort aktualisiert von"
   },
   "links": {
     "account": "Benutzerkonto",

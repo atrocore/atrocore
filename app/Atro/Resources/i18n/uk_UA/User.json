@@ -25,7 +25,9 @@
     "passwordPreview": "Попередній перегляд пароля",
     "isSuperAdmin": "Головний Адміністратор",
     "lastAccess": "Останнє підключення",
-    "type": "Тип"
+    "type": "Тип",
+    "passwordUpdatedAt": "Пароль оновлено в",
+    "passwordUpdatedBy": "Пароль оновлено користувачем"
   },
   "links": {
     "teams": "Групи",
