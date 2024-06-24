@@ -119,8 +119,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             // if url use file protocol
             if (str_starts_with($input->remoteUrl, 'file://')) {
                 $localFileName = str_replace('file://', '', $input->remoteUrl);
-                $result = file_exists($localFileName) && copy($localFileName, $fileName);
-            }else{
+                if (!file_exists($localFileName)) {
+                    throw new Error("File $localFileName does not exist");
+                }
+                $result = copy($localFileName, $fileName);
+            } else {
                 // load file from url
                 set_time_limit(0);
                 $fp = fopen($fileName, 'w+');
