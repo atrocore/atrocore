@@ -116,29 +116,35 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
          * Create via remote URL
          */
         if (!$result && property_exists($input, 'remoteUrl')) {
-            // load file from url
-            set_time_limit(0);
-            $fp = fopen($fileName, 'w+');
-            if ($fp === false) {
-                throw new Error(sprintf("Can't write any data to the file %s", $file->get('name')));
-            }
-            $ch = curl_init($input->remoteUrl);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-            curl_setopt($ch, CURLOPT_FILE, $fp);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_exec($ch);
-            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            fclose($fp);
-
-            if (!in_array($responseCode, [200, 201])) {
-                if (file_exists($fileName)) {
-                    @unlink($fileName);
+            // if url use file protocol
+            if (str_starts_with($input->remoteUrl, 'file://')) {
+                $localFileName = str_replace('file://', '', $input->remoteUrl);
+                $result = file_exists($localFileName) && copy($localFileName, $fileName);
+            }else{
+                // load file from url
+                set_time_limit(0);
+                $fp = fopen($fileName, 'w+');
+                if ($fp === false) {
+                    throw new Error(sprintf("Can't write any data to the file %s", $file->get('name')));
                 }
-                throw new Error(sprintf("Download for '%s' failed.", $input->remoteUrl));
-            }
+                $ch = curl_init($input->remoteUrl);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+                curl_setopt($ch, CURLOPT_FILE, $fp);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_exec($ch);
+                $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+                fclose($fp);
 
-            $result = true;
+                if (!in_array($responseCode, [200, 201])) {
+                    if (file_exists($fileName)) {
+                        @unlink($fileName);
+                    }
+                    throw new Error(sprintf("Download for '%s' failed.", $input->remoteUrl));
+                }
+
+                $result = true;
+            }
         }
 
         /**
