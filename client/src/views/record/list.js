@@ -1189,7 +1189,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         isHierarchical() {
-
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
                 && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
         },
@@ -1441,6 +1440,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         fullTableScroll() {
+
             let list = this.$el.find('.list');
             if (list.length) {
                 let fixedTableHeader = list.find('.fixed-header-table');
@@ -2486,6 +2486,39 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
                 this.reRender();
             }
-        }
+        },
+
+        actionQuickCompare: function (data) {
+            data = data || {}
+            var id = data.id;
+            if (!id) return;
+            var model = null;
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+            if (!data.scope && !model) {
+                return;
+            }
+            if (!this.getAcl().check(data.scope, 'read')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+            this.notify('Loading...');
+
+            this.getModelFactory().create(data.scope, function (model) {
+                model.id = data.id;
+                this.listenToOnce(model, 'sync', function () {
+                    this.createView('quickCompareDialog','views/modals/compare',{
+                        "model": model,
+                        "scope": data.scope,
+                        "mode":"details",
+                    }, function(dialog){
+                        dialog.render();
+                        this.notify(false)
+                    })
+                }, this);
+                model.fetch({main: true});
+            }, this);
+        },
     });
 });
