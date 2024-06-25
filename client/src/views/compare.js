@@ -22,7 +22,6 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
         headerView: 'views/header',
         recordView: 'views/record/compare',
         setup: function () {
-
             Dep.prototype.setup.call(this);
             this.model = this.options.model;
             this.scope = this.model.urlRoot;
@@ -30,7 +29,6 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
             this.updatePageTitle();
             this.setupHeader();
             this.setupRecord()
-
         },
 
         setupHeader: function () {
@@ -63,16 +61,15 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
             } else {
                 arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
             }
-            arr.push(this.getLanguage().translate('Compare'));
-            arr.push(this.model.get('name'));
+            arr.push(this.getLanguage().translate('Instance comparison'));
 
             return this.buildHeaderHtml(arr);
         },
 
-        setupRecord(name = 'record') {
+        setupRecord(name = 'instanceComparison') {
             this.notify('Loading...');
-
-            this.ajaxGetRequest(`Connector/action/distantEntity?entityType=${this.scope}&id=${this.model.id}`, null, {async: false}).success(attr => {
+            this.ajaxGetRequest(`Synchronization/action/distantInstanceRequest`, {
+                uri: this.scope + '/' + this.model.id}).success(attr => {
                 this.notify(false);
                 var o = {
                     model: this.model,
@@ -80,8 +77,7 @@ Espo.define('views/compare', ['views/main'], function (Dep) {
                     el: '#main > .'+name,
                     scope: this.scope
                 };
-
-                this.createView(name, this.recordView, o);
+                this.createView(name, this.recordView, o, view => view.render());
             })
 
         },

@@ -314,7 +314,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.getMetadata().get(['clientDefs', this.entityType, 'showCompareAction'])) {
-                if (this.getAcl().check(this.entityType, 'create') && this.mode !== 'edit') {
+                if (this.getAcl().check(this.entityType, 'read') && this.mode !== 'edit') {
                     let exists = false;
 
                     for (const item of (this.dropdownItemList || [])) {
@@ -325,7 +325,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     if (!exists) {
                         this.dropdownItemList.push({
-                            'label': 'Compare',
+                            'label': this.translate('Instance compare'),
                             'name': 'compare',
                             'action': 'compare'
                         });
