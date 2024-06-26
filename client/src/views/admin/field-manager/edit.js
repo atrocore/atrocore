@@ -223,6 +223,15 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             type: 'bool'
                         });
                     }
+                    if (this.type === 'linkMultiple') {
+                        this.paramList.push(
+                            {
+                                name: "auditedLink",
+                                type: "bool"
+                            }
+                        );
+                        this.model.set('auditedLink', this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'audited']));
+                    }
                     this.paramList.forEach(function (o) {
                         this.model.defs.fields[o.name] = o;
                     }, this);
