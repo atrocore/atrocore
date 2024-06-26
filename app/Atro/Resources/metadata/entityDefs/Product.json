@@ -84,7 +84,6 @@
       "relationName": "ProductHierarchy",
       "foreign": "parents",
       "entity": "Product",
-      "audited": false,
       "disableMassRelation": true,
       "midKeys": [
         "entityId",
@@ -96,7 +95,6 @@
       "relationName": "ProductHierarchy",
       "foreign": "children",
       "entity": "Product",
-      "audited": false,
       "disableMassRelation": true,
       "midKeys": [
         "parentId",

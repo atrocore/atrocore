@@ -77,7 +77,6 @@
       "relationName": "FolderHierarchy",
       "foreign": "parents",
       "entity": "Folder",
-      "audited": false,
       "midKeys": [
         "entityId",
         "parentId"
@@ -88,7 +87,6 @@
       "relationName": "FolderHierarchy",
       "foreign": "children",
       "entity": "Folder",
-      "audited": false,
       "midKeys": [
         "parentId",
         "entityId"

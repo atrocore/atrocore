@@ -6,7 +6,7 @@
   "customizable": false,
   "importable": false,
   "notifications": false,
-  "stream": false,
+  "streamDisabled": true,
   "disabled": false,
   "type": "Base",
   "notStorable": true,
