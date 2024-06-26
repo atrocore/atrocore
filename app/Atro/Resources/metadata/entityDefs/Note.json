@@ -74,9 +74,6 @@
             "notStorable": true,
             "disabled": true
         },
-        "isInternal": {
-            "type": "bool"
-        },
         "diff": {
             "type": "text",
             "notStorable": true,

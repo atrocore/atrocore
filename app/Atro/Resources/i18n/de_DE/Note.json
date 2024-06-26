@@ -6,7 +6,6 @@
     "users": "Benutzer",
     "type": "Typ",
     "isGlobal": "Ist global",
-    "isInternal": "Ist Intern (für interne Benutzer)",
     "related": "Verbunden",
     "createdByGender": "Erstellt von Geschlecht",
     "data": "Daten"

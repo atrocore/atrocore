@@ -9,11 +9,6 @@
     <div class="stream-head-container">
         <div class="pull-left">
             {{{avatar}}}
-            {{#if isInternal}}
-            <div class="internal-badge">
-                <span class="fas fa-lock small" title="{{translate 'internalPostTitle' category='messages'}}"></span>
-            </div>
-            {{/if}}
         </div>
 
         <div class="stream-head-text-container">
