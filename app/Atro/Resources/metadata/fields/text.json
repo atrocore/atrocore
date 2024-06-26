@@ -51,10 +51,6 @@
          "type":"bool"
       },
       {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
          "name":"useDisabledTextareaInViewMode",
          "type": "bool",
          "default":false

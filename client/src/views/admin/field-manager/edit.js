@@ -40,7 +40,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         scriptTypeFields: ['script', 'preview'],
 
-        paramWithTooltipList: ['audited', 'required', 'default', 'min', 'max', 'maxLength', 'after', 'before', 'readOnly'],
+        paramWithTooltipList: ['required', 'default', 'min', 'max', 'maxLength', 'after', 'before', 'readOnly'],
 
         data: function () {
             return {
@@ -222,15 +222,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             name: 'isPersonalData',
                             type: 'bool'
                         });
-                    }
-                    if(this.type === 'linkMultiple') {
-                        this.paramList.push(
-                            {
-                                name: "auditedLink",
-                                type: "bool"
-                            }
-                        );
-                        this.model.set('auditedLink', this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'audited']));
                     }
                     this.paramList.forEach(function (o) {
                         this.model.defs.fields[o.name] = o;

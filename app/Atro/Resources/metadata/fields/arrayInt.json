@@ -20,10 +20,6 @@
          "default": false
       },
       {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
          "name":"readOnly",
          "type":"bool"
       }

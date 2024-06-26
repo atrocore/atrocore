@@ -18,10 +18,6 @@
       "view": "views/admin/field-manager/fields/dropdown"
     },
     {
-      "name": "audited",
-      "type": "bool"
-    },
-    {
       "name": "readOnly",
       "type": "bool"
     },
