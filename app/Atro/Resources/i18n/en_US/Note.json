@@ -10,8 +10,7 @@
     "isInternal": "Is Internal (for internal users)",
     "related": "Related",
     "createdByGender": "Created By Gender",
-    "data": "Data",
-    "number": "Number"
+    "data": "Data"
   },
   "filters": {
     "all": "All",

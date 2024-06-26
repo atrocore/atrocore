@@ -53,11 +53,6 @@
             "notStorable": true,
             "readOnly": true
         },
-        "number": {
-            "type": "int",
-            "index": true,
-            "readOnly": true
-        },
         "teams": {
             "type": "linkMultiple",
             "noLoad": true

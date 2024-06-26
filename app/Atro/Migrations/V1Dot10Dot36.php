@@ -30,11 +30,16 @@ class V1Dot10Dot36 extends Base
             $this->exec("ALTER TABLE note DROP super_parent_type");
             $this->exec("CREATE INDEX IDX_NOTE_PARENT_AND_SUPER_PARENT ON note (parent_id, parent_type)");
 
+            $this->exec("DROP INDEX idx_note_number");
+            $this->exec("ALTER TABLE note DROP number");
         } else {
             $this->exec("DROP INDEX IDX_NOTE_SUPER_PARENT ON note");
             $this->exec("DROP INDEX IDX_NOTE_PARENT_AND_SUPER_PARENT ON note");
             $this->exec("ALTER TABLE note DROP super_parent_id, DROP super_parent_type");
             $this->exec("CREATE INDEX IDX_NOTE_PARENT_AND_SUPER_PARENT ON note (parent_id, parent_type)");
+
+            $this->exec("DROP INDEX IDX_NOTE_NUMBER ON note");
+            $this->exec("ALTER TABLE note DROP number");
         }
 
         $this->updateComposer('atrocore/core', '^1.10.36');
