@@ -31,9 +31,5 @@
   },
   "messages": {
     "writeMessage": "Write your message here"
-  },
-  "links": {
-    "superParent": "Super Parent",
-    "related": "Related"
   }
 }

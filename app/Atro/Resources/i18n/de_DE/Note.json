@@ -29,9 +29,5 @@
     "type": {
       "Post": "Senden"
     }
-  },
-  "links": {
-    "superParent": "Super Eltern",
-    "related": "Verbunden"
   }
 }

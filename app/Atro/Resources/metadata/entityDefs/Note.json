@@ -125,9 +125,6 @@
             "type": "belongsToParent",
             "foreign": "notes"
         },
-        "superParent": {
-            "type": "belongsToParent"
-        },
         "related": {
             "type": "belongsToParent"
         },
@@ -196,7 +193,7 @@
         },
         "parentAndSuperParent": {
             "type": "index",
-            "columns": ["parentId", "parentType", "superParentId", "superParentType"]
+            "columns": ["parentId", "parentType"]
         }
     }
 }

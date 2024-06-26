@@ -31,9 +31,5 @@
   },
   "messages": {
     "writeMessage": "Напишите Ваше сообщение здесь"
-  },
-  "links": {
-    "superParent": "Super Parent",
-    "related": "Связанный"
   }
 }

@@ -31,9 +31,5 @@
 	},
 	"messages": {
 		"writeMessage": "Napisz tutaj swoją wiadomość"
-	},
-	"links": {
-		"superParent": "Nadrzędny",
-		"related": "Powiązane"
 	}
 }
