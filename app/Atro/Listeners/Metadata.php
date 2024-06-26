@@ -581,6 +581,7 @@ class Metadata extends AbstractListener
             $data['scopes'][$entityName]['tab'] = false;
             $data['scopes'][$entityName]['layouts'] = false;
             $data['scopes'][$entityName]['customizable'] = false;
+            $data['scopes'][$entityName]['auditDisabled'] = true;
         }
     }
 
