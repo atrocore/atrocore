@@ -117,22 +117,6 @@
       ],
       [
         {
-          "name": "openAiOrganizationId"
-        },
-        {
-          "name": "openAiApiKey"
-        }
-      ],
-      [
-        {
-          "name": "openAiModel"
-        },
-        {
-          "name": "openAiTemperature"
-        }
-      ],
-      [
-        {
           "name": "additionalParameters"
         },
         false
