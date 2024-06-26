@@ -578,10 +578,16 @@ class Metadata extends AbstractListener
                 $data['scopes'][$entityName]['acl'] = true;
             }
 
+            if (!isset($data['scopes'][$entityName]['auditedDisabled'])) {
+                $data['scopes'][$entityName]['auditedDisabled'] = true;
+            }
+            if (!isset($data['scopes'][$entityName]['streamDisabled'])) {
+                $data['scopes'][$entityName]['streamDisabled'] = true;
+            }
+
             $data['scopes'][$entityName]['tab'] = false;
             $data['scopes'][$entityName]['layouts'] = false;
             $data['scopes'][$entityName]['customizable'] = false;
-            $data['scopes'][$entityName]['auditDisabled'] = true;
         }
     }
 

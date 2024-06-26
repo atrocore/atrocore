@@ -60,6 +60,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
                 this.model.set('type', this.getMetadata().get('scopes.' + scope + '.type') || '');
                 this.model.set('disabled', this.getMetadata().get('scopes.' + scope + '.disabled') || false);
+                this.model.set('auditedDisabled', this.getMetadata().get('scopes.' + scope + '.auditedDisabled') || false);
 
                 this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
@@ -145,6 +146,15 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 tooltip: true,
                 tooltipText: this.translate('disabled', 'tooltips', 'EntityManager'),
                 tooltipLink: this.translate('disabled', 'tooltipLink', 'EntityManager')
+            });
+
+            this.createView('auditedDisabled', 'views/fields/bool', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="auditedDisabled"]',
+                defs: {
+                    name: 'auditedDisabled'
+                }
             });
 
             this.createView('name', 'views/fields/varchar', {
@@ -525,6 +535,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 'labelSingular',
                 'labelPlural',
                 'disabled',
+                'auditedDisabled',
                 'statusField',
                 'iconClass'
             ];
@@ -578,6 +589,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 labelPlural: this.model.get('labelPlural'),
                 type: this.model.get('type'),
                 disabled: this.model.get('disabled'),
+                auditedDisabled: this.model.get('auditedDisabled'),
                 textFilterFields: this.model.get('textFilterFields'),
                 statusField: this.model.get('statusField'),
                 iconClass: this.model.get('iconClass'),

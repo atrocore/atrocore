@@ -38,6 +38,7 @@
     "linkMultipleFieldForeign": "Foreign Link Multiple Field",
     "disabled": "Disabled",
     "textFilterFields": "Text Filter Fields",
+    "auditedDisabled": "Disabled Track changes",
     "audited": "Track changes",
     "auditedForeign": "Foreign Audited",
     "statusField": "Status Field",

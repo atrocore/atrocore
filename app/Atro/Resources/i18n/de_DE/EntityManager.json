@@ -37,6 +37,7 @@
     "disabled": "Inaktiv",
     "textFilterFields": "Textfilter Felder",
     "audited": "Änderungen verfolgen",
+    "auditedDisabled": "Deaktiviert Änderungen verfolgen",
     "auditedForeign": "fremd geprüft",
     "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
     "color": "Farbe",

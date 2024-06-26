@@ -43,6 +43,12 @@
                     {{{disabled}}}
                 </div>
             </div>
+            <div class="cell form-group col-md-6" data-name="auditedDisabled">
+                <label class="control-label" data-name="auditedDisabled">{{translate 'auditedDisabled' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="auditedDisabled">
+                    {{{auditedDisabled}}}
+                </div>
+            </div>
         </div>
 
         {{#if sortBy}}
