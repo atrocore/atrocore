@@ -42,6 +42,8 @@ class V1Dot10Dot36 extends Base
             $this->exec("ALTER TABLE note DROP number");
         }
 
+        $this->exec("ALTER TABLE note DROP is_internal");
+
         $this->updateComposer('atrocore/core', '^1.10.36');
     }
 
