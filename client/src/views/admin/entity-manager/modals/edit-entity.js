@@ -42,7 +42,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             return {
                 isNew: this.isNew,
                 additionalParamsLayout: this.getMetadata().get('app.additionalEntityParams.layout') || [],
-                isActiveUnavailable: this.getMetadata().get(['scopes', this.scope, 'isActiveUnavailable']) || false
+                isActiveUnavailable: this.getMetadata().get(['scopes', this.scope, 'isActiveUnavailable']) || false,
+                auditable: !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled')
             };
         },
 
