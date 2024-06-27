@@ -2,11 +2,8 @@
 	"fields": {
 		"post": "Post",
 		"attachments": "Załączniki",
-		"teams": "Zespoły",
-		"users": "Użytkownicy",
 		"type": "Typ",
 		"isGlobal": "Globalny",
-		"related": "Powiązane",
 		"createdByGender": "Utworzone przez płeć",
 		"data": "Dane"
 	},
@@ -16,12 +13,6 @@
 		"updates": "Aktualizacje"
 	},
 	"options": {
-		"targetType": {
-			"self": "do siebie",
-			"users": "do konkretnych użytkowników",
-			"teams": "do konkretnych zespołów",
-			"all": "do wszystkich użytkowników wewnętrznych"
-		},
 		"type": {
 			"Post": "Post"
 		}

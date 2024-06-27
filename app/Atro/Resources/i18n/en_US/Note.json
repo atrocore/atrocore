@@ -2,11 +2,8 @@
   "fields": {
     "post": "Post",
     "attachments": "Attachments",
-    "teams": "Teams",
-    "users": "Users",
     "type": "Type",
     "isGlobal": "Is Global",
-    "related": "Related",
     "createdByGender": "Created By Gender",
     "data": "Data"
   },
@@ -16,12 +13,6 @@
     "updates": "Updates"
   },
   "options": {
-    "targetType": {
-      "self": "to myself",
-      "users": "to particular user(s)",
-      "teams": "to particular team(s)",
-      "all": "to all internal users"
-    },
     "type": {
       "Post": "Post"
     }

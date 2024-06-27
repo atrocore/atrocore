@@ -2,10 +2,8 @@
   "fields": {
     "post": "Senden",
     "attachments": "Anhänge",
-    "users": "Benutzer",
     "type": "Typ",
     "isGlobal": "Ist global",
-    "related": "Verbunden",
     "createdByGender": "Erstellt von Geschlecht",
     "data": "Daten"
   },
@@ -17,12 +15,6 @@
     "writeMessage": "Schreiben Sie hier Ihre Nachricht"
   },
   "options": {
-    "targetType": {
-      "self": "An sich selbst",
-      "users": "An (einen) bestimmte(n) Benutzer",
-      "teams": "An (ein) bestimmte(s) Team(s)",
-      "all": "An alle Benutzer"
-    },
     "type": {
       "Post": "Senden"
     }

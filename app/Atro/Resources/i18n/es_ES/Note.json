@@ -2,11 +2,8 @@
   "fields": {
     "post": "Entrada",
     "attachments": "Adjuntos",
-    "teams": "Equipos",
-    "users": "Usuarios",
     "type": "Tipo",
     "isGlobal": "Es global",
-    "related": "Relacionado",
     "createdByGender": "Creado por género",
     "data": "Datos",
     "number": "Número"
@@ -17,12 +14,6 @@
     "updates": "Actualizaciones"
   },
   "options": {
-    "targetType": {
-      "self": "Para mí",
-      "users": "Para determinado/s usuario/s",
-      "teams": "Para determinado/s equipo/s",
-      "all": "Para todos los usuarios"
-    },
     "type": {
       "Post": "Post"
     }
