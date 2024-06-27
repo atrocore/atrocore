@@ -40,7 +40,6 @@ class Entity extends AbstractListener
         if ($this->streamEnabled($entity)) {
             if ($entity->isNew()) {
                 $this->followCreatedEntity($entity);
-                $this->getStreamService()->noteCreate($entity);
             }
         }
 

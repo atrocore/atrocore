@@ -180,6 +180,12 @@ class V1Dot10Dot36 extends Base
         $this->exec("ALTER TABLE note DROP attribute_id");
         $this->exec("ALTER TABLE note DROP pav_id");
 
+        $this->getConnection()->createQueryBuilder()
+            ->delete('note')
+            ->where('type=:type')
+            ->setParameter('type', 'Create')
+            ->executeQuery();
+
         $this->updateComposer('atrocore/core', '^1.10.36');
     }
 
