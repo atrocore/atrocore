@@ -3,5 +3,6 @@
   "type": "Base",
   "module": "TreoCore",
   "object": true,
-  "quickCreateListDisabled": true
+  "quickCreateListDisabled": true,
+  "streamDisabled": true
 }

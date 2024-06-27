@@ -4,5 +4,6 @@
     "tab": false,
     "acl": false,
     "customizable":false,
-    "isActiveUnavailable": true
+    "isActiveUnavailable": true,
+    "streamDisabled": true
 }

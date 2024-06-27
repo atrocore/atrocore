@@ -16,9 +16,15 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Espo\Hooks\Common;
+use Espo\ORM\Entity as OrmEntity;
+use Espo\Services\Stream as StreamService;
 
 class Entity extends AbstractListener
 {
+    private array $streamEnabled = [];
+    private ?bool $followCreatedEntities = null;
+    private ?StreamService $streamService = null;
+
     public function beforeSave(Event $event): void
     {
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeSave', $event);
@@ -27,6 +33,16 @@ class Entity extends AbstractListener
     public function afterSave(Event $event): void
     {
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterSave', $event);
+
+        /** @var OrmEntity $entity */
+        $entity = $event->getArgument('entity');
+
+        if ($this->streamEnabled($entity)) {
+            if ($entity->isNew()) {
+                $this->followCreatedEntity($entity);
+                $this->getStreamService()->noteCreate($entity);
+            }
+        }
 
         if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
             $this
@@ -160,5 +176,56 @@ class Entity extends AbstractListener
     private function skipHooks(): bool
     {
         return !empty($this->getEntityManager()->getMemoryStorage()->get('skipHooks'));
+    }
+
+    protected function streamEnabled(OrmEntity $entity): bool
+    {
+        if (!isset($this->streamEnabled[$entity->getEntityType()])) {
+            $this->streamEnabled[$entity->getEntityType()] = empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.streamDisabled"));
+        }
+
+        return $this->streamEnabled[$entity->getEntityType()];
+    }
+
+    protected function followCreatedEntity(OrmEntity $entity): void
+    {
+        $userIdList = [];
+        if ($this->isFollowCreatedEntities() && $entity->get('createdById') && $entity->get('createdById') === $this->getUser()->id) {
+            $userIdList[] = $entity->get('createdById');
+        }
+
+        if (!empty($entity->get('assignedUserId')) && !in_array($entity->get('assignedUserId'), $userIdList)) {
+            $userIdList[] = $entity->get('assignedUserId');
+        }
+
+        if (!empty($userIdList)) {
+            $this->getStreamService()->followEntityMass($entity, $userIdList);
+        }
+
+        if (in_array($this->getUser()->id, $userIdList)) {
+            $entity->set('isFollowed', true);
+        }
+    }
+
+    protected function isFollowCreatedEntities(): bool
+    {
+        if ($this->followCreatedEntities === null) {
+            if ($this->getUser()->isSystem()) {
+                $this->followCreatedEntities = false;
+            } else {
+                $this->followCreatedEntities = !empty($this->getPreferences()) && !empty($this->getPreferences()->get('followCreatedEntities'));
+            }
+        }
+
+        return $this->followCreatedEntities;
+    }
+
+    protected function getStreamService(): StreamService
+    {
+        if ($this->streamService === null) {
+            $this->streamService = $this->getContainer()->get('serviceFactory')->create('Stream');
+        }
+
+        return $this->streamService;
     }
 }

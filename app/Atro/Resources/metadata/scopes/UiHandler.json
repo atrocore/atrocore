@@ -8,5 +8,6 @@
   "disabled": false,
   "type": "Base",
   "object": true,
-  "isActiveUnavailable": true
+  "isActiveUnavailable": true,
+  "streamDisabled": true
 }
