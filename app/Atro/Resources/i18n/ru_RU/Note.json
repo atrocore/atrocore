@@ -3,7 +3,6 @@
     "post": "Разместить",
     "attachments": "Вложения",
     "type": "Тип",
-    "isGlobal": "Глобальный",
     "createdByGender": "Создано по полу",
     "data": "Данные"
   },

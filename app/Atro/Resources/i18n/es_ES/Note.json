@@ -3,7 +3,6 @@
     "post": "Entrada",
     "attachments": "Adjuntos",
     "type": "Tipo",
-    "isGlobal": "Es global",
     "createdByGender": "Creado por género",
     "data": "Datos",
     "number": "Número"

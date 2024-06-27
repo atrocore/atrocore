@@ -3,7 +3,6 @@
     "post": "Post",
     "attachments": "Attachments",
     "type": "Type",
-    "isGlobal": "Is Global",
     "createdByGender": "Created By Gender",
     "data": "Data"
   },
