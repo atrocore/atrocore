@@ -121,9 +121,12 @@ class V1Dot10Dot36 extends Base
 
         if ($this->isPgSQL()) {
             $this->exec("DROP INDEX idx_note_related");
+            $this->exec("DROP SEQUENCE autofollow_id_seq CASCADE");
         } else {
             $this->exec("DROP INDEX IDX_NOTE_RELATED ON note");
         }
+
+        $this->exec("DROP TABLE autofollow");
 
         $this->exec("ALTER TABLE note DROP related_id");
         $this->exec("ALTER TABLE note DROP related_type");
