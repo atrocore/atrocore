@@ -1,15 +1,40 @@
 [
-    {
-        "label": "In-app Notifications",
-        "rows": [
-            [{"name": "assignmentNotifications"}, false]
-        ]
-    },
-    {
-        "label": "Email Notifications",
-        "rows": [
-            [{"name": "assignmentEmailNotifications"}, {"name": "mentionEmailNotifications"}],
-            [{"name": "streamEmailNotifications"}, false]
-        ]
-    }
+  {
+    "label": "In-app Notifications",
+    "rows": [
+      [
+        {
+          "name": "assignmentNotifications"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "Email Notifications",
+    "rows": [
+      [
+        {
+          "name": "notificationSmtpConnection"
+        },
+        {
+          "name": "disableEmailDelivery"
+        }
+      ],
+      [
+        {
+          "name": "assignmentEmailNotifications"
+        },
+        {
+          "name": "mentionEmailNotifications"
+        }
+      ],
+      [
+        {
+          "name": "streamEmailNotifications"
+        },
+        false
+      ]
+    ]
+  }
 ]

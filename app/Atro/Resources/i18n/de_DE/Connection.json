@@ -7,17 +7,25 @@
     "user": "Benutzer",
     "password": "Passwort",
     "payload": "Nutzlast",
-    "loginUrl": "Anmelde-URL"
+    "loginUrl": "Anmelde-URL",
+    "smtpAuth": "Authentifizierung",
+    "smtpSecurity": "Transportsicherheit",
+    "smtpUsername": "Benutzername",
+    "smtpPassword": "Passwort",
+    "outboundEmailFromName": "Absendername",
+    "outboundEmailFromAddress": "Absenderadresse"
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
     "testConnection": "Verbindung testen",
     "Create Connection": "Verbindung erstellen",
-    "cookie": "Cookie-Sitzung"
+    "cookie": "Cookie-Sitzung",
+    "smtp": "Smtp"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",
     "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
-    "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden"
+    "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden",
+    "notificationConnectionCannotBeDeleted": "Diese Verbindung wird für E-Mail-Benachrichtigungen verwendet und kann nicht gelöscht werden"
   }
 }

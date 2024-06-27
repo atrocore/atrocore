@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\ConnectionType\ConnectionInterface;
+use Atro\ConnectionType\ConnectionSmtp;
 use Atro\ConnectionType\TestConnectionInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
@@ -23,6 +24,20 @@ use Espo\ORM\Entity;
 class Connection extends Base
 {
     protected $mandatorySelectAttributeList = ['data'];
+
+    public function sendTestEmail(string $id, string $toEmail): bool
+    {
+        $connectionEntity = $this->getRepository()->get($id);
+        if (empty($connectionEntity)) {
+            throw new NotFound();
+        }
+
+        $connection = $this->createConnection($connectionEntity);
+        if ($connection instanceof ConnectionSmtp) {
+            return $connection->sendTestEmail($connectionEntity, $toEmail);
+        }
+        return false;
+    }
 
     public function testConnection(string $id): bool
     {
