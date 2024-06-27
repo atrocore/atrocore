@@ -97,7 +97,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 this.updateRelationshipPanel(link);
             });
 
-            if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
+            if (!this.getMetadata().get('scopes.' + this.scope + '.streamDisabled')) {
                 if (this.model.has('isFollowed')) {
                     this.handleFollowButton();
                 }
