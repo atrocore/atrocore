@@ -15,7 +15,6 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
-use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -48,10 +47,5 @@ class Webhook implements TypeInterface
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
-    }
-
-    protected function getServiceFactory(): ServiceFactory
-    {
-        return $this->container->get('serviceFactory');
     }
 }
