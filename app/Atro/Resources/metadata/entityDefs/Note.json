@@ -56,14 +56,6 @@
             "notStorable": true,
             "readOnly": true
         },
-        "teams": {
-            "type": "linkMultiple",
-            "noLoad": true
-        },
-        "users": {
-            "type": "linkMultiple",
-            "noLoad": true
-        },
         "isGlobal": {
             "type": "bool"
         },
@@ -118,18 +110,6 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "foreign": "notes"
-        },
-        "teams": {
-            "type": "hasMany",
-            "relationName": "noteTeam",
-            "entity": "Team",
-            "foreign": "notes"
-        },
-        "users": {
-            "type": "hasMany",
-            "relationName": "noteUser",
-            "entity": "User",
             "foreign": "notes"
         }
     },

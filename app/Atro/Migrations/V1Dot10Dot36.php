@@ -128,6 +128,9 @@ class V1Dot10Dot36 extends Base
         $this->exec("ALTER TABLE note DROP related_id");
         $this->exec("ALTER TABLE note DROP related_type");
 
+        $this->exec("DROP TABLE note_team");
+        $this->exec("DROP TABLE note_user");
+
         $this->updateComposer('atrocore/core', '^1.10.36');
     }
 
