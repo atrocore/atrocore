@@ -8,7 +8,8 @@
     "massAction": "Mass Action",
     "display": "Display",
     "actionsSet": "Actions Set",
-    "actions": "Actions"
+    "actions": "Actions",
+    "webhookUrl": "URL"
   },
   "links": {
     "actionsSet": "Actions Set",
@@ -34,7 +35,8 @@
       "single": "Single"
     },
     "type": {
-      "set": "Action Set"
+      "set": "Action Set",
+      "webhook": "Webhook"
     }
   },
   "tooltips": {

@@ -7,8 +7,11 @@
             <div class="pull-right item-menu-container">{{{../../../itemMenu}}}</div>
             {{/unless}}
             {{/if}}
-            <div class="form-group">
+            <div class="form-group horizontal">
                 <div class="field{{#if isAlignRight}} field-right-align{{/if}}{{#if isLarge}} field-large{{/if}}" data-name="{{name}}">{{{var key ../this}}}</div>
+                {{#if showLabel }}
+                <div class="label-text"> {{label}}</div>
+                {{/if}}
             </div>
         </div>
         {{/each}}

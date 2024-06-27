@@ -16190,6 +16190,10 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
   border-width: 1px;
 }
 
+.field > .note-editor{
+  margin-bottom: 0;
+}
+
 .note-editor .note-toolbar {
   border-bottom: 0 !important;
   background-color: transparent;
@@ -23414,4 +23418,13 @@ code.hljs {
   position: absolute;
   height: 100%;
   width: 100%;
+}
+
+.form-group.horizontal {
+  display: flex;
+  align-items: center;
+}
+
+.form-group.horizontal .label-text{
+  margin-left: 5px;
 }

@@ -299,37 +299,31 @@ Espo.define('controllers/record', ['controller','view'], function (Dep, View) {
         },
 
         compare: function (options) {
-            var id = options.id
-
-            var createView = function (model) {
+            let id = options.id
+            let createView = function (model) {
                 this.main('views/compare', {
                     model: model,
                     scope: this.name,
                 });
             }.bind(this);
 
+            this.getModel(function (model) {
+                model.id = id;
+                if (options.model) {
+                    model = options.model;
+                }
 
-            if('model' in options && '_fullyLoaded' in options.model){
-                createView(model);
-                return;
-            }
-
-
-            this.showLoadingNotification();
-            View.prototype.ajaxGetRequest(View.prototype.generateEntityUrl.call(this, this.name, id), {}, {async: false}).success(data => {
-                const modalAttribute = data.list[0];
-                modalAttribute['_fullyLoaded'] = true;
-
-                this.getModel(function (model) {
-                    model.id = id;
-                    model.set(modalAttribute)
+                this.showLoadingNotification();
+                this.listenToOnce(model, 'sync', function () {
                     createView(model);
                     this.hideLoadingNotification();
+                }, this);
+                model.fetch({main: true});
 
-                    }.bind(this)
-                );
-            }, this);
-
+                this.listenToOnce(this.baseController, 'action', function () {
+                    model.abortLastFetch();
+                }, this);
+            });
         },
 
         /**

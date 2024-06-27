@@ -28,10 +28,6 @@
     "loginUrl": "Login URL",
     "atrocoreUrl": "URL",
     "atrocoreToken": "Authorization Token",
-    "openAiOrganizationId": "Organization ID",
-    "openAiApiKey": "Api Key",
-    "openAiModel": "Model",
-    "openAiTemperature": "Temperature",
     "additionalParameters": "Additional Parameters"
   },
   "labels": {
@@ -55,13 +51,11 @@
     "products": "Products",
     "receipts": "Receipts",
     "price-reduction": "Price reduction",
-    "oauth1": "Oauth 1.0",
-    "chatgpt": "ChatGpt"
+    "oauth1": "Oauth 1.0"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",
     "connectionFailed": "Connection could not be established: %s",
-    "noSuchType": "No such connection type.",
-    "chatgptShouldBeUnique": "There should be only one chatgpt connection"
+    "noSuchType": "No such connection type."
   }
 }
