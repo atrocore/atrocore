@@ -84,6 +84,50 @@ class V1Dot10Dot36 extends Base
 
         $this->exec("ALTER TABLE note DROP post");
 
+        while (true) {
+            $notes = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('note')
+                ->where('related_type IS NOT NULL')
+                ->andWhere('deleted=:false')
+                ->setFirstResult(0)
+                ->setMaxResults(30000)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            if (empty($notes)) {
+                break;
+            }
+
+            foreach ($notes as $note) {
+                $data = @json_decode($note['data'], true);
+                if (!is_array($data)) {
+                    $data = [];
+                }
+
+                $data['relatedType'] = $note['related_type'];
+                $data['relatedId'] = $note['related_id'];
+
+                $note['data'] = json_encode($data);
+                $this->getConnection()->createQueryBuilder()
+                    ->update('note')
+                    ->set('data', ':data')
+                    ->where('id=:id')
+                    ->setParameter('id', $note['id'])
+                    ->setParameter('data', $note['data'])
+                    ->executeQuery();
+            }
+        }
+
+        if ($this->isPgSQL()) {
+            $this->exec("DROP INDEX idx_note_related");
+        } else {
+            $this->exec("DROP INDEX IDX_NOTE_RELATED ON note");
+        }
+
+        $this->exec("ALTER TABLE note DROP related_id");
+        $this->exec("ALTER TABLE note DROP related_type");
+
         $this->updateComposer('atrocore/core', '^1.10.36');
     }
 

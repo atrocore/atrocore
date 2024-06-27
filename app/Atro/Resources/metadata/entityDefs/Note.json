@@ -32,9 +32,15 @@
             "type": "linkParent",
             "readOnly": true
         },
-        "related": {
-            "type": "linkParent",
-            "readOnly": true
+        "relatedType": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "relatedId": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true
         },
         "attachments": {
             "type": "linkMultiple",
@@ -113,9 +119,6 @@
         "parent": {
             "type": "belongsToParent",
             "foreign": "notes"
-        },
-        "related": {
-            "type": "belongsToParent"
         },
         "teams": {
             "type": "hasMany",
