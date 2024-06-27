@@ -19,7 +19,7 @@ class V1Dot10Dot36 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-06-26 17:00:00');
+        return new \DateTime('2024-06-29 17:00:00');
     }
 
     public function up(): void
@@ -131,6 +131,51 @@ class V1Dot10Dot36 extends Base
 
         $this->exec("DROP TABLE note_team");
         $this->exec("DROP TABLE note_user");
+
+        while (true) {
+            try {
+                $notes = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from('note')
+                    ->where('pav_id IS NOT NULL')
+                    ->andWhere('deleted=:false')
+                    ->setFirstResult(0)
+                    ->setMaxResults(30000)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $notes = [];
+            }
+
+            if (empty($notes)) {
+                break;
+            }
+
+            foreach ($notes as $note) {
+                $data = @json_decode($note['data'], true);
+                if (!is_array($data)) {
+                    $data = [];
+                }
+
+                $data['attributeId'] = $note['attribute_id'];
+                $data['pavId'] = $note['pav_id'];
+
+                $note['data'] = json_encode($data);
+                $this->getConnection()->createQueryBuilder()
+                    ->update('note')
+                    ->set('data', ':data')
+                    ->set('pav_id', 'null')
+                    ->set('attribute_id', 'null')
+                    ->where('id=:id')
+                    ->setParameter('id', $note['id'])
+                    ->setParameter('data', $note['data'])
+                    ->setParameter('null', null, ParameterType::NULL)
+                    ->executeQuery();
+            }
+        }
+
+        $this->exec("ALTER TABLE note DROP attribute_id");
+        $this->exec("ALTER TABLE note DROP pav_id");
 
         $this->updateComposer('atrocore/core', '^1.10.36');
     }
