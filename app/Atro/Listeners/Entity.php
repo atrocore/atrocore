@@ -32,9 +32,6 @@ class Entity extends AbstractListener
             $this
                 ->createHook(Common\Stream::class)
                 ->afterSave($event->getArgument('entity'), $event->getArgument('options'));
-            $this
-                ->createHook(Common\StreamNotesAcl::class)
-                ->afterSave($event->getArgument('entity'), $event->getArgument('options'));
         }
     }
 

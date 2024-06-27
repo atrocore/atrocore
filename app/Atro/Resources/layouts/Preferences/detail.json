@@ -10,16 +10,14 @@
             ],
             [
                 {
-                    "name": "autoFollowEntityTypeList"
+                    "name": "followCreatedEntities"
                 },
                 {
                     "name": "followEntityOnStreamPost"
                 }
             ],
             [
-                {
-                    "name": "followCreatedEntities"
-                },
+                false,
                 {
                     "name": "followCreatedEntityTypeList"
                 }

@@ -11,7 +11,6 @@
     "receiveMentionEmailNotifications": "Notificaciones por correo electrónico acerca de menciones en los mensajes",
     "receiveStreamEmailNotifications": "Notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
     "dashboardLayout": "Diseño del escritorio",
-    "autoFollowEntityTypeList": "Seguir automaticamente (global)",
     "followEntityOnStreamPost": "Seguimiento automático después de publicar en la historia",
     "followCreatedEntities": "Seguimiento automático de registros creados",
     "followCreatedEntityTypeList": "Seguimiento automático de registros creados de tipos de entidades específicos",
@@ -35,7 +34,6 @@
     "Reset Dashboard to Default": "Reset Dashboard to Default"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Siguirá automáticamente todos los registros nuevos (creados por cualquier usuario) de los tipos de entidad seleccionados. Para poder ver información en la historia y recibir notificaciones sobre todos los registros en el sistema.",
     "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user.",
     "followCreatedEntityTypeList": "When creating new records of selected entity types, they will automatically be followed, even if assigned to a different user."
   }

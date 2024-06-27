@@ -7,7 +7,6 @@
     "receiveAssignmentEmailNotifications": "Powiadomienia o przypisaniu",
     "receiveMentionEmailNotifications": "Powiadomienia o wspomnieniach w postach",
     "receiveStreamEmailNotifications": "Powiadomienia o aktualizacjach w Strumieniu",
-    "autoFollowEntityTypeList": "Globalne automatyczne śledzenie",
     "dashboardTabList": "Lista zakładek",
     "theme": "Motyw",
     "useCustomTabList": "Użyj niestandardowej listy zakładek",
@@ -28,7 +27,6 @@
     "Reset Dashboard to Default": "Resetuj pulpit do domyślnych ustawień"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Automatycznie śledź WSZYSTKIE nowe rekordy (utworzone przez dowolnego użytkownika) wybranych typów encji. Aby móc zobaczyć informacje w strumieniu i otrzymywać powiadomienia o wszystkich rekordach w systemie.",
     "followCreatedEntities": "Tworząc nowe rekordy, będą one automatycznie śledzone, nawet jeśli są przypisane do innego użytkownika.",
     "followCreatedEntityTypeList": "Tworząc nowe rekordy określonych typów encji, będą one automatycznie śledzone, nawet jeśli są przypisane do innego użytkownika."
   }
