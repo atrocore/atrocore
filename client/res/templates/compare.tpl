@@ -15,4 +15,16 @@
         background-color: white;
         width: 100%;
     }
+    .compare-panel table td, .compare-panel table th{
+        max-width: 100px;
+    }
+    .file-link {
+        white-space: normal;
+    }
+    .compare-panel table tbody tr.danger {
+        border-left:2px solid red;
+    }
+    .compare-panel table tbody tr.danger > td  {
+        background-color: transparent;
+    }
 </style>

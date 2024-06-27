@@ -6,7 +6,7 @@
             <th>
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
-            {{#each instanceNames}}
+            {{#each instances}}
             <th>
                 {{name}}
             </th>

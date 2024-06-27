@@ -13,10 +13,7 @@
                 <thead>
                 <tr>
                     <th>{{ translate 'instance' scope='Synchronization' }}</th>
-                    <th>
-                        {{translate 'current' scope='Synchronization' category='labels'}}
-                    </th>
-                    {{#each ../instanceNames}}
+                    {{#each ../instances}}
                     <th class="text-center">
                         {{name}}
                     </th>
