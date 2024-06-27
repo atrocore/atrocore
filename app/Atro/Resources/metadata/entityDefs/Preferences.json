@@ -95,12 +95,6 @@
             "type": "bool",
             "tooltip": true
         },
-        "followCreatedEntityTypeList": {
-            "type": "multiEnum",
-            "view": "views/preferences/fields/auto-follow-entity-type-list",
-            "translation": "Global.scopeNamesPlural",
-            "tooltip": true
-        },
         "scopeColorsDisabled": {
             "type": "bool"
         },

@@ -15,12 +15,6 @@
                 {
                     "name": "followEntityOnStreamPost"
                 }
-            ],
-            [
-                false,
-                {
-                    "name": "followCreatedEntityTypeList"
-                }
             ]
         ]
     },

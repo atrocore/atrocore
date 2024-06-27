@@ -14,7 +14,6 @@
     "dashboardLayout": "Układ pulpitu",
     "followEntityOnStreamPost": "Automatyczne śledzenie rekordu po opublikowaniu w Strumieniu",
     "followCreatedEntities": "Automatyczne śledzenie utworzonych rekordów",
-    "followCreatedEntityTypeList": "Automatyczne śledzenie utworzonych rekordów określonych typów encji",
     "scopeColorsDisabled": "Wyłącz kolory zakresu",
     "tabColorsDisabled": "Wyłącz kolory ikon zakładek"
   },
@@ -27,7 +26,6 @@
     "Reset Dashboard to Default": "Resetuj pulpit do domyślnych ustawień"
   },
   "tooltips": {
-    "followCreatedEntities": "Tworząc nowe rekordy, będą one automatycznie śledzone, nawet jeśli są przypisane do innego użytkownika.",
-    "followCreatedEntityTypeList": "Tworząc nowe rekordy określonych typów encji, będą one automatycznie śledzone, nawet jeśli są przypisane do innego użytkownika."
+    "followCreatedEntities": "Tworząc nowe rekordy, będą one automatycznie śledzone, nawet jeśli są przypisane do innego użytkownika."
   }
 }
