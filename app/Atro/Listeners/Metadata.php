@@ -143,6 +143,34 @@ class Metadata extends AbstractListener
         }
 
         $this->getMemoryStorage()->set('dynamic_action', $actions);
+
+        foreach ($actions ?? [] as $action) {
+            if ($action['type'] === 'webhook') {
+                if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = [
+                        'id'         => $action['id'],
+                        'name'       => $action['name'],
+                        'display'    => $action['display'],
+                        'massAction' => false,
+                        'acl'        => [
+                            'scope'  => $action['source_entity'],
+                            'action' => 'read',
+                        ]
+                    ];
+                }
+                if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = [
+                        'id'      => $action['id'],
+                        'name'    => $action['name'],
+                        'display' => $action['display'],
+                        'acl'     => [
+                            'scope'  => $action['source_entity'],
+                            'action' => 'read',
+                        ]
+                    ];
+                }
+            }
+        }
     }
 
     protected function getMemoryStorage(): StorageInterface

@@ -42,7 +42,9 @@
             {
               "type": "in",
               "attribute": "type",
-              "value": []
+              "value": [
+                "webhook"
+              ]
             },
             {
               "type": "in",
@@ -92,6 +94,30 @@
               "value": [
                 "entity",
                 "record"
+              ]
+            }
+          ]
+        }
+      },
+      "webhookUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "webhook"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "webhook"
               ]
             }
           ]
