@@ -59,7 +59,7 @@
     "receipts": "Receipts",
     "price-reduction": "Price reduction",
     "oauth1": "Oauth 1.0",
-    "smtp": "Smtp"
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",

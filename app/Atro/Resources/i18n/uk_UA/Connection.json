@@ -18,7 +18,7 @@
     "connectionSuccess": "З'єднання успішно встановлено",
     "testConnection": "Перевірити з'єднання",
     "Create Connection": "Створити з'єднання",
-    "smtp": "Smtp"
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не встановлено.",

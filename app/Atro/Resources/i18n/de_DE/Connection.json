@@ -20,7 +20,7 @@
     "testConnection": "Verbindung testen",
     "Create Connection": "Verbindung erstellen",
     "cookie": "Cookie-Sitzung",
-    "smtp": "Smtp"
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",

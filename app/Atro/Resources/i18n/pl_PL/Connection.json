@@ -59,7 +59,7 @@
     "receipts": "Paragony",
     "price-reduction": "Obniżka cen",
     "oauth1": "OAuth 1.0",
-    "smtp": "Smtp"
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "Rozszerzenie PHP MSSQL nie jest zainstalowane.",
