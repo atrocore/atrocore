@@ -2,7 +2,6 @@
   "fields": {
     "post": "Разместить",
     "attachments": "Вложения",
-    "targetType": "Цель",
     "teams": "Группы",
     "users": "Пользователи",
     "type": "Тип",

@@ -2,7 +2,6 @@
   "fields": {
     "post": "Post",
     "attachments": "Attachments",
-    "targetType": "Target",
     "teams": "Teams",
     "users": "Users",
     "type": "Type",

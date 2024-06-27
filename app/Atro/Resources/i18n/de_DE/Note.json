@@ -2,7 +2,6 @@
   "fields": {
     "post": "Senden",
     "attachments": "Anhänge",
-    "targetType": "Ziel",
     "users": "Benutzer",
     "type": "Typ",
     "isGlobal": "Ist global",

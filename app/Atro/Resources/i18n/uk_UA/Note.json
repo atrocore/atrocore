@@ -2,7 +2,6 @@
   "fields": {
     "post": "Розмістити",
     "attachments": "Вкладення",
-    "targetType": "Ціль",
     "teams": "Групи",
     "users": "Користувачі",
     "type": "Тип",

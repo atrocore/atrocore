@@ -2,7 +2,6 @@
 	"fields": {
 		"post": "Post",
 		"attachments": "Załączniki",
-		"targetType": "Cel",
 		"teams": "Zespoły",
 		"users": "Użytkownicy",
 		"type": "Typ",

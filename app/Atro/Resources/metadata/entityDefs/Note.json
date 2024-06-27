@@ -2,7 +2,7 @@
     "fields": {
         "post": {
             "type": "text",
-            "rows": 30
+            "notStorable": true
         },
         "fieldDefs": {
             "type": "jsonObject",
@@ -27,9 +27,6 @@
             "readOnly": true,
             "view": "views/fields/enum",
             "options": ["Post"]
-        },
-        "targetType": {
-            "type": "varchar"
         },
         "parent": {
             "type": "linkParent",

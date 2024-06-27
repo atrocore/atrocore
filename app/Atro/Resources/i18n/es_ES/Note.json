@@ -2,7 +2,6 @@
   "fields": {
     "post": "Entrada",
     "attachments": "Adjuntos",
-    "targetType": "Objetivo",
     "teams": "Equipos",
     "users": "Usuarios",
     "type": "Tipo",

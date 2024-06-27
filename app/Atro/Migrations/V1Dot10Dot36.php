@@ -13,6 +13,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\ParameterType;
 
 class V1Dot10Dot36 extends Base
 {
@@ -43,6 +44,45 @@ class V1Dot10Dot36 extends Base
         }
 
         $this->exec("ALTER TABLE note DROP is_internal");
+        $this->exec("ALTER TABLE note DROP target_type");
+
+        while (true) {
+            $notes = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('note')
+                ->where('type=:type')
+                ->andWhere('deleted=:false')
+                ->andWhere('post IS NOT NULL')
+                ->setFirstResult(0)
+                ->setMaxResults(30000)
+                ->setParameter('type', 'Post')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            if (empty($notes)) {
+                break;
+            }
+
+            foreach ($notes as $note) {
+                $data = @json_decode($note['data'], true);
+                if (!is_array($data)) {
+                    $data = [];
+                }
+                $data['post'] = $note['post'];
+                $note['data'] = json_encode($data);
+                $this->getConnection()->createQueryBuilder()
+                    ->update('note')
+                    ->set('data', ':data')
+                    ->set('post', 'null')
+                    ->where('id=:id')
+                    ->setParameter('id', $note['id'])
+                    ->setParameter('data', $note['data'])
+                    ->setParameter('null', null, ParameterType::NULL)
+                    ->executeQuery();
+            }
+        }
+
+        $this->exec("ALTER TABLE note DROP post");
 
         $this->updateComposer('atrocore/core', '^1.10.36');
     }
