@@ -18,10 +18,11 @@ use Atro\Core\Mail\Sender;
 use Espo\ORM\Entity;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransportFactory;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
 class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
 {
-    public function connect(Entity $connectionEntity): \Symfony\Component\Mailer\Transport\TransportInterface
+    public function connect(Entity $connectionEntity): TransportInterface
     {
         $factory = new EsmtpTransportFactory;
 

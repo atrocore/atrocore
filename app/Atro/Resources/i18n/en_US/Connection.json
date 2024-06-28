@@ -40,6 +40,7 @@
   "labels": {
     "connectionSuccess": "Connection is successfully established",
     "testConnection": "Test Connection",
+    "sendTestEmail": "Send Test Email",
     "atrocore": "AtroCore",
     "mysql": "MySQL Server",
     "psql": "PostgreSQL Server",

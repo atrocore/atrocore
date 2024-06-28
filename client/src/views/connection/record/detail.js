@@ -26,7 +26,7 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
                 this.additionalButtons = [
                     {
                         action: "sendTestEmail",
-                        label: "Send Test Email"
+                        label:  this.translate('sendTestEmail', 'labels', 'Connection')
                     }
                 ]
             }

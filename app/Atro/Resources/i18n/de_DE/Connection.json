@@ -18,6 +18,7 @@
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
     "testConnection": "Verbindung testen",
+    "sendTestEmail": "Test-E-Mail senden",
     "Create Connection": "Verbindung erstellen",
     "cookie": "Cookie-Sitzung",
     "smtp": "SMTP"
