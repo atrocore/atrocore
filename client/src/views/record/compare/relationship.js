@@ -35,11 +35,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
         },
         fetchModelsAndSetup(){
             this.wait(true)
+            let nonComparableFields = this.getMetadata().get('scopes.' + this.relationship.scope + '.nonComparableFields') ?? [];
             this.getHelper().layoutManager.get(this.relationship.scope, 'listSmall', layout => {
                 if (layout && layout.length) {
                     let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.relationship.scope, 'read');
                     layout.forEach(item => {
-                        if (item.name && !forbiddenFieldList.includes(item.name)) {
+                        if (item.name && !forbiddenFieldList.includes(item.name) && !nonComparableFields.includes(item.name)) {
                             this.fields.push(item.name);
                         }
                     });
