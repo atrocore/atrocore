@@ -193,7 +193,7 @@ Espo.define('views/record/compare','view', function (Dep) {
                 this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                     scope: this.scope,
                     model: this.model,
-                    relationships: [{name: 'productAttributeValues'}] ?? layout,
+                    relationships: layout,
                     distantModels: this.distantModelsAttribute,
                     el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
                 }, view => {
