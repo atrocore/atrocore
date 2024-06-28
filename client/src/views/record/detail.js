@@ -325,7 +325,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     if (!exists) {
                         this.dropdownItemList.push({
-                            'label': this.translate('Instance compare'),
+                            'label': this.translate('Instance comparison'),
                             'name': 'compare',
                             'action': 'compare'
                         });

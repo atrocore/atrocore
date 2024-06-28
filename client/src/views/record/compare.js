@@ -50,15 +50,33 @@ Espo.define('views/record/compare','view', function (Dep) {
             this.scope = this.name =  this.options.scope
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
             this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
-            this.hideQuickMenu = this.options.hideQuickMenu
+            this.hideQuickMenu = this.options.hideQuickMenu;
+
+
         },
         setup(){
+            this.instances = this.getMetadata().get(['app','comparableInstances'])
             this.notify('Loading...')
             this.getModelFactory().create(this.scope, function (model) {
                 let modelCurrent = this.model;
                 let  modelOthers = [];
-                this.distantModelsAttribute.forEach((modelAttribute) => {
+                this.distantModelsAttribute.forEach((modelAttribute, index) => {
+
+                    if('_error' in modelAttribute){
+                        this.notify(modelAttribute['_error'], 'danger', 5000)
+                    }
                     let  m = model.clone();
+                    for(let key in modelAttribute){
+                        let el = modelAttribute[key];
+                        let instanceUrl = this.instances[index].atrocoreUrl;
+                        if(key.includes('PathsData')){
+                            if(el['thumbnails']){
+                                for (let size in el['thumbnails']){
+                                    modelAttribute[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                                }
+                            }
+                        }
+                    }
                     m.set(modelAttribute);
                     modelOthers.push(m);
                 })
@@ -175,7 +193,7 @@ Espo.define('views/record/compare','view', function (Dep) {
                 this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                     scope: this.scope,
                     model: this.model,
-                    relationships: layout,
+                    relationships: [{name: 'productAttributeValues'}] ?? layout,
                     distantModels: this.distantModelsAttribute,
                     el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
                 }, view => {
@@ -183,13 +201,12 @@ Espo.define('views/record/compare','view', function (Dep) {
                     view.render();
                 })
             });
-
         },
         data (){
             return {
                 buttonList: this.buttonList,
                 fieldsArr: this.fieldsArr,
-                distantModels: this.distantModelsAttribute,
+                instances: this.instances,
                 scope: this.scope,
                 id: this.id
             };
