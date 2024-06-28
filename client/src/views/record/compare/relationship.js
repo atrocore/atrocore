@@ -74,22 +74,28 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                                 'uri':this.scope+'/' + this.model.get('id')+'/' + this.relationship.name + '?select=' + selectField.join(','),
                                 'type':'list'
                             }).success(res => {
-                                this.otherItemModels = res.map( (data, index) => (data.list ?? []).map(item => {
-                                    for(let key in item){
-                                        let el = item[key];
-                                        let instanceUrl = this.instances[index].atrocoreUrl;
-                                        if(key.includes('PathsData')){
-                                            if(el['thumbnails']){
-                                                for (let size in el['thumbnails']){
-                                                    item[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                                this.otherItemModels = [];
+                                res.forEach((data, index) => {
+                                    if('_error' in data){
+                                        this.instances[index]['_error'] = data['_error'];
+                                    }
+                                    this.otherItemModels.push((data.list ?? []).map(item => {
+                                        for(let key in item){
+                                            let el = item[key];
+                                            let instanceUrl = this.instances[index].atrocoreUrl;
+                                            if(key.includes('PathsData')){
+                                                if( el && ('thumbnails' in el)){
+                                                    for (let size in el['thumbnails']){
+                                                        item[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    let itemModel = model.clone()
-                                    itemModel.set(item)
-                                    return itemModel
-                                }));
+                                        let itemModel = model.clone()
+                                        itemModel.set(item)
+                                        return itemModel
+                                    }));
+                                });
                                 this.setupRelationship(() => this.wait(false));
                             })
                         });

@@ -63,14 +63,14 @@ Espo.define('views/record/compare','view', function (Dep) {
                 this.distantModelsAttribute.forEach((modelAttribute, index) => {
 
                     if('_error' in modelAttribute){
-                        this.notify(modelAttribute['_error'], 'danger', 5000)
+                        this.instances[index]['_error'] = modelAttribute['_error'];
                     }
                     let  m = model.clone();
                     for(let key in modelAttribute){
                         let el = modelAttribute[key];
                         let instanceUrl = this.instances[index].atrocoreUrl;
                         if(key.includes('PathsData')){
-                            if(el['thumbnails']){
+                            if( el && ('thumbnails' in el)){
                                 for (let size in el['thumbnails']){
                                     modelAttribute[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
                                 }
@@ -178,6 +178,7 @@ Espo.define('views/record/compare','view', function (Dep) {
                 scope: this.scope,
                 model: this.model,
                 fieldsArr: this.fieldsArr,
+                instances: this.instances,
                 distantModels: this.distantModelsAttribute,
                 el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
             }, view => {
@@ -273,7 +274,6 @@ Espo.define('views/record/compare','view', function (Dep) {
                     }, function(dialog){
                         dialog.render();
                         this.notify(false)
-                        console.log('dialog','dialog')
                     })
                 }, this);
                 model.fetch({main: true});

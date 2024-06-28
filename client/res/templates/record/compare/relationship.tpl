@@ -9,6 +9,10 @@
             {{#each instances}}
             <th colspan="{{columnCount}}" class="text-center">
                 {{name}}
+                {{#if _error}}
+                <br>
+                <span class="danger"> ({{_error}})</span>
+                {{/if}}
             </th>
             {{/each}}
         </tr>
