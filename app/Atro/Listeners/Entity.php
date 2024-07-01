@@ -40,6 +40,8 @@ class Entity extends AbstractListener
         if ($this->streamEnabled($entity)) {
             if ($entity->isNew()) {
                 $this->followCreatedEntity($entity);
+            }else{
+                $this->getStreamService()->handleAudited($entity);
             }
         }
 
@@ -190,15 +192,12 @@ class Entity extends AbstractListener
     {
         $userIdList = [];
         if ($this->isFollowCreatedEntities() && $entity->get('createdById') && $entity->get('createdById') === $this->getUser()->id) {
+            $this->getStreamService()->followEntity($entity, $entity->get('createdById'));
             $userIdList[] = $entity->get('createdById');
         }
-
         if (!empty($entity->get('assignedUserId')) && !in_array($entity->get('assignedUserId'), $userIdList)) {
+            $this->getStreamService()->followEntity($entity, $entity->get('assignedUserId'));
             $userIdList[] = $entity->get('assignedUserId');
-        }
-
-        if (!empty($userIdList)) {
-            $this->getStreamService()->followEntityMass($entity, $userIdList);
         }
 
         if (in_array($this->getUser()->id, $userIdList)) {
