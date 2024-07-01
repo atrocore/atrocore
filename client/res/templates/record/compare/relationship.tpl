@@ -3,7 +3,7 @@
         <thead>
         <tr>
             <th style="width: 20%">{{ translate 'instance' scope='Synchronization' }}</th>
-            <th style="width: 40%; background-color:aliceblue" colspan="{{columnCountCurrent}}" class="text-center">
+            <th style="width: 40%;" colspan="{{columnCountCurrent}}" class="text-center">
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
             {{#each instances}}
