@@ -35,11 +35,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
         },
         fetchModelsAndSetup(){
             this.wait(true)
+            let nonComparableFields = this.getMetadata().get('scopes.' + this.relationship.scope + '.nonComparableFields') ?? [];
             this.getHelper().layoutManager.get(this.relationship.scope, 'listSmall', layout => {
                 if (layout && layout.length) {
                     let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.relationship.scope, 'read');
                     layout.forEach(item => {
-                        if (item.name && !forbiddenFieldList.includes(item.name)) {
+                        if (item.name && !forbiddenFieldList.includes(item.name) && !nonComparableFields.includes(item.name)) {
                             this.fields.push(item.name);
                         }
                     });
@@ -73,22 +74,28 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                                 'uri':this.scope+'/' + this.model.get('id')+'/' + this.relationship.name + '?select=' + selectField.join(','),
                                 'type':'list'
                             }).success(res => {
-                                this.otherItemModels = res.map( (data, index) => (data.list ?? []).map(item => {
-                                    for(let key in item){
-                                        let el = item[key];
-                                        let instanceUrl = this.instances[index].atrocoreUrl;
-                                        if(key.includes('PathsData')){
-                                            if(el['thumbnails']){
-                                                for (let size in el['thumbnails']){
-                                                    item[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                                this.otherItemModels = [];
+                                res.forEach((data, index) => {
+                                    if('_error' in data){
+                                        this.instances[index]['_error'] = data['_error'];
+                                    }
+                                    this.otherItemModels.push((data.list ?? []).map(item => {
+                                        for(let key in item){
+                                            let el = item[key];
+                                            let instanceUrl = this.instances[index].atrocoreUrl;
+                                            if(key.includes('PathsData')){
+                                                if( el && ('thumbnails' in el)){
+                                                    for (let size in el['thumbnails']){
+                                                        item[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    let itemModel = model.clone()
-                                    itemModel.set(item)
-                                    return itemModel
-                                }));
+                                        let itemModel = model.clone()
+                                        itemModel.set(item)
+                                        return itemModel
+                                    }));
+                                });
                                 this.setupRelationship(() => this.wait(false));
                             })
                         });

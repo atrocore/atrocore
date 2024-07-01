@@ -7,8 +7,12 @@
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
             {{#each instances}}
-            <th colspan="{{colunmCount}}" class="text-center">
+            <th colspan="{{columnCount}}" class="text-center">
                 {{name}}
+                {{#if _error}}
+                <br>
+                <span class="danger"> ({{_error}})</span>
+                {{/if}}
             </th>
             {{/each}}
         </tr>
@@ -30,7 +34,7 @@
             {{#if this }}
             {{#each this }}
             <td class="cell" data-field="{{key}}">
-                {{{var key ../../../this}}}
+                {{{var key ../../../../this}}}
             </td>
             {{/each}}
             {{else}}

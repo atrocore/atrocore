@@ -17,7 +17,7 @@
                          {{translate 'current' scope='Synchronization' category='labels'}}
                      </th>
                      {{#each ../instances}}
-                    <th colspan="{{../columnCountCurrent}}" class="text-center">
+                    <th colspan="{{columnCount}}" class="text-center">
                         {{name}}
                     </th>
                     {{/each}}

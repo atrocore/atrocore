@@ -16,7 +16,7 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
             this.scope = this.options.scope;
             this.fieldsArr = this.options.fieldsArr;
             this.model = this.options.model;
-            this.instances = this.getMetadata().get(['app','comparableInstances'])
+            this.instances = this.options.instances ?? this.getMetadata().get(['app','comparableInstances'])
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'detail', layout => {
                 if (layout && layout.length) {

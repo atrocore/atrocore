@@ -13,9 +13,13 @@
                 <thead>
                 <tr>
                     <th>{{ translate 'instance' scope='Synchronization' }}</th>
-                    {{#each ../instances}}
+                    {{#each instances}}
                     <th class="text-center">
                         {{name}}
+                        {{#if _error}}
+                        <br>
+                        <span class="danger"> ({{_error}})</span>
+                        {{/if}}
                     </th>
                     {{/each}}
                     <th width="25"></th>
@@ -35,9 +39,36 @@
         <div class="compare-panel  list col-md-12" data-name="relationshipsPanels">
 
         </div>
-
-        <div class="compare-panel  list col-md-12" data-name="attributesPanels">
-
-        </div>
     </div>
 </div>
+<style>
+    .hidden-cell{
+        display:none !important;
+    }
+    thead tr th[colspan="*"] {
+        text-align: center;
+    }
+    .compare-panel[data-name='relationshipsPanels'] table {
+        margin-bottom: 50px;
+    }
+    .compare-panel{
+        margin-bottom: 50px;
+        background-color: white;
+        width: 100%;
+    }
+    .compare-panel table td, .compare-panel table th{
+        max-width: 100px;
+    }
+    .file-link {
+        white-space: normal;
+    }
+    .compare-panel table tbody tr.danger {
+        border-left:2px solid red;
+    }
+    .compare-panel table tbody tr.danger > td  {
+        background-color: transparent;
+    }
+    th span.danger{
+        color:red;
+    }
+</style>
