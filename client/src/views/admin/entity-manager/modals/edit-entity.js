@@ -434,7 +434,11 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (view) {
                 view.disabled = true;
             }
-            this.$el.find('.cell[data-name=' + name+']').addClass('hidden');
+            this.$el.find('.cell[data-name=' + name + ']').addClass('hidden');
+        },
+
+        isFieldHidden: function (name) {
+            return this.$el.find('.cell[data-name=' + name + ']').hasClass('hidden');
         },
 
         showField: function (name) {
@@ -442,7 +446,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (view) {
                 view.disabled = false;
             }
-            this.$el.find('.cell[data-name=' + name+']').removeClass('hidden');
+            this.$el.find('.cell[data-name=' + name + ']').removeClass('hidden');
         },
 
         afterRender: function () {
@@ -452,13 +456,13 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 name = name.charAt(0).toUpperCase() + name.slice(1);
 
                 this.model.set('labelSingular', name);
-                this.model.set('labelPlural', name + 's') ;
+                this.model.set('labelPlural', name + 's');
                 if (name) {
                     name = name.replace(/\-/g, ' ').replace(/_/g, ' ').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
                         return g.toUpperCase();
                     }).replace(' ', '');
                     if (name.length) {
-                         name = name.charAt(0).toUpperCase() + name.slice(1);
+                        name = name.charAt(0).toUpperCase() + name.slice(1);
                     }
                 }
                 this.model.set('name', name);
@@ -529,11 +533,11 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
         managePanelsViewMode: function () {
             let additionalEntityParams = this.getMetadata().get('app.additionalEntityParams.layout') || [];
 
-            Object.keys(additionalEntityParams).forEach( (key) => {
-                if((additionalEntityParams[key].types || []).includes(this.model.get('type'))) {
-                    this.$el.find('.panel.entity-manager-'+key).removeClass('hidden');
+            Object.keys(additionalEntityParams).forEach((key) => {
+                if ((additionalEntityParams[key].types || []).includes(this.model.get('type'))) {
+                    this.$el.find('.panel.entity-manager-' + key).removeClass('hidden');
                 } else {
-                    this.$el.find('.panel.entity-manager-'+key).addClass('hidden');
+                    this.$el.find('.panel.entity-manager-' + key).addClass('hidden');
                 }
             });
         },
@@ -593,7 +597,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             var name = this.model.get('name');
 
-            var data = {
+            var tmpData = {
                 name: name,
                 labelSingular: this.model.get('labelSingular'),
                 labelPlural: this.model.get('labelPlural'),
@@ -606,23 +610,30 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             };
 
             if (this.hasColorField) {
-                data.color = this.model.get('color') || null
+                tmpData.color = this.model.get('color') || null
             }
 
-            if (data.statusField === '') {
-                data.statusField = null;
+            if (tmpData.statusField === '') {
+                tmpData.statusField = null;
             }
 
             if (this.scope) {
-                data.sortBy = this.model.get('sortBy');
-                data.sortDirection = this.model.get('sortDirection');
-                data.kanbanViewMode = this.model.get('kanbanViewMode');
-                data.kanbanStatusIgnoreList = this.model.get('kanbanStatusIgnoreList');
+                tmpData.sortBy = this.model.get('sortBy');
+                tmpData.sortDirection = this.model.get('sortDirection');
+                tmpData.kanbanViewMode = this.model.get('kanbanViewMode');
+                tmpData.kanbanStatusIgnoreList = this.model.get('kanbanStatusIgnoreList');
             }
 
             for (let param in this.additionalParams) {
-                data[param] = this.model.get(param);
+                tmpData[param] = this.model.get(param);
             }
+
+            let data = {};
+            $.each(tmpData, (name, val) => {
+                if (!this.isFieldHidden(name)) {
+                    data[name] = val;
+                }
+            });
 
             $.ajax({
                 url: url,

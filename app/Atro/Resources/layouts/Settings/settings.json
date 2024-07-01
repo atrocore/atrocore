@@ -48,7 +48,9 @@
         {
           "name": "fileNameRegexPattern"
         },
-        false
+        {
+          "name": "passwordRegexPattern"
+        }
       ]
     ]
   }

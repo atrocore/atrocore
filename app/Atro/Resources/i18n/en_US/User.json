@@ -72,7 +72,8 @@
     "uniqueLinkHasBeenSent": "The unique URL has been sent to the specified email address.",
     "passwordChangedByRequest": "Password has been changed.",
     "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
-    "userNameExists": "User Name already exists"
+    "userNameExists": "User Name already exists",
+    "newPasswordInvalid": "Your password should contain at least one symbol, capital letter, and digit and should be at least 8 characters long."
   },
   "options": {
     "gender": {

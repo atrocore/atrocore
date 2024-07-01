@@ -87,10 +87,10 @@ class FileManager extends Manager
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
                     $this->removeAllInDir($dir . DIRECTORY_SEPARATOR . $object);
                 } else {
-                    unlink($dir . DIRECTORY_SEPARATOR . $object);
+                    @unlink($dir . DIRECTORY_SEPARATOR . $object);
                 }
             }
-            rmdir($dir);
+            @rmdir($dir);
         }
     }
 }

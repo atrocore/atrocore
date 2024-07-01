@@ -452,6 +452,52 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     };
                 }
             }, this);
+
+            additionalButtons = this.getMetadata().get(['clientDefs', this.scope, 'additionalButtons']) || {};
+
+            Object.keys(additionalButtons).forEach(item => {
+                const check = (additionalButtons[item].conditions || []).every(condition => {
+                    let check;
+                    switch (condition.type) {
+                        case 'type':
+                            check = this.type === condition.value;
+                            break;
+                        default:
+                            check = true;
+                            break;
+                    }
+                    return check;
+                });
+
+                if (check) {
+                    let button = {
+                        name: additionalButtons[item].name,
+                        label: additionalButtons[item].label,
+                        action: additionalButtons[item].name
+                    };
+
+                    this.additionalButtons.push(button);
+
+                    let method = 'action' + Espo.Utils.upperCaseFirst(additionalButtons[item].name);
+                    this[method] = function () {
+                        let path = additionalButtons[item].actionViewPath;
+
+                        let o = {button: additionalButtons[item]};
+
+                        (additionalButtons[item].optionsToPass || []).forEach((option) => {
+                            if (option in this) {
+                                o[option] = this[option];
+                            }
+                        });
+
+                        this.createView(item, path, o, (view) => {
+                            if (typeof view[additionalButtons[item].action] === 'function') {
+                                view[additionalButtons[item].action]();
+                            }
+                        });
+                    };
+                }
+            }, this);
         },
 
         isHierarchical() {

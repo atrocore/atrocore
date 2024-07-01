@@ -28,9 +28,17 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "webhookUrl": {
+      "type": "url",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true
+    },
     "inBackground": {
       "type": "bool",
-      "default": true,
+      "default": false,
       "tooltip": true
     },
     "massAction": {

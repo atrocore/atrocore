@@ -102,11 +102,13 @@ class ExtensibleEnumOption extends Base
             $entity->set('code', null);
         }
 
+        if ($entity->get('name') === null && $entity->get('code') !== null) {
+            $entity->set('name', $entity->get('code'));
+        }
 
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
             $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
-
 
         parent::beforeSave($entity, $options);
     }
@@ -154,7 +156,7 @@ class ExtensibleEnumOption extends Base
                 continue;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDef) {
-                foreach ($entity->get('extensibleEnums') as $extensibleEnum ) {
+                foreach ($entity->get('extensibleEnums') as $extensibleEnum) {
                     if (empty($fieldDef['notStorable']) && !empty($fieldDef['extensibleEnumId']) && $fieldDef['extensibleEnumId'] === $extensibleEnum->get('id')) {
                         $column = Util::toUnderScore($field);
 
@@ -206,7 +208,7 @@ class ExtensibleEnumOption extends Base
     protected function getOptionName(): string
     {
         $language = \Espo\Core\Services\Base::getLanguagePrism();
-        if(empty($language)){
+        if (empty($language)) {
             $language = $this->getInjection('container')
                 ->get('preferences')
                 ->get('language');
