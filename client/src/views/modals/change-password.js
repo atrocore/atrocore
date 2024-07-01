@@ -93,9 +93,42 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
                     }
                 });
 
+                if (this.getUser().get('isAdmin') && this.getUser().id !== this.options.userId) {
+                    this.createView('sendAccessInfo', 'views/fields/bool', {
+                        model: user,
+                        mode: 'edit',
+                        el: this.options.el + ' .field[data-name="sendAccessInfo"]',
+                        defs: {
+                            name: 'sendAccessInfo',
+                            params: {
+                                default: false
+                            }
+                        }
+                    });
+
+                    this.createView('generatePassword', 'views/user/fields/generate-password', {
+                        model: user,
+                        mode: 'edit',
+                        el: this.options.el + ' .field[data-name="generatePassword"]',
+                        defs: {
+                            name: 'generatePassword',
+                            customLabel: ''
+                        }
+                    });
+
+                    this.createView('passwordPreview', 'views/fields/base', {
+                        model: user,
+                        mode: 'edit',
+                        readOnly: true,
+                        el: this.options.el + ' .field[data-name="passwordPreview"]',
+                        defs: {
+                            name: 'passwordPreview',
+                        }
+                    });
+                }
+
                 this.wait(false);
             }, this);
-
         },
 
 
@@ -120,7 +153,8 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
                 data: JSON.stringify({
                     userId: this.options.userId,
                     currentPassword: this.model.get('currentPassword'),
-                    password: this.model.get('password')
+                    password: this.model.get('password'),
+                    sendAccessInfo: this.model.get('sendAccessInfo') ?? false
                 }),
                 error: function () {
                     this.$el.find('button[data-name="change"]').removeClass('disabled');
