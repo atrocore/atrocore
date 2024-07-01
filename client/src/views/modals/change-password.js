@@ -118,6 +118,7 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
                 url: 'User/action/changeOwnPassword',
                 type: 'POST',
                 data: JSON.stringify({
+                    userId: this.options.userId,
                     currentPassword: this.model.get('currentPassword'),
                     password: this.model.get('password')
                 }),

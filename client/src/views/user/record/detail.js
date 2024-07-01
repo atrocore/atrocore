@@ -122,9 +122,11 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.notify(false);
 
                 this.listenToOnce(view, 'changed', function () {
-                    setTimeout(function () {
-                        this.getBaseController().logout();
-                    }.bind(this), 2000);
+                    if (this.model.id === this.getUser().id) {
+                        setTimeout(function () {
+                            this.getBaseController().logout();
+                        }.bind(this), 2000);
+                    }
                 }, this);
 
             }.bind(this));
