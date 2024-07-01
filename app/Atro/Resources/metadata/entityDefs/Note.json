@@ -42,6 +42,11 @@
             "readOnly": true,
             "notStorable": true
         },
+        "relatedName": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true
+        },
         "attachments": {
             "type": "linkMultiple",
             "entity": "File"
