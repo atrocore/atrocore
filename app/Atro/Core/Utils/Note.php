@@ -22,6 +22,7 @@ use Espo\Entities\Preferences;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
 use Espo\Core\Utils\FieldManager;
+use Espo\Entities\User;
 
 class Note
 {
@@ -315,7 +316,7 @@ class Note
         return $this->container;
     }
 
-    private function getUser(): \Espo\Entities\User
+    private function getUser(): User
     {
         return $this->getContainer()->get('user');
     }
