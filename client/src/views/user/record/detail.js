@@ -50,10 +50,10 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     style: 'default'
                 });
 
-                if (this.model.id == this.getUser().id) {
+                if (!this.getConfig().get('resetPasswordViaEmailOnly', false)) {
                     this.dropdownItemList.push({
                         name: 'changePassword',
-                        label: 'Change Password',
+                        label: this.translate('Change Password', 'labels', 'User'),
                         style: 'default'
                     });
                 }
