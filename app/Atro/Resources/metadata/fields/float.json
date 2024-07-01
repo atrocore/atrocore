@@ -52,6 +52,7 @@
       }
    ],
    "filter": true,
+   "auditable": true,
    "qbFilterType": "double",
    "fieldDefs":{
       "notNull":false

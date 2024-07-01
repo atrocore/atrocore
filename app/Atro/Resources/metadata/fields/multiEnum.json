@@ -26,6 +26,7 @@
       }
    ],
    "filter": true,
+   "auditable": true,
    "multilingual": true,
    "notCreatable": true,
    "notSortable": true,

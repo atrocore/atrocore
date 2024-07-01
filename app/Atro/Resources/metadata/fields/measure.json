@@ -33,6 +33,7 @@
     }
   ],
   "filter": true,
+  "auditable": true,
   "fieldDefs": {
     "type": "varchar"
   },

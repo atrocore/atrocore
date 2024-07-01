@@ -51,6 +51,7 @@
     }
   ],
   "filter": true,
+  "auditable": true,
   "qbFilterType": "integer",
   "textFilter": true,
   "personalData": true

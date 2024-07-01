@@ -39,5 +39,6 @@
     "name"
   ],
   "filter": true,
+  "auditable": true,
   "notCreatable": true
 }

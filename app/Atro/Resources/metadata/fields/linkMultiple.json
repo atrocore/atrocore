@@ -36,5 +36,6 @@
   ],
   "notCreatable": true,
   "notSortable": true,
-  "filter": true
+  "filter": true,
+  "auditable": true
 }

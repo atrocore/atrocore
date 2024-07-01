@@ -182,8 +182,8 @@ class V1Dot10Dot36 extends Base
 
         $this->getConnection()->createQueryBuilder()
             ->delete('note')
-            ->where('type=:type')
-            ->setParameter('type', 'Create')
+            ->where('type IN (:types)')
+            ->setParameter('types', ['Create', 'Assign', 'Own'], $this->getConnection()::PARAM_STR_ARRAY)
             ->executeQuery();
 
         $this->updateComposer('atrocore/core', '^1.10.36');

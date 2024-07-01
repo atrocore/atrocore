@@ -21,6 +21,7 @@
     }
   ],
   "filter": true,
+  "auditable": true,
   "multilingual": false,
   "fieldDefs":{
     "type":"varchar"
