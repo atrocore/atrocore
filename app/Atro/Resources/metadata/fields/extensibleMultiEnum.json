@@ -34,6 +34,7 @@
   ],
   "notSortable": true,
   "filter": true,
+  "auditable": true,
   "fieldDefs": {
     "type": "jsonArray"
   },
