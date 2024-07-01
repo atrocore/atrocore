@@ -2,12 +2,12 @@
     <table class="table full-table table-striped  table-fixed table-scrolled table-bordered" >
         <thead>
         <tr>
-            <th >{{ translate 'instance' scope='Synchronization' }}</th>
-            <th colspan="{{columnCountCurrent}}" class="text-center">
+            <th style="width: 20%">{{ translate 'instance' scope='Synchronization' }}</th>
+            <th style="width: 40%; background-color:aliceblue" colspan="{{columnCountCurrent}}" class="text-center">
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
             {{#each instances}}
-            <th colspan="{{columnCount}}" class="text-center">
+            <th style="width: 40%" colspan="{{columnCount}}" class="text-center">
                 {{name}}
                 {{#if _error}}
                 <br>
