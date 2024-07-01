@@ -22,6 +22,7 @@ use Espo\Services\Stream as StreamService;
 class Entity extends AbstractListener
 {
     private array $streamEnabled = [];
+    private array $relationEntityData = [];
     private ?bool $followCreatedEntities = null;
     private ?StreamService $streamService = null;
 
@@ -37,18 +38,15 @@ class Entity extends AbstractListener
         /** @var OrmEntity $entity */
         $entity = $event->getArgument('entity');
 
-        if ($this->streamEnabled($entity)) {
-            if ($entity->isNew()) {
+        if ($entity->isNew()) {
+            $this->handleCreateRelated($entity);
+            if ($this->streamEnabled($entity)) {
                 $this->followCreatedEntity($entity);
-            }else{
-                $this->getStreamService()->handleAudited($entity);
             }
         }
 
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
-            $this
-                ->createHook(Common\Stream::class)
-                ->afterSave($event->getArgument('entity'), $event->getArgument('options'));
+        if ($this->streamEnabled($entity) && !$entity->isNew()) {
+            $this->getStreamService()->handleAudited($entity);
         }
     }
 
@@ -203,6 +201,56 @@ class Entity extends AbstractListener
         if (in_array($this->getUser()->id, $userIdList)) {
             $entity->set('isFollowed', true);
         }
+    }
+
+    protected function handleCreateRelated(OrmEntity $entity): void
+    {
+        if (!isset($this->relationEntityData[$entity->getEntityType()])) {
+            $this->relationEntityData[$entity->getEntityType()] = [];
+            if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation') {
+                $relationFields = $this->getEntityManager()->getRepository($entity->getEntityType())->getRelationFields();
+
+                $this->relationEntityData[$entity->getEntityType()]['parentField'] = $relationFields[0] . 'Id';
+                $this->relationEntityData[$entity->getEntityType()]['parentEntity'] = $this->getMetadata()
+                    ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[0], 'entity']);
+
+                $this->relationEntityData[$entity->getEntityType()]['relatedField'] = $relationFields[1] . 'Id';
+                $this->relationEntityData[$entity->getEntityType()]['relatedEntity'] = $this->getMetadata()
+                    ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[1], 'entity']);
+            }
+        }
+
+        if (empty($this->relationEntityData[$entity->getEntityType()])) {
+            return;
+        }
+
+        $data = [
+            'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['relatedField']),
+            'relatedType' => $this->relationEntityData[$entity->getEntityType()]['relatedEntity']
+        ];
+
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => 'Relate',
+            'parentId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['parentField']),
+            'parentType' => $this->relationEntityData[$entity->getEntityType()]['parentEntity'],
+            'data'       => $data
+        ]);
+        $this->getEntityManager()->saveEntity($note);
+
+        $data = [
+            'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['parentField']),
+            'relatedType' => $this->relationEntityData[$entity->getEntityType()]['parentEntity']
+        ];
+
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => 'Relate',
+            'parentId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['relatedField']),
+            'parentType' => $this->relationEntityData[$entity->getEntityType()]['relatedEntity'],
+            'data'       => $data
+        ]);
+        $this->getEntityManager()->saveEntity($note);
     }
 
     protected function isFollowCreatedEntities(): bool
