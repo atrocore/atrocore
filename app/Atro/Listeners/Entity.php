@@ -15,175 +15,97 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
-use Espo\Hooks\Common;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
+use Espo\Core\Utils\FieldManager;
 
 class Entity extends AbstractListener
 {
     private array $streamEnabled = [];
     private array $relationEntityData = [];
+    private array $createRelatedData = [];
+    private array $auditedFieldsCache = [];
     private ?bool $followCreatedEntities = null;
     private ?StreamService $streamService = null;
 
     public function beforeSave(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeSave', $event);
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'beforeSave', $event);
     }
 
     public function afterSave(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterSave', $event);
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'afterSave', $event);
 
         /** @var OrmEntity $entity */
         $entity = $event->getArgument('entity');
 
         if ($entity->isNew()) {
-            $this->handleCreateRelated($entity);
-            if ($this->streamEnabled($entity)) {
+            $this->handleRelationEntity($entity);
+            if ($this->streamEnabled($entity->getEntityType())) {
                 $this->followCreatedEntity($entity);
             }
         }
 
-        if ($this->streamEnabled($entity) && !$entity->isNew()) {
-            $this->getStreamService()->handleAudited($entity);
+        if ($this->streamEnabled($entity->getEntityType()) && !$entity->isNew()) {
+            $this->handleAudited($entity);
         }
+
+        $this->handleCreateRelated($entity);
     }
 
     public function beforeRemove(Event $event): void
     {
-        // delegate an event
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRemove', $event);
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRemove', $event);
     }
 
     public function afterRemove(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterRemove', $event);
-
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
-            $this
-                ->createHook(Common\Stream::class)
-                ->afterRemove($event->getArgument('entity'), $event->getArgument('options'));
-        }
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'afterRemove', $event);
     }
 
     public function beforeMassRelate(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeMassRelate', $event);
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'beforeMassRelate', $event);
     }
 
     public function afterMassRelate(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterMassRelate', $event);
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'afterMassRelate', $event);
     }
 
     public function beforeRelate(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRelate', $event);
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRelate', $event);
     }
 
     public function afterRelate(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterRelate', $event);
-
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
-            $this
-                ->createHook(Common\Stream::class)
-                ->afterRelate(
-                    $event->getArgument('entity'),
-                    $event->getArgument('options'),
-                    $this->getHookRelationData($event)
-                );
-        }
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'afterRelate', $event);
     }
 
     public function beforeUnrelate(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeUnrelate', $event);
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'beforeUnrelate', $event);
     }
 
     public function afterUnrelate(Event $event): void
     {
-        $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterUnrelate', $event);
-
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
-            $this
-                ->createHook(Common\Stream::class)
-                ->afterUnrelate(
-                    $event->getArgument('entity'),
-                    $event->getArgument('options'),
-                    $this->getHookRelationData($event)
-                );
-        }
+        $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'afterUnrelate', $event);
     }
 
-    protected function dispatch(string $target, string $action, Event $event): void
+    protected function getEventManager(): Manager
     {
-        /** @var Manager $eventManager */
-        $eventManager = $this->getContainer()->get('eventManager');
-        $eventManager->dispatch($target, $action, $event);
+        return $this->getContainer()->get('eventManager');
     }
 
-    /**
-     * @param string $className
-     *
-     * @return mixed
-     */
-    private function createHook(string $className)
+    protected function streamEnabled(string $entityType): bool
     {
-        $hook = new $className();
-        foreach ($hook->getDependencyList() as $name) {
-            $hook->inject($name, $this->getContainer()->get($name));
+        if (!isset($this->streamEnabled[$entityType])) {
+            $this->streamEnabled[$entityType] = empty($this->getMetadata()->get("scopes.{$entityType}.streamDisabled"));
         }
 
-        return $hook;
-    }
-
-    /**
-     * @param string $entity
-     * @param string $relationName
-     * @param string $id
-     *
-     * @return mixed
-     */
-    private function findForeignEntity(string $entity, string $relationName, string $id)
-    {
-        $foreignEntityName = $this->getMetadata()->get(['entityDefs', $entity, 'links', $relationName, 'entity']);
-
-        return (!empty($foreignEntityName)) ? $this->getEntityManager()->getEntity($foreignEntityName, $id) : null;
-    }
-
-    private function getHookRelationData(Event $event): array
-    {
-        // prepare foreign
-        $foreign = $event->getArgument('foreign');
-        if (is_string($foreign)) {
-            $foreign = $this->findForeignEntity(
-                $event->getArgument('entity')->getEntityType(),
-                $event->getArgument('relationName'),
-                $foreign
-            );
-        }
-
-        return [
-            'relationName'  => $event->getArgument('relationName'),
-            'relationData'  => $event->getArgument('relationData'),
-            'foreignEntity' => $foreign,
-        ];
-    }
-
-    private function skipHooks(): bool
-    {
-        return !empty($this->getEntityManager()->getMemoryStorage()->get('skipHooks'));
-    }
-
-    protected function streamEnabled(OrmEntity $entity): bool
-    {
-        if (!isset($this->streamEnabled[$entity->getEntityType()])) {
-            $this->streamEnabled[$entity->getEntityType()] = empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.streamDisabled"));
-        }
-
-        return $this->streamEnabled[$entity->getEntityType()];
+        return $this->streamEnabled[$entityType];
     }
 
     protected function followCreatedEntity(OrmEntity $entity): void
@@ -203,19 +125,156 @@ class Entity extends AbstractListener
         }
     }
 
+    protected function getAuditedFieldsData(OrmEntity $entity): array
+    {
+        $entityType = $entity->getEntityType();
+
+        if (!array_key_exists($entityType, $this->auditedFieldsCache)) {
+            $auditableTypes = [];
+            foreach ($this->getMetadata()->get('fields') as $type => $typeData) {
+                if (!empty($typeData['auditable'])) {
+                    $auditableTypes[] = $type;
+                }
+            }
+
+            $systemFields = ['id', 'deleted', 'createdAt', 'modifiedAt', 'createdBy'];
+
+            $fields = $this->getMetadata()->get('entityDefs.' . $entityType . '.fields');
+
+            $auditedFields = [];
+            foreach ($fields as $field => $d) {
+                if (!empty($d['type']) && in_array($d['type'], $auditableTypes) && !in_array($field, $systemFields) && empty($d['notStorable'])) {
+                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['fieldType'] = $d['type'];
+                }
+            }
+            $this->auditedFieldsCache[$entityType] = $auditedFields;
+        }
+
+        return $this->auditedFieldsCache[$entityType];
+    }
+
+    protected function handleAudited(OrmEntity $entity): void
+    {
+        $auditedFields = $this->getAuditedFieldsData($entity);
+
+        $updatedFieldList = [];
+        $was = [];
+        $became = [];
+
+        foreach ($auditedFields as $field => $item) {
+            $updated = false;
+            foreach ($item['actualList'] as $attribute) {
+                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
+                    $updated = true;
+                }
+            }
+            if ($updated) {
+                $updatedFieldList[] = $field;
+
+                foreach (['actualList', 'notActualList'] as $key) {
+                    foreach ($item[$key] as $attribute) {
+                        if ($entity->isAttributeChanged($attribute)) {
+                            $valueWas = $entity->getFetched($attribute);
+                            $valueBecame = $entity->get($attribute);
+
+                            if (!(($valueWas === null || $valueWas === '') && ($valueBecame === null || $valueBecame === ''))) {
+                                $was[$attribute] = $valueWas;
+                                $became[$attribute] = $valueBecame;
+                            }
+                        }
+                    }
+                }
+
+                if ($item['fieldType'] === 'linkParent') {
+                    $wasParentType = $was[$field . 'Type'];
+                    $wasParentId = $was[$field . 'Id'];
+                    if ($wasParentType && $wasParentId) {
+                        if ($this->getEntityManager()->hasRepository($wasParentType)) {
+                            $wasParent = $this->getEntityManager()->getEntity($wasParentType, $wasParentId);
+                            if ($wasParent) {
+                                $was[$field . 'Name'] = $wasParent->get('name');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (empty($was) && empty($became)) {
+            return;
+        }
+
+        if (!empty($updatedFieldList)) {
+            $note = $this->getEntityManager()->getEntity('Note');
+            $note->set('type', 'Update');
+            $note->set('parentId', $entity->id);
+            $note->set('parentType', $entity->getEntityType());
+
+            $note->set('data', [
+                'fields'     => $updatedFieldList,
+                'attributes' => [
+                    'was'    => $was,
+                    'became' => $became
+                ]
+            ]);
+
+            $this->getEntityManager()->saveEntity($note);
+        }
+    }
+
     protected function handleCreateRelated(OrmEntity $entity): void
+    {
+        if (!$this->streamEnabled($entity->getEntityType())) {
+            return;
+        }
+
+        if (!isset($this->createRelatedData[$entity->getEntityType()])) {
+            $this->createRelatedData[$entity->getEntityType()] = [];
+            foreach ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".links", []) as $link => $defs) {
+                if ($defs['type'] == 'belongsTo') {
+                    if (empty($defs['foreign']) || empty($defs['entity'])) {
+                        continue;
+                    }
+                    if (!empty($defs['entity'])) {
+                        if (!$this->streamEnabled($defs['entity'])) {
+                            continue;
+                        }
+                        $this->createRelatedData[$entity->getEntityType()][$link . 'Id'] = $defs['entity'];
+                    }
+                }
+            }
+        }
+
+        foreach ($this->createRelatedData[$entity->getEntityType()] as $field => $scope) {
+            if ($entity->isAttributeChanged($field) && !empty($entity->get($field))) {
+                $note = $this->getEntityManager()->getEntity('Note');
+                $note->set('type', 'CreateRelated');
+                $note->set('parentId', $entity->get($field));
+                $note->set('parentType', $scope);
+                $note->set([
+                    'relatedType' => $entity->getEntityType(),
+                    'relatedId'   => $entity->id
+                ]);
+                $this->getEntityManager()->saveEntity($note);
+            }
+        }
+    }
+
+    protected function handleRelationEntity(OrmEntity $entity): void
     {
         if (!isset($this->relationEntityData[$entity->getEntityType()])) {
             $this->relationEntityData[$entity->getEntityType()] = [];
             if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation') {
                 $relationFields = $this->getEntityManager()->getRepository($entity->getEntityType())->getRelationFields();
 
-                $this->relationEntityData[$entity->getEntityType()]['parentField'] = $relationFields[0] . 'Id';
-                $this->relationEntityData[$entity->getEntityType()]['parentEntity'] = $this->getMetadata()
+                $this->relationEntityData[$entity->getEntityType()]['field1'] = $relationFields[0] . 'Id';
+                $this->relationEntityData[$entity->getEntityType()]['entity1'] = $this->getMetadata()
                     ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[0], 'entity']);
 
-                $this->relationEntityData[$entity->getEntityType()]['relatedField'] = $relationFields[1] . 'Id';
-                $this->relationEntityData[$entity->getEntityType()]['relatedEntity'] = $this->getMetadata()
+                $this->relationEntityData[$entity->getEntityType()]['field2'] = $relationFields[1] . 'Id';
+                $this->relationEntityData[$entity->getEntityType()]['entity2'] = $this->getMetadata()
                     ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[1], 'entity']);
             }
         }
@@ -224,31 +283,27 @@ class Entity extends AbstractListener
             return;
         }
 
-        $data = [
-            'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['relatedField']),
-            'relatedType' => $this->relationEntityData[$entity->getEntityType()]['relatedEntity']
-        ];
-
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
             'type'       => 'Relate',
-            'parentId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['parentField']),
-            'parentType' => $this->relationEntityData[$entity->getEntityType()]['parentEntity'],
-            'data'       => $data
+            'parentId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+            'parentType' => $this->relationEntityData[$entity->getEntityType()]['entity1'],
+            'data'       => [
+                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2']
+            ]
         ]);
         $this->getEntityManager()->saveEntity($note);
 
-        $data = [
-            'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['parentField']),
-            'relatedType' => $this->relationEntityData[$entity->getEntityType()]['parentEntity']
-        ];
-
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
             'type'       => 'Relate',
-            'parentId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['relatedField']),
-            'parentType' => $this->relationEntityData[$entity->getEntityType()]['relatedEntity'],
-            'data'       => $data
+            'parentId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+            'parentType' => $this->relationEntityData[$entity->getEntityType()]['entity2'],
+            'data'       => [
+                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1']
+            ]
         ]);
         $this->getEntityManager()->saveEntity($note);
     }
@@ -273,5 +328,10 @@ class Entity extends AbstractListener
         }
 
         return $this->streamService;
+    }
+
+    protected function getFieldManager(): FieldManager
+    {
+        return $this->getContainer()->get('fieldManager');
     }
 }
