@@ -62,6 +62,8 @@ class Metadata extends AbstractListener
 
         $this->prepareExtensibleEnum($data);
 
+        $this->prepareAclActionLevelListMap($data);
+
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
 
@@ -80,6 +82,18 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareAclActionLevelListMap(array &$data): void
+    {
+        foreach ($data['scopes'] as $scope => $scopeDefs) {
+            if (empty($scopeDefs['streamDisabled'])) {
+                $data['scopes'][$scope]['aclActionLevelListMap']['stream'] = [
+                    'all',
+                    'no'
+                ];
+            }
+        }
     }
 
     protected function prepareExtensibleEnum(array &$data): void

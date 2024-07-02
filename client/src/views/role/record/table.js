@@ -175,7 +175,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                             }
 
                             if (action === 'stream') {
-                                if (!this.getMetadata().get('scopes.' + scope + '.stream')) {
+                                if (this.getMetadata().get('scopes.' + scope + '.streamDisabled')) {
                                     list.push({
                                         action: 'stream',
                                         levelList: false,
