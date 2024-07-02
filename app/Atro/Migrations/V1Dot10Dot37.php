@@ -15,11 +15,11 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 
-class V1Dot10Dot36 extends Base
+class V1Dot10Dot37 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-06-29 17:00:00');
+        return new \DateTime('2024-07-02 17:00:00');
     }
 
     public function up(): void
@@ -186,7 +186,7 @@ class V1Dot10Dot36 extends Base
             ->setParameter('types', ['Create', 'Assign', 'Own'], $this->getConnection()::PARAM_STR_ARRAY)
             ->executeQuery();
 
-        $this->updateComposer('atrocore/core', '^1.10.36');
+        $this->updateComposer('atrocore/core', '^1.10.37');
     }
 
     public function down(): void
