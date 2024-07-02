@@ -28,11 +28,19 @@
     "loginUrl": "Login URL",
     "atrocoreUrl": "URL",
     "atrocoreToken": "Authorization Token",
-    "additionalParameters": "Additional Parameters"
+    "additionalParameters": "Additional Parameters",
+    "smtpServer": "Server",
+    "smtpPort": "Port",
+    "smtpSecurity": "Security",
+    "smtpUsername": "Username",
+    "smtpPassword": "Password",
+    "outboundEmailFromName": "From Name",
+    "outboundEmailFromAddress": "From Address"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
     "testConnection": "Test Connection",
+    "sendTestEmail": "Send Test Email",
     "atrocore": "AtroCore",
     "mysql": "MySQL Server",
     "psql": "PostgreSQL Server",
@@ -51,11 +59,13 @@
     "products": "Products",
     "receipts": "Receipts",
     "price-reduction": "Price reduction",
-    "oauth1": "Oauth 1.0"
+    "oauth1": "Oauth 1.0",
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",
     "connectionFailed": "Connection could not be established: %s",
-    "noSuchType": "No such connection type."
+    "noSuchType": "No such connection type.",
+    "notificationConnectionCannotBeDeleted": "This connection is used for E-Mail Notifications and cannot be deleted"
   }
 }

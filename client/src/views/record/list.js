@@ -978,7 +978,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     return;
                 }
 
-                if (!options.keepSelected) {
+                if (!options || !options.keepSelected) {
                     this.checkedList = [];
                     this.allResultIsChecked = false;
                 }
