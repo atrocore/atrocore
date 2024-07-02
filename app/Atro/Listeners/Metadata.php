@@ -273,7 +273,6 @@ class Metadata extends AbstractListener
                     "unitIdField" => true,
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
-                    "audited"     => !empty($fieldDefs['audited']),
                     "notStorable" => !empty($fieldDefs['notStorable']),
                     "emHidden"    => true
                 ];
@@ -312,7 +311,6 @@ class Metadata extends AbstractListener
                         "mainField"          => $field,
                         "unitField"          => true,
                         "required"           => false,
-                        "audited"            => false,
                         "filterDisabled"     => true,
                         "massUpdateDisabled" => true,
                         "emHidden"           => true
@@ -339,7 +337,6 @@ class Metadata extends AbstractListener
                         "notStorable"               => true,
                         "mainField"                 => $field,
                         "required"                  => false,
-                        "audited"                   => false,
                         "layoutListDisabled"        => true,
                         "layoutListSmallDisabled"   => true,
                         "layoutDetailDisabled"      => true,
@@ -419,11 +416,6 @@ class Metadata extends AbstractListener
                 }
                 if (isset($fieldDefs['maxTo'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['max'] = $fieldDefs['maxTo'];
-                }
-
-                if (!empty($fieldDefs['audited'])) {
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['audited'] = true;
-                    $data['entityDefs'][$entity]['fields'][$fieldTo]['audited'] = true;
                 }
 
                 if (!empty($fieldDefs['index'])) {
