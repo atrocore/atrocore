@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
-
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
@@ -183,20 +182,13 @@ class Note
         }
 
         if (!empty($updatedFieldList)) {
-            $note = $this->getEntityManager()->getEntity('Note');
-            $note->set('type', 'Update');
-            $note->set('parentId', $entity->id);
-            $note->set('parentType', $entity->getEntityType());
-
-            $note->set('data', [
+            $this->createNote('Update', $entity->getEntityType(), $entity->id, [
                 'fields'     => $updatedFieldList,
                 'attributes' => [
                     'was'    => $was,
                     'became' => $became
                 ]
             ]);
-
-            $this->getEntityManager()->saveEntity($note);
         }
     }
 
@@ -224,18 +216,40 @@ class Note
         }
 
         foreach ($this->createRelatedData[$entity->getEntityType()] as $field => $scope) {
-            if ($entity->isAttributeChanged($field) && !empty($entity->get($field))) {
-                $note = $this->getEntityManager()->getEntity('Note');
-                $note->set('type', 'CreateRelated');
-                $note->set('parentId', $entity->get($field));
-                $note->set('parentType', $scope);
-                $note->set([
-                    'relatedType' => $entity->getEntityType(),
-                    'relatedId'   => $entity->id
-                ]);
-                $this->getEntityManager()->saveEntity($note);
+            if ($entity->isAttributeChanged($field)) {
+                $wasValue = $entity->getFetched($field);
+                $value = $entity->get($field);
+                if (!empty($value)) {
+                    $this->createNote('CreateRelated', $scope, $value, [
+                        'relatedType' => $entity->getEntityType(),
+                        'relatedId'   => $entity->id
+                    ]);
+                    if (!empty($wasValue)) {
+                        $this->createNote('Unrelate', $scope, $wasValue, [
+                            'relatedType' => $entity->getEntityType(),
+                            'relatedId'   => $entity->id
+                        ]);
+                    }
+                } elseif (!empty($wasValue)) {
+                    $this->createNote('Unrelate', $scope, $wasValue, [
+                        'relatedType' => $entity->getEntityType(),
+                        'relatedId'   => $entity->id
+                    ]);
+                }
             }
         }
+    }
+
+    protected function createNote(string $type, string $parentType, string $parentId, array $data): void
+    {
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => $type,
+            'parentType' => $parentType,
+            'parentId'   => $parentId,
+            'data'       => $data,
+        ]);
+        $this->getEntityManager()->saveEntity($note);
     }
 
     protected function handleRelationEntity(OrmEntity $entity, string $type): void
@@ -259,29 +273,15 @@ class Note
             return;
         }
 
-        $note = $this->getEntityManager()->getEntity('Note');
-        $note->set([
-            'type'       => $type,
-            'parentId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
-            'parentType' => $this->relationEntityData[$entity->getEntityType()]['entity1'],
-            'data'       => [
-                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-                'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2']
-            ]
+        $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
+            'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+            'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2']
         ]);
-        $this->getEntityManager()->saveEntity($note);
 
-        $note = $this->getEntityManager()->getEntity('Note');
-        $note->set([
-            'type'       => $type,
-            'parentId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-            'parentType' => $this->relationEntityData[$entity->getEntityType()]['entity2'],
-            'data'       => [
-                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
-                'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1']
-            ]
+        $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
+            'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+            'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1']
         ]);
-        $this->getEntityManager()->saveEntity($note);
     }
 
     protected function isFollowCreatedEntities(): bool
