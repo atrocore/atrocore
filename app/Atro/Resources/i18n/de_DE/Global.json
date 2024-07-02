@@ -41,7 +41,7 @@
     "Preferences": "Benutzereinstellungen",
     "AuthLogRecord": "Auth Log-Datensatz",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
-    "ReviewTemplate": "Vorlage überprüfen"
+    "PreviewTemplate": "Vorschau Vorlage"
   },
   "scopeNamesPlural": {
     "Storage": "Dateiablagen",
@@ -78,11 +78,11 @@
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll",
-    "ReviewTemplate": "Vorlagen überprüfen"
+    "PreviewTemplate": "Vorschau Vorlagen"
   },
   "descriptions": {
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde.",
-    "reviewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
+    "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
     "Reupload": "Neu hochladen",
@@ -303,7 +303,7 @@
     "Dashboard": "Dashboard",
     "Provide Feedback": "Feedback geben",
     "Instance comparison": "Instanzvergleich",
-    "reviewTemplate": "Review Template"
+    "previewTemplate": "Vorschau Vorlage"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

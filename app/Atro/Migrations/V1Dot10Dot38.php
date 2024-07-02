@@ -19,7 +19,7 @@ class V1Dot10Dot38 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-07-02 14:00:00');
+        return new \DateTime('2024-07-02 17:00:00');
     }
 
     public function up(): void
@@ -38,7 +38,6 @@ oduct', data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', is_active TIN
 
     public function down(): void
     {
-        $this->exec('DROP TABLE preview_template;');
     }
 
     protected function exec(string $query): void

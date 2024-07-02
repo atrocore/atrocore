@@ -138,17 +138,4 @@ class V1Dot10Dot36 extends Base
 
         return $iv;
     }
-
-    protected  function previewTemplateMigration()
-    {
-
-    }
-
-     protected function exec(string $query): void
-     {
-         try {
-             $this->getPDO()->exec($query);
-         } catch (\Throwable $e) {
-         }
-     }
 }

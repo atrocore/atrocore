@@ -177,9 +177,9 @@
     "label": "Templates",
     "itemList": [
       {
-        "url": "#ReviewTemplate",
-        "label": "reviewTemplate",
-        "description": "reviewTemplate"
+        "url": "#PreviewTemplate",
+        "label": "previewTemplate",
+        "description": "previewTemplate"
       }
     ]
   }

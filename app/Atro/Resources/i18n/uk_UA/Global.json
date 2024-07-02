@@ -53,7 +53,7 @@
     "Unit": "Одиниця виміру",
     "QueueItem": "Елемент черги",
     "TreoStore": "Магазин",
-    "ReviewTemplate": "Шаблон відгуку"
+    "PreviewTemplate": "Шаблон перегляду"
   },
   "scopeNamesPlural": {
     "Storage": "Сховища",
@@ -94,11 +94,11 @@
     "Note": "Примітки",
     "Notification": "Повідомлення",
     "Preferences": "Налаштування",
-    "ReviewTemplate": "Шаблони відгуків"
+    "PreviewTemplate": "Шаблони перегляду"
   },
   "descriptions": {
     "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу.",
-    "reviewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
+    "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
 
   },
   "labels": {
@@ -322,7 +322,7 @@
     "Dashboard": "Панелі віджетів",
     "Provide Feedback": "Зворотній зв'язок",
     "Instance comparison": "Порівняння інстансів",
-    "reviewTemplate": "Шаблон відгуку"
+    "previewTemplate": "Шаблон для перегляду"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",

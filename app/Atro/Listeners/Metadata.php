@@ -19,6 +19,7 @@ use Atro\Core\Templates\Repositories\Relation;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 
@@ -1149,15 +1150,14 @@ class Metadata extends AbstractListener
             return;
         }
 
+        /** @var DataManager $dataManager */
         $dataManager = $this->getContainer()->get('dataManager');
         $previewTemplates = $dataManager->getCacheData(PreviewTemplate::CACHE_NAME);
         if ($previewTemplates === null) {
             try {
-                $previewTemplates = $this->getEntityManager()
-                    ->getConnection()
-                    ->createQueryBuilder()
+                $previewTemplates = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->select('id, name, entity_type')
                     ->from('preview_template')
-                    ->select('*')
                     ->where('is_active = :true')
                     ->andWhere('deleted = :false')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -1174,7 +1174,7 @@ class Metadata extends AbstractListener
             $data['clientDefs'][$previewTemplate['entity_type']]['additionalButtons'][$previewTemplate['id']] = [
                 'name' => $previewTemplate['id'],
                 'label' => 'Preview: ' . $previewTemplate['name'],
-                'actionViewPath' => 'product-components:views/record/actions/html-preview',
+                'actionViewPath' => 'views/preview-template/record/actions/preview',
                 'action' => 'showHtmlPreview',
                 'optionsToPass' => [
                     'model'

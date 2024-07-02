@@ -5,6 +5,6 @@
     "template": "HTML/CSS шаблон"
   },
   "labels": {
-    "Create ReviewTemplate": "Створити шаблон відгуку"
+    "Create PreviewTemplate": "Створити Шаблони перегляду"
   }
 }

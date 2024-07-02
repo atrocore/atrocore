@@ -5,6 +5,6 @@
     "template": "HTML/CSS-Vorlage"
   },
   "labels": {
-    "Create ReviewTemplate": "Überprüfungsvorlage erstellen"
+    "Create PreviewTemplate": "Vorschauvorlage erstellen"
   }
 }

@@ -52,7 +52,7 @@
     "Preferences": "Preferences",
     "AuthLogRecord": "Auth Log Record",
     "AuthFailLogRecord": "Auth Fail Log Record",
-    "ReviewTemplate": "Review Template"
+    "PreviewTemplate": "Preview Template"
   },
   "scopeNamesPlural": {
     "Storage": "Storages",
@@ -92,11 +92,11 @@
     "ActionHistoryRecord": "Action History",
     "AuthToken": "Auth Tokens",
     "LastViewed": "Last Viewed",
-    "ReviewTemplate": "Review Templates"
+    "PreviewTemplate": "Preview Templates"
   },
   "descriptions": {
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications.",
-    "reviewTemplate": "Manage HTML/CSS templates for automatic data preview"
+    "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
     "Reupload": "Reupload",
@@ -322,7 +322,7 @@
     "Dashboard": "Dashboard",
     "Provide Feedback": "Provide Feedback",
     "Instance comparison": "Instance comparison",
-    "reviewTemplate": "Review Template"
+    "previewTemplate": "Preview Templates"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

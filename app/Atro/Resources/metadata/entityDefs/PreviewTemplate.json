@@ -17,7 +17,7 @@
       "type": "enum",
       "required": true,
       "default": "Product",
-      "view": "product-components:views/html-template/fields/entity-type"
+      "view": "views/preview-template/fields/entity-type"
     },
     "data": {
       "type": "jsonObject",

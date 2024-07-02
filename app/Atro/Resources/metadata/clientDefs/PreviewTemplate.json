@@ -5,7 +5,7 @@
       {
         "name": "searchPanel",
         "label": "searchPanel",
-        "view": "product-components:views/html-template/record/panels/search",
+        "view": "views/preview-template/record/panels/search",
         "notRefreshable": true
       }
     ]
