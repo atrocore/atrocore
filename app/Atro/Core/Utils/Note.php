@@ -51,7 +51,7 @@ class Note
             $this->handleAudited($entity);
         }
 
-        $this->handleCreateRelated($entity);
+        $this->handleRelation($entity);
     }
 
     public function afterEntityRemoved(OrmEntity $entity): void
@@ -192,7 +192,7 @@ class Note
         }
     }
 
-    protected function handleCreateRelated(OrmEntity $entity): void
+    protected function handleRelation(OrmEntity $entity): void
     {
         if (!$this->streamEnabled($entity->getEntityType())) {
             return;
@@ -200,17 +200,16 @@ class Note
 
         if (!isset($this->createRelatedData[$entity->getEntityType()])) {
             $this->createRelatedData[$entity->getEntityType()] = [];
-            foreach ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".links", []) as $link => $defs) {
-                if ($defs['type'] == 'belongsTo') {
-                    if (empty($defs['foreign']) || empty($defs['entity'])) {
-                        continue;
-                    }
-                    if (!empty($defs['entity'])) {
-                        if (!$this->streamEnabled($defs['entity'])) {
-                            continue;
-                        }
-                        $this->createRelatedData[$entity->getEntityType()][$link . 'Id'] = $defs['entity'];
-                    }
+
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $defs) {
+                if ($defs['type'] === 'file') {
+                    $this->createRelatedData[$entity->getEntityType()][$field . 'Id'] = 'File';
+                }
+            }
+
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $defs) {
+                if ($defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->streamEnabled($defs['entity'])) {
+                    $this->createRelatedData[$entity->getEntityType()][$link . 'Id'] = $defs['entity'];
                 }
             }
         }
