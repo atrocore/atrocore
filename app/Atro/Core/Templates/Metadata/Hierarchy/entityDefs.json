@@ -57,7 +57,6 @@
       "relationName": "{entityType}Hierarchy",
       "foreign": "parents",
       "entity": "{entityType}",
-      "audited": false,
       "midKeys": [
         "entityId",
         "parentId"
@@ -68,7 +67,6 @@
       "relationName": "{entityType}Hierarchy",
       "foreign": "children",
       "entity": "{entityType}",
-      "audited": false,
       "midKeys": [
         "parentId",
         "entityId"

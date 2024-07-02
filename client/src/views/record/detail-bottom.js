@@ -36,6 +36,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
         template: 'record/bottom',
 
+        panelHeadingTemplate: 'record/panel-heading',
+
         mode: 'detail',
 
         streamPanel: true,
@@ -43,6 +45,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         relationshipPanels: true,
 
         readOnly: false,
+
+        canClose: true,
 
         data: function () {
             return {
@@ -68,7 +72,21 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                         view[method].call(view, d, e);
                     }
                 }
-            }
+            },
+            'click span.collapser[data-action="collapsePanel"]': function (e) {
+                this.collapseBottomPanel($(e.currentTarget).data('panel'));
+            },
+            'show.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
+                this.afterPanelCollapsed($(e.currentTarget));
+            },
+            'hide.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
+                this.afterPanelCollapsed($(e.currentTarget), true);
+            },
+            'click span.collapser[data-action="closePanel"]': function (e) {
+                let name = $(e.currentTarget).data('panel');
+                this.$el.find(`.panel[data-name="${name}"]`).addClass('hidden');
+                this.addToClosedPanelPreferences([name])
+            },
         },
 
         showPanel: function (name, callback) {
@@ -132,13 +150,6 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         },
 
         setupPanels: function () {
-            var scope = this.scope;
-
-            this.panelList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + scope + '.bottomPanels.' + this.type) || this.panelList || []);
-
-            if (this.streamPanel && this.getMetadata().get('scopes.' + scope + '.stream')) {
-                this.setupStreamPanel();
-            }
         },
 
         setupStreamPanel: function () {
@@ -155,49 +166,16 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             }
             if (streamAllowed !== false) {
                 this.panelList.push({
-                    "name":"stream",
-                    "label":"Stream",
-                    "view":"views/stream/panel",
-                    "sticked": true,
-                    "hidden": !streamAllowed,
-                    "order": 2
+                    "name": "stream",
+                    "label": "Stream",
+                    "title": this.translate('Stream', 'labels', this.scope),
+                    "view": "views/stream/panel",
+                    "sticked": false,
+                    "hidden": !streamAllowed || this.isPanelClosed('stream'),
+                    "order": this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
+                    "expanded": !this.isPanelClosed('stream')
                 });
             }
-        },
-
-        setupPanelViews: function () {
-            this.panelList.forEach(function (p) {
-                var name = p.name;
-                this.createView(name, p.view, {
-                    model: this.model,
-                    panelName: name,
-                    el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
-                    defs: p,
-                    mode: this.mode,
-                    recordHelper: this.recordHelper,
-                    inlineEditDisabled: this.inlineEditDisabled,
-                    readOnly: this.readOnly,
-                    disabled: p.hidden || false,
-                    recordViewObject: this.recordViewObject
-                }, function (view) {
-                    if ('getActionList' in view) {
-                        p.actionList = this.filterActions(view.getActionList());
-                    }
-                    if ('getButtonList' in view) {
-                        p.buttonList = this.filterActions(view.getButtonList());
-                    }
-
-                    if (view.titleHtml) {
-                        p.titleHtml = view.titleHtml;
-                    } else {
-                        if (p.label) {
-                            p.title = this.translate(p.label, 'labels', this.scope);
-                        } else {
-                            p.title = view.title;
-                        }
-                    }
-                }, this);
-            }, this);
         },
 
         init: function () {
@@ -215,6 +193,10 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             this.type = this.mode;
             if ('type' in this.options) {
                 this.type = this.options.type;
+            }
+
+            if ('canClose' in this.options) {
+                this.canClose = this.options.canClose;
             }
 
             this.panelList = [];
@@ -240,11 +222,6 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                             return;
                         }
                     }
-                    if (p.accessDataList) {
-                        if (!Espo.Utils.checkAccessDataList(p.accessDataList, this.getAcl(), this.getUser())) {
-                            return false;
-                        }
-                    }
                     return true;
                 }, this);
 
@@ -259,19 +236,37 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     } else {
                         this.recordHelper.setPanelStateParam(p.name, item.hidden || false);
                     }
+
                     return item;
                 }, this);
 
-                this.panelList.sort(function(item1, item2) {
-                    var order1 = item1.order || 0;
-                    var order2 = item2.order || 0;
-                    return order1 - order2;
-                });
+                if (this.streamPanel && !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && !this.getConfig().get('isStreamSide')) {
+                    this.setupStreamPanel();
+                }
 
                 this.setupPanelViews();
                 this.wait(false);
 
             }.bind(this));
+
+            this.listenTo(this, 'collapsePanel', (panel, type) => {
+                this.collapseBottomPanel(panel, type);
+            });
+
+            this.listenTo(Backbone, 'create-bottom-panel', function(panel){
+                this.notify('Loading..');
+                this.$el.find(`.panel[data-name="${panel.name}"]`).removeClass('hidden')
+                panel.hidden = false;
+                this.clearView(panel.name);
+                this.createPanelView(panel, (view, pDefs) => {
+                    this.rebuildPanelHeading(pDefs);
+                    view.render();
+                    this.removeFromClosedPanelPreferences([panel.name])
+                    Backbone.trigger('after:create-bottom-panel', panel)
+                    this.notify(false)
+
+                });
+            }.bind(this))
         },
 
         loadRelationshipsLayout: function (callback) {
@@ -282,62 +277,6 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             }.bind(this));
         },
 
-        setupRelationshipPanels: function () {
-            var scope = this.scope;
-
-            var scopesDefs = this.getMetadata().get('scopes') || {};
-
-            var panelList = this.relationshipsLayout;
-            panelList.forEach(function (item) {
-                var p;
-                if (typeof item == 'string' || item instanceof String) {
-                    p = {name: item};
-                } else {
-                    p = Espo.Utils.clone(item || {});
-                }
-                if (!p.name) {
-                    return;
-                }
-
-                var name = p.name;
-
-                var links = (this.model.defs || {}).links || {};
-                if (!(name in links)) {
-                    return;
-                }
-
-                var foreignScope = links[name].entity;
-
-                if ((scopesDefs[foreignScope] || {}).disabled) return;
-
-                if (!this.getAcl().check(foreignScope, 'read')) {
-                    return;
-                }
-
-                var defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
-                defs = Espo.Utils.clone(defs);
-
-                for (var i in defs) {
-                    if (i in p) continue;
-                    p[i] = defs[i];
-                }
-
-                if (!p.view) {
-                    p.view = 'views/record/panels/relationship';
-                }
-
-                p.order = 5;
-
-                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
-                    p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
-                } else {
-                    this.recordHelper.setPanelStateParam(p.name, p.hidden || false);
-                }
-
-                this.panelList.push(p);
-            }, this);
-        },
-
         filterActions: function (actions) {
             var filtered = [];
             actions.forEach(function (item) {
@@ -346,17 +285,6 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 }
             }.bind(this));
             return filtered;
-        },
-
-        getFieldViews: function (withHidden) {
-            var fields = {};
-            this.panelList.forEach(function (p) {
-                var panelView = this.getView(p.name);
-                if (panelView && (!panelView.disabled || withHidden)  && 'getFieldViews' in panelView) {
-                    fields = _.extend(fields, panelView.getFieldViews());
-                }
-            }, this);
-            return fields;
         },
 
         getFields: function () {
@@ -373,6 +301,320 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 }
             }, this);
             return data;
+        },
+
+        isPreferenceScopeExists(){
+            let preferences =  this.getPreferences().get('closedPanels') ?? {};
+            return preferences.hasOwnProperty(this.scope)
+        },
+
+        isPanelClosed(name){
+            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['closed'] ?? [];
+            return panels.includes(name)
+        },
+
+        isPanelHiddenPerDefault(name){
+            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['hiddenPerDefault'] ?? []
+            return panels.includes(name)
+        },
+
+        addToClosedPanelPreferences(names, isHiddenPerDefault = false){
+            if(names.length === 0) return;
+            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['closed'] ?? []
+            names.forEach(name => {
+                if(!panels.includes(name)){
+                    panels.push(name)
+                }
+            })
+            scopePreferences['closed'] = panels;
+
+            if(isHiddenPerDefault){
+                panels = scopePreferences['hiddenPerDefault'] ?? []
+                names.forEach(name => {
+                    if(!panels.includes(name)){
+                        panels.push(name)
+                    }
+                })
+                scopePreferences['hiddenPerDefault'] = panels;
+            }
+
+            preferences[this.scope] = scopePreferences;
+            this.getPreferences().set('closedPanelOptions', preferences);
+            this.getPreferences().save({patch: true});
+            this.getPreferences().trigger('update');
+        },
+
+        removeFromClosedPanelPreferences(names, fromHiddenPerDefault = false){
+            if(names.length === 0) return;
+            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {};
+            let panels = scopePreferences['closed'] ?? []
+
+            panels = panels.filter(n => !names.includes(n));
+            scopePreferences['closed'] = panels;
+
+            if(fromHiddenPerDefault){
+                panels = scopePreferences['hiddenPerDefault'] ?? []
+                panels = panels.filter(n => !names.includes(n));
+                scopePreferences['hiddenPerDefault'] = panels;
+            }
+
+            preferences[this.scope] = scopePreferences;
+            this.getPreferences().set('closedPanelOptions', preferences);
+            this.getPreferences().save({patch: true});
+            this.getPreferences().trigger('update');
+        },
+
+        setupRelationshipPanels: function () {
+            let scope = this.scope;
+
+            let scopesDefs = this.getMetadata().get('scopes') || {};
+
+            let panelList = this.relationshipsLayout;
+            let toRemoveAsHiddenPerDefault = []
+            panelList.forEach(function (item) {
+                let p;
+                if (typeof item === 'string' || item instanceof String) {
+                    p = {name: item};
+                } else {
+                    p = Espo.Utils.clone(item || {});
+                }
+                if (!p.name) {
+                    return;
+                }
+
+                let name = p.name;
+
+                let links = (this.model.defs || {}).links || {};
+                let bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
+                let bottomPanelOptions = bottomPanels.find(panel => panel.name === name);
+                if (!(name in links) && !bottomPanelOptions) {
+                    return;
+                }
+
+                let defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
+                if (bottomPanelOptions) {
+                    defs = bottomPanelOptions;
+                }
+                defs = Espo.Utils.clone(defs);
+
+                if (defs.aclScopesList) {
+                    if (!defs.aclScopesList.every(item => this.getAcl().checkScope(item, 'read'))) {
+                        return;
+                    }
+                } else {
+                    let foreignScope = (links[name] || {}).entity;
+                    if ((scopesDefs[foreignScope] || {}).disabled) return;
+                    if (foreignScope && !this.getAcl().check(foreignScope, 'read')) {
+                        return;
+                    }
+                }
+
+                for (let i in defs) {
+                    if (i in p) continue;
+                    p[i] = defs[i];
+                }
+
+                if (!p.view) {
+                    p.view = bottomPanelOptions ? 'views/record/panels/bottom' : 'views/record/panels/relationship';
+                }
+
+                p.canClose = p.canClose ?? this.canClose
+                p.order = 5;
+                if(p.hiddenPerDefault === true
+                    && !this.isPanelHiddenPerDefault(p.name)){
+                    this.addToClosedPanelPreferences([p.name], true)
+                }else if(p.hiddenPerDefault !== true && this.isPanelHiddenPerDefault(p.name)){
+                    toRemoveAsHiddenPerDefault.push(p.name)
+                }
+
+                if(this.isPanelClosed(p.name) && !toRemoveAsHiddenPerDefault.includes(p.name)){
+                    p.hidden = true
+                    this.recordHelper.setPanelStateParam(p.name, true);
+                }
+
+                if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
+                    p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
+                } else {
+                    this.recordHelper.setPanelStateParam(p.name, p.hidden || false);
+                }
+
+                p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
+
+                this.setPanelTitle(p);
+
+                this.panelList.push(p);
+            }, this);
+
+            this.removeFromClosedPanelPreferences(toRemoveAsHiddenPerDefault, true)
+        },
+
+        setupPanelViews() {
+            if (this.options.staticAllowedPanelNames) {
+                this.panelList = this.panelList.filter(p => {
+                    return this.options.staticAllowedPanelNames.includes(p.name);
+                });
+            }
+
+            this.setupOptionalPanels();
+            this.sortPanelList();
+            this.createPanelViews();
+        },
+
+        createPanelViews() {
+            this.panelList.filter(p => !p.hidden)
+                .forEach(p => {
+                    this.createPanelView(p);
+                });
+        },
+
+        createPanelView(p, callback) {
+            let name = p.name;
+            this.createView(name, p.view, {
+                model: p.model ? p.model : this.model,
+                panelName: name,
+                el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
+                defs: p,
+                mode: this.mode,
+                recordHelper: this.recordHelper,
+                inlineEditDisabled: this.inlineEditDisabled,
+                readOnly: this.readOnly,
+                disabled: p.hidden || false,
+                recordViewObject: this.recordViewObject
+            }, function (view) {
+                if ('getActionList' in view) {
+                    p.actionList = this.filterActions(view.getActionList());
+                }
+                if ('getButtonList' in view) {
+                    p.buttonList = this.filterActions(view.getButtonList());
+                }
+
+                if (view.titleHtml) {
+                    p.titleHtml = view.titleHtml;
+                }
+
+                this.setPanelTitle(p);
+
+                this.listenTo(view, 'panel:rebuild', defs => {
+                    this.clearView(defs.name);
+                    this.createPanelView(defs, (view, pDefs) => {
+                        this.rebuildPanelHeading(pDefs);
+                        view.render();
+                    });
+
+                    // refresh sync panels
+                    let syncPanels = this.getMetadata().get(['clientDefs', this.scope, 'syncPanels', defs.name]) || [];
+                    if (syncPanels !== []) {
+                        let syncPanelDefs = null;
+                        syncPanels.forEach(function (panelName) {
+                            // prepare syncPanelDefs
+                            syncPanelDefs = this.panelList.filter(panel => {
+                                return panel.name === panelName;
+                            }).shift();
+
+                            if (typeof syncPanelDefs !== 'undefined') {
+                                syncPanelDefs.select = defs.select;
+                                syncPanelDefs.create = defs.create;
+                                syncPanelDefs.readOnly = defs.readOnly;
+                                syncPanelDefs.actionList = [];
+                                syncPanelDefs.buttonList = [];
+
+                                this.clearView(panelName);
+                                this.createPanelView(syncPanelDefs, (view, pDefs) => {
+                                    this.rebuildPanelHeading(pDefs);
+                                    view.render();
+                                });
+                            }
+                        }, this);
+                    }
+                });
+
+                this.listenTo(view, 'collapsePanel', type => this.collapseBottomPanel(p.name, type));
+
+                if (callback) {
+                    callback(view ,p);
+                }
+            }, this);
+        },
+
+        rebuildPanelHeading(defs) {
+            let panelHeading = this.$el.find(`.panel[data-name="${defs.name}"] > .panel-heading`);
+            this._templator.getTemplate(this.panelHeadingTemplate, {}, false, template => {
+                panelHeading.html(this._renderer.render(template, defs));
+            });
+        },
+
+        setupOptionalPanels() {
+            let optionalPanels = this.getMetadata().get(`clientDefs.${this.scope}.optionalBottomPanels`) || {};
+
+            this.panelList = this.panelList.filter(panel => {
+                if (panel.name in optionalPanels) {
+                    return optionalPanels[panel.name].every(condition => this.model.get(condition.field) === condition.value);
+                }
+                return true;
+            });
+        },
+
+        sortPanelList() {
+            this.panelList.forEach((item, index) => item.index = index);
+            this.panelList.sort((a, b) => (((a.order || 0) - (b.order || 0)) || (a.index - b.index)));
+        },
+
+        collapseBottomPanel(panel, type) {
+            let panelBody = this.$el.find(`.panel-body[data-name="${panel}"]`);
+            panelBody.collapse(type ? type : 'toggle');
+        },
+
+        afterPanelCollapsed(target, hide) {
+            let collapser = target.prev().find(`span.collapser[data-panel="${target.data('name')}"]`);
+            if (hide) {
+                collapser.removeClass('fa-chevron-up');
+                collapser.addClass('fa-chevron-down');
+            } else {
+                collapser.removeClass('fa-chevron-down');
+                collapser.addClass('fa-chevron-up');
+            }
+            this.savePanelStateToStorage(target.data('name'), hide);
+        },
+
+        savePanelStateToStorage(panelName, hide) {
+            let states = this.getStorage().get('collapsed-panels', this.scope) || [];
+            if (!hide && states.includes(panelName)) {
+                states.splice(states.indexOf(panelName), 1);
+            } else if (hide && !states.includes(panelName)) {
+                states.push(panelName);
+            } else {
+                return;
+            }
+            this.getStorage().set('collapsed-panels', this.scope, states);
+        },
+
+        getFieldViews(withHidden) {
+            var fields = {};
+            this.panelList.forEach(function (p) {
+                var panelView = this.getView(p.name);
+                if (panelView && (!panelView.disabled || withHidden)  && 'getFieldViews' in panelView) {
+                    fields = _.extend(fields, panelView.getFieldViews());
+                }
+            }, this);
+            return fields;
+        },
+
+        setPanelTitle(panel) {
+            if (panel.label) {
+                let translated = this.translate(panel.name)
+                panel.title = translated === panel.name ? this.translate(panel.label, 'labels', this.scope) : translated;
+            } else {
+                panel.title = this.translate(panel.name, 'links', this.scope);
+            }
+            return panel;
         }
+
     });
 });

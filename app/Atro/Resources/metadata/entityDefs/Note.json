@@ -2,7 +2,7 @@
     "fields": {
         "post": {
             "type": "text",
-            "rows": 30
+            "notStorable": true
         },
         "fieldDefs": {
             "type": "jsonObject",
@@ -28,16 +28,24 @@
             "view": "views/fields/enum",
             "options": ["Post"]
         },
-        "targetType": {
-            "type": "varchar"
-        },
         "parent": {
             "type": "linkParent",
             "readOnly": true
         },
-        "related": {
-            "type": "linkParent",
-            "readOnly": true
+        "relatedType": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "relatedId": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "relatedName": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true
         },
         "attachments": {
             "type": "linkMultiple",
@@ -53,22 +61,6 @@
             "notStorable": true,
             "readOnly": true
         },
-        "number": {
-            "type": "int",
-            "index": true,
-            "readOnly": true
-        },
-        "teams": {
-            "type": "linkMultiple",
-            "noLoad": true
-        },
-        "users": {
-            "type": "linkMultiple",
-            "noLoad": true
-        },
-        "isGlobal": {
-            "type": "bool"
-        },
         "createdByGender": {
             "type": "foreign",
             "link": "createdBy",
@@ -78,9 +70,6 @@
             "type": "jsonArray",
             "notStorable": true,
             "disabled": true
-        },
-        "isInternal": {
-            "type": "bool"
         },
         "diff": {
             "type": "text",
@@ -123,24 +112,6 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "foreign": "notes"
-        },
-        "superParent": {
-            "type": "belongsToParent"
-        },
-        "related": {
-            "type": "belongsToParent"
-        },
-        "teams": {
-            "type": "hasMany",
-            "relationName": "noteTeam",
-            "entity": "Team",
-            "foreign": "notes"
-        },
-        "users": {
-            "type": "hasMany",
-            "relationName": "noteUser",
-            "entity": "User",
             "foreign": "notes"
         }
     },
@@ -196,7 +167,7 @@
         },
         "parentAndSuperParent": {
             "type": "index",
-            "columns": ["parentId", "parentType", "superParentId", "superParentType"]
+            "columns": ["parentId", "parentType"]
         }
     }
 }

@@ -99,9 +99,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 this.hideField('dashboardLayout');
             }
 
-            this.controlFollowCreatedEntityListVisibility();
-            this.listenTo(this.model, 'change:followCreatedEntities', this.controlFollowCreatedEntityListVisibility);
-
             this.controlColorsField();
             this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
 
@@ -146,14 +143,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                     window.location.reload();
                 }
             }, this);
-        },
-
-        controlFollowCreatedEntityListVisibility: function () {
-            if (!this.model.get('followCreatedEntities')) {
-                this.showField('followCreatedEntityTypeList');
-            } else {
-                this.hideField('followCreatedEntityTypeList');
-            }
         },
 
         controlColorsField: function () {

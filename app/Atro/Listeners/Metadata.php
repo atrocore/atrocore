@@ -62,6 +62,8 @@ class Metadata extends AbstractListener
 
         $this->prepareExtensibleEnum($data);
 
+        $this->prepareAclActionLevelListMap($data);
+
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
 
@@ -80,6 +82,18 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareAclActionLevelListMap(array &$data): void
+    {
+        foreach ($data['scopes'] as $scope => $scopeDefs) {
+            if (empty($scopeDefs['streamDisabled'])) {
+                $data['scopes'][$scope]['aclActionLevelListMap']['stream'] = [
+                    'all',
+                    'no'
+                ];
+            }
+        }
     }
 
     protected function prepareExtensibleEnum(array &$data): void
@@ -273,7 +287,6 @@ class Metadata extends AbstractListener
                     "unitIdField" => true,
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
-                    "audited"     => !empty($fieldDefs['audited']),
                     "notStorable" => !empty($fieldDefs['notStorable']),
                     "emHidden"    => true
                 ];
@@ -312,7 +325,6 @@ class Metadata extends AbstractListener
                         "mainField"          => $field,
                         "unitField"          => true,
                         "required"           => false,
-                        "audited"            => false,
                         "filterDisabled"     => true,
                         "massUpdateDisabled" => true,
                         "emHidden"           => true
@@ -339,7 +351,6 @@ class Metadata extends AbstractListener
                         "notStorable"               => true,
                         "mainField"                 => $field,
                         "required"                  => false,
-                        "audited"                   => false,
                         "layoutListDisabled"        => true,
                         "layoutListSmallDisabled"   => true,
                         "layoutDetailDisabled"      => true,
@@ -419,11 +430,6 @@ class Metadata extends AbstractListener
                 }
                 if (isset($fieldDefs['maxTo'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['max'] = $fieldDefs['maxTo'];
-                }
-
-                if (!empty($fieldDefs['audited'])) {
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['audited'] = true;
-                    $data['entityDefs'][$entity]['fields'][$fieldTo]['audited'] = true;
                 }
 
                 if (!empty($fieldDefs['index'])) {
@@ -604,6 +610,13 @@ class Metadata extends AbstractListener
 
             if (!empty($data['scopes'][$entityName]['isHierarchyEntity'])) {
                 $data['scopes'][$entityName]['acl'] = true;
+            }
+
+            if (!isset($data['scopes'][$entityName]['auditedDisabled'])) {
+                $data['scopes'][$entityName]['auditedDisabled'] = true;
+            }
+            if (!isset($data['scopes'][$entityName]['streamDisabled'])) {
+                $data['scopes'][$entityName]['streamDisabled'] = true;
             }
 
             $data['scopes'][$entityName]['tab'] = false;

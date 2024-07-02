@@ -26,10 +26,6 @@
       ]
     },
     {
-      "name": "audited",
-      "type": "bool"
-    },
-    {
       "name": "readOnly",
       "type": "bool"
     },
@@ -46,5 +42,6 @@
     "name"
   ],
   "filter": true,
+  "auditable": true,
   "personalData": true
 }

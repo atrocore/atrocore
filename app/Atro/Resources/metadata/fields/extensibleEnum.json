@@ -6,10 +6,6 @@
       "default": false
     },
     {
-      "name": "audited",
-      "type": "bool"
-    },
-    {
       "name": "readOnly",
       "type": "bool"
     },
@@ -43,6 +39,7 @@
   ],
   "notSortable": true,
   "filter": true,
+  "auditable": true,
   "fieldDefs": {
     "type": "varchar"
   },
