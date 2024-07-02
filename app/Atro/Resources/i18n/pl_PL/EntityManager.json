@@ -38,8 +38,6 @@
     "linkMultipleFieldForeign": "Obce wiele pól łącza",
     "disabled": "Wyłączone",
     "textFilterFields": "Pola filtra tekstowego",
-    "audited": "Śledzenie zmian",
-    "auditedForeign": "Obce śledzone",
     "statusField": "Pole statusu",
     "beforeSaveCustomScript": "Niestandardowy skrypt przed zapisaniem",
     "color": "Kolor",

@@ -39,8 +39,6 @@
     "disabled": "Disabled",
     "textFilterFields": "Text Filter Fields",
     "auditedDisabled": "Disable Track changes",
-    "audited": "Track changes",
-    "auditedForeign": "Foreign Audited",
     "statusField": "Status Field",
     "beforeSaveCustomScript": "Before Save Custom Script",
     "color": "Color",

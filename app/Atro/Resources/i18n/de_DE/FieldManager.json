@@ -65,7 +65,6 @@
     "isSorted": "Optionen werden nach dem Speichern sortiert.",
     "isMultilang": "Automatische Erstellung von Feldern durch Klonen des ausgewählten Felds, sofern in den Einstellungen für Mehrsprachigkeit Ländereinstellungen aktiviert sind.",
     "fontSize": "Schriftgröße in em (relativ zur aktuellen Schriftgröße).",
-    "audited": "Updates werden im Verlauf geloggt.",
     "required": "Das Feld ist ein Pflichtfeld und darf nicht leer sein.",
     "default": "Der Wert wird beim Erstellen standardmäßig gesetzt.",
     "min": "Min. zulässiger Wert",

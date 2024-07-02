@@ -23,8 +23,6 @@
     "linkMultipleFieldForeign": "Enlaza múltiples campos foráneos",
     "disabled": "Desactivado",
     "textFilterFields": "Los campos de filtro de texto",
-    "audited": "Cambio de camino",
-    "auditedForeign": "Foráneo auditado",
     "statusField": "Campo estado",
     "beforeSaveCustomScript": "Antes de guardar la secuencia de comandos personalizada",
     "hasAssignedUser": "Assigned User",
