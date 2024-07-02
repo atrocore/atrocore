@@ -66,7 +66,6 @@
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "fontSize": "Font size in em (relative to current font size).",
     "isSorted": "Options will be sorted after saving.",
-    "audited": "Updates will be logged in stream.",
     "required": "Field will be mandatory. Can't be left empty.",
     "default": "Value will be set by default upon creating.",
     "min": "Min acceptable value.",

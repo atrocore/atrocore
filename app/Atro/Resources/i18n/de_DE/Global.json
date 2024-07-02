@@ -40,7 +40,8 @@
     "DashletOptions": "Dashlet Optionen",
     "Preferences": "Benutzereinstellungen",
     "AuthLogRecord": "Auth Log-Datensatz",
-    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
+    "ReviewTemplate": "Vorlage überprüfen"
   },
   "scopeNamesPlural": {
     "Storage": "Dateiablagen",
@@ -76,10 +77,12 @@
     "PasswordChangeRequest": "Anforderungen zur Passwortänderung",
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
-    "AuthFailLogRecord": "Auth-Fehlerprotokoll"
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll",
+    "ReviewTemplate": "Vorlagen überprüfen"
   },
   "descriptions": {
-    "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
+    "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde.",
+    "reviewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
     "Reupload": "Neu hochladen",
@@ -299,7 +302,8 @@
     "Reset filter": "Filter zurücksetzen",
     "Dashboard": "Dashboard",
     "Provide Feedback": "Feedback geben",
-    "Instance comparison": "Instanzvergleich"
+    "Instance comparison": "Instanzvergleich",
+    "reviewTemplate": "Review Template"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -601,23 +605,6 @@
     "emailSentThis": "{by} hat eine E-Mail gesendet",
     "postTargetSelf": "{user} notierte für sich selbst",
     "postTargetSelfAndOthers": "{user} notierte für {target} und für sich selbst",
-    "createAssignedYou": "{user} wies Ihnen die {entityType} {entity} zu",
-    "createAssignedThisSelf": "{user} erstellte {entityType} als selbst zugewiesen",
-    "createAssignedSelf": "{user} erstellte {entityType} {entity} als selbst zugewiesen",
-    "own": "{user} setzte {owner} als Besitzer für {entityType} {entity}",
-    "ownThis": "{user} setzte {owner} als Besitzer für diese Entität {entityType}",
-    "ownYou": "{user} setzte Sie als Besitzer für {entityType} {entity}",
-    "ownThisVoid": "{user} entfernte den Besitzer für diese Entität {entityType}",
-    "ownVoid": "{user} entfernte den Besitzer für {entityType} {entity}",
-    "ownThisSelf": "{user} setzte sich als Besitzer für diese Entität {entityType}",
-    "ownSelf": "{user} setzte sich als Besitzer für {entityType} {entity}",
-    "assign": "{user} wies {entityType} {entity} an {assignee} zu",
-    "assignThis": "{user} wies {entityType} an {assignee} zu",
-    "assignYou": "{entityType} {entity} wurde Ihnen zugewiesen",
-    "assignThisVoid": "{user} löste die Zuweisung diese(r/n) {entityType} auf",
-    "assignVoid": "{user} löste die Zuweisung de(r/s) {entityType} {entity} auf",
-    "assignThisSelf": "{user} wies sich selbst {entityType} zu",
-    "assignSelf": "{user} wies sich {entityType} {entity} selbst zu",
     "unrelate": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
     "unrelateThis": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit diese(r/m) {entityType}",
     "updateOneThis": "{user} aktualisierte diese(s/n) {entityType}",

@@ -78,7 +78,7 @@ abstract class AbstractListener
         return $this->getContainer()->get('user');
     }
 
-    protected function getPreferences(): Preferences
+    protected function getPreferences(): ?Preferences
     {
         return $this->getContainer()->get('Preferences');
     }

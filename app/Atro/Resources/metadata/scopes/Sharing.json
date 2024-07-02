@@ -7,5 +7,6 @@
   "object": true,
   "hasOwner": false,
   "hasAssignedUser": false,
-  "hasTeam": false
+  "hasTeam": false,
+  "streamDisabled": true
 }

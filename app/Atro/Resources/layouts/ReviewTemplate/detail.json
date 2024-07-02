@@ -1,0 +1,29 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "isActive"
+        },
+        false
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "entityType"
+        }
+      ],
+      [
+        {
+          "name": "template",
+          "fullWidth": "true"
+        },
+        false
+      ]
+    ]
+  }
+]

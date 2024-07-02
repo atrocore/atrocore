@@ -172,5 +172,15 @@
       }
     ],
     "order": 40
+  },
+  "templates": {
+    "label": "Templates",
+    "itemList": [
+      {
+        "url": "#ReviewTemplate",
+        "label": "reviewTemplate",
+        "description": "reviewTemplate"
+      }
+    ]
   }
 }

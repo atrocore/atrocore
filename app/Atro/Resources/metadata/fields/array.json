@@ -21,15 +21,12 @@
          "default": false
       },
       {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
          "name":"readOnly",
          "type":"bool"
       }
    ],
    "filter": true,
+   "auditable": true,
    "multilingual": true,
    "notCreatable": false,
    "notSortable": true,

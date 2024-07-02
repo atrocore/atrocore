@@ -42,20 +42,13 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             return {
                 isNew: this.isNew,
                 additionalParamsLayout: this.getMetadata().get('app.additionalEntityParams.layout') || [],
-                isActiveUnavailable: this.getMetadata().get(['scopes', this.scope, 'isActiveUnavailable']) || false
+                isActiveUnavailable: this.getMetadata().get(['scopes', this.scope, 'isActiveUnavailable']) || false,
+                auditable: !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled')
             };
         },
 
         setupData: function () {
             var scope = this.scope;
-
-            this.hasStreamField = true;
-            if (scope) {
-                this.hasStreamField = (this.getMetadata().get('scopes.' + scope + '.customizable') && this.getMetadata().get('scopes.' + scope + '.object')) || false;
-            }
-            if (scope === 'User') {
-                this.hasStreamField = false;
-            }
 
             this.hasColorField = !this.getConfig().get('scopeColorsDisabled');
 
@@ -67,8 +60,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
                 this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
                 this.model.set('type', this.getMetadata().get('scopes.' + scope + '.type') || '');
-                this.model.set('stream', this.getMetadata().get('scopes.' + scope + '.stream') || false);
                 this.model.set('disabled', this.getMetadata().get('scopes.' + scope + '.disabled') || false);
+                this.model.set('auditedDisabled', this.getMetadata().get('scopes.' + scope + '.auditedDisabled') || false);
 
                 this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
@@ -144,21 +137,6 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 readOnly: !this.isNew
             });
 
-            if (this.hasStreamField) {
-                this.createView('stream', 'views/admin/entity-manager/fields/bool-for-type', {
-                    model: model,
-                    mode: 'edit',
-                    el: this.options.el + ' .field[data-name="stream"]',
-                    defs: {
-                        name: 'stream',
-                        types: ["Base", "Hierarchy"]
-                    },
-                    tooltip: true,
-                    tooltipText: this.translate('stream', 'tooltips', 'EntityManager'),
-                    tooltipLink: this.translate('stream', 'tooltipLink', 'EntityManager')
-                });
-            }
-
             this.createView('disabled', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
@@ -169,6 +147,15 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 tooltip: true,
                 tooltipText: this.translate('disabled', 'tooltips', 'EntityManager'),
                 tooltipLink: this.translate('disabled', 'tooltipLink', 'EntityManager')
+            });
+
+            this.createView('auditedDisabled', 'views/fields/bool', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="auditedDisabled"]',
+                defs: {
+                    name: 'auditedDisabled'
+                }
             });
 
             this.createView('name', 'views/fields/varchar', {
@@ -548,8 +535,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 'type',
                 'labelSingular',
                 'labelPlural',
-                'stream',
                 'disabled',
+                'auditedDisabled',
                 'statusField',
                 'iconClass'
             ];
@@ -602,8 +589,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 labelSingular: this.model.get('labelSingular'),
                 labelPlural: this.model.get('labelPlural'),
                 type: this.model.get('type'),
-                stream: this.model.get('stream'),
                 disabled: this.model.get('disabled'),
+                auditedDisabled: this.model.get('auditedDisabled'),
                 textFilterFields: this.model.get('textFilterFields'),
                 statusField: this.model.get('statusField'),
                 iconClass: this.model.get('iconClass'),

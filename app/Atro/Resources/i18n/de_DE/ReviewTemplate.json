@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "entityType": "Entität",
+    "isActive": "Aktiv",
+    "template": "HTML/CSS-Vorlage"
+  },
+  "labels": {
+    "Create ReviewTemplate": "Überprüfungsvorlage erstellen"
+  }
+}

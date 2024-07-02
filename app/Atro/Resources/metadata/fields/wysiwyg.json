@@ -54,13 +54,10 @@
       {
          "name": "useIframe",
          "type": "bool"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
       }
    ],
    "filter": true,
+   "auditable": true,
    "qbFilterType": "string",
    "multilingual": true,
    "fieldDefs":{

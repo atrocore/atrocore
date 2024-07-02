@@ -325,8 +325,7 @@
   "links": {
     "variables": {
       "type": "hasMany",
-      "entity": "Variable",
-      "audited": false
+      "entity": "Variable"
     },
     "notificationSmtpConnection": {
       "type": "belongsTo",

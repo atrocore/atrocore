@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "entityType": "Сутність",
+    "isActive": "Активний",
+    "template": "HTML/CSS шаблон"
+  },
+  "labels": {
+    "Create ReviewTemplate": "Створити шаблон відгуку"
+  }
+}

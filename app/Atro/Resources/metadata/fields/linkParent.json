@@ -11,10 +11,6 @@
          "view": "Admin.FieldManager.Fields.EntityList"
       },
       {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
          "name":"readOnly",
          "type":"bool"
       }
