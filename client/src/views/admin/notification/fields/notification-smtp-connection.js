@@ -30,33 +30,21 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/outbound-emails', 'views/settings/record/edit', function (Dep) {
+Espo.define('views/admin/notification/fields/notification-smtp-connection', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
-        layoutName: 'outboundEmails',
+        createDisabled: true,
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        selectBoolFilterList: ['notEntity', 'connectionType'],
+
+        boolFilterData: {
+            notEntity() {
+                return this.model.get('notificationSmtpConnectionId');
+            },
+            connectionType() {
+                return 'smtp'
+            }
         },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            var smtpSecurityField = this.getFieldView('smtpSecurity');
-            this.listenTo(smtpSecurityField, 'change', function () {
-                var smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];
-                if (smtpSecurity == 'SSL') {
-                    this.model.set('smtpPort', '465');
-                } else if (smtpSecurity == 'TLS') {
-                    this.model.set('smtpPort', '587');
-                } else {
-                    this.model.set('smtpPort', '25');
-                }
-            }.bind(this));
-        },
-
     });
-
 });
-

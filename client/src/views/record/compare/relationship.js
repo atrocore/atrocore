@@ -12,7 +12,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
     return Dep.extend({
         template: 'record/compare/relationship',
         relationshipsFields: [],
-        instanceNames: [],
+        instances: [],
         currentItemModels: [],
         otherItemModels: [],
         init(){
@@ -22,7 +22,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             this.scope = this.options.scope;
             this.baseModel = this.options.model;
             this.relationship = this.options.relationship;
-            this.instanceNames = this.getMetadata().get(['app','comparableInstanceNames']);
+            this.instances = this.getMetadata().get(['app','comparableInstances']);
             this.checkedList = [];
             this.enabledFixedHeader = false;
             this.dragableListRows = false;
@@ -35,18 +35,35 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
         },
         fetchModelsAndSetup(){
             this.wait(true)
+            let nonComparableFields = this.getMetadata().get('scopes.' + this.relationship.scope + '.nonComparableFields') ?? [];
             this.getHelper().layoutManager.get(this.relationship.scope, 'listSmall', layout => {
                 if (layout && layout.length) {
                     let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.relationship.scope, 'read');
                     layout.forEach(item => {
-                        if (item.name && !forbiddenFieldList.includes(item.name)) {
+                        if (item.name && !forbiddenFieldList.includes(item.name) && !nonComparableFields.includes(item.name)) {
                             this.fields.push(item.name);
                         }
                     });
                     this.getModelFactory().create(this.relationship.scope, function (model) {
-                        model.scope = this.relationship.scope;
+                        let selectField = [];
+                        this.fields.forEach(field => {
+                            let type = model.getFieldType(field)
+                            if(['file','link'].includes(type)){
+                                selectField.push(field + 'Id');
+                                selectField.push(field + 'Name');
+                                return;
+                            }
+
+                            if( type === 'linkMultiple'){
+                                selectField.push(field+'Ids');
+                                selectField.push(field+'Names');
+                                return;
+                            }
+
+                            selectField.push(field);
+                        })
                         this.ajaxGetRequest(this.scope+'/'+this.model.get('id')+'/'+this.relationship.name, {
-                            select: this.fields.join(',')
+                            select: selectField.join(',')
                         }).success(res => {
                             this.currentItemModels = res.list.map( item => {
                                 let itemModel = model.clone()
@@ -54,13 +71,31 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                                 return itemModel
                             });
                             this.ajaxGetRequest('Synchronization/action/distantInstanceRequest',{
-                                'uri':this.scope+'/' + this.model.get('id')+'/' + this.relationship.name + '?select=' + this.fields.join(',')
+                                'uri':this.scope+'/' + this.model.get('id')+'/' + this.relationship.name + '?select=' + selectField.join(','),
+                                'type':'list'
                             }).success(res => {
-                                this.otherItemModels = res.map( data => data.list.map(item => {
-                                    let itemModel = model.clone()
-                                    itemModel.set(item)
-                                    return itemModel
-                                }));
+                                this.otherItemModels = [];
+                                res.forEach((data, index) => {
+                                    if('_error' in data){
+                                        this.instances[index]['_error'] = data['_error'];
+                                    }
+                                    this.otherItemModels.push((data.list ?? []).map(item => {
+                                        for(let key in item){
+                                            let el = item[key];
+                                            let instanceUrl = this.instances[index].atrocoreUrl;
+                                            if(key.includes('PathsData')){
+                                                if( el && ('thumbnails' in el)){
+                                                    for (let size in el['thumbnails']){
+                                                        item[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        let itemModel = model.clone()
+                                        itemModel.set(item)
+                                        return itemModel
+                                    }));
+                                });
                                 this.setupRelationship(() => this.wait(false));
                             })
                         });
@@ -72,9 +107,13 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             return {
                 name: this.relationship.name,
                 scope: this.relationship.scope,
-                instanceNames: this.instanceNames,
+                instances: this.instances.map((i, key) => {
+                    i['columnCount'] = this.otherItemModels[key].length;
+                    return i;
+                }),
                 relationshipsFields: this.relationshipsFields,
-                columnCountCurrent: this.currentItemModels.length
+                columnCountCurrent: Math.max(this.currentItemModels.length,1),
+                currentItemModels: this.currentItemModels
             }
         },
         setupRelationship(callback){
@@ -117,6 +156,10 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             },
                             mode: 'detail',
                             inlineEditDisabled: true,
+                        }, view => {
+                            view.render()
+                            let instanceUrl = this.instances[index1].atrocoreUrl;
+                            this.updateBaseUrl(view, instanceUrl);
                         });
                     });
                 });
@@ -232,5 +275,39 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 }
             }
         },
+        afterRender(){
+            Dep.prototype.afterRender.call(this)
+            $('.not-approved-field').hide();
+        },
+        updateBaseUrl(view, instanceUrl){
+            view.listenTo(view, 'after:render', () => {
+                setTimeout(() => {
+                    let localUrl = this.getConfig().get('siteUrl');
+                    view.$el.find('a').each((i, el) => {
+                        let href = $(el).attr('href')
+
+                        if(href.includes('http') && localUrl){
+                            $(el).attr('href', href.replace(localUrl, instanceUrl))
+                        }
+
+                        if((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?')){
+                            $(el).attr('href', instanceUrl + href)
+                        }
+                        $(el).attr('target','_blank')
+                    });
+
+                    view.$el.find('img').each((i, el) => {
+                        let src = $(el).attr('src')
+                        if(src.includes('http') && localUrl){
+                            $(el).attr('src', src.replace(localUrl, instanceUrl))
+                        }
+
+                        if(!src.includes('http')){
+                            $(el).attr('src', instanceUrl + '/' + src)
+                        }
+                    });
+                })
+            }, 1000)
+        }
     })
 })

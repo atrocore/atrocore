@@ -54,62 +54,6 @@
       "required": true,
       "tooltip": true
     },
-    "outboundEmailFromName": {
-      "type": "varchar",
-      "default": "EspoCRM",
-      "trim": true
-    },
-    "outboundEmailFromAddress": {
-      "type": "varchar",
-      "default": "crm@example.com",
-      "trim": true
-    },
-    "smtpServer": {
-      "type": "varchar"
-    },
-    "smtpPort": {
-      "type": "int",
-      "min": 0,
-      "max": 9999,
-      "default": 25
-    },
-    "smtpAuth": {
-      "type": "bool",
-      "default": true
-    },
-    "smtpAuthMechanism": {
-      "type": "enum",
-      "optionsIds": [
-        "login",
-        "plain",
-        "crammd5"
-      ],
-      "options": [
-        "login",
-        "plain",
-        "crammd5"
-      ]
-    },
-    "smtpSecurity": {
-      "type": "enum",
-      "optionsIds": [
-        "",
-        "SSL",
-        "TLS"
-      ],
-      "options": [
-        "",
-        "SSL",
-        "TLS"
-      ]
-    },
-    "smtpUsername": {
-      "type": "varchar",
-      "required": true
-    },
-    "smtpPassword": {
-      "type": "password"
-    },
     "disableEmailDelivery": {
       "type": "bool"
     },
@@ -372,12 +316,20 @@
     "customHeadCodePath": {
       "type": "varchar",
       "readOnly": true
+    },
+    "notificationSmtpConnection": {
+      "type": "link",
+      "view": "views/admin/notification/fields/notification-smtp-connection"
     }
   },
   "links": {
     "variables": {
       "type": "hasMany",
       "entity": "Variable"
+    },
+    "notificationSmtpConnection": {
+      "type": "belongsTo",
+      "entity": "Connection"
     }
   }
 }

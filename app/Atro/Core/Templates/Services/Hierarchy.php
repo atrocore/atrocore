@@ -669,7 +669,7 @@ class Hierarchy extends Record
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
-            if (property_exists($data, 'parentId')) {
+            if (property_exists($data, 'parentId') && empty($data->parentsIds)) {
                 if (empty($data->parentId)) {
                     $data->parentsIds = [];
                     $data->parentsNames = new \stdClass();
