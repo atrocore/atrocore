@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "template": {
+      "type": "text",
+      "layoutListDisabled": true,
+      "useDisabledTextareaInViewMode": true,
+      "rows": 20,
+      "view": "views/fields/script",
+      "default": "{% set product = entities[0] %}\n<!DOCTYPE html>\n<html>\n<head>\n    <style>\n </style>\n</head>\n<body>\n    {% for component in product.components %}\n     {% set component= component|prepareHtmlField %}\n     {{ component.html |raw}}\n    {% endfor %} \n</body>\n</html>"
+    },
+    "entityType": {
+      "type": "enum",
+      "required": true,
+      "default": "Product",
+      "view": "product-components:views/html-template/fields/entity-type"
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "isActive": {
+      "type": "bool",
+      "default": true
+    }
+  }
+}
