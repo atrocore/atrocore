@@ -12,7 +12,7 @@
     "phoneNumber": "Telefon",
     "roles": "Rollen",
     "password": "Passwort",
-    "currentPassword": "Aktuelles Passwort",
+    "currentPassword": "Ihr aktuelles Passwort",
     "passwordConfirm": "Passwort bestätigen",
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
@@ -40,6 +40,7 @@
     "Access": "Berechtigungen",
     "Preferences": "Benutzereinstellungen",
     "Change Password": "Passwort ändern",
+    "Reset Password": "Passwort zurücksetzen",
     "Teams and Access Control": "Teams und Zugriffsberechtigung",
     "Forgot Password?": "Passwort vergessen?",
     "Password Change Request": "Anforderung zur Passwortänderung",
@@ -60,6 +61,9 @@
     "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
     "accountInfoEmailBody": "Ihre AtroCore Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
+    "passwordResetEmailSubject": "Passwort zurücksetzen",
+    "passwordResetEmailBody": "Sie können Ihr Passwort über diesen Link {link} wiederherstellen. Diese einzigartige URL wird bald ablaufen.",
+    "passwordExpiredForm": "Ihr Passwort ist abgelaufen. Bitte aktualisieren Sie es mit dem untenstehenden Formular.",
     "passwordChanged": "Das Passwort wurde geändert",
     "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
     "wrongUsernamePasword": "Falscher Benutzername/Passwort",
@@ -71,7 +75,8 @@
     "setupSmtpBefore": "Sie müssen die <a href=\"{url}\">SMTP Einstellungen</a> setzen damit das System Passwörter in E-Mails senden kann.",
     "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
     "userNameExists": "Benutzername existiert bereits",
-    "newPasswordInvalid": "Ihr Passwort muss mindestens ein Symbol, einen Großbuchstaben und eine Ziffer enthalten und sollte mehr als 8 Zeichen lang sein."
+    "newPasswordInvalid": "Ihr Passwort muss mindestens ein Symbol, einen Großbuchstaben und eine Ziffer enthalten und sollte mehr als 8 Zeichen lang sein.",
+    "changePasswordOnResetViaEmailOnly": "Sie können ein Passwort nicht manuell festlegen. Bitte verwenden Sie die Aktion \"Passwort zurücksetzen\"."
   },
   "boolFilters": {
     "onlyMyTeam": "Mein Team"

@@ -11,7 +11,7 @@
     "roles": "Ролі",
     "teamRole": "Посада (положення в групі)",
     "password": "Пароль",
-    "currentPassword": "Поточний пароль",
+    "currentPassword": "Ваш поточний пароль",
     "passwordConfirm": "Підтвердити пароль",
     "newPassword": "Новий пароль",
     "newPasswordConfirm": "Підтвердити новий пароль",
@@ -42,6 +42,7 @@
     "Access": "Доступ",
     "Preferences": "Персональні Налаштування",
     "Change Password": "Змінити пароль",
+    "Reset Password": "Скинути пароль",
     "Teams and Access Control": "Групи та рівень доступу",
     "Forgot Password?": "Забули пароль?",
     "Password Change Request": "Запит зміни пароля",
@@ -59,6 +60,9 @@
    },
    "messages": {
      "passwordWillBeSent": "Пароль буде надіслано на адресу електронної пошти користувача.",
+     "passwordResetEmailSubject": "Ваш пароль було скинуто",
+     "passwordResetEmailBody": "Ви можете відновити свій пароль за посиланням {link}. Строк дії цього посилання скоро завершиться.",
+     "passwordExpiredForm": "Строк дії Вашого пароля завершився. Будь ласка, оновіть його у формі нижчу",
      "passwordChanged": "Пароль був змінений",
      "userCantBeEmpty": "Ім'я користувача не може бути порожнім",
      "wrongUsernamePasword": "Неправильне ім'я користувача/пароль",
@@ -73,7 +77,8 @@
      "passwordChangeLinkEmailSubject": "Надіслати запит на зміну пароля",
      "passwordChangeLinkEmailBody": "Ви можете змінити Ваш пароль за {link}. Термін дії цього унікального URL незабаром закінчиться.",
      "setupSmtpBefore": "Вам необхідно встановити <a href=\"{url}\">SMTP settings</a> щоб дозволити системі надсилати пароль у емейлі.",
-     "newPasswordInvalid": "Пароль має містити принаймні один символ, велику літеру та цифру, а його довжина має перевищувати 8 символів."
+     "newPasswordInvalid": "Пароль має містити принаймні один символ, велику літеру та цифру, а його довжина має перевищувати 8 символів.",
+     "changePasswordOnResetViaEmailOnly": "Встановлювати пароль вручну заборонено. Будь ласка, скористайтеся функцією \"Скинути пароль\"."
    },
    "options": {
      "gender": {
