@@ -56,7 +56,7 @@
     "isAdmin": "Admin user can access everything.",
     "isActive": "If unchecked then user won't be able to login.",
     "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
-    "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
+    "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user."
   },
   "messages": {
     "accountInfoEmailSubject": "AtroCore User Access Info",
