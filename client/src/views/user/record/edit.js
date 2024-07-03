@@ -53,7 +53,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
 
             this.listenToOnce(this.model, 'change:password', function (model) {
                 passwordChanged = true;
-                if (model.get('emailAddress') && this.getConfig().get('smtpServer')) {
+                if (model.get('emailAddress') && !this.getConfig().get('disableEmailDelivery', false)) {
                     this.showField('sendAccessInfo');
                     this.model.set('sendAccessInfo', true);
                 }
@@ -61,7 +61,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
 
             this.listenTo(this.model, 'change:emailAddress', function (model) {
                 if (passwordChanged) {
-                    if (model.get('emailAddress') && this.getConfig().get('smtpServer')) {
+                    if (model.get('emailAddress') && !this.getConfig().get('disableEmailDelivery', false)) {
                         this.showField('sendAccessInfo');
                         this.model.set('sendAccessInfo', true);
                     } else {
