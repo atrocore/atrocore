@@ -38,6 +38,12 @@ Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
 
         template: 'modals/change-password',
 
+        data() {
+            return {
+                isAdmin: this.getUser().get('isAdmin') && this.getUser().id !== this.options.userId
+            };
+        },
+
         setup: function () {
             this.buttonList = [
                 {
