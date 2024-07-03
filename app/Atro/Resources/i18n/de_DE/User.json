@@ -53,9 +53,7 @@
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
     "isActive": "Wenn nicht markiert kann der Benutzer sich nicht einloggen",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
-    "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
-    "password": "Lassen Sie dieses Feld leer, wenn Sie das alte Password behalten wollen.",
-    "passwordConfirm": "Lassen Sie dieses Feld leer, wenn Sie das alte Password behalten wollen."
+    "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."
   },
   "messages": {
     "accountInfoEmailSubject": "AtroCore Benutzerzugriffsinfo",
