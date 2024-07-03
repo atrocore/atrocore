@@ -16,8 +16,10 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 
@@ -63,6 +65,8 @@ class Metadata extends AbstractListener
         $this->prepareExtensibleEnum($data);
 
         $this->prepareAclActionLevelListMap($data);
+
+        $this->addPreviewTemplates($data);
 
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
@@ -1138,5 +1142,44 @@ class Metadata extends AbstractListener
         }
 
         return $data;
+    }
+
+    protected function addPreviewTemplates(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        /** @var DataManager $dataManager */
+        $dataManager = $this->getContainer()->get('dataManager');
+        $previewTemplates = $dataManager->getCacheData(PreviewTemplate::CACHE_NAME);
+        if ($previewTemplates === null) {
+            try {
+                $previewTemplates = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->select('id, name, entity_type')
+                    ->from('preview_template')
+                    ->where('is_active = :true')
+                    ->andWhere('deleted = :false')
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $previewTemplates = [];
+            }
+
+            $dataManager->setCacheData(PreviewTemplate::CACHE_NAME, $previewTemplates);
+        }
+
+        foreach ($previewTemplates as $previewTemplate) {
+            $data['clientDefs'][$previewTemplate['entity_type']]['additionalButtons'][$previewTemplate['id']] = [
+                'name' => $previewTemplate['id'],
+                'label' => 'Preview: ' . $previewTemplate['name'],
+                'actionViewPath' => 'views/preview-template/record/actions/preview',
+                'action' => 'showHtmlPreview',
+                'optionsToPass' => [
+                    'model'
+                ]
+            ];
+        }
     }
 }

@@ -1,0 +1,12 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "entityType"
+  },
+  {
+    "name": "isActive"
+  }
+]

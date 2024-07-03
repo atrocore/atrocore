@@ -52,7 +52,8 @@
     "Measure": "Міра",
     "Unit": "Одиниця виміру",
     "QueueItem": "Елемент черги",
-    "TreoStore": "Магазин"
+    "TreoStore": "Магазин",
+    "PreviewTemplate": "Шаблон перегляду"
   },
   "scopeNamesPlural": {
     "Storage": "Сховища",
@@ -92,10 +93,13 @@
     "MeasuringUnit": "Одиниці виміру",
     "Note": "Примітки",
     "Notification": "Повідомлення",
-    "Preferences": "Налаштування"
+    "Preferences": "Налаштування",
+    "PreviewTemplate": "Шаблони перегляду"
   },
   "descriptions": {
-    "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу."
+    "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу.",
+    "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
+
   },
   "labels": {
     "Reupload": "Перезавантажити",
@@ -317,7 +321,8 @@
     "Reset filter": "Скинути фільтри",
     "Dashboard": "Панелі віджетів",
     "Provide Feedback": "Зворотній зв'язок",
-    "Instance comparison": "Порівняння інстансів"
+    "Instance comparison": "Порівняння інстансів",
+    "previewTemplate": "Шаблон для перегляду"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",

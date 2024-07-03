@@ -51,7 +51,8 @@
     "Global": "Global",
     "Preferences": "Preferences",
     "AuthLogRecord": "Auth Log Record",
-    "AuthFailLogRecord": "Auth Fail Log Record"
+    "AuthFailLogRecord": "Auth Fail Log Record",
+    "PreviewTemplate": "Preview Template"
   },
   "scopeNamesPlural": {
     "Storage": "Storages",
@@ -90,10 +91,12 @@
     "PasswordChangeRequest": "Password Change Requests",
     "ActionHistoryRecord": "Action History",
     "AuthToken": "Auth Tokens",
-    "LastViewed": "Last Viewed"
+    "LastViewed": "Last Viewed",
+    "PreviewTemplate": "Preview Templates"
   },
   "descriptions": {
-    "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
+    "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications.",
+    "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
     "Reupload": "Reupload",
@@ -318,7 +321,8 @@
     "Reset filter": "Reset filter",
     "Dashboard": "Dashboard",
     "Provide Feedback": "Provide Feedback",
-    "Instance comparison": "Instance comparison"
+    "Instance comparison": "Instance comparison",
+    "previewTemplate": "Preview Templates"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

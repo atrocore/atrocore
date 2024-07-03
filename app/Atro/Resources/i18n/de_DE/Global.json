@@ -40,7 +40,8 @@
     "DashletOptions": "Dashlet Optionen",
     "Preferences": "Benutzereinstellungen",
     "AuthLogRecord": "Auth Log-Datensatz",
-    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
+    "PreviewTemplate": "Vorschau Vorlage"
   },
   "scopeNamesPlural": {
     "Storage": "Dateiablagen",
@@ -76,10 +77,12 @@
     "PasswordChangeRequest": "Anforderungen zur Passwortänderung",
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
-    "AuthFailLogRecord": "Auth-Fehlerprotokoll"
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll",
+    "PreviewTemplate": "Vorschau Vorlagen"
   },
   "descriptions": {
-    "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
+    "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde.",
+    "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
     "Reupload": "Neu hochladen",
@@ -299,7 +302,8 @@
     "Reset filter": "Filter zurücksetzen",
     "Dashboard": "Dashboard",
     "Provide Feedback": "Feedback geben",
-    "Instance comparison": "Instanzvergleich"
+    "Instance comparison": "Instanzvergleich",
+    "previewTemplate": "Vorschau Vorlage"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
