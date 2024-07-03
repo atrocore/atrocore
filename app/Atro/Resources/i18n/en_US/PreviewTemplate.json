@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "entityType": "Entity",
+    "isActive": "Active",
+    "template": "HTML/CSS template"
+  },
+  "labels": {
+    "Create PreviewTemplate": "Create Preview Template"
+  }
+}

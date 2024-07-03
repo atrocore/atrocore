@@ -496,6 +496,163 @@
             }
           ]
         }
+      },
+      "smtpSecurity": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpServer": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpPassword": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpPort": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpUsername": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "outboundEmailFromAddress": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "outboundEmailFromName": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
       }
     }
   }

@@ -30,20 +30,21 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/preferences/fields/auto-follow-entity-type-list', 'views/fields/multi-enum', function (Dep) {
+Espo.define('views/admin/notification/fields/notification-smtp-connection', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
-        setup: function () {
-            this.params.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
-                return this.getMetadata().get('scopes.' + scope + '.entity') && this.getMetadata().get('scopes.' + scope + '.stream');
-            }, this).sort(function (v1, v2) {
-                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-            }.bind(this));
+        createDisabled: true,
 
-            Dep.prototype.setup.call(this);
+        selectBoolFilterList: ['notEntity', 'connectionType'],
+
+        boolFilterData: {
+            notEntity() {
+                return this.model.get('notificationSmtpConnectionId');
+            },
+            connectionType() {
+                return 'smtp'
+            }
         },
-
     });
 });

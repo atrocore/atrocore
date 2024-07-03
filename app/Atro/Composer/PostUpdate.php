@@ -903,18 +903,22 @@ class PostUpdate
             }
             self::$container->get('fileManager')->removeAllInDir(self::PDF_IMAGE_DIR);
         } catch (\Throwable $e) {
-            // ignore all
-        }
-
-        try {
-            if (class_exists('\Import\Services\ImportTypeSimple')) {
-                \Import\Services\ImportTypeSimple::clearCache();
-            }
-        } catch (\Throwable $e) {
         }
 
         try {
             MassDownload::clearCache();
+        } catch (\Throwable $e) {
+        }
+
+        try {
+            $list = \Atro\Core\ModuleManager\Manager::getList();
+            foreach ($list as $module) {
+                $className = "\\$module\\Module";
+                try {
+                    $className::afterUpdate();
+                } catch (\Throwable $e) {
+                }
+            }
         } catch (\Throwable $e) {
         }
 

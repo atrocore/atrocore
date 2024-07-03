@@ -9,7 +9,6 @@
     "dragAndDrop": true,
     "fieldValueInheritance": true,
     "relationInheritance": true,
-    "stream": false,
     "disabled": false,
     "type": "Hierarchy",
     "object": true

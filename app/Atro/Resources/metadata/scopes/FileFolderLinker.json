@@ -1,4 +1,5 @@
 {
   "type": "Base",
-  "object": true
+  "object": true,
+  "streamDisabled": true
 }

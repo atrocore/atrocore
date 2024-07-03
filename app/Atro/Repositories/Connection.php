@@ -35,4 +35,13 @@ class Connection extends Base
             $entity->set($name, $value);
         }
     }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($entity->get('type') === 'smtp' && $this->getConfig()->get('notificationSmtpConnectionId') === $entity->get('id')) {
+            throw new BadRequest($this->getLanguage()->translate("notificationConnectionCannotBeDeleted", "exceptions", $this->entityType));
+        }
+
+        parent::beforeSave($entity, $options);
+    }
 }

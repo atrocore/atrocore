@@ -2,15 +2,9 @@
   "fields": {
     "post": "Senden",
     "attachments": "Anhänge",
-    "targetType": "Ziel",
-    "users": "Benutzer",
     "type": "Typ",
-    "isGlobal": "Ist global",
-    "isInternal": "Ist Intern (für interne Benutzer)",
-    "related": "Verbunden",
     "createdByGender": "Erstellt von Geschlecht",
-    "data": "Daten",
-    "number": "Nummer"
+    "data": "Daten"
   },
   "filters": {
     "all": "Alle",
@@ -20,18 +14,8 @@
     "writeMessage": "Schreiben Sie hier Ihre Nachricht"
   },
   "options": {
-    "targetType": {
-      "self": "An sich selbst",
-      "users": "An (einen) bestimmte(n) Benutzer",
-      "teams": "An (ein) bestimmte(s) Team(s)",
-      "all": "An alle Benutzer"
-    },
     "type": {
       "Post": "Senden"
     }
-  },
-  "links": {
-    "superParent": "Super Eltern",
-    "related": "Verbunden"
   }
 }

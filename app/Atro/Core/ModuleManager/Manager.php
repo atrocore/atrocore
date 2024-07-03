@@ -69,10 +69,7 @@ class Manager
         return true;
     }
 
-    /**
-     * @return array
-     */
-    public function getModulesList(): array
+    public static function getList(): array
     {
         $data = [];
 
@@ -81,6 +78,11 @@ class Manager
         }
 
         return $data;
+    }
+
+    public function getModulesList(): array
+    {
+        return self::getList();
     }
 
     /**

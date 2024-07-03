@@ -3,5 +3,6 @@
   "layouts": false,
   "tab": true,
   "acl": false,
-  "customizable": false
+  "customizable": false,
+  "streamDisabled": true
 }

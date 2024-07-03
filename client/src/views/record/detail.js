@@ -288,11 +288,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             var url = '#' + this.entityType + '/compare?id=' + this.model.get('id');
-            this.getRouter().navigate(url, {trigger: false});
-            this.getRouter().dispatch(this.entityType, 'compare', {
-                id: this.model.get('id'),
-                model: this.model
-            });
+            const baseUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+            window.open(baseUrl +'/'+ url);
         },
 
         getSelfAssignAttributes: function () {
@@ -325,7 +322,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     if (!exists) {
                         this.dropdownItemList.push({
-                            'label': this.translate('Instance compare'),
+                            'label': this.translate('Instance comparison'),
                             'name': 'compare',
                             'action': 'compare'
                         });

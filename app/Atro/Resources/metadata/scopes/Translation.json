@@ -5,7 +5,6 @@
   "acl": false,
   "customizable": false,
   "notifications": false,
-  "stream": false,
   "disabled": false,
   "type": "Base",
   "object": true,

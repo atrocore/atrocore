@@ -16,7 +16,7 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
             this.scope = this.options.scope;
             this.fieldsArr = this.options.fieldsArr;
             this.model = this.options.model;
-            this.instanceNames = this.getMetadata().get(['app','comparableInstanceNames'])
+            this.instances = this.options.instances ?? this.getMetadata().get(['app','comparableInstances'])
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'detail', layout => {
                 if (layout && layout.length) {
@@ -51,7 +51,7 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
             return {
                 scope: this.scope,
                 fieldList: this.fieldListPanels,
-                instanceNames: this.instanceNames
+                instances: this.instances
             }
         },
         setupFieldList(){
@@ -82,7 +82,36 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
                             },
                             mode: 'detail',
                             inlineEditDisabled: true,
-                        });
+                        }, view => {
+                            view.render()
+                            view.listenTo(view, 'after:render', () => {
+                                let localUrl = this.getConfig().get('siteUrl');
+                                let instanceUrl = this.instances[index].atrocoreUrl;
+
+                               view.$el.find('a').each((i, el) => {
+                                   let href = $(el).attr('href')
+
+                                   if(href.includes('http') && localUrl){
+                                       $(el).attr('href', href.replace(localUrl, instanceUrl))
+                                   }
+
+                                   if((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?')){
+                                       $(el).attr('href', instanceUrl + href)
+                                   }
+                                   $(el).attr('target','_blank')
+                               })
+                                view.$el.find('img').each((i, el) => {
+                                   let src = $(el).attr('src')
+                                   if(src.includes('http') && localUrl){
+                                       $(el).attr('src', src.replace(localUrl, instanceUrl))
+                                   }
+
+                                   if(!src.includes('http')){
+                                       $(el).attr('src', instanceUrl + '/' + src)
+                                   }
+                               })
+                            })
+                        } );
                     })
                 })
             })
@@ -100,9 +129,6 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name+'Current');
-                    if(name === 'scriptDeDe'){
-                        debugger
-                    }
                 if (fieldView) {
                     fieldView.$el.parent().addClass('hidden')
                 } else {
@@ -124,6 +150,10 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
             if (view) {
                 view.setDisabled(locked);
             }
+        },
+        afterRender(){
+            Dep.prototype.afterRender.call(this)
+            $('.not-approved-field').hide();
         }
     })
 })

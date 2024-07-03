@@ -28,7 +28,14 @@
     "loginUrl": "URL logowania",
     "atrocoreUrl": "URL AtroCore",
     "atrocoreToken": "Token autoryzacyjny AtroCore",
-    "additionalParameters": "Dodatkowe parametry"
+    "additionalParameters": "Dodatkowe parametry",
+    "smtpServer": "Serwer SMTP",
+    "smtpPort": "Port SMTP",
+    "smtpSecurity": "Bezpieczeństwo SMTP",
+    "smtpUsername": "Nazwa użytkownika SMTP",
+    "smtpPassword": "Hasło SMTP",
+    "outboundEmailFromName": "Nazwa nadawcy",
+    "outboundEmailFromAddress": "Adres nadawcy"
   },
   "labels": {
     "connectionSuccess": "Połączenie zostało pomyślnie ustanowione",
@@ -51,7 +58,8 @@
     "products": "Produkty",
     "receipts": "Paragony",
     "price-reduction": "Obniżka cen",
-    "oauth1": "OAuth 1.0"
+    "oauth1": "OAuth 1.0",
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "Rozszerzenie PHP MSSQL nie jest zainstalowane.",

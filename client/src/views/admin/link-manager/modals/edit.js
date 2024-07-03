@@ -118,11 +118,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     this.model.set('relationName', relationName);
                 }
 
-                var audited = this.getMetadata().get(['entityDefs', scope, 'links', link, 'audited']) || false;
-                var auditedForeign = this.getMetadata().get(['entityDefs', entityForeign, 'links', linkForeign, 'audited']) || false;
-                this.model.set('audited', audited);
-                this.model.set('auditedForeign', auditedForeign);
-
                 isCustom = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.isCustom');
             }
 
@@ -268,30 +263,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 tooltipLink: this.translate('linkMultipleField', 'tooltipLink', 'EntityManager')
             });
 
-            this.createView('audited', 'views/fields/bool', {
-                model: model,
-                mode: 'edit',
-                el: this.options.el + ' .field[data-name="audited"]',
-                defs: {
-                    name: 'audited'
-                },
-                tooltip: true,
-                tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager'),
-                tooltipLink: this.translate('linkAudited', 'tooltipLink', 'EntityManager')
-            });
-
-            this.createView('auditedForeign', 'views/fields/bool', {
-                model: model,
-                mode: 'edit',
-                el: this.options.el + ' .field[data-name="auditedForeign"]',
-                defs: {
-                    name: 'auditedForeign'
-                },
-                tooltip: true,
-                tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager'),
-                tooltipLink: this.translate('linkAudited', 'tooltipLink', 'EntityManager')
-            });
-
             this.model.fetchedAttributes = this.model.getClonedAttributes();
         },
 
@@ -415,42 +386,18 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
 
                 this.showField('linkMultipleField');
                 this.showField('linkMultipleFieldForeign');
-                this.showField('audited');
-                this.showField('auditedForeign');
             } else {
                 this.hideField('relationName');
                 if (linkType === 'oneToMany') {
                     this.showField('linkMultipleField');
                     this.hideField('linkMultipleFieldForeign');
-                    this.showField('audited');
-                    this.hideField('auditedForeign');
                 } else if (linkType === 'manyToOne') {
                     this.hideField('linkMultipleField');
                     this.showField('linkMultipleFieldForeign');
-                    this.hideField('audited');
-                    this.showField('auditedForeign');
                 } else {
                     this.hideField('linkMultipleField');
                     this.hideField('linkMultipleFieldForeign');
-
-                    if (linkType == 'parentToChildren') {
-                        this.showField('audited');
-                        this.hideField('auditedForeign');
-                    } else if (linkType == 'childrenToParent') {
-                        this.hideField('audited');
-                        this.showField('auditedForeign');
-                    } else {
-                        this.hideField('audited');
-                        this.hideField('auditedForeign');
-                    }
                 }
-            }
-
-            if (!this.getMetadata().get(['scopes', this.scope, 'stream'])) {
-                this.hideField('audited');
-            }
-            if (!this.getMetadata().get(['scopes', this.model.get('entityForeign'), 'stream'])) {
-                this.hideField('auditedForeign');
             }
         },
 
@@ -483,9 +430,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 'entityForeign',
                 'relationName',
                 'linkMultipleField',
-                'linkMultipleFieldForeign',
-                'audited',
-                'auditedForeign'
+                'linkMultipleFieldForeign'
             ];
 
             var notValid = false;
@@ -527,9 +472,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             var linkMultipleField = this.model.get('linkMultipleField');
             var linkMultipleFieldForeign = this.model.get('linkMultipleFieldForeign');
 
-            var audited = this.model.get('audited');
-            var auditedForeign = this.model.get('auditedForeign');
-
             var attributes = {
                 entity: entity,
                 entityForeign: entityForeign,
@@ -540,9 +482,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 linkType: this.model.get('linkType'),
                 relationName: relationName,
                 linkMultipleField: linkMultipleField,
-                linkMultipleFieldForeign: linkMultipleFieldForeign,
-                audited: audited,
-                auditedForeign: auditedForeign
+                linkMultipleFieldForeign: linkMultipleFieldForeign
             };
 
             if (!this.isNew) {

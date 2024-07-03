@@ -22,10 +22,6 @@
          "name":"useNumericFormat"
       },
       {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
          "name":"readOnly",
          "type":"bool"
       },
@@ -39,6 +35,7 @@
       }
    ],
    "filter": true,
+   "auditable": true,
    "qbFilterType": "datetime",
    "fieldDefs":{
       "notNull":false

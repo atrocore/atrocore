@@ -10,10 +10,6 @@
             "type": "varchar"
         },
         {
-            "name": "audited",
-            "type": "bool"
-        },
-        {
             "name": "readOnly",
             "type": "bool"
         },
@@ -31,6 +27,7 @@
         }
     ],
     "filter": true,
+    "auditable": true,
     "fieldDefs": {
         "type": "varchar"
     },

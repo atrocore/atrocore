@@ -19,7 +19,7 @@ Espo.define('views/record/compare/relationships-panels','view', function (Dep) {
             this.relationships = this.options.relationships
             this.model = this.options.model;
             this.relationshipsPanels = [];
-            this.instanceNames = this.getMetadata().get(['app','comparableInstanceNames'])
+            this.instances = this.getMetadata().get(['app','comparableInstances'])
             this.nonComparableFields = this.getMetadata().get(['scopes', this.scope, 'nonComparableFields']) ?? [];
             let bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
 
@@ -69,7 +69,7 @@ Espo.define('views/record/compare/relationships-panels','view', function (Dep) {
             return {
                 scope: this.scope,
                 relationshipsPanels: this.relationshipsPanels,
-                instanceNames: this.instanceNames
+                instances: this.instances
             }
         },
     })

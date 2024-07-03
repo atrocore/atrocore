@@ -124,7 +124,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             if (this.getMetadata().get(['clientDefs', this.model.name, 'showCompareAction'])) {
                 list.push({
                     action: 'quickCompare',
-                    label: this.translate('Instance compare'),
+                    label: this.translate('Instance comparison'),
                     name: 'compare',
                     data: {
                         id: this.model.id,

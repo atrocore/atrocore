@@ -469,22 +469,7 @@
     "emailSentThis": "{by} ha enviado un correo",
     "postTargetSelf": "{user} se ha enviado un mensaje a sí mismo",
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí mismo",
-    "createAssignedYou": "{user} ha creado y te lo ha asignado: {entityType} {entity}",
-    "createAssignedThisSelf": "{user} ha creado y se ha asignado a sí mismo: {entityType}",
-    "createAssignedSelf": "{user} ha creado y se ha asignado a sí mismo: {entityType} {entity}",
-    "assignYou": "{user} te ha asignado {entityType} {entity} a ti",
-    "assignThisVoid": "{user} ha desasignado: {entityType}",
-    "assignVoid": "{user} ha desasignado: {entityType} {entity}",
-    "assignThisSelf": "{user} se ha asignado así mismo: {entityType}",
-    "assignSelf": "{user} se ha asignado así mismo: {entityType} {entity}",
-    "composerUpdateThis": "{user}",
-    "own": "{user} set {owner} as an owner for {entityType} {entity}",
-    "ownThis": "{user} set {owner} as an owner for this {entityType}",
-    "ownYou": "{user} set you as an owner for {entityType} {entity}",
-    "ownThisVoid": "{user} unset the owner for this {entityType}",
-    "ownVoid": "{user} unset the owner for {entityType} {entity}",
-    "ownThisSelf": "{user} set himself as an owner for this {entityType}",
-    "ownSelf": "{user} set himself as an owner for {entityType} {entity}"
+    "composerUpdateThis": "{user}"
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",
