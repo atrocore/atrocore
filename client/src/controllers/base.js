@@ -71,6 +71,12 @@ Espo.define('controllers/base', 'controller', function (Dep) {
             });
         },
 
+        passwordExpired: function () {
+            this.entire('views/user/password-expired', {}, function (view) {
+                view.render();
+            });
+        }
+
     });
 });
 

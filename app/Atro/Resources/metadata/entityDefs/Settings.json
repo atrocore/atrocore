@@ -302,6 +302,12 @@
       "tooltip": true,
       "view": "views/settings/fields/password-regex-pattern"
     },
+    "passwordExpireDays": {
+      "type": "int",
+      "default": 0,
+      "min": 0,
+      "tooltip": true
+    },
     "variables": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,

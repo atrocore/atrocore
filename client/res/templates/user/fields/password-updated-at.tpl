@@ -1,0 +1,1 @@
+<span data-name="passwordUpdatedAt" {{#if isNull}}class="text-gray">{{{translate 'Null'}}}{{else}}>{{dateValue}}{{/if}}</span> <span class="text-muted">&raquo;</span> <span data-name="passwordUpdatedBy" class="field">{{passwordUpdatedByField}}</span>

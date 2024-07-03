@@ -11,7 +11,7 @@
     "roles": "Roles",
     "teamRole": "Position",
     "password": "Password",
-    "currentPassword": "Current Password",
+    "currentPassword": "Your Current Password",
     "passwordConfirm": "Confirm Password",
     "newPassword": "New Password",
     "newPasswordConfirm": "Confirm New Password",
@@ -25,7 +25,9 @@
     "passwordPreview": "Password Preview",
     "isSuperAdmin": "Is Super Admin",
     "lastAccess": "Last Access",
-    "type": "Type"
+    "type": "Type",
+    "passwordUpdatedAt": "Password Updated At",
+    "passwordUpdatedBy": "Password Updated By"
   },
   "links": {
     "teams": "Teams",
@@ -40,6 +42,7 @@
     "Access": "Access",
     "Preferences": "Preferences",
     "Change Password": "Change Password",
+    "Reset Password": "Reset Password",
     "Teams and Access Control": "Teams and Access Control",
     "Forgot Password?": "Forgot Password?",
     "Password Change Request": "Password Change Request",
@@ -54,8 +57,6 @@
     "isActive": "If unchecked then user won't be able to login.",
     "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
     "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
-    "password": "Leave this field empty if you want to keep the old password.",
-    "passwordConfirm": "Leave this field empty if you want to keep the old password."
   },
   "messages": {
     "accountInfoEmailSubject": "AtroCore User Access Info",
@@ -63,6 +64,9 @@
     "accountInfoEmailBody": "Your access information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Change Password Request",
     "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon.",
+    "passwordResetEmailSubject": "Password reset",
+    "passwordResetEmailBody": "You can restore your password following this link {link}. This unique URL will be expired soon.",
+    "passwordExpiredForm": "Your password has been expired. Please update it using the form below.",
     "passwordChanged": "Password has been changed",
     "userCantBeEmpty": "Username can not be empty",
     "wrongUsernamePasword": "Wrong username/password",
@@ -73,7 +77,8 @@
     "passwordChangedByRequest": "Password has been changed.",
     "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
     "userNameExists": "User Name already exists",
-    "newPasswordInvalid": "Your password should contain at least one symbol, capital letter, and digit and should be at least 8 characters long."
+    "newPasswordInvalid": "Your password should contain at least one symbol, capital letter, and digit and should be at least 8 characters long.",
+    "changePasswordOnResetViaEmailOnly": "You cannot set a password manually. Please use \"Reset password\" action."
   },
   "options": {
     "gender": {

@@ -50,13 +50,19 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     style: 'default'
                 });
 
-                if (this.model.id == this.getUser().id) {
+                if (!this.getConfig().get('resetPasswordViaEmailOnly', false)) {
                     this.dropdownItemList.push({
                         name: 'changePassword',
-                        label: 'Change Password',
+                        label: this.translate('Change Password', 'labels', 'User'),
                         style: 'default'
                     });
                 }
+
+                this.dropdownItemList.push({
+                    name: 'resetPassword',
+                    label: this.translate('Reset Password', 'labels', 'User'),
+                    style: 'default'
+                });
             }
 
             if (this.model.id == this.getUser().id) {
@@ -116,11 +122,30 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.notify(false);
 
                 this.listenToOnce(view, 'changed', function () {
-                    setTimeout(function () {
-                        this.getBaseController().logout();
-                    }.bind(this), 2000);
+                    if (this.model.id === this.getUser().id) {
+                        setTimeout(function () {
+                            this.getBaseController().logout();
+                        }.bind(this), 2000);
+                    }
                 }, this);
 
+            }.bind(this));
+        },
+
+        actionResetPassword() {
+            $.ajax({
+                url: 'User/action/resetPassword',
+                type: 'POST',
+                data: JSON.stringify({
+                    userId: this.model.id
+                })
+            }).done(function () {
+                Espo.Ui.success(this.translate('uniqueLinkHasBeenSent', 'messages', 'User'));
+                setTimeout(() => {
+                    if (this.model.id === this.getUser().id) {
+                        this.getBaseController().logout();
+                    }
+                }, 2000);
             }.bind(this));
         },
 
