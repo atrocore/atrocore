@@ -718,8 +718,6 @@ class Mapper implements MapperInterface
     {
         if (isset($GLOBALS['debugSQL'])) {
             $GLOBALS['debugSQL'][] = $sql;
-            $foo = $GLOBALS['debugSQL'];
-            $sd = '1';
         }
     }
 
