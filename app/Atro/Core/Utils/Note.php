@@ -239,12 +239,8 @@ class Note
         }
     }
 
-    protected function createNote(string $type, ?string $parentType, ?string $parentId, array $data): void
+    protected function createNote(string $type, string $parentType, string $parentId, array $data): void
     {
-        if ($parentType === null || $parentId === null) {
-            return;
-        }
-
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
             'type'       => $type,
@@ -261,14 +257,15 @@ class Note
             $this->relationEntityData[$entity->getEntityType()] = [];
             if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation') {
                 $relationFields = $this->getEntityManager()->getRepository($entity->getEntityType())->getRelationFields();
+                if (isset($relationFields[1]) && isset($relationFields[0])) {
+                    $this->relationEntityData[$entity->getEntityType()]['field1'] = $relationFields[0] . 'Id';
+                    $this->relationEntityData[$entity->getEntityType()]['entity1'] = $this->getMetadata()
+                        ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[0], 'entity']);
 
-                $this->relationEntityData[$entity->getEntityType()]['field1'] = $relationFields[0] . 'Id';
-                $this->relationEntityData[$entity->getEntityType()]['entity1'] = $this->getMetadata()
-                    ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[0], 'entity']);
-
-                $this->relationEntityData[$entity->getEntityType()]['field2'] = $relationFields[1] . 'Id';
-                $this->relationEntityData[$entity->getEntityType()]['entity2'] = $this->getMetadata()
-                    ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[1], 'entity']);
+                    $this->relationEntityData[$entity->getEntityType()]['field2'] = $relationFields[1] . 'Id';
+                    $this->relationEntityData[$entity->getEntityType()]['entity2'] = $this->getMetadata()
+                        ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[1], 'entity']);
+                }
             }
         }
 
