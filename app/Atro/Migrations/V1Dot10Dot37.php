@@ -112,9 +112,12 @@ class V1Dot10Dot37 extends Base
                 $this->getConnection()->createQueryBuilder()
                     ->update('note')
                     ->set('data', ':data')
+                    ->set('related_type', ':null')
+                    ->set('related_id', ':null')
                     ->where('id=:id')
                     ->setParameter('id', $note['id'])
                     ->setParameter('data', $note['data'])
+                    ->setParameter('null', null, ParameterType::NULL)
                     ->executeQuery();
             }
         }
