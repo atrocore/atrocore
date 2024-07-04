@@ -725,13 +725,11 @@ class Metadata extends AbstractListener
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'children');
 
             if (empty($data['scopes'][$scope]['multiParents'])) {
-                $data['entityDefs'][$scope]['fields']['parents']['mandatoryToSelect'] = true;
-                $data['entityDefs'][$scope]['fields']['parents']['noLoad'] = false;
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"        => "link",
-                    "notStorable" => true,
-                    "entity"      => $scope,
-                    "emHidden"    => true,
+                    "type"           => "link",
+                    "notStorable"    => true,
+                    "entity"         => $scope,
+                    "emHidden"       => true,
                     "exportDisabled" => true,
                     "importDisabled" => true
                 ];
@@ -1172,11 +1170,11 @@ class Metadata extends AbstractListener
 
         foreach ($previewTemplates as $previewTemplate) {
             $data['clientDefs'][$previewTemplate['entity_type']]['additionalButtons'][$previewTemplate['id']] = [
-                'name' => $previewTemplate['id'],
-                'label' => 'Preview: ' . $previewTemplate['name'],
+                'name'           => $previewTemplate['id'],
+                'label'          => 'Preview: ' . $previewTemplate['name'],
                 'actionViewPath' => 'views/preview-template/record/actions/preview',
-                'action' => 'showHtmlPreview',
-                'optionsToPass' => [
+                'action'         => 'showHtmlPreview',
+                'optionsToPass'  => [
                     'model'
                 ]
             ];
