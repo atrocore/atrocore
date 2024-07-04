@@ -239,8 +239,12 @@ class Note
         }
     }
 
-    protected function createNote(string $type, string $parentType, string $parentId, array $data): void
+    protected function createNote(string $type, ?string $parentType, ?string $parentId, array $data): void
     {
+        if ($parentType === null || $parentId === null) {
+            return;
+        }
+
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
             'type'       => $type,
