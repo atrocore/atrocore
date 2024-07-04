@@ -380,7 +380,7 @@ class Composer extends HasContainer
         if ($result['total'] > 0) {
             $result['list'] = $repo
                 ->where(['parentType' => 'ModuleManager'])
-                ->order('number', 'DESC')
+                ->order('createdAt', 'DESC')
                 ->limit((int)$request->get('offset'), (int)$request->get('maxSize'))
                 ->find()
                 ->toArray();
