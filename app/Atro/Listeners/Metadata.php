@@ -726,13 +726,12 @@ class Metadata extends AbstractListener
 
             if (empty($data['scopes'][$scope]['multiParents'])) {
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"                 => "link",
-                    "notStorable"          => true,
-                    "hierarchyParentField" => true,
-                    "entity"               => $scope,
-                    "emHidden"             => true,
-                    "exportDisabled"       => true,
-                    "importDisabled"       => true
+                    "type"           => "link",
+                    "notStorable"    => true,
+                    "entity"         => $scope,
+                    "emHidden"       => true,
+                    "exportDisabled" => true,
+                    "importDisabled" => true
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'], [
@@ -1171,11 +1170,11 @@ class Metadata extends AbstractListener
 
         foreach ($previewTemplates as $previewTemplate) {
             $data['clientDefs'][$previewTemplate['entity_type']]['additionalButtons'][$previewTemplate['id']] = [
-                'name' => $previewTemplate['id'],
-                'label' => 'Preview: ' . $previewTemplate['name'],
+                'name'           => $previewTemplate['id'],
+                'label'          => 'Preview: ' . $previewTemplate['name'],
                 'actionViewPath' => 'views/preview-template/record/actions/preview',
-                'action' => 'showHtmlPreview',
-                'optionsToPass' => [
+                'action'         => 'showHtmlPreview',
+                'optionsToPass'  => [
                     'model'
                 ]
             ];
