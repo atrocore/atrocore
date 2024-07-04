@@ -116,7 +116,7 @@
         }
     },
     "collection": {
-        "sortBy": "number",
+        "sortBy": "createdAt",
         "asc": false
     },
     "statusStyles": {
