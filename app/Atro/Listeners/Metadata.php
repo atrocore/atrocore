@@ -725,15 +725,14 @@ class Metadata extends AbstractListener
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'children');
 
             if (empty($data['scopes'][$scope]['multiParents'])) {
-                $data['entityDefs'][$scope]['fields']['parents']['mandatoryToSelect'] = true;
-                $data['entityDefs'][$scope]['fields']['parents']['noLoad'] = false;
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"        => "link",
-                    "notStorable" => true,
-                    "entity"      => $scope,
-                    "emHidden"    => true,
-                    "exportDisabled" => true,
-                    "importDisabled" => true
+                    "type"                 => "link",
+                    "notStorable"          => true,
+                    "hierarchyParentField" => true,
+                    "entity"               => $scope,
+                    "emHidden"             => true,
+                    "exportDisabled"       => true,
+                    "importDisabled"       => true
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'], [

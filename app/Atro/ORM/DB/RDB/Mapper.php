@@ -117,6 +117,19 @@ class Mapper implements MapperInterface
             }
         }
 
+        if ($entity->getEntityType() === 'Product'){
+            if (empty($params['aggregation'])) {
+                $qb->addSelect('h11.parent_id AS ' . $this->getQueryConverter()->fieldToAlias('parentId'));
+                $qb->addSelect('h11.parent_id AS ' . $this->getQueryConverter()->fieldToAlias('parentName'));
+                $qb->leftJoin('t1', 'product_hierarchy', 'h11', 't1.id=h11.entity_id AND h11.deleted=:false');
+                $qb->setParameter('false', false, ParameterType::BOOLEAN);
+            }
+//            echo '<pre>';
+//            print_r($params['select']);
+//            print_r($queryData);
+//            die();
+        }
+
         foreach ($queryData['parameters'] ?? [] as $parameterName => $value) {
             $qb->setParameter($parameterName, $value, self::getParameterType($value));
         }
@@ -699,6 +712,8 @@ class Mapper implements MapperInterface
     {
         if (isset($GLOBALS['debugSQL'])) {
             $GLOBALS['debugSQL'][] = $sql;
+            $foo = $GLOBALS['debugSQL'];
+            $sd = '1';
         }
     }
 
