@@ -31,6 +31,7 @@ class Mapper implements MapperInterface
     protected EntityFactory $entityFactory;
     protected Metadata $metadata;
     protected QueryConverter $queryConverter;
+    private array $singleParentHierarchy = [];
 
     public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata)
     {
@@ -117,19 +118,6 @@ class Mapper implements MapperInterface
             }
         }
 
-        if ($entity->getEntityType() === 'Product'){
-            if (empty($params['aggregation'])) {
-                $qb->addSelect('h11.parent_id AS ' . $this->getQueryConverter()->fieldToAlias('parentId'));
-                $qb->addSelect('h11.parent_id AS ' . $this->getQueryConverter()->fieldToAlias('parentName'));
-                $qb->leftJoin('t1', 'product_hierarchy', 'h11', 't1.id=h11.entity_id AND h11.deleted=:false');
-                $qb->setParameter('false', false, ParameterType::BOOLEAN);
-            }
-//            echo '<pre>';
-//            print_r($params['select']);
-//            print_r($queryData);
-//            die();
-        }
-
         foreach ($queryData['parameters'] ?? [] as $parameterName => $value) {
             $qb->setParameter($parameterName, $value, self::getParameterType($value));
         }
@@ -156,10 +144,18 @@ class Mapper implements MapperInterface
             $qb->groupBy($queryData['groupBy']);
         }
 
-        if (!empty($queryData['having'])) {
-            echo '2023-10-17 TODO: having' . PHP_EOL;
-            print_r($queryData);
-            die();
+        // select parent_id if single parent hierarchy
+        if ($this->isSingleParentHierarchy($entity) && empty($params['aggregation'])) {
+            $tableName = $this->getQueryConverter()->toDb($entity->getEntityType());
+            $ta = $this->getQueryConverter()::TABLE_ALIAS;
+            $relAlias1 = 'hierarchy_alias' . Util::generateId();
+            $relAlias2 = 'alias' . Util::generateId();
+
+            $qb->addSelect("$relAlias1.parent_id AS " . $this->getQueryConverter()->fieldToAlias('parentId'));
+            $qb->addSelect("$relAlias2.name AS " . $this->getQueryConverter()->fieldToAlias('parentName'));
+            $qb->leftJoin($ta, "{$tableName}_hierarchy", $relAlias1, "$ta.id=$relAlias1.entity_id AND $relAlias1.deleted=:false");
+            $qb->leftJoin($relAlias1, $tableName, $relAlias2, "$relAlias2.id=$relAlias1.parent_id AND $relAlias1.deleted=:false");
+            $qb->setParameter('false', false, ParameterType::BOOLEAN);
         }
 
         if (!empty($params['callbacks'])) {
@@ -169,6 +165,16 @@ class Mapper implements MapperInterface
         }
 
         return $qb;
+    }
+
+    protected function isSingleParentHierarchy(IEntity $entity): bool
+    {
+        if (!isset($this->singleParentHierarchy[$entity->getEntityType()])) {
+            $scopeDefs = $this->metadata->get(['scopes', $entity->getEntityType()], []);
+            $this->singleParentHierarchy[$entity->getEntityType()] = !empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['multiParents']);
+        }
+
+        return $this->singleParentHierarchy[$entity->getEntityType()];
     }
 
     public function count(IEntity $entity, array $params = []): int
