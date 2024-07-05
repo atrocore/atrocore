@@ -49,13 +49,6 @@ class ExtensibleEnumOption extends Base
             }
 
             if (!isset($this->cachedOptions[$id])) {
-                $this->cachedOptions[$id] = [
-                    'id'                => $id,
-                    'name'              => $id,
-                    'preparedName'      => $id,
-                    'notExistingOption' => true
-                ];
-
                 // prepare select
                 $select = ['eeo.id', 'eeo.code', 'eeo.color', 'eeo.name', 'eeo.sort_order'];
                 foreach ($this->getLingualFields('name') as $lingualField) {
@@ -83,9 +76,14 @@ class ExtensibleEnumOption extends Base
                     $row = Util::arrayKeysToCamelCase($item);
                     $row['preparedName'] = !empty($row['multilingual']) ? $row[$this->getOptionName()] : $row['name'];
                     $this->cachedOptions[$row['id']] = $row;
+
+                    if ($id == $row['id']) {
+                        $res[] = $this->cachedOptions[$row['id']];
+                    }
                 }
+            } else {
+                $res[] = $this->cachedOptions[$id];
             }
-            $res[] = $this->cachedOptions[$id];
         }
 
         if (count($res) > 1) {
