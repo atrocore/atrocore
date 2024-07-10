@@ -60,6 +60,9 @@ class Sender
 
     public function sendByJob(array $emailData, ?string $connectionId = null, array $params = []): void
     {
+        if (empty($connectionId)) {
+            $connectionId = $this->config->get('notificationSmtpConnectionId');
+        }
         $this->queueManager->push('Send email', 'QueueManagerEmailSender', ['connectionId' => $connectionId, 'emailData' => $emailData, 'params' => $params]);
     }
 
