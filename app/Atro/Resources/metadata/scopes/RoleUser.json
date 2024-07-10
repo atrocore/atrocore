@@ -1,3 +1,4 @@
 {
-  "acl": false
+  "acl": false,
+  "streamDisabled": true
 }

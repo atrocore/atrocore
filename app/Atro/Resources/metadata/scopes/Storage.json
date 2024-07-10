@@ -4,7 +4,6 @@
   "tab": true,
   "acl": true,
   "customizable": false,
-  "stream": false,
   "disabled": false,
   "type": "Base",
   "object": true,

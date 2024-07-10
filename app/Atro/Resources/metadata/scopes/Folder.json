@@ -4,7 +4,6 @@
   "tab": true,
   "acl": true,
   "customizable": true,
-  "stream": false,
   "disabled": false,
   "type": "Hierarchy",
   "multiParents": false,

@@ -74,13 +74,6 @@
             "type": "bool",
             "default": true
         },
-        "autoFollowEntityTypeList": {
-            "type": "multiEnum",
-            "view": "views/preferences/fields/auto-follow-entity-type-list",
-            "translation": "Global.scopeNamesPlural",
-            "notStorable": true,
-            "tooltip": true
-        },
         "theme": {
             "type": "enum",
             "view": "views/preferences/fields/theme",
@@ -100,12 +93,6 @@
         },
         "followCreatedEntities": {
             "type": "bool",
-            "tooltip": true
-        },
-        "followCreatedEntityTypeList": {
-            "type": "multiEnum",
-            "view": "views/preferences/fields/auto-follow-entity-type-list",
-            "translation": "Global.scopeNamesPlural",
             "tooltip": true
         },
         "scopeColorsDisabled": {

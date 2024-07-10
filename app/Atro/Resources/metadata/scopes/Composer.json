@@ -1,3 +1,4 @@
 {
-  "module": "TreoCore"
+  "module": "TreoCore",
+  "streamDisabled": true
 }

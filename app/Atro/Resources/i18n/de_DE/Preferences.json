@@ -11,10 +11,8 @@
     "receiveAssignmentEmailNotifications": "Nachrichten bei Zuweisungen erhalten",
     "receiveMentionEmailNotifications": "Benachrichtigungen über Erwähnungen in Beiträgen",
     "receiveStreamEmailNotifications": "Benachrichtigungen über Änderungen im Aktivitätenpanel",
-    "autoFollowEntityTypeList": "Automatisches Abonnieren",
     "followEntityOnStreamPost": "Der Benutzer abonniert die Einträge nach dem Posten in dessen Aktivitäten",
     "followCreatedEntities": "Eigene Einträge abonnieren",
-    "followCreatedEntityTypeList": "Der Benutzer abonniert erstellten Einträge bestimmter Entitätstypen",
     "scopeColorsDisabled": "Bereichsfarben deaktivieren",
     "tabColorsDisabled": "Tabfarben deaktivieren",
     "hideFeedbackIcon": "Feedback-Icon ausblenden"
@@ -27,8 +25,6 @@
     "Reset Dashboard to Default": "Dashboard auf Standard zurücksetzen"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Der Benutzer abonniert automatisch alle neuen Einträge der gewählten Entitätstypen, sieht Neuigkeiten in den Aktivitäten und erhält Benachrichtigungen.",
-    "followCreatedEntities": "Wenn neue Datensätze erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind.",
-    "followCreatedEntityTypeList": "Wenn neue Datensätze von ausgewählten Entitätstypen erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind."
+    "followCreatedEntities": "Wenn neue Datensätze erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind."
   }
 }

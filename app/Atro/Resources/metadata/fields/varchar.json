@@ -44,10 +44,6 @@
       "default": true
     },
     {
-      "name": "audited",
-      "type": "bool"
-    },
-    {
       "name": "readOnly",
       "type": "bool"
     },
@@ -66,6 +62,7 @@
     }
   ],
   "filter": true,
+  "auditable": true,
   "qbFilterType": "string",
   "multilingual": true,
   "personalData": true,

@@ -100,21 +100,24 @@ class V1Dot9Dot1 extends Base
                 ->fetchAllAssociative();
 
             foreach ($options as $option) {
-                $this->getConnection()
-                    ->createQueryBuilder()
-                    ->insert('extensible_enum_extensible_enum_option')
-                    ->setValue('id', ':id')
-                    ->setValue('sorting', ':sortOrder')
-                    ->setValue('extensible_enum_id', ':extensibleEnumId')
-                    ->setValue('extensible_enum_option_id', ':extensibleEnumOptionId')
-                    ->setValue('created_by_id', ':createdById')
-                    ->setValue('modified_by_id', ':createdById')
-                    ->setParameter('id', Util::generateId())
-                    ->setParameter('extensibleEnumId', $option['extensible_enum_id'], Mapper::getParameterType($option['extensible_enum_id']))
-                    ->setParameter('extensibleEnumOptionId', $option['id'], Mapper::getParameterType($option['id']))
-                    ->setParameter('createdById', 'system', ParameterType::STRING)
-                    ->setParameter('sortOrder', $option['sort_order'], Mapper::getParameterType($option['sort_order']))
-                    ->executeStatement();
+                try {
+                    $this->getConnection()
+                        ->createQueryBuilder()
+                        ->insert('extensible_enum_extensible_enum_option')
+                        ->setValue('id', ':id')
+                        ->setValue('sorting', ':sortOrder')
+                        ->setValue('extensible_enum_id', ':extensibleEnumId')
+                        ->setValue('extensible_enum_option_id', ':extensibleEnumOptionId')
+                        ->setValue('created_by_id', ':createdById')
+                        ->setValue('modified_by_id', ':createdById')
+                        ->setParameter('id', Util::generateId())
+                        ->setParameter('extensibleEnumId', $option['extensible_enum_id'], Mapper::getParameterType($option['extensible_enum_id']))
+                        ->setParameter('extensibleEnumOptionId', $option['id'], Mapper::getParameterType($option['id']))
+                        ->setParameter('createdById', 'system', ParameterType::STRING)
+                        ->setParameter('sortOrder', $option['sort_order'], Mapper::getParameterType($option['sort_order']))
+                        ->executeStatement();
+                } catch (\Throwable $e) {
+                }
             }
 
             $offset +=$limit;

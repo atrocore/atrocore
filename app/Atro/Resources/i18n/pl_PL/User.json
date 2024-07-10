@@ -53,9 +53,7 @@
 		"isAdmin": "Użytkownik admin może mieć dostęp do wszystkiego.",
 		"isActive": "Jeśli niezaznaczone, użytkownik nie będzie mógł się zalogować.",
 		"teams": "Zespoły, do których należy ten użytkownik. Poziom kontroli dostępu jest dziedziczony z ról zespołu.",
-		"roles": "Dodatkowe role dostępu. Użyj ich, jeśli użytkownik nie należy do żadnego zespołu lub musisz rozszerzyć poziom kontroli dostępu wyłącznie dla tego użytkownika.",
-		"password": "Pozostaw to pole puste, jeśli chcesz zachować stare hasło.",
-		"passwordConfirm": "Pozostaw to pole puste, jeśli chcesz zachować stare hasło."
+		"roles": "Dodatkowe role dostępu. Użyj ich, jeśli użytkownik nie należy do żadnego zespołu lub musisz rozszerzyć poziom kontroli dostępu wyłącznie dla tego użytkownika."
 	},
 	"messages": {
 		"accountInfoEmailSubject": "Informacje o Dostępie do Użytkownika AtroCore",

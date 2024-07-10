@@ -644,6 +644,12 @@ Espo.define(
                         console.error('Bad server response: ' + xhr.responseText);
                         break;
                     case 401:
+                        const passwordExpiredHeader = xhr.getResponseHeader('Password-Expired');
+                        if (passwordExpiredHeader) {
+                            self.baseController.passwordExpired();
+                            return;
+                        }
+
                         if (!options.login) {
                             if (self.auth) {
                                 self.logout();

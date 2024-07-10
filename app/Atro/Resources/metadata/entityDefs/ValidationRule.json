@@ -25,7 +25,6 @@
       "notNull": true,
       "type": "bool",
       "default": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     },
@@ -59,7 +58,6 @@
       ],
       "default": "Mime",
       "isSorted": false,
-      "audited": false,
       "readOnly": false,
       "isMultilang": false,
       "tooltip": false,
@@ -69,7 +67,6 @@
       "notNull": false,
       "type": "float",
       "required": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     },
@@ -86,7 +83,6 @@
       ],
       "default": "List",
       "isSorted": false,
-      "audited": false,
       "readOnly": false,
       "isMultilang": false,
       "tooltip": false,
@@ -96,7 +92,6 @@
       "type": "varchar",
       "required": false,
       "trim": true,
-      "audited": false,
       "readOnly": false,
       "isMultilang": false,
       "tooltip": false
@@ -107,7 +102,6 @@
       "default": 0,
       "min": 0,
       "required": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false,
       "view": "views/validation-rule/fields/int-size"
@@ -117,7 +111,6 @@
       "type": "int",
       "min": 0,
       "required": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false,
       "view": "views/validation-rule/fields/int-size"
@@ -128,7 +121,6 @@
       "required": false,
       "noEmptyString": false,
       "options": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     },
@@ -144,7 +136,6 @@
         "RGB",
         "SRGB"
       ],
-      "audited": false,
       "readOnly": false,
       "isMultilang": false,
       "tooltip": false
@@ -154,7 +145,6 @@
       "type": "int",
       "min": 0,
       "required": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     },
@@ -163,7 +153,6 @@
       "type": "int",
       "min": 0,
       "required": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     },
@@ -173,7 +162,6 @@
       "required": false,
       "noEmptyString": false,
       "options": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     },
@@ -183,7 +171,6 @@
       "required": false,
       "noEmptyString": false,
       "options": false,
-      "audited": false,
       "readOnly": false,
       "tooltip": false
     }

@@ -253,11 +253,6 @@ class QueryConverter
             $result['distinct'] = $params['distinct'];
         } else {
             $result['aggregation'] = $params['aggregation'];
-            if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
-                echo '2023-10-11 TODO: AggregateValue' . PHP_EOL;
-                die();
-//                $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
-            }
         }
 
         return $result;
@@ -955,68 +950,44 @@ class QueryConverter
                     }
                 }
                 if (!empty($leftPart)) {
-
-                    if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
-                        if (!is_array($value)) {
-                            continue;
-                        }
-                        if (!empty($value['entityType'])) {
-                            $subQueryEntityType = $value['entityType'];
-                        } else {
-                            $subQueryEntityType = $entity->getEntityType();
-                        }
-                        $subQuerySelectParams = array();
-                        if (!empty($value['selectParams'])) {
-                            $subQuerySelectParams = $value['selectParams'];
-                        }
-                        $withDeleted = false;
-                        if (!empty($value['withDeleted'])) {
-                            $withDeleted = true;
-                        }
-
-                        echo '2023-10-11 TODO: createSelectQuery' . PHP_EOL;
-                        die();
-//                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
-                    } else {
-                        if (!is_array($value)) {
-                            if (!is_null($value)) {
-                                if ($isNotValue) {
-                                    $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
-                                } else {
-                                    $param = $this->sanitize($field) . '_w1_' . Util::generateId();
-                                    if (in_array($operator, ['LIKE', 'NOT LIKE']) && str_contains($value, '%')) {
-                                        $whereParts[] = "LOWER($leftPart) $operator LOWER(:$param)";
-                                    } else {
-                                        $whereParts[] = "$leftPart $operator :$param";
-                                    }
-                                    $this->parameters[$param] = $value;
-                                }
+                    if (!is_array($value)) {
+                        if (!is_null($value)) {
+                            if ($isNotValue) {
+                                $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
                             } else {
-                                if ($operator == '=') {
-                                    $whereParts[] = $leftPart . " IS NULL";
+                                $param = $this->sanitize($field) . '_w1_' . Util::generateId();
+                                if (in_array($operator, ['LIKE', 'NOT LIKE']) && str_contains($value, '%')) {
+                                    $whereParts[] = "LOWER($leftPart) $operator LOWER(:$param)";
                                 } else {
-                                    if ($operator == '<>') {
-                                        $whereParts[] = $leftPart . " IS NOT NULL";
-                                    }
+                                    $whereParts[] = "$leftPart $operator :$param";
                                 }
-                            }
-                        } else {
-                            $oppose = '';
-                            $emptyValue = false;
-                            if ($operator == '<>') {
-                                $oppose = 'NOT ';
-                                $emptyValue = true;
-                            }
-                            if (!empty($value)) {
-                                $parts = explode('.', $field);
-                                $param = $parts[1] ?? $parts[0];
-                                $param = "{$param}_w2_" . Util::generateId();
-                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param})";
                                 $this->parameters[$param] = $value;
-                            } else {
-                                $whereParts[] = ':emptyValue';
-                                $this->parameters['emptyValue'] = $emptyValue;
                             }
+                        } else {
+                            if ($operator == '=') {
+                                $whereParts[] = $leftPart . " IS NULL";
+                            } else {
+                                if ($operator == '<>') {
+                                    $whereParts[] = $leftPart . " IS NOT NULL";
+                                }
+                            }
+                        }
+                    } else {
+                        $oppose = '';
+                        $emptyValue = false;
+                        if ($operator == '<>') {
+                            $oppose = 'NOT ';
+                            $emptyValue = true;
+                        }
+                        if (!empty($value)) {
+                            $parts = explode('.', $field);
+                            $param = $parts[1] ?? $parts[0];
+                            $param = "{$param}_w2_" . Util::generateId();
+                            $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param})";
+                            $this->parameters[$param] = $value;
+                        } else {
+                            $whereParts[] = ':emptyValue';
+                            $this->parameters['emptyValue'] = $emptyValue;
                         }
                     }
                 }
@@ -1310,32 +1281,6 @@ class QueryConverter
                         'condition' => $condition
                     ]
                 ];
-
-            case IEntity::HAS_CHILDREN:
-                echo '2023-10-11  TODO: getJoin HAS_CHILDREN';
-                die();
-
-//                $foreignKey = $keySet['foreignKey'];
-//                $foreignType = $keySet['foreignType'];
-//                $distantTable = $this->toDb($relOpt['entity']);
-//
-//                $sql = $this->joinSQL($prefix, $distantTable, $alias) . " " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb(
-//                        $foreignKey
-//                    )
-//                    . " AND "
-//                    . "{$alias}." . $this->toDb($foreignType) . " = " . $entity->getEntityType()
-//                    . " AND "
-//                    . "{$alias}.deleted = " . 0;
-//
-//                $joinSqlList = [];
-//                foreach ($conditions as $left => $right) {
-//                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
-//                }
-//                if (count($joinSqlList)) {
-//                    $sql .= " AND " . implode(" AND ", $joinSqlList);
-//                }
-//
-//                return $sql;
 
             case IEntity::BELONGS_TO:
                 $join = $this->getBelongsToJoin($entity, $relationName, null, $alias, $withDeleted);

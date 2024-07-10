@@ -84,6 +84,10 @@ abstract class AbstractModule
         $this->container = $container;
     }
 
+    public static function afterUpdate(): void
+    {
+    }
+
     /**
      * Get client path
      *

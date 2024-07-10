@@ -2,13 +2,7 @@
   "fields": {
     "post": "Entrada",
     "attachments": "Adjuntos",
-    "targetType": "Objetivo",
-    "teams": "Equipos",
-    "users": "Usuarios",
     "type": "Tipo",
-    "isGlobal": "Es global",
-    "isInternal": "Es Interno (para usuarios internos)",
-    "related": "Relacionado",
     "createdByGender": "Creado por género",
     "data": "Datos",
     "number": "Número"
@@ -19,21 +13,11 @@
     "updates": "Actualizaciones"
   },
   "options": {
-    "targetType": {
-      "self": "Para mí",
-      "users": "Para determinado/s usuario/s",
-      "teams": "Para determinado/s equipo/s",
-      "all": "Para todos los usuarios"
-    },
     "type": {
       "Post": "Post"
     }
   },
   "messages": {
     "writeMessage": "Escriba su mensaje aquí"
-  },
-  "links": {
-    "superParent": "Super Parent",
-    "related": "Related"
   }
 }

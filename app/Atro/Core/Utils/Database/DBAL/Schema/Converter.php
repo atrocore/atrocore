@@ -269,26 +269,6 @@ class Converter
     protected function getSystemOrmMetadata(): array
     {
         return [
-            'Autofollow'   => [
-                'fields' => [
-                    'id'         => [
-                        'type'          => 'id',
-                        'dbType'        => 'int',
-                        'autoincrement' => true,
-                        'unique'        => true,
-                    ],
-                    'entityType' => [
-                        'type'  => 'varchar',
-                        'len'   => '100',
-                        'index' => 'entityType',
-                    ],
-                    'userId'     => [
-                        'type'  => 'varchar',
-                        'len'   => '24',
-                        'index' => true,
-                    ]
-                ]
-            ],
             'Preferences'  => [
                 'fields' => [
                     'id'   => [

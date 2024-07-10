@@ -1,0 +1,13 @@
+{
+  "controller": "controllers/record",
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "searchPanel",
+        "label": "searchPanel",
+        "view": "views/preview-template/record/panels/search",
+        "notRefreshable": true
+      }
+    ]
+  }
+}

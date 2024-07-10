@@ -694,7 +694,7 @@ class Hierarchy extends Record
             return;
         }
 
-        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'])) && empty($entity->get('parentId'))) {
             $entity->set('parentId', $entity->get('parentsIds')[0] ?? null);
             if (!empty($entity->get('parentId'))) {
                 $entity->set('parentName', $entity->get('parentsNames')->{$entity->get('parentId')} ?? null);
