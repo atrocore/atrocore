@@ -68,9 +68,9 @@ class PseudoTransactionManager
         return $this->push($entityType, $entityId, 'deleteEntity', '', $parentId);
     }
 
-    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
+    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null, bool $duplicate = false): string
     {
-        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId], JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId, 'duplicate' => $duplicate], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
@@ -258,7 +258,7 @@ class PseudoTransactionManager
                 case 'linkEntity':
                     if (!$inputIsEmpty) {
                         $inputData = Json::decode($job['input_data']);
-                        $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                        $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId, !empty($inputData->duplicate));
                     }
                     break;
                 case 'unlinkEntity':

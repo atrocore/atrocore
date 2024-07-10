@@ -507,11 +507,11 @@ class Hierarchy extends Record
         return $result;
     }
 
-    public function linkEntity($id, $link, $foreignId)
+    public function linkEntity($id, $link, $foreignId, $duplicate = false)
     {
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
             || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
-            return parent::linkEntity($id, $link, $foreignId);
+            return parent::linkEntity($id, $link, $foreignId, $duplicate);
         }
 
         /**

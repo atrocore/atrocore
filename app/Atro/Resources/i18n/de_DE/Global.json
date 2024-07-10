@@ -303,7 +303,8 @@
     "Dashboard": "Dashboard",
     "Provide Feedback": "Feedback geben",
     "Instance comparison": "Instanzvergleich",
-    "previewTemplate": "Vorschau Vorlage"
+    "previewTemplate": "Vorschau Vorlage",
+    "Duplicate and Select": "Duplizieren und Auswählen"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

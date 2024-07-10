@@ -327,7 +327,7 @@ abstract class AbstractRecordController extends AbstractController
 
         $id = $params['id'];
         $link = $params['link'];
-
+        $duplicate = !empty($data->duplicate);
         if (!empty($data->massRelate)) {
             if (!is_array($data->where)) {
                 throw new BadRequest();
@@ -339,7 +339,7 @@ abstract class AbstractRecordController extends AbstractController
                 $selectData = json_decode(json_encode($data->selectData), true);
             }
 
-            return $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
+            return $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData, $duplicate);
         } else {
             $foreignIdList = array();
             if (isset($data->id)) {
@@ -353,7 +353,7 @@ abstract class AbstractRecordController extends AbstractController
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
+                if ($this->getRecordService()->linkEntity($id, $link, $foreignId, $duplicate)) {
                     $result = true;
                 }
             }

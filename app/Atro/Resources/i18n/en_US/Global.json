@@ -322,7 +322,8 @@
     "Dashboard": "Dashboard",
     "Provide Feedback": "Provide Feedback",
     "Instance comparison": "Instance comparison",
-    "previewTemplate": "Preview Templates"
+    "previewTemplate": "Preview Templates",
+    "Duplicate and Select": "Duplicate and Select"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

@@ -94,7 +94,8 @@
     "Note": "Примітки",
     "Notification": "Повідомлення",
     "Preferences": "Налаштування",
-    "PreviewTemplate": "Шаблони перегляду"
+    "PreviewTemplate": "Шаблони перегляду",
+    "Duplicate and Select": "Зкопіювати і вибрати"
   },
   "descriptions": {
     "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу.",
