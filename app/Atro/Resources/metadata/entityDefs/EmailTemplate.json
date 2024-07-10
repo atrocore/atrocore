@@ -1,0 +1,78 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "code": {
+      "type": "varchar",
+      "unique": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "subject": {
+      "type": "text",
+      "required": true,
+      "view": "views/fields/script"
+    },
+    "body": {
+      "type": "text",
+      "required": true,
+      "view": "views/fields/script"
+    },
+    "connection": {
+      "type": "link",
+      "view": "views/email-template/fields/connection"
+    },
+    "allowAttachments": {
+      "type": "bool"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "connection": {
+      "type": "belongsTo",
+      "entity": "Connection"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

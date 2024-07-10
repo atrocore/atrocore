@@ -1,0 +1,42 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "subject",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "body",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "connection"
+        },
+        {
+          "name": "allowAttachments"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  }
+]
