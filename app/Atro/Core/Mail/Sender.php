@@ -58,7 +58,7 @@ class Sender
         $this->transport = $this->connexion->connect($connectionEntity);
     }
 
-    public function sendByJob(array $emailData, string $connectionId, array $params = []): void
+    public function sendByJob(array $emailData, ?string $connectionId = null, array $params = []): void
     {
         $this->queueManager->push('Send email', 'QueueManagerEmailSender', ['connectionId' => $connectionId, 'emailData' => $emailData, 'params' => $params]);
     }
@@ -69,12 +69,23 @@ class Sender
      *
      * @throws Error
      */
-    public function send(array $emailData, Connection $connectionEntity, array $params = []): void
+    public function send(array $emailData, ?Connection $connectionEntity = null, array $params = []): void
     {
         if (!empty($params['isNotification'])) {
             if ($this->config->get('disableEmailDelivery') === true) {
                 $GLOBALS['log']->alert('Notification Emails: Email delivery is deactivated.');
                 return;
+            }
+        }
+
+        // default connection
+        if (empty($connectionEntity)) {
+            $id = $this->config->get('notificationSmtpConnectionId');
+            if (!empty($id)) {
+                $connectionEntity = $this->entityManager->getEntity('Connection', $id);
+            }
+            if (empty($connectionEntity)) {
+                throw new Error("Connection entity not found : " . $id);
             }
         }
 
