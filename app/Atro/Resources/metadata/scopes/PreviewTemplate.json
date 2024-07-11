@@ -8,6 +8,7 @@
   "notifications": false,
   "stream": false,
   "disabled": false,
+  "streamDisabled": true,
   "type": "Base",
   "object": true,
   "isActiveUnavailable": true
