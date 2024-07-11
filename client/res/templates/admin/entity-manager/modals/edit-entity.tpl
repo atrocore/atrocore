@@ -44,10 +44,10 @@
                 </div>
             </div>
             {{#if auditable}}
-            <div class="cell form-group col-md-6" data-name="auditedDisabled">
-                <label class="control-label" data-name="auditedDisabled">{{translate 'auditedDisabled' category='fields' scope='EntityManager'}}</label>
-                <div class="field" data-name="auditedDisabled">
-                    {{{auditedDisabled}}}
+            <div class="cell form-group col-md-6" data-name="streamDisabled">
+                <label class="control-label" data-name="streamDisabled">{{translate 'streamDisabled' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="streamDisabled">
+                    {{{streamDisabled}}}
                 </div>
             </div>
             {{/if}}

@@ -615,10 +615,6 @@ class Metadata extends AbstractListener
             if (!empty($data['scopes'][$entityName]['isHierarchyEntity'])) {
                 $data['scopes'][$entityName]['acl'] = true;
             }
-
-            if (!isset($data['scopes'][$entityName]['auditedDisabled'])) {
-                $data['scopes'][$entityName]['auditedDisabled'] = true;
-            }
             if (!isset($data['scopes'][$entityName]['streamDisabled'])) {
                 $data['scopes'][$entityName]['streamDisabled'] = true;
             }
