@@ -511,7 +511,7 @@ class Hierarchy extends Record
     {
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
             || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
-            return parent::linkEntity($id, $link, $foreignId, $duplicate);
+            return parent::linkEntity($id, $link, $foreignId);
         }
 
         /**
@@ -533,27 +533,20 @@ class Hierarchy extends Record
          * Delegate to Update if OneToMany relation
          */
         if (!empty($linkData = $this->getOneToManyRelationData($link))) {
-            $data = new \stdClass();
-            $data->{"{$linkData['foreign']}Id"} = $id;
-            try {
-                $this->getServiceFactory()->create($linkData['entity'])->updateEntity($foreignId, $data);
-            } catch (NotModified $e) {
-                // ignore
-            }
-
+            $this->handleLinkOneToManyRelation($id, $link, $foreignId, $linkData, $duplicate);
             return true;
         }
 
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
-            return parent::linkEntity($id, $link, $foreignId, $duplicate);
+            return parent::linkEntity($id, $link, $foreignId);
         }
 
         if ($this->isPseudoTransaction()) {
-            return parent::linkEntity($id, $link, $foreignId, $duplicate);
+            return parent::linkEntity($id, $link, $foreignId);
         }
 
-        $result = parent::linkEntity($id, $link, $foreignId, $duplicate);
-        $this->createPseudoTransactionLinkJobs($id, $link, $foreignId, $duplicate);
+        $result = parent::linkEntity($id, $link, $foreignId);
+        $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
 
         $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'entity']);
         $foreignLink = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'foreign']);

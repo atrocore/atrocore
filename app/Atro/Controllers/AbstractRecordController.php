@@ -17,7 +17,6 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\PseudoTransactionManager;
 
 abstract class AbstractRecordController extends AbstractController
@@ -329,6 +328,7 @@ abstract class AbstractRecordController extends AbstractController
         $id = $params['id'];
         $link = $params['link'];
         $duplicate = !empty($data->duplicate);
+
         if (!empty($data->massRelate)) {
             if (!is_array($data->where)) {
                 throw new BadRequest();
@@ -598,10 +598,5 @@ abstract class AbstractRecordController extends AbstractController
     protected function getPseudoTransactionManager(): PseudoTransactionManager
     {
         return $this->getContainer()->get('pseudoTransactionManager');
-    }
-
-    public function getMemoryStorage(): StorageInterface
-    {
-        return $this->getContainer()->get('memoryStorage');
     }
 }
