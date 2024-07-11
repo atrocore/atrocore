@@ -19615,7 +19615,6 @@ table.table > thead th > div > a {
 
   .table > tbody > tr {
     border-top: 1px solid #e8eced;
-    transform: translate(0);
   }
 
   .table > tbody > tr.active {
