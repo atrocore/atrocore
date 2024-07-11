@@ -219,7 +219,7 @@ class Note
                 $wasValue = $entity->getFetched($field);
                 $value = $entity->get($field);
                 if (!empty($value)) {
-                    $this->createNote('CreateRelated', $scope, $value, [
+                    $this->createNote('relate', $scope, $value, [
                         'relatedType' => $entity->getEntityType(),
                         'relatedId'   => $entity->id
                     ]);
