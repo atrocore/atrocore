@@ -82,17 +82,6 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             this.model.set(this.name, value);
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            new Svelte.MyComponent({
-                target: this.el,
-                props: {
-                    name: 'Svelte 222'
-                }
-            });
-        },
-
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.valueIsSet = this.model.has(this.name);
