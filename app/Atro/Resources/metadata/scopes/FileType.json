@@ -6,6 +6,7 @@
   "customizable": false,
   "importable": false,
   "notifications": false,
+  "streamDisabled": true,
   "type": "Base",
   "object": true
 }

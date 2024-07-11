@@ -16,5 +16,6 @@
   "customizable": true,
   "importable": true,
   "object": true,
+  "streamDisabled": true,
   "isActiveUnavailable": true
 }
