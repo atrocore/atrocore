@@ -1,8 +1,13 @@
 <script lang="ts">
     export let name = 'world';
+
+    function changeName() {
+        console.log('13333')
+        name = name + '_';
+    }
 </script>
 
-<span class="ss">Hello {name}!</span>
+<button class="ss" on:click={changeName}>Hello {name}!</button>
 
 <style>
     .ss {
