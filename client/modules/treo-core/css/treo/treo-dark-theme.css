@@ -15520,11 +15520,9 @@ table.table > thead th > div > a {
     }
 
     .list > table td.fixed-button:last-child {
-        position: absolute;
-        top: 3px;
-        left: 0;
         border: 0;
         padding: 0;
+        position: relative;
     }
 
     .list > table td.fixed-button:last-child > .list-row-buttons {
@@ -15532,6 +15530,8 @@ table.table > thead th > div > a {
         flex-flow: row nowrap;
         justify-content: center;
         align-items: center;
+        position: absolute;
+        top: 3px;
     }
 
     .list > table td.fixed-button:last-child > .list-row-buttons > .dropdown-toggle {
@@ -15564,6 +15564,10 @@ table.table > thead th > div > a {
 .panel-scroll {
     height: 11px;
     overflow: auto;
+}
+
+.panel-scroll > div {
+    height: 100%;
 }
 
 .list-container > .list > .table thead th:not([data-name="r-checkbox"]):not([width]) > div:not(:empty) {
