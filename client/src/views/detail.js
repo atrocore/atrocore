@@ -607,11 +607,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 type: 'POST',
                 data: JSON.stringify(data),
                 success: function () {
-                    this.notify('Linked', 'success');
+                    this.notify(data.duplicate ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                     this.updateRelationshipPanel(link);
                     this.model.trigger('after:relate', link);
                 }.bind(this),
                 error: function () {
+                    this.updateRelationshipPanel(link);
+                    this.model.trigger('after:relate', link);
                     this.notify('Error occurred', 'error');
                 }.bind(this)
             });

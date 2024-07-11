@@ -415,7 +415,8 @@
     "massRestoreZeroResult": "Nothing got restore",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
-    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
+    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
+    "duplicatedAndLinked": "Records were successfully duplicated and linked."
   },
   "boolFilters": {
     "onlyActive": "Active",
@@ -1079,7 +1080,9 @@
     "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
     "notUniqueValue": "The record cannot be created/updated due to database constraints.",
     "fieldDoesNotExist": "Field \"{field}\" does not exist on the entity \"{entityType}\".",
-    "optionIsDisabled": "Item '%s' is disabled for field '%s'."
+    "optionIsDisabled": "Item '%s' is disabled for field '%s'.",
+    "someCouldNotDuplicatedAndLinked": "Some records could not be duplicated and linked",
+    "someCouldNotLinked": "Some records could not be linked"
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

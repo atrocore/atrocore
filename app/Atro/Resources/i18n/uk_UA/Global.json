@@ -414,7 +414,8 @@
     "massFollowResultSingle": "{count} запис зараз відстежується",
     "massUnfollowResultSingle": "{count} запис зараз не відстежується",
     "clearAclCacheError": "ACL кеш не може бути очищений.",
-    "emptyMultilangOptions": "Список опцій не може бути порожнім, доки активована багатомовна опція."
+    "emptyMultilangOptions": "Список опцій не може бути порожнім, доки активована багатомовна опція.",
+    "duplicatedAndLinked": "Записи були успішно продубльовані та пов'язані між собою."
   },
   "boolFilters": {
     "onlyActive": "Активні",
@@ -1014,7 +1015,9 @@
     "dontMatchToPattern": "Значення поля \"{field}\" не відповідає патерну \"{pattern}\".",
     "notUniqueValue": "Запис неможливо створити/оновити через обмеження бази даних.",
     "fieldDoesNotExist": "Поле \"{field}\" не існує в сутності \"{entityType}\".",
-    "optionIsDisabled": "Елемент '%s' вимкнено для поля '%s'."
+    "optionIsDisabled": "Елемент '%s' вимкнено для поля '%s'.",
+    "someCouldNotDuplicatedAndLinked": "Деякі записи неможливо було продублювати та прив'язати",
+    "someCouldNotLinked": "Деякі записи не вдалося пов'язати"
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\PseudoTransactionManager;
 
 abstract class AbstractRecordController extends AbstractController
@@ -339,7 +340,9 @@ abstract class AbstractRecordController extends AbstractController
                 $selectData = json_decode(json_encode($data->selectData), true);
             }
 
-            return $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData, $duplicate);
+             $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData, $duplicate);
+             $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $duplicate);
+             return true;
         } else {
             $foreignIdList = array();
             if (isset($data->id)) {
@@ -358,7 +361,8 @@ abstract class AbstractRecordController extends AbstractController
                 }
             }
             if ($result) {
-                return true;
+                $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $duplicate);
+                return  true;
             }
         }
 
@@ -594,5 +598,10 @@ abstract class AbstractRecordController extends AbstractController
     protected function getPseudoTransactionManager(): PseudoTransactionManager
     {
         return $this->getContainer()->get('pseudoTransactionManager');
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getContainer()->get('memoryStorage');
     }
 }

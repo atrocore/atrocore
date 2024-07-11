@@ -545,15 +545,15 @@ class Hierarchy extends Record
         }
 
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
-            return parent::linkEntity($id, $link, $foreignId);
+            return parent::linkEntity($id, $link, $foreignId, $duplicate);
         }
 
         if ($this->isPseudoTransaction()) {
-            return parent::linkEntity($id, $link, $foreignId);
+            return parent::linkEntity($id, $link, $foreignId, $duplicate);
         }
 
-        $result = parent::linkEntity($id, $link, $foreignId);
-        $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
+        $result = parent::linkEntity($id, $link, $foreignId, $duplicate);
+        $this->createPseudoTransactionLinkJobs($id, $link, $foreignId, $duplicate);
 
         $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'entity']);
         $foreignLink = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'foreign']);
