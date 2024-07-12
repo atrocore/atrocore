@@ -295,10 +295,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 new Svelte.QueueManagerIcon({
                     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
                     props: {
-                        Language: this.getLanguage()
+                        Language: this.getLanguage(),
+                        NavbarView: this
                     }
                 });
-
 
                 // this.$el.find('.navbar-header').find('.notifications-badge-container').before('<li class="dropdown queue-badge-container"></li>');
                 // this.createView('queueBadgeHeader', 'treo-core:views/queue-manager/badge', {
