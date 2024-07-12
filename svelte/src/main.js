@@ -1,5 +1,4 @@
-import MyComponent from './MyComponent.svelte';
-import Counter from './Counter.svelte';
-import TextField from './fields/Text.svelte';
+import QueueManagerIcon from './icons/QueueManagerIcon.svelte';
+import QueueManagerModal from './modals/QueueManagerModal.svelte';
 
-export {MyComponent, Counter, TextField};
+export {QueueManagerIcon, QueueManagerModal};
