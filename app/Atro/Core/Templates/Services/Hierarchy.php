@@ -507,7 +507,7 @@ class Hierarchy extends Record
         return $result;
     }
 
-    public function linkEntity($id, $link, $foreignId, $duplicate = false)
+    public function linkEntity($id, $link, $foreignId)
     {
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
             || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
@@ -533,7 +533,7 @@ class Hierarchy extends Record
          * Delegate to Update if OneToMany relation
          */
         if (!empty($linkData = $this->getOneToManyRelationData($link))) {
-            $this->handleLinkOneToManyRelation($id, $link, $foreignId, $linkData, $duplicate);
+            $this->handleLinkOneToManyRelation($id, $link, $foreignId, $linkData);
             return true;
         }
 

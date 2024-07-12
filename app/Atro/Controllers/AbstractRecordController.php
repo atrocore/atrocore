@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\PseudoTransactionManager;
 
 abstract class AbstractRecordController extends AbstractController
@@ -327,7 +328,9 @@ abstract class AbstractRecordController extends AbstractController
 
         $id = $params['id'];
         $link = $params['link'];
-        $duplicate = !empty($data->duplicate);
+        $key = $this->getRecordService()->getCreateLinkDataKey($id, $link);
+
+        $this->getMemoryStorage()->set($key, ['duplicate' => !empty($data->duplicate)]);
 
         if (!empty($data->massRelate)) {
             if (!is_array($data->where)) {
@@ -340,8 +343,8 @@ abstract class AbstractRecordController extends AbstractController
                 $selectData = json_decode(json_encode($data->selectData), true);
             }
 
-             $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData, $duplicate);
-             $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $duplicate);
+             $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
+             $this->getRecordService()->handleLinkEntitiesErrors($id, $link);
              return true;
         } else {
             $foreignIdList = array();
@@ -356,12 +359,12 @@ abstract class AbstractRecordController extends AbstractController
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if ($this->getRecordService()->linkEntity($id, $link, $foreignId, $duplicate)) {
+                if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
                     $result = true;
                 }
             }
             if ($result) {
-                $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $duplicate);
+                $this->getRecordService()->handleLinkEntitiesErrors($id, $link);
                 return  true;
             }
         }
@@ -598,5 +601,10 @@ abstract class AbstractRecordController extends AbstractController
     protected function getPseudoTransactionManager(): PseudoTransactionManager
     {
         return $this->getContainer()->get('pseudoTransactionManager');
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getContainer()->get('memoryStorage');
     }
 }
