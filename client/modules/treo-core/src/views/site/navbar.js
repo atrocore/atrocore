@@ -294,6 +294,9 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             if (this.getAcl().check('QueueItem', 'read')) {
                 new Svelte.QueueManagerIcon({
                     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
+                    props: {
+                        Language: this.getLanguage()
+                    }
                 });
 
 

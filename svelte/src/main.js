@@ -1,4 +1,6 @@
-import QueueManagerIcon from './icons/QueueManagerIcon.svelte';
-import QueueManagerModal from './modals/QueueManagerModal.svelte';
+import './styles/style.css';
 
-export {QueueManagerIcon, QueueManagerModal};
+import QueueManagerIcon from './components/icons/QueueManagerIcon.svelte';
+import QueuePanelContainer from './components/panels/QueuePanelContainer.svelte';
+
+export {QueueManagerIcon, QueuePanelContainer};
