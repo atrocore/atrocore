@@ -6,5 +6,8 @@
     "emailTo": "Email To",
     "emailCc": "Email CC",
     "attachments": "Attachments"
+  },
+  "labels": {
+    "send": "Send"
   }
 }

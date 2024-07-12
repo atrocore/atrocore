@@ -5,5 +5,8 @@
     "allowAttachments": "Zezwalaj na załączniki",
     "emailTo": "Wyślij email do",
     "emailCc": "Wyślij e-mail do CC"
+  },
+  "labels": {
+    "send": "Wysłać"
   }
 }

@@ -5,5 +5,8 @@
     "allowAttachments": "Permitir archivos adjuntos",
     "emailTo": "Email para",
     "emailCc": "Enviar CC por correo electrónico"
+  },
+  "labels": {
+    "send": "Enviar"
   }
 }

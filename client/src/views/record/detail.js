@@ -238,12 +238,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             })
                             return;
                         }
+                        if (callback) {
+                            callback()
+                        }
                     } else {
                         this.notify(response.message, 'error');
                     }
                 }
                 this.model.fetch();
-            });
+            })
         },
 
         actionDelete: function () {

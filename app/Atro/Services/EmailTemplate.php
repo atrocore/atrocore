@@ -49,15 +49,15 @@ class EmailTemplate extends Base
             'subject'          => $twig->renderTemplate($emailTemplate->get('subject'), $data),
             'body'             => $twig->renderTemplate($emailTemplate->get('body'), $data),
             'attachmentsIds'   => array_column($attachments, 'id'),
-            'attachmentsNames' => array_column($attachments, 'name'),
+            'attachmentsNames' => array_column($attachments, 'name', 'id'),
         ];
     }
 
     public function getAttachments(Entity $entity): array
     {
         $attachments = [];
-        foreach ($entity->getFields() as $field => $defs) {
-            if ($defs['type'] === 'file') {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) ?? [] as $field => $defs) {
+            if (!empty($defs['type']) && $defs['type'] === 'file') {
                 $file = $entity->get($field);
                 if (!empty($file)) {
                     $attachments[] = ['id' => $file->get('id'), 'name' => $file->get('name')];
