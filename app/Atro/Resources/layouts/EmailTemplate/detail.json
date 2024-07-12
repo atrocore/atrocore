@@ -17,6 +17,14 @@
       ],
       [
         {
+          "name": "emailTo"
+        },
+        {
+          "name": "emailCc"
+        }
+      ],
+      [
+        {
           "name": "subject",
           "fullWidth": true
         }
