@@ -54,11 +54,6 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             this.notNull = this.params?.notNull
                 ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? true;
 
-            let defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default']);
-
-            if(this.model.isNew() && !this.notNull && defaultValue !== null){
-                this.model.set(this.name, defaultValue === true)
-            }
         },
 
         setupSearch() {

@@ -208,7 +208,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     if ($(window).outerWidth() > 768 && rowsButtons.length) {
                         rowsButtons.addClass('fixed-button');
                         rowsButtons.each(function () {
-                            $(this).css('left', list.width() - $(this).width() - 5)
+                            let a = $(this).find('.list-row-buttons');
+
+                            if (a) {
+                                let width = -1 * (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
+                                a.css('left', width);
+                            }
                         });
                     }
 
@@ -222,7 +227,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
                             if ($(window).outerWidth() > 768 && rowsButtons.hasClass('fixed-button')) {
                                 rowsButtons.each(function () {
-                                    $(this).css('left', list.scrollLeft() + list.width() - $(this).width() - 5)
+                                    let a = $(this).find('.list-row-buttons');
+
+                                    if (a) {
+                                        let width = list.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
+                                        a.css('left',  width);
+                                    }
                                 });
                             }
                         }
@@ -238,7 +248,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             scroll.css({width: list.width(), display: 'block'});
                             scroll.find('div').css('width', fullTable.width());
                             rowsButtons.each(function () {
-                                $(this).css('left', scroll.scrollLeft() + list.width() - $(this).width() - 5)
+                                let a = $(this).find('.list-row-buttons');
+
+                                if (a) {
+                                    let width = list.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
+                                    a.css('left',  width);
+                                }
                             });
 
                             this.listenTo(this.collection, 'sync', function () {
@@ -250,7 +265,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             scroll.on('scroll', () => {
                                 fullTable.css('left', -1 * scroll.scrollLeft());
                                 rowsButtons.each(function () {
-                                    $(this).css('left', scroll.scrollLeft() + list.width() - $(this).width() - 5)
+                                    let a = $(this).find('.list-row-buttons');
+
+                                    if (a) {
+                                        let width = scroll.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
+                                        a.css('left', width);
+                                    }
                                 });
                             });
 
