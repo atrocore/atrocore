@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EmailTemplate": "Plantilla de correo electrónico",
     "User": "Usuario",
     "Team": "Equipo",
     "Role": "Rol",
@@ -40,6 +41,7 @@
     "AuthFailLogRecord": "Auth Fail Log Record"
   },
   "scopeNamesPlural": {
+    "EmailTemplate": "Plantillas de correo electrónico",
     "User": "Usuarios",
     "Team": "Equipos",
     "OutboundEmail": "Salientes",

@@ -8,6 +8,7 @@
     "attachments": "Attachments"
   },
   "labels": {
-    "send": "Send"
+    "send": "Send",
+    "Create EmailTemplate": "Create Email Template"
   }
 }

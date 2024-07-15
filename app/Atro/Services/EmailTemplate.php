@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Atro\ActionTypes\TypeInterface;
 use Espo\Core\ORM\Entity;
+use Espo\Core\Utils\Util;
 use Espo\ORM\IEntity;
 
 class EmailTemplate extends Base
@@ -33,45 +34,10 @@ class EmailTemplate extends Base
             throw new NotFound();
         }
 
-        return $this->getEmailData($emailTemplate, ['entity' => $entity]);
+        $userLanguage = $this->getConfig()->get('locales')[$this->getLocaleId()]['language'];
+
+        return $this->getRepository()->getEmailData($emailTemplate, $userLanguage, ['entity' => $entity]);
     }
 
-    public function getEmailData(IEntity $emailTemplate, array $data = []): array
-    {
-        $twig = $this->getInjection('twig');
-        $attachments = [];
-        if (!empty($data['entity']) && $data['entity'] instanceof Entity) {
-            $attachments = $this->getAttachments($data['entity']);
-        }
-        return [
-            'emailTo'          => $emailTemplate->get('emailTo'),
-            'emailCc'          => $emailTemplate->get('emailCc'),
-            'subject'          => $twig->renderTemplate($emailTemplate->get('subject'), $data),
-            'body'             => $twig->renderTemplate($emailTemplate->get('body'), $data),
-            'attachmentsIds'   => array_column($attachments, 'id'),
-            'attachmentsNames' => array_column($attachments, 'name', 'id'),
-        ];
-    }
-
-    public function getAttachments(Entity $entity): array
-    {
-        $attachments = [];
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) ?? [] as $field => $defs) {
-            if (!empty($defs['type']) && $defs['type'] === 'file') {
-                $file = $entity->get($field);
-                if (!empty($file)) {
-                    $attachments[] = ['id' => $file->get('id'), 'name' => $file->get('name')];
-                }
-            }
-        }
-        return $attachments;
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('twig');
-    }
 
 }

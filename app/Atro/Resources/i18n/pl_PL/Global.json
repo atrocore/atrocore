@@ -1,5 +1,6 @@
 {
 "scopeNames":{
+    "EmailTemplate": "Szablon e-maila",
     "Storage": "Przechowywanie plików",
     "Folder": "Folder",
     "File": "Plik",
@@ -55,6 +56,7 @@
     "AuthFailLogRecord":"Rekord dziennika nieudanych autoryzacji"
 },
 "scopeNamesPlural":{
+    "EmailTemplate": "Szablony wiadomości",
     "Storage": "Przechowywanie plików",
     "Folder": "Foldery",
     "File": "Pliki",

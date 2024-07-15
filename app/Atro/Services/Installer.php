@@ -737,6 +737,8 @@ class Installer extends HasContainer
         \Atro\Migrations\V1Dot10Dot0::createDefaultStorage($this->getEntityManager()->getConnection());
         \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
 
+        \Atro\Migrations\V1Dot10Dot41::createNotificationEmailTemplates($this->getEntityManager()->getConnection(), $this->getConfig());
+
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate lists >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate measures >/dev/null");

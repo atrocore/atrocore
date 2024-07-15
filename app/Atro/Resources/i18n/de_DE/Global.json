@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EmailTemplate": "E-Mail-Vorlage",
     "Storage": "Dateiablage",
     "Folder": "Ordner",
     "File": "Datei",
@@ -44,6 +45,7 @@
     "PreviewTemplate": "Vorschau Vorlage"
   },
   "scopeNamesPlural": {
+    "EmailTemplate": "E-Mail-Vorlagen",
     "Storage": "Dateiablagen",
     "Folder": "Ordner",
     "File": "Dateien",

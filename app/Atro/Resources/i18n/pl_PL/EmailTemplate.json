@@ -7,6 +7,7 @@
     "emailCc": "Wyślij e-mail do CC"
   },
   "labels": {
-    "send": "Wysłać"
+    "send": "Wysłać",
+    "Create EmailTemplate": "Utwórz szablon e-maila"
   }
 }
