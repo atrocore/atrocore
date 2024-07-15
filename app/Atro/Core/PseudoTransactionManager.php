@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -69,11 +68,9 @@ class PseudoTransactionManager
         return $this->push($entityType, $entityId, 'deleteEntity', '', $parentId);
     }
 
-    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
+    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null, bool $duplicateForeign = false): string
     {
-        $key = $this->getServiceFactory()->create($entityType)->getCreateLinkDataKey($entityId, $link);
-        $data = $this->getMemoryStorage()->get($key);
-        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId, 'duplicate' => !empty($data['duplicate'])], JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId, 'duplicateForeign' => $duplicateForeign], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
@@ -85,6 +82,7 @@ class PseudoTransactionManager
     {
         return $this->push($entityType, '', $action, $this->prepareInputData($data), $parentId);
     }
+
 
     public function run(): void
     {
@@ -261,9 +259,11 @@ class PseudoTransactionManager
                 case 'linkEntity':
                     if (!$inputIsEmpty) {
                         $inputData = Json::decode($job['input_data']);
-                        $key = $service->getCreateLinkDataKey($job['entity_id'], $inputData->link);
-                        $this->getMemoryStorage()->set($key, ['duplicate' => !empty($inputData->duplicate)]);
-                        $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                        if(!empty($inputData->duplicateForeign)){
+                            $service->duplicateAndLinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                        }else{
+                            $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                        }
                     }
                     break;
                 case 'unlinkEntity':
@@ -329,10 +329,5 @@ class PseudoTransactionManager
     protected function getUser(): User
     {
         return $this->container->get('user');
-    }
-
-    public function getMemoryStorage(): StorageInterface
-    {
-        return $this->container->get('memoryStorage');
     }
 }

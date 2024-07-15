@@ -569,7 +569,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 dialog.render();
                 this.notify(false);
                 dialog.once('select', function (selectObj, duplicate = false) {
-                    var data = {duplicate};
+                    var data = {shouldDuplicateForeign: duplicate};
                     if (Object.prototype.toString.call(selectObj) === '[object Array]') {
                         var ids = [];
                         selectObj.forEach(function (model) {
@@ -607,7 +607,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 type: 'POST',
                 data: JSON.stringify(data),
                 success: function () {
-                    this.notify(data.duplicate ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
+                    this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                     this.updateRelationshipPanel(link);
                     this.model.trigger('after:relate', link);
                 }.bind(this),

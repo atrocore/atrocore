@@ -17,7 +17,6 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\PseudoTransactionManager;
 
 abstract class AbstractRecordController extends AbstractController
@@ -328,9 +327,7 @@ abstract class AbstractRecordController extends AbstractController
 
         $id = $params['id'];
         $link = $params['link'];
-        $key = $this->getRecordService()->getCreateLinkDataKey($id, $link);
-
-        $this->getMemoryStorage()->set($key, ['duplicate' => !empty($data->duplicate)]);
+        $shouldDuplicateForeign = !empty($data->shouldDuplicateForeign);
 
         if (!empty($data->massRelate)) {
             if (!is_array($data->where)) {
@@ -342,9 +339,12 @@ abstract class AbstractRecordController extends AbstractController
             if (isset($data->selectData) && is_array($data->selectData)) {
                 $selectData = json_decode(json_encode($data->selectData), true);
             }
-
-             $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
-             $this->getRecordService()->handleLinkEntitiesErrors($id, $link);
+             if($shouldDuplicateForeign){
+                 $this->getRecordService()->duplicateAndLinkEntityMass($id, $link, $where, $selectData);
+             }else{
+                 $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
+             }
+             $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
              return true;
         } else {
             $foreignIdList = array();
@@ -359,12 +359,14 @@ abstract class AbstractRecordController extends AbstractController
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
-                    $result = true;
+                if($shouldDuplicateForeign){
+                    $result = $this->getRecordService()->duplicateAndLinkEntity($id, $link, $foreignId);
+                }else{
+                    $result = $this->getRecordService()->linkEntity($id, $link, $foreignId);
                 }
             }
             if ($result) {
-                $this->getRecordService()->handleLinkEntitiesErrors($id, $link);
+                $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
                 return  true;
             }
         }
@@ -603,8 +605,4 @@ abstract class AbstractRecordController extends AbstractController
         return $this->getContainer()->get('pseudoTransactionManager');
     }
 
-    public function getMemoryStorage(): StorageInterface
-    {
-        return $this->getContainer()->get('memoryStorage');
-    }
 }
