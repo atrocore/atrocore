@@ -70,10 +70,13 @@ export const Language = {
 
     translateOption(value: string, field: string, scope: null | string = null): string {
         let translation = Language.translate(field, 'options', scope);
-        if (typeof translation != 'object') {
-            translation = {};
+
+        if (translation === null){
+            return '';
+        }else if (typeof translation === 'object') {
+            return translation[value];
         }
 
-        return translation[value] || value;
+        return value;
     },
 };
