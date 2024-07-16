@@ -4,6 +4,7 @@
 
     import {Language} from '../../utils/Language';
     import {UserData} from '../../utils/UserData';
+    import {Notifier} from '../../utils/Notifier';
 
     let qmPaused = false;
     window.addEventListener('publicDataFetched', (event: CustomEvent): void => {
@@ -16,37 +17,27 @@
             return;
         }
 
-        console.log('stop', pause);
-        const url = '/api/v1/App/action/QueueManagerUpdate';
-        const data = {
-            pause: pause
-        };
-
         try {
-            const response = await fetch(url, {
+            const response = await fetch('/api/v1/App/action/QueueManagerUpdate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({pause: pause})
             });
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
 
-            const result = await response.json();
-            console.log('Success:', result);
+            await response.json();
+
+            Notifier.notify('Done', 'success');
         } catch (error) {
             console.error('Error:', error);
         }
-
-        // NavbarView.ajaxPostRequest('App/action/QueueManagerUpdate', {pause: true}).then(() => {
-        //     NavbarView.notify('Done', 'success');
-        // });
     }
-
 </script>
 
 {#if isOpen}
