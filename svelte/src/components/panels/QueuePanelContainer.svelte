@@ -1,7 +1,8 @@
 <script lang="ts">
     export let isOpen = false;
     export let close: any;
-    export let Language: any;
+
+    import { Language } from '../../utils/Language';
 
     let qmPaused = false;
     window.addEventListener('publicDataFetched', (event: CustomEvent): void => {

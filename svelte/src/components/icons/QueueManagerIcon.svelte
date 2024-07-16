@@ -1,7 +1,6 @@
 <script lang="ts">
     import QueuePanelContainer from "../panels/QueuePanelContainer.svelte";
 
-    export let Language: any;
     export let renderTable;
 
     let isPanelOpen = false;
@@ -23,4 +22,4 @@
     <span class="fas fa-tasks"></span>
     <span class="fas fa-pause-circle pause-icon hidden"></span>
 </a>
-<QueuePanelContainer isOpen={isPanelOpen} close={closePanel} {Language} />
+<QueuePanelContainer isOpen={isPanelOpen} close={closePanel} />
