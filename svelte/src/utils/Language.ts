@@ -11,7 +11,7 @@ export const Language = {
     has(name: string, category: string, scope: string): boolean {
         let res = false;
 
-        data.subscribe((current) => {
+        data.subscribe((current: any) => {
             if (scope in current) {
                 if (category in current[scope]) {
                     if (name in current[scope][category]) {
@@ -25,10 +25,10 @@ export const Language = {
         return res;
     },
 
-    get(scope: string, category: string, name: string): string | null {
-        let translatedText: string = name;
+    get(scope: string, category: string, name: string): string | null | object {
+        let translatedText: any = name;
 
-        data.subscribe((current) => {
+        data.subscribe((current: any) => {
             if (scope in current) {
                 if (category in current[scope]) {
                     if (name in current[scope][category]) {
@@ -57,10 +57,10 @@ export const Language = {
         return translatedText;
     },
 
-    translate(name: string, category: null | string = null, scope: null | string = null): string | object {
+    translate(name: string, category: null | string = null, scope: null | string = null): string | null | object {
         scope = scope || 'Global';
         category = category || 'labels';
-        var res = Language.get(scope, category, name);
+        let res = Language.get(scope, category, name);
         if (res === null && scope != 'Global') {
             res = Language.get('Global', category, name);
         }
