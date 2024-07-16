@@ -40,7 +40,7 @@ class V1Dot10Dot41 extends Base
         $table->addColumn('subject', 'text', ['notnull' => false]);
         $table->addColumn('body', 'text', ['notnull' => false]);
         foreach ($this->getConfig()->get('locales', []) as $locale) {
-            if ($locale['language'] === $this->getConfig()->get('language')) {
+            if ($locale['language'] === 'en_US') {
                 continue;
             }
             $locale = strtolower($locale['language']);

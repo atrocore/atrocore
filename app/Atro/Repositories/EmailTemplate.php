@@ -32,7 +32,7 @@ class EmailTemplate extends Base
         $subject = $emailTemplate->get('subject');
         $body = $emailTemplate->get('body');
 
-        if (!empty($language) && $language !== $this->getConfig()->get('language')) {
+        if (!empty($language) && $language !== 'en_US') {
             $suffix = ucfirst(Util::toCamelCase(strtolower($language)));
             $field = 'subject' . $suffix;
             if (!empty($emailTemplate->get($field))) {

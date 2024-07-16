@@ -113,7 +113,7 @@ class LayoutController extends AbstractListener
             $newRows[] = $row;
             if (in_array($row[0]['name'], ['subject', 'body'])) {
                 foreach ($this->getConfig()->get('locales') as $locale) {
-                    if ($locale['language'] === $this->getConfig()->get('language')) {
+                    if ($locale['language'] === 'en_US') {
                         continue;
                     }
                     $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));

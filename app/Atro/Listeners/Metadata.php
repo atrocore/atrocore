@@ -93,7 +93,7 @@ class Metadata extends AbstractListener
     public function prepareEmailTemplateMultilangFields(array &$data): void
     {
         foreach ($this->getConfig()->get('locales') as $locale) {
-            if ($locale['language'] === $this->getConfig()->get('language')) {
+            if ($locale['language'] === 'en_US') {
                 continue;
             }
             $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
