@@ -57,4 +57,7 @@
     .qp-view-list {
         margin-left: 5px
     }
+    .close{
+        margin-left: 10px;
+    }
 </style>
