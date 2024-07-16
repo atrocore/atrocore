@@ -467,8 +467,8 @@
     "emailReceivedInitialFrom": "Correo recibido de {from}, se ha creado: {entityType} {entityType}",
     "emailReceived": "El correo {email} ha sido recibido para el {entityType} {entity}",
     "emailReceivedInitial": "Correo recibido, se ha creado: {entityType} {entityType}",
-    "emailSent": "{by} ha enviado un correo relacionado a: {entityType} {entity}",
-    "emailSentThis": "{by} ha enviado un correo",
+    "emailSent": "{user} correo electrónico enviado exitosamente con el asunto '{subject}' para '{emailTo}' en '{createdAt}', relacionado con {entityType} {entity}",
+    "emailSentThis": "{user} correo electrónico enviado exitosamente con el asunto '{subject}' para '{emailTo}' en '{createdAt}'",
     "postTargetSelf": "{user} se ha enviado un mensaje a sí mismo",
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí mismo",
     "composerUpdateThis": "{user}"
