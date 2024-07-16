@@ -292,11 +292,49 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         initProgressBadge() {
             if (this.getAcl().check('QueueItem', 'read')) {
+
+                window.addEventListener('qmPanelClosed', () => {
+                    if (this.qmInterval) {
+                        window.clearInterval(this.qmInterval);
+                        console.log('closed!')
+                    }
+                });
+
                 new Svelte.QueueManagerIcon({
                     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
                     props: {
                         Language: this.getLanguage(),
-                        NavbarView: this
+                        renderTable: () => {
+                            this.getCollectionFactory().create('QueueItem', collection => {
+                                collection.maxSize = 20;
+                                collection.url = 'QueueItem';
+                                collection.sortBy = 'sortOrder';
+                                collection.asc = true;
+                                collection.where = [
+                                    {
+                                        field: 'status',
+                                        type: 'in',
+                                        value: ['Running', 'Pending']
+                                    }
+                                ];
+                                this.listenToOnce(collection, 'sync', () => {
+                                    this.createView('list', 'views/record/list', {
+                                        el: this.options.el + ' .list-container',
+                                        collection: collection,
+                                        rowActionsDisabled: true,
+                                        checkboxes: false,
+                                        headerDisabled: true,
+                                        layoutName: 'listInQueueManager'
+                                    }, view => {
+                                        view.render();
+                                        this.qmInterval = window.setInterval(() => {
+                                            collection.fetch();
+                                        }, 2000)
+                                    });
+                                });
+                                collection.fetch();
+                            });
+                        }
                     }
                 });
 
