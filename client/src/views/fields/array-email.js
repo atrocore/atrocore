@@ -33,7 +33,6 @@
 Espo.define('views/fields/array-email', 'views/fields/array', function (Dep) {
 
     return Dep.extend({
-        type: 'arrayEmail',
         addValue: function (value) {
             const result = !(String(value).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/));
             if (result) {
