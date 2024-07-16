@@ -4,10 +4,8 @@
     export let Language: any;
 
     let qmPaused = false;
-    window.addEventListener('publicDataFetched', event => {
-        if (event.detail) {
-            qmPaused = !!(event.detail.qmPaused);
-        }
+    window.addEventListener('publicDataFetched', (event: CustomEvent): void => {
+        qmPaused = !!(event.detail.qmPaused);
     });
 
     function startQm(event: any): void {

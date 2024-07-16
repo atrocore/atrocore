@@ -4,8 +4,6 @@
     export let Language: any;
     export let renderTable;
 
-    let interval: any;
-
     let isPanelOpen = false;
 
     function openPanel(event: any): void {
