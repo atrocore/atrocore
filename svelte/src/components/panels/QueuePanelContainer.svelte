@@ -1,7 +1,9 @@
 <script lang="ts">
     export let isOpen = false;
     export let close: any;
+    export let icon: any;
 
+    import {onMount, onDestroy} from 'svelte';
     import {Language} from '../../utils/Language';
     import {UserData} from '../../utils/UserData';
     import {Notifier} from '../../utils/Notifier';
@@ -9,6 +11,22 @@
     let qmPaused = false;
     window.addEventListener('publicDataFetched', (event: CustomEvent): void => {
         qmPaused = !!(event.detail.qmPaused);
+    });
+
+    let panel;
+
+    function handleClickOutside(event) {
+        if (panel && !panel.contains(event.target) && icon && !icon.contains(event.target) && isOpen === true) {
+            close();
+        }
+    }
+
+    onMount(() => {
+        document.addEventListener('click', handleClickOutside);
+    });
+
+    onDestroy(() => {
+        document.removeEventListener('click', handleClickOutside);
     });
 
     async function startStopQm(pause: boolean): void {
@@ -41,12 +59,12 @@
 </script>
 
 {#if isOpen}
-    <div class="queue-panel-container">
+    <div bind:this={panel} class="queue-panel-container">
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <span class="panel-heading-title">{Language.translate('queueManager', 'labels', 'QueueItem')}</span>
                 <span class="pull-right">
-                    <a href="/" class="close" on:click={close}><span aria-hidden="true">×</span></a>
+                    <a href="/" class="close" on:click={event=>{event.preventDefault();close();}}><span aria-hidden="true">×</span></a>
                     {#if qmPaused}
                     <a href="/" title="{Language.translate('Start')}" class="qm-button"
                        on:click={event=>{event.preventDefault();startStopQm(false);}}>{Language.translate('Start')}</a>
