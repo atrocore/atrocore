@@ -600,6 +600,7 @@ Espo.define(
             $.ajax({
                 url: 'App/user',
             }).done(function (data) {
+                window.SvelteUserData.set(data);
                 callback(data);
             }.bind(this));
         },

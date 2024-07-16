@@ -3,6 +3,7 @@
     export let close: any;
 
     import {Language} from '../../utils/Language';
+    import {UserData} from '../../utils/UserData';
 
     let qmPaused = false;
     window.addEventListener('publicDataFetched', (event: CustomEvent): void => {
@@ -10,20 +11,23 @@
     });
 
     async function startStopQm(pause: boolean): void {
+        let userData = UserData.get();
+        if (!userData) {
+            return;
+        }
+
         console.log('stop', pause);
         const url = '/api/v1/App/action/QueueManagerUpdate';
         const data = {
             pause: pause
         };
 
-        // 'Authorization-Token': Base64.encode(userName + ':' + data.token)
-
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization-Token': 'YWRtaW46ZDg4MGVjOWY1MWY3YTEwYzc1MTA0ZDcxNjgzN2JkNDc='
+                    'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
                 },
                 body: JSON.stringify(data)
             });
