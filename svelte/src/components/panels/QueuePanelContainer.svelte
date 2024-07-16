@@ -2,31 +2,45 @@
     export let isOpen = false;
     export let close: any;
 
-    import { Language } from '../../utils/Language';
+    import {Language} from '../../utils/Language';
 
     let qmPaused = false;
     window.addEventListener('publicDataFetched', (event: CustomEvent): void => {
         qmPaused = !!(event.detail.qmPaused);
     });
 
-    function startQm(event: any): void {
-        event.preventDefault();
+    async function startStopQm(pause: boolean): void {
+        console.log('stop', pause);
+        const url = '/api/v1/App/action/QueueManagerUpdate';
+        const data = {
+            pause: pause
+        };
 
-        // NavbarView.ajaxPostRequest('App/action/QueueManagerUpdate', {pause: false}).then(() => {
-        //     NavbarView.notify('Done', 'success');
-        // });
+        // 'Authorization-Token': Base64.encode(userName + ':' + data.token)
 
-        console.log('start')
-    }
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization-Token': 'YWRtaW46ZDg4MGVjOWY1MWY3YTEwYzc1MTA0ZDcxNjgzN2JkNDc='
+                },
+                body: JSON.stringify(data)
+            });
 
-    function stopQm(event: any): void {
-        event.preventDefault();
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            console.log('Success:', result);
+        } catch (error) {
+            console.error('Error:', error);
+        }
 
         // NavbarView.ajaxPostRequest('App/action/QueueManagerUpdate', {pause: true}).then(() => {
         //     NavbarView.notify('Done', 'success');
         // });
-
-        console.log('stop')
     }
 
 </script>
@@ -39,11 +53,14 @@
                 <span class="pull-right">
                     <a href="/" class="close" on:click={close}><span aria-hidden="true">×</span></a>
                     {#if qmPaused}
-                    <a href="/" title="{Language.translate('Start')}" class="qm-button" on:click={startQm}>{Language.translate('Start')}</a>
+                    <a href="/" title="{Language.translate('Start')}" class="qm-button"
+                       on:click={event=>{event.preventDefault();startStopQm(false);}}>{Language.translate('Start')}</a>
                     {:else}
-                    <a href="/" title="{Language.translate('Pause')}" class="qm-button" on:click={stopQm}>{Language.translate('Pause')}</a>
+                    <a href="/" title="{Language.translate('Pause')}" class="qm-button"
+                       on:click={event=>{event.preventDefault();startStopQm(true);}}>{Language.translate('Pause')}</a>
                     {/if}
-                    <a href="#QueueItem" title="{Language.translate('View List')}" class="qp-view-list">{Language.translate('View List')}</a>
+                    <a href="#QueueItem" title="{Language.translate('View List')}"
+                       class="qp-view-list">{Language.translate('View List')}</a>
                </span>
             </div>
             <div class="panel-body">
@@ -57,7 +74,8 @@
     .qp-view-list {
         margin-left: 5px
     }
-    .close{
+
+    .close {
         margin-left: 10px;
     }
 </style>
