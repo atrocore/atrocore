@@ -14,10 +14,10 @@
       "type": "text"
     },
     "emailTo": {
-      "type": "array"
+      "type": "arrayEmail"
     },
     "emailCc": {
-      "type": "array"
+      "type": "arrayEmail"
     },
     "subject": {
       "type": "text",
