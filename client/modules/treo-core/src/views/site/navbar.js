@@ -328,7 +328,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 window.addEventListener('qmPanelClosed', () => {
                     if (this.qmInterval) {
                         window.clearInterval(this.qmInterval);
-                        console.log('closed!')
                     }
                 });
 
