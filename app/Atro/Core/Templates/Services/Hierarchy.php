@@ -533,14 +533,7 @@ class Hierarchy extends Record
          * Delegate to Update if OneToMany relation
          */
         if (!empty($linkData = $this->getOneToManyRelationData($link))) {
-            $data = new \stdClass();
-            $data->{"{$linkData['foreign']}Id"} = $id;
-            try {
-                $this->getServiceFactory()->create($linkData['entity'])->updateEntity($foreignId, $data);
-            } catch (NotModified $e) {
-                // ignore
-            }
-
+            $this->handleLinkOneToManyRelation($id, $link, $foreignId, $linkData);
             return true;
         }
 

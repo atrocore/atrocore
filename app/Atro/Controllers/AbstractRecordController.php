@@ -327,6 +327,7 @@ abstract class AbstractRecordController extends AbstractController
 
         $id = $params['id'];
         $link = $params['link'];
+        $shouldDuplicateForeign = !empty($data->shouldDuplicateForeign);
 
         if (!empty($data->massRelate)) {
             if (!is_array($data->where)) {
@@ -338,8 +339,13 @@ abstract class AbstractRecordController extends AbstractController
             if (isset($data->selectData) && is_array($data->selectData)) {
                 $selectData = json_decode(json_encode($data->selectData), true);
             }
-
-            return $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
+             if($shouldDuplicateForeign){
+                 $this->getRecordService()->duplicateAndLinkEntityMass($id, $link, $where, $selectData);
+             }else{
+                 $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
+             }
+             $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
+             return true;
         } else {
             $foreignIdList = array();
             if (isset($data->id)) {
@@ -353,12 +359,15 @@ abstract class AbstractRecordController extends AbstractController
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
-                    $result = true;
+                if($shouldDuplicateForeign){
+                    $result = $this->getRecordService()->duplicateAndLinkEntity($id, $link, $foreignId);
+                }else{
+                    $result = $this->getRecordService()->linkEntity($id, $link, $foreignId);
                 }
             }
             if ($result) {
-                return true;
+                $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
+                return  true;
             }
         }
 
@@ -595,4 +604,5 @@ abstract class AbstractRecordController extends AbstractController
     {
         return $this->getContainer()->get('pseudoTransactionManager');
     }
+
 }

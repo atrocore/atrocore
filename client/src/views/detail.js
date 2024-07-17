@@ -503,12 +503,17 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }
             var scope = this.model.defs['links'][link].entity;
             var foreign = this.model.defs['links'][link].foreign;
+            let type = this.model.defs['links'][link].type;
 
             var massRelateEnabled = this.getMetadata().get('clientDefs.' + this.scope + '.relationshipPanels.' + link + '.massRelateEnabled')
+            let selectDuplicateEnabled = false;
             if (massRelateEnabled === null && foreign) {
                 var foreignType = this.getMetadata().get('entityDefs.' + scope + '.links.' + foreign + '.type');
                 if (foreignType == 'hasMany') {
                     massRelateEnabled = true;
+                }
+                if(type === 'hasMany' && foreignType === 'belongsTo'){
+                    selectDuplicateEnabled = true;
                 }
             }
 
@@ -550,21 +555,21 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
-
             this.notify('Loading...');
             this.createView('dialog', viewName, {
                 scope: scope,
-                multiple: this.model.defs['links'][link].type !== 'belongsTo',
+                multiple: type !== 'belongsTo',
                 createButton: false,
                 filters: filters,
                 massRelateEnabled: massRelateEnabled,
                 primaryFilterName: primaryFilterName,
-                boolFilterList: boolFilterList
+                boolFilterList: boolFilterList,
+                selectDuplicateEnabled: selectDuplicateEnabled
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
-                dialog.once('select', function (selectObj) {
-                    var data = {};
+                dialog.once('select', function (selectObj, duplicate = false) {
+                    var data = {shouldDuplicateForeign: duplicate};
                     if (Object.prototype.toString.call(selectObj) === '[object Array]') {
                         var ids = [];
                         selectObj.forEach(function (model) {
@@ -602,11 +607,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 type: 'POST',
                 data: JSON.stringify(data),
                 success: function () {
-                    this.notify('Linked', 'success');
+                    this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                     this.updateRelationshipPanel(link);
                     this.model.trigger('after:relate', link);
                 }.bind(this),
                 error: function () {
+                    this.updateRelationshipPanel(link);
+                    this.model.trigger('after:relate', link);
                     this.notify('Error occurred', 'error');
                 }.bind(this)
             });

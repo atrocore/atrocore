@@ -105,9 +105,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             this.boolFilterList = this.options.boolFilterList || [];
             this.primaryFilterName = this.options.primaryFilterName || null;
             this.scope = this.entityType = this.options.scope || this.scope;
+            this.selectDuplicateEnabled = !!this.options.selectDuplicateEnabled
 
             if ('multiple' in this.options) {
                 this.multiple = this.options.multiple;
+
             }
 
             if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true) {
@@ -129,6 +131,19 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 }
             ];
 
+            if(this.selectDuplicateEnabled){
+                this.buttonList.unshift({
+                    name: 'selectDuplicate',
+                    style: 'primary',
+                    label: 'Select and Duplicate',
+                    disabled: true,
+                    onClick: function (dialog) {
+                        this.handleOnSelect(true);
+                        dialog.close();
+                    }.bind(this),
+                });
+            }
+
             if (this.multiple) {
                 this.buttonList.unshift({
                     name: 'select',
@@ -136,27 +151,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     label: 'Select',
                     disabled: true,
                     onClick: function (dialog) {
-                        if (this.getSelectedViewType() === 'tree') {
-                            let ids = [];
-                            this.selectedItems.forEach(id => {
-                                ids.push({id: id, name: this.selectedItemsNames[id]});
-                            });
-                            this.trigger('select', ids);
-                        } else {
-                            let listView = this.getView('list');
-                            if (listView.allResultIsChecked) {
-                                var where = this.collection.where;
-                                this.trigger('select', {
-                                    massRelate: true,
-                                    where: where
-                                });
-                            } else {
-                                var list = listView.getSelected();
-                                if (list.length) {
-                                    this.trigger('select', list);
-                                }
-                            }
-                        }
+                        this.handleOnSelect();
                         dialog.close();
                     }.bind(this),
                 });
@@ -325,12 +320,15 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     this.listenTo(view, 'check', function () {
                         if (view.checkedList.length) {
                             this.enableButton('select');
+                            this.enableButton('selectDuplicate');
                         } else {
                             this.disableButton('select');
+                            this.disableButton('selectDuplicate');
                         }
                     }, this);
                     this.listenTo(view, 'select-all-results', function () {
                         this.enableButton('select');
+                        this.enableButton('selectDuplicate');
                     }, this);
                 }
 
@@ -635,8 +633,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
                     if (this.selectedItems.length) {
                         this.enableButton('select');
+                        this.enableButton('selectDuplicate');
                     } else {
                         this.disableButton('select');
+                        this.disableButton('selectDuplicate');
                     }
                 } else {
                     this.getModelFactory().create(this.scope, model => {
@@ -693,6 +693,29 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 }.bind(this));
             });
         },
+        handleOnSelect(duplicate = false){
+            if (this.getSelectedViewType() === 'tree') {
+                let ids = [];
+                this.selectedItems.forEach(id => {
+                    ids.push({id: id, name: this.selectedItemsNames[id]});
+                });
+                this.trigger('select', ids, duplicate);
+            } else {
+                let listView = this.getView('list');
+                if (listView.allResultIsChecked) {
+                    var where = this.collection.where;
+                    this.trigger('select', {
+                        massRelate: true,
+                        where: where
+                    }, duplicate);
+                } else {
+                    var list = listView.getSelected();
+                    if (list.length) {
+                        this.trigger('select', list, duplicate);
+                    }
+                }
+            }
+        }
     });
 });
 
