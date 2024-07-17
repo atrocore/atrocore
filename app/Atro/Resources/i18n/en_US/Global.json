@@ -1086,10 +1086,10 @@
     "someCouldNotDuplicatedAndLinked": "Some records could not be duplicated and linked",
     "someCouldNotLinked": "Some records could not be linked",
     "massUpdateNoRecordProceed": "No record was updated.",
-    "massRemoveNoRecordProceed": "No record was removed.",
+    "massDeleteNoRecordProceed": "No record was removed.",
     "massRestoreNoRecordProceed": "No record was restored.",
     "massUpdateSomeRecordNotProceed": "Some record(s) could not be successfully updated.",
-    "massRemoveSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
+    "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored."
   },
   "themes": {

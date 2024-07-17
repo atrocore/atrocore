@@ -1021,10 +1021,10 @@
     "someCouldNotDuplicatedAndLinked": "Деякі записи неможливо було продублювати та прив'язати",
     "someCouldNotLinked": "Деякі записи не вдалося пов'язати",
     "massUpdateNoRecordProceed": "Ніякий запис не був оновлений",
-    "massRemoveNoRecordProceed": "Жоден запис не був видалений.",
+    "massDeleteNoRecordProceed": "Жоден запис не був видалений.",
     "massRestoreNoRecordProceed": "Жоден запис не був відновлений.",
     "massUpdateSomeRecordNotProceed": "Деякі записи не були оновлені.",
-    "massRemoveSomeRecordNotProceed": "Деякі записи не були видалені.",
+    "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
     "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити."
 
   },
