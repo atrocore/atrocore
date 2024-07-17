@@ -604,6 +604,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     data: JSON.stringify(data)
                 }).done(function (result) {
                     this.notify(false)
+                    if (result.sync) {
+                        if (result.errors && result.errors.length > 0) {
+                            Espo.ui.error(result.errors.join('<br>'));
+                        } else {
+                            Espo.ui.success(this.translate('Done'))
+                        }
+                    }
                     this.collection.fetch();
                 }.bind(this));
             }, this);
@@ -808,10 +815,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:update', function () {
+                view.once('after:update', function (result) {
                     view.close();
                     this.listenToOnce(this.collection, 'sync', function () {
-                        Espo.Ui.success(this.translate('Done'));
+                        if (result.sync) {
+                            if (result.errors && result.errors.length > 0) {
+                                Espo.Ui.error(result.errors.join('<br>'));
+                            } else {
+                                Espo.Ui.success(this.translate('Done'));
+                            }
+                        }
                         if (allResultIsChecked) {
                             this.selectAllResult();
                         } else {
@@ -1238,7 +1251,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let el = this.$el;
             el.on('show.bs.dropdown', function (e) {
                 let target = e.relatedTarget;
-                if($(target).hasClass('actions-button')){
+                if ($(target).hasClass('actions-button')) {
                     return;
                 }
                 let menu = $(target).siblings('.dropdown-menu');
@@ -1251,7 +1264,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         menu.css({
                             'position': 'fixed',
                             'top': `${positionTop}px`,
-                            'right':  `${rightOffset}px`
+                            'right': `${rightOffset}px`
                         });
                     }
                 }
@@ -1504,7 +1517,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                                     if (a) {
                                         let width = list.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                        a.css('left',  width);
+                                        a.css('left', width);
                                     }
                                 });
                             }
@@ -2528,11 +2541,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.getModelFactory().create(data.scope, function (model) {
                 model.id = data.id;
                 this.listenToOnce(model, 'sync', function () {
-                    this.createView('quickCompareDialog','views/modals/compare',{
+                    this.createView('quickCompareDialog', 'views/modals/compare', {
                         "model": model,
                         "scope": data.scope,
-                        "mode":"details",
-                    }, function(dialog){
+                        "mode": "details",
+                    }, function (dialog) {
                         dialog.render();
                         this.notify(false)
                     })
