@@ -66,7 +66,7 @@ class File extends Base
         return $this->getEntityManager()->getRepository($this->entityType)->getPathsData($this);
     }
 
-    public function findOrCreateLocalFilePath($tmpDir): string
+    public function findOrCreateLocalFilePath(string $tmpDir): string
     {
         $storage = $this->getStorage();
         if (empty($storage)) {

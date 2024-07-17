@@ -166,6 +166,7 @@ class Sender
         if (!empty($emailData['attachments'])) {
             $attachments = $this->entityManager->getRepository('File')->where(['id' => $emailData['attachments']])->find();
             $tmpDir = $this->getAttachmentTmpDirectory();
+            Util::createDir($tmpDir);
             /* @var $attachment File */
             foreach ($attachments as $attachment) {
                 $email->attachFromPath($attachment->findOrCreateLocalFilePath($tmpDir), $attachment->get('name'), $attachment->get('mimeType'));

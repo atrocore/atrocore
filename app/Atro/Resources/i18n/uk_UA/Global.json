@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EmailTemplate": "Шаблон електронної пошти",
     "Storage": "Сховище",
     "Folder": "Папка",
     "File": "Файл",
@@ -56,6 +57,7 @@
     "PreviewTemplate": "Шаблон перегляду"
   },
   "scopeNamesPlural": {
+    "EmailTemplate": "Шаблони електронної пошти",
     "Storage": "Сховища",
     "Folder": "Папки",
     "File": "Файли",
@@ -584,8 +586,8 @@
     "emailReceivedInitialFrom": "Отримано ел. лист від {from}, {entityType} {entity} створено",
     "emailReceived": "Отримано ел. лист, що відноситься до {entityType} {entity}",
     "emailReceivedInitial": "Отримано ел. лист: {entityType} {entity} створено",
-    "emailSent": "{by} відправив ел. лист, що належить до {entityType} {entity}",
-    "emailSentThis": "{by} відправив ел. лист",
+    "emailSent": "{user} успішно надіслав листа з темою '{subject}' на адресу '{emailTo}' в '{createdAt}', пов'язані з {entityType} {entity}",
+    "emailSentThis": "{user} успішно надіслав листа з темою '{subject}' на адресу '{emailTo}' в '{createdAt}'",
     "postTargetSelf": "{user} залишив повідомлення у себе на стрічці",
     "postTargetSelfAndOthers": "{user} залишив повідомлення для {target} і для себе",
     "composerUpdateThis": "{user}",

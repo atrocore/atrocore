@@ -100,4 +100,34 @@ class LayoutController extends AbstractListener
 
         $event->setArgument('result', Json::encode($result));
     }
+
+    protected function modifyEmailTemplateDetail(Event $event): void
+    {
+        if ($this->getContainer()->get('layout')->isCustom('EmailTemplate', $event->getArgument('params')['name'])) {
+            return;
+        }
+
+        $result = Json::decode($event->getArgument('result'), true);
+        $newRows = [];
+        foreach ($result[0]['rows'] as $row) {
+            $newRows[] = $row;
+            if (in_array($row[0]['name'], ['subject', 'body'])) {
+                foreach ($this->getConfig()->get('locales') as $locale) {
+                    if ($locale['language'] === 'en_US') {
+                        continue;
+                    }
+                    $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
+                    $newRows[] = [['name' => $row[0]['name'] . $preparedLocale, 'fullWidth' => true]];
+                }
+            }
+        }
+        $result[0]['rows'] = $newRows;
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyEmailTemplateDetailSmall(Event $event): void
+    {
+        $this->modifyEmailTemplateDetail($event);
+    }
 }

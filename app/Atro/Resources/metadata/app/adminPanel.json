@@ -48,6 +48,11 @@
         "description": "notifications"
       },
       {
+        "url": "#EmailTemplate",
+        "label": "emailTemplates",
+        "description": "emailTemplates"
+      },
+      {
         "url": "#Admin/clearCache",
         "label": "Clear Cache",
         "description": "clearCache"
