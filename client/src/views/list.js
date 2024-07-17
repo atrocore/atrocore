@@ -92,7 +92,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.searchPanel = false;
             }
 
-            if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])) {
+            if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled']) || this.getMetadata().get(['scopes', this.scope, 'disabled'])) {
                 this.createButton = false;
             }
 

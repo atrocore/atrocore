@@ -1401,10 +1401,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (!this.editModeDisabled) {
                 if ('editModeDisabled' in this.options) {
                     this.editModeDisabled = this.options.editModeDisabled;
+                } else if (this.getMetadata().get(['scopes', this.model.name, 'disabled'])) {
+                    this.editModeDisabled = true
                 }
             }
 
-            this.buttonsDisabled = this.options.buttonsDisabled || this.buttonsDisabled;
+            this.buttonsDisabled = this.options.buttonsDisabled || this.buttonsDisabled || this.getMetadata().get(['scopes', this.model.name, 'disabled']);
 
             // for backward compatibility
             // TODO remove in 5.6.0
@@ -1430,7 +1432,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.readOnlyLocked = this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
 
-            this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled']) || false;
+            this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled'])
+                || this.getMetadata().get(['scopes', this.model.name, 'disabled']) || false;
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
 

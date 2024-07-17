@@ -867,6 +867,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
+            if (this.getMetadata().get(['scopes', this.getModelScope(), 'disabled'])) {
+                this.checkboxes = false;
+            }
+
             if (!this.getAcl().checkScope(this.entityType, 'delete')) {
                 this.removeMassAction('remove');
                 this.removeMassAction('merge');
@@ -2070,9 +2074,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);
 
+                const entityDisabled = this.getMetadata().get(['scopes', model.name, 'disabled'])
                 var acl = {
-                    edit: this.getAcl().checkModel(model, 'edit'),
-                    delete: this.getAcl().checkModel(model, 'delete'),
+                    edit: entityDisabled ? false : this.getAcl().checkModel(model, 'edit'),
+                    delete: entityDisabled ? false : this.getAcl().checkModel(model, 'delete'),
                     unlink: this.options.canUnlink
                 };
 
