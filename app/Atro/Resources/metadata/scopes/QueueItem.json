@@ -12,5 +12,6 @@
   "hasAssignedUser": true,
   "hasTeam": true,
   "hasOwner": true,
-  "quickCreateListDisabled": true
+  "quickCreateListDisabled": true,
+  "streamDisabled": true
 }

@@ -533,14 +533,7 @@ class Hierarchy extends Record
          * Delegate to Update if OneToMany relation
          */
         if (!empty($linkData = $this->getOneToManyRelationData($link))) {
-            $data = new \stdClass();
-            $data->{"{$linkData['foreign']}Id"} = $id;
-            try {
-                $this->getServiceFactory()->create($linkData['entity'])->updateEntity($foreignId, $data);
-            } catch (NotModified $e) {
-                // ignore
-            }
-
+            $this->handleLinkOneToManyRelation($id, $link, $foreignId, $linkData);
             return true;
         }
 
@@ -669,7 +662,7 @@ class Hierarchy extends Record
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
-            if (property_exists($data, 'parentId')) {
+            if (property_exists($data, 'parentId') && empty($data->parentsIds)) {
                 if (empty($data->parentId)) {
                     $data->parentsIds = [];
                     $data->parentsNames = new \stdClass();
@@ -694,7 +687,7 @@ class Hierarchy extends Record
             return;
         }
 
-        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'])) && empty($entity->get('parentId'))) {
             $entity->set('parentId', $entity->get('parentsIds')[0] ?? null);
             if (!empty($entity->get('parentId'))) {
                 $entity->set('parentName', $entity->get('parentsNames')->{$entity->get('parentId')} ?? null);

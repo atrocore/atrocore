@@ -65,7 +65,8 @@
        "Contacts":"Kontakty",
        "Addresses":"Adresy",
        "Currency":"Waluta",
-       "lists": "Listy"
+       "lists": "Listy",
+       "emailTemplates": "Szablony wiadomości"
     },
     "layouts":{
        "relationships":"Panele relacji",
@@ -160,8 +161,6 @@
        "seeMoreDisabled":"Wyłącz skracanie wyświetlanego tekstu",
        "entityList":"Lista jednostek",
        "isSorted":"Posortowane (alfabetycznie)",
-       "audited":"Śledź zmiany",
-       "auditedLink":"Śledź zmiany",
        "trim":"Usuń wiodące i końcowe spacje",
        "height":"Wysokość (px)",
        "minHeight":"Minimalna wysokość (px)",
@@ -235,7 +234,8 @@
        "contacts":"Zarządzaj kontaktami",
        "addresses":"Zarządzaj adresami",
        "currency":"Skonfiguruj używane waluty",
-       "lists": "Zarządzaj listami i ich opcjami dla list prostych lub wielowartościowych."
+       "lists": "Zarządzaj listami i ich opcjami dla list prostych lub wielowartościowych.",
+       "emailTemplates": "Zarządzaj szablonami e-maili"
     },
     "options":{
        "previewSize":{

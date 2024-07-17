@@ -14,7 +14,8 @@
         "oauth2",
         "oauth1",
         "otto",
-        "cookie"
+        "cookie",
+        "smtp"
       ],
       "options": [
         "atrocore",
@@ -26,7 +27,8 @@
         "oauth2",
         "oauth1",
         "otto",
-        "cookie"
+        "cookie",
+        "smtp"
       ],
       "default": "atrocore"
     },
@@ -260,37 +262,6 @@
       "trim": true,
       "default": "https://staging.davidsonsinc.com/rest/V1/products/011418204"
     },
-    "openAiOrganizationId": {
-      "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
-      "required": false,
-      "trim": true
-    },
-    "openAiApiKey": {
-      "type": "password",
-      "notStorable": true,
-      "dataField": true,
-      "required": false,
-      "trim": true
-    },
-    "openAiModel": {
-      "type": "varchar",
-      "notStorable": true,
-      "dataField": true,
-      "required": false,
-      "trim": true,
-      "default": "gpt-3.5-turbo"
-    },
-    "openAiTemperature": {
-      "type": "float",
-      "min": 0,
-      "max": 1,
-      "notStorable": true,
-      "dataField": true,
-      "required": false,
-      "default": 0.7
-    },
     "data": {
       "type": "jsonObject",
       "layoutDetailDisabled": true,
@@ -324,6 +295,50 @@
     },
     "additionalParameters": {
       "type": "text",
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpSecurity": {
+      "type": "enum",
+      "options": [
+        "SSL",
+        "TLS"
+      ],
+      "optionsIds": [
+        "SSL",
+        "TLS"
+      ],
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpServer": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpPassword": {
+      "type": "password",
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpPort": {
+      "type": "int",
+      "notStorable": true,
+      "dataField": true,
+      "view": "views/connection/fields/smtp-port"
+    },
+    "smtpUsername": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true
+    },
+    "outboundEmailFromName": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true
+    },
+    "outboundEmailFromAddress": {
+      "type": "varchar",
       "notStorable": true,
       "dataField": true
     }

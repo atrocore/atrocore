@@ -192,7 +192,7 @@ class V1Dot10Dot0 extends Base
                         ->setValue('color', ':color')
                         ->setParameter('id', $id)
                         ->setParameter('name', $meta['fields']['tags']['options'][$k] ?? $id)
-                        ->setParameter('color', isset($meta['fields']['tags']['optionColors'][$k]) ? '#' . rtrim($meta['fields']['tags']['optionColors'][$k], '#') : null);
+                        ->setParameter('color', isset($meta['fields']['tags']['optionColors'][$k]) ? '#' . ltrim($meta['fields']['tags']['optionColors'][$k], '#') : null);
                     try {
                         $qb->executeQuery();
                     } catch (\Throwable $e) {
@@ -271,6 +271,7 @@ class V1Dot10Dot0 extends Base
                 ->setValue('thumbnails_path', ':thumbnailsPath')
                 ->setValue('storage_id', ':storageId')
                 ->setValue('type_id', ':typeId')
+                ->setValue('tags', ':tags')
                 ->setValue('created_at', ':createdAt')
                 ->setValue('modified_at', ':modifiedAt')
                 ->setValue('created_by_id', ':createdById')
@@ -287,6 +288,7 @@ class V1Dot10Dot0 extends Base
                 ->setParameter('thumbnailsPath', $v['storage_thumb_path'])
                 ->setParameter('storageId', 'a_base')
                 ->setParameter('typeId', $typeId)
+                ->setParameter('tags', $v['tags'])
                 ->setParameter('createdAt', $v['created_at'])
                 ->setParameter('modifiedAt', $v['modified_at'] ?? null)
                 ->setParameter('createdById', $v['created_by_id'])
@@ -406,13 +408,16 @@ class V1Dot10Dot0 extends Base
 
                                 foreach ($res as $v) {
                                     if (!empty($v['file_id'])) {
-                                        $this->getConnection()->createQueryBuilder()
-                                            ->update($this->getConnection()->quoteIdentifier($table))
-                                            ->set('file_id', ':fileId')
-                                            ->where('id=:id')
-                                            ->setParameter('id', $v['id'])
-                                            ->setParameter('fileId', $v['file_id'])
-                                            ->executeQuery();
+                                        try {
+                                            $this->getConnection()->createQueryBuilder()
+                                                ->update($this->getConnection()->quoteIdentifier($table))
+                                                ->set('file_id', ':fileId')
+                                                ->where('id=:id')
+                                                ->setParameter('id', $v['id'])
+                                                ->setParameter('fileId', $v['file_id'])
+                                                ->executeQuery();
+                                        } catch (\Throwable $e) {
+                                        }
                                     }
                                 }
 

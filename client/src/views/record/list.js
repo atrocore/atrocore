@@ -982,7 +982,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     return;
                 }
 
-                if (!options.keepSelected) {
+                if (!options || !options.keepSelected) {
                     this.checkedList = [];
                     this.allResultIsChecked = false;
                 }
@@ -1193,7 +1193,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         isHierarchical() {
-
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
                 && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
         },
@@ -1445,6 +1444,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         fullTableScroll() {
+
             let list = this.$el.find('.list');
             if (list.length) {
                 let fixedTableHeader = list.find('.fixed-header-table');
@@ -1485,7 +1485,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     if ($(window).outerWidth() > 768 && rowsButtons.length) {
                         rowsButtons.addClass('fixed-button');
                         rowsButtons.each(function () {
-                            $(this).css('left', list.width() - $(this).width() - 5)
+                            let a = $(this).find('.list-row-buttons');
+
+                            if (a) {
+                                let width = -1 * (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
+                                a.css('left', width);
+                            }
                         });
                     }
 
@@ -1499,7 +1504,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                             if ($(window).outerWidth() > 768 && rowsButtons.hasClass('fixed-button')) {
                                 rowsButtons.each(function () {
-                                    $(this).css('left', list.scrollLeft() + list.width() - $(this).width() - 5)
+                                    let a = $(this).find('.list-row-buttons');
+
+                                    if (a) {
+                                        let width = list.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
+                                        a.css('left',  width);
+                                    }
                                 });
                             }
                         }
@@ -1515,7 +1525,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             scroll.css({width: list.width(), display: 'block'});
                             scroll.find('div').css('width', fullTable.width());
                             rowsButtons.each(function () {
-                                $(this).css('left', scroll.scrollLeft() + list.width() - $(this).width() - 5)
+                                let a = $(this).find('.list-row-buttons');
+
+                                if (a) {
+                                    let width = scroll.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
+                                    a.css('left', width);
+                                }
                             });
 
                             this.listenTo(this.collection, 'sync', function () {
@@ -1527,7 +1542,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             scroll.on('scroll', () => {
                                 fullTable.css('left', -1 * scroll.scrollLeft());
                                 rowsButtons.each(function () {
-                                    $(this).css('left', scroll.scrollLeft() + list.width() - $(this).width() - 5)
+                                    let a = $(this).find('.list-row-buttons');
+
+                                    if (a) {
+                                        let width = scroll.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
+                                        a.css('left', width);
+                                    }
                                 });
                             });
 
@@ -2491,6 +2511,39 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
                 this.reRender();
             }
-        }
+        },
+
+        actionQuickCompare: function (data) {
+            data = data || {}
+            var id = data.id;
+            if (!id) return;
+            var model = null;
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+            if (!data.scope && !model) {
+                return;
+            }
+            if (!this.getAcl().check(data.scope, 'read')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+            this.notify('Loading...');
+
+            this.getModelFactory().create(data.scope, function (model) {
+                model.id = data.id;
+                this.listenToOnce(model, 'sync', function () {
+                    this.createView('quickCompareDialog','views/modals/compare',{
+                        "model": model,
+                        "scope": data.scope,
+                        "mode":"details",
+                    }, function(dialog){
+                        dialog.render();
+                        this.notify(false)
+                    })
+                }, this);
+                model.fetch({main: true});
+            }, this);
+        },
     });
 });

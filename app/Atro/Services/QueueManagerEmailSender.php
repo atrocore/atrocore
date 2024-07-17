@@ -24,9 +24,14 @@ class QueueManagerEmailSender extends QueueManagerBase
     {
         $emailData = !empty($data['emailData']) ? $data['emailData'] : [];
         $params = !empty($data['params']) ? $data['params'] : [];
+        $connectionEntity = $this->getEntityManager()->getEntity('Connection', $data['connectionId']);
+
+        if (empty($connectionEntity)) {
+            throw new \Exception("Connection entity not found : " . $data['connectionId']);
+        }
 
         try {
-            $this->getContainer()->get('mailSender')->send($emailData, $params);
+            $this->getContainer()->get('mailSender')->send($emailData, $connectionEntity, $params);
         } catch (\Throwable $e) {
             $GLOBALS['log']->error('MailSender: [' . $e->getCode() . '] ' . $e->getMessage());
         }

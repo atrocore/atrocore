@@ -42,8 +42,7 @@
           "massUpdateDisabled": true,
           "filterDisabled": true,
           "exportDisabled": true,
-          "importDisabled": false,
-          "tooltip": true
+          "importDisabled": false
         },
         "passwordConfirm": {
           "type": "password",
@@ -57,8 +56,7 @@
           "filterDisabled": true,
           "exportDisabled": true,
           "importDisabled": false,
-          "notStorable": true,
-          "tooltip": true
+          "notStorable": true
         },
         "firstName": {
             "type": "varchar",
@@ -211,6 +209,16 @@
             "massUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "directAccessDisabled": true
+        },
+        "passwordUpdatedAt": {
+            "type": "datetime",
+            "readOnly": true,
+            "view": "views/user/fields/password-updated-at"
+        },
+        "passwordUpdatedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
         }
     },
     "links": {
@@ -232,6 +240,10 @@
             "layoutRelationshipsDisabled": true
         },
         "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "passwordUpdatedBy": {
             "type": "belongsTo",
             "entity": "User"
         },

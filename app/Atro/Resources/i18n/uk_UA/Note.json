@@ -2,16 +2,9 @@
   "fields": {
     "post": "Розмістити",
     "attachments": "Вкладення",
-    "targetType": "Ціль",
-    "teams": "Групи",
-    "users": "Користувачі",
     "type": "Тип",
-    "isGlobal": "Глобальний",
-    "isInternal": "Внутрішній (для внутрішніх користувачів)",
-    "related": "Пов'язаний",
     "createdByGender": "Створено за статтю",
-    "data": "Дані",
-    "number": "Номер"
+    "data": "Дані"
   },
   "filters": {
     "all": "Усі",
@@ -19,21 +12,11 @@
     "updates": "Оновлення"
   },
   "options": {
-    "targetType": {
-      "self": "Собі",
-      "users": "Певному користувачеві або користувачам",
-      "teams": "Певній групі або групам",
-      "all": "Усім користувачам"
-    },
     "type": {
       "Post": "Розмістити"
     }
   },
   "messages": {
     "writeMessage": "Напишіть Ваше повідомлення тут"
-  },
-  "links": {
-    "superParent": "Super Parent",
-    "related": "Пов'язаний"
   }
 }

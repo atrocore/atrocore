@@ -5,17 +5,26 @@
     "host": "Хост",
     "port": "Порт",
     "user": "Користувач",
-    "password": "Пароль"
+    "password": "Пароль",
+    "smtpServer": "Сервер",
+    "smtpPort": "Порт",
+    "smtpSecurity": "Безпека",
+    "smtpUsername": "Ім'я користувача",
+    "smtpPassword": "Пароль",
+    "outboundEmailFromName": "Ім'я відправника",
+    "outboundEmailFromAddress": "Адреса відправника"
   },
   "labels": {
     "connectionSuccess": "З'єднання успішно встановлено",
     "testConnection": "Перевірити з'єднання",
-    "Create Connection": "Створити з'єднання"
+    "sendTestEmail": "Надіслати тестовий електронний лист",
+    "Create Connection": "Створити з'єднання",
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не встановлено.",
     "connectionFailed": "З'єднання не встановлено: %s",
     "noSuchType": "Тип з'єднання не підтримується.",
-    "chatgptShouldBeUnique": "Має бути лише одне підключення chatgpt"
+    "notificationConnectionCannotBeDeleted": "Це з’єднання використовується для сповіщень електронною поштою та не може бути видалено"
   }
 }

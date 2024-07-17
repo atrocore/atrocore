@@ -54,7 +54,8 @@
     "Accounts": "Cuenta",
     "Contacts": "Contactos",
     "Addresses": "Direcciones",
-    "lists": "Listas"
+    "lists": "Listas",
+    "emailTemplates": "Plantillas de correo electrónico"
   },
   "layouts": {
     "list": "Lista",
@@ -129,8 +130,6 @@
     "defaultType": "Tipo por defecto",
     "entityList": "Lista de entidades",
     "isSorted": "¿Se debe ordenar?",
-    "audited": "Cambio de camino",
-    "auditedLink": "Cambio de camino",
     "trim": "Eliminar los espacios en blanco iniciales y finales",
     "height": "Altura (px)",
     "minHeight": "Altura mínima (px)",
@@ -195,7 +194,8 @@
     "accounts": "Cuentas de administración",
     "contacts": "Gestionar contactos",
     "addresses": "Administrar direcciones",
-    "lists": "Gestione sus listas y sus opciones para listas simples o multivalor."
+    "lists": "Gestione sus listas y sus opciones para listas simples o multivalor.",
+    "emailTemplates": "Administrar plantillas de correo electrónico"
   },
   "options": {
     "previewSize": {

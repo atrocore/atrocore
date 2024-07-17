@@ -207,11 +207,24 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionDynamicAction: function (data) {
-            this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {
+            const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
+            if (defs && defs.type) {
+                const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, data);
+                    return
+                }
+            }
+
+            this.executeActionRequest({
                 actionId: data.id,
                 entityId: this.model.get('id')
-            }).success(response => {
+            })
+        },
+
+        executeActionRequest(payload, callback) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow', payload).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
@@ -225,12 +238,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             })
                             return;
                         }
+                        if (callback) {
+                            callback()
+                        }
                     } else {
                         this.notify(response.message, 'error');
                     }
                 }
                 this.model.fetch();
-            });
+            })
         },
 
         actionDelete: function () {
@@ -288,11 +304,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             var url = '#' + this.entityType + '/compare?id=' + this.model.get('id');
-            this.getRouter().navigate(url, {trigger: false});
-            this.getRouter().dispatch(this.entityType, 'compare', {
-                id: this.model.get('id'),
-                model: this.model
-            });
+            const baseUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+            window.open(baseUrl + '/' + url);
         },
 
         getSelfAssignAttributes: function () {
@@ -314,7 +327,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.getMetadata().get(['clientDefs', this.entityType, 'showCompareAction'])) {
-                if (this.getAcl().check(this.entityType, 'create') && this.mode !== 'edit') {
+                if (this.getAcl().check(this.entityType, 'read') && this.mode !== 'edit') {
                     let exists = false;
 
                     for (const item of (this.dropdownItemList || [])) {
@@ -325,7 +338,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     if (!exists) {
                         this.dropdownItemList.push({
-                            'label': 'Compare',
+                            'label': this.translate('Instance comparison'),
                             'name': 'compare',
                             'action': 'compare'
                         });
@@ -363,6 +376,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (dynamicAction.display === 'dropdown') {
                         this.dropdownItemList.push({
                             id: dynamicAction.id,
+                            type: dynamicAction.type,
                             label: dynamicAction.name,
                             name: "dynamicAction"
                         });
@@ -371,6 +385,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (dynamicAction.display === 'single') {
                         this.additionalButtons.push({
                             id: dynamicAction.id,
+                            type: dynamicAction.type,
                             label: dynamicAction.name,
                             action: "dynamicAction"
                         });
@@ -450,6 +465,52 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.createView(item, path, o, (view) => {
                             if (typeof view[dropDownItems[item].action] === 'function') {
                                 view[dropDownItems[item].action]();
+                            }
+                        });
+                    };
+                }
+            }, this);
+
+            additionalButtons = this.getMetadata().get(['clientDefs', this.scope, 'additionalButtons']) || {};
+
+            Object.keys(additionalButtons).forEach(item => {
+                const check = (additionalButtons[item].conditions || []).every(condition => {
+                    let check;
+                    switch (condition.type) {
+                        case 'type':
+                            check = this.type === condition.value;
+                            break;
+                        default:
+                            check = true;
+                            break;
+                    }
+                    return check;
+                });
+
+                if (check) {
+                    let button = {
+                        name: additionalButtons[item].name,
+                        label: additionalButtons[item].label,
+                        action: additionalButtons[item].name
+                    };
+
+                    this.additionalButtons.push(button);
+
+                    let method = 'action' + Espo.Utils.upperCaseFirst(additionalButtons[item].name);
+                    this[method] = function () {
+                        let path = additionalButtons[item].actionViewPath;
+
+                        let o = {button: additionalButtons[item]};
+
+                        (additionalButtons[item].optionsToPass || []).forEach((option) => {
+                            if (option in this) {
+                                o[option] = this[option];
+                            }
+                        });
+
+                        this.createView(item, path, o, (view) => {
+                            if (typeof view[additionalButtons[item].action] === 'function') {
+                                view[additionalButtons[item].action]();
                             }
                         });
                     };

@@ -1,3 +1,4 @@
 {
-  "notStorable": true
+  "notStorable": true,
+  "streamDisabled": true
 }

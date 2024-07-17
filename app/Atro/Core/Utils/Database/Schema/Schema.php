@@ -15,42 +15,28 @@ namespace Atro\Core\Utils\Database\Schema;
 
 use Atro\Core\Container;
 use Atro\Core\EventManager\Manager as EventManager;
-use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonArrayType;
-use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonObjectType;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Database\Orm\Converter as OrmConverter;
-use Espo\Core\Utils\Metadata;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\File\ClassParser;
 use Doctrine\DBAL\Schema\Schema as SchemaDBAL;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Comparator;
-use Doctrine\DBAL\Types\Type;
 
 class Schema
 {
     private EventManager $eventManager;
-    private Config $config;
-    private Metadata $metadata;
     private EntityManager $entityManager;
-    private ClassParser $classParser;
     private Connection $connection;
     private Converter $schemaConverter;
     private Comparator $comparator;
     private OrmConverter $ormConverter;
 
-    protected ?array $rebuildActionClasses = null;
-
     public function __construct(Container $container)
     {
         $this->eventManager = $container->get('eventManager');
-        $this->config = $container->get('config');
-        $this->metadata = $container->get('metadata');
         $this->entityManager = $container->get('entityManager');
-        $this->classParser = $container->get('classParser');
         $this->connection = $container->get('connection');
         $this->schemaConverter = $container->get(Converter::class);
         $this->comparator = new Comparator();
@@ -60,12 +46,6 @@ class Schema
 
     public function rebuild(): bool
     {
-        // init rebuild actions
-        $this->initRebuildActions();
-
-        // execute rebuild actions
-        $this->executeRebuildActions('beforeRebuild');
-
         // get queries
         $queries = $this->getDiffQueries(false);
 
@@ -81,15 +61,28 @@ class Schema
             }
         }
 
-        // execute rebuild action
-        $this->executeRebuildActions('afterRebuild');
+        $this->createSystemUser();
 
-        // after rebuild action
-        $result = $this->eventManager
+        return $this->eventManager
             ->dispatch('Schema', 'afterRebuild', new Event(['result' => (bool)$result, 'queries' => $queries]))
             ->getArgument('result');
+    }
 
-        return $result;
+    protected function createSystemUser(): bool
+    {
+        $entity = $this->entityManager->getEntity('User', 'system');
+        if (!isset($entity)) {
+            $entity = $this->entityManager->getEntity('User');
+            $entity->set([
+                'id'        => 'system',
+                'userName'  => 'system',
+                'firstName' => '',
+                'lastName'  => 'System',
+            ]);
+            $this->entityManager->saveEntity($entity);
+        }
+
+        return true;
     }
 
     public function getDiffQueries(bool $strictType = true): array
@@ -135,48 +128,5 @@ class Schema
     public function getOrmConverter(): OrmConverter
     {
         return $this->ormConverter;
-    }
-
-    protected function initRebuildActions(): void
-    {
-        $currentSchema = $this->getCurrentSchema();
-        $metadataSchema = $this->schemaConverter->createSchema();
-
-        $methods = array('beforeRebuild', 'afterRebuild');
-
-        $this->classParser->setAllowedMethods($methods);
-        $rebuildActions = $this->classParser->getData(['corePath' => VENDOR_PATH . '/atrocore-legacy/app/Espo/Core/Utils/Database/Schema/rebuildActions']);
-
-        $classes = array();
-        foreach ($rebuildActions as $actionName => $actionClass) {
-            $rebuildActionClass = new $actionClass($this->metadata, $this->config, $this->entityManager);
-            if (isset($currentSchema)) {
-                $rebuildActionClass->setCurrentSchema($currentSchema);
-            }
-            if (isset($metadataSchema)) {
-                $rebuildActionClass->setMetadataSchema($metadataSchema);
-            }
-
-            foreach ($methods as $methodName) {
-                if (method_exists($rebuildActionClass, $methodName)) {
-                    $classes[$methodName][] = $rebuildActionClass;
-                }
-            }
-        }
-
-        $this->rebuildActionClasses = $classes;
-    }
-
-    protected function executeRebuildActions($action = 'beforeRebuild'): void
-    {
-        if (!isset($this->rebuildActionClasses)) {
-            $this->initRebuildActions();
-        }
-
-        if (isset($this->rebuildActionClasses[$action])) {
-            foreach ($this->rebuildActionClasses[$action] as $rebuildActionClass) {
-                $rebuildActionClass->$action();
-            }
-        }
     }
 }

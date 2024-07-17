@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EmailTemplate": "Email Template",
     "Storage": "Storage",
     "Folder": "Folder",
     "File": "File",
@@ -51,9 +52,11 @@
     "Global": "Global",
     "Preferences": "Preferences",
     "AuthLogRecord": "Auth Log Record",
-    "AuthFailLogRecord": "Auth Fail Log Record"
+    "AuthFailLogRecord": "Auth Fail Log Record",
+    "PreviewTemplate": "Preview Template"
   },
   "scopeNamesPlural": {
+    "EmailTemplate": "Email Templates",
     "Storage": "Storages",
     "Folder": "Folders",
     "File": "Files",
@@ -90,10 +93,12 @@
     "PasswordChangeRequest": "Password Change Requests",
     "ActionHistoryRecord": "Action History",
     "AuthToken": "Auth Tokens",
-    "LastViewed": "Last Viewed"
+    "LastViewed": "Last Viewed",
+    "PreviewTemplate": "Preview Templates"
   },
   "descriptions": {
-    "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
+    "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications.",
+    "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
     "Reupload": "Reupload",
@@ -317,7 +322,10 @@
     "Apply filter": "Apply filter",
     "Reset filter": "Reset filter",
     "Dashboard": "Dashboard",
-    "Provide Feedback": "Provide Feedback"
+    "Provide Feedback": "Provide Feedback",
+    "Instance comparison": "Instance comparison",
+    "previewTemplate": "Preview Templates",
+    "Duplicate and Select": "Duplicate and Select"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
@@ -409,7 +417,8 @@
     "massRestoreZeroResult": "Nothing got restore",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
-    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
+    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
+    "duplicatedAndLinked": "Records were successfully duplicated and linked."
   },
   "boolFilters": {
     "onlyActive": "Active",
@@ -567,25 +576,6 @@
     "mentionYouInPostTargetNoTarget": "{user} mentioned you in post",
     "create": "{user} created {entityType} {entity}",
     "createThis": "{user} created this {entityType}",
-    "createAssignedThis": "{user} created this {entityType} assigned to {assignee}",
-    "createAssigned": "{user} created {entityType} {entity} assigned to {assignee}",
-    "createAssignedYou": "{user} created {entityType} {entity} assigned to you",
-    "createAssignedThisSelf": "{user} created this {entityType} self-assigned",
-    "createAssignedSelf": "{user} created {entityType} {entity} self-assigned",
-    "own": "{user} set {owner} as an owner for {entityType} {entity}",
-    "ownThis": "{user} set {owner} as an owner for this {entityType}",
-    "ownYou": "{user} set you as an owner for {entityType} {entity}",
-    "ownThisVoid": "{user} unset the owner for this {entityType}",
-    "ownVoid": "{user} unset the owner for {entityType} {entity}",
-    "ownThisSelf": "{user} set himself as an owner for this {entityType}",
-    "ownSelf": "{user} set himself as an owner for {entityType} {entity}",
-    "assign": "{user} assigned {entityType} {entity} to {assignee}",
-    "assignThis": "{user} assigned this {entityType} to {assignee}",
-    "assignYou": "{user} assigned {entityType} {entity} to you",
-    "assignThisVoid": "{user} unassigned this {entityType}",
-    "assignVoid": "{user} unassigned {entityType} {entity}",
-    "assignThisSelf": "{user} self-assigned this {entityType}",
-    "assignSelf": "{user} self-assigned {entityType} {entity}",
     "postThis": "{user} posted",
     "attachThis": "{user} attached",
     "statusThis": "{user} updated {field}",
@@ -603,8 +593,8 @@
     "emailReceived": "Email received related to {entityType} {entity}",
     "emailReceivedInitial": "Email received: {entityType} {entity} created",
     "emailReceivedInitialFrom": "Email received from {from}, {entityType} {entity} created",
-    "emailSent": "{by} sent email related to {entityType} {entity}",
-    "emailSentThis": "{by} sent email",
+    "emailSent": "{user} successfully sent e-mail with the subject '{subject}' to '{emailTo}' on '{createdAt}', related to {entityType} {entity}",
+    "emailSentThis": "{user} successfully sent e-mail with the subject '{subject}' to '{emailTo}' on '{createdAt}'",
     "unrelate": "{user} unlinked {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
     "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} with this {entityType}",
     "updateOneThis": "{user} in this {entityType} updated",
@@ -1092,7 +1082,9 @@
     "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
     "notUniqueValue": "The record cannot be created/updated due to database constraints.",
     "fieldDoesNotExist": "Field \"{field}\" does not exist on the entity \"{entityType}\".",
-    "optionIsDisabled": "Item '%s' is disabled for field '%s'."
+    "optionIsDisabled": "Item '%s' is disabled for field '%s'.",
+    "someCouldNotDuplicatedAndLinked": "Some records could not be duplicated and linked",
+    "someCouldNotLinked": "Some records could not be linked"
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

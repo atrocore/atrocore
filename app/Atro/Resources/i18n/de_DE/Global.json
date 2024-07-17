@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EmailTemplate": "E-Mail-Vorlage",
     "Storage": "Dateiablage",
     "Folder": "Ordner",
     "File": "Datei",
@@ -40,9 +41,11 @@
     "DashletOptions": "Dashlet Optionen",
     "Preferences": "Benutzereinstellungen",
     "AuthLogRecord": "Auth Log-Datensatz",
-    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
+    "PreviewTemplate": "Vorschau Vorlage"
   },
   "scopeNamesPlural": {
+    "EmailTemplate": "E-Mail-Vorlagen",
     "Storage": "Dateiablagen",
     "Folder": "Ordner",
     "File": "Dateien",
@@ -76,10 +79,12 @@
     "PasswordChangeRequest": "Anforderungen zur Passwortänderung",
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
-    "AuthFailLogRecord": "Auth-Fehlerprotokoll"
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll",
+    "PreviewTemplate": "Vorschau Vorlagen"
   },
   "descriptions": {
-    "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
+    "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde.",
+    "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
     "Reupload": "Neu hochladen",
@@ -298,7 +303,10 @@
     "Apply filter": "Filter anwenden",
     "Reset filter": "Filter zurücksetzen",
     "Dashboard": "Dashboard",
-    "Provide Feedback": "Feedback geben"
+    "Provide Feedback": "Feedback geben",
+    "Instance comparison": "Instanzvergleich",
+    "previewTemplate": "Vorschau Vorlage",
+    "Duplicate and Select": "Duplizieren und Auswählen"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -390,7 +398,8 @@
     "fieldShouldBeGreater": "{field} muss größer als {value} sein",
     "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
     "clearAclCacheError": "Cache von Zugriffskontrollliste konnte nicht geleert werden.",
-    "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist."
+    "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist.",
+    "duplicatedAndLinked": "Die Datensätze wurden erfolgreich dupliziert und verknüpft."
   },
   "unit Length": {
     "mm": "mm",
@@ -596,27 +605,10 @@
     "emailReceivedInitialFrom": "E-Mail empfangen von {from}, {entityType} {entity} wurde erstellt",
     "emailReceived": "E-Mail empfangen verbunden mit {entityType} {entity}",
     "emailReceivedInitial": "E-Mail empfangen: {entityType} {entity} wurde erstellt",
-    "emailSent": "{by} hat eine E-Mail verbunden mit {entityType} {entity} gesendet",
-    "emailSentThis": "{by} hat eine E-Mail gesendet",
+    "emailSent": "{user} hat erfolgreich eine E-Mail mit dem Betreff '{subject}' an '{emailTo}' am '{createdAt}' gesendet, bezüglich {entityType} {entity}",
+    "emailSentThis": "{user} hat erfolgreich eine E-Mail mit dem Betreff '{subject}' an '{emailTo}' am '{createdAt}' gesendet",
     "postTargetSelf": "{user} notierte für sich selbst",
     "postTargetSelfAndOthers": "{user} notierte für {target} und für sich selbst",
-    "createAssignedYou": "{user} wies Ihnen die {entityType} {entity} zu",
-    "createAssignedThisSelf": "{user} erstellte {entityType} als selbst zugewiesen",
-    "createAssignedSelf": "{user} erstellte {entityType} {entity} als selbst zugewiesen",
-    "own": "{user} setzte {owner} als Besitzer für {entityType} {entity}",
-    "ownThis": "{user} setzte {owner} als Besitzer für diese Entität {entityType}",
-    "ownYou": "{user} setzte Sie als Besitzer für {entityType} {entity}",
-    "ownThisVoid": "{user} entfernte den Besitzer für diese Entität {entityType}",
-    "ownVoid": "{user} entfernte den Besitzer für {entityType} {entity}",
-    "ownThisSelf": "{user} setzte sich als Besitzer für diese Entität {entityType}",
-    "ownSelf": "{user} setzte sich als Besitzer für {entityType} {entity}",
-    "assign": "{user} wies {entityType} {entity} an {assignee} zu",
-    "assignThis": "{user} wies {entityType} an {assignee} zu",
-    "assignYou": "{entityType} {entity} wurde Ihnen zugewiesen",
-    "assignThisVoid": "{user} löste die Zuweisung diese(r/n) {entityType} auf",
-    "assignVoid": "{user} löste die Zuweisung de(r/s) {entityType} {entity} auf",
-    "assignThisSelf": "{user} wies sich selbst {entityType} zu",
-    "assignSelf": "{user} wies sich {entityType} {entity} selbst zu",
     "unrelate": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
     "unrelateThis": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit diese(r/m) {entityType}",
     "updateOneThis": "{user} aktualisierte diese(s/n) {entityType}",
@@ -997,7 +989,9 @@
     "dontMatchToPattern": "ert des Feldes \"{field}\" entspricht nicht dem Pattern \"{pattern}\".",
     "notUniqueValue": "Der Datensatz kann aufgrund von Datenbankeinschränkungen nicht erstellt/aktualisiert werden.",
     "fieldDoesNotExist": "Das Feld \"{field}\" existiert nicht in der entität \"{entityType}\".",
-    "optionIsDisabled": "Das Element '%s' ist für das Feld '%s' deaktiviert."
+    "optionIsDisabled": "Das Element '%s' ist für das Feld '%s' deaktiviert.",
+    "someCouldNotDuplicatedAndLinked": "Einige Datensätze konnten nicht dupliziert und verknüpft werden",
+    "someCouldNotLinked": "Einige Datensätze konnten nicht verknüpft werden"
   },
   "queryBuilderFilter": {
     "add_rule": "neue Regel",

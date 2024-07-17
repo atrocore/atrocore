@@ -28,11 +28,14 @@
     "loginUrl": "URL logowania",
     "atrocoreUrl": "URL AtroCore",
     "atrocoreToken": "Token autoryzacyjny AtroCore",
-    "openAiOrganizationId": "ID organizacji OpenAI",
-    "openAiApiKey": "Klucz API OpenAI",
-    "openAiModel": "Model OpenAI",
-    "openAiTemperature": "Temperatura OpenAI",
-    "additionalParameters": "Dodatkowe parametry"
+    "additionalParameters": "Dodatkowe parametry",
+    "smtpServer": "Serwer SMTP",
+    "smtpPort": "Port SMTP",
+    "smtpSecurity": "Bezpieczeństwo SMTP",
+    "smtpUsername": "Nazwa użytkownika SMTP",
+    "smtpPassword": "Hasło SMTP",
+    "outboundEmailFromName": "Nazwa nadawcy",
+    "outboundEmailFromAddress": "Adres nadawcy"
   },
   "labels": {
     "connectionSuccess": "Połączenie zostało pomyślnie ustanowione",
@@ -56,12 +59,11 @@
     "receipts": "Paragony",
     "price-reduction": "Obniżka cen",
     "oauth1": "OAuth 1.0",
-    "chatgpt": "ChatGpt"
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "Rozszerzenie PHP MSSQL nie jest zainstalowane.",
     "connectionFailed": "Nie można nawiązać połączenia: %s",
-    "noSuchType": "Brak takiego typu połączenia.",
-    "chatgptShouldBeUnique": "Powinno być tylko jedno połączenie chatgpt"
+    "noSuchType": "Brak takiego typu połączenia."
   }
 }

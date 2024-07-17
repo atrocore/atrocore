@@ -12,14 +12,7 @@
     "useCache": "Cache nutzen",
     "companyLogo": "Header-Logo",
     "favicon": "Favicon",
-    "smtpAuth": "Authentifizierung",
-    "smtpSecurity": "Transportsicherheit",
-    "smtpUsername": "Benutzername",
-    "emailAddress": "E-Mail",
-    "smtpPassword": "Passwort",
-    "outboundEmailFromName": "Absendername",
-    "disableEmailDelivery": "E-Mail-Zustellung deaktivieren",
-    "outboundEmailFromAddress": "Absenderadresse",
+    "notificationSmtpConnection": "Verbindung für E-Mail Benachrichtigungenphp",
     "recordsPerPage": "Datensätze pro Seite",
     "recordsPerPageSmall": "Datensätze pro Seite (Klein)",
     "tabList": "Navigationsmenü",
@@ -77,7 +70,8 @@
     "information": "Information",
     "error": "Fehler",
     "customHeadCode": "Head Code",
-    "passwordRegexPattern": "Passwort Regex Pattern"
+    "passwordRegexPattern": "Passwort Regex Pattern",
+    "passwordExpireDays": "Gültigkeitsdauer des Passworts (in Tagen)"
   },
   "links": {
     "variables": "Variablen"
@@ -99,7 +93,8 @@
     "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert.",
     "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen.",
     "customHeadCode": "Fügen Sie den Code am Ende des <head>-Tags ein. Atrocore validiert benutzerdefinierten Code nicht für Sie, also überprüfen Sie Ihren Code vor der Veröffentlichung.",
-    "passwordRegexPattern": "Regeln für die Passwortkomplexität mit regulären Ausdrücken festlegen. \nTipp: Verwenden Sie Gruppen wie (?=.*\\d), um erforderliche Symbole zu definieren. \n\nFolgen Sie diesem <a href=\"{message_link}\" target=\"_blank\">Link</a>, um eine Validierungsfehlermeldung zu aktualisieren."
+    "passwordRegexPattern": "Regeln für die Passwortkomplexität mit regulären Ausdrücken festlegen. \nTipp: Verwenden Sie Gruppen wie (?=.*\\d), um erforderliche Symbole zu definieren. \n\nFolgen Sie diesem <a href=\"{message_link}\" target=\"_blank\">Link</a>, um eine Validierungsfehlermeldung zu aktualisieren.",
+    "passwordExpireDays": "Legen Sie den Zeitraum (in Tagen) fest, nach dem Benutzer ihr Kennwort aktualisieren müssen."
   },
   "labels": {
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",
@@ -109,6 +104,7 @@
     "notAllowByName": "Nicht zulassen, nach Dateinamen",
     "notAllowByContentAndName": "Nicht zulassen, nach Dateinamen + Dateiinhalt prüfen",
     "allow": "Zulassen",
+    "Security": "Sicherheit",
     "Locale": "Lokale Einstellungen",
     "Configuration": "Konfiguration",
     "In-app Notifications": "In-App Benachrichtigungen",

@@ -18,11 +18,6 @@
         "description": "authentication"
       },
       {
-        "url": "#Admin/outboundEmails",
-        "label": "Email",
-        "description": "outboundEmails"
-      },
-      {
         "url": "#ScheduledJob",
         "label": "Scheduled Jobs",
         "description": "scheduledJob"
@@ -51,6 +46,11 @@
         "url": "#Admin/notifications",
         "label": "Notifications",
         "description": "notifications"
+      },
+      {
+        "url": "#EmailTemplate",
+        "label": "emailTemplates",
+        "description": "emailTemplates"
       },
       {
         "url": "#Admin/clearCache",
@@ -177,5 +177,15 @@
       }
     ],
     "order": 40
+  },
+  "templates": {
+    "label": "Templates",
+    "itemList": [
+      {
+        "url": "#PreviewTemplate",
+        "label": "previewTemplate",
+        "description": "previewTemplate"
+      }
+    ]
   }
 }

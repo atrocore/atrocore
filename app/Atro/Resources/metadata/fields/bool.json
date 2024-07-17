@@ -15,15 +15,12 @@
          "view": "views/admin/field-manager/fields/bool/default"
       },
       {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
          "name":"readOnly",
          "type":"bool"
       }
    ],
    "filter": true,
+   "auditable": true,
    "qbFilterType": "boolean",
    "multilingual": true
 }

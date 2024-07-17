@@ -436,91 +436,6 @@
           ]
         }
       },
-      "openAiOrganizationId": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "chatgpt"
-              ]
-            }
-          ]
-        }
-      },
-      "openAiApiKey": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "chatgpt"
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "chatgpt"
-              ]
-            }
-          ]
-        }
-      },
-      "openAiModel": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "chatgpt"
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "chatgpt"
-              ]
-            }
-          ]
-        }
-      },
-      "openAiTemperature": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "chatgpt"
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "chatgpt"
-              ]
-            }
-          ]
-        }
-      },
       "additionalParameters": {
         "visible": {
           "conditionGroup": [
@@ -577,6 +492,163 @@
               "attribute": "type",
               "value": [
                 "atrocore"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpSecurity": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpServer": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpPassword": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpPort": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpUsername": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "outboundEmailFromAddress": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "outboundEmailFromName": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
               ]
             }
           ]

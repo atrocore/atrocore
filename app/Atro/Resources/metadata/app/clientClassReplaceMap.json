@@ -32,9 +32,6 @@
   "views/dashlets/options/base": [
     "treo-core"
   ],
-  "views/record/detail-bottom": [
-    "treo-core"
-  ],
   "views/record/row-actions/default": [
     "treo-core"
   ],

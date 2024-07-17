@@ -4,7 +4,6 @@
     "tab": true,
     "acl": true,
     "customizable": true,
-    "stream": true,
     "importable": true,
     "notifications": true,
     "object": true,

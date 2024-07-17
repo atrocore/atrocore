@@ -11,10 +11,14 @@
 
 namespace Atro\Core\Mail;
 
+use Atro\ConnectionType\ConnectionSmtp;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\QueueManager;
+use Atro\Entities\Connection;
+use Atro\Entities\File;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Transport;
@@ -36,31 +40,30 @@ class Sender
      */
     private $transport;
 
+    private ConnectionSmtp $connexion;
+
     /**
      * Sender constructor.
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, ConnectionSmtp $connexion)
     {
         $this->config = $container->get('config');
         $this->queueManager = $container->get('queueManager');
         $this->entityManager = $container->get('entityManager');
-
-        $factory = new EsmtpTransportFactory;
-
-        $scheme = in_array($this->config->get('smtpSecurity'), ['SSL', 'TLS']) ? ($this->config->get('smtpPort') === 465 ? 'smtps' : 'smtp') : '';
-        $this->transport = $factory->create(new Dsn(
-            $scheme,
-            $this->config->get('smtpServer') ?? '',
-            $this->config->get('smtpUsername') ?? null,
-            $this->config->get('smtpPassword') ?? null,
-            $this->config->get('smtpPort') ?? null,
-        ));
-
+        $this->connexion = $connexion;
     }
 
-    public function sendByJob(array $emailData, array $params = []): void
+    public function initializeTransport(Connection $connectionEntity): void
     {
-        $this->queueManager->push('Send email', 'QueueManagerEmailSender', ['emailData' => $emailData, 'params' => $params]);
+        $this->transport = $this->connexion->connect($connectionEntity);
+    }
+
+    public function sendByJob(array $emailData, ?string $connectionId = null, array $params = []): void
+    {
+        if (empty($connectionId)) {
+            $connectionId = $this->config->get('notificationSmtpConnectionId');
+        }
+        $this->queueManager->push('Send email', 'QueueManagerEmailSender', ['connectionId' => $connectionId, 'emailData' => $emailData, 'params' => $params]);
     }
 
     /**
@@ -69,18 +72,36 @@ class Sender
      *
      * @throws Error
      */
-    public function send(array $emailData, array $params = []): void
+    public function send(array $emailData, ?Connection $connectionEntity = null, array $params = []): void
     {
-        if($this->config->get('disableEmailDelivery') === true){
-            $GLOBALS['log']->alert('Outbound emails: Email delivery is deactivated.');
-            return;
+        if (!empty($params['isNotification'])) {
+            if ($this->config->get('disableEmailDelivery') === true) {
+                $GLOBALS['log']->alert('Notification Emails: Email delivery is deactivated.');
+                return;
+            }
         }
+
+        // default connection
+        if (empty($connectionEntity)) {
+            $id = $this->config->get('notificationSmtpConnectionId');
+            if (!empty($id)) {
+                $connectionEntity = $this->entityManager->getEntity('Connection', $id);
+            }
+            if (empty($connectionEntity)) {
+                throw new Error("Connection entity not found : " . $id);
+            }
+        }
+
+        if (empty($this->transport)) {
+            $this->initializeTransport($connectionEntity);
+        }
+
 
         if (empty($emailData['subject']) || empty($emailData['to'])) {
             throw new Error('Subject and emailTo is required.');
         }
 
-        $fromEmail = $this->config->get('outboundEmailFromAddress');
+        $fromEmail = $connectionEntity->get('outboundEmailFromAddress');
         if (!empty($emailData['from'])) {
             $fromEmail = $emailData['from'];
         }
@@ -91,7 +112,10 @@ class Sender
 
         $email = (new Email())->from($fromEmail);
 
-        $fromName = $this->config->get('outboundEmailFromName', $fromEmail);
+        $fromName = $connectionEntity->get('outboundEmailFromName');
+        if (empty($fromName)) {
+            $fromName = $fromEmail;
+        }
         if (array_key_exists('fromName', $emailData)) {
             $fromName = $emailData['fromName'];
         }
@@ -134,15 +158,18 @@ class Sender
         $bodyPlain = !empty($emailData['body']) ? $emailData['body'] : '';
 
         if (!empty($emailData['isHtml'])) {
-           $email->html($bodyPlain);
+            $email->html($bodyPlain);
         } else {
-           $email->text($this->prepareBodyPlain($bodyPlain));
+            $email->text($this->prepareBodyPlain($bodyPlain));
         }
 
         if (!empty($emailData['attachments'])) {
             $attachments = $this->entityManager->getRepository('File')->where(['id' => $emailData['attachments']])->find();
+            $tmpDir = $this->getAttachmentTmpDirectory();
+            Util::createDir($tmpDir);
+            /* @var $attachment File */
             foreach ($attachments as $attachment) {
-              $email->attachFromPath($attachment->getFilePath(), $attachment->get('name'), $attachment->get('mimeType'));
+                $email->attachFromPath($attachment->findOrCreateLocalFilePath($tmpDir), $attachment->get('name'), $attachment->get('mimeType'));
             }
         }
 
@@ -150,7 +177,16 @@ class Sender
             $this->transport->send($email, Envelope::create($email));
         } catch (\Exception $e) {
             throw new Error($e->getMessage(), 500);
+        } finally {
+            if (!empty($tmpDir)) {
+                Util::removeDir($tmpDir);
+            }
         }
+    }
+
+    public function getAttachmentTmpDirectory(): string
+    {
+        return \Atro\Services\MassDownload::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'mailSender' . DIRECTORY_SEPARATOR . Util::generateId();
     }
 
     protected function prepareBodyPlain(string $body): string

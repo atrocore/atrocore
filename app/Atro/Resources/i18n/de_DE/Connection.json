@@ -8,22 +8,25 @@
     "password": "Passwort",
     "payload": "Nutzlast",
     "loginUrl": "Anmelde-URL",
-    "openAiOrganizationId": "Organisations-ID",
-    "openAiApiKey": "API-Schlüssel",
-    "openAiModel": "Model",
-    "openAiTemperature": "Temperature"
+    "smtpAuth": "Authentifizierung",
+    "smtpSecurity": "Transportsicherheit",
+    "smtpUsername": "Benutzername",
+    "smtpPassword": "Passwort",
+    "outboundEmailFromName": "Absendername",
+    "outboundEmailFromAddress": "Absenderadresse"
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
     "testConnection": "Verbindung testen",
+    "sendTestEmail": "Test-E-Mail senden",
     "Create Connection": "Verbindung erstellen",
     "cookie": "Cookie-Sitzung",
-    "chatgpt": "ChatGpt"
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",
     "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
     "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden",
-    "chatgptShouldBeUnique": "Es sollte nur eine ChatGPT-Verbindung bestehen"
+    "notificationConnectionCannotBeDeleted": "Diese Verbindung wird für E-Mail-Benachrichtigungen verwendet und kann nicht gelöscht werden"
   }
 }

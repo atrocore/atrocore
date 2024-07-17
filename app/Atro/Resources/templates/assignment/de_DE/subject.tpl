@@ -1,1 +1,0 @@
-Ihnen zugewiesen: [{{{entityType}}}] {{{name}}}

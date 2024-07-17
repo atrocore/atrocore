@@ -96,6 +96,10 @@ Espo.define('views/user/password-change-request', 'view', function (Dep) {
             }
             this.$el.find('.btn-submit').addClass('disabled');
 
+            this.sendRequest(password);
+        },
+
+        sendRequest(password) {
             $.ajax({
                 type: 'POST',
                 url: 'User/changePasswordByRequest',
@@ -103,20 +107,23 @@ Espo.define('views/user/password-change-request', 'view', function (Dep) {
                     requestId: this.options.requestId,
                     password: password
                 }),
-                error: function () {
-                    this.$el.find('.btn-submit').removeClass('disabled');
-                }.bind(this)
-            }).done(function (data) {
-                this.$el.find('.password-change').remove();
+                error: this.onRequestError.bind(this)
+            }).done(this.onRequestDone.bind(this));
+        },
 
-                var url = data.url || this.getConfig().get('siteUrl');
+        onRequestError() {
+            this.$el.find('.btn-submit').removeClass('disabled');
+        },
 
-                var msg = this.translate('passwordChangedByRequest', 'messages', 'User');
-                msg += ' <a href="' + url + '">' + this.translate('Login', 'labels', 'User') + '</a>.';
+        onRequestDone(data) {
+            this.$el.find('.password-change').remove();
 
-                this.$el.find('.msg-box').removeClass('hidden').html('<span class="text-success">' + msg + '</span>');
-            }.bind(this));
+            var url = data.url || this.getConfig().get('siteUrl');
 
+            var msg = this.translate('passwordChangedByRequest', 'messages', 'User');
+            msg += ' <a href="' + url + '">' + this.translate('Login', 'labels', 'User') + '</a>.';
+
+            this.$el.find('.msg-box').removeClass('hidden').html('<span class="text-success">' + msg + '</span>');
         }
 
     });

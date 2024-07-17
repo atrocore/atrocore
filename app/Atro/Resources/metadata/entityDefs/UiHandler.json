@@ -65,7 +65,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "duplicateIgnore": true
     },
     "conditions": {
       "type": "wysiwyg",

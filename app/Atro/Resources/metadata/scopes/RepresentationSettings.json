@@ -1,4 +1,5 @@
 {
-    "entity": false,
-    "module": "TreoCore"
+  "entity": false,
+  "module": "TreoCore",
+  "streamDisabled": true
 }

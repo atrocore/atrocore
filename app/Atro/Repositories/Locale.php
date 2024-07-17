@@ -22,6 +22,7 @@ class Locale extends Base
     public function refreshCache(): void
     {
         $this->getInjection('dataManager')->clearCache();
+        $this->getInjection('dataManager')->rebuild();
     }
 
     protected function afterSave(Entity $entity, array $options = [])

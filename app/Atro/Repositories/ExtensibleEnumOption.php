@@ -49,13 +49,6 @@ class ExtensibleEnumOption extends Base
             }
 
             if (!isset($this->cachedOptions[$id])) {
-                $this->cachedOptions[$id] = [
-                    'id'                => $id,
-                    'name'              => $id,
-                    'preparedName'      => $id,
-                    'notExistingOption' => true
-                ];
-
                 // prepare select
                 $select = ['eeo.id', 'eeo.code', 'eeo.color', 'eeo.name', 'eeo.sort_order'];
                 foreach ($this->getLingualFields('name') as $lingualField) {
@@ -83,9 +76,14 @@ class ExtensibleEnumOption extends Base
                     $row = Util::arrayKeysToCamelCase($item);
                     $row['preparedName'] = !empty($row['multilingual']) ? $row[$this->getOptionName()] : $row['name'];
                     $this->cachedOptions[$row['id']] = $row;
+
+                    if ($id == $row['id']) {
+                        $res[] = $this->cachedOptions[$row['id']];
+                    }
                 }
+            } else {
+                $res[] = $this->cachedOptions[$id];
             }
-            $res[] = $this->cachedOptions[$id];
         }
 
         if (count($res) > 1) {
@@ -102,11 +100,13 @@ class ExtensibleEnumOption extends Base
             $entity->set('code', null);
         }
 
+        if ($entity->get('name') === null && $entity->get('code') !== null) {
+            $entity->set('name', $entity->get('code'));
+        }
 
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
             $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
-
 
         parent::beforeSave($entity, $options);
     }
@@ -154,7 +154,7 @@ class ExtensibleEnumOption extends Base
                 continue;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDef) {
-                foreach ($entity->get('extensibleEnums') as $extensibleEnum ) {
+                foreach ($entity->get('extensibleEnums') as $extensibleEnum) {
                     if (empty($fieldDef['notStorable']) && !empty($fieldDef['extensibleEnumId']) && $fieldDef['extensibleEnumId'] === $extensibleEnum->get('id')) {
                         $column = Util::toUnderScore($field);
 
@@ -206,7 +206,7 @@ class ExtensibleEnumOption extends Base
     protected function getOptionName(): string
     {
         $language = \Espo\Core\Services\Base::getLanguagePrism();
-        if(empty($language)){
+        if (empty($language)) {
             $language = $this->getInjection('container')
                 ->get('preferences')
                 ->get('language');

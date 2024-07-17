@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EmailTemplate": "Шаблон електронної пошти",
     "Storage": "Сховище",
     "Folder": "Папка",
     "File": "Файл",
@@ -52,9 +53,11 @@
     "Measure": "Міра",
     "Unit": "Одиниця виміру",
     "QueueItem": "Елемент черги",
-    "TreoStore": "Магазин"
+    "TreoStore": "Магазин",
+    "PreviewTemplate": "Шаблон перегляду"
   },
   "scopeNamesPlural": {
+    "EmailTemplate": "Шаблони електронної пошти",
     "Storage": "Сховища",
     "Folder": "Папки",
     "File": "Файли",
@@ -92,10 +95,14 @@
     "MeasuringUnit": "Одиниці виміру",
     "Note": "Примітки",
     "Notification": "Повідомлення",
-    "Preferences": "Налаштування"
+    "Preferences": "Налаштування",
+    "PreviewTemplate": "Шаблони перегляду",
+    "Duplicate and Select": "Зкопіювати і вибрати"
   },
   "descriptions": {
-    "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу."
+    "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу.",
+    "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
+
   },
   "labels": {
     "Reupload": "Перезавантажити",
@@ -316,7 +323,9 @@
     "Apply filter": "Застосувати фільтри",
     "Reset filter": "Скинути фільтри",
     "Dashboard": "Панелі віджетів",
-    "Provide Feedback": "Зворотній зв'язок"
+    "Provide Feedback": "Зворотній зв'язок",
+    "Instance comparison": "Порівняння інстансів",
+    "previewTemplate": "Шаблон для перегляду"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
@@ -407,7 +416,8 @@
     "massFollowResultSingle": "{count} запис зараз відстежується",
     "massUnfollowResultSingle": "{count} запис зараз не відстежується",
     "clearAclCacheError": "ACL кеш не може бути очищений.",
-    "emptyMultilangOptions": "Список опцій не може бути порожнім, доки активована багатомовна опція."
+    "emptyMultilangOptions": "Список опцій не може бути порожнім, доки активована багатомовна опція.",
+    "duplicatedAndLinked": "Записи були успішно продубльовані та пов'язані між собою."
   },
   "boolFilters": {
     "onlyActive": "Активні",
@@ -576,26 +586,11 @@
     "emailReceivedInitialFrom": "Отримано ел. лист від {from}, {entityType} {entity} створено",
     "emailReceived": "Отримано ел. лист, що відноситься до {entityType} {entity}",
     "emailReceivedInitial": "Отримано ел. лист: {entityType} {entity} створено",
-    "emailSent": "{by} відправив ел. лист, що належить до {entityType} {entity}",
-    "emailSentThis": "{by} відправив ел. лист",
+    "emailSent": "{user} успішно надіслав листа з темою '{subject}' на адресу '{emailTo}' в '{createdAt}', пов'язані з {entityType} {entity}",
+    "emailSentThis": "{user} успішно надіслав листа з темою '{subject}' на адресу '{emailTo}' в '{createdAt}'",
     "postTargetSelf": "{user} залишив повідомлення у себе на стрічці",
     "postTargetSelfAndOthers": "{user} залишив повідомлення для {target} і для себе",
-    "createAssignedYou": "{user} створив {entityType} {entity} Вам",
-    "createAssignedThisSelf": "{user} створив цей {entityType} self-assigned",
-    "createAssignedSelf": "{user} створив {entityType} {entity} self-assigned",
-    "assignYou": "{user} призначив {entityType} {entity} Вам",
-    "assignThisSelf": "{user} призначив {entityType} {entityType} на себе",
-    "assignSelf": "{user} призначив {entityType} {entity} на себе",
     "composerUpdateThis": "{user}",
-    "own": "{user} призначив {owner} власником для {entityType} {entity}",
-    "ownThis": "{user} призначив {owner} власником для {entityType}",
-    "ownYou": "{user} призначив Вас власником для {entityType} {entity}",
-    "ownThisVoid": "{user} скасував власника для {entityType}",
-    "ownVoid": "{user} скасував власника для {entityType} {entity}",
-    "ownThisSelf": "{user} призначив себе власником для {entityType}",
-    "ownSelf": "{user} призначив себе власником для{entityType} {entity}",
-    "assignThisVoid": "{user} не призначений {entityType}",
-    "assignVoid": "{user} не призначений {entityType} {entity}",
     "unrelate": "{user} відв'язав {relatedEntityType} {relatedEntity} від {entityType} {entity}",
     "unrelateThis": "{user} відв'язав {relatedEntityType} {relatedEntity} від цього {entityType}",
     "updateOneThis": "{user} оновив {entityType} {entity}",
@@ -1022,7 +1017,9 @@
     "dontMatchToPattern": "Значення поля \"{field}\" не відповідає патерну \"{pattern}\".",
     "notUniqueValue": "Запис неможливо створити/оновити через обмеження бази даних.",
     "fieldDoesNotExist": "Поле \"{field}\" не існує в сутності \"{entityType}\".",
-    "optionIsDisabled": "Елемент '%s' вимкнено для поля '%s'."
+    "optionIsDisabled": "Елемент '%s' вимкнено для поля '%s'.",
+    "someCouldNotDuplicatedAndLinked": "Деякі записи неможливо було продублювати та прив'язати",
+    "someCouldNotLinked": "Деякі записи не вдалося пов'язати"
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

@@ -1,6 +1,5 @@
 {
   "atrocore": "\\Atro\\ConnectionType\\ConnectionAtroCore",
-  "chatgpt": "\\Atro\\ConnectionType\\ConnectionChatgpt",
   "mysql": "\\Atro\\ConnectionType\\ConnectionMysql",
   "psql": "\\Atro\\ConnectionType\\ConnectionPsql",
   "msql": "\\Atro\\ConnectionType\\ConnectionMsql",
@@ -9,5 +8,6 @@
   "oauth2": "\\Atro\\ConnectionType\\ConnectionOauth2",
   "oauth1": "\\Atro\\ConnectionType\\ConnectionOauth1",
   "otto": "\\Atro\\ConnectionType\\ConnectionOtto",
-  "cookie": "\\Atro\\ConnectionType\\ConnectionCookie"
+  "cookie": "\\Atro\\ConnectionType\\ConnectionCookie",
+  "smtp": "\\Atro\\ConnectionType\\ConnectionSmtp"
 }

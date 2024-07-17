@@ -117,22 +117,6 @@
       ],
       [
         {
-          "name": "openAiOrganizationId"
-        },
-        {
-          "name": "openAiApiKey"
-        }
-      ],
-      [
-        {
-          "name": "openAiModel"
-        },
-        {
-          "name": "openAiTemperature"
-        }
-      ],
-      [
-        {
           "name": "additionalParameters"
         },
         false
@@ -143,6 +127,36 @@
         },
         {
           "name": "atrocoreToken"
+        }
+      ],
+      [
+        {
+          "name": "smtpServer"
+        },
+        {
+          "name": "smtpPort"
+        }
+      ],
+      [
+        {
+          "name": "smtpSecurity"
+        },
+        false
+      ],
+      [
+        {
+          "name": "smtpUsername"
+        },
+        {
+          "name": "smtpPassword"
+        }
+      ],
+      [
+        {
+          "name": "outboundEmailFromAddress"
+        },
+        {
+          "name": "outboundEmailFromName"
         }
       ]
     ]

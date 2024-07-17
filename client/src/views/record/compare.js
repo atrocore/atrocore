@@ -13,7 +13,10 @@ Espo.define('views/record/compare','view', function (Dep) {
     return Dep.extend({
         template: 'record/compare',
         panelDetailNavigation: null,
+        fieldsPanelsView: 'views/record/compare/fields-panels',
+        relationshipsPanelsView: 'views/record/compare/relationships-panels',
         buttonList: [],
+        fieldsArr: [],
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -47,16 +50,33 @@ Espo.define('views/record/compare','view', function (Dep) {
             this.scope = this.name =  this.options.scope
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
             this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
-            this.hideQuickMenu = this.options.hideQuickMenu
-            this.firstEl = this.options.el.split(' ')[0];
+            this.hideQuickMenu = this.options.hideQuickMenu;
+
+
         },
         setup(){
+            this.instances = this.getMetadata().get(['app','comparableInstances'])
             this.notify('Loading...')
             this.getModelFactory().create(this.scope, function (model) {
                 let modelCurrent = this.model;
                 let  modelOthers = [];
-                this.distantModelsAttribute.forEach((modelAttribute) => {
+                this.distantModelsAttribute.forEach((modelAttribute, index) => {
+
+                    if('_error' in modelAttribute){
+                        this.instances[index]['_error'] = modelAttribute['_error'];
+                    }
                     let  m = model.clone();
+                    for(let key in modelAttribute){
+                        let el = modelAttribute[key];
+                        let instanceUrl = this.instances[index].atrocoreUrl;
+                        if(key.includes('PathsData')){
+                            if( el && ('thumbnails' in el)){
+                                for (let size in el['thumbnails']){
+                                    modelAttribute[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                                }
+                            }
+                        }
+                    }
                     m.set(modelAttribute);
                     modelOthers.push(m);
                 })
@@ -95,32 +115,6 @@ Espo.define('views/record/compare','view', function (Dep) {
                         return;
                     }
 
-                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
-                    this.createView(field + 'Current', viewName, {
-                        el: this.firstEl +` [data-field="${field}"]  .current`,
-                        model: modelCurrent,
-                        readOnly: true,
-                        defs: {
-                            name: field,
-                            label: field + ' 11'
-                        },
-                        mode: 'detail',
-                        inlineEditDisabled: true,
-                    });
-
-                    modelOthers.forEach((model, index) => {
-                        this.createView(field + 'Other'+index, viewName, {
-                            el: this.firstEl+` [data-field="${field}"]  .other${index}`,
-                            model: model,
-                            readOnly: true,
-                            defs: {
-                                name: field
-                            },
-                            mode: 'detail',
-                            inlineEditDisabled: true,
-                        });
-                    })
-
                     let htmlTag = 'code';
 
                     if (type === 'color' || type === 'enum') {
@@ -136,19 +130,22 @@ Espo.define('views/record/compare','view', function (Dep) {
                             }
                         }) : null;
 
-                    let showQuickCompare = (modelCurrent.get(fieldId)  && type === "link")
+                    let showDetailsComparison = (modelCurrent.get(fieldId)  && type === "link")
                         || ((modelCurrent.get(fieldId)?.length ?? 0) > 0  && type === "linkMultiple")
-                    if(showQuickCompare){
+                    if(showDetailsComparison){
                         for (const other of modelOthers) {
-                            showQuickCompare = showQuickCompare && modelCurrent.get(fieldId)?.toString() === other.get(fieldId)?.toString();
+                            showDetailsComparison = showDetailsComparison && modelCurrent.get(fieldId)?.toString() === other.get(fieldId)?.toString();
                         }
                     }
 
                     this.fieldsArr.push({
                         isField: true,
                         field: field,
+                        type: type,
                         label: fieldDef['label'] ?? field,
                         current: field + 'Current',
+                        modelCurrent: modelCurrent,
+                        modelOthers: modelOthers,
                         htmlTag: htmlTag,
                         others: modelOthers.map((element, index) => {
                             return  {other: field + 'Other'+index, index}
@@ -156,24 +153,61 @@ Espo.define('views/record/compare','view', function (Dep) {
                         isLink: isLink ,
                         foreignScope: isLink ? this.links[field].entity : null,
                         foreignId: isLink ? modelCurrent.get(fieldId)?.toString() : null,
-                        showQuickCompare: showQuickCompare && this.hideQuickMenu !== true,
+                        showDetailsComparison: showDetailsComparison && this.hideQuickMenu !== true,
                         isLinkMultiple: isLinkMultiple,
                         values: values,
-                        different:  !this.areEquals(modelCurrent, modelOthers, field, fieldDef)
+                        different:  !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
+                        required: !!fieldDef['required']
                     });
 
                 }, this);
 
-                this.addCustomRows(modelCurrent, modelOthers);
-
+                this.afterModelsLoading(modelCurrent, modelOthers);
+                this.listenTo(this, 'after:render', () => {
+                    this.setupFieldsPanels();
+                    if(this.options.hideRelationShip !== true){
+                        this.setupRelationshipsPanels()
+                    }
+                });
             }, this)
 
+        },
+        setupFieldsPanels(){
+            this.notify('Loading...')
+            this.createView('fieldsPanels', this.fieldsPanelsView, {
+                scope: this.scope,
+                model: this.model,
+                fieldsArr: this.fieldsArr,
+                instances: this.instances,
+                distantModels: this.distantModelsAttribute,
+                el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
+            }, view => {
+                view.render();
+                this.notify(false);
+            })
+        },
+
+        setupRelationshipsPanels(){
+            this.notify('Loading...')
+
+            this.getHelper().layoutManager.get(this.scope, 'relationships', layout => {
+                this.createView('relationshipsPanels', this.relationshipsPanelsView, {
+                    scope: this.scope,
+                    model: this.model,
+                    relationships: layout,
+                    distantModels: this.distantModelsAttribute,
+                    el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
+                }, view => {
+                    this.notify(false)
+                    view.render();
+                })
+            });
         },
         data (){
             return {
                 buttonList: this.buttonList,
                 fieldsArr: this.fieldsArr,
-                distantModels: this.distantModelsAttribute,
+                instances: this.instances,
                 scope: this.scope,
                 id: this.id
             };
@@ -183,30 +217,7 @@ Espo.define('views/record/compare','view', function (Dep) {
 
             }, this);
         },
-        actionQuickCompare(data){
 
-            this.notify('Loading...');
-
-            this.ajaxGetRequest(this.generateEntityUrl(data.scope, data.id), {}, {async: false}).success(res => {
-                const modalAttribute = res.list[0];
-                modalAttribute['_fullyLoaded'] = true;
-
-                this.getModelFactory().create(data.scope, function (model) {
-                    model.id = data.id;
-                    model.set(modalAttribute)
-                    this.createView('dialog','views/modals/compare',{
-                        "model": model,
-                        "scope": data.scope,
-                        "mode":"details"
-                    }, function(dialog){
-                        dialog.render();
-                        this.notify(false)
-                        console.log('dialog','dialog')
-                    })
-                }, this);
-            }, this);
-
-        },
         areEquals(current, others, field, fieldDef){
             if(fieldDef['type'] === 'linkMultiple'){
                 const fieldId = field+'Ids';
@@ -249,6 +260,24 @@ Espo.define('views/record/compare','view', function (Dep) {
         afterRender(){
            this.notify(false)
         },
-        addCustomRows(modelCurrent, modelOthers){},
+        afterModelsLoading(modelCurrent, modelOthers){},
+
+        actionDetailsComparison(data){
+            this.notify('Loading...');
+            this.getModelFactory().create(data.scope, (model) => {
+                model.id = data.id;
+                this.listenToOnce(model, 'sync', function () {
+                    this.createView('dialog','views/modals/compare',{
+                        "model": model,
+                        "scope": data.scope,
+                        "mode":"details",
+                    }, function(dialog){
+                        dialog.render();
+                        this.notify(false)
+                    })
+                }, this);
+                model.fetch({main: true});
+            });
+        },
     });
 });

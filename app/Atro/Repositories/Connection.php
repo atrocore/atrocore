@@ -36,14 +36,10 @@ class Connection extends Base
         }
     }
 
-    protected function beforeSave(Entity $entity, array $options = [])
+    protected function beforeRemove(Entity $entity, array $options = [])
     {
-        if ($entity->get('type') === 'chatgpt') {
-            $chatgptConnection = $this->where(['type' => "chatgpt", 'id!=' => $entity->get('id')])
-                ->select(['id'])->findOne();
-            if (!empty($chatgptConnection)) {
-                throw new BadRequest($this->getLanguage()->translate("chatgptShouldBeUnique", "exceptions", $this->entityType));
-            }
+        if ($entity->get('type') === 'smtp' && $this->getConfig()->get('notificationSmtpConnectionId') === $entity->get('id')) {
+            throw new BadRequest($this->getLanguage()->translate("notificationConnectionCannotBeDeleted", "exceptions", $this->entityType));
         }
 
         parent::beforeSave($entity, $options);

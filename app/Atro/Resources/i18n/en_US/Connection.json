@@ -28,15 +28,19 @@
     "loginUrl": "Login URL",
     "atrocoreUrl": "URL",
     "atrocoreToken": "Authorization Token",
-    "openAiOrganizationId": "Organization ID",
-    "openAiApiKey": "Api Key",
-    "openAiModel": "Model",
-    "openAiTemperature": "Temperature",
-    "additionalParameters": "Additional Parameters"
+    "additionalParameters": "Additional Parameters",
+    "smtpServer": "Server",
+    "smtpPort": "Port",
+    "smtpSecurity": "Security",
+    "smtpUsername": "Username",
+    "smtpPassword": "Password",
+    "outboundEmailFromName": "From Name",
+    "outboundEmailFromAddress": "From Address"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
     "testConnection": "Test Connection",
+    "sendTestEmail": "Send Test Email",
     "atrocore": "AtroCore",
     "mysql": "MySQL Server",
     "psql": "PostgreSQL Server",
@@ -56,12 +60,12 @@
     "receipts": "Receipts",
     "price-reduction": "Price reduction",
     "oauth1": "Oauth 1.0",
-    "chatgpt": "ChatGpt"
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",
     "connectionFailed": "Connection could not be established: %s",
     "noSuchType": "No such connection type.",
-    "chatgptShouldBeUnique": "There should be only one chatgpt connection"
+    "notificationConnectionCannotBeDeleted": "This connection is used for E-Mail Notifications and cannot be deleted"
   }
 }

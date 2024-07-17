@@ -64,7 +64,8 @@
     "Contacts": "Contacts",
     "Addresses": "Addresses",
     "Currency": "Currency",
-    "lists": "Lists"
+    "lists": "Lists",
+    "emailTemplates": "Email Templates"
   },
   "layouts": {
     "relationships": "Relation panels",
@@ -159,8 +160,6 @@
     "seeMoreDisabled": "Disable Displayed Text Shortening",
     "entityList": "Entity list",
     "isSorted": "Is sorted (alphabetically)",
-    "audited": "Track changes",
-    "auditedLink": "Track changes",
     "trim": "Remove leading and trailing whitespaces",
     "height": "Height (px)",
     "minHeight": "Min height (px)",
@@ -234,7 +233,8 @@
     "contacts": "Manage contacts",
     "addresses": "Manage addresses",
     "currency": "Configure currencies to be used",
-    "lists": "Manage your lists and their options for simple or multivalue lists."
+    "lists": "Manage your lists and their options for simple or multivalue lists.",
+    "emailTemplates": "Manage Email Templates"
   },
   "options": {
     "previewSize": {

@@ -53,7 +53,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
 
             this.listenToOnce(this.model, 'change:password', function (model) {
                 passwordChanged = true;
-                if (model.get('emailAddress')) {
+                if (model.get('emailAddress') && !this.getConfig().get('disableEmailDelivery', false)) {
                     this.showField('sendAccessInfo');
                     this.model.set('sendAccessInfo', true);
                 }
@@ -61,7 +61,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
 
             this.listenTo(this.model, 'change:emailAddress', function (model) {
                 if (passwordChanged) {
-                    if (model.get('emailAddress')) {
+                    if (model.get('emailAddress') && !this.getConfig().get('disableEmailDelivery', false)) {
                         this.showField('sendAccessInfo');
                         this.model.set('sendAccessInfo', true);
                     } else {
@@ -105,7 +105,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     ]
                 });
 
-                if (this.type == 'edit' && this.getUser().isAdmin()) {
+                if (this.type === 'edit' && this.getUser().isAdmin() && this.isNew) {
                     layout.push({
                         label: 'Password',
                         rows: [
@@ -114,7 +114,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                                     name: 'password',
                                     type: 'password',
                                     params: {
-                                        required: this.isNew,
+                                        required: true,
                                         readyToChange: true
                                     }
                                 },
@@ -129,7 +129,7 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                                     name: 'passwordConfirm',
                                     type: 'password',
                                     params: {
-                                        required: this.isNew,
+                                        required: true,
                                         readyToChange: true
                                     }
                                 },

@@ -25,11 +25,28 @@ class Connection extends Base
             throw new Forbidden();
         }
 
-        if (!property_exists($data, 'id')){
+        if (!property_exists($data, 'id')) {
             throw new BadRequest('ID is required.');
         }
 
         return $this->getRecordService()->testConnection((string)$data->id);
+    }
+
+    public function postActionSendTestEmail($params, $data, $request)
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        if (!property_exists($data, 'id')) {
+            throw new BadRequest('ID is required.');
+        }
+
+        if (!property_exists($data, 'email')) {
+            throw new BadRequest('Email is required.');
+        }
+
+        return $this->getRecordService()->sendTestEMail((string)$data->id, (string)$data->email);
     }
 
     protected function checkControllerAccess()

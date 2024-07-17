@@ -16,8 +16,10 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 
@@ -62,6 +64,12 @@ class Metadata extends AbstractListener
 
         $this->prepareExtensibleEnum($data);
 
+        $this->prepareAclActionLevelListMap($data);
+
+        $this->addPreviewTemplates($data);
+
+        $this->prepareEmailTemplateMultilangFields($data);
+
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
 
@@ -80,6 +88,39 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    public function prepareEmailTemplateMultilangFields(array &$data): void
+    {
+        foreach ($this->getConfig()->get('locales') as $locale) {
+            if ($locale['language'] === 'en_US') {
+                continue;
+            }
+            $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
+
+            foreach (['subject', 'body'] as $field) {
+                // prepare multi-lang field
+                $mField = $field . $preparedLocale;
+
+                $mParams = json_decode(json_encode($data['entityDefs']['EmailTemplate']['fields'][$field]), true);
+                $mParams['isCustom'] = false;
+                $mParams['required'] = false;
+
+                $data['entityDefs']['EmailTemplate']['fields'][$mField] = $mParams;
+            }
+        }
+    }
+
+    protected function prepareAclActionLevelListMap(array &$data): void
+    {
+        foreach ($data['scopes'] as $scope => $scopeDefs) {
+            if (empty($scopeDefs['streamDisabled'])) {
+                $data['scopes'][$scope]['aclActionLevelListMap']['stream'] = [
+                    'all',
+                    'no'
+                ];
+            }
+        }
     }
 
     protected function prepareExtensibleEnum(array &$data): void
@@ -143,6 +184,34 @@ class Metadata extends AbstractListener
         }
 
         $this->getMemoryStorage()->set('dynamic_action', $actions);
+
+        foreach ($actions ?? [] as $action) {
+            if ($action['type'] === 'webhook') {
+                if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = [
+                        'id'         => $action['id'],
+                        'name'       => $action['name'],
+                        'display'    => $action['display'],
+                        'massAction' => false,
+                        'acl'        => [
+                            'scope'  => $action['source_entity'],
+                            'action' => 'read',
+                        ]
+                    ];
+                }
+                if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = [
+                        'id'      => $action['id'],
+                        'name'    => $action['name'],
+                        'display' => $action['display'],
+                        'acl'     => [
+                            'scope'  => $action['source_entity'],
+                            'action' => 'read',
+                        ]
+                    ];
+                }
+            }
+        }
     }
 
     protected function getMemoryStorage(): StorageInterface
@@ -245,7 +314,6 @@ class Metadata extends AbstractListener
                     "unitIdField" => true,
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
-                    "audited"     => !empty($fieldDefs['audited']),
                     "notStorable" => !empty($fieldDefs['notStorable']),
                     "emHidden"    => true
                 ];
@@ -284,7 +352,6 @@ class Metadata extends AbstractListener
                         "mainField"          => $field,
                         "unitField"          => true,
                         "required"           => false,
-                        "audited"            => false,
                         "filterDisabled"     => true,
                         "massUpdateDisabled" => true,
                         "emHidden"           => true
@@ -311,7 +378,6 @@ class Metadata extends AbstractListener
                         "notStorable"               => true,
                         "mainField"                 => $field,
                         "required"                  => false,
-                        "audited"                   => false,
                         "layoutListDisabled"        => true,
                         "layoutListSmallDisabled"   => true,
                         "layoutDetailDisabled"      => true,
@@ -391,11 +457,6 @@ class Metadata extends AbstractListener
                 }
                 if (isset($fieldDefs['maxTo'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['max'] = $fieldDefs['maxTo'];
-                }
-
-                if (!empty($fieldDefs['audited'])) {
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['audited'] = true;
-                    $data['entityDefs'][$entity]['fields'][$fieldTo]['audited'] = true;
                 }
 
                 if (!empty($fieldDefs['index'])) {
@@ -577,6 +638,9 @@ class Metadata extends AbstractListener
             if (!empty($data['scopes'][$entityName]['isHierarchyEntity'])) {
                 $data['scopes'][$entityName]['acl'] = true;
             }
+            if (!isset($data['scopes'][$entityName]['streamDisabled'])) {
+                $data['scopes'][$entityName]['streamDisabled'] = true;
+            }
 
             $data['scopes'][$entityName]['tab'] = false;
             $data['scopes'][$entityName]['layouts'] = false;
@@ -680,13 +744,11 @@ class Metadata extends AbstractListener
             $this->addScopesToRelationShip($data, $scope, $relationEntityName, 'children');
 
             if (empty($data['scopes'][$scope]['multiParents'])) {
-                $data['entityDefs'][$scope]['fields']['parents']['mandatoryToSelect'] = true;
-                $data['entityDefs'][$scope]['fields']['parents']['noLoad'] = false;
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"        => "link",
-                    "notStorable" => true,
-                    "entity"      => $scope,
-                    "emHidden"    => true,
+                    "type"           => "link",
+                    "notStorable"    => true,
+                    "entity"         => $scope,
+                    "emHidden"       => true,
                     "exportDisabled" => true,
                     "importDisabled" => true
                 ];
@@ -1097,5 +1159,44 @@ class Metadata extends AbstractListener
         }
 
         return $data;
+    }
+
+    protected function addPreviewTemplates(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        /** @var DataManager $dataManager */
+        $dataManager = $this->getContainer()->get('dataManager');
+        $previewTemplates = $dataManager->getCacheData(PreviewTemplate::CACHE_NAME);
+        if ($previewTemplates === null) {
+            try {
+                $previewTemplates = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->select('id, name, entity_type')
+                    ->from('preview_template')
+                    ->where('is_active = :true')
+                    ->andWhere('deleted = :false')
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $previewTemplates = [];
+            }
+
+            $dataManager->setCacheData(PreviewTemplate::CACHE_NAME, $previewTemplates);
+        }
+
+        foreach ($previewTemplates as $previewTemplate) {
+            $data['clientDefs'][$previewTemplate['entity_type']]['additionalButtons'][$previewTemplate['id']] = [
+                'name'           => $previewTemplate['id'],
+                'label'          => 'Preview: ' . $previewTemplate['name'],
+                'actionViewPath' => 'views/preview-template/record/actions/preview',
+                'action'         => 'showHtmlPreview',
+                'optionsToPass'  => [
+                    'model'
+                ]
+            ];
+        }
     }
 }
