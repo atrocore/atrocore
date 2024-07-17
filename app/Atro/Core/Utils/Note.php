@@ -74,7 +74,7 @@ class Note
             ->executeQuery();
     }
 
-    protected function streamEnabled(string $entityType): bool
+    public function streamEnabled(string $entityType): bool
     {
         if (!isset($this->streamEnabled[$entityType])) {
             $this->streamEnabled[$entityType] = empty($this->getMetadata()->get("scopes.{$entityType}.streamDisabled"));

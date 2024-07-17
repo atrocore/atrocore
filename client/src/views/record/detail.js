@@ -207,11 +207,24 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionDynamicAction: function (data) {
-            this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {
+            const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
+            if (defs && defs.type) {
+                const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, data);
+                    return
+                }
+            }
+
+            this.executeActionRequest({
                 actionId: data.id,
                 entityId: this.model.get('id')
-            }).success(response => {
+            })
+        },
+
+        executeActionRequest(payload, callback) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow', payload).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
@@ -225,12 +238,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             })
                             return;
                         }
+                        if (callback) {
+                            callback()
+                        }
                     } else {
                         this.notify(response.message, 'error');
                     }
                 }
                 this.model.fetch();
-            });
+            })
         },
 
         actionDelete: function () {
@@ -289,7 +305,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             var url = '#' + this.entityType + '/compare?id=' + this.model.get('id');
             const baseUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-            window.open(baseUrl +'/'+ url);
+            window.open(baseUrl + '/' + url);
         },
 
         getSelfAssignAttributes: function () {
@@ -360,6 +376,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (dynamicAction.display === 'dropdown') {
                         this.dropdownItemList.push({
                             id: dynamicAction.id,
+                            type: dynamicAction.type,
                             label: dynamicAction.name,
                             name: "dynamicAction"
                         });
@@ -368,6 +385,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (dynamicAction.display === 'single') {
                         this.additionalButtons.push({
                             id: dynamicAction.id,
+                            type: dynamicAction.type,
                             label: dynamicAction.name,
                             action: "dynamicAction"
                         });
@@ -1248,7 +1266,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         selected.push(option);
                     }
                 });
-                if(selected.length === 0){
+                if (selected.length === 0) {
                     selected = [options[0]]
                 }
             }

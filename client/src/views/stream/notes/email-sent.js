@@ -40,41 +40,94 @@ Espo.define('views/stream/notes/email-sent', 'views/stream/note', function (Dep)
 
         data: function () {
             return _.extend({
-                emailId: this.emailId,
-                emailName: this.emailName,
-                hasPost: this.hasPost,
-                hasAttachments: this.hasAttachments,
-                emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || ''
+                emailIconClassName: this.getMetadata().get(['clientDefs', 'EmailTemplate', 'iconClass']) || ''
             }, Dep.prototype.data.call(this));
+        },
+
+        events: {
+            'click a[data-action="expandDetails"]': function (e) {
+                if (this.$el.find('.details').hasClass('hidden')) {
+                    this.$el.find('.details').removeClass('hidden');
+                    $(e.currentTarget).find('span').removeClass('fa-angle-down').addClass('fa-angle-up');
+                } else {
+                    this.$el.find('.details').addClass('hidden');
+                    $(e.currentTarget).find('span').addClass('fa-angle-down').removeClass('fa-angle-up');
+                }
+            }
         },
 
         setup: function () {
             var data = this.model.get('data') || {};
 
-            this.emailId = data.emailId;
-            this.emailName = data.emailName;
+            this.model.set('subject', data.subject);
+            this.model.set('body', data.body);
+            this.model.set('emailTo', data.emailTo);
+            this.model.set('emailCc', data.emailCc);
 
             if (
                 this.parentModel
                 &&
                 (this.model.get('parentType') == this.parentModel.name && this.model.get('parentId') == this.parentModel.id)
             ) {
-                if (this.model.get('post')) {
-                    this.createField('post', null, null, 'views/stream/fields/post');
-                    this.hasPost = true;
-                }
-                if ((this.model.get('attachmentsIds') || []).length) {
-                    this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
-                    this.hasAttachments = true;
-                }
+                this.createView('emailTo', 'views/fields/array', {
+                    name: 'emailTo',
+                    model: this.model,
+                    scope: this.scope,
+                    defs: {
+                        name: 'emailTo'
+                    },
+                    mode: 'detail',
+                    inlineEditDisabled: true
+                }, view => view.render());
+
+                this.createView('emailCc', 'views/fields/array', {
+                    name: 'emailCc',
+                    model: this.model,
+                    scope: this.scope,
+                    defs: {
+                        name: 'emailCc'
+                    },
+                    mode: 'detail',
+                    inlineEditDisabled: true
+                }, view => view.render());
+
+                this.createView('subject', 'views/fields/text', {
+                    name: 'subject',
+                    model: this.model,
+                    scope: this.scope,
+                    defs: {
+                        name: 'subject'
+                    },
+                    mode: 'detail',
+                    inlineEditDisabled: true
+                }, view => view.render());
+
+                this.createView('body', 'views/fields/text', {
+                    name: 'body',
+                    model: this.model,
+                    scope: this.scope,
+                    defs: {
+                        name: 'body'
+                    },
+                    mode: 'detail',
+                    inlineEditDisabled: true
+                }, view => view.render());
+                this.createView('attachments', 'views/fields/link-multiple', {
+                    model: this.model,
+                    scope: this.scope,
+                    foreignScope: 'File',
+                    defs: {
+                        name: 'attachments'
+                    },
+                    mode: 'detail',
+                    inlineEditDisabled: true
+                }, view => view.render());
             }
 
-            this.messageData['email'] = '<a href="#Email/view/' + data.emailId + '">' + data.emailName + '</a>';
-
+            this.messageData['createdAt'] = 'field:createdAt'
+            this.messageData['subject'] = this.model.get('subject')
+            this.messageData['emailTo'] = (this.model.get('emailTo') ?? []).join(";")
             this.messageName = 'emailSent';
-
-            this.messageData['by'] = '<a href="#'+data.personEntityType+'/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
-
 
             if (this.isThis) {
                 this.messageName += 'This';

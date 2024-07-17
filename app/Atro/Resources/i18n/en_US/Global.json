@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EmailTemplate": "Email Template",
     "Storage": "Storage",
     "Folder": "Folder",
     "File": "File",
@@ -55,6 +56,7 @@
     "PreviewTemplate": "Preview Template"
   },
   "scopeNamesPlural": {
+    "EmailTemplate": "Email Templates",
     "Storage": "Storages",
     "Folder": "Folders",
     "File": "Files",
@@ -591,8 +593,8 @@
     "emailReceived": "Email received related to {entityType} {entity}",
     "emailReceivedInitial": "Email received: {entityType} {entity} created",
     "emailReceivedInitialFrom": "Email received from {from}, {entityType} {entity} created",
-    "emailSent": "{by} sent email related to {entityType} {entity}",
-    "emailSentThis": "{by} sent email",
+    "emailSent": "{user} successfully sent e-mail with the subject '{subject}' to '{emailTo}' on '{createdAt}', related to {entityType} {entity}",
+    "emailSentThis": "{user} successfully sent e-mail with the subject '{subject}' to '{emailTo}' on '{createdAt}'",
     "unrelate": "{user} unlinked {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
     "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} with this {entityType}",
     "updateOneThis": "{user} in this {entityType} updated",

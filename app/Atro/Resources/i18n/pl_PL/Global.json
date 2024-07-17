@@ -1,5 +1,6 @@
 {
 "scopeNames":{
+    "EmailTemplate": "Szablon e-maila",
     "Storage": "Przechowywanie plików",
     "Folder": "Folder",
     "File": "Plik",
@@ -55,6 +56,7 @@
     "AuthFailLogRecord":"Rekord dziennika nieudanych autoryzacji"
 },
 "scopeNamesPlural":{
+    "EmailTemplate": "Szablony wiadomości",
     "Storage": "Przechowywanie plików",
     "Folder": "Foldery",
     "File": "Pliki",
@@ -572,8 +574,8 @@
     "emailReceived":"Email received related to {entityType} {entity}",
     "emailReceivedInitial":"Email received: {entityType} {entity} created",
     "emailReceivedInitialFrom":"Email received from {from}, {entityType} {entity} created",
-    "emailSent":"{by} sent email related to {entityType} {entity}",
-    "emailSentThis":"{by} sent email",
+    "emailSent": "{user} pomyślnie wysłano wiadomość e-mail z tematem '{subject}' do '{emailTo}' na '{createdAt}', związany z {entityType} {entity}",
+    "emailSentThis": "{user} pomyślnie wysłano wiadomość e-mail z tematem '{subject}' do '{emailTo}' na '{createdAt}'",
     "unrelate":"{user} unlinked {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
     "unrelateThis":"{user} unlinked {relatedEntityType} {relatedEntity} with this {entityType}",
     "updateOneThis":"{user} in this {entityType} updated",
