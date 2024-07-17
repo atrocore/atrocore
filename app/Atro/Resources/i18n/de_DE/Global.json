@@ -472,7 +472,7 @@
     "export": "Exportieren",
     "restore": "Wiederherstellen",
     "massRestore": "Massenwiederherstellung",
-    "download": "Nachladen"
+    "download": "Nachladen",
   },
   "fields": {
     "path": "Ordner Pfad",
@@ -989,7 +989,13 @@
     "fieldDoesNotExist": "Das Feld \"{field}\" existiert nicht in der entität \"{entityType}\".",
     "optionIsDisabled": "Das Element '%s' ist für das Feld '%s' deaktiviert.",
     "someCouldNotDuplicatedAndLinked": "Einige Datensätze konnten nicht dupliziert und verknüpft werden",
-    "someCouldNotLinked": "Einige Datensätze konnten nicht verknüpft werden"
+    "someCouldNotLinked": "Einige Datensätze konnten nicht verknüpft werden",
+    "massUpdateNoRecordProceed": "Es wurde kein Datensatz aktualisiert.",
+    "massRemoveNoRecordProceed": "Es wurde kein Datensatz entfernt.",
+    "massRestoreNoRecordProceed": "No wurde der Datensatz wiederhergestellt.",
+    "massUpdateSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich aktualisiert werden.",
+    "massRemoveSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich entfernt werden.",
+    "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden."
   },
   "queryBuilderFilter": {
     "add_rule": "neue Regel",
