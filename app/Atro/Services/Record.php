@@ -29,6 +29,8 @@ class Record extends \Espo\Services\RecordService
             $deleted = true;
         }
 
+        $res = false;
+
         if ($deleted) {
             $id = $this
                 ->dispatchEvent('beforeDeleteEntityPermanently', new Event(['id' => $id, 'service' => $this]))
@@ -37,9 +39,11 @@ class Record extends \Espo\Services\RecordService
                 $this->getRepository()->deleteFromDb($id);
             }
 
-            return true;
+            $res = true;
         }
 
-        return false;
+        return $this
+            ->dispatchEvent('afterDeleteEntityPermanently', new Event(['id' => $id, 'service' => $this, 'res' => $res]))
+            ->getArgument('res');
     }
 }
