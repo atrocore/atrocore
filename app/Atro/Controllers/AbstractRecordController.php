@@ -229,14 +229,23 @@ abstract class AbstractRecordController extends AbstractController
 
         $id = $params['id'];
 
-        $permanently = $this->getRecordService()::getHeader('Permanently');
-        if ($permanently && ($permanently === '1' || strtolower($permanently) === 'true')) {
-            return $this->getRecordService()->deleteEntityPermanently($id);
-        }
-
         if ($this->getRecordService()->deleteEntity($id)) {
             return true;
         }
+
+        throw new Error();
+    }
+
+    public function actionDeletePermanently($params, $data, $request)
+    {
+        if (!$request->isDelete() || empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        if ($this->getRecordService()->deleteEntityPermanently((string)$data->id)) {
+            return true;
+        }
+
         throw new Error();
     }
 
