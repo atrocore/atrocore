@@ -604,13 +604,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     data: JSON.stringify(data)
                 }).done(function (result) {
                     this.notify(false)
-                    if (result.sync) {
-                        if (result.errors && result.errors.length > 0) {
-                            Espo.ui.error(result.errors.join('<br>'));
-                        } else {
-                            Espo.ui.success(this.translate('Done'))
-                        }
-                    }
+                    this.processMassActionResult(result)
                     this.collection.fetch();
                 }.bind(this));
             }, this);
@@ -791,6 +785,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
         },
 
+        processMassActionResult(result) {
+            if (result.sync) {
+                if (result.errors && result.errors.length > 0) {
+                    let error = result.errors.slice(0, 19).join('<br>');
+                    if (result.errors.length > 20) {
+                        error += '<br> ' + (result.errors.length - 20) + ' more errors'
+                    }
+                    Espo.ui.error(error);
+                } else {
+                    Espo.Ui.success(this.translate('Done'));
+                }
+            }
+        },
+
         massActionMassUpdate: function () {
             if (!this.getAcl().check(this.entityType, 'edit')) {
                 this.notify('Access denied', 'error');
@@ -818,13 +826,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 view.once('after:update', function (result) {
                     view.close();
                     this.listenToOnce(this.collection, 'sync', function () {
-                        if (result.sync) {
-                            if (result.errors && result.errors.length > 0) {
-                                Espo.Ui.error(result.errors.join('<br>'));
-                            } else {
-                                Espo.Ui.success(this.translate('Done'));
-                            }
-                        }
+                        this.processMassActionResult(result)
                         if (allResultIsChecked) {
                             this.selectAllResult();
                         } else {
