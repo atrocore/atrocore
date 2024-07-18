@@ -577,11 +577,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.notify('Access denied', 'error');
                 return false;
             }
-
-            this.confirm({
-                message: this.prepareRemoveSelectedRecordsConfirmationMessage(),
-                confirmText: this.translate('Remove')
-            }, function () {
+            let action = () => {
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
@@ -613,7 +609,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }
                     this.collection.fetch();
                 }.bind(this));
-            }, this);
+            }
+
+            if (!!this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])
+                && ((!this.allResultIsChecked && this.checkedList.length === 1) || this.collection.length === 1)) {
+                action();
+            } else {
+                this.confirm({
+                    message: this.prepareRemoveSelectedRecordsConfirmationMessage(),
+                    confirmText: this.translate('Remove')
+                }, () => action(), this);
+            }
         },
         massActionRestore: function () {
             if (!this.getAcl().check(this.entityType, 'delete')) {
@@ -2436,11 +2442,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             let parts = message.split('.');
-
-            this.confirm({
-                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
-                confirmText: this.translate('Remove')
-            }, function () {
+            let destroy = () => {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
                 this.notify('removing');
@@ -2455,7 +2457,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.collection.push(model);
                     }.bind(this)
                 });
-            }, this);
+            }
+
+            if (!this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'], false)) {
+                this.confirm({
+                    message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
+                    confirmText: this.translate('Remove')
+                }, () => destroy(), this);
+            } else {
+                destroy()
+            }
         },
         actionQuickRestore: function (data) {
             data = data || {}

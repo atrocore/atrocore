@@ -145,6 +145,15 @@
             {{/unless}}
         </div>
         <div class="row">
+            <div class="cell form-group col-md-6" data-name="deleteWithoutConfirmation">
+                <label class="control-label"
+                       data-name="deleteWithoutConfirmation">{{translate 'deleteWithoutConfirmation' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="deleteWithoutConfirmation">
+                    {{{deleteWithoutConfirmation}}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="cell form-group col-md-6" data-name="modifiedExtendedRelations">
                 <label class="control-label"
                        data-name="modifiedExtendedRelations">{{translate 'modifiedExtendedRelations' category='fields' scope='EntityManager'}}</label>

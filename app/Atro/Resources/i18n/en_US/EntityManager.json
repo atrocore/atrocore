@@ -48,7 +48,8 @@
     "disableHierarchy": "Disable Hierarchy",
     "modifiedExtendedRelations": "Relations effecting modification date/time",
     "duplicatableRelations": "Duplicatable Relations",
-    "nonComparableFields": "Non Comparable Fields"
+    "nonComparableFields": "Non Comparable Fields",
+    "deleteWithoutConfirmation": "Delete without confirmation"
   },
   "options": {
     "linkType": {
@@ -85,6 +86,7 @@
     "disabled": "Check if you don't need this entity in your system.",
     "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
     "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
-    "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time."
+    "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time.",
+    "deleteWithoutConfirmation": "If checked, the individual record is deleted without user confirmation. Deletion of multiple records is still  to be confirmed."
   }
 }
