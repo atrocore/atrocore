@@ -606,7 +606,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.notify(false)
                     if (result.sync) {
                         if (result.errors && result.errors.length > 0) {
-                            Espo.ui.error(result.errors.join('<br>'));
+                            let error = result.errors.slice(0, 19).join('<br>');
+                            if (result.errors.length > 20) {
+                                error += '<br> ' + (result.errors.length - 20) + ' more errors'
+                            }
+                            Espo.ui.error(error);
                         } else {
                             Espo.ui.success(this.translate('Done'))
                         }
@@ -820,7 +824,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.listenToOnce(this.collection, 'sync', function () {
                         if (result.sync) {
                             if (result.errors && result.errors.length > 0) {
-                                Espo.Ui.error(result.errors.join('<br>'));
+                                let error = result.errors.slice(0, 19).join('<br>');
+                                if (result.errors.length > 20) {
+                                    error += '<br> ' + (result.errors.length - 20) + ' more errors'
+                                }
+                                Espo.ui.error(error);
                             } else {
                                 Espo.Ui.success(this.translate('Done'));
                             }
