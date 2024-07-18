@@ -186,7 +186,7 @@ class Metadata extends AbstractListener
         $this->getMemoryStorage()->set('dynamic_action', $actions);
 
         foreach ($actions ?? [] as $action) {
-            if ($action['type'] === 'webhook') {
+            if (in_array($action['type'], ['webhook', 'set'])) {
                 if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
                     $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = [
                         'id'         => $action['id'],
