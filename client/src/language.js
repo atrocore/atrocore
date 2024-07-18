@@ -97,6 +97,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 var cached = this.cache.get('app', 'language-' + name);
                 if (cached) {
                     this.data = cached;
+                    window.SvelteLanguage.setTranslations(cached);
                     return true;
                 }
             }
@@ -135,6 +136,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
         fetch: function (disableCache, loadDefault) {
             Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
                 this.data = data;
+                window.SvelteLanguage.setTranslations(data);
                 if (!disableCache) {
                     this.storeToCache(loadDefault);
                 }

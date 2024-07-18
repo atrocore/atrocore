@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "EmailTemplate": "E-Mail-Vorlage",
     "Storage": "Dateiablage",
     "Folder": "Ordner",
     "File": "Datei",
@@ -44,6 +45,7 @@
     "PreviewTemplate": "Vorschau Vorlage"
   },
   "scopeNamesPlural": {
+    "EmailTemplate": "E-Mail-Vorlagen",
     "Storage": "Dateiablagen",
     "Folder": "Ordner",
     "File": "Dateien",
@@ -603,8 +605,8 @@
     "emailReceivedInitialFrom": "E-Mail empfangen von {from}, {entityType} {entity} wurde erstellt",
     "emailReceived": "E-Mail empfangen verbunden mit {entityType} {entity}",
     "emailReceivedInitial": "E-Mail empfangen: {entityType} {entity} wurde erstellt",
-    "emailSent": "{by} hat eine E-Mail verbunden mit {entityType} {entity} gesendet",
-    "emailSentThis": "{by} hat eine E-Mail gesendet",
+    "emailSent": "{user} hat erfolgreich eine E-Mail mit dem Betreff '{subject}' an '{emailTo}' am '{createdAt}' gesendet, bezüglich {entityType} {entity}",
+    "emailSentThis": "{user} hat erfolgreich eine E-Mail mit dem Betreff '{subject}' an '{emailTo}' am '{createdAt}' gesendet",
     "postTargetSelf": "{user} notierte für sich selbst",
     "postTargetSelfAndOthers": "{user} notierte für {target} und für sich selbst",
     "unrelate": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
@@ -989,7 +991,13 @@
     "fieldDoesNotExist": "Das Feld \"{field}\" existiert nicht in der entität \"{entityType}\".",
     "optionIsDisabled": "Das Element '%s' ist für das Feld '%s' deaktiviert.",
     "someCouldNotDuplicatedAndLinked": "Einige Datensätze konnten nicht dupliziert und verknüpft werden",
-    "someCouldNotLinked": "Einige Datensätze konnten nicht verknüpft werden"
+    "someCouldNotLinked": "Einige Datensätze konnten nicht verknüpft werden",
+    "massUpdateNoRecordProceed": "Es wurde kein Datensatz aktualisiert.",
+    "massDeleteNoRecordProceed": "Es wurde kein Datensatz entfernt.",
+    "massRestoreNoRecordProceed": "No wurde der Datensatz wiederhergestellt.",
+    "massUpdateSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich aktualisiert werden.",
+    "massDeleteSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich entfernt werden.",
+    "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden."
   },
   "queryBuilderFilter": {
     "add_rule": "neue Regel",

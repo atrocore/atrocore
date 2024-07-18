@@ -74,7 +74,7 @@ class Note
             ->executeQuery();
     }
 
-    protected function streamEnabled(string $entityType): bool
+    public function streamEnabled(string $entityType): bool
     {
         if (!isset($this->streamEnabled[$entityType])) {
             $this->streamEnabled[$entityType] = empty($this->getMetadata()->get("scopes.{$entityType}.streamDisabled"));
@@ -219,7 +219,7 @@ class Note
                 $wasValue = $entity->getFetched($field);
                 $value = $entity->get($field);
                 if (!empty($value)) {
-                    $this->createNote('CreateRelated', $scope, $value, [
+                    $this->createNote('relate', $scope, $value, [
                         'relatedType' => $entity->getEntityType(),
                         'relatedId'   => $entity->id
                     ]);

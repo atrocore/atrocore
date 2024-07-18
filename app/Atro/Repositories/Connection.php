@@ -42,6 +42,6 @@ class Connection extends Base
             throw new BadRequest($this->getLanguage()->translate("notificationConnectionCannotBeDeleted", "exceptions", $this->entityType));
         }
 
-        parent::beforeSave($entity, $options);
+        parent::beforeRemove($entity, $options);
     }
 }

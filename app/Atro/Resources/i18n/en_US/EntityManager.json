@@ -38,7 +38,7 @@
     "linkMultipleFieldForeign": "Foreign Link Multiple Field",
     "disabled": "Disabled",
     "textFilterFields": "Text Filter Fields",
-    "auditedDisabled": "Disable Track changes",
+    "streamDisabled": "Disable Track changes",
     "statusField": "Status Field",
     "beforeSaveCustomScript": "Before Save Custom Script",
     "color": "Color",

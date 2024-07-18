@@ -54,7 +54,8 @@
     "Accounts": "Cuenta",
     "Contacts": "Contactos",
     "Addresses": "Direcciones",
-    "lists": "Listas"
+    "lists": "Listas",
+    "emailTemplates": "Plantillas de correo electrónico"
   },
   "layouts": {
     "list": "Lista",
@@ -193,7 +194,8 @@
     "accounts": "Cuentas de administración",
     "contacts": "Gestionar contactos",
     "addresses": "Administrar direcciones",
-    "lists": "Gestione sus listas y sus opciones para listas simples o multivalor."
+    "lists": "Gestione sus listas y sus opciones para listas simples o multivalor.",
+    "emailTemplates": "Administrar plantillas de correo electrónico"
   },
   "options": {
     "previewSize": {

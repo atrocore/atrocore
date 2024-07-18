@@ -44,8 +44,12 @@ class File extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        $fileNameParts = explode('.', $entity->get('name'));
-        $entity->set('extension', strtolower(end($fileNameParts)));
+        if (is_string($entity->get('name'))) {
+            $fileNameParts = explode('.', $entity->get('name'));
+            if (count($fileNameParts) > 1) {
+                $entity->set('extension', strtolower(end($fileNameParts)));
+            }
+        }
 
         if (!empty($downloadUrl = $entity->getDownloadUrl())) {
             $entity->set('downloadUrl', $downloadUrl);

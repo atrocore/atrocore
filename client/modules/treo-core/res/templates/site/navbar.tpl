@@ -16,6 +16,7 @@
                     {{{lastViewedBadge}}}
                 </li>
                 {{/if}}
+                {{#if hasQM}}<li class="dropdown queue-badge-container"></li>{{/if}}
                 <li class="notifications-badge-container ">
                     {{{notificationsBadge}}}
                 </li>
@@ -131,6 +132,7 @@
                 </ul>
             </li>
             {{/if}}
+            {{#if hasQM}}<li id='qqq' class="dropdown queue-badge-container hidden-xs"></li>{{/if}}
             <li class="dropdown notifications-badge-container hidden-xs">
                 {{{notificationsBadge}}}
             </li>

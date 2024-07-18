@@ -177,6 +177,11 @@
     "label": "Templates",
     "itemList": [
       {
+        "url": "#EmailTemplate",
+        "label": "emailTemplates",
+        "description": "emailTemplates"
+      },
+      {
         "url": "#PreviewTemplate",
         "label": "previewTemplate",
         "description": "previewTemplate"

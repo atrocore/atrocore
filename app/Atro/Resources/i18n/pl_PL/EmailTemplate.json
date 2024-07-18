@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "subject": "Temat",
+    "body": "Ciało",
+    "allowAttachments": "Zezwalaj na załączniki",
+    "emailTo": "Wyślij email do",
+    "emailCc": "Wyślij e-mail do CC"
+  },
+  "labels": {
+    "send": "Wysłać",
+    "Create EmailTemplate": "Utwórz szablon e-maila"
+  },
+  "exceptions": {
+    "notificationTemplatesCannotBeDeleted": "Szablonów powiadomień nie można usunąć"
+  }
+}

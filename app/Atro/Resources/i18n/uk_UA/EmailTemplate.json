@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "subject": "Тема",
+    "body": "Тіло",
+    "allowAttachments": "Дозволити вкладення",
+    "emailTo": "Електронна пошта до",
+    "emailCc": "Електронна пошта CC"
+  },
+  "labels": {
+    "send": "Надіслати",
+    "Create EmailTemplate": "Створити шаблон електронної пошти"
+  },
+  "exceptions": {
+    "notificationTemplatesCannotBeDeleted": "Шаблони сповіщень не можна видалити"
+  }
+}

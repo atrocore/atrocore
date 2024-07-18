@@ -1,33 +1,33 @@
 /*
- * this file is part of espocrm and/or atrocore.
+ * This file is part of EspoCRM and/or AtroCore.
  *
- * espocrm - open source crm application.
- * copyright (c) 2014-2019 yuri kuznetsov, taras machyshyn, oleksiy avramenko
- * website: http://www.espocrm.com
+ * EspoCRM - Open Source CRM application.
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: http://www.espocrm.com
  *
- * atrocore is espocrm-based open source application.
- * copyright (c) 2020 atrocore gmbh.
+ * AtroCore is EspoCRM-based Open Source application.
+ * Copyright (C) 2020 AtroCore GmbH.
  *
- * atrocore as well as espocrm is free software: you can redistribute it and/or modify
- * it under the terms of the gnu general public license as published by
- * the free software foundation, either version 3 of the license, or
+ * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * atrocore as well as espocrm is distributed in the hope that it will be useful,
- * but without any warranty; without even the implied warranty of
- * merchantability or fitness for a particular purpose. see the
- * gnu general public license for more details.
+ * AtroCore as well as EspoCRM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * you should have received a copy of the gnu general public license
- * along with espocrm. if not, see http://www.gnu.org/licenses/.
+ * You should have received a copy of the GNU General Public License
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  *
- * the interactive user interfaces in modified source and object code versions
- * of this program must display appropriate legal notices, as required under
- * section 5 of the gnu general public license version 3.
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
  *
- * in accordance with section 7(b) of the gnu general public license version 3,
- * these appropriate legal notices must retain the display of the "espocrm" word
- * and "atrocore" word.
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
+ * and "AtroCore" word.
  */
 
 Espo.define('views/detail', 'views/main', function (Dep) {

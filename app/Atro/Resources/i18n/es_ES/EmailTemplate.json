@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "subject": "Sujeto",
+    "body": "Cuerpo",
+    "allowAttachments": "Permitir archivos adjuntos",
+    "emailTo": "Email para",
+    "emailCc": "Enviar CC por correo electrónico"
+  },
+  "labels": {
+    "send": "Enviar",
+    "Create EmailTemplate": "Crear plantilla de correo electrónico"
+  },
+  "exceptions": {
+    "notificationTemplatesCannotBeDeleted": "Las plantillas para notificaciones no se pueden eliminar"
+  }
+}

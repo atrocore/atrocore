@@ -44,6 +44,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         data() {
             return _.extend({
+                hasQM: this.getAcl().check('QueueItem', 'read'),
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled')
             }, Dep.prototype.data.call(this));
@@ -289,30 +290,63 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             });
         },
 
+        renderQmPanelList() {
+            this.getCollectionFactory().create('QueueItem', collection => {
+                collection.maxSize = 20;
+                collection.url = 'QueueItem';
+                collection.sortBy = 'sortOrder';
+                collection.asc = true;
+                collection.where = [
+                    {
+                        field: 'status',
+                        type: 'in',
+                        value: ['Running', 'Pending']
+                    }
+                ];
+                this.listenToOnce(collection, 'sync', () => {
+                    this.createView('list', 'views/record/list', {
+                        el: this.options.el + ' .list-container',
+                        collection: collection,
+                        rowActionsDisabled: true,
+                        checkboxes: false,
+                        headerDisabled: true,
+                        layoutName: 'listInQueueManager'
+                    }, view => {
+                        view.render();
+                        this.qmInterval = window.setInterval(() => {
+                            collection.fetch();
+                        }, 2000)
+                    });
+                });
+                collection.fetch();
+            });
+        },
+
         initProgressBadge() {
             if (this.getAcl().check('QueueItem', 'read')) {
-                this.$el.find('.navbar-header').find('.notifications-badge-container').before('<li class="dropdown queue-badge-container"></li>');
-                this.createView('queueBadgeHeader', 'treo-core:views/queue-manager/badge', {
-                    el: `${this.options.el} .navbar-header .queue-badge-container`,
-                    intervalConditions: [
-                        () => {
-                            return $(window).innerWidth() < 768;
-                        }
-                    ]
-                }, view => {
-                    view.render();
+
+                window.addEventListener('qmPanelClosed', () => {
+                    if (this.qmInterval) {
+                        window.clearInterval(this.qmInterval);
+                    }
                 });
 
-                this.$el.find('.navbar-right').find('.notifications-badge-container').before('<li class="dropdown queue-badge-container hidden-xs"></li>');
-                this.createView('queueBadgeRight', 'treo-core:views/queue-manager/badge', {
-                    el: `${this.options.el} .navbar-right .queue-badge-container`,
-                    intervalConditions: [
-                        () => {
-                            return $(window).innerWidth() >= 768;
+                new Svelte.QueueManagerIcon({
+                    target: this.$el.find('.navbar-header .queue-badge-container').get(0),
+                    props: {
+                        renderTable: () => {
+                            this.renderQmPanelList();
                         }
-                    ]
-                }, view => {
-                    view.render();
+                    }
+                });
+
+                new Svelte.QueueManagerIcon({
+                    target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
+                    props: {
+                        renderTable: () => {
+                            this.renderQmPanelList();
+                        }
+                    }
                 });
             }
         },

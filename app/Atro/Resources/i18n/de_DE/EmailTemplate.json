@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "subject": "Thema",
+    "body": "Körper",
+    "allowAttachments": "Anhänge zulassen",
+    "emailTo": "E-Mail an",
+    "emailCc": "E-Mail an CC senden"
+  },
+  "labels": {
+    "send": "Senden",
+    "Create EmailTemplate": "E-Mail-Vorlage erstellen"
+  },
+  "exceptions": {
+    "notificationTemplatesCannotBeDeleted": "Vorlagen für Benachrichtigungen können nicht gelöscht werden"
+  }
+}
