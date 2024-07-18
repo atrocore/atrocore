@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Util;
@@ -68,6 +69,15 @@ class EmailTemplate extends Base
             }
         }
         return $attachments;
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if (in_array($entity->get('id'), ['mention', 'notePost', 'notePostNoParent', 'ownership', 'assignment'])) {
+            throw new BadRequest($this->getLanguage()->translate("notificationTemplatesCannotBeDeleted", "exceptions", $this->entityType));
+        }
+
+        parent::beforeRemove($entity, $options);
     }
 
     protected function init()
