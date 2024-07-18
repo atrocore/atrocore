@@ -13,21 +13,19 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
-use Atro\Core\Exceptions\NotUnique;
-use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Espo\Core\ORM\Repositories\RDB;
+use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\ORM\Repositories\RDB;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class Relation extends RDB
 {
-
-
     public static function buildVirtualFieldName(string $relationName, string $fieldName): string
     {
         return "{$relationName}__{$fieldName}";
