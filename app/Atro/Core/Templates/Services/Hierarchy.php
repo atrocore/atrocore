@@ -24,7 +24,7 @@ use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Espo\Services\Record;
+use Atro\Services\Record;
 use Atro\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
