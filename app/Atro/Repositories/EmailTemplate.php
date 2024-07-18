@@ -26,7 +26,7 @@ class EmailTemplate extends Base
     {
         $twig = $this->getInjection('twig');
         $attachments = [];
-        if (!empty($data['entity']) && $data['entity'] instanceof \Espo\Core\ORM\Entity) {
+        if (!empty($data['entity']) && $data['entity'] instanceof \Espo\Core\ORM\Entity && !empty($emailTemplate->get('allowAttachments'))) {
             $attachments = $this->getAttachments($data['entity']);
         }
 
@@ -52,6 +52,7 @@ class EmailTemplate extends Base
             'emailCc'          => $emailTemplate->get('emailCc'),
             'subject'          => $twig->renderTemplate($subject, $data),
             'body'             => $twig->renderTemplate($body, $data),
+            'allowAttachments' => $emailTemplate->get('allowAttachments'),
             'attachmentsIds'   => array_column($attachments, 'id'),
             'attachmentsNames' => array_column($attachments, 'name', 'id'),
         ];
