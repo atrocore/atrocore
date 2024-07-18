@@ -20,7 +20,7 @@ use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
-use Espo\Services\Record;
+use Atro\Services\Record;
 
 class PseudoTransactionManager
 {

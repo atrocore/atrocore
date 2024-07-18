@@ -13,6 +13,33 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-class Record extends AbstractService
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\EventManager\Event;
+
+class Record extends \Espo\Services\RecordService
 {
+    public function deleteEntityPermanently(string $id): bool
+    {
+        try {
+            $deleted = $this->deleteEntity($id);
+        } catch (NotFound $e) {
+            if (empty($this->getRepository()->markedAsDeleted($id))) {
+                throw new NotFound();
+            }
+            $deleted = true;
+        }
+
+        if ($deleted) {
+            $id = $this
+                ->dispatchEvent('beforeDeleteEntityPermanently', new Event(['id' => $id, 'service' => $this]))
+                ->getArgument('id');
+            if (!empty($id)) {
+                $this->getRepository()->deleteFromDb($id);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }
