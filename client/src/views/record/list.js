@@ -2457,6 +2457,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
             }, this);
         },
+
         actionQuickRestore: function (data) {
             data = data || {}
             var id = data.id;
@@ -2499,6 +2500,51 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.collection.push(model);
                 }.bind(this))
             }, this);
+        },
+
+        actionDeletePermanently(data) {
+            console.log(data)
+            // data = data || {}
+            // var id = data.id;
+            // if (!id) return;
+            //
+            // var model = this.collection.get(id);
+            // if (!this.getAcl().checkModel(model, 'delete')) {
+            //     this.notify('Access denied', 'error');
+            //     return false;
+            // }
+            //
+            // let message = 'Global.messages.restoreRecordConfirmation';
+            //
+            // let scopeMessage = this.getMetadata().get(`clientDefs.${this.scope}.restoreConfirmation`);
+            // if (scopeMessage) {
+            //     message = scopeMessage;
+            // }
+            //
+            // let parts = message.split('.');
+            //
+            // this.confirm({
+            //     message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
+            //     confirmText: this.translate('Restore')
+            // }, function () {
+            //     this.collection.trigger('model-removing', id);
+            //     this.collection.remove(model);
+            //     this.notify('restoring');
+            //     $.ajax({
+            //         url: this.entityType + '/action/massRestore',
+            //         type: 'POST',
+            //         data: JSON.stringify({
+            //             ids: [id]
+            //         })
+            //     }).done(function (result) {
+            //             this.notify('Restored', 'success');
+            //             this.removeRecordFromList(id);
+            //         }.bind(this)
+            //     ).fail(function () {
+            //         this.notify('Error occured', 'error');
+            //         this.collection.push(model);
+            //     }.bind(this))
+            // }, this);
         },
 
         removeRecordFromList: function (id) {

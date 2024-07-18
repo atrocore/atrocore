@@ -101,6 +101,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "deletePermanently": "Delete Permanently",
     "Reupload": "Reupload",
     "attachFiles":"Attach Files",
     "typeToSearch": "Type and press Enter...",

@@ -87,6 +87,7 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "deletePermanently": "Dauerhaft löschen",
     "Reupload": "Neu hochladen",
     "attachFiles":"Dateien anhängen",
     "typeToSearch": "Tippe und absende...",

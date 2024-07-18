@@ -92,13 +92,22 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             const filters = this.getStorage().get('listSearch', scope);
             if (filters && filters.bool['onlyDeleted'] === true) {
                 if (this.options.acl.delete) {
-                    return [{
-                        action: 'quickRestore',
-                        label: 'Restore',
-                        data: {
-                            id: this.model.id
+                    return [
+                        {
+                            action: 'quickRestore',
+                            label: 'Restore',
+                            data: {
+                                id: this.model.id
+                            }
+                        },
+                        {
+                            action: 'deletePermanently',
+                            label: 'deletePermanently',
+                            data: {
+                                id: this.model.id
+                            }
                         }
-                    }];
+                    ];
                 }
             }
             var list = [{
