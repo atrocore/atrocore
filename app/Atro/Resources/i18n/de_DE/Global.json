@@ -374,6 +374,7 @@
     "deleteAllConfirmation": "Möchten Sie wirklich alle Datensätze löschen?",
     "resetPreferencesConfirmation": "Sind Sie sicher, dass Sie die Einstellungen auf Standardwerte zurücksetzen wollen?",
     "removeRecordConfirmation": "Sind Sie sicher, dass Sie den Eintrag löschen wollen?",
+    "deletePermanentlyRecordConfirmation": "Sind Sie sicher, dass Sie den Datensatz endgültig löschen wollen?",
     "restoreRecordConfirmation": "Der ausgewählte Datensatz wird wiederhergestellt. Sind Sie sicher, dass Sie es wiederherstellen möchten?",
     "unlinkRecordConfirmation": "Wollen Sie die Verknüpfung mit dem Datensatz wirklich endgültig löschen?",
     "removeRecordConfirmationHierarchically": "Wollen Sie wirklich die Datensätze hierarchisch löschen?",
