@@ -1,33 +1,33 @@
 /*
- * This file is part of EspoCRM and/or AtroCore.
+ * this file is part of espocrm and/or atrocore.
  *
- * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * espocrm - open source crm application.
+ * copyright (c) 2014-2019 yuri kuznetsov, taras machyshyn, oleksiy avramenko
+ * website: http://www.espocrm.com
  *
- * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore GmbH.
+ * atrocore is espocrm-based open source application.
+ * copyright (c) 2020 atrocore gmbh.
  *
- * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * atrocore as well as espocrm is free software: you can redistribute it and/or modify
+ * it under the terms of the gnu general public license as published by
+ * the free software foundation, either version 3 of the license, or
  * (at your option) any later version.
  *
- * AtroCore as well as EspoCRM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * atrocore as well as espocrm is distributed in the hope that it will be useful,
+ * but without any warranty; without even the implied warranty of
+ * merchantability or fitness for a particular purpose. see the
+ * gnu general public license for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ * you should have received a copy of the gnu general public license
+ * along with espocrm. if not, see http://www.gnu.org/licenses/.
  *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
+ * the interactive user interfaces in modified source and object code versions
+ * of this program must display appropriate legal notices, as required under
+ * section 5 of the gnu general public license version 3.
  *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
- * and "AtroCore" word.
+ * in accordance with section 7(b) of the gnu general public license version 3,
+ * these appropriate legal notices must retain the display of the "espocrm" word
+ * and "atrocore" word.
  */
 
 Espo.define('views/detail', 'views/main', function (Dep) {
@@ -265,6 +265,17 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             let boolFilterListCallback = data.boolFilterListCallback;
             let boolFilterDataCallback = data.boolFilterDataCallback;
             let panelView = this.getPanelView(link);
+            let foreign = this.model.defs['links'][link].foreign;
+            let type = this.model.defs['links'][link].type;
+            let selectDuplicateEnabled = false;
+
+            if (foreign) {
+                var foreignType = this.getMetadata().get('entityDefs.' + scope + '.links.' + foreign + '.type');
+
+                if(type === 'hasMany' && foreignType === 'belongsTo'){
+                    selectDuplicateEnabled = true;
+                }
+            }
 
             let filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
             for (let filterName in filters) {
@@ -312,11 +323,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 massRelateEnabled: false,
                 primaryFilterName: primaryFilterName,
                 boolFilterList: boolFilterList,
-                boolFilterData: boolfilterData
+                boolFilterData: boolfilterData,
+                selectDuplicateEnabled: selectDuplicateEnabled
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
-                dialog.once('select', selectObj => {
+                dialog.once('select',(selectObj, duplicate) => {
+
                     if (massRelateDisabled && !Array.isArray(selectObj)) {
                         const list = dialog.getView('list');
 
@@ -328,7 +341,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                     if (afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
                         panelView[afterSelectCallback](selectObj);
                     } else {
-                        let data = {};
+                        let data = {shouldDuplicateForeign: duplicate};
                         if (Array.isArray(selectObj)) {
                             data.massRelate = true;
                             data.where = [{
@@ -342,7 +355,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
                         this.ajaxPostRequest(`${this.scope}/${this.model.id}/${link}`, data)
                             .then(() => {
-                                this.notify('Linked', 'success');
+                                this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                                 this.updateRelationshipPanel(link);
                                 this.model.trigger('after:relate', link);
                             });
