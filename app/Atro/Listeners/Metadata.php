@@ -33,7 +33,7 @@ class Metadata extends AbstractListener
 
         $data = $this->addOnlyActiveFilter($data);
 
-        $data = $this->addOnlyDeletedFilter($data);
+        $this->addOnlyDeletedFilter($data);
 
         $data = $this->addArchive($data);
 
@@ -1145,20 +1145,11 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function addOnlyDeletedFilter(array $data): array
+    protected function addOnlyDeletedFilter(array &$data): void
     {
         foreach ($data['entityDefs'] as $entity => $row) {
-            if ($entity !== 'File') {
-                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
-            }
+            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
         }
-
-        return $data;
     }
 
     protected function addPreviewTemplates(array &$data): void
