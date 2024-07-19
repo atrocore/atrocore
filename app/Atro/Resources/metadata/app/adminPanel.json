@@ -48,11 +48,6 @@
         "description": "notifications"
       },
       {
-        "url": "#EmailTemplate",
-        "label": "emailTemplates",
-        "description": "emailTemplates"
-      },
-      {
         "url": "#Admin/clearCache",
         "label": "Clear Cache",
         "description": "clearCache"
@@ -181,6 +176,11 @@
   "templates": {
     "label": "Templates",
     "itemList": [
+      {
+        "url": "#EmailTemplate",
+        "label": "emailTemplates",
+        "description": "emailTemplates"
+      },
       {
         "url": "#PreviewTemplate",
         "label": "previewTemplate",

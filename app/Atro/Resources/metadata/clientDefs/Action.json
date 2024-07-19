@@ -43,7 +43,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "webhook"
+                "webhook",
+                "set"
               ]
             },
             {

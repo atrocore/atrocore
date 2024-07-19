@@ -10,5 +10,8 @@
   "labels": {
     "send": "Send",
     "Create EmailTemplate": "Create Email Template"
+  },
+  "exceptions": {
+    "notificationTemplatesCannotBeDeleted": "Templates for notifications cannot be deleted"
   }
 }

@@ -15,9 +15,9 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Services\Action;
 use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -42,8 +42,8 @@ class Set implements TypeInterface
     {
         $linker = $this->getEntityManager()->getRepository('ActionSetLinker')
             ->where([
-                'setId'    => $action->get('id'),
-                'isActive' => true
+                'setId'     => $action->get('id'),
+                'isActive'  => true
             ])
             ->order('sortOrder', 'ASC')
             ->findOne();
@@ -52,20 +52,12 @@ class Set implements TypeInterface
             return false;
         }
 
-        $this->executeAction($linker);
+        $this->executeAction($linker, $input);
 
         return true;
     }
 
-    /**
-     * @param Entity $current
-     *
-     * @return bool
-     *
-     * @throws \Atro\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function executeAction(Entity $current): bool
+    public function executeAction(Entity $current, \stdClass $input): bool
     {
         if ($current->getEntityType() != 'ActionSetLinker') {
             return false;
@@ -79,7 +71,10 @@ class Set implements TypeInterface
         $actionService = $this->getServiceFactory()->create('Action');
 
         try {
-            $input = new \stdClass();
+            if (property_exists($input, 'actionSetLinkerId')) {
+                unset($input->actionSetLinkerId);
+            }
+
             $input->actionSetLinkerId = $current->get('id');
 
             $actionService->executeNow($action->get('id'), $input);
@@ -89,7 +84,7 @@ class Set implements TypeInterface
         }
 
         if (empty($action->get('inBackground')) && !empty($next = $this->getNextAction($current))) {
-            return $this->executeAction($next);
+            return $this->executeAction($next, $input);
         }
 
         return true;
@@ -105,9 +100,9 @@ class Set implements TypeInterface
             ->getEntityManager()
             ->getRepository('ActionSetLinker')
             ->where([
-                'setId'    => $entity->get('setId'),
-                'sortOrder>' => $entity->get('sortOrder'),
-                'isActive' => true
+                'setId'         => $entity->get('setId'),
+                'sortOrder>'    => $entity->get('sortOrder'),
+                'isActive'      => true
             ])
             ->order('sortOrder', 'ASC')
             ->findOne();
@@ -135,14 +130,41 @@ class Set implements TypeInterface
             ->getEntityManager()
             ->getRepository('QueueItem')
             ->where([
-                'status' => ['Pending', 'Running'],
-                'data*' => '%"actionSetLinkerId":"' . $current->get('id') . '"%'
+                'status'    => ['Pending', 'Running'],
+                'data*'     => '%"actionSetLinkerId":"' . $current->get('id') . '"%'
             ])
             ->find();
 
         if (count($exist) == 0 && !empty($next = $this->getNextAction($current))) {
-            $this->executeAction($next);
+            $data = $entity->get('data');
+            $data = empty($data) ? [] : Json::decode(Json::encode($data), true);
+
+            $where = $this->searchValueByKey($data, 'where');
+
+            $this->executeAction($next, (object)['where' => $where]);
         }
+    }
+
+    protected function searchValueByKey($array, $key)
+    {
+        if (!is_array($array)) {
+            return [];
+        }
+
+        if (array_key_exists($key, $array)) {
+            return $array[$key];
+        }
+
+        foreach ($array as $subArray) {
+            if (is_array($subArray)) {
+                $result = $this->searchValueByKey($subArray, $key);
+                if ($result !== []) {
+                    return $result;
+                }
+            }
+        }
+
+        return [];
     }
 
     protected function getEntityManager(): EntityManager

@@ -9,5 +9,8 @@
   "labels": {
     "send": "Надіслати",
     "Create EmailTemplate": "Створити шаблон електронної пошти"
+  },
+  "exceptions": {
+    "notificationTemplatesCannotBeDeleted": "Шаблони сповіщень не можна видалити"
   }
 }
