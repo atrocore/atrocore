@@ -302,8 +302,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
-//            return $this->getFileManager()->removeFile($path);
-            return $this->getFileManager()->move($path, $this->getTrashPath($file));
+            return $this->getFileManager()->removeFile($path);
+//            return $this->getFileManager()->move($path, $this->getTrashPath($file));
         }
 
         return true;
