@@ -106,7 +106,7 @@ class Record extends \Espo\Services\RecordService
 
         if (array_key_exists('where', $params)) {
             $selectParams = $this->getSelectParams(['where' => $params['where']], true, true);
-            if (!empty($params['permanently']) && $action === 'delete') {
+            if ($action === 'delete' && !empty($params['permanently'])) {
                 $selectParams['withDeleted'] = true;
             }
 
@@ -160,7 +160,9 @@ class Record extends \Espo\Services\RecordService
                     'totalChunks' => $totalChunks,
                     'ids'         => $chunk,
                 ]);
-
+                if ($action === 'delete' && !empty($params['permanently'])) {
+                    $jobData['deletePermanently'] = true;
+                }
                 $name = $this->getInjection('language')->translate($action, 'massActions', 'Global') . ': ' . $this->entityName;
                 if ($part > 0) {
                     $name .= " ($part)";
