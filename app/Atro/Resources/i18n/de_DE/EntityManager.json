@@ -44,7 +44,8 @@
     "disableHierarchy": "Hierarchie deaktivieren",
     "modifiedExtendedRelations": "Relationen mit Auswirkungen auf Änderungsdatum/-Zeit",
     "duplicatableRelations": "Duplizierbare Beziehungen",
-    "nonComparableFields": "Nicht vergleichbare Felder"
+    "nonComparableFields": "Nicht vergleichbare Felder",
+    "deleteWithoutConfirmation": "Ohne Bestätigung löschen"
   },
   "options": {
     "linkType": {
@@ -81,6 +82,7 @@
     "textFilterFields": "Von der Textsuche verwendete Felder.",
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
     "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
-    "modifiedExtendedRelations": "Änderungen in diesen Beziehungen führen zur Aktualisierung von \"Verändert\" Datum und Uhrzeit."
+    "modifiedExtendedRelations": "Änderungen in diesen Beziehungen führen zur Aktualisierung von \"Verändert\" Datum und Uhrzeit.",
+    "deleteWithoutConfirmation": "Wenn diese Option aktiviert ist, wird der einzelne Datensatz ohne Bestätigung des Benutzers gelöscht. Die Löschung mehrerer Datensätze muss noch bestätigt werden."
   }
 }

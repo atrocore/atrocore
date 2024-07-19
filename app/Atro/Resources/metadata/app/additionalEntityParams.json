@@ -112,6 +112,11 @@
     "hasActive": {
       "type": "bool",
       "default": false
+    },
+    "deleteWithoutConfirmation": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true
     }
   },
   "layout": {

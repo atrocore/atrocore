@@ -79,6 +79,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 this.model.set('kanbanViewMode', this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false);
                 this.model.set('kanbanStatusIgnoreList', this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []);
+                this.model.set('deleteWithoutConfirmation', this.getMetadata().get(['scopes', scope, 'deleteWithoutConfirmation']) ||  false);
             }
         },
 
