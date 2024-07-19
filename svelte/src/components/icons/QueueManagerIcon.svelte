@@ -8,6 +8,11 @@
     let icon;
     let isPanelOpen = false;
 
+    let qmPaused = false;
+    window.addEventListener('publicDataFetched', (event: any): void => {
+        qmPaused = !!(event.detail.qmPaused);
+    });
+
     function openPanel(): void {
         if (!isPanelOpen) {
             isPanelOpen = true;
@@ -23,6 +28,8 @@
 
 <a href="/" class="notifications-button" bind:this={icon} on:click={event=>{event.preventDefault();openPanel();}}>
     <span class="fas fa-tasks"></span>
-    <span class="fas fa-pause-circle pause-icon hidden"></span>
+    {#if qmPaused}
+    <span class="fas fa-pause-circle pause-icon"></span>
+    {/if}
 </a>
 <QueuePanelContainer icon={icon} isOpen={isPanelOpen} close={closePanel}/>

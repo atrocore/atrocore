@@ -57,7 +57,7 @@ export const Language = {
         return translatedText;
     },
 
-    translate(name: string, category: null | string = null, scope: null | string = null): string | null | object {
+    translate(name: string, category: null | string = null, scope: null | string = null): string {
         scope = scope || 'Global';
         category = category || 'labels';
         let res = Language.get(scope, category, name);
@@ -65,6 +65,7 @@ export const Language = {
             res = Language.get('Global', category, name);
         }
 
+        // @ts-ignore: Suppress error for non string return. Normally it should be always string.
         return res;
     },
 
