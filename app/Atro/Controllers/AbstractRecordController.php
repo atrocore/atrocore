@@ -229,9 +229,17 @@ abstract class AbstractRecordController extends AbstractController
 
         $id = $params['id'];
 
-        if ($this->getRecordService()->deleteEntity($id)) {
+        $method = 'deleteEntity';
+
+        $permanently = trim((string)$this->getRecordService()::getHeader('permanently'));
+        if ($permanently && (strtolower($permanently) === 'true') || $permanently === '1') {
+            $method = 'deleteEntityPermanently';
+        }
+
+        if ($this->getRecordService()->$method($id)) {
             return true;
         }
+
         throw new Error();
     }
 
@@ -286,6 +294,9 @@ abstract class AbstractRecordController extends AbstractController
         }
         if (property_exists($data, 'ids')) {
             $params['ids'] = $data->ids;
+        }
+        if (property_exists($data, 'permanently')) {
+            $params['permanently'] = $data->permanently;
         }
 
         return $this->getRecordService()->massRemove($params);

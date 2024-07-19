@@ -572,20 +572,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
         },
 
-        massActionRemove: function () {
+        massActionRemove: function (data, permanently = false) {
             if (!this.getAcl().check(this.entityType, 'delete')) {
                 this.notify('Access denied', 'error');
                 return false;
             }
 
             this.confirm({
-                message: this.prepareRemoveSelectedRecordsConfirmationMessage(),
+                message: this.prepareRemoveSelectedRecordsConfirmationMessage(permanently ? 'deletePermanentlyRecordsConfirmation' : 'removeSelectedRecordsConfirmation'),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
-                var data = {};
+                var data = {permanently: permanently};
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
                     data.selectData = this.collection.data || {};
@@ -609,6 +609,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }.bind(this));
             }, this);
         },
+
+        massActionDeletePermanently() {
+            this.massActionRemove(null, true);
+        },
+
         massActionRestore: function () {
             if (!this.getAcl().check(this.entityType, 'delete')) {
                 this.notify('Access denied', 'error');
@@ -645,11 +650,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
         },
 
-        prepareRemoveSelectedRecordsConfirmationMessage: function () {
+        prepareRemoveSelectedRecordsConfirmationMessage: function (key) {
             let scopeMessage = this.getMetadata()
-                .get(`clientDefs.${this.scope}.removeSelectedRecordsConfirmation`)
+                .get(`clientDefs.${this.scope}.${key}`)
                 ?.split('.');
-            let message = this.translate('removeSelectedRecordsConfirmation', 'messages');
+            let message = this.translate(key, 'messages');
             if (scopeMessage?.length > 0) {
                 message = this.translate(scopeMessage.pop(), scopeMessage.pop(), scopeMessage.pop());
                 var selectedIds = this.checkedList;
@@ -1195,8 +1200,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (filters && filters.bool['onlyDeleted'] === true && !this.massActionList.includes('restore')) {
                 this.massActionListBackup = this.massActionList;
                 this.checkAllResultMassActionListBackup = this.checkAllResultMassActionList;
-                this.massActionList = ['restore'];
-                this.checkAllResultMassActionList = ['restore'];
+                this.massActionList = ['restore', 'deletePermanently'];
+                this.checkAllResultMassActionList = ['restore', 'deletePermanently'];
                 this.reRender();
             }
 
@@ -2459,6 +2464,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
             }, this);
         },
+
         actionQuickRestore: function (data) {
             data = data || {}
             var id = data.id;
@@ -2501,6 +2507,41 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.collection.push(model);
                 }.bind(this))
             }, this);
+        },
+
+        actionDeletePermanently(data) {
+            let id = (data || {id: null}).id;
+            if (!id) {
+                return;
+            }
+
+            let model = this.collection.get(id);
+            if (!this.getAcl().checkModel(model, 'delete')) {
+                this.notify('Access denied', 'error');
+                return;
+            }
+
+            this.confirm({
+                message: this.translate('deletePermanentlyRecordConfirmation', 'messages'),
+                confirmText: this.translate('Delete')
+            }, () => {
+                this.collection.trigger('model-removing', id);
+                this.collection.remove(model);
+                this.notify('removing');
+                $.ajax({
+                    url: `${this.entityType}/${id}`,
+                    type: 'DELETE',
+                    headers: {
+                        permanently: 'true'
+                    }
+                }).done(result => {
+                    this.notify('Removed', 'success');
+                    this.removeRecordFromList(id);
+                }).fail(() => {
+                    this.notify('Error occured', 'error');
+                    this.collection.push(model);
+                });
+            });
         },
 
         removeRecordFromList: function (id) {

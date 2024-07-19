@@ -26,9 +26,14 @@ class MassDelete extends QueueManagerBase
         $entityType = $data['entityType'];
         $service = $this->getContainer()->get('serviceFactory')->create($entityType);
 
+        $method = 'deleteEntity';
+        if (!empty($data['deletePermanently'])) {
+            $method = 'deleteEntityPermanently';
+        }
+
         foreach ($data['ids'] as $id) {
             try {
-                $service->deleteEntity($id);
+                $service->$method($id);
             } catch (\Throwable $e) {
                 $message = "MassDelete {$entityType} '$id', failed: {$e->getMessage()}";
                 $GLOBALS['log']->error($message);

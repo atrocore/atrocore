@@ -17,7 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
-use Espo\Services\Record;
+use Atro\Services\Record;
 
 class Relation extends Record
 {

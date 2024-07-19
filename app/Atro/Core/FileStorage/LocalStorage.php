@@ -36,6 +36,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 {
     public const CHUNKS_DIR = '.chunks';
     public const TMP_DIR = '.tmp';
+    public const TRASH_DIR = '.trash';
 
     protected Container $container;
 
@@ -302,9 +303,18 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
             return $this->getFileManager()->removeFile($path);
+//            return $this->getFileManager()->move($path, $this->getTrashPath($file));
         }
 
         return true;
+    }
+
+    public function getTrashPath(File $file): string
+    {
+        $trashDir = $file->getStorage()->get('path') . DIRECTORY_SEPARATOR . self::TRASH_DIR . DIRECTORY_SEPARATOR . $file->get('thumbnailsPath');
+        $this->getFileManager()->mkdir($trashDir, 0777, true);
+
+        return $trashDir . DIRECTORY_SEPARATOR . $file->get('name');
     }
 
     public function deleteFolder(Folder $folder): bool

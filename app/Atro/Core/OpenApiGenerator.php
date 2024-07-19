@@ -528,6 +528,16 @@ class OpenApiGenerator
                             "type" => "string"
                         ]
                     ],
+                    [
+                        "name"        => "permanently",
+                        "in"          => "header",
+                        "required"    => false,
+                        "description" => "Set to TRUE if you want to delete the record permanently",
+                        "schema"      => [
+                            "type"    => "boolean",
+                            "example" => false,
+                        ]
+                    ],
                 ],
                 "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
@@ -627,12 +637,16 @@ class OpenApiGenerator
                             'schema' => [
                                 "type"       => "object",
                                 "properties" => [
-                                    "ids" => [
+                                    "ids"         => [
                                         "type"    => "array",
                                         "items"   => [
                                             "type" => "string"
                                         ],
                                         'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                    ],
+                                    "permanently" => [
+                                        "type"    => "boolean",
+                                        'example' => false
                                     ],
                                 ],
                             ]

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
-use Espo\Services\Record;
+use Atro\Services\Record;
 
 class Base extends Record
 {
