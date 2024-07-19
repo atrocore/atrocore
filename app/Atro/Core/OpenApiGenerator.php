@@ -532,6 +532,31 @@ class OpenApiGenerator
                 "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
+            $result['paths']["/{$scopeName}/action/deletePermanently"]['delete'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Delete permanently a record of the $scopeName",
+                "description" => "Delete permanently a record of the $scopeName",
+                "operationId" => "deletePermanently{$scopeName}Item",
+                'security'    => [['Authorization-Token' => []]],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => [
+                                "type"       => "object",
+                                "properties" => [
+                                    "id" => [
+                                        "type"    => "string",
+                                        'example' => "613219736ca7a1c68"
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+                "responses"   => self::prepareResponses(['type' => 'boolean'])
+            ];
+
             $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
                 'tags'        => [$scopeName],
                 "summary"     => "Returns linked entities for the $scopeName",
