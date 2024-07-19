@@ -295,6 +295,9 @@ abstract class AbstractRecordController extends AbstractController
         if (property_exists($data, 'ids')) {
             $params['ids'] = $data->ids;
         }
+        if (property_exists($data, 'permanently')) {
+            $params['permanently'] = $data->permanently;
+        }
 
         return $this->getRecordService()->massRemove($params);
     }

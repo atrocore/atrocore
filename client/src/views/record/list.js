@@ -572,7 +572,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
         },
 
-        massActionRemove: function () {
+        massActionRemove: function (data, permanently = false) {
             if (!this.getAcl().check(this.entityType, 'delete')) {
                 this.notify('Access denied', 'error');
                 return false;
@@ -585,7 +585,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
-                var data = {};
+                var data = {permanently: permanently};
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
                     data.selectData = this.collection.data || {};
@@ -609,6 +609,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }.bind(this));
             }, this);
         },
+
+        massActionDeletePermanently() {
+            this.massActionRemove(null, true);
+        },
+
         massActionRestore: function () {
             if (!this.getAcl().check(this.entityType, 'delete')) {
                 this.notify('Access denied', 'error');
@@ -1195,8 +1200,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (filters && filters.bool['onlyDeleted'] === true && !this.massActionList.includes('restore')) {
                 this.massActionListBackup = this.massActionList;
                 this.checkAllResultMassActionListBackup = this.checkAllResultMassActionList;
-                this.massActionList = ['restore'];
-                this.checkAllResultMassActionList = ['restore'];
+                this.massActionList = ['restore', 'deletePermanently'];
+                this.checkAllResultMassActionList = ['restore', 'deletePermanently'];
                 this.reRender();
             }
 
