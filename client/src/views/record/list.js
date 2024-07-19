@@ -579,7 +579,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.confirm({
-                message: this.prepareRemoveSelectedRecordsConfirmationMessage(),
+                message: this.prepareRemoveSelectedRecordsConfirmationMessage(permanently ? 'deletePermanentlyRecordsConfirmation' : 'removeSelectedRecordsConfirmation'),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify(this.translate('removing', 'labels', 'Global'));
@@ -650,11 +650,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
         },
 
-        prepareRemoveSelectedRecordsConfirmationMessage: function () {
+        prepareRemoveSelectedRecordsConfirmationMessage: function (key) {
             let scopeMessage = this.getMetadata()
-                .get(`clientDefs.${this.scope}.removeSelectedRecordsConfirmation`)
+                .get(`clientDefs.${this.scope}.${key}`)
                 ?.split('.');
-            let message = this.translate('removeSelectedRecordsConfirmation', 'messages');
+            let message = this.translate(key, 'messages');
             if (scopeMessage?.length > 0) {
                 message = this.translate(scopeMessage.pop(), scopeMessage.pop(), scopeMessage.pop());
                 var selectedIds = this.checkedList;

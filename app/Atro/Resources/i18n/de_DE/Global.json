@@ -468,6 +468,7 @@
     "merge": "Zusammenführen",
     "cancel": "Stornieren",
     "delete": "Löschen",
+    "deletePermanently": "Dauerhaft löschen",
     "massDelete": "Masse löschen",
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
