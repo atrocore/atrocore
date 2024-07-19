@@ -579,6 +579,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             let action = () => {
+                this.notify(this.translate('removing', 'labels', 'Global'));
+
                 var ids = [];
                 var data = {permanently: permanently};
                 if (this.allResultIsChecked) {
@@ -606,17 +608,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (!permanently && this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])
                 && ((!this.allResultIsChecked && this.checkedList.length === 1) || this.collection.length === 1)) {
                 action();
-            } else {
-                this.confirm({
-                    message: this.prepareRemoveSelectedRecordsConfirmationMessage(permanently ? 'deletePermanentlyRecordsConfirmation' : 'removeSelectedRecordsConfirmation'),
-                    confirmText: this.translate('Remove')
-                }, function () {
-                    this.notify(this.translate('removing', 'labels', 'Global'));
-                    action();
-
-                }, this);
+                return;
             }
 
+            this.confirm({
+                message: this.prepareRemoveSelectedRecordsConfirmationMessage(permanently ? 'deletePermanentlyRecordsConfirmation' : 'removeSelectedRecordsConfirmation'),
+                confirmText: this.translate('Remove')
+            }, function () {
+
+                action();
+
+            }, this);
         },
 
         massActionDeletePermanently() {
@@ -2453,10 +2455,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             let parts = message.split('.');
 
-            this.confirm({
-                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
-                confirmText: this.translate('Remove')
-            }, function () {
+            let action = () => {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
                 this.notify('removing');
@@ -2471,6 +2470,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.collection.push(model);
                     }.bind(this)
                 });
+            }
+
+            if (this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])) {
+               action();
+               return;
+            }
+
+            this.confirm({
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
+                confirmText: this.translate('Remove')
+            }, function () {
+                action();
             }, this);
         },
 

@@ -1099,7 +1099,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             let parts = message.split('.');
 
-            let destroy = () => {
+            let action = () => {
                 this.trigger('before:delete');
                 this.trigger('delete');
 
@@ -1125,14 +1125,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }.bind(this),
                 });
             }
-            if (!this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])) {
-                this.confirm({
-                    message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', this.model.get('name')),
-                    confirmText: this.translate('Remove')
-                }, () => destroy(), this);
-            } else {
-                destroy()
+
+            if (this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])) {
+              action();
+              return;
             }
+
+            this.confirm({
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', this.model.get('name')),
+                confirmText: this.translate('Remove')
+            }, () => action(), this);
         },
 
         getFieldViews: function (withHidden) {
