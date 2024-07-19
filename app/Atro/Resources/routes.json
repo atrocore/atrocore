@@ -384,14 +384,6 @@
     }
   },
   {
-    "route": "/:controller/action/deletePermanently",
-    "method": "delete",
-    "params": {
-      "controller": ":controller",
-      "action": "deletePermanently"
-    }
-  },
-  {
     "route": "/:controller/:id/stream",
     "method": "get",
     "params": {

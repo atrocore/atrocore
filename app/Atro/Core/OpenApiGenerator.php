@@ -528,29 +528,14 @@ class OpenApiGenerator
                             "type" => "string"
                         ]
                     ],
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
-
-            $result['paths']["/{$scopeName}/action/deletePermanently"]['delete'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Delete permanently a record of the $scopeName",
-                "description" => "Delete permanently a record of the $scopeName",
-                "operationId" => "deletePermanently{$scopeName}Item",
-                'security'    => [['Authorization-Token' => []]],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => [
-                                "type"       => "object",
-                                "properties" => [
-                                    "id" => [
-                                        "type"    => "string",
-                                        'example' => "613219736ca7a1c68"
-                                    ],
-                                ],
-                            ]
+                    [
+                        "name"        => "permanently",
+                        "in"          => "header",
+                        "required"    => false,
+                        "description" => "Set to TRUE if you want to delete the record permanently",
+                        "schema"      => [
+                            "type"    => "boolean",
+                            "example" => false,
                         ]
                     ],
                 ],
@@ -652,12 +637,16 @@ class OpenApiGenerator
                             'schema' => [
                                 "type"       => "object",
                                 "properties" => [
-                                    "ids" => [
+                                    "ids"         => [
                                         "type"    => "array",
                                         "items"   => [
                                             "type" => "string"
                                         ],
                                         'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                    ],
+                                    "permanently" => [
+                                        "type"    => "boolean",
+                                        'example' => false
                                     ],
                                 ],
                             ]

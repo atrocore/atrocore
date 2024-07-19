@@ -2524,9 +2524,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.collection.remove(model);
                 this.notify('removing');
                 $.ajax({
-                    url: `${this.entityType}/action/deletePermanently`,
+                    url: `${this.entityType}/${id}`,
                     type: 'DELETE',
-                    data: JSON.stringify({id: id})
+                    headers: {
+                        permanently: 'true'
+                    }
                 }).done(result => {
                     this.notify('Removed', 'success');
                     this.removeRecordFromList(id);
