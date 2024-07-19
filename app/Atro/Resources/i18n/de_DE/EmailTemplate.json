@@ -9,5 +9,8 @@
   "labels": {
     "send": "Senden",
     "Create EmailTemplate": "E-Mail-Vorlage erstellen"
+  },
+  "exceptions": {
+    "notificationTemplatesCannotBeDeleted": "Vorlagen für Benachrichtigungen können nicht gelöscht werden"
   }
 }

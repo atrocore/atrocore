@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Util;
@@ -25,7 +26,7 @@ class EmailTemplate extends Base
     {
         $twig = $this->getInjection('twig');
         $attachments = [];
-        if (!empty($data['entity']) && $data['entity'] instanceof \Espo\Core\ORM\Entity) {
+        if (!empty($data['entity']) && $data['entity'] instanceof \Espo\Core\ORM\Entity && !empty($emailTemplate->get('allowAttachments'))) {
             $attachments = $this->getAttachments($data['entity']);
         }
 
@@ -51,6 +52,7 @@ class EmailTemplate extends Base
             'emailCc'          => $emailTemplate->get('emailCc'),
             'subject'          => $twig->renderTemplate($subject, $data),
             'body'             => $twig->renderTemplate($body, $data),
+            'allowAttachments' => $emailTemplate->get('allowAttachments'),
             'attachmentsIds'   => array_column($attachments, 'id'),
             'attachmentsNames' => array_column($attachments, 'name', 'id'),
         ];
@@ -68,6 +70,15 @@ class EmailTemplate extends Base
             }
         }
         return $attachments;
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if (in_array($entity->get('id'), ['mention', 'notePost', 'notePostNoParent', 'ownership', 'assignment'])) {
+            throw new BadRequest($this->getLanguage()->translate("notificationTemplatesCannotBeDeleted", "exceptions", $this->entityType));
+        }
+
+        parent::beforeRemove($entity, $options);
     }
 
     protected function init()

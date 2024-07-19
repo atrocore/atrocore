@@ -1086,7 +1086,13 @@
     "fieldDoesNotExist": "Field \"{field}\" does not exist on the entity \"{entityType}\".",
     "optionIsDisabled": "Item '%s' is disabled for field '%s'.",
     "someCouldNotDuplicatedAndLinked": "Some records could not be duplicated and linked",
-    "someCouldNotLinked": "Some records could not be linked"
+    "someCouldNotLinked": "Some records could not be linked",
+    "massUpdateNoRecordProceed": "No record was updated.",
+    "massDeleteNoRecordProceed": "No record was removed.",
+    "massRestoreNoRecordProceed": "No record was restored.",
+    "massUpdateSomeRecordNotProceed": "Some record(s) could not be successfully updated.",
+    "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
+    "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

@@ -76,7 +76,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.scope = this.options.scope;
             this.ids = this.options.ids;
-            this.where = this.options.where;
+            this.where = this.getWhere();
             this.selectData = this.options.selectData;
             this.byWhere = this.options.byWhere;
 
@@ -205,6 +205,25 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             }.bind(this));
 
             return notValid;
+        },
+
+        getWhere(){
+            let where = this.options.where;
+            let cleanWhere = (where) => {
+                where.forEach(wherePart => {
+                    if(['in', 'notIn'].includes(wherePart['type'])) {
+                        if ('value' in wherePart && !(wherePart['value'] ?? []).length){
+                            delete wherePart['value']
+                        }
+                    }
+
+                    if(['and', 'or'].includes(wherePart['type']) && Array.isArray(wherePart['value'] ?? [])){
+                        cleanWhere(wherePart['value'] ?? [])
+                    }
+                })
+            };
+            cleanWhere(where);
+            return where;
         }
     });
 });

@@ -265,6 +265,17 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             let boolFilterListCallback = data.boolFilterListCallback;
             let boolFilterDataCallback = data.boolFilterDataCallback;
             let panelView = this.getPanelView(link);
+            let foreign = this.model.defs['links'][link].foreign;
+            let type = this.model.defs['links'][link].type;
+            let selectDuplicateEnabled = false;
+
+            if (foreign) {
+                var foreignType = this.getMetadata().get('entityDefs.' + scope + '.links.' + foreign + '.type');
+
+                if(type === 'hasMany' && foreignType === 'belongsTo'){
+                    selectDuplicateEnabled = true;
+                }
+            }
 
             let filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
             for (let filterName in filters) {
@@ -312,11 +323,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 massRelateEnabled: false,
                 primaryFilterName: primaryFilterName,
                 boolFilterList: boolFilterList,
-                boolFilterData: boolfilterData
+                boolFilterData: boolfilterData,
+                selectDuplicateEnabled: selectDuplicateEnabled
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
-                dialog.once('select', selectObj => {
+                dialog.once('select',(selectObj, duplicate) => {
+
                     if (massRelateDisabled && !Array.isArray(selectObj)) {
                         const list = dialog.getView('list');
 
@@ -328,7 +341,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                     if (afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
                         panelView[afterSelectCallback](selectObj);
                     } else {
-                        let data = {};
+                        let data = {shouldDuplicateForeign: duplicate};
                         if (Array.isArray(selectObj)) {
                             data.massRelate = true;
                             data.where = [{
@@ -342,7 +355,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
                         this.ajaxPostRequest(`${this.scope}/${this.model.id}/${link}`, data)
                             .then(() => {
-                                this.notify('Linked', 'success');
+                                this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                                 this.updateRelationshipPanel(link);
                                 this.model.trigger('after:relate', link);
                             });

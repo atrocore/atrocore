@@ -4,18 +4,19 @@
     export let icon: any;
 
     import {onMount, onDestroy} from 'svelte';
+
     import {Language} from '../../utils/Language';
     import {UserData} from '../../utils/UserData';
     import {Notifier} from '../../utils/Notifier';
 
     let qmPaused = false;
-    window.addEventListener('publicDataFetched', (event: CustomEvent): void => {
+    window.addEventListener('publicDataFetched', (event: any): void => {
         qmPaused = !!(event.detail.qmPaused);
     });
 
-    let panel;
+    let panel: any;
 
-    function handleClickOutside(event) {
+    function handleClickOutside(event: any) {
         if (panel && !panel.contains(event.target) && icon && !icon.contains(event.target) && isOpen === true) {
             close();
         }
@@ -29,7 +30,7 @@
         document.removeEventListener('click', handleClickOutside);
     });
 
-    async function startStopQm(pause: boolean): void {
+    async function startStopQm(pause: boolean) {
         let userData = UserData.get();
         if (!userData) {
             return;
@@ -64,7 +65,8 @@
             <div class="panel-heading clearfix">
                 <span class="panel-heading-title">{Language.translate('queueManager', 'labels', 'QueueItem')}</span>
                 <span class="pull-right">
-                    <a href="/" class="close" on:click={event=>{event.preventDefault();close();}}><span aria-hidden="true">×</span></a>
+                    <a href="/" class="close" on:click={event=>{event.preventDefault();close();}}><span
+                            aria-hidden="true">×</span></a>
                     {#if qmPaused}
                     <a href="/" title="{Language.translate('Start')}" class="qm-button"
                        on:click={event=>{event.preventDefault();startStopQm(false);}}>{Language.translate('Start')}</a>
