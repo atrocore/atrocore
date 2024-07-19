@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
-use Espo\Core\ORM\Repositories\RDB;
+use Atro\Core\ORM\Repositories\RDB;
 
 class Base extends RDB
 {

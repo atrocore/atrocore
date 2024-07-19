@@ -101,6 +101,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "deletePermanently": "Delete Permanently",
     "Reupload": "Reupload",
     "attachFiles":"Attach Files",
     "typeToSearch": "Type and press Enter...",
@@ -381,11 +382,13 @@
     "unlinkAllConfirmation": "Are you sure you want to unlink all records?",
     "deleteAllConfirmation": "Are you sure you want to delete all records?",
     "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
-    "removeRecordConfirmation": "The selected record will be deleted permanently. Are you sure you want to delete it?",
+    "removeRecordConfirmation": "Are you sure you want to delete the record?",
+    "removeSelectedRecordsConfirmation": "Are you sure you want to delete the selected records?",
     "restoreRecordConfirmation": "The selected record will be restore. Are you sure you want to restore it?",
     "unlinkRecordConfirmation": "Are you sure you want to unlink the related record?",
     "removeRecordConfirmationHierarchically": "The selected record and its children records will be permanently deleted. Are you sure you want to delete it/them?",
-    "removeSelectedRecordsConfirmation": "Are you sure you want to delete the selected records permanently?",
+    "deletePermanentlyRecordConfirmation": "Are you sure you want to delete the record permanently?",
+    "deletePermanentlyRecordsConfirmation": "Are you sure you want to delete the selected records permanently?",
     "restoreSelectedRecordsConfirmation": "Are you sure you want to restore the selected records?",
     "massUpdateResultSingle": "{count} record has been updated",
     "noRecordsUpdated": "No records were updated",
@@ -452,6 +455,7 @@
     "restore": "Restore",
     "massRestore": "Mass Restore",
     "delete": "Delete",
+    "deletePermanently": "Delete Permanently",
     "massDelete": "Mass Delete",
     "download": "Download"
   },
