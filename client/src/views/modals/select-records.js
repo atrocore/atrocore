@@ -135,7 +135,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.buttonList.unshift({
                     name: 'selectDuplicate',
                     style: 'primary',
-                    label: 'Select and Duplicate',
+                    label: 'Duplicate and Select',
                     disabled: true,
                     onClick: function (dialog) {
                         this.handleOnSelect(true);
