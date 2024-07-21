@@ -1280,14 +1280,21 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (target && menu) {
                     let menuHeight = menu.height();
                     let positionTop = $(target).offset().top + $(target).outerHeight(true);
-                    let positionBottom = this.getPositionFromBottom(target);
-                    if ((positionTop + menuHeight) > this.getHeightParentPosition() && positionBottom >= menuHeight) {
-                        let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true);
-                        menu.css({
-                            'position': 'fixed',
-                            'top': `${positionTop}px`,
-                            'right': `${rightOffset}px`
-                        });
+                    let list = this.$el.find('.list');
+                    let listPositionTop = list.offset().top;
+                    if ((positionTop + menuHeight) > this.getHeightParentPosition()) {
+                        if(menuHeight  <= (positionTop - listPositionTop)  ){
+                            menu.css({
+                                "top": `-${menuHeight}px`
+                            })
+                        }else{
+                            let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true);
+                            menu.css({
+                                'position': 'fixed',
+                                'top': `${positionTop}px`,
+                                'right': `${rightOffset}px`
+                            });
+                        }
                     }
                 }
             }.bind(this));
