@@ -73,6 +73,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }
         },
 
+        mode: 'detail',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -165,6 +167,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                     }
                 }
             }
+
+            this.listenTo(this.model, 'after:change-mode', (mode) => this.mode = mode)
         },
 
         switchToModelByIndex: function (indexOfRecord) {
@@ -357,7 +361,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                             .then(() => {
                                 this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                                 this.updateRelationshipPanel(link);
-                                this.model.trigger('after:relate', link);
+
+                                if(this.mode !== 'edit'){
+                                    this.model.trigger('after:relate', link);
+                                }
                             });
                     }
                 }, this);
@@ -622,11 +629,15 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 success: function () {
                     this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                     this.updateRelationshipPanel(link);
-                    this.model.trigger('after:relate', link);
+                    if(this.mode !== 'edit'){
+                        this.model.trigger('after:relate', link);
+                    }
                 }.bind(this),
                 error: function () {
                     this.updateRelationshipPanel(link);
-                    this.model.trigger('after:relate', link);
+                    if(this.mode !== 'edit'){
+                        this.model.trigger('after:relate', link);
+                    }
                     this.notify('Error occurred', 'error');
                 }.bind(this)
             });
@@ -645,10 +656,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 });
                 this.getRouter().navigate(url, {trigger: false});
             }.bind(this));
-
-
         },
-
     });
 });
 
