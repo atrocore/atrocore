@@ -177,6 +177,21 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+            if (!this.defs.hideShowFullList) {
+                let foreign = this.model.getLinkParam(this.link, 'foreign');
+
+                if (foreign) {
+                    this.actionList.unshift({
+                        label: 'showFullList',
+                        action: this.defs.showFullListAction || 'showFullList',
+                        data: {
+                            modelId: this.model.get('id'),
+                            modelName: this.model.get('name')
+                        }
+                    });
+                }
+            }
+
             if (canSelect && this.isInheritingRelation() && this.model.get('isRoot') !== true) {
                 this.actionList.push({
                     label: 'inheritAll',
@@ -297,28 +312,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }, this);
 
             this.setupFilterActions();
-
-            this.addReadyCondition(() => {
-                return this.filtersLayoutLoaded;
-            });
-
-            this.getHelper().layoutManager.get(this.scope, 'filters', layout => {
-                this.filtersLayoutLoaded = true;
-                let foreign = this.model.getLinkParam(this.link, 'foreign');
-
-                if (foreign && layout.includes(foreign)) {
-                    this.actionList.push({
-                        label: 'showFullList',
-                        action: this.defs.showFullListAction || 'showFullList',
-                        data: {
-                            modelId: this.model.get('id'),
-                            modelName: this.model.get('name')
-                        }
-                    });
-                }
-
-                this.tryReady();
-            });
 
             var select = this.actionList.find(item => item.action === (this.defs.selectAction || 'selectRelated'));
             if (select) {
