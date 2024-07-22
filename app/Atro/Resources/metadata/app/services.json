@@ -11,5 +11,6 @@
   "ScheduledJob": "\\Espo\\Services\\ScheduledJob",
   "Composer": "\\Atro\\Services\\Composer",
   "TreoStore": "\\Atro\\Services\\TreoStore",
-  "MassDownload": "\\Atro\\Services\\MassDownload"
+  "MassDownload": "\\Atro\\Services\\MassDownload",
+  "MassActionType": "\\Atro\\Services\\MassActionType"
 }
