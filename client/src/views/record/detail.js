@@ -312,6 +312,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupActionItems: function () {
+            if (this.getMetadata().get(['scopes', this.model.name, 'disabled'])) {
+                this.buttonList = []
+                this.dropdownItemList = []
+                this.buttonEditList = []
+                this.dropdownEditItemList = []
+                return
+            }
+
             if (this.model.isNew()) {
                 this.isNew = true;
                 this.removeButton('delete');
@@ -1127,8 +1135,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])) {
-              action();
-              return;
+                action();
+                return;
             }
 
             this.confirm({
@@ -1196,6 +1204,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 dropdownEditItemList: this.dropdownEditItemList,
                 dropdownItemListEmpty: this.isDropdownItemListEmpty(),
                 buttonsDisabled: this.buttonsDisabled,
+                hasButtons: this.buttonList.length > 0 || this.dropdownItemList.length > 0 || this.additionalButtons.length > 0,
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
@@ -1412,7 +1421,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            this.buttonsDisabled = this.options.buttonsDisabled || this.buttonsDisabled || this.getMetadata().get(['scopes', this.model.name, 'disabled']);
+            this.buttonsDisabled = this.options.buttonsDisabled || this.buttonsDisabled;
 
             // for backward compatibility
             // TODO remove in 5.6.0

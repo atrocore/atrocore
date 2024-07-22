@@ -1,6 +1,7 @@
 <div class="detail" id="{{id}}">
     {{#unless buttonsDisabled}}
     <div class="detail-button-container button-container record-buttons clearfix">
+        {{#if hasButtons}}
         <div class="btn-group pull-left" role="group">
             {{#each buttonList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
             {{#if dropdownItemList}}
@@ -15,6 +16,7 @@
             {{/if}}
             {{#if additionalButtons}}{{#each additionalButtons}}<button type="button" class="btn btn-default additional-button action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>{{/each}}{{/if}}
         </div>
+        {{/if}}
         <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
