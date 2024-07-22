@@ -157,6 +157,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+
             if (this.defs.select) {
                 var data = {link: this.link};
                 if (this.defs.selectPrimaryFilterName) {
@@ -173,6 +174,21 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         data: data,
                         acl: 'edit',
                         aclScope: this.model.name
+                    });
+                }
+            }
+
+            if (!this.defs.hideShowFullList) {
+                let foreign = this.model.getLinkParam(this.link, 'foreign');
+
+                if (foreign) {
+                    this.actionList.unshift({
+                        label: 'showFullList',
+                        action: this.defs.showFullListAction || 'showFullList',
+                        data: {
+                            modelId: this.model.get('id'),
+                            modelName: this.model.get('name')
+                        }
                     });
                 }
             }
@@ -298,27 +314,31 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.setupFilterActions();
 
-            this.addReadyCondition(() => {
-                return this.filtersLayoutLoaded;
-            });
+            // this.addReadyCondition(() => {
+            //     return this.filtersLayoutLoaded;
+            // });
+            //
+            //
+            // this.filtersLayoutLoaded = true;
 
-            this.getHelper().layoutManager.get(this.scope, 'filters', layout => {
-                this.filtersLayoutLoaded = true;
-                let foreign = this.model.getLinkParam(this.link, 'foreign');
-
-                if (foreign && layout.includes(foreign)) {
-                    this.actionList.push({
-                        label: 'showFullList',
-                        action: this.defs.showFullListAction || 'showFullList',
-                        data: {
-                            modelId: this.model.get('id'),
-                            modelName: this.model.get('name')
-                        }
-                    });
-                }
-
-                this.tryReady();
-            });
+            // this.getHelper().layoutManager.get(this.scope, 'filters', layout => {
+            //
+            //
+            //     let foreign = this.model.getLinkParam(this.link, 'foreign');
+            //
+            //     if (foreign && layout.includes(foreign)) {
+            //         this.actionList.push({
+            //             label: 'showFullList',
+            //             action: this.defs.showFullListAction || 'showFullList',
+            //             data: {
+            //                 modelId: this.model.get('id'),
+            //                 modelName: this.model.get('name')
+            //             }
+            //         });
+            //     }
+            //
+            //     this.tryReady();
+            // });
 
             var select = this.actionList.find(item => item.action === (this.defs.selectAction || 'selectRelated'));
             if (select) {
