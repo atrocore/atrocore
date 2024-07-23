@@ -335,6 +335,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     aclScope: 'File'
                 });
             }
+
+            this.listenTo(this.model, 'after:change-mode', (mode) => this.mode = mode)
         },
 
         setupTotal() {
@@ -598,7 +600,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.listenToOnce(view, 'after:save', () => {
                     this.model.trigger('updateRelationshipPanel', link);
                     this.collection.fetch();
-                    this.model.trigger('after:relate', link);
+                    if(this.mode !== 'edit'){
+                        this.model.trigger('after:relate', link);
+                    }
                 });
             });
         },
@@ -683,7 +687,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     success: () => {
                         this.notify('Unlinked', 'success');
                         this.collection.fetch();
-                        this.model.trigger('after:unrelate', this.link, this.defs);
+                        if(this.mode !== 'edit'){
+                            this.model.trigger('after:unrelate', this.link, this.defs);
+                        }
                     },
                     error: () => {
                         this.notify('Error occurred', 'error');
