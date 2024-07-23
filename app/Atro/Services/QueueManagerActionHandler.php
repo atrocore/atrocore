@@ -16,10 +16,10 @@ namespace Atro\Services;
 use Atro\ActionTypes\TypeInterface;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Metadata;
-use Espo\Services\QueueManagerBase;
+use Atro\Services\QueueManagerBase;
 use Espo\Services\Record;
 
-class MassActionType extends QueueManagerBase
+class QueueManagerActionHandler extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
