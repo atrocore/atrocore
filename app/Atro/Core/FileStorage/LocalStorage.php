@@ -125,6 +125,14 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 }
                 $result = copy($localFileName, $fileName);
             } else {
+                // headers should be passed as key-value structure
+                $headers = $input->urlHeaders ?? null;
+                if (is_object($headers)) {
+                    $headers = json_decode(json_encode($headers), true);
+                } else if (is_string($headers)) {
+                    $headers = @json_decode($headers, true);
+                }
+
                 // load file from url
                 set_time_limit(0);
                 $fp = fopen($fileName, 'w+');
@@ -135,6 +143,14 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 curl_setopt($ch, CURLOPT_TIMEOUT, 50);
                 curl_setopt($ch, CURLOPT_FILE, $fp);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                if (is_array($headers) && !empty($headers)) {
+                    $requestHeaders = [];
+                    foreach ($headers as $header => $value) {
+                        $requestHeaders[] = "$header: $value";
+                    }
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
+                }
+
                 curl_exec($ch);
                 $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
