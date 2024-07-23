@@ -47,17 +47,21 @@ class V1Dot10Dot37 extends Base
         $this->exec("ALTER TABLE note DROP target_type");
 
         while (true) {
-            $notes = $this->getConnection()->createQueryBuilder()
-                ->select('*')
-                ->from('note')
-                ->where('type=:type')
-                ->andWhere('deleted=:false')
-                ->andWhere('post IS NOT NULL')
-                ->setFirstResult(0)
-                ->setMaxResults(30000)
-                ->setParameter('type', 'Post')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+            try {
+                $notes = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from('note')
+                    ->where('type=:type')
+                    ->andWhere('deleted=:false')
+                    ->andWhere('post IS NOT NULL')
+                    ->setFirstResult(0)
+                    ->setMaxResults(30000)
+                    ->setParameter('type', 'Post')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $notes = [];
+            }
 
             if (empty($notes)) {
                 break;
@@ -85,15 +89,19 @@ class V1Dot10Dot37 extends Base
         $this->exec("ALTER TABLE note DROP post");
 
         while (true) {
-            $notes = $this->getConnection()->createQueryBuilder()
-                ->select('*')
-                ->from('note')
-                ->where('related_type IS NOT NULL')
-                ->andWhere('deleted=:false')
-                ->setFirstResult(0)
-                ->setMaxResults(30000)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+            try {
+                $notes = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from('note')
+                    ->where('related_type IS NOT NULL')
+                    ->andWhere('deleted=:false')
+                    ->setFirstResult(0)
+                    ->setMaxResults(30000)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $notes = [];
+            }
 
             if (empty($notes)) {
                 break;
