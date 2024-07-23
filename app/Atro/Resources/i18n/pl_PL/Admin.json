@@ -235,7 +235,7 @@
        "addresses":"Zarządzaj adresami",
        "currency":"Skonfiguruj używane waluty",
        "lists": "Zarządzaj listami i ich opcjami dla list prostych lub wielowartościowych.",
-       "emailTemplates": "Zarządzaj szablonami e-maili"
+       "emailTemplates": "Zarządzaj szablonami wiadomości e-mail w celu ręcznego lub automatycznego dostarczania wiadomości e-mail (nie dla standardowych powiadomień)."
     },
     "options":{
        "previewSize":{

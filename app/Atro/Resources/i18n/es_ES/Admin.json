@@ -195,7 +195,7 @@
     "contacts": "Gestionar contactos",
     "addresses": "Administrar direcciones",
     "lists": "Gestione sus listas y sus opciones para listas simples o multivalor.",
-    "emailTemplates": "Administrar plantillas de correo electrónico"
+    "emailTemplates": "Administre plantillas de correo electrónico para entrega de correo electrónico manual o automatizada (no para notificaciones estándar)."
   },
   "options": {
     "previewSize": {

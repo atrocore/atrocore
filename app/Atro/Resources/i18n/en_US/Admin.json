@@ -234,7 +234,7 @@
     "addresses": "Manage addresses",
     "currency": "Configure currencies to be used",
     "lists": "Manage your lists and their options for simple or multivalue lists.",
-    "emailTemplates": "Manage Email Templates"
+    "emailTemplates": "Manage email templates for manual or automated email delivery (not for standard notifications)."
   },
   "options": {
     "previewSize": {
