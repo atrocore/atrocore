@@ -88,18 +88,6 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             let ids = this.model.get(this.idsName);
             let nameHash = this.model.get(this.nameHashName);
 
-            let foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'foreignName']);
-            if (foreignName && foreignName !== 'name') {
-                let collection = this.model.get(this.name);
-                if (collection) {
-                    this.nameHash = {};
-                    collection.forEach(e => {
-                        this.nameHash[e.id] = e[foreignName];
-                    });
-                    nameHash = this.nameHash;
-                }
-            }
-
             return _.extend({
                 idValues: this.model.get(this.idsName),
                 idValuesString: ids ? ids.join(',') : '',
@@ -223,7 +211,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                             }
                             models.forEach(function (model) {
                                 if (typeof model.get !== "undefined") {
-                                    self.addLink(model.id, model.get('name'));
+                                    const foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';
+                                    self.addLink(model.id, model.get(foreignName) ?? model.get('name'));
                                 } else if (model.name) {
                                     self.addLink(model.id, model.name);
                                 } else {

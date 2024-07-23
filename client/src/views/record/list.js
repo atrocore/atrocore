@@ -1823,15 +1823,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
                 if (!fieldType) return;
                 this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
-                    if (fieldType === 'linkMultiple') {
-                        const foreignName = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'foreignName']);
-                        if (attribute === field + 'Ids' && foreignName && foreignName !== 'name') {
-                            list.push(field);
-                        } else if (attribute === field + 'Names' && !foreignName) {
-                            return;
-                        }
-                    }
-
                     list.push(attribute);
                 }, this);
             }, this);
