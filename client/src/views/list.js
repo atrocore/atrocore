@@ -193,7 +193,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 params = {actionId: data.id};
 
             if (listView) {
-                debugger
                 if (listView.allResultIsChecked) {
                     params.where = listView.collection.where;
                 } else {
