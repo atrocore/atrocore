@@ -185,6 +185,11 @@
         "url": "#PreviewTemplate",
         "label": "previewTemplate",
         "description": "previewTemplate"
+      },
+      {
+        "url": "#NotificationTemplate",
+        "label": "notificationTemplates",
+        "description": "notificationTemplates"
       }
     ]
   }

@@ -1,0 +1,26 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "subject",
+          "fullWidth": true
+        },
+        {
+          "name": "body",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

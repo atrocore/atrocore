@@ -1,0 +1,48 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "code": {
+      "type": "varchar",
+      "unique": true,
+      "trim": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": ["system", "email"],
+      "optionsIds": ["system", "email"]
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
+    },
+    "body": {
+      "type": "text",
+      "required": true,
+      "notStorable": true,
+      "dataField": true,
+      "view": "views/fields/script",
+      "isMultilang": true
+    },
+    "subject": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "view": "views/fields/script",
+      "isMultilang": true
+    }
+  }
+}
