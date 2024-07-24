@@ -294,10 +294,19 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
             } else {
                 let fileReader = new FileReader();
                 const id = this.generateId();
+
+                let method = 'POST',
+                    url = 'File?silent=true';
+
+                if (this.model.get('reupload')) {
+                    method = 'PUT';
+                    url = 'File/action/reupload';
+                }
+
                 fileReader.onload = e => {
                     $.ajax({
-                        type: 'POST',
-                        url: 'File?silent=true',
+                        type: method,
+                        url: url,
                         contentType: "application/json",
                         data: JSON.stringify(_.extend(this.model.attributes, {
                             id: id,
@@ -396,9 +405,17 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
                     return;
                 }
 
+                let method = 'POST',
+                    url = 'File?silent=true';
+
+                if (this.model.get('reupload')) {
+                    method = 'PUT';
+                    url = 'File/action/reupload';
+                }
+
                 $.ajax({
-                    type: 'POST',
-                    url: 'File?silent=true',
+                    type: method,
+                    url: url,
                     contentType: "application/json",
                     data: JSON.stringify(_.extend(this.model.attributes, {
                         id: id,
