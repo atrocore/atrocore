@@ -61,6 +61,19 @@ class File extends Base
         return $this->getRecordService()->createEntity($data);
     }
 
+    public function actionReupload($params, $data, $request)
+    {
+        if (!$request->isPut() || !property_exists($data, 'reupload') || empty($data->reupload)) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->createEntity($data);
+    }
+
     public function actionMassDownload($params, $data, $request)
     {
         if (!$request->isPost()) {

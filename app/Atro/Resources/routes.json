@@ -27,6 +27,14 @@
     }
   },
   {
+    "route": "/File/action/reupload",
+    "method": "put",
+    "params": {
+      "controller": "File",
+      "action": "reupload"
+    }
+  },
+  {
     "route": "/Composer/list",
     "method": "get",
     "params": {
