@@ -11,7 +11,9 @@
 
 namespace Atro\Migrations;
 
-class V1Dot10Dot47 extends V1Dot10Dot37
+use Atro\Core\Migration\Base;
+
+class V1Dot10Dot47 extends V1Dot10Dot36
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -20,6 +22,10 @@ class V1Dot10Dot47 extends V1Dot10Dot37
 
     public function up(): void
     {
+        // Fix for 1.10.36 not executed
+        parent::up();
+
+        // Update Templates
         foreach (V1Dot10Dot41::getTemplateData() as $template) {
             try {
                 $query = $this->getConnection()->createQueryBuilder()
