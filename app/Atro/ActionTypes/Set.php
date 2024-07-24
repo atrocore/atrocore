@@ -83,7 +83,7 @@ class Set implements TypeInterface
             return false;
         }
 
-        if (empty($action->get('inBackground')) && !empty($next = $this->getNextAction($current))) {
+        if (empty($action->get('inBackground')) && !property_exists($input, 'where') && !empty($next = $this->getNextAction($current))) {
             return $this->executeAction($next, $input);
         }
 
