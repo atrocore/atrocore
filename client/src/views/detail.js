@@ -269,8 +269,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             let boolFilterListCallback = data.boolFilterListCallback;
             let boolFilterDataCallback = data.boolFilterDataCallback;
             let panelView = this.getPanelView(link);
-            let foreign = this.model.defs['links'][link].foreign;
-            let type = this.model.defs['links'][link].type;
+            let foreign = this.model.defs['links'][link]?.foreign;
+            let type = this.model.defs['links'][link]?.type;
             let selectDuplicateEnabled = false;
 
             if (foreign) {
