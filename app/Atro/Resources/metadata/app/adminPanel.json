@@ -18,6 +18,11 @@
         "description": "authentication"
       },
       {
+        "url": "#Connection",
+        "label": "Connection",
+        "description": "connection"
+      },
+      {
         "url": "#ScheduledJob",
         "label": "Scheduled Jobs",
         "description": "scheduledJob"
