@@ -71,9 +71,9 @@ class V1Dot10Dot41 extends Base
         }
     }
 
-    public static function createNotificationEmailTemplates(Connection $connection, Config $config)
+    public static function getTemplateData(): array
     {
-        $data = [
+        return [
             [
                 'id'            => 'assignment',
                 'name'          => 'Assignment',
@@ -94,17 +94,17 @@ class V1Dot10Dot41 extends Base
                 'subject'       => "You were mentioned",
                 'subject_de_de' => 'Sie wurden erwähnt',
                 'body'          => '<p>You were mentioned in post by {{userName}}.</p>
-{{#if parentName}}
+{% if parentName %}
 <p>Related to: {{parentName}}</p>
-{{/if}}
-<p>{{post}}</p>
+{% endif %}
+<p>{{post | raw}}</p>
 <p><a href="{{url}}">View</a></p>
 ',
                 'body_de_de'    => '<p>Sie wurden in Post von {{userName}} erwähnt.</p>
-{{#if parentName}}
+{% if parentName %}
 <p>Im Zusammenhang mit: {{parentName}}</p>
-{{/if}}
-<p>{{post}}</p>
+{% endif %}
+<p>{{post | raw}}</p>
 <p><a href="{{url}}">Ansehen</a></p>
 '
             ],
@@ -112,13 +112,13 @@ class V1Dot10Dot41 extends Base
                 'id'            => 'notePost',
                 'name'          => 'Note Post',
                 'code'          => 'notePost',
-                'subject'       => 'Post: [{{{entityType}}}] {{{name}}}',
-                'subject_de_de' => 'Post: [{{{entityType}}}] {{{name}}}',
+                'subject'       => 'Post: [{{entityType}}] {{name}}',
+                'subject_de_de' => 'Post: [{{entityType}}] {{name}}',
                 'body'          => '<p>{{userName}} posted on {{entityTypeLowerFirst}} {{parentName}}.</p>
-<p>{{post}}</p>
+<p>{{post | raw}}</p>
 <p><a href="{{url}}">View</a></p>',
                 'body_de_de'    => '<p>{{userName}} auf {{entityTypeLowerFirst}} {{parentName}} gepostet.</p>
-<p>{{post}}</p>
+<p>{{post | raw}}</p>
 <p><a href="{{url}}">Ansehen</a></p>'
             ],
             [
@@ -128,10 +128,10 @@ class V1Dot10Dot41 extends Base
                 'subject'       => 'Post',
                 'subject_de_de' => 'Post',
                 'body'          => '<p>{{userName}} posted.</p>
-<p>{{post}}</p>
+<p>{{post | raw}}</p>
 <p><a href="{{url}}">View</a></p>',
                 'body_de_de'    => '<p>{{userName}} gepostet.</p>
-<p>{{post}}</p>
+<p>{{post | raw}}</p>
 <p><a href="{{url}}">Ansehen</a></p>'
             ],
             [
@@ -148,9 +148,12 @@ class V1Dot10Dot41 extends Base
 <p><a href="{{recordUrl}}">Eintrag öffnen</a></p>'
             ]
         ];
+    }
 
+    public static function createNotificationEmailTemplates(Connection $connection, Config $config)
+    {
 
-        foreach ($data as $template) {
+        foreach (self::getTemplateData() as $template) {
             try {
                 $query = $connection->createQueryBuilder()
                     ->insert('email_template')
