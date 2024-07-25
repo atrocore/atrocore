@@ -54,7 +54,10 @@
     "Unit": "Одиниця виміру",
     "QueueItem": "Елемент черги",
     "TreoStore": "Магазин",
-    "PreviewTemplate": "Шаблон перегляду"
+    "PreviewTemplate": "Шаблон перегляду",
+    "NotificationTemplate": "Шаблон сповіщення",
+    "NotificationProfile": "Профіль сповіщень",
+    "NotificationRule": "Правило сповіщення"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Шаблони електронної пошти",
@@ -97,7 +100,10 @@
     "Notification": "Повідомлення",
     "Preferences": "Налаштування",
     "PreviewTemplate": "Шаблони перегляду",
-    "Duplicate and Select": "Зкопіювати і вибрати"
+    "Duplicate and Select": "Зкопіювати і вибрати",
+    "NotificationTemplate": "Шаблони сповіщень",
+    "NotificationProfile": "Профілі сповіщень",
+    "NotificationRule": "Правила повідомлення"
   },
   "descriptions": {
     "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу.",

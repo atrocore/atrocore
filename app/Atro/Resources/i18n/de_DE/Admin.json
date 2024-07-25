@@ -59,7 +59,10 @@
     "Addresses": "Adressen",
     "Currency": "Währungen",
     "lists": "Listen",
-    "emailTemplates": "E-Mail-Vorlagen"
+    "emailTemplates": "E-Mail-Vorlagen",
+    "notificationTemplates": "Benachrichtigungsvorlagen",
+    "notificationProfiles": "Benachrichtigungs-Profile"
+
   },
   "logicalOperators": {
     "and": "UND",
@@ -216,7 +219,10 @@
     "addresses": "Adressen verwalten",
     "currency": "Konfigurieren Sie die zu verwendenden Währungen",
     "lists": "Verwalten Sie Ihre Listen und deren Optionen für einfache oder mehrwertige Listen.",
-    "emailTemplates": "Verwalten Sie E-Mail-Vorlagen für den manuellen oder automatischen E-Mail-Versand (nicht für Standardbenachrichtigungen)."
+    "emailTemplates": "Verwalten Sie E-Mail-Vorlagen für den manuellen oder automatischen E-Mail-Versand (nicht für Standardbenachrichtigungen).",
+    "notificationTemplates": "Verwalten Sie die Vorlage für die Standardmeldung des Systems.",
+    "notificationProfiles": "Konfigurieren Sie Benachrichtigungsprofile und -regeln, um Ihren Alarmmanagementprozess effektiv zu optimieren, damit er zeitnah und relevant ist."
+
   },
   "options": {
     "previewSize": {

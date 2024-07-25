@@ -55,7 +55,8 @@
     "AuthFailLogRecord": "Auth Fail Log Record",
     "PreviewTemplate": "Preview Template",
     "NotificationTemplate": "Notification Template",
-    "NotificationProfile": "Notification Profile"
+    "NotificationProfile": "Notification Profile",
+    "NotificationRule": "Notification Rule"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Email Templates",
