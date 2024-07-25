@@ -88,6 +88,26 @@ Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fiel
                 };
             }
 
+            if (type === 'isNotEmpty') {
+                return {
+                    type: 'and',
+                    value: [
+                        {
+                            type: 'isNotNull',
+                            attribute: this.name
+                        },
+                        {
+                            type: 'notEquals',
+                            value: '',
+                            attribute: this.name
+                        }
+                    ],
+                    data: {
+                        type: 'isEmpty'
+                    }
+                };
+            }
+
             return Dep.prototype.fetchSearch.call(this)
         }
     });
