@@ -63,6 +63,32 @@ Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fiel
 
         getOptionsData() {
             return {}
+        },
+
+        fetchSearch() {
+            var type = this.$el.find('[name="' + this.name + '-type"]').val();
+
+            if (type === 'isEmpty') {
+                return {
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'isNull',
+                            attribute: this.name
+                        },
+                        {
+                            type: 'equals',
+                            value: '',
+                            attribute: this.name
+                        }
+                    ],
+                    data: {
+                        type: 'isEmpty'
+                    }
+                };
+            }
+
+            return Dep.prototype.fetchSearch.call(this)
         }
     });
 });
