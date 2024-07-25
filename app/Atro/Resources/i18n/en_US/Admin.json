@@ -66,7 +66,8 @@
     "Currency": "Currency",
     "lists": "Lists",
     "emailTemplates": "Email Templates",
-    "notificationTemplates": "Notification Templates"
+    "notificationTemplates": "Notification Templates",
+    "notificationProfiles": "Notification Profiles"
   },
   "layouts": {
     "relationships": "Relation panels",
@@ -236,7 +237,8 @@
     "currency": "Configure currencies to be used",
     "lists": "Manage your lists and their options for simple or multivalue lists.",
     "emailTemplates": "Manage email templates for manual or automated email delivery (not for standard notifications).",
-    "notificationTemplates": "Manage  template for standard notification of the system."
+    "notificationTemplates": "Manage  template for standard notification of the system.",
+    "notificationProfiles": "Configure Notification Profiles and Notification Rules to effectively streamline your alert management process so that it is timely and relevant."
   },
   "options": {
     "previewSize": {

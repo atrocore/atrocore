@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "isActive": "Active",
+    "description": "Description"
+  },
+  "links": {
+    "notificationRules": "Notification Rules"
+  },
+  "labels": {
+    "Create NotificationProfile": "Create Notification Profile"
+  }
+}

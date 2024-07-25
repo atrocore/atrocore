@@ -130,4 +130,53 @@ class LayoutController extends AbstractListener
     {
         $this->modifyEmailTemplateDetail($event);
     }
+
+    protected function modifyNotificationTemplateDetail(Event $event): void
+    {
+        if ($this->getContainer()->get('layout')->isCustom('NotificationTemplate', $event->getArgument('params')['name'])) {
+            return;
+        }
+
+        $result = Json::decode($event->getArgument('result'), true);
+        $newRows = [];
+        foreach ($result[0]['rows'] as $row) {
+            $newRows[] = $row;
+            if (in_array($row[0]['name'], ['subject', 'body'])) {
+                foreach ($this->getConfig()->get('locales') as $locale) {
+                    if ($locale['language'] === $this->getConfig()->get('mainLanguage')) {
+                        continue;
+                    }
+                    $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
+                    $newRows[] = [['name' => $row[0]['name'] . $preparedLocale, 'fullWidth' => true]];
+                }
+            }
+        }
+        $result[0]['rows'] = $newRows;
+
+        $event->setArgument('result', Json::encode($result));
+    }
+
+    protected function modifyNotificationTemplateDetailSmall(Event $event): void
+    {
+        $this->modifyNotificationTemplateDetail($event);
+    }
+
+    protected function modifyNotificationRuleDetail(Event $event): void
+    {
+
+        $result = Json::decode($event->getArgument('result'), true);
+
+        $rows = [];
+
+        foreach(array_keys(($this->getMetadata()->get(['app','notificationTransports'], []))) as $transport){
+            $rows[] = [["name" => $transport.'Active'], ["name" => $transport.'TemplateId']];
+        }
+
+        $result[] = [
+            "label" => "Transport",
+            "rows" => $rows
+        ];
+
+        $event->setArgument('result', Json::encode($result));
+    }
 }

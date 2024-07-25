@@ -43,9 +43,9 @@
         "description": "currency"
       },
       {
-        "url": "#Admin/notifications",
-        "label": "Notifications",
-        "description": "notifications"
+        "url": "#NotificationProfile",
+        "label": "notificationProfiles",
+        "description": "notificationProfiles"
       },
       {
         "url": "#Admin/clearCache",

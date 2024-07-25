@@ -1,11 +1,10 @@
 [
   {
     "label": "Overview",
-    "style": "default",
     "rows": [
       [
         {
-          "name": "type"
+          "name": "isActive"
         },
         false
       ],
@@ -17,13 +16,7 @@
       ],
       [
         {
-          "name": "subject",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "body",
+          "name": "description",
           "fullWidth": true
         }
       ]

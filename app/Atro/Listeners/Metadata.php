@@ -70,6 +70,10 @@ class Metadata extends AbstractListener
 
         $this->prepareEmailTemplateMultilangFields($data);
 
+        $this->prepareNotificationTemplateMultilangFields($data);
+
+        $this->prepareNotificationRuleTransportField($data);
+
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
 
@@ -1188,6 +1192,64 @@ class Metadata extends AbstractListener
                 'action'         => 'showHtmlPreview',
                 'optionsToPass'  => [
                     'model'
+                ]
+            ];
+        }
+    }
+
+    protected function prepareNotificationTemplateMultilangFields(array &$data): void
+    {
+        foreach ($this->getConfig()->get('locales') as $locale) {
+            if ($locale['language'] === 'en_US') {
+                continue;
+            }
+            $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
+
+            foreach (['subject', 'body'] as $field) {
+                // prepare multi-lang field
+                $mField = $field . $preparedLocale;
+
+                $mParams = json_decode(json_encode($data['entityDefs']['NotificationTemplate']['fields'][$field]), true);
+                $mParams['isCustom'] = false;
+                $data['entityDefs']['NotificationTemplate']['fields'][$mField] = $mParams;
+
+                if (!empty($dynamicLogic = $this->getMetadata()->get(['clientDefs', 'NotificationTemplate', 'dynamicLogic', 'fields', $field]))) {
+                    $data['clientDefs']['NotificationTemplate']['dynamicLogic']['fields'][$mField] = $dynamicLogic;
+                }
+            }
+        }
+    }
+
+    protected function prepareNotificationRuleTransportField(array &$data): void
+    {
+        foreach (array_keys(($this->getMetadata()->get(['app', 'notificationTransports'], []))) as $transport) {
+            $data['entityDefs']['NotificationRule']['fields'][$transport . 'Active'] = [
+                "type" => "bool",
+                "virtualField" => true,
+                "notStorable" => true
+            ];
+            // field for the notification template selected for this transport
+            $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateId'] = [
+                "type" => "varchar",
+                "virtualField" => true,
+                "notStorable" => true,
+                "view" => "views/notification-rule/fields/notification-template",
+                "name" => $transport . 'Template',
+                "t_type" => $transport
+            ];
+            $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateName'] = [
+                "type" => "varchar",
+                "notStorable" => true
+            ];
+
+            $data['clientDefs']['NotificationRule']['dynamicLogic']['fields'][$transport . 'TemplateId'] = [
+                "required" => [
+                    "conditionGroup" => [
+                        [
+                            "type" => "isTrue",
+                            "attribute" => $transport . 'Active'
+                        ]
+                    ]
                 ]
             ];
         }

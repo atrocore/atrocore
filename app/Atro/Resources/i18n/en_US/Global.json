@@ -54,7 +54,8 @@
     "AuthLogRecord": "Auth Log Record",
     "AuthFailLogRecord": "Auth Fail Log Record",
     "PreviewTemplate": "Preview Template",
-    "NotificationTemplate": "Notification Template"
+    "NotificationTemplate": "Notification Template",
+    "NotificationProfile": "Notification Profile"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Email Templates",
@@ -96,7 +97,9 @@
     "AuthToken": "Auth Tokens",
     "LastViewed": "Last Viewed",
     "PreviewTemplate": "Preview Templates",
-    "NotificationTemplate": "Notification Templates"
+    "NotificationTemplate": "Notification Templates",
+    "NotificationProfile": "Notification Profiles",
+    "NotificationRule": "Notification Rules"
   },
   "descriptions": {
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications.",

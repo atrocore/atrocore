@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "description": "Description",
+    "entity": "Entity",
+    "notificationProfile": "Notification Profile",
+    "occurrence": "Occurrence",
+    "isActive": "Active",
+    "ignoreSelfAction": "Ignore self actions",
+    "asOwner": "As Owner",
+    "asFollower": "As Follower",
+    "asAssignee": "As Assignee",
+    "asTeamMember": "As Team Member",
+    "asNotificationProfile": "As Notification Profile's User",
+    "emailActive": "Email Notification",
+    "systemActive": "Email Notification",
+    "emailTemplateId": "Email Template",
+    "systemTemplateId": "System Template"
+  },
+  "options": {
+    "occurrence": {
+        "creation": "Creation",
+        "updating": "Update",
+        "linking": "Linking",
+        "unlinking": "Unlinking",
+        "deletion": "Deletion",
+        "note_created": "Create of Notes",
+        "note_updated": "Update of Notes",
+        "note_deleted": "Delete of Notes",
+        "ownership_assignment": "Ownership/Assignment",
+        "unlinking_ownership_assignment": "Unlinking Ownership/Assignment",
+        "mentioned": "Mention"
+    }
+  },
+  "labels": {
+    "Create NotificationRule": "Create Notification Rule",
+    "Notify User": "Notify User",
+    "Transport": "Transport"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "email": "\\Atro\\NotificationTransport\\EmailTransport",
+  "system": "\\Atro\\NotificationTransport\\SystemTransport"
+}

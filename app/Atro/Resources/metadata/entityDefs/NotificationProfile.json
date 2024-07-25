@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "isActive": {
+      "type": "bool"
+    },
+    "notificationRules": {
+      "type": "linkMultiple"
+    }
+  },
+  "links": {
+    "notificationRules": {
+      "type": "hasMany",
+      "entity": "NotificationRule",
+      "foreign": "notificationProfile"
+    }
+  }
+}

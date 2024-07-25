@@ -13,6 +13,7 @@
     "type": {
       "type": "enum",
       "required": true,
+      "prohibitedEmptyValue": true,
       "options": ["system", "email"],
       "optionsIds": ["system", "email"]
     },
@@ -33,16 +34,22 @@
       "type": "text",
       "required": true,
       "notStorable": true,
-      "dataField": true,
-      "view": "views/fields/script",
-      "isMultilang": true
+      "virtualField": true,
+      "view": "views/fields/script"
     },
     "subject": {
-      "type": "varchar",
+      "type": "text",
       "notStorable": true,
-      "dataField": true,
-      "view": "views/fields/script",
-      "isMultilang": true
+      "virtualField": true,
+      "view": "views/fields/script"
+    }
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
     }
   }
 }
