@@ -83,7 +83,7 @@ Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fiel
                         }
                     ],
                     data: {
-                        type: 'isEmpty'
+                        type: type
                     }
                 };
             }
@@ -103,7 +103,7 @@ Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fiel
                         }
                     ],
                     data: {
-                        type: 'isEmpty'
+                        type: type
                     }
                 };
             }
