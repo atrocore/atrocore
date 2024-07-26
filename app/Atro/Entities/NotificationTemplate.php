@@ -15,7 +15,7 @@ namespace Atro\Entities;
 
 use Atro\Core\Templates\Entities\Base;
 
-class ReviewTemplate extends Base
+class NotificationTemplate extends Base
 {
-    protected $entityType = "ReviewTemplate";
+    protected $entityType = "NotificationTemplate";
 }

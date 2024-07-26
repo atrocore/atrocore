@@ -71,7 +71,8 @@
     "error": "Fehler",
     "customHeadCode": "Head Code",
     "passwordRegexPattern": "Passwort Regex Pattern",
-    "passwordExpireDays": "Gültigkeitsdauer des Passworts (in Tagen)"
+    "passwordExpireDays": "Gültigkeitsdauer des Passworts (in Tagen)",
+    "sendOutNotifications": "Benachrichtigungen verschicken"
   },
   "links": {
     "variables": "Variablen"

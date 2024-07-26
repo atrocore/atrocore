@@ -64,5 +64,28 @@
         }
       ]
     ]
+  },
+  {
+    "label": "Notifications",
+    "rows": [
+      [
+        {
+          "name": "sendOutNotifications"
+        },
+        false
+      ],
+      [
+        {
+          "name": "notificationSmtpConnection"
+        },
+        false
+      ],
+      [
+        {
+          "name": "defaultNotificationProfile"
+        },
+        false
+      ]
+    ]
   }
 ]

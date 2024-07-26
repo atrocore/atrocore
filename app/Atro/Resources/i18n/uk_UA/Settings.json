@@ -72,7 +72,8 @@
     "error": "Помилка",
     "customHeadCode": "Код Head",
     "passwordRegexPattern": "Шаблон для паролів",
-    "passwordExpireDays": "Термін дії пароля (у днях)"
+    "passwordExpireDays": "Термін дії пароля (у днях)",
+    "sendOutNotifications": "Розсилка сповіщень"
   },
   "links": {
     "variables": "Змінні"

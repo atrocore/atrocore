@@ -2,7 +2,12 @@
 
 namespace Atro\NotificationTransport;
 
-class SystemTransport
+use Atro\Entities\NotificationTemplate;
+
+class SystemTransport extends AbstractNotificationTransport
 {
 
+    public function send(NotificationTemplate $template): void
+    {
+    }
 }
