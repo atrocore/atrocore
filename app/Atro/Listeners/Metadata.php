@@ -46,8 +46,6 @@ class Metadata extends AbstractListener
 
         $data = $this->setForeignName($data);
 
-        $data = $this->showConnections($data);
-
         $data = $this->prepareHierarchyEntities($data);
 
         $this->prepareRanges($data);
@@ -785,30 +783,6 @@ class Metadata extends AbstractListener
         } else {
             $metadata['clientDefs'][$scope]['relationshipPanels'][$relation]["aclScopesList"] = array_merge($data['aclScopesList'] ?? [], [$scope, $relationEntityName]);
         }
-    }
-
-    protected function showConnections(array $data): array
-    {
-        if (
-            !empty($data['scopes']['Connection']['showInAdminPanel'])
-            && !empty($data['app']['adminPanel']['system']['itemList'])
-            && is_array($data['app']['adminPanel']['system']['itemList'])
-        ) {
-            $new = [];
-            foreach ($data['app']['adminPanel']['system']['itemList'] as $v) {
-                $new[] = $v;
-                if ($v['label'] == 'Authentication') {
-                    $new[] = [
-                        "url"         => "#Connection",
-                        "label"       => "Connection",
-                        "description" => "connection"
-                    ];
-                }
-            }
-            $data['app']['adminPanel']['system']['itemList'] = $new;
-        }
-
-        return $data;
     }
 
     protected function setForeignName(array $data): array
