@@ -28,6 +28,7 @@ class Container
 
     protected array $classAliases
         = [
+            'notificationManager'      => \Atro\Core\Utils\NotificationManager::class,
             'fileManager'              => \Atro\Core\Utils\FileManager::class,
             'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
             'consoleManager'           => \Atro\Core\ConsoleManager::class,

@@ -1,37 +1,40 @@
 <?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
 
+declare(strict_types=1);
 namespace Atro\NotificationTransport;
 
 use Atro\Core\Container;
-use Atro\Entities\Connection;
+use Atro\Core\Twig\Twig;
 use Atro\Entities\NotificationTemplate;
-use Projects\Entities\User;
+use Espo\Core\Utils\Config;
 
 abstract class AbstractNotificationTransport
 {
     protected Container $container;
-
-    protected ?Connection $connectionEntity;
-
-    protected User $user;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-     public  function setConnection(Connection $connectionEntity): self
+    abstract public function send(\Espo\Entities\User $user, NotificationTemplate $template, array $params): void;
+
+    protected function getTwig(): Twig
     {
-        $this->connectionEntity = $connectionEntity;
-        return $this;
+        return $this->container->get('twig');
     }
 
-    public function setUser(User $user): self
+    protected function getConfig(): Config
     {
-        $this->user = $user;
-        return $this;
+        return $this->container->get('config');
     }
-
-    abstract public function send(NotificationTemplate $template): void;
-
 }

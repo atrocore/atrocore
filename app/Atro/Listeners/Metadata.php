@@ -1200,7 +1200,7 @@ class Metadata extends AbstractListener
     protected function prepareNotificationTemplateMultilangFields(array &$data): void
     {
         foreach ($this->getConfig()->get('locales') as $locale) {
-            if ($locale['language'] === 'en_US') {
+            if ($locale['language'] === $this->getConfig()->get('mainLanguage')) {
                 continue;
             }
             $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
