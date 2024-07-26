@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
+use Atro\Core\QueueManager;
 use Atro\NotificationTransport\AbstractNotificationTransport;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Repositories\NotificationRule;
@@ -31,6 +32,16 @@ class NotificationManager
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    public function processByJob(string $occurrence, Entity $entity, User $actionUser): void
+    {
+        $this->getQueueManager()->push('Process Notification','QueueManagerNotificationSender', [
+            "occurrence" => $occurrence,
+            "entityType" => $entity->getEntityType(),
+            "entityId" => $entity->get('id'),
+            "actionUserId" => $actionUser->get('id')
+        ]);
     }
 
     public function process(string $occurrence, Entity $entity, User $actionUser): void
@@ -184,5 +195,10 @@ class NotificationManager
     protected function getConfig(): Config
     {
         return $this->container->get('config');
+    }
+
+    protected function getQueueManager(): QueueManager
+    {
+        return $this->container->get('queueManager');
     }
 }
