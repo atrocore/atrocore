@@ -16,6 +16,7 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -73,6 +74,8 @@ class Metadata extends AbstractListener
         $this->prepareNotificationTemplateMultilangFields($data);
 
         $this->prepareNotificationRuleTransportField($data);
+
+        $this->addNotificationRulesToCache($data);
 
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
@@ -1233,12 +1236,14 @@ class Metadata extends AbstractListener
                 "type" => "varchar",
                 "virtualField" => true,
                 "notStorable" => true,
+                "filterDisabled" => true,
                 "view" => "views/notification-rule/fields/notification-template",
                 "name" => $transport . 'Template',
                 "t_type" => $transport
             ];
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateName'] = [
                 "type" => "varchar",
+                "filterDisabled" => true,
                 "notStorable" => true
             ];
 
@@ -1252,6 +1257,44 @@ class Metadata extends AbstractListener
                     ]
                 ]
             ];
+        }
+    }
+
+    protected function addNotificationRulesToCache(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        /** @var DataManager $dataManager */
+        $dataManager = $this->getContainer()->get('dataManager');
+        $notificationRules = $dataManager->getCacheData(NotificationRule::CACHE_NAME);
+        if ($notificationRules === null) {
+            try {
+                $connection = $this->getEntityManager()->getConnection();
+                $notificationRules = $connection->createQueryBuilder()
+                    ->select('nr.*')
+                    ->from($connection->quoteIdentifier('notification_rule'), 'nr')
+                    ->leftJoin('nr','notification_profile','np', 'nr.notification_profile_id = np.id AND np.deleted = :false')
+                    ->where('nr.is_active = :true')
+                    ->andWhere('nr.deleted = :false')
+                    ->andWhere('np.is_active = :true')
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $notificationRules = [];
+            }
+
+            $dataManager->setCacheData(NotificationRule::CACHE_NAME, $notificationRules);
+        }
+
+        foreach ($notificationRules as $notificationRule) {
+            if(!empty($notificationRule['entity'])){
+                $data['scopes'][$notificationRule['entity']]['notificationRuleIdByOccurrence'][$notificationRule['occurrence']] = $notificationRule['id'];
+            }else{
+                $data['app']['globalNotificationRuleIdByOccurrence'][$notificationRule['occurrence']] = $notificationRule['id'];
+            }
         }
     }
 }

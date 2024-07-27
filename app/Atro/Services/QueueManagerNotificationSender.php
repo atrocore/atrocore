@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Utils\NotificationManager;
+use Atro\NotificationTransport\NotificationOccurrence;
 use Espo\ORM\Entity;
 
 class QueueManagerNotificationSender extends QueueManagerBase
@@ -32,17 +33,20 @@ class QueueManagerNotificationSender extends QueueManagerBase
         $entity = $this->getEntityManager()
             ->getRepository($data['entityType'])
             ->where(['id' => $data['entityId']])
-            ->findOne(['withDeleted' => true]);
+            ->findOne(['withDeleted' => in_array($occurrence, [NotificationOccurrence::DELETION, NotificationOccurrence::NOTE_DELETED])]);
 
         if(empty($entity)){
             return true;
         }
 
-        $actionUser = $this->getEntityManager()->getEntity('User',$data['actionUserId']);
+        $actionUser = $this->getEntityManager()
+            ->getRepository('User')
+            ->where(['id' =>$data['actionUserId']])
+            ->findeOne();
 
         /** @var NotificationManager $notificationManager*/
         $notificationManager = $this->getInjection('notificationManager');
-        $notificationManager->process($occurrence, $entity, $actionUser);
+        $notificationManager->handleNotification($occurrence, $entity, $actionUser);
 
         return true;
     }

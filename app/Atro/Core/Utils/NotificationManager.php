@@ -34,19 +34,46 @@ class NotificationManager
         $this->container = $container;
     }
 
-    public function processByJob(string $occurrence, Entity $entity, User $actionUser): void
+    public function handleNotificationByJob(string $occurrence, Entity $entity): void
     {
-        $this->getQueueManager()->push('Process Notification','QueueManagerNotificationSender', [
+        $notificationRuleId = $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'notificationRuleIdByOccurrence', 'occurrence']);
+
+        if (empty($notificationRuleId)) {
+            $notificationRuleId = $this->getMetadata()->get(['app', 'globalNotificationRuleIdByOccurrence', $occurrence]);
+        }
+
+        if (empty($notificationRuleId)) {
+            return;
+        }
+
+        $jobData = [
             "occurrence" => $occurrence,
             "entityType" => $entity->getEntityType(),
             "entityId" => $entity->get('id'),
-            "actionUserId" => $actionUser->get('id')
-        ]);
+            "actionUserId" => !empty($user = $this->container->get('user')) ? $user->get('id') : null
+        ];
+
+        $this->getQueueManager()->push('Process Notification', 'QueueManagerNotificationSender', $jobData, 'Crucial');
     }
 
-    public function process(string $occurrence, Entity $entity, User $actionUser): void
+    public function handleNotification(string $occurrence, Entity $entity, User $actionUser): void
     {
-        $notificationRule = $this->getNotificationRuleRepository()->findOneByOccurrence($occurrence, $entity->getEntityType());
+        if (empty($this->getConfig()->get('sendOutNotifications'))) {
+            $GLOBALS['log']->alert('Notification Not Sent: Send out Notification is deactivated.');
+            return;
+        }
+
+        $notificationRuleId = $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'notificationRuleIdByOccurrence', $occurrence]);
+
+        if (empty($notificationRuleId)) {
+            $notificationRuleId = $this->getMetadata()->get(['app', 'globalNotificationRuleIdByOccurrence', $occurrence]);
+        }
+
+        if (empty($notificationRuleId)) {
+            return;
+        }
+
+        $notificationRule = $this->getNotificationRuleRepository()->findFromCache($notificationRuleId);
 
         if (empty($notificationRule)) {
             return;
@@ -70,7 +97,7 @@ class NotificationManager
             $usersToNotifyIds = array_merge($usersToNotifyIds, $this->getSubscriberUserIds($entity));
         }
 
-        if ($notificationRule->get('asTeamMember') && !empty($entity->get('teamsIds'))) {
+        if ($notificationRule->get('asTeamMember')) {
             $usersToNotifyIds = array_merge($usersToNotifyIds, $this->getTeamUserIds($entity));
         }
 
@@ -86,13 +113,15 @@ class NotificationManager
                 unset($usersToNotifyIds[$key]);
             }
         }
-
         // we select only the user who as configure the notificationProfile link to this rule
-        $usersToNotifyIds = array_filter($usersToNotifyIds, function ($userId, $notificationRule) {
+        $usersToNotifyIds = array_filter($usersToNotifyIds, function ($userId) use ($notificationRule) {
             $preference = $this->getEntityManager()->getEntity('Preferences', $userId);
-            return $preference->get('notificationProfileId') === $notificationRule->get('notificationProfileId');
+            return ($preference->get('notificationProfileId') ?? $this->getConfig()->get('defaultNotificationProfileId')) === $notificationRule->get('notificationProfileId');
         });
 
+        if (empty($usersToNotifyIds)) {
+            return;
+        }
 
         $userList = $this
             ->getEntityManager()
@@ -106,18 +135,22 @@ class NotificationManager
             ->find();
 
         foreach ($userList as $user) {
-
             foreach ($this->getMetadata()->get(['app', 'notificationTransports']) as $transportType => $transportClassName) {
                 if ($notificationRule->isTransportActive($transportType) && !empty($template = $notificationRule->getTransportTemplate($transportType))) {
                     /** @var AbstractNotificationTransport $transport */
                     $transport = $this->container->get($transportClassName);
-                    $transport->send($user, $template, [
-                        "config" => $this->getConfig(),
-                        "occurrence" => $occurrence,
-                        "entity" => $entity,
-                        "actionUser" => $actionUser,
-                        "notifyUser" => $user
-                    ]);
+                    try {
+                        $transport->send($user, $template, [
+                            "config" => $this->getConfig(),
+                            "occurrence" => $occurrence,
+                            "entity" => $entity,
+                            'entityType' => $entity->getEntityType(),
+                            "actionUser" => $actionUser,
+                            "notifyUser" => $user
+                        ]);
+                    } catch (\Throwable $e) {
+                        $GLOBALS['log']->error("Failed to send Notification[Occurrence: $occurrence][Entity: {$entity->getEntityType()}[User: {$user->id}:  . {$e->getMessage()}");
+                    }
                 }
             }
         }
@@ -174,7 +207,7 @@ class NotificationManager
             ->setParameter('notificationProfileId', '%"' . $notificationProfileId . '"%')
             ->fetchAllAssociative();
 
-        return array_column($userIds, 'user_id');
+        return array_column($userIds, 'id');
     }
 
     protected function getNotificationRuleRepository(): NotificationRule

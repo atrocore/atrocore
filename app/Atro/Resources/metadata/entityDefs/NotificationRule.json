@@ -93,7 +93,8 @@
     "unique_notification_rules": [
       "notification_profile_id",
       "entity",
-      "occurrence"
+      "occurrence",
+      "deleted"
     ]
   }
 }

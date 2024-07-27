@@ -15,6 +15,8 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Utils\NotificationManager;
+use Espo\ORM\Entity;
 
 class Record extends \Espo\Services\RecordService
 {

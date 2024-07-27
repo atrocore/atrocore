@@ -12,7 +12,7 @@
     "asTeamMember": "As Team Member",
     "asNotificationProfile": "As Notification Profile's User",
     "emailActive": "Email Notification",
-    "systemActive": "Email Notification",
+    "systemActive": "System Notification",
     "emailTemplateId": "Email Template",
     "systemTemplateId": "System Template"
   },

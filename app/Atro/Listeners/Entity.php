@@ -16,6 +16,8 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\Utils\Note as NoteUtil;
+use Atro\Core\Utils\NotificationManager;
+use Atro\NotificationTransport\NotificationOccurrence;
 
 class Entity extends AbstractListener
 {
@@ -28,12 +30,17 @@ class Entity extends AbstractListener
     {
         $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'afterSave', $event);
 
-        $this->getNoteUtil()->afterEntitySaved($event->getArgument('entity'));
+        $this->getNoteUtil()->afterEntitySaved($entity = $event->getArgument('entity'));
+
+        $occurrence = $entity->isNew() ? NotificationOccurrence::CREATION : NotificationOccurrence::UPDATE;
+//        $this->getNotificationManager()->handleNotificationByJob($occurrence, $entity);
     }
 
     public function beforeRemove(Event $event): void
     {
         $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRemove', $event);
+
+        $this->getNotificationManager()->handleNotificationByJob(NotificationOccurrence::DELETION, $event->getArgument('entity'));
     }
 
     public function afterRemove(Event $event): void
@@ -81,5 +88,10 @@ class Entity extends AbstractListener
     private function getNoteUtil(): NoteUtil
     {
         return $this->getContainer()->get(NoteUtil::class);
+    }
+
+    protected function getNotificationManager(): NotificationManager
+    {
+        return $this->getContainer()->get(NotificationManager::class);
     }
 }

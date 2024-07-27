@@ -17,15 +17,15 @@ abstract class NotificationOccurrence
 {
 const CREATION = "creation";
 
-const UPDATING = "updating";
+const UPDATE = "updating";
 
-const LINKING = "linking";
+const LINK = "linking";
 
-const UNLINKING  = "unlinking";
+const UNLINK  = "unlinking";
 
 const DELETION = "deletion";
 
-const NOTE_CREATION = "note_created";
+const NOTE_CREATED = "note_created";
 
 const NOTE_UPDATED = "note_updated";
 

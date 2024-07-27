@@ -15,7 +15,10 @@ namespace Atro\NotificationTransport;
 use Atro\Core\Container;
 use Atro\Core\Twig\Twig;
 use Atro\Entities\NotificationTemplate;
+use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Entities\User;
 
 abstract class AbstractNotificationTransport
 {
@@ -26,7 +29,7 @@ abstract class AbstractNotificationTransport
         $this->container = $container;
     }
 
-    abstract public function send(\Espo\Entities\User $user, NotificationTemplate $template, array $params): void;
+    abstract public function send(User $user, NotificationTemplate $template, array $params): void;
 
     protected function getTwig(): Twig
     {
@@ -36,5 +39,16 @@ abstract class AbstractNotificationTransport
     protected function getConfig(): Config
     {
         return $this->container->get('config');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
+    }
+
+    protected function getUserLanguage(User $user): string
+    {
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->get('id'));
+        return Language::detectLanguage($this->getConfig(), $preferences);
     }
 }

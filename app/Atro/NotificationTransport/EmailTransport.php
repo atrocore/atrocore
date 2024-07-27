@@ -31,12 +31,8 @@ class EmailTransport extends AbstractNotificationTransport
 
     public function send(User $user, NotificationTemplate $template, array $params): void
     {
-        if(empty($this->getConfig()->get('sendOutNotifications'))){
-            $GLOBALS['log']->alert('Notification Not Sent: Send out Notification is deactivated.');
-            return;
-        }
 
-        $language = $user->get('language');
+        $language = $this->getUserLanguage($user);
         $subject = $template->get('subject');
         $body = $template->get('body');
 
@@ -56,8 +52,9 @@ class EmailTransport extends AbstractNotificationTransport
             'to' => $user->get('emailAddress'),
             'subject' => $this->getTwig()->renderTemplate($subject, $params),
             'body' => $this->getTwig()->renderTemplate($body, $params),
+            'isHtml' => true
         ];
 
-        $this->sender->sendByJob($data);
+        $this->sender->send($data);
     }
 }
