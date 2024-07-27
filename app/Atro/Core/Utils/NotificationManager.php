@@ -27,6 +27,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Atro\Entities\NotificationRule as RuleEntity;
 
 class NotificationManager
 {
@@ -42,6 +43,7 @@ class NotificationManager
 
     public function afterEntitySaved(Entity $entity): void
     {
+
         if ($this->getMemoryStorage()->get('importJobId')) {
             return;
         }
@@ -156,7 +158,7 @@ class NotificationManager
         }
     }
 
-    protected function handleNotificationByJob(string $occurrence, string $entityType, string $entityId, array $additionalParams = []): void
+    public function handleNotificationByJob(string $occurrence, string $entityType, string $entityId, array $additionalParams = []): void
     {
         if (!$this->hasExistingRule($occurrence, $entityType)) {
             return;
@@ -173,10 +175,15 @@ class NotificationManager
         $this->getQueueManager()->push('Process Notification', 'QueueManagerNotificationSender', $jobData, 'Crucial');
     }
 
-    protected function handleNotification(string $occurrence, Entity $entity, User $actionUser, array $additionalParams = []): void
+    public function handleNotification(string $occurrence, Entity $entity, User $actionUser, array $additionalParams = []): void
     {
         if (empty($this->getConfig()->get('sendOutNotifications'))) {
             $GLOBALS['log']->alert('Notification Not Sent: Send out Notification is deactivated.');
+            return;
+        }
+
+        if ($occurrence === NotificationOccurrence::MENTION && $entity->getEntityType() === 'Note') {
+            $this->handleMentionNotification($occurrence, $entity, $actionUser, $additionalParams);
             return;
         }
 
@@ -195,108 +202,150 @@ class NotificationManager
             return;
         }
 
-        $userList = [];
+        $usersToNotifyIds = [];
 
-        if ($occurrence === NotificationOccurrence::MENTION && $entity->getEntityType() === 'Note') {
-            $parent = null;
-            if ($entity->get('parentId') && $entity->get('parentType')) {
-                $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
-            }
-
-            foreach ($entity->get('data')->mentions as $mention) {
-                if ($notificationRule->get('ignoreSelfAction' && $mention->id === $actionUser->id)) {
-                    continue;
-                }
-
-                if (empty($user = $this->getEntityManager()->getEntity('User', $mention->id))) {
-                    continue;
-                }
-
-                if ($this->getUserNotificationProfileId($user->get('id')) === $notificationRule->get('notificationProfileId')) {
-                    continue;
-                }
-
-                if ($parent && !$this->checkByAclManager($user, $parent, 'stream')) {
-                    continue;
-                }
-
-                $userList[] = $user;
-            }
-        } else {
-            $usersToNotifyIds = [];
-
-            if ($notificationRule->get('asOwner') && !empty($entity->get('ownerUserId'))) {
-                $usersToNotifyIds[] = $entity->get('ownerUserId');
-            }
-
-            if ($notificationRule->get('asAssignee') && !empty($entity->get('assignedUserId'))) {
-                $usersToNotifyIds[] = $entity->get('assignedUserId');
-            }
-
-            if ($notificationRule->get('asFollower')) {
-                $usersToNotifyIds = array_merge($usersToNotifyIds, $this->getSubscriberUserIds($entity));
-            }
-
-            if ($notificationRule->get('asTeamMember')) {
-                $usersToNotifyIds = array_merge($usersToNotifyIds, $this->getTeamUserIds($entity));
-            }
-
-            if ($notificationRule->get('asNotificationProfile')) {
-                $usersToNotifyIds = array_merge($usersToNotifyIds, $this->getNotificationProfileUserIds($notificationRule->get('notificationProfileId')));
-            }
-
-            $usersToNotifyIds = array_unique($usersToNotifyIds);
-
-            if ($notificationRule->get('ignoreSelfAction')) {
-                $key = array_search($actionUser->id, $usersToNotifyIds);
-                if ($key !== false) {
-                    unset($usersToNotifyIds[$key]);
-                }
-            }
-            // we select only the user who as configure the notificationProfile link to this rule
-            $usersToNotifyIds = array_filter($usersToNotifyIds, function ($userId) use ($notificationRule) {
-                return $this->getUserNotificationProfileId($userId) === $notificationRule->get('notificationProfileId');
-            });
-
-            if (empty($usersToNotifyIds)) {
-                return;
-            }
-
-            $userList = $this
-                ->getEntityManager()
-                ->getRepository('User')
-                ->where(
-                    [
-                        'isActive' => true,
-                        'id' => $usersToNotifyIds
-                    ]
-                )
-                ->find();
+        if ($notificationRule->get('asOwner') && !empty($entity->get('ownerUserId'))) {
+            $usersToNotifyIds[] = $entity->get('ownerUserId');
         }
 
-        $data = [
-            "config" => $this->getConfig(),
-            "occurrence" => $occurrence,
-            "entity" => $entity,
-            'entityType' => $entity->getEntityType(),
-            "actionUser" => $actionUser,
-            "notifyUser" => $user
-        ];
+        if ($notificationRule->get('asAssignee') && !empty($entity->get('assignedUserId'))) {
+            $usersToNotifyIds[] = $entity->get('assignedUserId');
+        }
 
-        $dataForTemplate = array_merge($data, $this->transformData($additionalParams));
-        $parent = null;
+        if ($notificationRule->get('asFollower')) {
+            $usersToNotifyIds = array_merge($usersToNotifyIds, $this->getSubscriberUserIds($entity));
+        }
 
-        foreach ($userList as $user) {
+        if ($notificationRule->get('asTeamMember')) {
+            $usersToNotifyIds = array_merge($usersToNotifyIds, $this->getTeamUserIds($entity));
+        }
+
+        if ($notificationRule->get('asNotificationProfile')) {
+            $usersToNotifyIds = array_merge($usersToNotifyIds, $this->getNotificationProfileUserIds($notificationRule->get('notificationProfileId')));
+        }
+
+        $usersToNotifyIds = array_unique($usersToNotifyIds);
+
+        if ($notificationRule->get('ignoreSelfAction')) {
+            $key = array_search($actionUser->id, $usersToNotifyIds);
+            if ($key !== false) {
+                unset($usersToNotifyIds[$key]);
+            }
+        }
+        // we select only the user who as configure the notificationProfile link to this rule
+        $usersToNotifyIds = array_filter($usersToNotifyIds, function ($userId) use ($notificationRule) {
+            return $this->getUserNotificationProfileId($userId) === $notificationRule->get('notificationProfileId');
+        });
+
+        if (empty($usersToNotifyIds)) {
+            return;
+        }
+
+        $userList = $this
+            ->getEntityManager()
+            ->getRepository('User')
+            ->where(
+                [
+                    'isActive' => true,
+                    'id' => $usersToNotifyIds
+                ]
+            )
+            ->find();
+
+        $userList = array_filter($userList, function ($user) use ($occurrence, $entity) {
+
             if (in_array($occurrence, [NotificationOccurrence::NOTE_CREATED, NotificationOccurrence::NOTE_UPDATED, NotificationOccurrence::NOTE_DELETED])) {
+                $parent = null;
                 if ($entity->get('parentId') && $entity->get('parentType')) {
                     $parent = $parent ?? $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
                 }
                 if ($parent && !$this->checkByAclManager($user, $parent, 'stream')) {
-                    continue;
+                    return false;
                 }
             } else if ($this->checkByAclManager($user, $entity, 'read')) {
+                return false;
+            }
+            return true;
+        });
+
+        $this->sendNotificationToTransports($userList, $occurrence, $entity, $actionUser, $additionalParams, $notificationRule);
+    }
+
+    protected function handleMentionNotification(string $occurrence, Entity $entity, User $actionUser, array $additionalParams)
+    {
+        $hasParent = false;
+        $userList = [];
+        $parent = null;
+        if ($entity->get('parentId') && $entity->get('parentType')) {
+            $hasParent = true;
+            $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        }
+
+        if ($hasParent && !$this->hasExistingRule($occurrence, $entity->get('parentType'))) {
+            return;
+        }
+
+        if (!$hasParent && !$this->hasExistingRule($occurrence, $entity->getEntityType())) {
+            return;
+        }
+
+        $id = $hasParent ? $this->getNotificationRuleId($occurrence, $entity->get('parentType')) : $this->getNotificationRuleId($occurrence, $entity->getEntityType());
+        $notificationRule = $this->getNotificationRuleRepository()->findFromCache($id);
+
+        if (empty($notificationRule)) {
+            return;
+        }
+
+        foreach ($entity->get('data')->mentions as $mention) {
+            if ($notificationRule->get('ignoreSelfAction' && $mention->id === $actionUser->id)) {
                 continue;
             }
+
+            if (empty($user = $this->getEntityManager()->getEntity('User', $mention->id))) {
+                continue;
+            }
+
+            if ($this->getUserNotificationProfileId($user->get('id')) === $notificationRule->get('notificationProfileId')) {
+                continue;
+            }
+
+            if ($hasParent && !$this->checkByAclManager($user, $parent, 'stream')) {
+                continue;
+            }
+
+            if (!$hasParent && !$this->checkByAclManager($user, $entity, 'read')) {
+                continue;
+            }
+
+            $userList[] = $user;
+        }
+
+        if (!empty($userList)) {
+            $this->sendNotificationToTransports($userList, $occurrence, $entity, $actionUser, $additionalParams, $notificationRule);
+        }
+    }
+
+    protected function sendNotificationToTransports(
+        array      $userList,
+        string     $occurrence,
+        Entity     $entity,
+        User       $actionUser,
+        array      $additionalParams,
+        RuleEntity $notificationRule
+    ): void
+    {
+        foreach ($userList as $user) {
+            $data = [
+                "config" => $this->getConfig(),
+                "occurrence" => $occurrence,
+                "entity" => $entity,
+                'entityType' => $entity->getEntityType(),
+                "actionUser" => $actionUser,
+                "notifyUser" => $user
+            ];
+
+            $dataForTemplate = array_merge($data, $this->transformData($additionalParams));
+
 
             // send notification for each transport
             foreach ($this->getMetadata()->get(['app', 'notificationTransports']) as $transportType => $transportClassName) {
@@ -386,7 +435,7 @@ class NotificationManager
         return array_column($userIds, 'id');
     }
 
-    private function handleNotificationRelationEntity(Entity $entity, string $occurrence)
+    protected function handleNotificationRelationEntity(Entity $entity, string $occurrence)
     {
         if (!isset($this->relationEntityData[$entity->getEntityType()])) {
             $this->relationEntityData[$entity->getEntityType()] = [];
