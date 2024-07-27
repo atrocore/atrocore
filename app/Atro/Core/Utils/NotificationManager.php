@@ -16,6 +16,7 @@ namespace Atro\Core\Utils;
 use Atro\Core\Container;
 use Atro\Core\QueueManager;
 use Atro\NotificationTransport\AbstractNotificationTransport;
+use Atro\NotificationTransport\NotificationOccurrence;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Repositories\NotificationRule;
 use Doctrine\DBAL\ParameterType;
@@ -28,29 +29,59 @@ use Espo\ORM\EntityManager;
 class NotificationManager
 {
     protected Container $container;
+    protected array $relationEntityData;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    public function handleNotificationByJob(string $occurrence, Entity $entity): void
+    public function afterEntitySaved(Entity $entity):void
     {
-        $notificationRuleId = $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'notificationRuleIdByOccurrence', 'occurrence']);
+        $isNote = $entity->getEntityType() === 'Note';
 
-        if (empty($notificationRuleId)) {
-            $notificationRuleId = $this->getMetadata()->get(['app', 'globalNotificationRuleIdByOccurrence', $occurrence]);
+        if ($entity->isNew()) {
+            $this->handleNotificationRelationEntity($entity, NotificationOccurrence::LINK);
+            $this->handleNotificationByJob(
+                $isNote ? NotificationOccurrence::NOTE_CREATED : NotificationOccurrence::CREATION,
+                $entity->getEntityType(),
+                $entity->get('id')
+            );
         }
 
-        if (empty($notificationRuleId)) {
+        $this->handleNotificationByJob(
+            $isNote ? NotificationOccurrence::NOTE_UPDATED : NotificationOccurrence::UPDATE,
+            $entity->getEntityType(),
+            $entity->get('id')
+        );
+
+    }
+
+    public function afterEntityDeleted(Entity $entity):void
+    {
+        $isNote = $entity->getEntityType() === 'Note';
+
+        $this->handleNotificationRelationEntity($entity, NotificationOccurrence::UNLINK);
+
+        $this->handleNotificationByJob(
+            $isNote ? NotificationOccurrence::NOTE_DELETED : NotificationOccurrence::DELETION,
+            $entity->getEntityType(),
+            $entity->get('id')
+        );
+    }
+
+    public function handleNotificationByJob(string $occurrence, string $entityType, string $entityId, array $additionalParams = []): void
+    {
+        if (!$this->hasExistingRule($occurrence, $entityType)) {
             return;
         }
 
         $jobData = [
             "occurrence" => $occurrence,
-            "entityType" => $entity->getEntityType(),
-            "entityId" => $entity->get('id'),
-            "actionUserId" => !empty($user = $this->container->get('user')) ? $user->get('id') : null
+            "entityType" => $entityType,
+            "entityId" => $entityId,
+            "actionUserId" => !empty($user = $this->container->get('user')) ? $user->get('id') : null,
+            "params" => $additionalParams
         ];
 
         $this->getQueueManager()->push('Process Notification', 'QueueManagerNotificationSender', $jobData, 'Crucial');
@@ -63,17 +94,12 @@ class NotificationManager
             return;
         }
 
-        $notificationRuleId = $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'notificationRuleIdByOccurrence', $occurrence]);
-
-        if (empty($notificationRuleId)) {
-            $notificationRuleId = $this->getMetadata()->get(['app', 'globalNotificationRuleIdByOccurrence', $occurrence]);
-        }
-
-        if (empty($notificationRuleId)) {
+        if (!$this->hasExistingRule($occurrence, $entity->getEntityType())) {
             return;
         }
 
-        $notificationRule = $this->getNotificationRuleRepository()->findFromCache($notificationRuleId);
+        $id = $this->getNotificationRuleId($occurrence, $entity->getEntityType());
+        $notificationRule = $this->getNotificationRuleRepository()->findFromCache($id);
 
         if (empty($notificationRule)) {
             return;
@@ -156,6 +182,22 @@ class NotificationManager
         }
     }
 
+    protected function getNotificationRuleId(string $occurrence, string $entityType): ?string
+    {
+        $notificationRuleId = $this->getMetadata()->get(['scopes', $entityType, 'notificationRuleIdByOccurrence', 'occurrence']);
+
+        if (empty($notificationRuleId)) {
+            $notificationRuleId = $this->getMetadata()->get(['app', 'globalNotificationRuleIdByOccurrence', $occurrence]);
+        }
+
+        return $notificationRuleId;
+    }
+
+    protected function hasExistingRule(string $occurrence, string $entityType): bool
+    {
+        return !empty($this->getNotificationRuleId($occurrence, $entityType));
+    }
+
     protected function getSubscriberUserIds(Entity $entity): array
     {
         $connection = $this->getEntityManager()->getConnection();
@@ -208,6 +250,50 @@ class NotificationManager
             ->fetchAllAssociative();
 
         return array_column($userIds, 'id');
+    }
+
+    private function handleNotificationRelationEntity(Entity $entity, string $occurrence)
+    {
+        if (!isset($this->relationEntityData[$entity->getEntityType()])) {
+            $this->relationEntityData[$entity->getEntityType()] = [];
+            if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation') {
+                $relationFields = $this->getEntityManager()->getRepository($entity->getEntityType())->getRelationFields();
+                if (isset($relationFields[1]) && isset($relationFields[0])) {
+                    $this->relationEntityData[$entity->getEntityType()]['field1'] = $relationFields[0] . 'Id';
+                    $this->relationEntityData[$entity->getEntityType()]['entity1'] = $this->getMetadata()
+                        ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[0], 'entity']);
+
+                    $this->relationEntityData[$entity->getEntityType()]['field2'] = $relationFields[1] . 'Id';
+                    $this->relationEntityData[$entity->getEntityType()]['entity2'] = $this->getMetadata()
+                        ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[1], 'entity']);
+                }
+            }
+        }
+
+        if (empty($this->relationEntityData[$entity->getEntityType()])) {
+            return;
+        }
+
+        $this->handleNotificationByJob(
+            $occurrence,
+            $this->relationEntityData[$entity->getEntityType()]['entity1'],
+            $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+            [
+                "linkedEntityId" =>  $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                "linkedEntityType" =>  $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+            ]
+        );
+
+        $this->handleNotificationByJob(
+            $occurrence,
+            $this->relationEntityData[$entity->getEntityType()]['entity2'],
+            $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+            [
+                "linkedEntityId" =>  $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                "linkedEntityType" =>  $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+            ]
+        );
+
     }
 
     protected function getNotificationRuleRepository(): NotificationRule

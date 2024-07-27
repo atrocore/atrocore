@@ -24,7 +24,7 @@ class QueueManagerNotificationSender extends QueueManagerBase
      */
     public function run(array $data = []): bool
     {
-        if(empty($data['occurrence']) || empty($data['entityId']) || empty($data['entityType']) || empty($data['actionUserId'])) {
+        if (empty($data['occurrence']) || empty($data['entityId']) || empty($data['entityType']) || empty($data['actionUserId'])) {
             return true;
         }
 
@@ -33,18 +33,23 @@ class QueueManagerNotificationSender extends QueueManagerBase
         $entity = $this->getEntityManager()
             ->getRepository($data['entityType'])
             ->where(['id' => $data['entityId']])
-            ->findOne(['withDeleted' => in_array($occurrence, [NotificationOccurrence::DELETION, NotificationOccurrence::NOTE_DELETED])]);
+            ->findOne(['withDeleted' => in_array($occurrence, [
+                        NotificationOccurrence::DELETION,
+                        NotificationOccurrence::NOTE_DELETED,
+                    ]
+                )]
+            );
 
-        if(empty($entity)){
+        if (empty($entity)) {
             return true;
         }
 
         $actionUser = $this->getEntityManager()
             ->getRepository('User')
-            ->where(['id' =>$data['actionUserId']])
+            ->where(['id' => $data['actionUserId']])
             ->findeOne();
 
-        /** @var NotificationManager $notificationManager*/
+        /** @var NotificationManager $notificationManager */
         $notificationManager = $this->getInjection('notificationManager');
         $notificationManager->handleNotification($occurrence, $entity, $actionUser);
 
