@@ -46,6 +46,7 @@ abstract class AbstractNotificationTransport
         return $this->container->get('entityManager');
     }
 
+
     protected function getUserLanguage(User $user): string
     {
         $preferences = $this->getEntityManager()->getEntity('Preferences', $user->get('id'));

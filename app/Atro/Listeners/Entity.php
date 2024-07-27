@@ -32,15 +32,14 @@ class Entity extends AbstractListener
 
         $this->getNoteUtil()->afterEntitySaved($entity = $event->getArgument('entity'));
 
-        $occurrence = $entity->isNew() ? NotificationOccurrence::CREATION : NotificationOccurrence::UPDATE;
-//        $this->getNotificationManager()->handleNotificationByJob($occurrence, $entity);
+        $this->getNotificationManager()->afterEntitySaved($entity);
     }
 
     public function beforeRemove(Event $event): void
     {
         $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRemove', $event);
 
-        $this->getNotificationManager()->handleNotificationByJob(NotificationOccurrence::DELETION, $event->getArgument('entity'));
+        $this->getNotificationManager()->afterEntityDeleted($event->getArgument('entity'));
     }
 
     public function afterRemove(Event $event): void
