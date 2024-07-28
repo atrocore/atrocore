@@ -70,6 +70,7 @@ class NotificationManager
         }
 
         $isNote = $entity->getEntityType() === 'Note';
+        $noteHasParent = $entity->get('parentType') && $entity->get('parentId');
 
         if ($isNote && $entity->get('type') !== 'Post') {
             return;
@@ -79,15 +80,18 @@ class NotificationManager
 
         if ($entity->isNew()) {
             $this->sendNotificationsRelationEntity($entity, NotificationOccurrence::LINK, $sync);
-            if ($isNote) {
+
+            if ($isNote && !empty($entity->get('data')->mentions)) {
+                $this->sendNoteNotifications(
+                    NotificationOccurrence::MENTION,
+                    $entity,
+                    $sync
+                );
+
+            }
+
+            if ($isNote && $noteHasParent) {
                 $this->sendNoteNotifications(NotificationOccurrence::NOTE_CREATED, $entity, $sync);
-                if (!empty($entity->get('data')->mentions)) {
-                    $this->sendNoteNotifications(
-                        NotificationOccurrence::MENTION,
-                        $entity,
-                        $sync
-                    );
-                }
             } else {
                 $this->sendNotificationsByJob(
                     NotificationOccurrence::CREATION,
@@ -98,7 +102,7 @@ class NotificationManager
                 );
             }
         } else {
-            if ($isNote) {
+            if ($isNote && $noteHasParent) {
                 $this->sendNoteNotifications(
                     NotificationOccurrence::NOTE_UPDATED,
                     $entity,
@@ -153,6 +157,7 @@ class NotificationManager
         }
 
         $isNote = $entity->getEntityType() === 'Note';
+        $noteHasParent = $entity->get('parentType') && $entity->get('parentId');
 
         if ($isNote && $entity->get('type') !== 'Post') {
             return;
@@ -162,7 +167,7 @@ class NotificationManager
 
         $this->sendNotificationsRelationEntity($entity, NotificationOccurrence::UNLINK, $sync);
 
-        if ($isNote) {
+        if ($isNote && $noteHasParent) {
             $this->sendNoteNotifications(
                 NotificationOccurrence::NOTE_DELETED,
                 $entity,
@@ -207,8 +212,6 @@ class NotificationManager
             "actionUserId" => !empty($user = $this->container->get('user')) ? $user->get('id') : null,
             "params" => $additionalParams
         ];
-
-//        (new QueueManagerNotificationSender())->run($jobData);
 
         $this->getQueueManager()->push('Process Notification', 'QueueManagerNotificationSender', $jobData, 'Crucial');
     }
