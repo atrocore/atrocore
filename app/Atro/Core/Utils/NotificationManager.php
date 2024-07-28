@@ -57,15 +57,7 @@ class NotificationManager
     public function afterEntitySaved(Entity $entity): void
     {
 
-        if ($this->getMemoryStorage()->get('importJobId')) {
-            return;
-        }
-
-        if ($this->notificationDisabled($entity->getEntityType())) {
-            return;
-        }
-
-        if ($entity->getEntityType() === 'QueueItem' && $entity->get('serviceName') === 'QueueManagerNotificationSender') {
+        if(!$this->canSendNotification($entity)){
             return;
         }
 
@@ -144,24 +136,12 @@ class NotificationManager
 
     public function afterEntityDeleted(Entity $entity): void
     {
-        if ($this->getMemoryStorage()->get('importJobId')) {
-            return;
-        }
-
-        if ($this->notificationDisabled($entity->getEntityType())) {
-            return;
-        }
-
-        if ($entity->getEntityType() === 'QueueItem' && $entity->get('serviceName') === 'QueueManagerNotificationSender') {
+        if(!$this->canSendNotification($entity)){
             return;
         }
 
         $isNote = $entity->getEntityType() === 'Note';
         $noteHasParent = $entity->get('parentType') && $entity->get('parentId');
-
-        if ($isNote && $entity->get('type') !== 'Post') {
-            return;
-        }
 
         $sync = $this->getConfig()->get('sendNotificationInSync', false);
 
@@ -267,6 +247,29 @@ class NotificationManager
         }
 
         $this->sendNotificationsToTransports($finalUserList, $occurrence, $entity, $actionUser, $params, $parent);
+    }
+
+    protected function canSendNotification(Entity  $entity): bool
+    {
+        if ($this->getMemoryStorage()->get('importJobId')) {
+            return false;
+        }
+
+        if ($this->notificationDisabled($entity->getEntityType())) {
+            return false;
+        }
+
+        if ($entity->getEntityType() === 'QueueItem' && $entity->get('serviceName') === 'QueueManagerNotificationSender') {
+            return false;
+        }
+
+        $isNote = $entity->getEntityType() === 'Note';
+
+        if ($isNote && $entity->get('type') !== 'Post') {
+            return false;
+        }
+
+        return true;
     }
 
     protected function sendMentionNotifications(string $occurrence, Entity $entity, User $actionUser, array $additionalParams)
@@ -605,7 +608,6 @@ class NotificationManager
             $sync
         );
     }
-
 
     protected function getNotificationRuleRepository(): NotificationRule
     {
