@@ -40,7 +40,7 @@ class SystemTransport extends AbstractNotificationTransport
         }
         $notification = $this->getEntityManager()->getEntity('Notification');
 
-        $notification->set('type', 'Simple');
+        $notification->set('type', 'TranslatedMessage');
         $notification->set('data', $data);
         $notification->set('userId', $user->get('id'));
         $notification->set('relatedId', $params['entity']->get('id'));

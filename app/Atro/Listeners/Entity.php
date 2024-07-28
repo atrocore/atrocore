@@ -32,7 +32,7 @@ class Entity extends AbstractListener
 
         $this->getNoteUtil()->afterEntitySaved($entity = $event->getArgument('entity'));
 
-        $this->getNotificationManager()->afterEntitySaved($entity);
+        $this->getNotificationManager()->afterEntitySaved($entity, true);
     }
 
     public function beforeRemove(Event $event): void

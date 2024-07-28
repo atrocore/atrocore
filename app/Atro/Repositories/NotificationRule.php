@@ -54,9 +54,11 @@ class NotificationRule extends Base
     {
         parent::afterSave($entity, $options);
 
-        if (($entity->isNew() && $entity->get('isActive')) || $entity->isAttributeChanged('isActive')) {
-            $this->deleteCacheFile();
+        if (($entity->isNew() || !$entity->isAttributeChanged('isActive')) && !$entity->get('isActive')) {
+            return;
         }
+
+        $this->deleteCacheFile();
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

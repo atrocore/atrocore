@@ -15,16 +15,12 @@ namespace Atro\Services;
 
 use Atro\Core\Utils\NotificationManager;
 use Atro\NotificationTransport\NotificationOccurrence;
-use Espo\ORM\Entity;
 
 class QueueManagerNotificationSender extends QueueManagerBase
 {
-    /**
-     * @inheritdoc
-     */
     public function run(array $data = []): bool
     {
-        if (empty($data['occurrence']) || empty($data['entityId']) || empty($data['entityType']) || empty($data['actionUserId'])) {
+        if (empty($data['occurrence']) || empty($data['entityId']) || empty($data['entityType']) || empty($data['actionUserId']) || empty($data['params'])) {
             return true;
         }
 
@@ -47,12 +43,18 @@ class QueueManagerNotificationSender extends QueueManagerBase
         $actionUser = $this->getEntityManager()
             ->getRepository('User')
             ->where(['id' => $data['actionUserId']])
-            ->findeOne();
+            ->findOne();
 
         /** @var NotificationManager $notificationManager */
-        $notificationManager = $this->getInjection('notificationManager');
-        $notificationManager->handleNotification($occurrence, $entity, $actionUser);
+        $notificationManager = $this->getInjection(NotificationManager::class);
+        $notificationManager->handleNotification($occurrence, $entity, $actionUser, $data['params']);
 
         return true;
+    }
+
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency(NotificationManager::class);
     }
 }

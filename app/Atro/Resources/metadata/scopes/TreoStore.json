@@ -4,5 +4,6 @@
   "module": "TreoCore",
   "object": true,
   "quickCreateListDisabled": true,
-  "streamDisabled": true
+  "streamDisabled": true,
+  "notificationDisabled": true
 }

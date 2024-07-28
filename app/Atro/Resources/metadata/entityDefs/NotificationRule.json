@@ -10,7 +10,7 @@
     },
     "entity": {
       "type": "enum",
-      "view": "views/fields/entity-type"
+      "view": "views/notification-rule/fields/entity-type"
     },
     "notificationProfile": {
       "type": "link",
