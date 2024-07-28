@@ -33,6 +33,8 @@ class EmailTransport extends AbstractNotificationTransport
     {
 
         $language = $this->getUserLanguage($user);
+        $this->addTranslatedEntitiesName($params, $language);
+
         $subject = $template->get('subject');
         $body = $template->get('body');
 

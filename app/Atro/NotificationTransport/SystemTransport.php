@@ -33,6 +33,7 @@ class SystemTransport extends AbstractNotificationTransport
             }
 
             if (!empty($template->get($field))) {
+                $this->addTranslatedEntitiesName($params, $locale['language']);
                 $message = $this->getTwig()->renderTemplate($template->get($field), $params);
             }
 

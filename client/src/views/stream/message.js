@@ -50,6 +50,7 @@ Espo.define('views/stream/message', 'view', function (Dep) {
                     template = template.replace('{' + key +'}', value);
                 }
             }
+
             this._template = template;
         },
 

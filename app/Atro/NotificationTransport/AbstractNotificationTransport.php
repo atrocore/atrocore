@@ -10,6 +10,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Atro\NotificationTransport;
 
 use Atro\Core\Container;
@@ -31,6 +32,26 @@ abstract class AbstractNotificationTransport
 
     abstract public function send(User $user, NotificationTemplate $template, array $params): void;
 
+    protected function getUserLanguage(User $user): string
+    {
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->get('id'));
+        return Language::detectLanguage($this->getConfig(), $preferences);
+    }
+
+    protected function addTranslatedEntitiesName(array &$params, string $language): void
+    {
+        $languageManager = $this->getLanguage();
+        $initialLanguage = $languageManager->getLanguage();
+        $languageManager->setLanguage($language);
+        foreach ($params as $key => $param) {
+            if (strpos($key, 'Type', max(0,strlen($key) - 4)) !== false) {
+                $name = str_replace('Type', 'Name', $key);
+                $params[$name] = $languageManager->translate($param, $language, 'scopeNames');
+            }
+        }
+        $languageManager->setLanguage($initialLanguage);
+    }
+
     protected function getTwig(): Twig
     {
         return $this->container->get('twig');
@@ -46,10 +67,8 @@ abstract class AbstractNotificationTransport
         return $this->container->get('entityManager');
     }
 
-
-    protected function getUserLanguage(User $user): string
+    protected function getLanguage(): Language
     {
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->get('id'));
-        return Language::detectLanguage($this->getConfig(), $preferences);
+        return $this->container->get('language');
     }
 }
