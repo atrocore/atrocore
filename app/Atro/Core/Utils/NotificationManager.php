@@ -71,10 +71,14 @@ class NotificationManager
                     $entity->getEntityType(),
                     $entity->get('id'),
                     [
+                        "parentType" => $entity->get('parentType'),
+                        "parentName" => $this->getLanguage()->translate($entity->get('parentType') ?? '', 'scopeNames'),
                         "entities" => [
-                            "name" => "parent",
-                            "entityType" => $entity->get('parentType'),
-                            "entityId" => $entity->get('parentId')
+                            [
+                                "name" => "parent",
+                                "entityType" => $entity->get('parentType'),
+                                "entityId" => $entity->get('parentId')
+                            ]
                         ]
                     ],
                     $sync
@@ -96,10 +100,14 @@ class NotificationManager
                 $entity->getEntityType(),
                 $entity->get('id'),
                 [
+                    "parentType" => $entity->get('parentType'),
+                    "parentName" => $this->getLanguage()->translate($entity->get('parentType') ?? '', 'scopeNames'),
                     "entities" => [
-                        "name" => "parent",
-                        "entityType" => $entity->get('parentType'),
-                        "entityId" => $entity->get('parentId')
+                        [
+                            "name" => "parent",
+                            "entityType" => $entity->get('parentType'),
+                            "entityId" => $entity->get('parentId')
+                        ]
                     ]
                 ],
                 $sync
@@ -121,10 +129,14 @@ class NotificationManager
                     $entity->getEntityType(),
                     $entity->get('id'),
                     [
+                        "isOwnership" => $link === 'ownerUser',
+                        "isAssignment" => $link === 'assignedUser',
                         "entities" => [
-                            "name" => $link,
-                            "entity" => "User",
-                            "entityId" => $entity->get($link . 'Id')
+                            [
+                                "name" => $link,
+                                "entityType" => "User",
+                                "entityId" => $entity->get($link . 'Id')
+                            ]
                         ]
                     ],
                     $sync
@@ -139,10 +151,14 @@ class NotificationManager
                     $entity->getEntityType(),
                     $entity->get('id'),
                     [
+                        "parentType" => $entity->get('parentType'),
+                        "parentName" => $this->getLanguage()->translate($entity->get('parentType') ?? '', 'scopeNames'),
                         "entities" => [
-                            "name" => "parent",
-                            "entityType" => $entity->get('parentType'),
-                            "entityId" => $entity->get('parentId')
+                            [
+                                "name" => "parent",
+                                "entityType" => $entity->get('parentType'),
+                                "entityId" => $entity->get('parentId')
+                            ]
                         ]
                     ],
                     $sync
@@ -151,8 +167,20 @@ class NotificationManager
         }
     }
 
-    public function afterEntityDeleted(Entity $entity): void
+    public function afterEntityDeleted(Entity $entity, bool $sync = false): void
     {
+        if ($this->getMemoryStorage()->get('importJobId')) {
+            return;
+        }
+
+        if ($this->notificationDisabled($entity->getEntityType())) {
+            return;
+        }
+
+        if ($entity->getEntityType() === 'QueueItem' && $entity->get('serviceName') === 'QueueManagerNotificationSender') {
+            return;
+        }
+
         $isNote = $entity->getEntityType() === 'Note';
 
         $this->handleNotificationRelationEntity($entity, NotificationOccurrence::UNLINK);
@@ -163,18 +191,25 @@ class NotificationManager
                 $entity->getEntityType(),
                 $entity->get('id'),
                 [
+                    "parentType" => $entity->get('parentType'),
+                    "parentName" => $this->getLanguage()->translate($entity->get('parentType') ?? '', 'scopeNames'),
                     "entities" => [
-                        "name" => "parent",
-                        "entityType" => $entity->get('parentType'),
-                        "entityId" => $entity->get('parentId')
+                        [
+                            "name" => "parent",
+                            "entityType" => $entity->get('parentType'),
+                            "entityId" => $entity->get('parentId')
+                        ]
                     ]
-                ]
+                ],
+                $sync
             );
         } else {
             $this->handleNotificationByJob(
                 NotificationOccurrence::DELETION,
                 $entity->getEntityType(),
-                $entity->get('id')
+                $entity->get('id'),
+                [],
+                $sync
             );
         }
     }
@@ -191,13 +226,13 @@ class NotificationManager
             return;
         }
 
-        if($occurrence !== NotificationOccurrence::MENTION &&
+        if ($occurrence !== NotificationOccurrence::MENTION &&
             !$this->hasUserToNotify(
                 $occurrence,
                 $this->getEntityManager()->getRepository($entityType)->get($entityId),
                 $this->container->get('user'),
             )
-        ){
+        ) {
             return;
         }
 
@@ -367,7 +402,7 @@ class NotificationManager
         if (isset($this->notificationRuleIds[$entityType][$occurrence])) {
             return $this->notificationRuleIds[$entityType][$occurrence];
         }
-        $notificationRuleId = $this->getMetadata()->get(['scopes', $entityType, 'notificationRuleIdByOccurrence', 'occurrence']);
+        $notificationRuleId = $this->getMetadata()->get(['scopes', $entityType, 'notificationRuleIdByOccurrence', $occurrence]);
 
         if (empty($notificationRuleId)) {
             $notificationRuleId = $this->getMetadata()->get(['app', 'globalNotificationRuleIdByOccurrence', $occurrence]);
@@ -473,11 +508,13 @@ class NotificationManager
             $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
             [
                 "entities" => [
-                    "name" => "linkedEntity",
-                    "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-                    "entityType" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-
-                ]
+                    [
+                        "name" => "linkedEntity",
+                        "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                        "entityType" => $entityType = $entity->get($this->relationEntityData[$entity->getEntityType()]['entity2']),
+                    ]
+                ],
+                "linkedEntityName" => $this->getLanguage()->translate($entityType, 'scopeNames')
             ],
             $sync
         );
@@ -488,11 +525,13 @@ class NotificationManager
             $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
             [
                 "entities" => [
-                    "name" => "unlinkedEntity",
-                    "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
-                    "entityType" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
-
-                ]
+                    [
+                        "name" => "unlinkedEntity",
+                        "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                        "entityType" => $entityType = $entity->get($this->relationEntityData[$entity->getEntityType()]['entity1']),
+                    ]
+                ],
+                "unlinkedEntityName" => $this->getLanguage()->translate($entityType, 'scopeNames')
             ],
             $sync
         );

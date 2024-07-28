@@ -179,4 +179,9 @@ class LayoutController extends AbstractListener
 
         $event->setArgument('result', Json::encode($result));
     }
+
+    protected function modifyNotificationRuleDetailSmall(Event $event): void
+    {
+        $this->modifyNotificationRuleDetail($event);
+    }
 }
