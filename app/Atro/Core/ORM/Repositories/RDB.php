@@ -912,28 +912,38 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    /**
+     * @deprecated
+     */
     protected function assignmentNotifications(Entity $entity): void
     {
     }
 
+    /**
+     * @deprecated
+     */
     protected function createOwnNotification(Entity $entity, ?string $userId): void
     {
     }
 
+    /**
+     * @deprecated
+     */
     protected function createAssignmentNotification(Entity $entity, ?string $userId): void
     {
     }
 
+    /**
+     * @deprecated
+     */
     protected function getOwnNotificationMessageData(Entity $entity): array
     {
-        return [
-            'entityName' => $entity->get('name'),
-            'entityType' => $entity->getEntityType(),
-            'entityId'   => $entity->get('id'),
-            'changedBy'  => $this->getEntityManager()->getUser()->get('id')
-        ];
+        return [];
     }
 
+    /**
+     * @deprecated
+     */
     protected function getAssignmentNotificationMessageData(Entity $entity): array
     {
         return $this->getOwnNotificationMessageData($entity);

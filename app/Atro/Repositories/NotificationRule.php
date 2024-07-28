@@ -80,7 +80,7 @@ class NotificationRule extends Base
     }
 
 
-    public function findFromCache(string $id): ?\Atro\Entities\NotificationRule
+    public function getFromCache(string $id): ?\Atro\Entities\NotificationRule
     {
         if (!$this->getDataManager()->isUseCache(self::CACHE_NAME)) {
             return $this->get($id);

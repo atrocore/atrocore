@@ -374,7 +374,7 @@ class NotificationManager
         }
 
         if (!empty($notificationRuleId)) {
-            return $this->notificationRuleIds[$entityType][$occurrence] = $this->getNotificationRuleRepository()->findFromCache($notificationRuleId);
+            return $this->notificationRuleIds[$entityType][$occurrence] = $this->getNotificationRuleRepository()->getFromCache($notificationRuleId);
         }
 
         return null;
