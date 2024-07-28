@@ -52,22 +52,22 @@ abstract class AbstractNotificationTransport
         $languageManager->setLanguage($initialLanguage);
     }
 
-    protected function getTwig(): Twig
+    private function getTwig(): Twig
     {
         return $this->container->get('twig');
     }
 
-    protected function getConfig(): Config
+    private function getConfig(): Config
     {
         return $this->container->get('config');
     }
 
-    protected function getEntityManager(): EntityManager
+    private function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
     }
 
-    protected function getLanguage(): Language
+    private function getLanguage(): Language
     {
         return $this->container->get('language');
     }

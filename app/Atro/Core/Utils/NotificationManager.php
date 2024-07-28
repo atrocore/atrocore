@@ -424,7 +424,6 @@ class NotificationManager
 
     protected function getNotificationProfileUserIds($notificationProfileId)
     {
-
         $connection = $this->getEntityManager()->getConnection();
 
         $userIds = $connection->createQueryBuilder()
@@ -572,7 +571,6 @@ class NotificationManager
         });
 
         return $this->userToNotifyIds[$occurrence][$entity->getEntityType()][$actionUser->get('id')] = array_values($usersToNotifyIds);
-
     }
 
     protected function hasExistingRule(string $occurrence, string $entityType): bool
@@ -609,12 +607,12 @@ class NotificationManager
         );
     }
 
-    protected function getNotificationRuleRepository(): NotificationRule
+    private function getNotificationRuleRepository(): NotificationRule
     {
         return $this->getEntityManager()->getRepository('NotificationRule');
     }
 
-    protected function checkByAclManager(User $user, Entity $parent, string $action): bool
+    private function checkByAclManager(User $user, Entity $parent, string $action): bool
     {
         return (AclManagerFactory::createAclManager($this->container))->check($user, $parent, $action);
     }
