@@ -40,6 +40,7 @@ class NotificationManager
     ];
 
     protected Container $container;
+
     protected array $relationEntityData = [];
 
     protected array $notificationRuleIds = [];
@@ -70,25 +71,25 @@ class NotificationManager
 
         $isNote = $entity->getEntityType() === 'Note';
 
-        if ($isNote && $entity->get('type') !== 'Message') {
+        if ($isNote && $entity->get('type') !== 'Post') {
             return;
         }
 
         $sync = $this->getConfig()->get('sendNotificationInSync', false);
 
         if ($entity->isNew()) {
-            $this->handleNotificationRelationEntity($entity, NotificationOccurrence::LINK, $sync);
+            $this->sendNotificationsRelationEntity($entity, NotificationOccurrence::LINK, $sync);
             if ($isNote) {
-                $this->handleNoteNotification(NotificationOccurrence::NOTE_CREATED, $entity, $sync);
+                $this->sendNoteNotifications(NotificationOccurrence::NOTE_CREATED, $entity, $sync);
                 if (!empty($entity->get('data')->mentions)) {
-                    $this->handleNoteNotification(
+                    $this->sendNoteNotifications(
                         NotificationOccurrence::MENTION,
                         $entity,
                         $sync
                     );
                 }
             } else {
-                $this->handleNotificationByJob(
+                $this->sendNotificationsByJob(
                     NotificationOccurrence::CREATION,
                     $entity->getEntityType(),
                     $entity->get('id'),
@@ -98,13 +99,13 @@ class NotificationManager
             }
         } else {
             if ($isNote) {
-                $this->handleNoteNotification(
+                $this->sendNoteNotifications(
                     NotificationOccurrence::NOTE_UPDATED,
                     $entity,
                     $sync
                 );
             } else {
-                $this->handleNotificationByJob(
+                $this->sendNotificationsByJob(
                     NotificationOccurrence::UPDATE,
                     $entity->getEntityType(),
                     $entity->get('id'),
@@ -116,7 +117,7 @@ class NotificationManager
 
         foreach (['ownerUser', 'assignedUser'] as $link) {
             if ($entity->isAttributeChanged($link . 'Id')) {
-                $this->handleNotificationByJob(
+                $this->sendNotificationsByJob(
                     $entity->get($link . 'Id') ? NotificationOccurrence::OWNERSHIP_ASSIGNMENT : NotificationOccurrence::UNLIKING_OWNERSHIP_ASSIGNMENT,
                     $entity->getEntityType(),
                     $entity->get('id'),
@@ -153,22 +154,22 @@ class NotificationManager
 
         $isNote = $entity->getEntityType() === 'Note';
 
-        if ($isNote && $entity->get('type') !== 'Message') {
+        if ($isNote && $entity->get('type') !== 'Post') {
             return;
         }
 
         $sync = $this->getConfig()->get('sendNotificationInSync', false);
 
-        $this->handleNotificationRelationEntity($entity, NotificationOccurrence::UNLINK, $sync);
+        $this->sendNotificationsRelationEntity($entity, NotificationOccurrence::UNLINK, $sync);
 
         if ($isNote) {
-            $this->handleNoteNotification(
+            $this->sendNoteNotifications(
                 NotificationOccurrence::NOTE_DELETED,
                 $entity,
                 $sync
             );
         } else {
-            $this->handleNotificationByJob(
+            $this->sendNotificationsByJob(
                 NotificationOccurrence::DELETION,
                 $entity->getEntityType(),
                 $entity->get('id'),
@@ -178,7 +179,7 @@ class NotificationManager
         }
     }
 
-    public function handleNotificationByJob(string $occurrence, string $entityType, string $entityId, array $additionalParams = [], bool $sync = false): void
+    public function sendNotificationsByJob(string $occurrence, string $entityType, string $entityId, array $additionalParams = [], bool $sync = false): void
     {
         $type = $entityType;
         if (in_array($occurrence, self::NOTE_OCCURRENCES) && !empty($additionalParams['entities'][0]['entityType'])) {
@@ -190,7 +191,7 @@ class NotificationManager
         }
 
         if ($sync) {
-            $this->handleNotification(
+            $this->sendNotifications(
                 $occurrence,
                 $this->getEntityManager()->getRepository($entityType)->get($entityId),
                 $this->container->get('user'),
@@ -207,10 +208,12 @@ class NotificationManager
             "params" => $additionalParams
         ];
 
+//        (new QueueManagerNotificationSender())->run($jobData);
+
         $this->getQueueManager()->push('Process Notification', 'QueueManagerNotificationSender', $jobData, 'Crucial');
     }
 
-    public function handleNotification(string $occurrence, Entity $entity, User $actionUser, array $params = []): void
+    public function sendNotifications(string $occurrence, Entity $entity, User $actionUser, array $params = []): void
     {
         if (empty($this->getConfig()->get('sendOutNotifications'))) {
             $GLOBALS['log']->alert('Notification Not Sent: Send out Notification is deactivated.');
@@ -218,7 +221,7 @@ class NotificationManager
         }
 
         if ($occurrence === NotificationOccurrence::MENTION && $entity->getEntityType() === 'Note') {
-            $this->handleMentionNotification($occurrence, $entity, $actionUser, $params);
+            $this->sendMentionNotifications($occurrence, $entity, $actionUser, $params);
             return;
         }
 
@@ -260,10 +263,10 @@ class NotificationManager
             $finalUserList[] = $user;
         }
 
-        $this->sendNotificationToTransports($finalUserList, $occurrence, $entity, $actionUser, $params, $parent);
+        $this->sendNotificationsToTransports($finalUserList, $occurrence, $entity, $actionUser, $params, $parent);
     }
 
-    protected function handleMentionNotification(string $occurrence, Entity $entity, User $actionUser, array $additionalParams)
+    protected function sendMentionNotifications(string $occurrence, Entity $entity, User $actionUser, array $additionalParams)
     {
         $userList = [];
         $parent = null;
@@ -310,11 +313,11 @@ class NotificationManager
         }
 
         if (!empty($userList)) {
-            $this->sendNotificationToTransports($userList, $occurrence, $entity, $actionUser, $additionalParams, $parent);
+            $this->sendNotificationsToTransports($userList, $occurrence, $entity, $actionUser, $additionalParams, $parent);
         }
     }
 
-    protected function sendNotificationToTransports(
+    protected function sendNotificationsToTransports(
         array   $userList,
         string  $occurrence,
         Entity  $entity,
@@ -428,7 +431,7 @@ class NotificationManager
         return array_column($userIds, 'id');
     }
 
-    protected function handleNotificationRelationEntity(Entity $entity, string $occurrence, bool $sync = false)
+    protected function sendNotificationsRelationEntity(Entity $entity, string $occurrence, bool $sync = false)
     {
         if (!isset($this->relationEntityData[$entity->getEntityType()])) {
             $this->relationEntityData[$entity->getEntityType()] = [];
@@ -452,7 +455,7 @@ class NotificationManager
 
         $name = $occurrence === NotificationOccurrence::LINK ? "linkedEntity" : "unlinkedEntity";
 
-        $this->handleNotificationByJob(
+        $this->sendNotificationsByJob(
             $occurrence,
             $this->relationEntityData[$entity->getEntityType()]['entity1'],
             $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
@@ -469,7 +472,7 @@ class NotificationManager
             $sync
         );
 
-        $this->handleNotificationByJob(
+        $this->sendNotificationsByJob(
             $occurrence,
             $this->relationEntityData[$entity->getEntityType()]['entity2'],
             $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
@@ -580,9 +583,9 @@ class NotificationManager
         return $this->notificationDisabled[$entityType] = $this->getMetadata()->get(['scopes', $entityType, 'notificationDisabled'], false);
     }
 
-    private function handleNoteNotification(string $occurrence, Entity $entity, bool $sync): void
+    protected function sendNoteNotifications(string $occurrence, Entity $entity, bool $sync): void
     {
-        $this->handleNotificationByJob(
+        $this->sendNotificationsByJob(
             $occurrence,
             $entity->getEntityType(),
             $entity->get('id'),

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\NotificationManager;
 use Atro\NotificationTransport\NotificationOccurrence;
 use Espo\ORM\Entity;
@@ -21,7 +22,7 @@ class QueueManagerNotificationSender extends QueueManagerBase
 {
     public function run(array $data = []): bool
     {
-        if (empty($data['occurrence']) || empty($data['entityId']) || empty($data['entityType']) || empty($data['actionUserId']) || empty($data['params'])) {
+        if (empty($data['occurrence']) || empty($data['entityId']) || empty($data['entityType']) || empty($data['actionUserId']) || !isset($data['params'])) {
             return true;
         }
 
@@ -49,10 +50,11 @@ class QueueManagerNotificationSender extends QueueManagerBase
         if(empty($actionUser)){
             return true;
         }
+        $GLOBALS['log']->error("Entity existe ". !empty(json_encode($data)));
 
         /** @var NotificationManager $notificationManager */
         $notificationManager = $this->getInjection(NotificationManager::class);
-        $notificationManager->handleNotification($occurrence, $entity, $actionUser, $data['params'] ?? []);
+        $notificationManager->sendNotifications($occurrence, $entity, $actionUser, $data['params'] ?? []);
 
         return true;
     }
