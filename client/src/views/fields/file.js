@@ -295,6 +295,19 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 });
             }
 
+            if (this.getMetadata().get(['scopes', 'File', 'hasOwner'])) {
+                res.ownerUserId = this.getUser().id;
+                res.ownerUserName = this.getUser().get('name');
+            }
+            if (this.getMetadata().get(['scopes', 'File', 'hasAssignedUser'])) {
+                res.assignedUserId = this.getUser().id;
+                res.assignedUserName = this.getUser().get('name');
+            }
+            if (this.getMetadata().get(['scopes', 'File', 'hasTeam'])) {
+                res.teamsIds = this.model.get('teamsIds') || null;
+                res.teamsNames = this.model.get('teamsNames') || null;
+            }
+
             return res;
         },
 

@@ -805,6 +805,19 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 createAttributes.folderName = this.model.get('folderName');
             }
 
+            if (this.getMetadata().get(['scopes', 'File', 'hasOwner'])) {
+                createAttributes.ownerUserId = this.getUser().id;
+                createAttributes.ownerUserName = this.getUser().get('name');
+            }
+            if (this.getMetadata().get(['scopes', 'File', 'hasAssignedUser'])) {
+                createAttributes.assignedUserId = this.getUser().id;
+                createAttributes.assignedUserName = this.getUser().get('name');
+            }
+            if (this.getMetadata().get(['scopes', 'File', 'hasTeam'])) {
+                createAttributes.teamsIds = this.model.get('teamsIds') || null;
+                createAttributes.teamsNames = this.model.get('teamsNames') || null;
+            }
+
             this.notify('Loading...');
             this.createView('upload', 'views/file/modals/upload', {
                 scope: 'File',
