@@ -224,7 +224,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         executeActionRequest(payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', payload).success(response => {
+            this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
@@ -247,6 +247,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
                 this.model.fetch();
             })
+                .error(error => {
+                    Espo.ui.error(error.responseText)
+                })
         },
 
         actionDelete: function () {
