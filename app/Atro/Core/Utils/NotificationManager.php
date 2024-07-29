@@ -57,7 +57,7 @@ class NotificationManager
     public function afterEntitySaved(Entity $entity): void
     {
 
-        if(!$this->canSendNotification($entity)){
+        if (!$this->canSendNotification($entity)) {
             return;
         }
 
@@ -136,7 +136,7 @@ class NotificationManager
 
     public function afterEntityDeleted(Entity $entity): void
     {
-        if(!$this->canSendNotification($entity)){
+        if (!$this->canSendNotification($entity)) {
             return;
         }
 
@@ -187,11 +187,11 @@ class NotificationManager
             return;
         }
 
-        if(!in_array($occurrence, self::NOTE_OCCURRENCES) ) {
+        if (!in_array($occurrence, self::NOTE_OCCURRENCES)) {
             $userToNotify = $this->getUserToNotifyIds($occurrence, $this->getEntityManager()->getEntity($entityType, $entityId), $actionUser);
-           if(empty($userToNotify)){
-               return;
-           }
+            if (empty($userToNotify)) {
+                return;
+            }
         }
 
         $jobData = [
@@ -258,7 +258,7 @@ class NotificationManager
         $this->sendNotificationsToTransports($finalUserList, $occurrence, $entity, $actionUser, $params, $parent);
     }
 
-    protected function canSendNotification(Entity  $entity): bool
+    protected function canSendNotification(Entity $entity): bool
     {
         if ($this->getMemoryStorage()->get('importJobId')) {
             return false;
@@ -358,8 +358,12 @@ class NotificationManager
             // send notification for each transport
             foreach ($this->getMetadata()->get(['app', 'notificationTransports']) as $transportType => $transportClassName) {
                 if ($notificationRule->isTransportActive($transportType) && !empty($template = $notificationRule->getTransportTemplate($transportType))) {
-                    /** @var AbstractNotificationTransport $transport */
                     $transport = $this->container->get($transportClassName);
+
+                    if (!($transport instanceof AbstractNotificationTransport)) {
+                        continue;
+                    }
+
                     try {
                         $transport->send($user, $template, $dataForTemplate);
                     } catch (\Throwable $e) {
@@ -474,7 +478,7 @@ class NotificationManager
                     [
                         "name" => $name,
                         "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-                        "entityType" =>$this->relationEntityData[$entity->getEntityType()]['entity2'],
+                        "entityType" => $this->relationEntityData[$entity->getEntityType()]['entity2'],
                     ],
                 ],
             ],
@@ -523,7 +527,7 @@ class NotificationManager
             return $this->getConfig()->get('defaultNotificationProfileId');
         }
 
-        if($preference->get('notificationProfileId') === 'default'){
+        if ($preference->get('notificationProfileId') === 'default') {
             return $this->getConfig()->get('defaultNotificationProfileId');
         }
 
