@@ -73,6 +73,7 @@ class V1Dot10Dot49 extends Base
         }
 
         $this->getConfig()->set('sendOutNotifications', !$this->getConfig()->get('disableEmailDelivery'));
+        self::createNotificationDefaultNotificationProfile($this->getConnection(), $this->getConfig());
     }
 
     public function down(): void
@@ -80,6 +81,8 @@ class V1Dot10Dot49 extends Base
         $this->exec("DROP TABLE notification_rule;");
         $this->exec("DROP TABLE notification_profile;");
         $this->exec("DROP TABLE notification_template;");
+        $this->getConfig()->set('disableEmailDelivery', !$this->getConfig()->get('sendOutNotifications'));
+
     }
 
     protected function exec(string $query): void
@@ -90,7 +93,7 @@ class V1Dot10Dot49 extends Base
         }
     }
 
-    public static function createNotificationEmailTemplates(Connection $connection, Config $config)
+    public static function createNotificationDefaultNotificationProfile(Connection $connection, Config $config)
     {
         $defaultProfileId = 'defaultProfileId';
         $config->set('defaultNotificationProfileId', $defaultProfileId);
