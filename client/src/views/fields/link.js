@@ -168,8 +168,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
             }
 
-            var self = this;
-
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
                    this.selectLink();
@@ -178,7 +176,28 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.clearLink();
                 });
                 this.addActionHandler('createLink', function () {
-                    const attributes = _.extend((this.getCreateAttributes() || {}), {_entityFrom: _.extend(this.model.attributes, {_entityName: this.model.name, _createLinkName: this.name})});
+                    const attributes = _.extend((this.getCreateAttributes() || {}), {
+                        _entityFrom: _.extend(this.model.attributes, {
+                            _entityName: this.model.name,
+                            _createLinkName: this.name
+                        })
+                    });
+
+                    if (this.getMetadata().get(['scopes', this.foreignScope, 'hasOwner'])) {
+                        attributes.ownerUserId = this.getUser().id;
+                        attributes.ownerUserName = this.getUser().get('name');
+                    }
+
+                    if (this.getMetadata().get(['scopes', this.foreignScope, 'hasAssignedUser'])) {
+                        attributes.assignedUserId = this.getUser().id;
+                        attributes.assignedUserName = this.getUser().get('name');
+                    }
+
+                    if (this.getMetadata().get(['scopes', this.foreignScope, 'hasTeam'])) {
+                        attributes.teamsIds = this.model.get('teamsIds') || null;
+                        attributes.teamsNames = this.model.get('teamsNames') || null;
+                    }
+
                     this.notify('Loading...');
                     this.createView('quickCreate', 'views/modals/edit', {
                         scope: this.foreignScope,
