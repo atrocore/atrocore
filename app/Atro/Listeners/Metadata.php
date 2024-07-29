@@ -1244,6 +1244,7 @@ class Metadata extends AbstractListener
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateName'] = [
                 "type" => "varchar",
                 "filterDisabled" => true,
+                "readOnly" => true,
                 "notStorable" => true
             ];
 

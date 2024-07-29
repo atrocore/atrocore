@@ -32,8 +32,12 @@ class EmailTransport extends AbstractNotificationTransport
     public function send(User $user, NotificationTemplate $template, array $params): void
     {
 
+        if (empty($user->get('emailAddress'))) {
+            return;
+        }
         $language = $this->getUserLanguage($user);
-        $this->addTranslatedEntitiesName($params, $language);
+        $this->addEntitiesTypeAndName($params, $language);
+        $this->addEntitiesViewUrl($params);
 
         $subject = $template->get('subject');
         $body = $template->get('body');
@@ -57,6 +61,6 @@ class EmailTransport extends AbstractNotificationTransport
             'isHtml' => true
         ];
 
-        $this->sender->send($data);
+        $this->sender->sendByJob($data);
     }
 }

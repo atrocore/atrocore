@@ -73,7 +73,8 @@
     "customHeadCode": "Код Head",
     "passwordRegexPattern": "Шаблон для паролів",
     "passwordExpireDays": "Термін дії пароля (у днях)",
-    "sendOutNotifications": "Розсилка сповіщень"
+    "sendOutNotifications": "Розсилка сповіщень",
+    "sendNotificationInSync": "Надсилати сповіщення без роботи"
   },
   "links": {
     "variables": "Змінні"

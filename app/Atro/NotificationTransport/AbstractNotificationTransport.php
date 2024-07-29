@@ -20,6 +20,7 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Entities\User;
+use Espo\ORM\Entity;
 
 abstract class AbstractNotificationTransport
 {
@@ -38,36 +39,45 @@ abstract class AbstractNotificationTransport
         return Language::detectLanguage($this->getConfig(), $preferences);
     }
 
-    protected function addTranslatedEntitiesName(array &$params, string $language): void
+    protected function addEntitiesTypeAndName(array &$params, string $language): void
     {
         $languageManager = $this->getLanguage();
         $initialLanguage = $languageManager->getLanguage();
         $languageManager->setLanguage($language);
         foreach ($params as $key => $param) {
-            if (strpos($key, 'Type', max(0,strlen($key) - 4)) !== false) {
-                $name = str_replace('Type', 'Name', $key);
-                $params[$name] = $languageManager->translate($param, $language, 'scopeNames');
+            if ($param instanceof Entity) {
+                $params[$key . 'Type'] = $param->getEntityType();
+                $params[$key . 'Name'] = $languageManager->translate($param->getEntityType(), $language, 'scopeNames');
             }
         }
         $languageManager->setLanguage($initialLanguage);
     }
 
-    private function getTwig(): Twig
+    protected function addEntitiesViewUrl(array &$params): void
+    {
+        foreach ($params as $key => $param) {
+            if ($param instanceof Entity) {
+                $params[$key . 'Url'] = $this->getConfig()->get('siteUrl') . '/#' . $param->getEntityType() . '/view/' . $param->get('id');
+            }
+        }
+    }
+
+    protected function getTwig(): Twig
     {
         return $this->container->get('twig');
     }
 
-    private function getConfig(): Config
+    protected function getConfig(): Config
     {
         return $this->container->get('config');
     }
 
-    private function getEntityManager(): EntityManager
+    protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
     }
 
-    private function getLanguage(): Language
+    protected function getLanguage(): Language
     {
         return $this->container->get('language');
     }

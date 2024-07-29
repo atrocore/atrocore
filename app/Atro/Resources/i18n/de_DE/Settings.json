@@ -72,7 +72,8 @@
     "customHeadCode": "Head Code",
     "passwordRegexPattern": "Passwort Regex Pattern",
     "passwordExpireDays": "Gültigkeitsdauer des Passworts (in Tagen)",
-    "sendOutNotifications": "Benachrichtigungen verschicken"
+    "sendOutNotifications": "Benachrichtigungen verschicken",
+    "sendNotificationInSync": "Benachrichtigungen ohne Auftrag senden"
   },
   "links": {
     "variables": "Variablen"

@@ -175,25 +175,34 @@ class NotificationManager
             return;
         }
 
+        $actionUser = $this->container->get('user');
+
         if ($sync) {
             $this->sendNotifications(
                 $occurrence,
                 $this->getEntityManager()->getRepository($entityType)->get($entityId),
-                $this->container->get('user'),
+                $actionUser,
                 $additionalParams
             );
             return;
+        }
+
+        if(!in_array($occurrence, self::NOTE_OCCURRENCES) ) {
+            $userToNotify = $this->getUserToNotifyIds($occurrence, $this->getEntityManager()->getEntity($entityType, $entityId), $actionUser);
+           if(empty($userToNotify)){
+               return;
+           }
         }
 
         $jobData = [
             "occurrence" => $occurrence,
             "entityType" => $entityType,
             "entityId" => $entityId,
-            "actionUserId" => !empty($user = $this->container->get('user')) ? $user->get('id') : null,
+            "actionUserId" => $actionUser->get('id'),
             "params" => $additionalParams
         ];
 
-        $this->getQueueManager()->push('Process Notification', 'QueueManagerNotificationSender', $jobData, 'Crucial');
+        $this->getQueueManager()->push('Process Notification', 'QueueManagerNotificationSender', $jobData, 'Normal');
     }
 
     public function sendNotifications(string $occurrence, Entity $entity, User $actionUser, array $params = []): void
@@ -256,10 +265,6 @@ class NotificationManager
         }
 
         if ($this->notificationDisabled($entity->getEntityType())) {
-            return false;
-        }
-
-        if ($entity->getEntityType() === 'QueueItem' && $entity->get('serviceName') === 'QueueManagerNotificationSender') {
             return false;
         }
 
@@ -340,9 +345,9 @@ class NotificationManager
 
         foreach ($userList as $user) {
             $data = [
+                "siteUrl" => $this->getConfig()->get('siteUrl'),
                 "occurrence" => $occurrence,
                 "entity" => $entity,
-                'entityType' => $entity->getEntityType(),
                 "actionUser" => $actionUser,
                 "notifyUser" => $user
             ];
@@ -469,10 +474,9 @@ class NotificationManager
                     [
                         "name" => $name,
                         "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-                        "entityType" => $entityType = $this->relationEntityData[$entity->getEntityType()]['entity2'],
+                        "entityType" =>$this->relationEntityData[$entity->getEntityType()]['entity2'],
                     ],
                 ],
-                $name . "Type" => $entityType
             ],
             $sync
         );
@@ -486,10 +490,9 @@ class NotificationManager
                     [
                         "name" => $name,
                         "entityId" => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
-                        "entityType" => $entityType = $this->relationEntityData[$entity->getEntityType()]['entity1'],
+                        "entityType" => $this->relationEntityData[$entity->getEntityType()]['entity1'],
                     ],
                 ],
-                $name . "Type" => $entityType
             ],
             $sync
         );
@@ -517,6 +520,10 @@ class NotificationManager
     {
         $preference = $this->getEntityManager()->getEntity('Preferences', $userId);
         if (empty($preference)) {
+            return $this->getConfig()->get('defaultNotificationProfileId');
+        }
+
+        if($preference->get('notificationProfileId') === 'default'){
             return $this->getConfig()->get('defaultNotificationProfileId');
         }
 
@@ -594,7 +601,6 @@ class NotificationManager
             $entity->getEntityType(),
             $entity->get('id'),
             [
-                "parentType" => $entity->get('parentType'),
                 "entities" => [
                     [
                         "name" => "parent",
@@ -607,42 +613,42 @@ class NotificationManager
         );
     }
 
-    private function getNotificationRuleRepository(): NotificationRule
+    protected function getNotificationRuleRepository(): NotificationRule
     {
         return $this->getEntityManager()->getRepository('NotificationRule');
     }
 
-    private function checkByAclManager(User $user, Entity $parent, string $action): bool
+    protected function checkByAclManager(User $user, Entity $parent, string $action): bool
     {
         return (AclManagerFactory::createAclManager($this->container))->check($user, $parent, $action);
     }
 
-    private function getEntityManager(): EntityManager
+    protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
     }
 
-    private function getMetadata(): Metadata
+    protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
     }
 
-    private function getConfig(): Config
+    protected function getConfig(): Config
     {
         return $this->container->get('config');
     }
 
-    private function getQueueManager(): QueueManager
+    protected function getQueueManager(): QueueManager
     {
         return $this->container->get('queueManager');
     }
 
-    private function getMemoryStorage(): MemoryStorage
+    protected function getMemoryStorage(): MemoryStorage
     {
         return $this->container->get('memoryStorage');
     }
 
-    private function getLanguage(): Language
+    protected function getLanguage(): Language
     {
         return $this->container->get('language');
     }

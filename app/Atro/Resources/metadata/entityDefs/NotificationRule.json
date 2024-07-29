@@ -80,6 +80,24 @@
       "importDisabled": true,
       "textFilterDisabled": true,
       "emHidden": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
     }
   },
   "links": {
@@ -87,6 +105,14 @@
       "type": "belongsTo",
       "entity": "NotificationProfile",
       "foreign": "notificationRules"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
     }
   },
   "uniqueIndexes": {

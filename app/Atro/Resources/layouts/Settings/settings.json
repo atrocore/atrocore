@@ -72,7 +72,9 @@
         {
           "name": "sendOutNotifications"
         },
-        false
+        {
+          "name": "sendNotificationInSync"
+        }
       ],
       [
         {

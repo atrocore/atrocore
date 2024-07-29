@@ -17,7 +17,7 @@ Espo.define('views/preferences/fields/notification-profile', 'views/fields/link-
                 let newData = data.filter(profile => profile.id !== this.getConfig().get('defaultNotificationProfileId'))
                 if(newData.length < data.length){
                     newData.unshift({
-                        id: this.getConfig().get('defaultNotificationProfileId'),
+                        id: 'default',
                         name: this.translate('Default')
                     })
                 }

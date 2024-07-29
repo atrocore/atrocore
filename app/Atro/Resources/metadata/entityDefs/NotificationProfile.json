@@ -13,6 +13,24 @@
     },
     "notificationRules": {
       "type": "linkMultiple"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
     }
   },
   "links": {
@@ -20,6 +38,14 @@
       "type": "hasMany",
       "entity": "NotificationRule",
       "foreign": "notificationProfile"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
     }
   }
 }
