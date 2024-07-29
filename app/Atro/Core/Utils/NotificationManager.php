@@ -408,43 +408,6 @@ class NotificationManager
         return array_column($userIds, 'user_id');
     }
 
-    protected function getTeamUserIds(Entity $entity): array
-    {
-        $entity->loadLinkMultipleField('teams');
-        $teamsIds = $entity->get('teamsIds');
-
-        if (empty($teamsIds)) {
-            return [];
-        }
-
-        $connection = $this->getEntityManager()->getConnection();
-
-        $userIds = $connection->createQueryBuilder()
-            ->select('s.user_id')
-            ->from($connection->quoteIdentifier('team_user'), 's')
-            ->where('s.team_id IN (:teamIds)')
-            ->andWhere('s.deleted = :false')
-            ->setParameter('teamIds', $teamsIds, Mapper::getParameterType($teamsIds))
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
-
-        return array_column($userIds, 'user_id');
-    }
-
-    protected function getNotificationProfileUserIds($notificationProfileId)
-    {
-        $connection = $this->getEntityManager()->getConnection();
-
-        $userIds = $connection->createQueryBuilder()
-            ->select('s.id')
-            ->from($connection->quoteIdentifier('preferences'), 's')
-            ->where("s.data like :notificationProfileId")
-            ->setParameter('notificationProfileId', '%"' . $notificationProfileId . '"%')
-            ->fetchAllAssociative();
-
-        return array_column($userIds, 'id');
-    }
-
     protected function sendNotificationsRelationEntity(Entity $entity, string $occurrence, bool $sync = false)
     {
         if (!isset($this->relationEntityData[$entity->getEntityType()])) {
@@ -548,6 +511,14 @@ class NotificationManager
 
         $usersToNotifyIds = [];
 
+        if ($entity->getEntityType() === 'Note' && (empty($targetType = $entity->get('targetType')) || $targetType === 'all')) {
+            $usersToNotifyIds = $this->getAllUserIds();
+        }
+
+        if ($entity->getEntityType() === 'Note') {
+            $usersToNotifyIds = $this->getAllUserIds();
+        }
+
         if ($notificationRule->get('asOwner') && !empty($entity->get('ownerUserId'))) {
             $usersToNotifyIds[] = $entity->get('ownerUserId');
         }
@@ -615,6 +586,59 @@ class NotificationManager
             ],
             $sync
         );
+    }
+
+    protected function getTeamUserIds(Entity $entity, ?array $teamsIds = null): array
+    {
+        if($teamsIds === null) {
+            $entity->loadLinkMultipleField('teams');
+            $teamsIds = $entity->get('teamsIds');
+        }
+
+        if (empty($teamsIds)) {
+            return [];
+        }
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $userIds = $connection->createQueryBuilder()
+            ->select('s.user_id')
+            ->from($connection->quoteIdentifier('team_user'), 's')
+            ->where('s.team_id IN (:teamIds)')
+            ->andWhere('s.deleted = :false')
+            ->setParameter('teamIds', $teamsIds, Mapper::getParameterType($teamsIds))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return array_column($userIds, 'user_id');
+    }
+
+    protected function getAllUserIds(): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $userIds = $connection->createQueryBuilder()
+            ->select('t.id')
+            ->from($connection->quoteIdentifier('user'), 't')
+            ->where('t.deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return array_column($userIds, 'id');
+    }
+
+    protected function getNotificationProfileUserIds($notificationProfileId)
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $userIds = $connection->createQueryBuilder()
+            ->select('s.id')
+            ->from($connection->quoteIdentifier('preferences'), 's')
+            ->where("s.data like :notificationProfileId")
+            ->setParameter('notificationProfileId', '%"' . $notificationProfileId . '"%')
+            ->fetchAllAssociative();
+
+        return array_column($userIds, 'id');
     }
 
     protected function getNotificationRuleRepository(): NotificationRule
