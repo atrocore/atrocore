@@ -35,7 +35,7 @@ class V1Dot10Dot49 extends Base
             $this->exec("COMMENT ON COLUMN notification_template.data IS '(DC2Type:jsonObject)'");
             $this->exec("CREATE TABLE notification_profile (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', description TEXT DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, PRIMARY KEY(id))");
 
-            $this->exec("CREATE TABLE notification_rule (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', description VARCHAR(255) DEFAULT NULL, entity VARCHAR(255) DEFAULT NULL, occurrence VARCHAR(255) DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, ignore_self_action BOOLEAN DEFAULT 'false' NOT NULL, as_owner BOOLEAN DEFAULT 'false' NOT NULL, as_follower BOOLEAN DEFAULT 'false' NOT NULL, as_assignee BOOLEAN DEFAULT 'false' NOT NULL, as_team_member BOOLEAN DEFAULT 'false' NOT NULL, as_notification_profile BOOLEAN DEFAULT 'false' NOT NULL, data TEXT DEFAULT NULL, notification_profile_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+            $this->exec("CREATE TABLE notification_rule (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', description TEXT DEFAULT NULL, entity VARCHAR(255) DEFAULT NULL, occurrence VARCHAR(255) DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, ignore_self_action BOOLEAN DEFAULT 'false' NOT NULL, as_owner BOOLEAN DEFAULT 'false' NOT NULL, as_follower BOOLEAN DEFAULT 'false' NOT NULL, as_assignee BOOLEAN DEFAULT 'false' NOT NULL, as_team_member BOOLEAN DEFAULT 'false' NOT NULL, as_notification_profile BOOLEAN DEFAULT 'false' NOT NULL, data TEXT DEFAULT NULL, notification_profile_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
             $this->exec("CREATE UNIQUE INDEX IDX_NOTIFICATION_RULE_UNIQUE_NOTIFICATION_RULES ON notification_rule (notification_profile_id, entity, occurrence, deleted);");
             $this->exec("CREATE INDEX IDX_NOTIFICATION_RULE_NOTIFICATION_PROFILE_ID ON notification_rule (notification_profile_id, deleted);");
             $this->exec("COMMENT ON COLUMN notification_rule.data IS '(DC2Type:jsonObject)';");
@@ -224,21 +224,21 @@ class V1Dot10Dot49 extends Base
                         'data' => [
                             'field' => [
                                 "body" => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
                                 "bodyDeDe" => '<p>{{actionUser.name}} auf{% if parent %}  {{parentName}} {{parent.name}} gepostet. {% endif %}</p>
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
                                 "bodyUkUa" => '<p>{{actionUser.name}} опублікував {% if parent %} на {{parentName}} {{parent.name}}. {% endif %}</p> <p>
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Вигляд</a></p>
 {% else %}
@@ -256,21 +256,21 @@ class V1Dot10Dot49 extends Base
                                 "subjectDeDe" => 'Post: [{{ entityName }}] {{entity.name}}',
                                 "subjectUkUa" => 'Post: [{{ entityName }}] {{entity.name}}',
                                 "body" => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
                                 "bodyDeDe" => '<p>{{actionUser.name}} auf{% if parent %}  {{parentName}} {{parent.name}} gepostet. {% endif %}</p>
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
                                 "bodyUkUa" => '<p>{{actionUser.name}} опублікував {% if parent %} на {{parentName}} {{parent.name}}. {% endif %}</p> <p>
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Вигляд</a></p>
 {% else %}
@@ -312,7 +312,7 @@ class V1Dot10Dot49 extends Base
 {% if parent %}
 <p>Related to: {{parentName}}</p>
 {% endif  %}
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
@@ -322,7 +322,7 @@ class V1Dot10Dot49 extends Base
 {% if parent %}
 <p>Verwandt mit:  {{parentName}}</p>
 {% endif  %}
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Siehe</a></p>
 {% else %}
@@ -331,7 +331,7 @@ class V1Dot10Dot49 extends Base
                                 "bodyUkUa" => '<p>Вас було згадано у дописі користувача {{actionUser.name}}.</p>{% if parent %}
 <p>Пов\'язано з:  {{parentName}}</p>
 {% endif  %}
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Вигляд</a></p>
 {% else %}
@@ -352,7 +352,7 @@ class V1Dot10Dot49 extends Base
 {% if parent %}
 <p>Related to: {{parentName}}</p>
 {% endif  %}
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
@@ -363,7 +363,7 @@ class V1Dot10Dot49 extends Base
 {% if parent %}
 <p>Verwandt mit:  {{parentName}}</p>
 {% endif  %}
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Siehe</a></p>
 {% else %}
@@ -372,7 +372,7 @@ class V1Dot10Dot49 extends Base
                                 "bodyUkUa" => '<p>Вас було згадано у дописі користувача {{actionUser.name}}.</p>{% if parent %}
 <p>Пов\'язано з:  {{parentName}}</p>
 {% endif  %}
-<p>{{entity.message}}</p>
+<p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Вигляд</a></p>
 {% else %}
