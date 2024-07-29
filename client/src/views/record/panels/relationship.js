@@ -569,6 +569,19 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
             let attributes = {_entityFrom: _.extend(this.model.attributes, {_entityName: this.model.name})};
+            if (this.getMetadata().get(['scopes', scope, 'hasOwner'])) {
+                attributes.ownerUserId = this.getUser().id;
+                attributes.ownerUserName = this.getUser().get('name');
+            }
+            if (this.getMetadata().get(['scopes', scope, 'hasAssignedUser'])) {
+                attributes.assignedUserId = this.getUser().id;
+                attributes.assignedUserName = this.getUser().get('name');
+            }
+            if (this.getMetadata().get(['scopes', scope, 'hasTeam'])) {
+                attributes.teamsIds = this.model.get('teamsIds') || null;
+                attributes.teamsNames = this.model.get('teamsNames') || null;
+            }
+
             this.model.trigger('prepareAttributesForCreateRelated', attributes, link, preparedAttributes => {
                 attributes = preparedAttributes;
             });

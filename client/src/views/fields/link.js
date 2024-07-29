@@ -182,17 +182,14 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             _createLinkName: this.name
                         })
                     });
-
                     if (this.getMetadata().get(['scopes', this.foreignScope, 'hasOwner'])) {
                         attributes.ownerUserId = this.getUser().id;
                         attributes.ownerUserName = this.getUser().get('name');
                     }
-
                     if (this.getMetadata().get(['scopes', this.foreignScope, 'hasAssignedUser'])) {
                         attributes.assignedUserId = this.getUser().id;
                         attributes.assignedUserName = this.getUser().get('name');
                     }
-
                     if (this.getMetadata().get(['scopes', this.foreignScope, 'hasTeam'])) {
                         attributes.teamsIds = this.model.get('teamsIds') || null;
                         attributes.teamsNames = this.model.get('teamsNames') || null;
