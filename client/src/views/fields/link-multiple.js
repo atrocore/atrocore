@@ -262,13 +262,30 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         uploadLink: function () {
+            let attributes = this.getCreateAttributes() || {};
+
+            if (this.defs.entityModel) {
+                if (this.getMetadata().get(['scopes', 'File', 'hasOwner'])) {
+                    attributes.ownerUserId = this.getUser().id;
+                    attributes.ownerUserName = this.getUser().get('name');
+                }
+                if (this.getMetadata().get(['scopes', 'File', 'hasAssignedUser'])) {
+                    attributes.assignedUserId = this.getUser().id;
+                    attributes.assignedUserName = this.getUser().get('name');
+                }
+                if (this.getMetadata().get(['scopes', 'File', 'hasTeam'])) {
+                    attributes.teamsIds = this.defs.entityModel.get('teamsIds') || null;
+                    attributes.teamsNames = this.defs.entityModel.get('teamsNames') || null;
+                }
+            }
+
             this.notify('Loading...');
             this.createView('upload', 'views/file/modals/upload', {
                 scope: 'File',
                 fullFormDisabled: true,
                 layoutName: 'upload',
                 multiUpload: true,
-                attributes: this.getCreateAttributes(),
+                attributes: attributes,
             }, view => {
                 view.render();
                 this.notify(false);

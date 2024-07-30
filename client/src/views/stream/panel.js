@@ -320,6 +320,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 placeholder: this.translate("attachFiles"),
                 defs: {
                     name: 'attachments',
+                    entityModel: this.model
                 },
             }, function (view) {
                 view.render();
