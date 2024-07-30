@@ -129,8 +129,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 $headers = $input->urlHeaders ?? null;
                 if (is_object($headers)) {
                     $headers = json_decode(json_encode($headers), true);
-                } else if (is_string($headers)) {
-                    $headers = @json_decode($headers, true);
+                } else {
+                    if (is_string($headers)) {
+                        $headers = @json_decode($headers, true);
+                    }
                 }
 
                 // load file from url
@@ -331,9 +333,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
             $this->getFileManager()->removeFile($trashPath);
         }
 
-        $path = $this->getLocalPath($file);
-        if (file_exists($path)) {
-            $this->getFileManager()->removeFile($path);
+        try {
+            $path = $this->getLocalPath($file);
+            if (file_exists($path)) {
+                $this->getFileManager()->removeFile($path);
+            }
+        } catch (NotFound $e) {
         }
 
         return true;
