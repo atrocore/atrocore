@@ -54,6 +54,10 @@ interface FileStorageInterface
 
     public function deleteFolder(Folder $folder): bool;
 
+    public function deleteFolderPermanently(Folder $folder): bool;
+
+    public function restoreFolder(Folder $folder): bool;
+
     public function getStream(File $file): StreamInterface;
 
     public function getUrl(File $file): string;
