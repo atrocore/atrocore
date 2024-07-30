@@ -174,6 +174,13 @@ class Folder extends Hierarchy
         parent::afterRemove($entity, $options);
     }
 
+    protected function afterRestore($entity)
+    {
+        $this->restoreItem($entity);
+        $this->restoreHierarchyItem($entity);
+        $this->getStorage($entity)->restoreFolder($entity);
+    }
+
     public function deleteFiles(FolderEntity $folder): void
     {
         while (true) {
@@ -308,6 +315,14 @@ class Folder extends Hierarchy
         }
     }
 
+    public function deleteFromDb(string $id): bool
+    {
+        $this->deleteItemPermanently($id);
+        $this->deleteHierarchyItem($id);
+
+        return parent::deleteFromDb($id);
+    }
+
     public function removeItem(Entity $entity): void
     {
         $storage = $entity->getStorage();
@@ -328,6 +343,52 @@ class Folder extends Hierarchy
         }
 
         $this->getEntityManager()->removeEntity($fileFolderLinker);
+    }
+
+    public function restoreItem(Entity $entity): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update('file_folder_linker')
+            ->set('deleted', ':false')
+            ->where('folder_id = :folderId')
+            ->andWhere('file_id IS NULL')
+            ->andWhere('deleted=:true')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('folderId', $entity->get('id'))
+            ->executeQuery();
+    }
+
+    public function restoreHierarchyItem(Entity $entity): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update('folder_hierarchy')
+            ->set('deleted', ':false')
+            ->where('entity_id=:folderId')
+            ->andWhere('deleted=:true')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('folderId', $entity->get('id'))
+            ->executeQuery();
+    }
+
+    public function deleteItemPermanently(string $folderId): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('file_folder_linker')
+            ->where('folder_id = :folderId')
+            ->andWhere('file_id IS NULL')
+            ->setParameter('folderId', $folderId)
+            ->executeQuery();
+    }
+
+    public function deleteHierarchyItem(string $folderId): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('folder_hierarchy')
+            ->where('entity_id=:folderId')
+            ->setParameter('folderId', $folderId)
+            ->executeQuery();
     }
 
     public function getStorage(FolderEntity $folder): FileStorageInterface

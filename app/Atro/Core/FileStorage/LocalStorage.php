@@ -346,6 +346,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function restoreFile(File $file): bool
     {
+        // @todo restore folder if needs
+
         $trashPath = $this->getFileTrashPath($file);
         if (file_exists($trashPath)) {
             $this->getFileManager()->move($trashPath, $this->getLocalPath($file));
@@ -387,7 +389,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
     public function restoreFolder(Folder $folder): bool
     {
-        return true;
+        return $this->createFolder($folder);
     }
 
     public function getContents(File $file): string
