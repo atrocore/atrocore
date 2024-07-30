@@ -1122,9 +1122,7 @@ class Metadata extends AbstractListener
     protected function addOnlyDeletedFilter(array &$data): void
     {
         foreach ($data['entityDefs'] as $entity => $row) {
-            if ($entity !== 'File') {
-                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
-            }
+            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
         }
     }
 

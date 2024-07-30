@@ -318,8 +318,32 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
-            return $this->getFileManager()->removeFile($path);
-//            return $this->getFileManager()->move($path, $this->getTrashPath($file));
+            return $this->getFileManager()->move($path, $this->getTrashPath($file));
+        }
+
+        return true;
+    }
+
+    public function deleteFilePermanently(File $file): bool
+    {
+        $trashPath = $this->getTrashPath($file);
+        if (file_exists($trashPath)) {
+            $this->getFileManager()->removeFile($trashPath);
+        }
+
+        $path = $this->getLocalPath($file);
+        if (file_exists($path)) {
+            $this->getFileManager()->removeFile($path);
+        }
+
+        return true;
+    }
+
+    public function restoreFile(File $file): bool
+    {
+        $trashPath = $this->getTrashPath($file);
+        if (file_exists($trashPath)) {
+            $this->getFileManager()->move($trashPath, $this->getLocalPath($file));
         }
 
         return true;

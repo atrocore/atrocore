@@ -161,6 +161,22 @@ class File extends Base
         return $res;
     }
 
+    protected function afterRestore($entity)
+    {
+        $this->getStorage($entity)->restoreFile($entity);
+    }
+
+    public function deleteFromDb(string $id): bool
+    {
+        /** @var \Atro\Entities\File $file */
+        $file = $this->getMapper()->selectById($this->entityFactory->create($this->entityType), $id, ['withDeleted' => true]);
+        if (!empty($file)) {
+            $this->getStorage($file)->deleteFilePermanently($file);
+        }
+
+        return parent::deleteFromDb($id);
+    }
+
     public function rename(FileEntity $file): void
     {
         if ($this->isExtensionChanged($file)) {
