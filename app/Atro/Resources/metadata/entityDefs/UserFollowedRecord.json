@@ -1,0 +1,9 @@
+{
+  "uniqueIndexes": {
+    "unique": [
+      "entity_id",
+      "entity_type",
+      "user_id"
+    ]
+  }
+}

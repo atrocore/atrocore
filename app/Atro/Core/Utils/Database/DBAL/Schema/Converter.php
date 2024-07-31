@@ -269,7 +269,7 @@ class Converter
     protected function getSystemOrmMetadata(): array
     {
         return [
-            'Preferences'  => [
+            'Preferences'        => [
                 'fields' => [
                     'id'   => [
                         'dbType' => 'varchar',
@@ -282,7 +282,7 @@ class Converter
                 ]
             ],
             'UserFollowedRecord' => [
-                'fields' => [
+                'fields'        => [
                     'id'         => [
                         'type'          => 'id',
                         'dbType'        => 'int',
@@ -304,7 +304,7 @@ class Converter
                         'len'   => '24',
                         'index' => true,
                     ],
-                ],
+                ]
             ],
         ];
     }
