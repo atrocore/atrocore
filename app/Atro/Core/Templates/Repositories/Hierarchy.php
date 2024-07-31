@@ -52,38 +52,6 @@ class Hierarchy extends RDB
         return parent::findRelated($entity, $relationName, $params);
     }
 
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        parent::afterRemove($entity, $options);
-
-        if ($this->getConnection()->createSchemaManager()->tablesExist(array($this->hierarchyTableName))) {
-            $this->getConnection()
-                ->createQueryBuilder()
-                ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
-                ->set('deleted', ':deleted')
-                ->setParameter('deleted', true, ParameterType::BOOLEAN)
-                ->where('entity_id = :entityId')
-                ->orWhere('parent_id = :entityId')
-                ->setParameter('entityId', $entity->get('id'))
-                ->executeQuery();
-        }
-    }
-
-    protected function afterRestore($entity)
-    {
-        parent::afterRestore($entity);
-
-        $this->getConnection()
-            ->createQueryBuilder()
-            ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
-            ->set('deleted', ':deleted')
-            ->setParameter('deleted', false, ParameterType::BOOLEAN)
-            ->where('entity_id = :entityId')
-            ->orWhere('parent_id = :entityId')
-            ->setParameter('entityId', $entity->get('id'))
-            ->executeQuery();
-    }
-
     public function getEntityPosition(Entity $entity, string $parentId): ?int
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
