@@ -72,8 +72,10 @@ class V1Dot10Dot50 extends Base
             $this->exec("CREATE INDEX IDX_NOTIFICATION_TEMPLATE_MODIFIED_BY_ID ON notification_template (modified_by_id, deleted)");
         }
 
-        $this->getConfig()->set('sendOutNotifications', !$this->getConfig()->get('disableEmailDelivery'));
-        self::createNotificationDefaultNotificationProfile($this->getConnection(), $this->getConfig());
+        $config = $this->getConfig();
+        $config->set('sendOutNotifications', !$this->getConfig()->get('disableEmailDelivery'));
+        self::createNotificationDefaultNotificationProfile($this->getConnection(), $config);
+        $config->save();
     }
 
     public function down(): void
@@ -96,7 +98,10 @@ class V1Dot10Dot50 extends Base
     public static function createNotificationDefaultNotificationProfile(Connection $connection, Config $config)
     {
         $defaultProfileId = 'defaultProfileId';
+        $defaultProfileName = 'Default Notification Profile';
+
         $config->set('defaultNotificationProfileId', $defaultProfileId);
+        $config->set('defaultNotificationProfileName', $defaultProfileName);
 
         try {
             $connection->createQueryBuilder()
@@ -107,7 +112,7 @@ class V1Dot10Dot50 extends Base
                     'is_active' => ':is_active',
                 ])
                 ->setParameter('id', 'defaultProfileId')
-                ->setParameter('name', 'Default')
+                ->setParameter('name', $defaultProfileName)
                 ->setParameter('is_active', true, ParameterType::BOOLEAN)
                 ->executeStatement();
         } catch (\Throwable $e) {
