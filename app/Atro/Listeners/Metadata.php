@@ -1202,7 +1202,7 @@ class Metadata extends AbstractListener
 
     protected function prepareNotificationTemplateMultilangFields(array &$data): void
     {
-        foreach ($this->getConfig()->get('locales') as $locale) {
+        foreach ($this->getConfig()->get('locales', []) as $locale) {
             if ($locale['language'] === $this->getConfig()->get('mainLanguage')) {
                 continue;
             }
@@ -1213,7 +1213,6 @@ class Metadata extends AbstractListener
                 $mField = $field . $preparedLocale;
 
                 $mParams = json_decode(json_encode($data['entityDefs']['NotificationTemplate']['fields'][$field]), true);
-                $mParams['isCustom'] = false;
                 $data['entityDefs']['NotificationTemplate']['fields'][$mField] = $mParams;
 
                 if (!empty($dynamicLogic = $this->getMetadata()->get(['clientDefs', 'NotificationTemplate', 'dynamicLogic', 'fields', $field]))) {
