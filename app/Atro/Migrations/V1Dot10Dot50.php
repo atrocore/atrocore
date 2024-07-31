@@ -72,10 +72,33 @@ class V1Dot10Dot50 extends Base
             $this->exec("CREATE INDEX IDX_NOTIFICATION_TEMPLATE_MODIFIED_BY_ID ON notification_template (modified_by_id, deleted)");
         }
 
-        $config = $this->getConfig();
-        $config->set('sendOutNotifications', !$config->get('disableEmailDelivery'));
-        self::createNotificationDefaultNotificationProfile($this->getConnection(), $config);
-        $config->save();
+        $this->getConfig()->set('sendOutNotifications', !$this->getConfig()->get('disableEmailDelivery'));
+
+        self::createNotificationDefaultNotificationProfile($this->getConnection(), $this->getConfig());
+
+        try {
+            $preferences = $this->getConnection()->createQueryBuilder()
+                ->select('id', 'data')
+                ->from('preferences')
+                ->fetchAllAssociative();
+
+            foreach ($preferences as $preference) {
+                $data = @json_decode($preference['data'], true);
+                if (empty($data)) {
+                    continue;
+                }
+                $data['receiveNotifications'] = true;
+                $data['notificationProfileId'] = "default";
+
+                $this->getConnection()->createQueryBuilder()
+                    ->update('preferences')
+                    ->set('data', ':data')
+                    ->setParameter('data', json_encode($data))
+                    ->executeStatement();
+            }
+        }catch (\Throwable $e){
+
+        }
     }
 
     public function down(): void
