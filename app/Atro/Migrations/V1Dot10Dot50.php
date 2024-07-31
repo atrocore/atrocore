@@ -73,7 +73,7 @@ class V1Dot10Dot50 extends Base
         }
 
         $config = $this->getConfig();
-        $config->set('sendOutNotifications', !$this->getConfig()->get('disableEmailDelivery'));
+        $config->set('sendOutNotifications', !$config->get('disableEmailDelivery'));
         self::createNotificationDefaultNotificationProfile($this->getConnection(), $config);
         $config->save();
     }
@@ -102,6 +102,7 @@ class V1Dot10Dot50 extends Base
 
         $config->set('defaultNotificationProfileId', $defaultProfileId);
         $config->set('defaultNotificationProfileName', $defaultProfileName);
+        $config->save();
 
         try {
             $connection->createQueryBuilder()
