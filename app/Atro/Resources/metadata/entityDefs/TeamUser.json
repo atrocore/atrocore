@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "role": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "team_position",
+      "length": 100
+    }
+  }
+}

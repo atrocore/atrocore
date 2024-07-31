@@ -38,5 +38,10 @@
     "id": "conditions_type",
     "name": "Conditions Type",
     "multilingual": false
+  },
+  {
+    "id": "team_position",
+    "name": "Team Position",
+    "multilingual": false
   }
 ]
