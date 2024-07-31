@@ -9,15 +9,6 @@
             "type": "linkMultiple",
             "tooltip": true
         },
-        "positionList": {
-            "type": "array",
-            "tooltip": true
-        },
-        "userRole": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true
-        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

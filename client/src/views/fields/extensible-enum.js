@@ -83,7 +83,9 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             if (['list', 'detail'].includes(this.mode)) {
                 const optionData = this.model.get(this.name + 'OptionData') || this.getOptionsData();
                 const fontSize = this.model.getFieldParam(this.name, 'fontSize');
-
+                if (optionData.preparedName) {
+                    data.nameValue = optionData.preparedName;
+                }
                 data.description = optionData.description || '';
                 data.fontSize = fontSize ? fontSize + 'em' : '100%';
                 data.fontWeight = 'normal';
@@ -116,6 +118,8 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                     }
                 });
             }
+
+            // console.log(res)
 
             return res;
         },

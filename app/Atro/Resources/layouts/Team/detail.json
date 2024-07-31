@@ -1,13 +1,18 @@
 [
-    {
-        "rows": [
-            [
-                {"name": "name"}
-            ],
-            [
-                {"name": "roles"},
-                {"name": "positionList"}
-            ]
-        ]
-    }
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "roles"
+        },
+        false
+      ]
+    ]
+  }
 ]
