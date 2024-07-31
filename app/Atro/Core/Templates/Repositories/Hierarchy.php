@@ -52,6 +52,24 @@ class Hierarchy extends RDB
         return parent::findRelated($entity, $relationName, $params);
     }
 
+    protected function beforeRestore($id)
+    {
+        parent::beforeRestore($id);
+
+        $parentId = $this->getConnection()->createQueryBuilder()
+            ->select('h.parent_id')
+            ->from($this->hierarchyTableName, 'h')
+            ->innerJoin('h', $this->tableName, 't', 't.id=h.parent_id AND t.deleted=:false')
+            ->where('h.entity_id=:id')
+            ->setParameter('id', $id)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+
+        if (empty($parentId)) {
+            throw new BadRequest("Record can't be restored because parent record deleted too.");
+        }
+    }
+
     public function getEntityPosition(Entity $entity, string $parentId): ?int
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);

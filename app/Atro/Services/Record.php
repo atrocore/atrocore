@@ -129,7 +129,7 @@ class Record extends \Espo\Services\RecordService
                     $message = "{$action} {$this->getEntityType()} '$id' failed: {$e->getTraceAsString()}";
                     $GLOBALS['log']->error($message);
                     $entity = $this->getRepository()->get($id);
-                    $name = $entity->get('name') ?? $id;
+                    $name = !empty($entity) ? $entity->get('name') : $id;
                     $errors[] = "Error for '$name': {$e->getMessage()}";
                 }
             }
