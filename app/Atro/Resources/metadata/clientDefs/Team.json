@@ -11,7 +11,9 @@
   "relationshipPanels": {
     "users": {
       "create": false,
-      "layout": "listForTeam"
+      "rowActionsView": "views/record/row-actions/relationship-no-remove",
+      "layout": "listForTeam",
+      "selectPrimaryFilterName": "active"
     }
   },
   "recordViews": {
