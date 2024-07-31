@@ -302,12 +302,26 @@ abstract class AbstractRecordController extends AbstractController
         return $this->getRecordService()->massRemove($params);
     }
 
+    public function actionRestore($params, $data, $request)
+    {
+        if (!$request->isPost() || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return !empty($this->getRecordService()->restoreEntity((string)$data->id));
+    }
+
     public function actionMassRestore($params, $data, $request)
     {
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        if (!$this->getAcl()->check($this->name, 'delete')) {
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
             throw new Forbidden();
         }
 

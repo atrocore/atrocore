@@ -2511,11 +2511,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.collection.remove(model);
                 this.notify('restoring');
                 $.ajax({
-                    url: this.entityType + '/action/massRestore',
+                    url: this.entityType + '/action/restore',
                     type: 'POST',
-                    data: JSON.stringify({
-                        ids: [id]
-                    })
+                    data: JSON.stringify({id: id})
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
