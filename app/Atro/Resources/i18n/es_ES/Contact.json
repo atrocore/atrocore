@@ -12,9 +12,7 @@
     "street": "Calle",
     "zip": "ZIP",
     "box": "Box",
-    "city": "Ciudad",
-    "country": "País",
-    "countryCode": "Código de país"
+    "city": "Ciudad"
   },
   "links": {
     "accounts": "Cuentas"

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "isActive"
+  },
+  {
+    "name": "eu"
+  }
+]
