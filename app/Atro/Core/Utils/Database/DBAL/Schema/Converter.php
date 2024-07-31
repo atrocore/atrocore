@@ -282,7 +282,7 @@ class Converter
                 ]
             ],
             'UserFollowedRecord' => [
-                'fields'        => [
+                'fields' => [
                     'id'         => [
                         'type'          => 'id',
                         'dbType'        => 'int',
@@ -303,7 +303,7 @@ class Converter
                         'type'  => 'varchar',
                         'len'   => '24',
                         'index' => true,
-                    ],
+                    ]
                 ]
             ],
         ];
