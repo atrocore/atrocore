@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "description": "Опис",
+    "entity": "Сутність",
+    "notificationProfile": "Профіль сповіщення",
+    "occurrence": "Випадок",
+    "isActive": "Активний",
+    "ignoreSelfAction": "Ігнорувати власні дії",
+    "asOwner": "Як власник",
+    "asFollower": "Як підписник",
+    "asAssignee": "Як правонаступник",
+    "asTeamMember": "Як член команди",
+    "asNotificationProfile": "Як користувач профілю сповіщень",
+    "emailActive": "Email-сповіщення",
+    "systemActive": "Email-сповіщення",
+    "emailTemplateId": "Шаблон електронної пошти",
+    "systemTemplateId": "Системний шаблон"
+  },
+  "options": {
+    "occurrence": {
+      "creation": "Створення",
+      "updating": "Оновлення",
+      "linking": "Зв'язування",
+      "unlinking": "Від'єднання",
+      "deletion": "Видалення",
+      "note_created": "Створення нотаток",
+      "note_updated": "Оновлення нотаток",
+      "note_deleted": "Видалення нотаток",
+      "ownership_assignment": "Власність/призначення",
+      "unlinking_ownership_assignment": "Відв'язування права власності/призначення",
+      "mentioned": "Згадка"
+    }
+  },
+  "labels": {
+    "Create NotificationRule": "Створити правило сповіщення",
+    "Notify User": "Сповістити користувача",
+    "Transport": "Transport"
+  }
+}

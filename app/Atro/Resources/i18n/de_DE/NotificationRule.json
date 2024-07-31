@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "description": "Beschreibung",
+    "entity": "Entität",
+    "notificationProfile": "Benachrichtigungsprofil",
+    "occurrence": "Vorkommnis",
+    "isActive": "Aktiv",
+    "ignoreSelfAction": "Selbstaktionen ignorieren",
+    "asOwner": "Als Besitzer",
+    "asFollower": "Als Follower",
+    "asAssignee": "Als Zessionar",
+    "asTeamMember": "Als Teammitglied",
+    "asNotificationProfile": "Als Benutzer des Benachrichtigungsprofils",
+    "emailActive": "E-Mail-Benachrichtigung",
+    "systemActive": "System-Benachrichtigung",
+    "emailTemplateId": "E-Mail-Vorlage",
+    "systemTemplateId": "Systemvorlage"
+  },
+  "options": {
+    "occurrence": {
+      "creation": "Erstellung",
+      "updating": "Aktualisierung",
+      "linking": "Verlinkung",
+      "unlinking": "Unlinking",
+      "deletion": "Löschung",
+      "note_created": "Erstellen von Notizen",
+      "note_updated": "Aktualisierung von Notizen",
+      "note_deleted": "Löschen von Notizen",
+      "ownership_assignment": "Eigentümerschaft/Zuordnung",
+      "unlinking_ownership_assignment": "Verknüpfung von Eigentum/Zuordnung aufheben",
+      "mentioned": "Erwähnung"
+    }
+  },
+  "labels": {
+    "Create NotificationRule": "Benachrichtigungsregel erstellen",
+    "Notify User": "Benutzer benachrichtigen",
+    "transport": "Transport"
+  }
+}

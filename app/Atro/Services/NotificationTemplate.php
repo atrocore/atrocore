@@ -11,11 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Atro\Entities;
+namespace Atro\Services;
 
-use Atro\Core\Templates\Entities\Base;
+use Atro\Core\Templates\Services\Base;
 
-class ReviewTemplate extends Base
+class NotificationTemplate extends Base
 {
-    protected $entityType = "ReviewTemplate";
+    protected $mandatorySelectAttributeList = ['data'];
+
 }

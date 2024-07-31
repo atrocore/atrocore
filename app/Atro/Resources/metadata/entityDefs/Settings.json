@@ -54,9 +54,6 @@
       "required": true,
       "tooltip": true
     },
-    "disableEmailDelivery": {
-      "type": "bool"
-    },
     "tabList": {
       "type": "array",
       "view": "views/settings/fields/tab-list"
@@ -83,30 +80,6 @@
     "favicon": {
       "type": "file",
       "fileTypeId": "a_favicon"
-    },
-    "assignmentEmailNotifications": {
-      "type": "bool",
-      "default": false
-    },
-    "assignmentNotifications": {
-      "type": "bool",
-      "default": true
-    },
-    "postEmailNotifications": {
-      "type": "bool",
-      "default": false
-    },
-    "updateEmailNotifications": {
-      "type": "bool",
-      "default": false
-    },
-    "mentionEmailNotifications": {
-      "type": "bool",
-      "default": false
-    },
-    "streamEmailNotifications": {
-      "type": "bool",
-      "default": false
     },
     "b2cMode": {
       "type": "bool",
@@ -326,6 +299,15 @@
     "notificationSmtpConnection": {
       "type": "link",
       "view": "views/admin/notification/fields/notification-smtp-connection"
+    },
+    "defaultNotificationProfile": {
+      "type": "link"
+    },
+    "sendOutNotifications": {
+      "type": "bool"
+    },
+    "sendNotificationInSync": {
+      "type": "bool"
     }
   },
   "links": {
@@ -336,6 +318,10 @@
     "notificationSmtpConnection": {
       "type": "belongsTo",
       "entity": "Connection"
+    },
+    "defaultNotificationProfile": {
+      "type": "belongsTo",
+      "entity": "NotificationProfile"
     }
   }
 }

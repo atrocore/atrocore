@@ -602,8 +602,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterSave($entity, $options);
 
-        $this->assignmentNotifications($entity);
-
         if (!$this->processFieldsAfterSaveDisabled) {
             $this->processSpecifiedRelationsSave($entity, $options);
             if (empty($entity->skipProcessFileFieldsSave)) {
@@ -914,97 +912,38 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    /**
+     * @deprecated
+     */
     protected function assignmentNotifications(Entity $entity): void
     {
-        if ($entity->getEntityType() === 'Notification' || $entity->getEntityType() === 'QueueItem') {
-            return;
-        }
-
-        if (!$this->getConfig()->get('assignmentNotifications', true)) {
-            return;
-        }
-
-        if (!empty($this->getMemoryStorage()->get('skipAssignmentNotifications'))) {
-            return;
-        }
-
-        if ($entity->isAttributeChanged('ownerUserId')) {
-            $this->createOwnNotification($entity, $entity->get('ownerUserId'));
-        }
-
-        if ($entity->isAttributeChanged('assignedUserId')) {
-            $this->createAssignmentNotification($entity, $entity->get('assignedUserId'));
-        }
     }
 
+    /**
+     * @deprecated
+     */
     protected function createOwnNotification(Entity $entity, ?string $userId): void
     {
-        if (empty($userId)) {
-            return;
-        }
-
-        $user = $this->getEntityManager()->getEntity('User', $userId);
-        if (empty($user)) {
-            return;
-        }
-
-        if (!$this->getInjection('aclManager')->checkScope($user, $entity->getEntityType(), 'read')) {
-            return;
-        }
-
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
-        if (empty($preferences->get('assignmentNotifications'))) {
-            return;
-        }
-
-        $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set('type', 'Own');
-        $notification->set('relatedType', $entity->getEntityType());
-        $notification->set('relatedId', $entity->get('id'));
-        $notification->set('userId', $userId);
-        $notification->set('data', $this->getOwnNotificationMessageData($entity));
-        $this->getEntityManager()->saveEntity($notification);
     }
 
+    /**
+     * @deprecated
+     */
     protected function createAssignmentNotification(Entity $entity, ?string $userId): void
     {
-        if (empty($userId)) {
-            return;
-        }
-
-        $user = $this->getEntityManager()->getEntity('User', $userId);
-        if (empty($user)) {
-            return;
-        }
-
-        if (!$this->getInjection('aclManager')->checkScope($user, $entity->getEntityType(), 'read')) {
-            return;
-        }
-
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
-        if (empty($preferences->get('assignmentNotifications'))) {
-            return;
-        }
-
-        $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set('type', 'Assign');
-        $notification->set('relatedType', $entity->getEntityType());
-        $notification->set('relatedId', $entity->get('id'));
-        $notification->set('userId', $userId);
-        $notification->set('data', $this->getAssignmentNotificationMessageData($entity));
-        $this->getEntityManager()->saveEntity($notification);
     }
 
+    /**
+     * @deprecated
+     */
     protected function getOwnNotificationMessageData(Entity $entity): array
     {
-        return [
-            'entityName' => $entity->get('name'),
-            'entityType' => $entity->getEntityType(),
-            'entityId'   => $entity->get('id'),
-            'changedBy'  => $this->getEntityManager()->getUser()->get('id')
-        ];
+        return [];
     }
 
+    /**
+     * @deprecated
+     */
     protected function getAssignmentNotificationMessageData(Entity $entity): array
     {
         return $this->getOwnNotificationMessageData($entity);

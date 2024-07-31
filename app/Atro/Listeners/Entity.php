@@ -16,6 +16,7 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\Utils\Note as NoteUtil;
+use Atro\Core\Utils\NotificationManager;
 
 class Entity extends AbstractListener
 {
@@ -29,6 +30,8 @@ class Entity extends AbstractListener
         $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'afterSave', $event);
 
         $this->getNoteUtil()->afterEntitySaved($event->getArgument('entity'));
+
+        $this->getNotificationManager()->afterEntitySaved($event->getArgument('entity'));
     }
 
     public function beforeRemove(Event $event): void
@@ -41,6 +44,9 @@ class Entity extends AbstractListener
         $this->getEventManager()->dispatch($event->getArgument('entityType') . 'Entity', 'afterRemove', $event);
 
         $this->getNoteUtil()->afterEntityRemoved($event->getArgument('entity'));
+
+        $this->getNotificationManager()->afterEntityDeleted($event->getArgument('entity'));
+
     }
 
     public function beforeMassRelate(Event $event): void
@@ -81,5 +87,10 @@ class Entity extends AbstractListener
     private function getNoteUtil(): NoteUtil
     {
         return $this->getContainer()->get(NoteUtil::class);
+    }
+
+    protected function getNotificationManager(): NotificationManager
+    {
+        return $this->getContainer()->get(NotificationManager::class);
     }
 }

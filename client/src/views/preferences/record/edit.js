@@ -102,25 +102,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             this.controlColorsField();
             this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
 
-            this.hideNotificationPanel = true;
-            if (!this.getConfig().get('assignmentEmailNotifications')) {
-                this.hideField('receiveAssignmentEmailNotifications');
-            } else {
-                this.hideNotificationPanel = false;
-            }
-
-            if (!this.getConfig().get('mentionEmailNotifications')) {
-                this.hideField('receiveMentionEmailNotifications');
-            } else {
-                this.hideNotificationPanel = false;
-            }
-
-            if (!this.getConfig().get('streamEmailNotifications')) {
-                this.hideField('receiveStreamEmailNotifications');
-            } else {
-                this.hideNotificationPanel = false;
-            }
-
             if (this.getConfig().get('scopeColorsDisabled')) {
                 this.hideField('scopeColorsDisabled');
                 this.hideField('tabColorsDisabled');
@@ -143,6 +124,14 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                     window.location.reload();
                 }
             }, this);
+
+            this.listenTo(this.model, 'change:receiveNotifications', () => {
+                if(this.model.get('receiveNotifications')){
+                    this.setFieldRequired('notificationProfileId')
+                }else{
+                    this.setFieldNotRequired('notificationProfileId')
+                }
+            })
         },
 
         controlColorsField: function () {
@@ -188,9 +177,10 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-
-            if (this.hideNotificationPanel) {
-                this.hidePanel('notifications');
+            if(this.model.get('receiveNotifications')){
+                this.setFieldRequired('notificationProfileId')
+            }else{
+                this.setFieldNotRequired('notificationProfileId')
             }
         },
 

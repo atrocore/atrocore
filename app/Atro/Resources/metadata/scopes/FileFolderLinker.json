@@ -1,5 +1,6 @@
 {
   "type": "Base",
   "object": true,
-  "streamDisabled": true
+  "streamDisabled": true,
+  "notificationDisabled": true
 }

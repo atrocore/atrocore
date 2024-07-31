@@ -1,4 +1,5 @@
 {
   "isActiveUnavailable": true,
-  "streamDisabled": true
+  "streamDisabled": true,
+  "notificationDisabled": true
 }

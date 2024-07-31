@@ -16,7 +16,9 @@
     "followCreatedEntities": "Auto-follow created records",
     "scopeColorsDisabled": "Disable scope colors",
     "tabColorsDisabled": "Disable tab icons colors",
-    "hideFeedbackIcon": "Hide feedback icon"
+    "hideFeedbackIcon": "Hide feedback icon",
+    "receiveNotifications": "Receive Notifications",
+    "notificationProfile": "Notification Profile"
   },
   "links": {
   },

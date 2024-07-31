@@ -42,7 +42,10 @@
     "Preferences": "Benutzereinstellungen",
     "AuthLogRecord": "Auth Log-Datensatz",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
-    "PreviewTemplate": "Vorschau Vorlage"
+    "PreviewTemplate": "Vorschau Vorlage",
+    "NotificationTemplate": "Vorlage für Benachrichtigung",
+    "NotificationProfile": "Benachrichtigungsprofil",
+    "NotificationRule": "Meldevorschrift"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "E-Mail-Vorlagen",
@@ -80,7 +83,10 @@
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll",
-    "PreviewTemplate": "Vorschau Vorlagen"
+    "PreviewTemplate": "Vorschau Vorlagen",
+    "NotificationTemplate": "Benachrichtigungsvorlagen",
+    "NotificationProfile": "Benachrichtigungs-Profile",
+    "NotificationRule": "Benachrichtigungsregeln"
   },
   "descriptions": {
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde.",

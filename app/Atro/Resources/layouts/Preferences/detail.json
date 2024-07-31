@@ -1,86 +1,74 @@
 [
-    {
-        "label": "General",
-        "rows": [
-            [
-                {
-                    "name": "locale"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "followCreatedEntities"
-                },
-                {
-                    "name": "followEntityOnStreamPost"
-                }
-            ]
-        ]
-    },
-    {
-        "label": "User Interface",
-        "rows": [
-            [
-                {
-                    "name": "theme"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "scopeColorsDisabled"
-                },
-                {
-                    "name": "tabColorsDisabled"
-                }
-            ],
-            [
-                {
-                    "name": "useCustomTabList"
-                },
-                {
-                    "name": "tabList"
-                }
-            ],
-            [
-                {
-                    "name": "hideFeedbackIcon"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "dashboardLayout",
-                    "fullWidth": true
-                }
-            ]
-        ]
-    },
-    {
-        "label": "In-app Notifications",
-        "rows": [
-            [{"name": "assignmentNotifications"}, false]
-        ]
-    },
-    {
-        "label": "Email Notifications",
-        "name": "notifications",
-        "rows": [
-            [
-                {
-                    "name": "receiveAssignmentEmailNotifications"
-                },
-                {
-                    "name": "receiveMentionEmailNotifications"
-                }
-            ],
-            [
-                {
-                    "name": "receiveStreamEmailNotifications"
-                },
-                false
-            ]
-        ]
-    }
+  {
+    "label": "General",
+    "rows": [
+      [
+        {
+          "name": "locale"
+        },
+        false
+      ],
+      [
+        {
+          "name": "followCreatedEntities"
+        },
+        {
+          "name": "followEntityOnStreamPost"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "User Interface",
+    "rows": [
+      [
+        {
+          "name": "theme"
+        },
+        false
+      ],
+      [
+        {
+          "name": "scopeColorsDisabled"
+        },
+        {
+          "name": "tabColorsDisabled"
+        }
+      ],
+      [
+        {
+          "name": "useCustomTabList"
+        },
+        {
+          "name": "tabList"
+        }
+      ],
+      [
+        {
+          "name": "hideFeedbackIcon"
+        },
+        false
+      ],
+      [
+        {
+          "name": "dashboardLayout",
+          "fullWidth": true
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Notifications",
+    "name": "notifications",
+    "rows": [
+      [
+        {
+          "name": "receiveNotifications"
+        },
+        {
+          "name": "notificationProfile"
+        }
+      ]
+    ]
+  }
 ]

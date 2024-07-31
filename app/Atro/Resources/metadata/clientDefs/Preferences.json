@@ -1,9 +1,9 @@
 {
-   "recordViews":{
-      "edit": "views/preferences/record/edit"
-   },
-   "views":{
-      "edit": "views/preferences/edit"
-   },
-   "acl": "acl/preferences"
+  "recordViews": {
+    "edit": "views/preferences/record/edit"
+  },
+  "views": {
+    "edit": "views/preferences/edit"
+  },
+  "acl": "acl/preferences"
 }

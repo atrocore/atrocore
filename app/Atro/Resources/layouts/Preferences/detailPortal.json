@@ -22,28 +22,16 @@
         ]
     },
     {
-        "label": "In-app Notifications",
-        "rows": [
-            [{"name": "assignmentNotifications"}, false]
-        ]
-    },
-    {
-        "label": "Email Notifications",
+        "label": "Notifications",
         "name": "notifications",
         "rows": [
             [
                 {
-                    "name": "receiveAssignmentEmailNotifications"
+                    "name": "receiveNotifications"
                 },
                 {
-                    "name": "receiveMentionEmailNotifications"
+                    "name": "notificationProfile"
                 }
-            ],
-            [
-                {
-                    "name": "receiveStreamEmailNotifications"
-                },
-                false
             ]
         ]
     }

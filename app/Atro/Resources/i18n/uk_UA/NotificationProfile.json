@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "isActive": "Активний",
+    "description": "Опис"
+  },
+  "links": {
+    "notificationRules": "Правила сповіщення"
+  },
+  "labels": {
+    "Create NotificationProfile": "Створити профіль сповіщень"
+  }
+}

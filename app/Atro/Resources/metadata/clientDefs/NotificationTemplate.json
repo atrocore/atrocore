@@ -1,0 +1,47 @@
+{
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "transportType"
+  ],
+  "hiddenBoolFilterList": [
+    "transportType"
+  ],
+  "dynamicLogic": {
+    "fields": {
+      "subject": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      },
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

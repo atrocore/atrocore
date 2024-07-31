@@ -1,0 +1,15 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "notificationProfile"
+  },
+  {
+    "name": "isActive"
+  },
+  {
+    "name": "ignoreSelfAction"
+  }
+]

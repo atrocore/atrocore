@@ -15,7 +15,9 @@
     "followCreatedEntities": "Eigene Einträge abonnieren",
     "scopeColorsDisabled": "Bereichsfarben deaktivieren",
     "tabColorsDisabled": "Tabfarben deaktivieren",
-    "hideFeedbackIcon": "Feedback-Icon ausblenden"
+    "hideFeedbackIcon": "Feedback-Icon ausblenden",
+    "receiveNotifications": "Erhalten Sie Benachrichtigungen",
+    "notificationProfile": "Benachrichtigungsprofil"
   },
   "labels": {
     "Notifications": "Benachrichtigungen",

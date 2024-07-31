@@ -1,0 +1,78 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "notificationProfile"
+        }
+      ],
+      [
+        {
+          "name": "occurrence"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isActive"
+        },
+        {
+          "name": "ignoreSelfAction"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Notify User",
+    "name": "notifyUser",
+    "dynamicLogicVisible": {
+      "conditionGroup": [
+        {
+          "type": "notIn",
+          "attribute": "occurrence",
+          "value": ["mentioned"]
+        }
+      ]
+    },
+    "rows": [
+      [
+        {
+          "name": "asOwner"
+        },
+        {
+          "name": "asFollower"
+        }
+      ],
+      [
+        {
+          "name": "asAssignee"
+        },
+        {
+          "name": "asTeamMember"
+        }
+      ],
+      [
+        {
+          "name": "asNotificationProfile"
+        },
+        false
+      ]
+    ]
+  }
+]
