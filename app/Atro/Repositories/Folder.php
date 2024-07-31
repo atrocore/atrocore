@@ -161,23 +161,12 @@ class Folder extends Hierarchy
             throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
         }
 
-        /** @var FolderHierarchy $folderHierarchyRepository */
-        $folderHierarchyRepository = $this->getEntityManager()->getRepository('FolderHierarchy');
-
-        foreach ($folderHierarchyRepository->where(['entityId' => $entity->get('id')])->find() as $folderHierarchy) {
-            $this->getEntityManager()->removeEntity($folderHierarchy, ['ignoreValidation' => true]);
-        }
-        foreach ($folderHierarchyRepository->where(['parentId' => $entity->get('id')])->find() as $folderHierarchy) {
-            $this->getEntityManager()->removeEntity($folderHierarchy, ['ignoreValidation' => true]);
-        }
-
         parent::afterRemove($entity, $options);
     }
 
     protected function afterRestore($entity)
     {
         $this->restoreItem($entity);
-        $this->restoreHierarchyItem($entity);
         $this->getStorage($entity)->restoreFolder($entity);
     }
 
@@ -318,7 +307,6 @@ class Folder extends Hierarchy
     public function deleteFromDb(string $id): bool
     {
         $this->deleteItemPermanently($id);
-        $this->deleteHierarchyItem($id);
 
         return parent::deleteFromDb($id);
     }
@@ -347,29 +335,32 @@ class Folder extends Hierarchy
 
     public function restoreItem(Entity $entity): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->update('file_folder_linker')
-            ->set('deleted', ':false')
-            ->where('folder_id = :folderId')
-            ->andWhere('file_id IS NULL')
-            ->andWhere('deleted=:true')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('folderId', $entity->get('id'))
-            ->executeQuery();
-    }
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
 
-    public function restoreHierarchyItem(Entity $entity): void
-    {
-        $this->getConnection()->createQueryBuilder()
-            ->update('folder_hierarchy')
-            ->set('deleted', ':false')
-            ->where('entity_id=:folderId')
-            ->andWhere('deleted=:true')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('folderId', $entity->get('id'))
-            ->executeQuery();
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
+        $folderHierarchy = $this->getEntityManager()->getRepository('FolderHierarchy')
+            ->select(['parentId'])
+            ->where(['entityId' => $entity->get('id')])
+            ->findOne();
+
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
+        $fileFolderLinker->set([
+            'name'     => $entity->get('name'),
+            'parentId' => !empty($folderHierarchy) ? $folderHierarchy->get('parentId') : '',
+            'folderId' => $entity->get('id')
+        ]);
+
+        try {
+            $this->getEntityManager()->saveEntity($fileFolderLinker);
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
     }
 
     public function deleteItemPermanently(string $folderId): void
@@ -378,15 +369,6 @@ class Folder extends Hierarchy
             ->delete('file_folder_linker')
             ->where('folder_id = :folderId')
             ->andWhere('file_id IS NULL')
-            ->setParameter('folderId', $folderId)
-            ->executeQuery();
-    }
-
-    public function deleteHierarchyItem(string $folderId): void
-    {
-        $this->getConnection()->createQueryBuilder()
-            ->delete('folder_hierarchy')
-            ->where('entity_id=:folderId')
             ->setParameter('folderId', $folderId)
             ->executeQuery();
     }
