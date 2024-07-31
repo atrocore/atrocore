@@ -122,11 +122,6 @@
             "notStorable": true,
             "disabled": true
         },
-        "teamRole": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true
-        },
         "teams": {
             "type": "linkMultiple",
             "tooltip": true,

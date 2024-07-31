@@ -8,7 +8,7 @@
     "name": "userName"
   },
   {
-    "name": "teamRole",
+    "name": "TeamUser__role",
     "notSortable": true
   }
 ]

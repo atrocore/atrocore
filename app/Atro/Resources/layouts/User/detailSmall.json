@@ -39,6 +39,12 @@
         {
           "name": "isActive"
         }
+      ],
+      [
+        {
+          "name": "TeamUser__role"
+        },
+        false
       ]
     ]
   }

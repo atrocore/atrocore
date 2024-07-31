@@ -8,9 +8,5 @@
   },
   {
     "name": "emailAddress"
-  },
-  {
-    "name": "TeamUser__role",
-    "notSortable": true
   }
 ]
