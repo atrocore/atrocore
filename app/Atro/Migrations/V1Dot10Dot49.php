@@ -19,11 +19,11 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Util;
 
-class V1Dot10Dot49 extends Base
+class V1Dot10Dot50 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-07-29 17:00:00');
+        return new \DateTime('2024-07-31 11:00:00');
     }
 
     public function up(): void
