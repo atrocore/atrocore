@@ -1,0 +1,126 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "entity": {
+      "type": "enum",
+      "view": "views/notification-rule/fields/entity-type"
+    },
+    "notificationProfile": {
+      "type": "link",
+      "required": true
+    },
+    "occurrence": {
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "required": true,
+      "optionsIds": [
+        "creation",
+        "updating",
+        "linking",
+        "unlinking",
+        "deletion",
+        "note_created",
+        "note_updated",
+        "note_deleted",
+        "ownership_assignment",
+        "unlinking_ownership_assignment",
+        "mentioned"
+      ],
+      "options": [
+        "creation",
+        "updating",
+        "linking",
+        "unlinking",
+        "deletion",
+        "note_created",
+        "note_updated",
+        "note_deleted",
+        "ownership_assignment",
+        "unlinking_ownership_assignment",
+        "mentioned"
+      ]
+    },
+    "isActive": {
+      "type": "bool"
+    },
+    "ignoreSelfAction": {
+      "type": "bool"
+    },
+    "asOwner": {
+      "type": "bool"
+    },
+    "asFollower": {
+      "type": "bool"
+    },
+    "asAssignee": {
+      "type": "bool"
+    },
+    "asTeamMember": {
+      "type": "bool"
+    },
+    "asNotificationProfile": {
+      "type": "bool"
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "notificationProfile": {
+      "type": "belongsTo",
+      "entity": "NotificationProfile",
+      "foreign": "notificationRules"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "uniqueIndexes": {
+    "unique_notification_rules": [
+      "notification_profile_id",
+      "entity",
+      "occurrence",
+      "deleted"
+    ]
+  }
+}

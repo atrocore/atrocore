@@ -74,13 +74,6 @@ class Sender
      */
     public function send(array $emailData, ?Connection $connectionEntity = null, array $params = []): void
     {
-        if (!empty($params['isNotification'])) {
-            if ($this->config->get('disableEmailDelivery') === true) {
-                $GLOBALS['log']->alert('Notification Emails: Email delivery is deactivated.');
-                return;
-            }
-        }
-
         // default connection
         if (empty($connectionEntity)) {
             $id = $this->config->get('notificationSmtpConnectionId');

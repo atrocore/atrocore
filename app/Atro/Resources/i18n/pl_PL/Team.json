@@ -1,6 +1,6 @@
 {
-	"fields": {"name": "Nazwa", "roles": "Role", "positionList": "Lista stanowisk"},
+	"fields": {"name": "Nazwa", "roles": "Role"},
 	"links": {"users": "Użytkownicy", "notes": "Notatki", "roles": "Role"},
-	"tooltips": {"roles": "Role dostępu. Użytkownicy tego zespołu uzyskują poziom kontroli dostępu z wybranych ról.", "positionList": "Dostępne stanowiska w tym zespole. Na przykład: Sprzedawca, Kierownik."},
+	"tooltips": {"roles": "Role dostępu. Użytkownicy tego zespołu uzyskują poziom kontroli dostępu z wybranych ról."},
 	"labels": {"Create Team": "Utwórz Zespół"}
 }

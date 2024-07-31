@@ -1,24 +1,28 @@
 {
-    "defaultSidePanel": {
-        "edit": false,
-        "editSmall": false
-    },
-    "defaultSidePanelFieldLists": {
-        "detail": ["createdAt"]
-    },
-    "relationshipPanels": {
-        "users": {
-            "create": false,
-            "rowActionsView": "views/record/row-actions/relationship-unlink-only",
-            "layout": "listForTeam",
-            "selectPrimaryFilterName": "active"
-        }
-    },
-    "recordViews": {
-        "detail": "views/team/record/detail",
-        "edit": "views/team/record/edit",
-        "list": "views/team/record/list"
-    },
-    "boolFilterList": ["onlyMy"],
-    "iconClass": "fas fa-users"
+  "defaultSidePanel": {
+    "edit": false,
+    "editSmall": false
+  },
+  "defaultSidePanelFieldLists": {
+    "detail": [
+      "createdAt"
+    ]
+  },
+  "relationshipPanels": {
+    "users": {
+      "create": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-remove",
+      "layout": "listForTeam",
+      "selectPrimaryFilterName": "active"
+    }
+  },
+  "recordViews": {
+    "detail": "views/team/record/detail",
+    "edit": "views/team/record/edit",
+    "list": "views/team/record/list"
+  },
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "iconClass": "fas fa-users"
 }

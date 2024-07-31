@@ -48,9 +48,9 @@
         "description": "currency"
       },
       {
-        "url": "#Admin/notifications",
-        "label": "Notifications",
-        "description": "notifications"
+        "url": "#NotificationProfile",
+        "label": "notificationProfiles",
+        "description": "notificationProfiles"
       },
       {
         "url": "#Admin/clearCache",
@@ -190,6 +190,11 @@
         "url": "#PreviewTemplate",
         "label": "previewTemplate",
         "description": "previewTemplate"
+      },
+      {
+        "url": "#NotificationTemplate",
+        "label": "notificationTemplates",
+        "description": "notificationTemplates"
       }
     ]
   }

@@ -7,5 +7,6 @@
   "disabled": false,
   "type": "Base",
   "object": true,
-  "hasActive": true
+  "hasActive": true,
+  "notificationDisabled": true
 }

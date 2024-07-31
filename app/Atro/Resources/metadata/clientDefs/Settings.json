@@ -20,6 +20,26 @@
             }
           ]
         }
+      },
+      "notificationSmtpConnection": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "sendOutNotifications"
+            }
+          ]
+        }
+      },
+      "defaultNotificationProfile": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "sendOutNotifications"
+            }
+          ]
+        }
       }
     }
   }

@@ -13,5 +13,6 @@
   "hasTeam": true,
   "hasOwner": true,
   "quickCreateListDisabled": true,
-  "streamDisabled": true
+  "streamDisabled": true,
+  "notificationDisabled": true
 }

@@ -58,22 +58,6 @@
         "presetFilters": {
             "type": "jsonObject"
         },
-        "receiveAssignmentEmailNotifications": {
-            "type": "bool",
-            "default": true
-        },
-        "receiveMentionEmailNotifications": {
-            "type": "bool",
-            "default": true
-        },
-        "receiveStreamEmailNotifications": {
-            "type": "bool",
-            "default": true
-        },
-        "assignmentNotifications": {
-            "type": "bool",
-            "default": true
-        },
         "theme": {
             "type": "enum",
             "view": "views/preferences/fields/theme",
@@ -106,6 +90,19 @@
         },
         "hideFeedbackIcon": {
             "type": "bool"
+        },
+        "receiveNotifications": {
+            "type": "bool"
+        },
+        "notificationProfile": {
+            "type": "link",
+            "view": "views/preferences/fields/notification-profile"
+        }
+    },
+    "links": {
+        "notificationProfile": {
+            "type": "belongsTo",
+            "entity": "NotificationProfile"
         }
     }
 }

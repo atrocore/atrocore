@@ -86,42 +86,6 @@
             "maxLength": 100,
             "trim": true
         },
-        "position": {
-            "type": "varchar",
-            "maxLength": 100,
-            "notStorable": true,
-            "where": {
-                "LIKE": {
-                    "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role LIKE {value}",
-                    "distinct": true
-                },
-                "=": {
-                    "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role = {value}",
-                    "distinct": true
-                },
-                "<>": {
-                    "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role <> {value}",
-                    "distinct": true
-                },
-                "IS NULL": {
-                    "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role IS NULL",
-                    "distinct": true
-                },
-                "IS NOT NULL": {
-                    "leftJoins": [["teams", "teamsPosition"]],
-                    "sql": "teamsPositionMiddle.role IS NOT NULL",
-                    "distinct": true
-                }
-            },
-            "trim": true,
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "textFilterDisabled": true
-        },
         "emailAddress": {
             "type": "email",
             "required": true
@@ -158,17 +122,9 @@
             "notStorable": true,
             "disabled": true
         },
-        "teamRole": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true
-        },
         "teams": {
             "type": "linkMultiple",
             "tooltip": true,
-            "columns": {
-                "role": "userRole"
-            },
             "view": "views/user/fields/teams",
             "default": "javascript: return {teamsIds: []}"
         },
@@ -231,12 +187,6 @@
             "entity": "Team",
             "relationName": "TeamUser",
             "foreign": "users",
-            "additionalColumns": {
-                "role": {
-                    "type": "varchar",
-                    "len": 100
-                }
-            },
             "layoutRelationshipsDisabled": true
         },
         "createdBy": {

@@ -4,5 +4,6 @@
     "tab": false,
     "acl": false,
     "streamDisabled": true,
-    "customizable":false
+    "customizable":false,
+    "notificationDisabled": true
 }

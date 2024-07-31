@@ -1,8 +1,7 @@
 {
   "fields": {
     "userRole": "Benutzer Rolle",
-    "roles": "Rollen",
-    "positionList": "Positionsbezeichnungen"
+    "roles": "Rollen"
   },
   "links": {
     "users": "Benutzer",
@@ -10,8 +9,7 @@
     "roles": "Rollen"
   },
   "tooltips": {
-    "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen.",
-    "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc."
+    "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen."
   },
   "labels": {
     "Create Team": "Team erstellen"

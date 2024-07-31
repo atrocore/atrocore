@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Core\Utils\NotificationManager;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;

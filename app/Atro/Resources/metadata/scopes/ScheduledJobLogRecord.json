@@ -5,5 +5,5 @@
     "acl": false,
     "streamDisabled": true,
     "customizable":false,
-    "streamDisabled": true
+    "notificationDisabled": true
 }

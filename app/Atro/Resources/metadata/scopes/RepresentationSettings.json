@@ -1,5 +1,6 @@
 {
   "entity": false,
   "module": "TreoCore",
-  "streamDisabled": true
+  "streamDisabled": true,
+  "notificationDisabled": true
 }

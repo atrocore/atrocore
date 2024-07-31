@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "isActive": "Aktiv",
+    "description": "Beschreibung"
+  },
+  "links": {
+    "notificationRules": "Benachrichtigungsregeln"
+  },
+  "labels": {
+    "Create NotificationProfile": "Benachrichtigungsprofil erstellen"
+  }
+}
