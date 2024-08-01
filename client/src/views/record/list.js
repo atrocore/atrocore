@@ -542,7 +542,29 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        getActionDefs(id) {
+            let defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === id)
+            if (!defs) {
+                defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).find(defs => defs.id === id)
+            }
+            return defs
+        },
+
         massActionDynamicMassAction: function (data) {
+            const defs = this.getActionDefs(data.id)
+
+            if (defs && defs.type) {
+                const method = 'massActionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, data);
+                    return
+                }
+            }
+
+            this.executeDynamicMassActionRequest(data)
+        },
+
+        executeDynamicMassActionRequest(data) {
             let where;
             if (this.allResultIsChecked) {
                 where = this.collection.getWhere();
@@ -1283,11 +1305,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     let list = this.$el.find('.list');
                     let listPositionTop = list.offset().top;
                     if ((positionTop + menuHeight) > this.getHeightParentPosition()) {
-                        if(menuHeight  <= (positionTop - listPositionTop)  ){
+                        if (menuHeight <= (positionTop - listPositionTop)) {
                             menu.css({
                                 "top": `-${menuHeight}px`
                             })
-                        }else{
+                        } else {
                             let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true);
                             menu.css({
                                 'position': 'fixed',
@@ -2401,11 +2423,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         actionDynamicAction: function (data) {
-            this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {
+            const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.action_id)
+            if (defs && defs.type) {
+                const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, data);
+                    return
+                }
+            }
+
+            this.executeActionRequest({
                 actionId: data.action_id,
                 entityId: data.entity_id
-            }).success(response => {
+            })
+        },
+
+        executeActionRequest: function (payload, callback) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
@@ -2418,12 +2453,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             })
                             return;
                         }
+                        if (callback) {
+                            callback()
+                        }
                     } else {
                         this.notify(response.message, 'error');
                     }
                 }
                 this.collection.fetch();
-            });
+            })
+                .error(error => {
+                    Espo.ui.error(error.responseText)
+                })
         },
 
         getRowSelector: function (id) {
@@ -2471,8 +2512,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             if (this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])) {
-               action();
-               return;
+                action();
+                return;
             }
 
             this.confirm({
