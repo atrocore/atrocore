@@ -12,9 +12,7 @@
     "street": "вуличний",
     "zip": "ZIP",
     "box": "Box",
-    "city": "Сіті",
-    "country": "провінційний",
-    "countryCode": "код країни"
+    "city": "Сіті"
   },
   "links": {
     "accounts": "важливість"

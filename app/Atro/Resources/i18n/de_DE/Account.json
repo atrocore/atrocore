@@ -24,5 +24,8 @@
   "links": {
     "addresses": "Adressen",
     "contacts": "Kontakte"
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": "Die Standardadresse für das Konto ist bereits vorhanden."
   }
 }

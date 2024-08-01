@@ -45,15 +45,19 @@
         {
           "name": "country"
         },
-        {
-          "name": "countryCode"
-        }
+        false
       ],
       [
         {
           "name": "description",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "AddressAccount__default"
+        },
+        false
       ]
     ],
     "style": "default",

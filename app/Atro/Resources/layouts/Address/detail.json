@@ -45,9 +45,7 @@
         {
           "name": "country"
         },
-        {
-          "name": "countryCode"
-        }
+        false
       ],
       [
         {

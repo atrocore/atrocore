@@ -100,7 +100,8 @@
     "PreviewTemplate": "Preview Templates",
     "NotificationTemplate": "Notification Templates",
     "NotificationProfile": "Notification Profiles",
-    "NotificationRule": "Notification Rules"
+    "NotificationRule": "Notification Rules",
+    "Country": "Countries"
   },
   "descriptions": {
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications.",

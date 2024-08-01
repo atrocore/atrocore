@@ -38,10 +38,7 @@
       "type": "varchar"
     },
     "country": {
-      "type": "varchar"
-    },
-    "countryCode": {
-      "type": "varchar"
+      "type": "link"
     },
     "createdAt": {
       "type": "datetime",
@@ -108,6 +105,10 @@
       "relationName": "AddressContact",
       "foreign": "addresses",
       "entity": "Contact"
+    },
+    "country": {
+      "type": "belongsTo",
+      "entity": "Country"
     }
   },
   "collection": {

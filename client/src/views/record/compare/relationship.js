@@ -172,7 +172,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             if (list.length) {
                 let fixedTableHeader = list.find('.fixed-header-table');
                 let fullTable = list.find('.full-table');
-                let scroll = this.$el.parent().siblings('.panel-scroll');
+                let scroll = this.$el.find('.list > .panel-scroll');
 
                 if (fullTable.length) {
                     if (scroll.length) {
@@ -298,6 +298,10 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
         afterRender(){
             Dep.prototype.afterRender.call(this)
             $('.not-approved-field').hide();
+
+            if (this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
+                this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
+            }
         },
         updateBaseUrl(view, instanceUrl){
             view.listenTo(view, 'after:render', () => {

@@ -43,9 +43,5 @@
         <div class="panel-body{{#if isForm}} panel-body-form{{/if}} panel-collapse collapse {{#if expanded}}in{{/if}}" data-name="{{name}}">
             {{{var name ../this}}}
         </div>
-
-        <div class="panel-scroll hidden">
-            <div></div>
-        </div>
     </div>
 {{/each}}

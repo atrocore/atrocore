@@ -45,7 +45,8 @@
     "PreviewTemplate": "Vorschau Vorlage",
     "NotificationTemplate": "Vorlage für Benachrichtigung",
     "NotificationProfile": "Benachrichtigungsprofil",
-    "NotificationRule": "Meldevorschrift"
+    "NotificationRule": "Meldevorschrift",
+    "Country": "Land"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "E-Mail-Vorlagen",
@@ -86,7 +87,8 @@
     "PreviewTemplate": "Vorschau Vorlagen",
     "NotificationTemplate": "Benachrichtigungsvorlagen",
     "NotificationProfile": "Benachrichtigungs-Profile",
-    "NotificationRule": "Benachrichtigungsregeln"
+    "NotificationRule": "Benachrichtigungsregeln",
+    "Country": "Länder"
   },
   "descriptions": {
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde.",

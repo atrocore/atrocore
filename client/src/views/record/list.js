@@ -542,7 +542,29 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        getActionDefs(id) {
+            let defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === id)
+            if (!defs) {
+                defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).find(defs => defs.id === id)
+            }
+            return defs
+        },
+
         massActionDynamicMassAction: function (data) {
+            const defs = this.getActionDefs(data.id)
+
+            if (defs && defs.type) {
+                const method = 'massActionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, data);
+                    return
+                }
+            }
+
+            this.executeDynamicMassActionRequest(data)
+        },
+
+        executeDynamicMassActionRequest(data) {
             let where;
             if (this.allResultIsChecked) {
                 where = this.collection.getWhere();
@@ -1095,6 +1117,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             };
 
+            if (this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
+                this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
+            }
+
             this.fullTableScroll();
             $(window).on("resize.fixed-scrollbar tree-width-changed tree-width-unset", function () {
                 this.fullTableScroll();
@@ -1283,11 +1309,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     let list = this.$el.find('.list');
                     let listPositionTop = list.offset().top;
                     if ((positionTop + menuHeight) > this.getHeightParentPosition()) {
-                        if(menuHeight  <= (positionTop - listPositionTop)  ){
+                        if (menuHeight <= (positionTop - listPositionTop)) {
                             menu.css({
                                 "top": `-${menuHeight}px`
                             })
-                        }else{
+                        } else {
                             let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true);
                             menu.css({
                                 'position': 'fixed',
@@ -1487,7 +1513,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (list.length) {
                 let fixedTableHeader = list.find('.fixed-header-table');
                 let fullTable = list.find('.full-table');
-                let scroll = this.getParentView().$el.siblings('.panel-scroll');
+                let scroll = this.$el.find('.list > .panel-scroll');
 
                 if (fullTable.length) {
                     if (scroll.length) {
@@ -2401,11 +2427,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         actionDynamicAction: function (data) {
-            this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {
+            const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.action_id)
+            if (defs && defs.type) {
+                const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, data);
+                    return
+                }
+            }
+
+            this.executeActionRequest({
                 actionId: data.action_id,
                 entityId: data.entity_id
-            }).success(response => {
+            })
+        },
+
+        executeActionRequest: function (payload, callback) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
@@ -2418,12 +2457,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             })
                             return;
                         }
+                        if (callback) {
+                            callback()
+                        }
                     } else {
                         this.notify(response.message, 'error');
                     }
                 }
                 this.collection.fetch();
-            });
+            })
+                .error(error => {
+                    Espo.ui.error(error.responseText)
+                })
         },
 
         getRowSelector: function (id) {
@@ -2471,8 +2516,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             if (this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])) {
-               action();
-               return;
+                action();
+                return;
             }
 
             this.confirm({
@@ -2511,11 +2556,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.collection.remove(model);
                 this.notify('restoring');
                 $.ajax({
-                    url: this.entityType + '/action/massRestore',
+                    url: this.entityType + '/action/restore',
                     type: 'POST',
-                    data: JSON.stringify({
-                        ids: [id]
-                    })
+                    data: JSON.stringify({id: id})
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);
