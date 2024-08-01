@@ -103,7 +103,8 @@
     "Duplicate and Select": "Зкопіювати і вибрати",
     "NotificationTemplate": "Шаблони сповіщень",
     "NotificationProfile": "Профілі сповіщень",
-    "NotificationRule": "Правила повідомлення"
+    "NotificationRule": "Правила повідомлення",
+    "Country": "Країни"
   },
   "descriptions": {
     "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу.",

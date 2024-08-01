@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "code": {
+      "type": "varchar",
+      "unique": true
+    },
+    "isActive": {
+      "type": "bool",
+      "default": false
+    },
+    "eu": {
+      "type": "bool",
+      "default": false
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}
