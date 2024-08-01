@@ -123,19 +123,44 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterRemove($entity, $options);
 
+        $this->dispatch('afterRemove', $entity, $options);
+    }
+
+    public function deleteFromDb(string $id): bool
+    {
+        $deleteRelEntities = !empty($this->getMemoryStorage()->get('deleteRelEntities'));
+
+        if (!$deleteRelEntities) {
+            /** @var Entity $entity */
+            $entity = $this->getMapper()->selectById($this->entityFactory->create($this->entityType), $id, ['withDeleted' => true]);
+        }
+
+        $res = parent::deleteFromDb($id);
+
         // remove all many-many relation entities
-        foreach ($entity->getRelations() as $name => $defs) {
-            if (!empty($defs['relationName']) && !empty($defs['key']) && !empty($defs['midKeys'][0])) {
-                $this->getEntityManager()
-                    ->getRepository(ucfirst($defs['relationName']))
-                    ->where([
-                        $defs['midKeys'][0] => $entity->get($defs['key'])
-                    ])
-                    ->removeCollection();
+        if (!$deleteRelEntities) {
+            $this->getMemoryStorage()->set('deleteRelEntities', true);
+            foreach ($entity->getRelations() as $defs) {
+                if (!empty($defs['relationName']) && !empty($defs['key']) && !empty($defs['midKeys'][0])) {
+                    $repository = $this->getEntityManager()->getRepository(ucfirst($defs['relationName']));
+                    while (true) {
+                        $collection = $repository
+                            ->select(['id'])
+                            ->where([$defs['midKeys'][0] => $entity->get($defs['key'])])
+                            ->limit(0, $this->getConfig()->get('removeCollectionPart', 2000))
+                            ->find();
+                        if (empty($collection[0])) {
+                            break;
+                        }
+                        foreach ($collection as $item) {
+                            $repository->deleteFromDb($item->get('id'));
+                        }
+                    }
+                }
             }
         }
 
-        $this->dispatch('afterRemove', $entity, $options);
+        return $res;
     }
 
     protected function beforeMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
@@ -172,8 +197,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->createQueryBuilder()
             ->update($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($this->entityType))))
             ->set('deleted', ':false')
-            ->where('id = :id')
-            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->where('id=:id')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $id)
             ->executeQuery();
 

@@ -129,8 +129,10 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 $headers = $input->urlHeaders ?? null;
                 if (is_object($headers)) {
                     $headers = json_decode(json_encode($headers), true);
-                } else if (is_string($headers)) {
-                    $headers = @json_decode($headers, true);
+                } else {
+                    if (is_string($headers)) {
+                        $headers = @json_decode($headers, true);
+                    }
                 }
 
                 // load file from url
@@ -318,19 +320,48 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
         $path = $this->getLocalPath($file);
         if (file_exists($path)) {
-            return $this->getFileManager()->removeFile($path);
-//            return $this->getFileManager()->move($path, $this->getTrashPath($file));
+            return $this->getFileManager()->move($path, $this->getFileTrashPath($file));
         }
 
         return true;
     }
 
-    public function getTrashPath(File $file): string
+    public function deleteFilePermanently(File $file): bool
     {
-        $trashDir = $file->getStorage()->get('path') . DIRECTORY_SEPARATOR . self::TRASH_DIR . DIRECTORY_SEPARATOR . $file->get('thumbnailsPath');
+        $trashPath = $this->getFileTrashPath($file);
+        if (file_exists($trashPath)) {
+            $this->getFileManager()->removeFile($trashPath);
+        }
+
+        try {
+            $path = $this->getLocalPath($file);
+            if (file_exists($path)) {
+                $this->getFileManager()->removeFile($path);
+            }
+        } catch (NotFound $e) {
+        }
+
+        return true;
+    }
+
+    public function restoreFile(File $file): bool
+    {
+        $trashPath = $this->getFileTrashPath($file);
+        if (file_exists($trashPath)) {
+            $this->getFileManager()->move($trashPath, $this->getLocalPath($file));
+        }
+
+        return true;
+    }
+
+    public function getFileTrashPath(File $file): string
+    {
+        $storagePath = $file->getStorage()->get('path');
+        $trashDir = $storagePath . DIRECTORY_SEPARATOR . self::TRASH_DIR;
+
         $this->getFileManager()->mkdir($trashDir, 0777, true);
 
-        return $trashDir . DIRECTORY_SEPARATOR . $file->get('name');
+        return $trashDir . DIRECTORY_SEPARATOR . $file->get('id');
     }
 
     public function deleteFolder(Folder $folder): bool
@@ -347,6 +378,16 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
         $this->getFileManager()->removeAllInDir($folderName);
 
         return true;
+    }
+
+    public function deleteFolderPermanently(Folder $folder): bool
+    {
+        return true;
+    }
+
+    public function restoreFolder(Folder $folder): bool
+    {
+        return $this->createFolder($folder);
     }
 
     public function getContents(File $file): string
@@ -729,7 +770,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 if (is_file($path)) {
                     $results[] = $path;
                 } elseif (is_dir($path)) {
-                    if (!in_array($value, [self::CHUNKS_DIR, self::TMP_DIR])) {
+                    if (!in_array($value, [self::CHUNKS_DIR, self::TMP_DIR, self::TRASH_DIR])) {
                         $this->getStorageFiles($path, $results);
                     }
                 }
@@ -749,7 +790,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
                 $path = $dir . DIRECTORY_SEPARATOR . $value;
 
-                if (in_array($value, [self::CHUNKS_DIR, self::TMP_DIR])) {
+                if (in_array($value, [self::CHUNKS_DIR, self::TMP_DIR, self::TRASH_DIR])) {
                     continue;
                 }
 
