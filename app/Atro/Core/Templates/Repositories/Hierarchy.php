@@ -56,17 +56,20 @@ class Hierarchy extends RDB
     {
         parent::beforeRestore($id);
 
-        $parentId = $this->getConnection()->createQueryBuilder()
-            ->select('h.parent_id')
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+            throw new BadRequest('Restore prohibited for entity with possible multiple parents.');
+        }
+
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('h.parent_id, t.deleted')
             ->from($this->hierarchyTableName, 'h')
-            ->innerJoin('h', $this->tableName, 't', 't.id=h.parent_id AND t.deleted=:false')
+            ->leftJoin('h', $this->tableName, 't', 't.id=h.parent_id')
             ->where('h.entity_id=:id')
             ->setParameter('id', $id)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchFirstColumn();
+            ->fetchAssociative();
 
-        if (empty($parentId)) {
-            throw new BadRequest("Record can't be restored because parent record deleted too.");
+        if (!empty($res['parent_id']) && !empty($res['deleted'])) {
+            $this->getInjection('serviceFactory')->create($this->entityType)->restoreEntity($res['parent_id']);
         }
     }
 
@@ -757,5 +760,12 @@ class Hierarchy extends RDB
         $result = $this->getMapper()->count($this->entityFactory->create($this->entityName), $selectParams);
 
         return $result;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('serviceFactory');
     }
 }
