@@ -772,7 +772,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
                 if (is_file($path)) {
                     $results[] = $path;
                 } elseif (is_dir($path)) {
-                    if (!in_array($value, [self::CHUNKS_DIR, self::TMP_DIR])) {
+                    if (!in_array($value, [self::CHUNKS_DIR, self::TMP_DIR, self::TRASH_DIR])) {
                         $this->getStorageFiles($path, $results);
                     }
                 }
@@ -792,7 +792,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
 
                 $path = $dir . DIRECTORY_SEPARATOR . $value;
 
-                if (in_array($value, [self::CHUNKS_DIR, self::TMP_DIR])) {
+                if (in_array($value, [self::CHUNKS_DIR, self::TMP_DIR, self::TRASH_DIR])) {
                     continue;
                 }
 
