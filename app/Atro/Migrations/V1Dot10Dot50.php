@@ -73,7 +73,32 @@ class V1Dot10Dot50 extends Base
         }
 
         $this->getConfig()->set('sendOutNotifications', !$this->getConfig()->get('disableEmailDelivery'));
+
         self::createNotificationDefaultNotificationProfile($this->getConnection(), $this->getConfig());
+
+        try {
+            $preferences = $this->getConnection()->createQueryBuilder()
+                ->select('id', 'data')
+                ->from('preferences')
+                ->fetchAllAssociative();
+
+            foreach ($preferences as $preference) {
+                $data = @json_decode($preference['data'], true);
+                if (empty($data)) {
+                    continue;
+                }
+                $data['receiveNotifications'] = true;
+                $data['notificationProfileId'] = "default";
+
+                $this->getConnection()->createQueryBuilder()
+                    ->update('preferences')
+                    ->set('data', ':data')
+                    ->setParameter('data', json_encode($data))
+                    ->executeStatement();
+            }
+        }catch (\Throwable $e){
+
+        }
     }
 
     public function down(): void
@@ -96,7 +121,11 @@ class V1Dot10Dot50 extends Base
     public static function createNotificationDefaultNotificationProfile(Connection $connection, Config $config)
     {
         $defaultProfileId = 'defaultProfileId';
+        $defaultProfileName = 'Default Notification Profile';
+
         $config->set('defaultNotificationProfileId', $defaultProfileId);
+        $config->set('defaultNotificationProfileName', $defaultProfileName);
+        $config->save();
 
         try {
             $connection->createQueryBuilder()
@@ -107,7 +136,7 @@ class V1Dot10Dot50 extends Base
                     'is_active' => ':is_active',
                 ])
                 ->setParameter('id', 'defaultProfileId')
-                ->setParameter('name', 'Default')
+                ->setParameter('name', $defaultProfileName)
                 ->setParameter('is_active', true, ParameterType::BOOLEAN)
                 ->executeStatement();
         } catch (\Throwable $e) {

@@ -14,7 +14,8 @@
     },
     "notificationProfile": {
       "type": "link",
-      "required": true
+      "required": true,
+      "view": "views/notification-rule/fields/notification-profile"
     },
     "occurrence": {
       "type": "enum",

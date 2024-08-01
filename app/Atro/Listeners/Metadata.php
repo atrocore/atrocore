@@ -1176,11 +1176,21 @@ class Metadata extends AbstractListener
 
     protected function prepareNotificationTemplateMultilangFields(array &$data): void
     {
-        foreach ($this->getConfig()->get('locales', []) as $locale) {
-            if ($locale['language'] === $this->getConfig()->get('mainLanguage')) {
+        $languages = array_map(
+            function($locale){
+                return !empty($locale['language']) ? $locale['language'] : $this->getConfig()->get('mainLanguage');
+                },
+            $this->getConfig()->get('locales', [])
+        );
+
+        // avoid duplicated languages
+        $languages = array_unique($languages);
+
+        foreach ($languages as $language) {
+            if ($language === $this->getConfig()->get('mainLanguage')) {
                 continue;
             }
-            $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
+            $preparedLocale = ucfirst(Util::toCamelCase(strtolower($language)));
 
             foreach (['subject', 'body'] as $field) {
                 // prepare multi-lang field
