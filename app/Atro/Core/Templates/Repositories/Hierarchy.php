@@ -56,10 +56,6 @@ class Hierarchy extends RDB
     {
         parent::beforeRestore($id);
 
-        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
-            throw new BadRequest('Restore prohibited for entity with possible multiple parents.');
-        }
-
         $res = $this->getConnection()->createQueryBuilder()
             ->select('h.parent_id, t.deleted')
             ->from($this->hierarchyTableName, 'h')
@@ -69,6 +65,9 @@ class Hierarchy extends RDB
             ->fetchAssociative();
 
         if (!empty($res['parent_id']) && !empty($res['deleted'])) {
+            if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+                throw new BadRequest('Restore prohibited for entity with possible multiple parents.');
+            }
             $this->getInjection('serviceFactory')->create($this->entityType)->restoreEntity($res['parent_id']);
         }
     }
