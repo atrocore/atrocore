@@ -29,7 +29,7 @@
     <a href="javascript:" class="close">
         <span aria-hidden="true">×</span>
     </a>
-    <div class="body-container" style="display: flex; flex-direction: column; align-items: center">
+    <div class="body-container" style="width:100%; overflow:auto">
             <h3>Preview</h3>
             <iframe
                     style="width:{{size.width}};height:{{size.height}}; 0.5px solid rgba(0,0,0,0.2) ">
