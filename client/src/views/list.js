@@ -189,32 +189,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         actionDynamicEntityAction(data) {
-            let listView = this.getView('list'),
-                params = {actionId: data.id};
+            let listView = this.getView('list')
 
             if (listView) {
-                if (listView.allResultIsChecked) {
-                    params.where = listView.collection.where;
-                } else {
-                    params.where = [{
-                        type: 'in',
-                        attribute: 'id',
-                        value: (listView.getSelected() || []).map(item => {return item.id})
-                    }]
-                }
-
-                this.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest('Action/action/executeNow', params).success(response => {
-                    if (response.inBackground) {
-                        this.notify(this.translate('jobAdded', 'messages'), 'success');
-                    } else {
-                        if (response.success) {
-                            this.notify(response.message, 'success');
-                        } else {
-                            this.notify(response.message, 'error');
-                        }
-                    }
-                });
+                listView.massActionDynamicMassAction(data)
             }
         },
 
