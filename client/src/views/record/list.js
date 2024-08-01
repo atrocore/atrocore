@@ -1095,6 +1095,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             };
 
+            if (this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
+                this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
+            }
+
             this.fullTableScroll();
             $(window).on("resize.fixed-scrollbar tree-width-changed tree-width-unset", function () {
                 this.fullTableScroll();
@@ -1487,7 +1491,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (list.length) {
                 let fixedTableHeader = list.find('.fixed-header-table');
                 let fullTable = list.find('.full-table');
-                let scroll = this.getParentView().$el.siblings('.panel-scroll');
+                let scroll = this.$el.find('.list > .panel-scroll');
 
                 if (fullTable.length) {
                     if (scroll.length) {
