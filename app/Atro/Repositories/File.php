@@ -23,6 +23,7 @@ use Atro\Core\FileValidator;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\FilePathBuilder;
 use Espo\ORM\Entity;
 
@@ -159,6 +160,23 @@ class File extends Base
         }
 
         return $res;
+    }
+
+    protected function beforeRestore($id)
+    {
+        parent::beforeRestore($id);
+
+        $rec = $this->getConnection()->createQueryBuilder()
+            ->select('f.id, f1.id as folder_id, f1.deleted as folder_deleted')
+            ->from('file', 'f')
+            ->leftJoin('f', 'folder', 'f1', 'f.folder_id=f1.id')
+            ->where('f.id=:id')
+            ->setParameter('id', $id)
+            ->fetchAssociative();
+
+        if (!empty($rec['folder_id']) && !empty($rec['folder_deleted'])) {
+            throw new BadRequest("File can't be restored for deleted Folder.");
+        }
     }
 
     protected function afterRestore($entity)
