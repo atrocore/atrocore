@@ -103,7 +103,7 @@ class V1Dot10Dot52 extends Base
             }
         }
 
-        $this->updateComposer('atrocore/core', '^1.10.51');
+        $this->updateComposer('atrocore/core', '^1.10.52');
     }
 
     public function down(): void
