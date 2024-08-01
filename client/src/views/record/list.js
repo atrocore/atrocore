@@ -552,7 +552,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         massActionDynamicMassAction: function (data) {
             const defs = this.getActionDefs(data.id)
-            debugger
+
             if (defs && defs.type) {
                 const method = 'massActionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
                 if (typeof this[method] == 'function') {
