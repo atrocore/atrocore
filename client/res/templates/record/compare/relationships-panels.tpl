@@ -36,8 +36,5 @@
         </div>
     </div>
     </div>
-<div class="panel-scroll hidden">
-    <div></div>
-</div>
  </div>
 {{/each}}
