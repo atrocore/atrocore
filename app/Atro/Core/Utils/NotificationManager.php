@@ -344,6 +344,13 @@ class NotificationManager
         }
 
         foreach ($userList as $user) {
+
+            $preference = $this->getEntityManager()->getEntity('Preferences', $user->get('id'));
+
+            if (!empty($preference) && !$preference->get('receiveNotifications')) {
+                continue;
+            }
+
             $data = [
                 "siteUrl" => $this->getConfig()->get('siteUrl'),
                 "occurrence" => $occurrence,
@@ -590,7 +597,7 @@ class NotificationManager
 
     protected function getTeamUserIds(Entity $entity, ?array $teamsIds = null): array
     {
-        if($teamsIds === null) {
+        if ($teamsIds === null) {
             $entity->loadLinkMultipleField('teams');
             $teamsIds = $entity->get('teamsIds');
         }

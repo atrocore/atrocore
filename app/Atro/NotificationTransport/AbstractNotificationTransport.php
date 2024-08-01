@@ -39,7 +39,7 @@ abstract class AbstractNotificationTransport
         return Language::detectLanguage($this->getConfig(), $preferences);
     }
 
-    protected function addEntitiesTypeAndName(array &$params, string $language): void
+    protected function addEntitiesAdditionalData(array &$params, string $language): void
     {
         $languageManager = $this->getLanguage();
         $initialLanguage = $languageManager->getLanguage();
@@ -48,19 +48,12 @@ abstract class AbstractNotificationTransport
             if ($param instanceof Entity) {
                 $params[$key . 'Type'] = $param->getEntityType();
                 $params[$key . 'Name'] = $languageManager->translate($param->getEntityType(), $language, 'scopeNames');
+                $params[$key . 'Url'] = $this->getConfig()->get('siteUrl') . '/#' . $param->getEntityType() . '/view/' . $param->get('id');
             }
         }
         $languageManager->setLanguage($initialLanguage);
     }
 
-    protected function addEntitiesViewUrl(array &$params): void
-    {
-        foreach ($params as $key => $param) {
-            if ($param instanceof Entity) {
-                $params[$key . 'Url'] = $this->getConfig()->get('siteUrl') . '/#' . $param->getEntityType() . '/view/' . $param->get('id');
-            }
-        }
-    }
 
     protected function getTwig(): Twig
     {

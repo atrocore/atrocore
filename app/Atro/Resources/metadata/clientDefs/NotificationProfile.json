@@ -1,3 +1,9 @@
 {
-  "controller": "controllers/record"
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyActive"
+  ],
+  "hiddenBoolFilterList": [
+    "onlyActive"
+  ]
 }
