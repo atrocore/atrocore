@@ -52,6 +52,12 @@
           "name": "description",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "AddressAccount__default"
+        },
+        false
       ]
     ],
     "style": "default",

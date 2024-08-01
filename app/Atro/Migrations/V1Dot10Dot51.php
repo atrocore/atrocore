@@ -93,6 +93,16 @@ class V1Dot10Dot51 extends Base
             }
         }
 
+        $table = $toSchema->getTable('address_account');
+        $field = $this->getConnection()->quoteIdentifier('default');
+        if (!$table->hasColumn($field)) {
+            $table->addColumn($field, 'boolean', ['default' => false]);
+
+            foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+                $this->exec($sql);
+            }
+        }
+
         $this->updateComposer('atrocore/core', '^1.10.51');
     }
 

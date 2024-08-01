@@ -24,7 +24,7 @@ class Address extends Base
     public function beforeSave(Entity $entity, array $options = array())
     {
         // set hash
-        $fields = ["phone", "email", "type", "street", "zip", "box", "city", "country", "country_code"];
+        $fields = ["phone", "email", "type", "street", "zip", "box", "city", "countryId"];
         $text = join("\n", array_map(function ($field) use ($entity) {
             return empty($entity->get($field)) ? "" : $entity->get($field);
         }, $fields));
