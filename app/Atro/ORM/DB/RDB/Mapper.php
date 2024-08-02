@@ -83,7 +83,7 @@ class Mapper implements MapperInterface
         return $result;
     }
 
-    public function createSelectQueryBuilder(IEntity $entity, array $params): QueryBuilder
+    public function createSelectQueryBuilder(IEntity $entity, array $params, bool $innerSql = false): QueryBuilder
     {
         try {
             $queryData = $this->getQueryConverter()->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
@@ -145,7 +145,7 @@ class Mapper implements MapperInterface
         }
 
         // select parent_id if single parent hierarchy
-        if ($this->isSingleParentHierarchy($entity) && empty($params['aggregation'])) {
+        if ($this->isSingleParentHierarchy($entity) && empty($params['aggregation']) && !$innerSql) {
             $tableName = $this->getQueryConverter()->toDb($entity->getEntityType());
             $ta = $this->getQueryConverter()::TABLE_ALIAS;
             $relAlias1 = 'hierarchy_alias_' . Util::generateId();
