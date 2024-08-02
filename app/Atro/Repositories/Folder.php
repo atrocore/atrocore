@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
+use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Entities\Storage as StorageEntity;
 use Atro\Entities\Folder as FolderEntity;
@@ -155,13 +156,18 @@ class Folder extends Hierarchy
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
+        parent::afterRemove($entity, $options);
+
         $this->removeItem($entity);
 
-        if (!$this->getStorage($entity)->deleteFolder($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+        $storage = $this->getStorage($entity);
+        if ($storage instanceof HasBasketInterface) {
+            if (!$storage->deleteFolder($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+            }
+        } else {
+            $this->deleteFromDb($entity->get('id'));
         }
-
-        parent::afterRemove($entity, $options);
     }
 
     protected function afterRestore($entity)

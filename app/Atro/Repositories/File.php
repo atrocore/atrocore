@@ -144,20 +144,8 @@ class File extends Base
             $inTransaction = true;
         }
 
-        $storage = $this->getStorage($entity);
-
         try {
-            if ($storage instanceof HasBasketInterface) {
-                if (!$storage->deleteFile($entity)) {
-                    throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
-                }
-                $res = parent::deleteEntity($entity);
-            } else {
-                $res = $this->deleteFromDb($entity->get('id'));
-            }
-            if ($res) {
-                $this->removeItem($entity);
-            }
+            $res = parent::deleteEntity($entity);
         } catch (\Throwable $e) {
             if ($inTransaction) {
                 $this->getPDO()->rollBack();
@@ -170,6 +158,22 @@ class File extends Base
         }
 
         return $res;
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->removeItem($entity);
+
+        $storage = $this->getStorage($entity);
+        if ($storage instanceof HasBasketInterface) {
+            if (!$storage->deleteFile($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
+            }
+        } else {
+            $this->deleteFromDb($entity->get('id'));
+        }
     }
 
     protected function beforeRestore($id)
