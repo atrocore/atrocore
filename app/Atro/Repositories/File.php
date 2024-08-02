@@ -181,7 +181,7 @@ class File extends Base
         parent::beforeRestore($id);
 
         $rec = $this->getConnection()->createQueryBuilder()
-            ->select('f.id, f.storage_id, st.folder_id as storage_folder_id, f1.id as folder_id, f1.deleted as folder_deleted')
+            ->select('f.id, f.storage_id, st.folder_id as storage_folder_id, f.folder_id as file_folder_id, f1.id as folder_id, f1.deleted as folder_deleted')
             ->from('file', 'f')
             ->leftJoin('f', 'folder', 'f1', 'f.folder_id=f1.id')
             ->leftJoin('f', 'storage', 'st', 'f.storage_id=st.id')
@@ -194,20 +194,28 @@ class File extends Base
                 // restore folder
                 $this->getInjection('container')->get('serviceFactory')->create('Folder')->restoreEntity($rec['folder_id']);
             } catch (\Throwable $e) {
-                // change file folder to storage root folder
-                $qb = $this->getConnection()->createQueryBuilder()
-                    ->update('file')
-                    ->set('folder_id', ':storageFolder')
-                    ->where('id=:id')
-                    ->setParameter('id', $id);
-                if (empty($rec['storage_folder_id'])) {
-                    $qb->setParameter('storageFolder', null, ParameterType::NULL);
-                } else {
-                    $qb->setParameter('storageFolder', $rec['storage_folder_id']);
-                }
-                $qb->executeQuery();
+                $this->changeFileFolderToStorageRoot($id);
             }
         }
+
+        if (empty($rec['folder_id']) && !empty($rec['file_folder_id'])) {
+            $this->changeFileFolderToStorageRoot($id);
+        }
+    }
+
+    protected function changeFileFolderToStorageRoot(string $fileId): void
+    {
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->update('file')
+            ->set('folder_id', ':storageFolder')
+            ->where('id=:id')
+            ->setParameter('id', $fileId);
+        if (empty($rec['storage_folder_id'])) {
+            $qb->setParameter('storageFolder', null, ParameterType::NULL);
+        } else {
+            $qb->setParameter('storageFolder', $rec['storage_folder_id']);
+        }
+        $qb->executeQuery();
     }
 
     protected function afterRestore($entity)
