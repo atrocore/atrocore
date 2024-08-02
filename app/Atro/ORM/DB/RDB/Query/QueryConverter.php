@@ -980,11 +980,18 @@ class QueryConverter
                             $emptyValue = true;
                         }
                         if (!empty($value)) {
-                            $parts = explode('.', $field);
-                            $param = $parts[1] ?? $parts[0];
-                            $param = "{$param}_w2_" . Util::generateId();
-                            $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param})";
-                            $this->parameters[$param] = $value;
+                            if (!isset($value['innerSql'])) {
+                                $parts = explode('.', $field);
+                                $param = $parts[1] ?? $parts[0];
+                                $param = "{$param}_w2_" . Util::generateId();
+                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param})";
+                                $this->parameters[$param] = $value;
+                            } else {
+                                $whereParts[] = $leftPart . " {$oppose}IN " . "({$value['innerSql']['sql']})";
+                                foreach ($value['innerSql']['parameters'] as $p => $v) {
+                                    $this->parameters[$p] = $v;
+                                }
+                            }
                         } else {
                             $whereParts[] = ':emptyValue';
                             $this->parameters['emptyValue'] = $emptyValue;
