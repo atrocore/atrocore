@@ -32,7 +32,7 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Psr\Http\Message\StreamInterface;
 
-class LocalStorage implements FileStorageInterface, LocalFileStorageInterface
+class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, HasBasketInterface
 {
     public const CHUNKS_DIR = '.chunks';
     public const TMP_DIR = '.tmp';

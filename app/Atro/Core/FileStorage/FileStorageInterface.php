@@ -46,17 +46,9 @@ interface FileStorageInterface
 
     public function reupload(File $file): bool;
 
-    public function deleteFile(File $file): bool;
-
     public function deleteFilePermanently(File $file): bool;
 
-    public function restoreFile(File $file): bool;
-
-    public function deleteFolder(Folder $folder): bool;
-
     public function deleteFolderPermanently(Folder $folder): bool;
-
-    public function restoreFolder(Folder $folder): bool;
 
     public function getStream(File $file): StreamInterface;
 
