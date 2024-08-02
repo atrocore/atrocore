@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
+use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\FileValidator;
@@ -145,9 +146,6 @@ class File extends Base
 
         try {
             $res = parent::deleteEntity($entity);
-            if ($res) {
-                $this->removeItem($entity);
-            }
         } catch (\Throwable $e) {
             if ($inTransaction) {
                 $this->getPDO()->rollBack();
@@ -160,6 +158,22 @@ class File extends Base
         }
 
         return $res;
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->removeItem($entity);
+
+        $storage = $this->getStorage($entity);
+        if ($storage instanceof HasBasketInterface) {
+            if (!$storage->deleteFile($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
+            }
+        } else {
+            $this->deleteFromDb($entity->get('id'));
+        }
     }
 
     protected function beforeRestore($id)
@@ -259,21 +273,6 @@ class File extends Base
         $ext = array_pop($parts);
 
         return $fetchedExt !== $ext;
-    }
-
-    protected function beforeRemove(Entity $entity, array $options = [])
-    {
-        parent::beforeRemove($entity, $options);
-
-        $this->deleteFile($entity);
-    }
-
-    public function deleteFile(FileEntity $entity): void
-    {
-        // delete origin file
-        if (!$this->getStorage($entity)->deleteFile($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
-        }
     }
 
     public function getContents(FileEntity $file): string
