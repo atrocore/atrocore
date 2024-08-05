@@ -47,7 +47,9 @@
             <tr>
                 {{#if checkboxes}}
                 <th width="40" data-name="r-checkbox">
-                    <span class="select-all-container"><input type="checkbox" class="select-all fixed"></span>
+                    {{#if allowSelectAllResult}}
+                        <span class="select-all-container"><input type="checkbox" class="select-all fixed"></span>
+                    {{/if}}
                 </th>
                 {{/if}}
                 {{#each headerDefs}}
@@ -88,7 +90,9 @@
             <tr>
                 {{#if checkboxes}}
                 <th width="40" data-name="r-checkbox">
-                    <span class="select-all-container"><input type="checkbox" class="select-all"></span>
+                    {{#if allowSelectAllResult}}
+                        <span class="select-all-container"><input type="checkbox" class="select-all"></span>
+                    {{/if}}
                 </th>
                 {{/if}}
                 {{#each headerDefs}}
