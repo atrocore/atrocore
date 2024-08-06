@@ -148,9 +148,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList);
             }
-            if (this.options.disabledOptionList) {
-                this.disableOptions(this.options.disabledOptionList)
-            }
 
             this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
 
@@ -172,6 +169,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                         this.model.set({[this.name]: ''});
                     }
                 }
+            }
+
+            if (this.options.disabledOptionList) {
+                this.disableOptions(this.options.disabledOptionList)
             }
         },
 
