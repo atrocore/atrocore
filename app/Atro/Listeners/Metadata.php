@@ -97,7 +97,7 @@ class Metadata extends AbstractListener
 
     public function prepareEmailTemplateMultilangFields(array &$data): void
     {
-        foreach ($this->getConfig()->get('locales') as $locale) {
+        foreach ($this->getConfig()->get('locales', []) as $locale) {
             if ($locale['language'] === 'en_US') {
                 continue;
             }
