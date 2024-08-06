@@ -69,7 +69,7 @@ class Cron extends AbstractConsole
                 return;
             }
 
-            exec("$php index.php daemon composer $id >/dev/null 2>&1 &");
+//            exec("$php index.php daemon composer $id >/dev/null 2>&1 &");
         }
 
         // exit if system is updating now
@@ -89,12 +89,12 @@ class Cron extends AbstractConsole
 
         // open daemon notification
         if (empty(strpos($processes, "index.php daemon notification $id"))) {
-            exec("$php index.php daemon notification $id >/dev/null 2>&1 &");
+//            exec("$php index.php daemon notification $id >/dev/null 2>&1 &");
         }
 
         // open daemon for pseudo transaction manager
         if (empty(strpos($processes, "index.php daemon pt $id"))) {
-            exec("$php index.php daemon pt $id >/dev/null 2>&1 &");
+//            exec("$php index.php daemon pt $id >/dev/null 2>&1 &");
         }
 
         // check auth tokens

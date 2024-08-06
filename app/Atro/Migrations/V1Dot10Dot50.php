@@ -96,7 +96,7 @@ class V1Dot10Dot50 extends Base
                     ->setParameter('data', json_encode($data))
                     ->executeStatement();
             }
-        }catch (\Throwable $e){
+        } catch (\Throwable $e) {
 
         }
     }
@@ -118,60 +118,38 @@ class V1Dot10Dot50 extends Base
         }
     }
 
-    public static function createNotificationDefaultNotificationProfile(Connection $connection, Config $config)
+    public static function getDefaultRules()
     {
         $defaultProfileId = 'defaultProfileId';
-        $defaultProfileName = 'Default Notification Profile';
-
-        $config->set('defaultNotificationProfileId', $defaultProfileId);
-        $config->set('defaultNotificationProfileName', $defaultProfileName);
-        $config->save();
-
-        try {
-            $connection->createQueryBuilder()
-                ->insert('notification_profile')
-                ->values([
-                    'id' => ':id',
-                    'name' => ':name',
-                    'is_active' => ':is_active',
-                ])
-                ->setParameter('id', 'defaultProfileId')
-                ->setParameter('name', $defaultProfileName)
-                ->setParameter('is_active', true, ParameterType::BOOLEAN)
-                ->executeStatement();
-        } catch (\Throwable $e) {
-
-        }
-
-        $rules = [
+        return [
             [
-                "id" => Util::generateId(),
-                "name" => "Entity Update",
-                "entity" => '',
-                "occurrence" => NotificationOccurrence::UPDATE,
+                "id"                      => Util::generateId(),
+                "name"                    => "Entity Update",
+                "entity"                  => '',
+                "occurrence"              => NotificationOccurrence::UPDATE,
                 "notification_profile_id" => $defaultProfileId,
-                "is_active" => true,
-                "ignore_self_action" => true,
-                "as_owner" => true,
-                "as_follower" => true,
-                "as_assignee" => true,
-                "as_team_member" => true,
+                "is_active"               => true,
+                "ignore_self_action"      => true,
+                "as_owner"                => true,
+                "as_follower"             => true,
+                "as_assignee"             => true,
+                "as_team_member"          => true,
                 "as_notification_profile" => false,
-                "data" => [
+                "data"                    => [
                     "field" => [
-                        "systemActive" => true,
-                        "emailActive" => true,
+                        "systemActive"     => true,
+                        "emailActive"      => true,
                         "systemTemplateId" => "systemUpdateEntity",
-                        "emailTemplateId" => "emailUpdateEntity"
+                        "emailTemplateId"  => "emailUpdateEntity"
                     ],
                 ],
-                "templates" => [
+                "templates"               => [
                     "system" => [
-                        "id" => "systemUpdateEntity",
+                        "id"   => "systemUpdateEntity",
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
-                                "body" => '<p>{{actionUser.name}} made update  on {{entityName}} {{entity.name}}.</p>
+                                "body"     => '<p>{{actionUser.name}} made update  on {{entityName}} {{entity.name}}.</p>
 <p><a href="{{entityUrl}}">View</a></p>',
                                 "bodyDeDe" => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen {{entity.name}}.</p>
 
@@ -182,20 +160,20 @@ class V1Dot10Dot50 extends Base
                             ]
                         ]
                     ],
-                    "email" => [
-                        "id" => "emailUpdateEntity",
+                    "email"  => [
+                        "id"   => "emailUpdateEntity",
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
-                                "subject" => "Update: [{{ entityName }}] {{entity.name}}",
-                                "subjectDeDe" => "Update: [{{ entityName }}] {{entity.name}}",
-                                "subjectUkUa" => "Оновлення: [{{ entityName }}] {{entity.name}}",
-                                "body" => '<p>{{actionUser.name}} made update  on {{entityName}} {{entity.name}}.</p>
+                                "subject"     => "Update: [{{ entityName }}] {{entity.name | raw}}",
+                                "subjectDeDe" => "Update: [{{ entityName }}] {{entity.name | raw}}",
+                                "subjectUkUa" => "Оновлення: [{{ entityName }}] {{entity.name | raw }}",
+                                "body"        => '<p>{{actionUser.name}} made update on {{entityName}} {{entity.name}}.</p>
 <p><a href="{{entityUrl}}">View</a></p>',
-                                "bodyDeDe" => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen {{entity.name}}.</p>
+                                "bodyDeDe"    => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen {{entity.name}}.</p>
 
 <p><a href="{{entityUrl}}">Siehe</a></p>',
-                                "bodyUkUa" => '<p>{{actionUser.name}} зробив оновлення для {{entityName}} {{entity.name}}.</p>
+                                "bodyUkUa"    => '<p>{{actionUser.name}} зробив оновлення для {{entityName}} {{entity.name}}.</p>
 
 <p><a href="{{entityUrl}}">Вигляд</a></p>'
                             ]
@@ -204,55 +182,55 @@ class V1Dot10Dot50 extends Base
                 ]
             ],
             [
-                "id" => Util::generateId(),
-                "name" => "Note Creation Without parent",
-                "entity" => 'Note',
-                "occurrence" => NotificationOccurrence::CREATION,
+                "id"                      => Util::generateId(),
+                "name"                    => "Note Creation Without parent",
+                "entity"                  => 'Note',
+                "occurrence"              => NotificationOccurrence::CREATION,
                 "notification_profile_id" => $defaultProfileId,
-                "is_active" => true,
-                "ignore_self_action" => true,
-                "as_owner" => true,
-                "as_follower" => true,
-                "as_assignee" => true,
-                "as_team_member" => true,
+                "is_active"               => true,
+                "ignore_self_action"      => true,
+                "as_owner"                => true,
+                "as_follower"             => true,
+                "as_assignee"             => true,
+                "as_team_member"          => true,
                 "as_notification_profile" => false,
-                "data" => [
+                "data"                    => [
                     "field" => [
-                        "systemActive" => true,
-                        "emailActive" => true,
+                        "systemActive"     => true,
+                        "emailActive"      => true,
                         "systemTemplateId" => "systemNotePost",
-                        "emailTemplateId" => "emailNotePost"
+                        "emailTemplateId"  => "emailNotePost"
                     ],
                 ],
             ],
             [
-                "id" => Util::generateId(),
-                "name" => "Note Creation in Entity",
-                "entity" => '',
-                "occurrence" => NotificationOccurrence::NOTE_CREATED,
+                "id"                      => Util::generateId(),
+                "name"                    => "Note Creation in Entity",
+                "entity"                  => '',
+                "occurrence"              => NotificationOccurrence::NOTE_CREATED,
                 "notification_profile_id" => $defaultProfileId,
-                "is_active" => true,
-                "ignore_self_action" => true,
-                "as_owner" => true,
-                "as_follower" => true,
-                "as_assignee" => true,
-                "as_team_member" => false,
+                "is_active"               => true,
+                "ignore_self_action"      => true,
+                "as_owner"                => true,
+                "as_follower"             => true,
+                "as_assignee"             => true,
+                "as_team_member"          => false,
                 "as_notification_profile" => false,
-                "data" => [
+                "data"                    => [
                     "field" => [
-                        "systemActive" => true,
-                        "emailActive" => true,
+                        "systemActive"     => true,
+                        "emailActive"      => true,
                         "systemTemplateId" => "systemNotePost",
-                        "emailTemplateId" => "emailNotePost"
+                        "emailTemplateId"  => "emailNotePost"
                     ],
                 ],
-                "templates" => [
+                "templates"               => [
                     "system" => [
-                        'id' => 'systemNotePost',
+                        'id'   => 'systemNotePost',
                         'name' => 'Note Creation',
                         'data' => [
                             'field' => [
-                                "body" => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
+                                "body"     => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
 <p>{{entity.data.post}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
@@ -276,30 +254,30 @@ class V1Dot10Dot50 extends Base
                             ]
                         ]
                     ],
-                    "email" => [
-                        'id' => 'emailNotePost',
+                    "email"  => [
+                        'id'   => 'emailNotePost',
                         "name" => "Note creation",
                         "data" => [
                             "field" => [
-                                "subject" => 'Post: [{{ entityName }}] {{entity.name}}',
-                                "subjectDeDe" => 'Post: [{{ entityName }}] {{entity.name}}',
-                                "subjectUkUa" => 'Post: [{{ entityName }}] {{entity.name}}',
-                                "body" => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
-<p>{{entity.data.post}}</p>
+                                "subject"     => 'Post: [{{ entityName }}] {{entity.name | raw}}',
+                                "subjectDeDe" => 'Post: [{{ entityName }}] {{entity.name | raw}}',
+                                "subjectUkUa" => 'Post: [{{ entityName }}] {{entity.name | raw}}',
+                                "body"        => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
+<p>{{entity.data.post | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyDeDe" => '<p>{{actionUser.name}} auf{% if parent %}  {{parentName}} {{parent.name}} gepostet. {% endif %}</p>
-<p>{{entity.data.post}}</p>
+                                "bodyDeDe"    => '<p>{{actionUser.name}} auf{% if parent %}  {{parentName}} {{parent.name}} gepostet. {% endif %}</p>
+<p>{{entity.data.post  | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyUkUa" => '<p>{{actionUser.name}} опублікував {% if parent %} на {{parentName}} {{parent.name}}. {% endif %}</p> <p>
-<p>{{entity.data.post}}</p>
+                                "bodyUkUa"    => '<p>{{actionUser.name}} опублікував {% if parent %} на {{parentName}} {{parent.name}}. {% endif %}</p> <p>
+<p>{{entity.data.post | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Вигляд</a></p>
 {% else %}
@@ -311,33 +289,33 @@ class V1Dot10Dot50 extends Base
                 ]
             ],
             [
-                "id" => Util::generateId(),
-                "name" => "Mention",
-                "entity" => '',
-                "occurrence" => NotificationOccurrence::MENTION,
+                "id"                      => Util::generateId(),
+                "name"                    => "Mention",
+                "entity"                  => '',
+                "occurrence"              => NotificationOccurrence::MENTION,
                 "notification_profile_id" => $defaultProfileId,
-                "is_active" => true,
-                "ignore_self_action" => true,
-                "as_owner" => false,
-                "as_follower" => false,
-                "as_assignee" => false,
-                "as_team_member" => false,
+                "is_active"               => true,
+                "ignore_self_action"      => true,
+                "as_owner"                => false,
+                "as_follower"             => false,
+                "as_assignee"             => false,
+                "as_team_member"          => false,
                 "as_notification_profile" => false,
-                "data" => [
+                "data"                    => [
                     "field" => [
-                        "systemActive" => true,
-                        "emailActive" => true,
+                        "systemActive"     => true,
+                        "emailActive"      => true,
                         "systemTemplateId" => "systemMention",
-                        "emailTemplateId" => "emailMention"
+                        "emailTemplateId"  => "emailMention"
                     ]
                 ],
-                "templates" => [
+                "templates"               => [
                     "system" => [
-                        "id" => "systemMention",
+                        "id"   => "systemMention",
                         "name" => 'Mention',
                         "data" => [
                             "field" => [
-                                "body" => '<p>You were mentioned in post by {{actionUser.name}}.</p>
+                                "body"     => '<p>You were mentioned in post by {{actionUser.name}}.</p>
 {% if parent %}
 <p>Related to: {{parentName}}</p>
 {% endif  %}
@@ -369,39 +347,39 @@ class V1Dot10Dot50 extends Base
                             ]
                         ]
                     ],
-                    "email" => [
-                        "id" => "emailMention",
+                    "email"  => [
+                        "id"   => "emailMention",
                         "name" => "Mention",
                         "data" => [
                             "field" => [
-                                "subject" => "You were mentioned",
+                                "subject"     => "You were mentioned",
                                 "subjectDeDe" => "Sie wurden erwähnt",
                                 "subjectUkUa" => "Тебе згадували",
-                                "body" => '<p>You were mentioned in post by {{actionUser.name}}.</p>
+                                "body"        => '<p>You were mentioned in post by {{actionUser.name}}.</p>
 {% if parent %}
 <p>Related to: {{parentName}}</p>
 {% endif  %}
-<p>{{entity.data.post}}</p>
+<p>{{entity.data.post | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyDeDe" => '
+                                "bodyDeDe"    => '
  <p>Sie wurden in einem Beitrag von {{actionUser.name}} erwähnt.</p>
 {% if parent %}
 <p>Verwandt mit:  {{parentName}}</p>
 {% endif  %}
-<p>{{entity.data.post}}</p>
+<p>{{entity.data.post | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Siehe</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">Siehe</a></p>
 {% endif %}',
-                                "bodyUkUa" => '<p>Вас було згадано у дописі користувача {{actionUser.name}}.</p>{% if parent %}
+                                "bodyUkUa"    => '<p>Вас було згадано у дописі користувача {{actionUser.name}}.</p>{% if parent %}
 <p>Пов\'язано з:  {{parentName}}</p>
 {% endif  %}
-<p>{{entity.data.post}}</p>
+<p>{{entity.data.post | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Вигляд</a></p>
 {% else %}
@@ -413,34 +391,34 @@ class V1Dot10Dot50 extends Base
                 ]
             ],
             [
-                "id" => Util::generateId(),
-                "name" => "Assignment/Ownership",
-                "entity" => '',
-                "occurrence" => NotificationOccurrence::OWNERSHIP_ASSIGNMENT,
+                "id"                      => Util::generateId(),
+                "name"                    => "Assignment/Ownership",
+                "entity"                  => '',
+                "occurrence"              => NotificationOccurrence::OWNERSHIP_ASSIGNMENT,
                 "notification_profile_id" => $defaultProfileId,
-                "is_active" => true,
-                "ignore_self_action" => true,
-                "as_owner" => true,
-                "as_follower" => false,
-                "as_assignee" => true,
-                "as_team_member" => false,
+                "is_active"               => true,
+                "ignore_self_action"      => true,
+                "as_owner"                => true,
+                "as_follower"             => false,
+                "as_assignee"             => true,
+                "as_team_member"          => false,
                 "as_notification_profile" => false,
-                "data" => [
+                "data"                    => [
                     "field" => [
-                        "systemActive" => true,
-                        "emailActive" => true,
+                        "systemActive"     => true,
+                        "emailActive"      => true,
                         "systemTemplateId" => "systemOwnerAssign",
-                        "emailTemplateId" => "emailOwnerAssign"
+                        "emailTemplateId"  => "emailOwnerAssign"
                     ],
                 ],
-                "templates" => [
+                "templates"               => [
                     "system" => [
-                        "id" => 'systemOwnerAssign',
+                        "id"   => 'systemOwnerAssign',
                         "type" => "system",
                         "name" => "Assignment/Ownership",
                         "data" => [
                             "field" => [
-                                "body" => '{% if isAssignment %}
+                                "body"     => '{% if isAssignment %}
 <p>{{actionUser.name}} has assigned {{entityName}} to  {% if notifyUser.id == assignedUser.id %} you. {% else %}  {{assignedUser.name}}. {% endif %} </p>
 <p><strong>{{entity.name}}</strong></p>
 <p><a href="{{entityUrl}}">View</a></p>
@@ -474,28 +452,28 @@ class V1Dot10Dot50 extends Base
                             ]
                         ]
                     ],
-                    "email" => [
-                        "id" => 'emailOwnerAssign',
+                    "email"  => [
+                        "id"   => 'emailOwnerAssign',
                         "type" => "system",
                         "name" => "Assignment/Ownership",
                         "data" => [
                             "field" => [
-                                "subject" => '{% if isAssignment %}
-Assigned to {% if notifyUser.id == assignedUser.id %} you {% else %}  {{assignedUser.name}} {% endif %}: [{{entityType}}] {{entity.name}}
+                                "subject"     => '{% if isAssignment %}
+Assigned to {% if notifyUser.id == assignedUser.id %} you {% else %}  {{assignedUser.name | raw}} {% endif %}: [{{entityType}}] {{entity.name | raw}}
 {% else %}
-Marked as owner: [{{entityType}}] {{entity.name}}
+Marked as owner: [{{entityType}}] {{entity.name | raw}}
 {% endif %}',
                                 "subjectDeDe" => '{% if isAssignment  %}
-Ihnen {% if notifyUser.id == assignedUser.id %} zugewiesen. {% else %}  {{assignedUser.name}} {% endif %} : [{{entityType}}] {{entity.name}}
+Ihnen {% if notifyUser.id == assignedUser.id %} zugewiesen. {% else %}  {{assignedUser.name | raw}} {% endif %} : [{{entityType}}] {{entity.name | raw}}
 {% else %}
-Markiert als Eigentümer: [{{entityType}}] {{entity.name}}
+Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
 {% endif %}',
                                 "subjectUkUa" => '{% if isAssignment %}
-Призначено {% if notifyUser.id == assignedUser.id %} вам {% else %} {{assignedUser.name}} {% endif %}: [{{entityType}}] {{entity.name}}
+Призначено {% if notifyUser.id == assignedUser.id %} вам {% else %} {{assignedUser.name | raw}} {% endif %}: [{{entityType}}] {{entity.name | raw}}
 {% else %}
-Позначено як власник: [{{entityType}}] {{entity.name}}
+Позначено як власник: [{{entityType}}] {{entity.name | raw}}
 {% endif %}',
-                                "body" => '{% if isAssignment %}
+                                "body"        => '{% if isAssignment %}
 <p>{{actionUser.name}} has assigned {{entityName}} to  {% if notifyUser.id == assignedUser.id %} you. {% else %}  {{assignedUser.name}}. {% endif %} </p>
 <p><strong>{{entity.name}}</strong></p>
 <p><a href="{{entityUrl}}">View</a></p>
@@ -505,7 +483,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name}}
 <p><a href="{{entityUrl}}">View</a></p>
 {% endif %}
 ',
-                                "bodyDeDe" => '
+                                "bodyDeDe"    => '
 {% if isAssignment %}
 <p>{{actionUser.name}} hat Ihnen {{entityName}}   {% if notifyUser.id == assignedUser.id %} zugewiesen. {% else %}  {{assignedUser.name}}. {% endif %} </p>
 <p><strong>{{entity.name}}</strong></p>
@@ -515,7 +493,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name}}
 <p><a href="{{entityUrl}}">Siehe</a></p>
 {% endif %} 
 ',
-                                "bodyUkUa" => '
+                                "bodyUkUa"    => '
 {% if isAssignment %}
 <p>{{actionUser.name}} призначив {% if notifyUser.id == assignedUser.id %} вам {% else %} {{assignedUser.name}}. {% endif %} {{entityName}}.</p>
 <p><strong>{{entity.name}}</strong></p>
@@ -532,6 +510,34 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name}}
                 ]
             ]
         ];
+    }
+
+    public static function createNotificationDefaultNotificationProfile(Connection $connection, Config $config)
+    {
+        $defaultProfileId = 'defaultProfileId';
+        $defaultProfileName = 'Default Notification Profile';
+
+        $config->set('defaultNotificationProfileId', $defaultProfileId);
+        $config->set('defaultNotificationProfileName', $defaultProfileName);
+        $config->save();
+
+        try {
+            $connection->createQueryBuilder()
+                ->insert('notification_profile')
+                ->values([
+                    'id'        => ':id',
+                    'name'      => ':name',
+                    'is_active' => ':is_active',
+                ])
+                ->setParameter('id', 'defaultProfileId')
+                ->setParameter('name', $defaultProfileName)
+                ->setParameter('is_active', true, ParameterType::BOOLEAN)
+                ->executeStatement();
+        } catch (\Throwable $e) {
+
+        }
+
+        $rules = self::getDefaultRules();
 
 
         foreach ($rules as $rule) {
@@ -541,7 +547,7 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name}}
                         $connection->createQueryBuilder()
                             ->insert('notification_template')
                             ->values([
-                                'id' => ':id',
+                                'id'   => ':id',
                                 'name' => ':name',
                                 'data' => ':data',
                                 'type' => ':type'

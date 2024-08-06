@@ -144,7 +144,7 @@ class Daemon extends AbstractConsole
                     }
                 }
 
-                usleep(1000000 / 2);
+                usleep(1000000/2);
             }
 
             return;
