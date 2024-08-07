@@ -160,7 +160,7 @@ class Composer extends AbstractController
         throw new Exceptions\NotFound();
     }
 
-    public function actionReleaseNotes($params, $data, Request $request): array
+    public function actionReleaseNotes($params, \stdClass $data, Request $request): array
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Exceptions\Forbidden();
