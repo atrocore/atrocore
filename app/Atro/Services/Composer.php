@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\HasContainer;
 use Atro\Core\Exceptions;
 use Atro\Core\Exceptions\Error;
@@ -130,12 +131,12 @@ class Composer extends HasContainer
             // get only necessary content
             $html = explode('<div id="body-inner">', $output);
             if (empty($html[1])) {
-                throw new Exceptions\BadRequest('Invalid Content form server');
+                throw new BadRequest('Invalid Content form server');
             }
             $html = explode('</div>', $html[1])[0];
             return $html;
         } else {
-            throw new Exceptions\BadRequest("Invalid server response code: " . $httpCode);
+            throw new BadRequest("Invalid server response code: " . $httpCode);
         }
     }
 
