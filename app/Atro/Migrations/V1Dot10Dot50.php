@@ -260,9 +260,9 @@ class V1Dot10Dot50 extends Base
                         "name" => "Note creation",
                         "data" => [
                             "field" => [
-                                "subject"     => 'Post: [{{ entityName }}] {{entity.name | raw}}',
-                                "subjectDeDe" => 'Post: [{{ entityName }}] {{entity.name | raw}}',
-                                "subjectUkUa" => 'Post: [{{ entityName }}] {{entity.name | raw}}',
+                                "subject"     => 'Post: [{{ parentName }}] {{parent.name | raw}}',
+                                "subjectDeDe" => 'Post: [{{ parentName }}] {{parent.name | raw}}',
+                                "subjectUkUa" => 'Post: [{{ parentName }}] {{parent.name | raw}}',
                                 "body"        => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
 <p>{{entity.data.post | raw}}</p>
 {% if parent %}
