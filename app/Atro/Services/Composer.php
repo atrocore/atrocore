@@ -109,10 +109,14 @@ class Composer extends HasContainer
         return '-';
     }
 
-    public function getReleaseNotes($id): string
+    public function getReleaseNotes(string $id): string
     {
-        $id = explode('/', $this->getComposerName($id))[1];
-        $url = "https://help.atrocore.com/release-notes/$id";
+        $parts = explode('/', $this->getComposerName($id) ?? '');
+        if (empty($parts[1])) {
+            throw new BadRequest();
+        }
+
+        $url = "https://help.atrocore.com/release-notes/" . $parts[1];
 
         // fetch html
         $ch = curl_init($url);
@@ -128,13 +132,7 @@ class Composer extends HasContainer
         curl_close($ch);
 
         if ($httpCode == 200) {
-            // get only necessary content
-            $html = explode('<div id="body-inner">', $output);
-            if (empty($html[1])) {
-                throw new BadRequest('Invalid Content form server');
-            }
-            $html = explode('</div>', $html[1])[0];
-            return $html;
+            return $output;
         } else {
             throw new BadRequest("Invalid server response code: " . $httpCode);
         }
