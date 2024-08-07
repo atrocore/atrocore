@@ -13,49 +13,58 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
 
 class V1Dot10Dot55 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-08-06 15:00:00');
+        return new \DateTime('2024-08-07 15:00:00');
     }
 
     public function up(): void
     {
-        // Update Templates
-        foreach (V1Dot10Dot50::getDefaultRules() as $rule) {
-            if (!empty($template = $rule['templates']['email'])) {
-                try {
-                    $this->getConnection()->createQueryBuilder()
-                        ->update('notification_template')
-                        ->where('id = :id')
-                        ->set('name', ':name')
-                        ->set('data', ':data')
-                        ->setParameter('id', $template['id'])
-                        ->setParameter('name', $template['name'])
-                        ->setParameter('data', json_encode($template['data']))
-                        ->executeStatement();
+        try {
+            $preferences = $this->getConnection()->createQueryBuilder()
+                ->select('id', 'data')
+                ->from('preferences')
+                ->fetchAllAssociative();
 
-                } catch (\Exception $e) {
-
+            foreach ($preferences as $preference) {
+                $data = @json_decode($preference['data'], true);
+                if (empty($data)) {
+                    continue;
                 }
+                $data['id'] = $preference['id'];
+
+                $this->getConnection()->createQueryBuilder()
+                    ->update('preferences')
+                    ->set('data', ':data')
+                    ->where('id= :id')
+                    ->setParameter('data', json_encode($data))
+                    ->setParameter('id', $preference['id'])
+                    ->executeStatement();
+
             }
+        } catch (\Throwable $e) {
         }
 
-        $this->updateComposer('atrocore/core', '^1.10.53');
+        try {
+            $this->getConnection()->createQueryBuilder()
+                ->update('notification_rule')
+                ->set('as_team_member', ':false')
+                ->where('occurrence = :occurrence')
+                ->andWhere('entity = :entity')
+                ->setParameter('occurrence', 'updating')
+                ->setParameter('entity', '')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->executeStatement();
+        }catch (\Throwable $e){
+
+        }
     }
 
     public function down(): void
     {
     }
 
-    protected function exec(string $query): void
-    {
-        try {
-            $this->getPDO()->exec($query);
-        } catch (\Throwable $e) {
-        }
-    }
 }
