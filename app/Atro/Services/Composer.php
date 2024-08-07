@@ -131,11 +131,10 @@ class Composer extends HasContainer
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($httpCode == 200) {
-            return $output;
-        } else {
+        if ($httpCode != 200) {
             throw new BadRequest("Invalid server response code: " . $httpCode);
         }
+        return $output;
     }
 
     /**

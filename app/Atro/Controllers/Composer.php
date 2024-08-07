@@ -162,11 +162,11 @@ class Composer extends AbstractController
 
     public function actionReleaseNotes($params, $data, Request $request): array
     {
-        if (!$this->getUser()->isAdmin() || !property_exists($data, 'id') || empty($data->id)) {
+        if (!$this->getUser()->isAdmin()) {
             throw new Exceptions\Forbidden();
         }
 
-        if (!$request->isPost()) {
+        if (!$request->isPost() || !property_exists($data, 'id') || empty($data->id)) {
             throw new Exceptions\BadRequest();
         }
 
