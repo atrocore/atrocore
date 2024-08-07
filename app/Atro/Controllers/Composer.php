@@ -160,6 +160,26 @@ class Composer extends AbstractController
         throw new Exceptions\NotFound();
     }
 
+    public function actionReleaseNotes($params, $data, Request $request): array
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Exceptions\Forbidden();
+        }
+
+        if (!$request->isPost()) {
+            throw new Exceptions\BadRequest();
+        }
+
+        // prepare data
+        $data = Json::decode(Json::encode($data), true);
+
+        if (!empty($id = $data['id'])) {
+            return ['html' => $this->getComposerService()->getReleaseNotes($id)];
+        }
+
+        throw new Exceptions\NotFound();
+    }
+
     public function actionLogs($params, $data, Request $request): array
     {
         if (!$this->getUser()->isAdmin()) {

@@ -308,6 +308,20 @@ Espo.define('treo-core:views/composer/list', 'views/list',
             });
         },
 
+        actionShowReleaseNotes(data) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Composer/action/releaseNotes', {
+                id: data.id
+            }).success(response => {
+                this.notify(false)
+                this.createView('dialog', 'treo-core:views/composer/modals/release-notes', {
+                    scope: this.options.scope,
+                    el: '[data-view="dialog"]',
+                    notes: response.html,
+                }, view => view.render());
+            })
+        },
+
         toggleActionButton(action, show) {
             let button = this.$el.find(`.detail-button-container button[data-action="${action}"]`);
             if (show) {

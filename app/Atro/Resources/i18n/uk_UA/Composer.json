@@ -53,7 +53,8 @@
     "Log": "Лог",
     "confirmRun": "Після дії оновлення всі користувачі будуть вилоговані з системи. Ви впевнені, що хочете оновити систему?",
     "daemonDisabled": "<b>Демон програми-компонувальника не запущений!</b> <br> Ймовірно, демон зараз перезавантажується, і Вам слід почекати хвилину, або crontab не налаштований. Інструкції з налаштування crontab ви можете знайти <a href= \"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\" _blank\">тут</a>.",
-    "queueManagerRunning": "<b>Менеджер черг запущено!</b><br>Можливість оновлення модулів заблокована. Будь ласка, повторіть спробу пізніше."
+    "queueManagerRunning": "<b>Менеджер черг запущено!</b><br>Можливість оновлення модулів заблокована. Будь ласка, повторіть спробу пізніше.",
+    "showReleaseNotes": "Примітки до випуску"
   },
   "notifications": {
     "Module update": "Модуль {module} був оновлений. З версії {from} до {to}",
