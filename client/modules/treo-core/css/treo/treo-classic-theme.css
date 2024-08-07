@@ -15434,6 +15434,12 @@ table.table > thead th > div > a {
 
 #main > .list-container > .list {
     overflow: hidden;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+#main > .list-container > .list::-webkit-scrollbar {
+    display: none;
 }
 
 @media screen and (min-width: 768px) {
@@ -15443,10 +15449,6 @@ table.table > thead th > div > a {
 
     #main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
         margin-top: 2px;
-    }
-
-    #main > .list-container > .list > .table.table-scrolled th:last-child {
-        display: none;
     }
 
     .catalog-tree-panel {
@@ -15470,14 +15472,6 @@ table.table > thead th > div > a {
         align-items: center;
         position: absolute;
         top: 3px;
-    }
-
-    .list > table td.fixed-button:last-child > .list-row-buttons > .dropdown-toggle {
-        width: 28px;
-        height: 28px;
-        border: 0;
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 50%;
     }
 
     .fixed-scrollbar {
@@ -16265,11 +16259,28 @@ table.no-margin {
 }
 
 .list > table td.cell[data-name="buttons"] {
-    overflow: visible
+    overflow: visible;
+    position: sticky;
+    background-color: transparent;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    right: 0;
+}
+
+.panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
+    padding-right: 0;
 }
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -13px
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
 }
 
 .dashboard-header .dashboard-buttons {
@@ -20889,7 +20900,7 @@ button.category:focus {
 
     .detail .panel-default > .panel-heading,
     .edit .panel-default > .panel-heading {
-        margin: 0 -5px;
+        margin: 0 -14px;
     }
 
     .detail .overview,

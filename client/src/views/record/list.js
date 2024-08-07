@@ -335,6 +335,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 showCount: this.showCount && this.collection.total > 0,
                 moreCount: this.collection.total - this.collection.length,
                 checkboxes: this.checkboxes,
+                allowSelectAllResult: this.isAllowedSelectAllResult(),
                 massActionList: this.massActionList,
                 rowList: this.rowList,
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
@@ -344,6 +345,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.total && !fixedHeaderRow
             };
+        },
+
+        isAllowedSelectAllResult() {
+          if (this.getParentView() && this.getParentView().getParentView()) {
+              let view = this.getParentView().getParentView();
+
+              if (view.fieldType && view.fieldType === 'linkMultiple') {
+                  return false;
+              }
+          }
+
+          return true;
         },
 
         isFixedListHeaderRow() {
@@ -1130,7 +1143,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         $('.fixed-scrollbar').css('display', 'none');
                     } else {
                         $('.fixed-scrollbar').css('display', 'block');
-                        $('td[data-name="buttons"]').addClass('fixed-button');
                         fixSize();
                     }
                 }
@@ -1175,6 +1187,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             }
                         });
                     }, 50);
+                });
+
+                list.on("scroll", function () {
+                    $bar.scrollLeft(list.scrollLeft());
                 });
 
                 $(window).trigger("scroll.fixed-scrollbar");
@@ -1322,11 +1338,21 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             });
                         }
                     }
+
+                    const cellButtons = $(target).closest('.cell[data-name=buttons]');
+                    if (cellButtons.length) {
+                        cellButtons.css('z-index', 1);
+                    }
                 }
             }.bind(this));
 
             el.on('hide.bs.dropdown', function (e) {
                 $(e.relatedTarget).next('.dropdown-menu').removeAttr('style');
+
+                const cellButtons = $(e.relatedTarget).closest('.cell[data-name=buttons]');
+                if (cellButtons.length) {
+                    cellButtons.css('z-index', '');
+                }
             });
         },
 
@@ -1545,19 +1571,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     fixedTableHeader.addClass('table-scrolled');
                     fullTable.addClass('table-scrolled');
 
-                    let rowsButtons = this.$el.find('td[data-name="buttons"]');
-                    if ($(window).outerWidth() > 768 && rowsButtons.length) {
-                        rowsButtons.addClass('fixed-button');
-                        rowsButtons.each(function () {
-                            let a = $(this).find('.list-row-buttons');
-
-                            if (a) {
-                                let width = -1 * (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                a.css('left', width);
-                            }
-                        });
-                    }
-
                     let prevScrollLeft = 0;
 
                     list.off('scroll');
@@ -1565,17 +1578,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         if (prevScrollLeft !== list.scrollLeft()) {
                             let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
                             fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
-
-                            if ($(window).outerWidth() > 768 && rowsButtons.hasClass('fixed-button')) {
-                                rowsButtons.each(function () {
-                                    let a = $(this).find('.list-row-buttons');
-
-                                    if (a) {
-                                        let width = list.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                        a.css('left', width);
-                                    }
-                                });
-                            }
                         }
                         prevScrollLeft = list.scrollLeft();
                     });
@@ -1588,14 +1590,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                             scroll.css({width: list.width(), display: 'block'});
                             scroll.find('div').css('width', fullTable.width());
-                            rowsButtons.each(function () {
-                                let a = $(this).find('.list-row-buttons');
-
-                                if (a) {
-                                    let width = scroll.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                    a.css('left', width);
-                                }
-                            });
 
                             this.listenTo(this.collection, 'sync', function () {
                                 if (!this.hasHorizontalScroll()) {
@@ -1605,14 +1599,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                             scroll.on('scroll', () => {
                                 fullTable.css('left', -1 * scroll.scrollLeft());
-                                rowsButtons.each(function () {
-                                    let a = $(this).find('.list-row-buttons');
-
-                                    if (a) {
-                                        let width = scroll.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                        a.css('left', width);
-                                    }
-                                });
                             });
 
                             if ($(window).width() < 768) {
@@ -1856,6 +1842,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
                 if (!fieldType) return;
                 this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
+                    if (fieldType === 'link' || fieldType === 'linkMultiple') {
+                        const foreignEntity = this.getMetadata().get(['entityDefs', this.scope, 'links', field, 'entity']);
+                        let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'foreignName']);
+                        if (foreignEntity && this.getMetadata().get(['entityDefs', foreignEntity, 'fields', 'name'])) {
+                            foreignName = 'name';
+                        }
+
+                        if (!foreignName && (attribute.endsWith('Name') || attribute.endsWith('Names'))) {
+                            return;
+                        }
+                    }
+
                     list.push(attribute);
                 }, this);
             }, this);
