@@ -12,7 +12,6 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Atro\NotificationTransport\NotificationOccurrence;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -93,6 +92,8 @@ class V1Dot10Dot50 extends Base
                 $this->getConnection()->createQueryBuilder()
                     ->update('preferences')
                     ->set('data', ':data')
+                    ->where('id = :id')
+                    ->setParameter('id', $preference['id'])
                     ->setParameter('data', json_encode($data))
                     ->executeStatement();
             }
@@ -148,7 +149,7 @@ class V1Dot10Dot50 extends Base
                 "id" => Util::generateId(),
                 "name" => "Entity Update",
                 "entity" => '',
-                "occurrence" => NotificationOccurrence::UPDATE,
+                "occurrence" => 'updating',
                 "notification_profile_id" => $defaultProfileId,
                 "is_active" => true,
                 "ignore_self_action" => true,
@@ -207,7 +208,7 @@ class V1Dot10Dot50 extends Base
                 "id" => Util::generateId(),
                 "name" => "Note Creation Without parent",
                 "entity" => 'Note',
-                "occurrence" => NotificationOccurrence::CREATION,
+                "occurrence" => 'creation',
                 "notification_profile_id" => $defaultProfileId,
                 "is_active" => true,
                 "ignore_self_action" => true,
@@ -229,7 +230,7 @@ class V1Dot10Dot50 extends Base
                 "id" => Util::generateId(),
                 "name" => "Note Creation in Entity",
                 "entity" => '',
-                "occurrence" => NotificationOccurrence::NOTE_CREATED,
+                "occurrence" => 'note_created',
                 "notification_profile_id" => $defaultProfileId,
                 "is_active" => true,
                 "ignore_self_action" => true,
@@ -314,7 +315,7 @@ class V1Dot10Dot50 extends Base
                 "id" => Util::generateId(),
                 "name" => "Mention",
                 "entity" => '',
-                "occurrence" => NotificationOccurrence::MENTION,
+                "occurrence" => 'mentioned',
                 "notification_profile_id" => $defaultProfileId,
                 "is_active" => true,
                 "ignore_self_action" => true,
@@ -416,7 +417,7 @@ class V1Dot10Dot50 extends Base
                 "id" => Util::generateId(),
                 "name" => "Assignment/Ownership",
                 "entity" => '',
-                "occurrence" => NotificationOccurrence::OWNERSHIP_ASSIGNMENT,
+                "occurrence" => 'ownership_assignment',
                 "notification_profile_id" => $defaultProfileId,
                 "is_active" => true,
                 "ignore_self_action" => true,
