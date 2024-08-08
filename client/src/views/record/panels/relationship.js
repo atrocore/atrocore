@@ -126,7 +126,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 canUnlink = this.getAcl().check(relationEntityName, 'delete');
             }
 
-            if(this.readOnly){
+            if (this.readOnly) {
                 canUnlink = false;
                 canSelect = false
             }
@@ -267,6 +267,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 if (asc) {
                     collection.asc = asc;
                 }
+                collection.collectionOnly = true
+
                 this.collection = collection;
 
                 this.setFilter(this.filter);
@@ -289,7 +291,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         layoutName: layoutName,
                         listLayout: listLayout,
                         checkboxes: false,
-                        rowActionsView: (this.defs.readOnly || this.readOnly)? false : (this.defs.rowActionsView || this.rowActionsView),
+                        rowActionsView: (this.defs.readOnly || this.readOnly) ? false : (this.defs.rowActionsView || this.rowActionsView),
                         rowActionsColumnWidth: this.rowActionsColumnWidth,
                         buttonsDisabled: true,
                         el: this.options.el + ' .list-container',
@@ -348,8 +350,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             $buttonHtml.hide()
 
             this.listenTo(this.collection, 'update update-total', () => {
-                const total = this.collection.total || this.collection.length
-                $buttonHtml.find('span').text(`${this.translate('Shown', 'labels', 'Global')}: ${this.collection.length} | ${this.translate('Total', 'labels', 'Global')}: ${total}`)
+                const total = this.collection.totalIsLenght ? this.collection.length : this.collection.total
+                if (total == null) {
+                    $buttonHtml.find('span').html('<img class="preloader" style="height:12px;" src="client/img/atro-loader.svg" />')
+                } else {
+                    $buttonHtml.find('span').html(`${this.translate('Shown', 'labels', 'Global')}: ${this.collection.length} | ${this.translate('Total', 'labels', 'Global')}: ${total}`)
+                }
                 $buttonHtml.show()
             })
         },
@@ -613,7 +619,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.listenToOnce(view, 'after:save', () => {
                     this.model.trigger('updateRelationshipPanel', link);
                     this.collection.fetch();
-                    if(this.mode !== 'edit'){
+                    if (this.mode !== 'edit') {
                         this.model.trigger('after:relate', link);
                     }
                 });
@@ -700,7 +706,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     success: () => {
                         this.notify('Unlinked', 'success');
                         this.collection.fetch();
-                        if(this.mode !== 'edit'){
+                        if (this.mode !== 'edit') {
                             this.model.trigger('after:unrelate', this.link, this.defs);
                         }
                     },

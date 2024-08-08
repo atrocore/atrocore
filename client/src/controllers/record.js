@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('controllers/record', ['controller','view'], function (Dep, View) {
+Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
     return Dep.extend({
 
@@ -123,7 +123,8 @@ Espo.define('controllers/record', ['controller','view'], function (Dep, View) {
             });
         },
 
-        prepareModelView: function (model, options) {},
+        prepareModelView: function (model, options) {
+        },
 
         view: function (options) {
             var id = options.id;
@@ -346,12 +347,13 @@ Espo.define('controllers/record', ['controller','view'], function (Dep, View) {
             }
             this.collectionFactory.create(collectionName, function (collection) {
                 this.collectionMap[collectionName] = collection;
+                collection.collectionOnly = true
                 this.listenTo(collection, 'sync', function () {
                     collection.isFetched = true;
                 }, this);
                 callback.call(context, collection);
             }, context);
-        },/**
+        }, /**
          * Get model for the current controller.
          * @param {model}.
          */
