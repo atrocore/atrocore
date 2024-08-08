@@ -341,7 +341,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
-                displayTotalCount: this.displayTotalCount && this.collection.total >= 0,
+                displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
+                totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.length && !fixedHeaderRow
             };
@@ -1083,10 +1084,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.$el.find('.show-more').addClass('hide')
                 }
 
-                let $total = this.$el.find('.total-count-span');
-                if ($total.length > 0) {
-                    $total.html(this.collection.total);
+                if(this.collection.total !=null){
+                    this.$el.find('.list-buttons-container .preloader').addClass('hide')
+                    this.$el.find('.list-buttons-container .total-count').removeClass('hide')
+                    if(this.collection.total>=0){
+                        this.$el.find('.total-count-span').html(this.collection.total)
+                    }
+                }else{
+                    this.$el.find('.list-buttons-container .preloader').removeClass('hide')
+                    this.$el.find('.list-buttons-container .text-count').addClass('hide')
                 }
+
             });
 
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {

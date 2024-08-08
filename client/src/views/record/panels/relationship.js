@@ -267,7 +267,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 if (asc) {
                     collection.asc = asc;
                 }
-                collection.collectionOnly = true
 
                 this.collection = collection;
 

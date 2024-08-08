@@ -347,7 +347,6 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
             }
             this.collectionFactory.create(collectionName, function (collection) {
                 this.collectionMap[collectionName] = collection;
-                collection.collectionOnly = true
                 this.listenTo(collection, 'sync', function () {
                     collection.isFetched = true;
                 }, this);
