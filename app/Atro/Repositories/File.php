@@ -416,6 +416,10 @@ class File extends Base
 
     public function getDownloadUrl(FileEntity $file): ?string
     {
+        if (empty($file->get('storageId'))) {
+            return null;
+        }
+
         try {
             $url = $this->getStorage($file)->getUrl($file);
         } catch (BadRequest|NotFound $e) {
@@ -427,6 +431,10 @@ class File extends Base
 
     public function getSmallThumbnailUrl(FileEntity $file): ?string
     {
+        if (empty($file->get('storageId'))) {
+            return null;
+        }
+
         try {
             $url = $this->getStorage($file)->getThumbnail($file, 'small');
         } catch (BadRequest|NotFound $e) {
@@ -438,6 +446,10 @@ class File extends Base
 
     public function getMediumThumbnailUrl(FileEntity $file): ?string
     {
+        if (empty($file->get('storageId'))) {
+            return null;
+        }
+
         try {
             $url = $this->getStorage($file)->getThumbnail($file, 'medium');
         } catch (BadRequest|NotFound $e) {
@@ -449,6 +461,10 @@ class File extends Base
 
     public function getLargeThumbnailUrl(FileEntity $file): ?string
     {
+        if (empty($file->get('storageId'))) {
+            return null;
+        }
+
         try {
             $url = $this->getStorage($file)->getThumbnail($file, 'large');
         } catch (BadRequest|NotFound $e) {
