@@ -173,7 +173,7 @@ class Relation extends RDB
 
         $this->updateModifiedAtForRelatedEntity($entity);
 
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'isHierarchyEntity'], false)
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'isHierarchyEntity'], false))
             && empty($this->getMetadata()->get(['scopes', $this->getHierarchicalEntity(), 'multiParents']))
         ) {
             $table = $this->getEntityManager()->getMapper()->toDB($this->entityType);
