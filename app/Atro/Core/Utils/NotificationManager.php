@@ -46,8 +46,6 @@ class NotificationManager
 
     protected array $notificationRules = [];
 
-    protected array $userToNotifyIds = [];
-
     protected array $notificationDisabled = [];
 
     protected array $subscribers = [];
