@@ -27,6 +27,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Atro\Entities\NotificationRule as RuleEntity;
 
@@ -52,6 +53,8 @@ class NotificationManager
     protected array $subscribers = [];
 
     protected array $teamMembers = [];
+
+    protected array $users = [];
 
     public function __construct(Container $container)
     {
@@ -243,16 +246,11 @@ class NotificationManager
         $maxSize = 200;
 
         while(true){
-           $users =  $this
-                ->getEntityManager()
-                ->getRepository('User')
-                ->where(['isActive' => true, 'id!=' => 'system'])
-                ->limit($offset , $maxSize)
-                ->find();
+           $users =  $this->getUsers($offset, $maxSize);
 
            $offset = $offset + $maxSize;
 
-           if(empty($users)){
+           if($users->count() === 0){
                break;
            }
 
@@ -307,7 +305,7 @@ class NotificationManager
         $preference = $this->getEntityManager()->getEntity('Preferences', $user->get('id'));
 
         if (empty($preference) || !$preference->get('receiveNotifications')) {
-            $GLOBALS['log']->alert('Notification not sent: Receive notification if deactivate for user: ' . $user->get('id'));
+            $GLOBALS['log']->alert('Notification not sent: Receive notification is deactivate for user: ' . $user->get('id'));
             return false;
         }
 
@@ -356,7 +354,6 @@ class NotificationManager
         if ($rule->get('asTeamMember') && in_array($user->get('id'), $this->getTeamUserIds($entity))) {
             return true;
         }
-
 
         return false;
     }
@@ -646,5 +643,18 @@ class NotificationManager
     protected function getLanguage(): Language
     {
         return $this->container->get('language');
+    }
+
+    protected function getUsers(int $offset, int $maxSize): EntityCollection
+    {
+        $key = 'User' . $offset . '_'.$maxSize;
+        if(!empty($this->users[$key])){
+            return $this->users[$key];
+        }
+
+        return $this->users[$key] = $this->getEntityManager()->getRepository('User')
+            ->where(['isActive' => true, 'id!=' => 'system'])
+            ->limit($offset , $maxSize)
+            ->find();
     }
 }
