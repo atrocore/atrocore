@@ -119,7 +119,6 @@ abstract class AbstractRecordController extends AbstractController
         $result = $this->getRecordService()->findEntities($params);
 
         if (!empty($totalOnly)) {
-            sleep(5);
             return ['total' => $result['total']];
         }
 
