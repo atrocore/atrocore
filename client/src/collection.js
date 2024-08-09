@@ -150,7 +150,6 @@ Espo.define('collection', [], function () {
 
         fetch: function (options) {
             this.lastXhr = Backbone.Collection.prototype.fetch.call(this, this.getRequestOptions(options));
-
             return this.lastXhr;
         },
 

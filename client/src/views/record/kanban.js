@@ -227,7 +227,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.$content = $('#content');
 
             $window.off('resize.kanban');
-            $window.on('resize.kanban', function() {
+            $window.on('resize.kanban', function () {
                 this.adjustMinHeight();
             }.bind(this));
 
@@ -291,7 +291,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             });
         },
 
-        handleAttributesOnGroupChange: function (model, attributes, group) {},
+        handleAttributesOnGroupChange: function (model, attributes, group) {
+        },
 
         adjustMinHeight: function () {
             if (this.collection.models.length === 0) return;
@@ -339,7 +340,9 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
         buildRows: function (callback) {
             var groupList = (this.collection.dataAdditional || {}).groupList || [];
 
+            const total = this.collection.total
             this.collection.reset();
+            this.collection.total = total
 
             this.collection.subCollectionList = [];
 
@@ -379,7 +382,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                     var itemDataList = [];
 
                     collection.models.forEach(function (model) {
-                        count ++;
+                        count++;
                         itemDataList.push({
                             key: model.id,
                             id: model.id
@@ -427,7 +430,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.createView(key, this.itemViewName, {
                 model: model,
-                el: this.getSelector() + ' .item[data-id="'+model.id+'"]',
+                el: this.getSelector() + ' .item[data-id="' + model.id + '"]',
                 itemLayout: this.listLayout,
                 rowActionsDisabled: this.rowActionsDisabled,
                 rowActionsView: this.rowActionsView,
@@ -444,7 +447,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.clearView(id);
 
-            this.$el.find('.item[data-id="'+id+'"]').remove();
+            this.$el.find('.item[data-id="' + id + '"]').remove();
 
             this.collection.subCollectionList.forEach(function (collection) {
                 if (collection.get(id)) {
@@ -509,8 +512,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                 }
             }
 
-            var $item = this.$el.find('.item[data-id="'+id+'"]');
-            var $column = this.$el.find('.group-column[data-name="'+group+'"] .group-column-list');
+            var $item = this.$el.find('.item[data-id="' + id + '"]');
+            var $column = this.$el.find('.group-column[data-name="' + group + '"] .group-column-list');
 
             if ($column.size()) {
                 $column.prepend($item);
@@ -532,8 +535,8 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             if (!groupItem) return;
 
             var collection = groupItem.collection;
-            var $list = this.$el.find('.group-column-list[data-name="'+group+'"]');
-            var $showMore = this.$el.find('.group-column[data-name="'+group+'"] .show-more');
+            var $list = this.$el.find('.group-column-list[data-name="' + group + '"]');
+            var $showMore = this.$el.find('.group-column[data-name="' + group + '"] .show-more');
 
             collection.data.select = this.collection.data.select;
 
@@ -556,7 +559,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         getRowContainerHtml: function (id) {
-            return '<div class="item" data-id="'+id+'">';
+            return '<div class="item" data-id="' + id + '">';
         },
 
         actionMoveOver: function (data) {
