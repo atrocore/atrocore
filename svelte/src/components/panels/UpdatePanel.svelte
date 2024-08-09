@@ -94,7 +94,7 @@
             </section>
             <section class="logs-section">
                 <div class="buttons">
-                    <button class="btn btn-default" on:click={showLogsButtonHandler}><i
+                    <button class="btn btn-default" disabled={!fullLogs} on:click={showLogsButtonHandler}><i
                             class="fa fa-list"></i>{showLogs ? 'Hide' : 'Show'} logs
                     </button>
                     {#if restoreLink}
@@ -103,7 +103,7 @@
                                 class="fa fa-history"></i>Restore the system</a>
                     {/if}
                 </div>
-                {#if showLogs}
+                {#if showLogs && fullLogs}
                     <hr>
                     <pre class="logs-container" bind:this={logsContainer} on:scroll={logsScrollHandler}>{fullLogs}</pre>
                 {/if}
