@@ -10,7 +10,10 @@
     "type": "типовий",
     "account": "лічильний",
     "contactName": "Контактна Особа",
-    "name": "Назва компанії"
+    "name": "Назва компанії",
+    "prospect": "Перспективи",
+    "accounts": "Аккаунти",
+    "contacts": "Kонтакти"
   },
   "options": {
     "type": {
@@ -20,5 +23,11 @@
   },
   "labels": {
     "Create Address": "Створити адресу"
+  },
+  "links": {
+    "prospect": "Перспективи",
+    "country": "провінційний",
+    "accounts": "Аккаунти",
+    "contacts": "Kонтакти"
   }
 }
