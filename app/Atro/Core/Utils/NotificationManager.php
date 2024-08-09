@@ -182,6 +182,10 @@ class NotificationManager
 
         $actionUser = $this->container->get('user');
 
+        if(empty($actionUser)){
+            return;
+        }
+
         if ($sync) {
             $this->sendNotifications(
                 $occurrence,
