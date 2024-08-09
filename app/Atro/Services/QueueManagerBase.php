@@ -19,7 +19,7 @@ use Espo\Core\Services\Base;
 use Espo\ORM\Entity;
 use Atro\Entities\QueueItem;
 
-abstract class QueueManagerBase extends Base implements QueueManagerServiceInterface
+abstract class QueueManagerBase extends AbstractService implements QueueManagerServiceInterface
 {
     protected QueueItem $qmItem;
 

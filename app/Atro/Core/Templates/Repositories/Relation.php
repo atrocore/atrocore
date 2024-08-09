@@ -173,16 +173,16 @@ class Relation extends RDB
 
         $this->updateModifiedAtForRelatedEntity($entity);
 
-        if(!empty($this->getHierarchicalEntity())
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'isHierarchyEntity'], false)
             && empty($this->getMetadata()->get(['scopes', $this->getHierarchicalEntity(), 'multiParents']))
-        ){
-                $table = strtolower($this->getHierarchicalEntity()).'_hierarchy';
-                $this->getConnection()->createQueryBuilder()
-                    ->delete($this->getConnection()->quoteIdentifier($table))
-                    ->where('entity_id=:entityId AND parent_id <> :parentId')
-                    ->setParameter('entityId', $entity->get('entityId'))
-                    ->setParameter('parentId', $entity->get('parentId'))
-                    ->executeQuery();
+        ) {
+            $table = $this->getEntityManager()->getMapper()->toDB($this->entityType);
+            $this->getConnection()->createQueryBuilder()
+                ->delete($this->getConnection()->quoteIdentifier($table))
+                ->where('entity_id=:entityId AND parent_id <> :parentId')
+                ->setParameter('entityId', $entity->get('entityId'))
+                ->setParameter('parentId', $entity->get('parentId'))
+                ->executeQuery();
         }
 
     }
@@ -380,7 +380,8 @@ class Relation extends RDB
                             if ($relEntity) {
                                 try {
                                     $this->getEntityManager()->saveEntity($relEntity);
-                                } catch (NotUnique $e) {}
+                                } catch (NotUnique $e) {
+                                }
                             }
                         }
                     }
