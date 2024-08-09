@@ -1273,9 +1273,9 @@ class Metadata extends AbstractListener
 
         foreach ($notificationRules as $notificationRule) {
             if(!empty($notificationRule['entity'])){
-                $data['scopes'][$notificationRule['entity']]['notificationRuleIdByOccurrence'][$notificationRule['occurrence']] = $notificationRule['id'];
+                $data['scopes'][$notificationRule['entity']]['notificationRuleIdByOccurrence'][$notificationRule['occurrence']][] = $notificationRule['id'];
             }else{
-                $data['app']['globalNotificationRuleIdByOccurrence'][$notificationRule['occurrence']] = $notificationRule['id'];
+                $data['app']['globalNotificationRuleIdByOccurrence'][$notificationRule['occurrence']][] = $notificationRule['id'];
             }
         }
     }

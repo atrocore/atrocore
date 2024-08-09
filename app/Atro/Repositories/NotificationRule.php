@@ -80,16 +80,26 @@ class NotificationRule extends Base
     }
 
 
-    public function getFromCache(string $id): ?\Atro\Entities\NotificationRule
+    public function findOneFromCache(string $notificationProfileId, string $occurrence, string $entity): ?\Atro\Entities\NotificationRule
     {
         if (!$this->getDataManager()->isUseCache(self::CACHE_NAME)) {
-            return $this->get($id);
+            return $this->where([
+                "notificationProfileId" => $notificationProfileId,
+                "occurrence" => $occurrence,
+                "entity=" => $entity
+            ])->findOne();
         }
 
         $notificationRules = $this->getDataManager()->getCacheData(self::CACHE_NAME);
 
-        $result = array_filter($notificationRules, function ($rule) use ($id) {
-            return $rule['id'] === $id;
+        if(empty($notificationRules)){
+            return null;
+        }
+
+        $result = array_filter($notificationRules, function ($rule) use ($notificationProfileId, $entity, $occurrence) {
+            return $rule['notification_profile_id'] === $notificationProfileId
+                && $rule['occurrence'] === $occurrence
+                && $rule['entity'] === $entity;
         });
 
         if (!empty($result)) {
