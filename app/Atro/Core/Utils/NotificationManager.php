@@ -243,39 +243,39 @@ class NotificationManager
         $offset = 0;
         $maxSize = 200;
 
-        while(true){
-           $users =  $this->getUsers($offset, $maxSize);
+        while (true) {
+            $users = $this->getUsers($offset, $maxSize);
 
-           $offset = $offset + $maxSize;
+            $offset = $offset + $maxSize;
 
-           if($users->count() === 0){
-               break;
-           }
+            if ($users->count() === 0) {
+                break;
+            }
 
-           foreach ($users as $user){
-               if(!$this->userCanBeNotify($user, $occurrence, $entity, $actionUser, $parent)){
-                   continue;
-               }
+            foreach ($users as $user) {
+                if (!$this->userCanBeNotify($user, $occurrence, $entity, $actionUser, $parent)) {
+                    continue;
+                }
 
-               $dataForTemplate['notifyUser'] = $user;
+                $dataForTemplate['notifyUser'] = $user;
 
-               $this->sendNotificationsToTransports(
-                   $user,
-                   $this->getUserNotificationRule(
-                       $user->get('id'),
-                       $occurrence,
-                       $parent ? $parent->getEntityType() : $entity->getEntityType()
-                   ),
-                   $dataForTemplate
-               );
-           }
+                $this->sendNotificationsToTransports(
+                    $user,
+                    $this->getUserNotificationRule(
+                        $user->get('id'),
+                        $occurrence,
+                        $parent ? $parent->getEntityType() : $entity->getEntityType()
+                    ),
+                    $dataForTemplate
+                );
+            }
         }
     }
 
     public function sendNotificationsToTransports(
-        User  $user,
+        User       $user,
         RuleEntity $notificationRule,
-        array $params
+        array      $params
     ): void
     {
         // send notification for each transport
@@ -307,11 +307,11 @@ class NotificationManager
             return false;
         }
 
-        if ($parent && !$this->checkByAclManager($user, $parent, 'stream')) {
-            return false;
-        }
-
-        if (!$parent && !$this->checkByAclManager($user, $entity, 'read')) {
+        if ($entity->getEntityType() === 'Note') {
+            if (!$this->checkByAclManager($user, $parent ?? $user, 'stream')) {
+                return false;
+            }
+        } else if (!$this->checkByAclManager($user, $entity, 'read')) {
             return false;
         }
 
@@ -333,11 +333,11 @@ class NotificationManager
             return true;
         }
 
-        if ($rule->get('asOwner') && $entity->get('ownerUserId') === $user->get('id')) {
+        if ($rule->get('asOwner') && ($parent ?? $entity)->get('ownerUserId') === $user->get('id')) {
             return true;
         }
 
-        if ($rule->get('asAssignee') && $entity->get('assignedUserId') === $user->get('id')) {
+        if ($rule->get('asAssignee') && ($parent ?? $entity)->get('assignedUserId') === $user->get('id')) {
             return true;
         }
 
@@ -345,11 +345,11 @@ class NotificationManager
             return true;
         }
 
-        if ($rule->get('asFollower') && in_array($user->get('id'), $this->getSubscriberUserIds($entity))) {
+        if ($rule->get('asFollower') && in_array($user->get('id'), $this->getSubscriberUserIds($parent ?? $entity))) {
             return true;
         }
 
-        if ($rule->get('asTeamMember') && in_array($user->get('id'), $this->getTeamUserIds($entity))) {
+        if ($rule->get('asTeamMember') && in_array($user->get('id'), $this->getTeamUserIds($parent ?? $entity))) {
             return true;
         }
 
@@ -645,14 +645,14 @@ class NotificationManager
 
     protected function getUsers(int $offset, int $maxSize): EntityCollection
     {
-        $key = 'User' . $offset . '_'.$maxSize;
-        if(!empty($this->users[$key])){
+        $key = 'User' . $offset . '_' . $maxSize;
+        if (!empty($this->users[$key])) {
             return $this->users[$key];
         }
 
         return $this->users[$key] = $this->getEntityManager()->getRepository('User')
             ->where(['isActive' => true, 'id!=' => 'system'])
-            ->limit($offset , $maxSize)
+            ->limit($offset, $maxSize)
             ->find();
     }
 }

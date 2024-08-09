@@ -150,14 +150,9 @@ class V1Dot10Dot50 extends Base
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
-                                "body"     => '<p>{{actionUser.name}} made update  on {{entityName}} {{entity.name}}.</p>
-<p><a href="{{entityUrl}}">View</a></p>',
-                                "bodyDeDe" => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen {{entity.name}}.</p>
-
-<p><a href="{{entityUrl}}">Siehe</a></p>',
-                                "bodyUkUa" => '<p>{{actionUser.name}} зробив оновлення для {{entityName}} {{entity.name}}.</p>
-
-<p><a href="{{entityUrl}}">Вигляд</a></p>'
+                                "body"     => '<p>{{actionUser.name}} made update  on {{entityName}} <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>',
+                                "bodyDeDe" => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>',
+                                "bodyUkUa" => '<p>{{actionUser.name}} зробив оновлення для {{entityName}} <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>'
                             ]
                         ]
                     ],
@@ -231,25 +226,19 @@ class V1Dot10Dot50 extends Base
                         'name' => 'Note Creation',
                         'data' => [
                             'field' => [
-                                "body"     => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
+                                "body"     => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a>. {% endif %}</p>
 <p>{{entity.data.post}}</p>
-{% if parent %}
-<p><a href="{{parentUrl}}">View</a></p>
-{% else %}
+{% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyDeDe" => '<p>{{actionUser.name}} auf{% if parent %}  {{parentName}} {{parent.name}} gepostet. {% endif %}</p>
+                                "bodyDeDe" => '<p>{{actionUser.name}} auf{% if parent %}  {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a> gepostet. {% endif %}</p>
 <p>{{entity.data.post}}</p>
-{% if parent %}
-<p><a href="{{parentUrl}}">View</a></p>
-{% else %}
+{% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyUkUa" => '<p>{{actionUser.name}} опублікував {% if parent %} на {{parentName}} {{parent.name}}. {% endif %}</p> <p>
+                                "bodyUkUa" => '<p>{{actionUser.name}} опублікував {% if parent %} на {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a>. {% endif %}</p> <p>
 <p>{{entity.data.post}}</p>
-{% if parent %}
-<p><a href="{{parentUrl}}">Вигляд</a></p>
-{% else %}
+{% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">Вигляд</a></p>
 {% endif %}'
                             ]
@@ -318,31 +307,25 @@ class V1Dot10Dot50 extends Base
                             "field" => [
                                 "body"     => '<p>You were mentioned in post by {{actionUser.name}}.</p>
 {% if parent %}
-<p>Related to: {{parentName}}</p>
+<p>Related to: {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a></p>
 {% endif  %}
 <p>{{entity.data.post}}</p>
-{% if parent %}
-<p><a href="{{parentUrl}}">View</a></p>
-{% else %}
+{% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
                                 "bodyDeDe" => '<p>Sie wurden in einem Beitrag von {{actionUser.name}} erwähnt.</p>
 {% if parent %}
-<p>Verwandt mit:  {{parentName}}</p>
+<p>Verwandt mit:  {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a></p>
 {% endif  %}
 <p>{{entity.data.post}}</p>
-{% if parent %}
-<p><a href="{{parentUrl}}">Siehe</a></p>
-{% else %}
+{% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">Siehe</a></p>
 {% endif %}',
                                 "bodyUkUa" => '<p>Вас було згадано у дописі користувача {{actionUser.name}}.</p>{% if parent %}
-<p>Пов\'язано з:  {{parentName}}</p>
+<p>Пов\'язано з:  {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a></p>
 {% endif  %}
 <p>{{entity.data.post}}</p>
-{% if parent %}
-<p><a href="{{parentUrl}}">Вигляд</a></p>
-{% else %}
+{% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">Вигляд</a></p>
 {% endif %}'
                             ]
@@ -421,33 +404,28 @@ class V1Dot10Dot50 extends Base
                             "field" => [
                                 "body"     => '{% if isAssignment %}
 <p>{{actionUser.name}} has assigned {{entityName}} to  {% if notifyUser.id == assignedUser.id %} you. {% else %}  {{assignedUser.name}}. {% endif %} </p>
-<p><strong>{{entity.name}}</strong></p>
-<p><a href="{{entityUrl}}">View</a></p>
+<p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% else %}
 <p>{{actionUser.name}} has set {% if notifyUser.id == ownerUser.id %} you {% else %}  {{ownerUser.name}} {% endif %} as owner for {{entityName}}.</p>
-<p><strong>{{entity.name}}</strong></p>
-<p><a href="{{entityUrl}}">View</a></p>
+<p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% endif %}
 ',
                                 "bodyDeDe" => '
 {% if  isAssignment %}
 <p>{{actionUser.name}} hat Ihnen {{entityName}}   {% if notifyUser.id == assignedUser.id %} zugewiesen. {% else %}  {{assignedUser.name}}. {% endif %} </p>
-<p><strong>{{entity.name}}</strong></p>
-<p><a href="{{entityUrl}}">Siehe</a></p>
+<p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% else %}
-<p>{{actionUser.name}} hat {% if notifyUser.id == ownerUser.id %} Sie {% else %}  {{ownerUser.name}} {% endif %} als Eigentümer für {{entityName}}.</p><p><strong>{{entity.name}}</strong></p>
-<p><a href="{{entityUrl}}">Siehe</a></p>
+<p>{{actionUser.name}} hat {% if notifyUser.id == ownerUser.id %} Sie {% else %}  {{ownerUser.name}} {% endif %} als Eigentümer für {{entityName}}.
+<p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% endif %} 
 ',
                                 "bodyUkUa" => '
 {% if isAssignment %}
 <p>{{actionUser.name}} призначив {% if notifyUser.id == assignedUser.id %} вам {% else %} {{assignedUser.name}}. {% endif %} {{entityName}}.</p>
-<p><strong>{{entity.name}}</strong></p>
-<p><a href="{{entityUrl}}">Вигляд</a></p>
+<p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% else %}
 <p>{{actionUser.name}} встановив {% if notifyUser.id == ownerUser.id %} вам {% else %}  {{ownerUser.name}} {% endif  %} як власника для {{entityName}}.</p>
-<p><strong>{{entity.name}}</strong></p>
-<p><a href="{{entityUrl}}">Вигляд</a></p>
+<p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% endif %}
                               '
                             ]
@@ -542,7 +520,8 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
 
 
         foreach ($rules as $rule) {
-            if (!empty($templates = $rule['templates'])) {
+            if (!empty($rule['templates'])) {
+                $templates = $rule['templates'];
                 foreach ($templates as $type => $template) {
                     try {
                         $connection->createQueryBuilder()

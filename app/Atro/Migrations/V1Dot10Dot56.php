@@ -26,21 +26,24 @@ class V1Dot10Dot56 extends Base
     {
         // Update Templates
         foreach (V1Dot10Dot50::getDefaultRules() as $rule) {
-            if (!empty($template = $rule['templates']['email'])) {
-                try {
-                    $this->getConnection()->createQueryBuilder()
-                        ->update('notification_template')
-                        ->where('id = :id')
-                        ->set('name', ':name')
-                        ->set('data', ':data')
-                        ->setParameter('id', $template['id'])
-                        ->setParameter('name', $template['name'])
-                        ->setParameter('data', json_encode($template['data']))
-                        ->executeStatement();
+            if (!empty($rule['templates'])) {
+                $templates = $rule['templates'];
+                foreach ($templates as $type => $template) {
+                    try {
+                        $this->getConnection()->createQueryBuilder()
+                            ->update('notification_template')
+                            ->set('data', ':data')
+                            ->set('name', ':name')
+                            ->where('id = :id')
+                            ->setParameter('id', $template['id'])
+                            ->setParameter('name', $template['name'])
+                            ->setParameter('data', json_encode($template['data']))
+                            ->executeStatement();
+                    } catch (\Throwable $e) {
 
-                } catch (\Exception $e) {
-
+                    }
                 }
+
             }
         }
 
