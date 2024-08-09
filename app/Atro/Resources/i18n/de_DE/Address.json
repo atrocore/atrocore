@@ -11,7 +11,16 @@
     "type": "Typ",
     "account": "Konto",
     "contactName": "Kontaktname",
-    "name": "Name der Firma"
+    "name": "Name der Firma",
+    "prospect": "Interessenten",
+    "accounts": "Konten",
+    "contacts": "Kontakte"
+  },
+  "links": {
+    "prospect": "Interessenten",
+    "country": "Land",
+    "accounts": "Konten",
+    "contacts": "Kontakte"
   },
   "options": {
     "type": {

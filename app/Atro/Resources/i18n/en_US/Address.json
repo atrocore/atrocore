@@ -11,7 +11,16 @@
     "type": "Type",
     "account": "Account",
     "contactName": "Contact Name",
-    "name": "Company Name"
+    "name": "Company Name",
+    "prospect": "Prospects",
+    "accounts": "Accounts",
+    "contacts": "Contacts"
+  },
+  "links": {
+    "prospect": "Prospects",
+    "country": "Country",
+    "accounts": "Accounts",
+    "contacts": "Contacts"
   },
   "options": {
     "type": {
