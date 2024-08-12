@@ -607,7 +607,8 @@
     "from": "з",
     "to": "на",
     "was": "було",
-    "become": "стало"
+    "become": "стало",
+    "changed": "було змінено"
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",

@@ -625,7 +625,8 @@
     "updateOneThis": "{user} in this {entityType} updated",
     "updateFromToThis": "{user} in this {entityType} updated",
     "updateOne": "{user} in {entityType} {entity} updated",
-    "updateFromTo": "{user} in {entityType} {entity} updated"
+    "updateFromTo": "{user} in {entityType} {entity} updated",
+    "changed": "was changed"
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",

@@ -6006,7 +6006,7 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 }
 
 .panel {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     background-color: #fff;
     border: 1px solid transparent;
     border-radius: 0;
@@ -16788,7 +16788,12 @@ h4.panel-title span.color-icon {
 }
 
 .stream-head-text-container {
-    padding-left: 26px
+    padding-left: 37px
+}
+
+.stream-head-container code,
+.stream-details-container code {
+    font-size: 80%;
 }
 
 .stream-head-container > img.avatar {
@@ -16830,6 +16835,10 @@ stream-head-text-container .span {
 
 .stream-post-container, .stream-attachments-container, .stream-details-container, .stream-subject-container {
     padding: 2px 0 5px 37px
+}
+
+.stream-details-container {
+    margin-top: 20px;
 }
 
 .log-list-container .complex-text b {

@@ -630,7 +630,8 @@
     "from": "aus",
     "to": "zu",
     "was": "war",
-    "become": "werden"
+    "become": "werden",
+    "changed": "wurde geändert"
   },
   "monthNames": {
     "January": "Januar",
