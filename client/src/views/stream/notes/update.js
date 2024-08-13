@@ -44,14 +44,35 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             const diff = this.model.get('diff');
             const showInline = this.model.get('data').fields.length === 1 && !diff;
 
+            let detailFieldsArr = [],
+                diffArr = [];
+
+            this.fieldsArr.forEach(function (item) {
+                if (diff && typeof diff === 'object' && Object.keys(diff).includes(item.field)) {
+                    if (diff[item.field] !== null && diff[item.field] !== '') {
+                        return;
+                    }
+                }
+
+                detailFieldsArr.push(item);
+            });
+
+            Object.keys(diff || {}).forEach(function (field) {
+                diffArr.push({
+                    field: this.translate(field, 'fields', this.model.get('parentType')),
+                    diff: diff[field]
+                })
+            }, this);
+
             return _.extend({
                 fieldsArr: this.fieldsArr,
+                detailFieldsArr: detailFieldsArr,
                 changedFieldsStr: (this.fieldsArr.map(item => '<code>' + item.label + '</code>')).join(', '),
                 parentType: this.model.get('parentType'),
-                diff: diff,
+                diffArr: diffArr,
                 showDiff: typeof diff !== 'undefined',
                 showInline: showInline,
-                showCommon: !showInline && !diff
+                showCommon: !showInline
             }, Dep.prototype.data.call(this));
         },
 

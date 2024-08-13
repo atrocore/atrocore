@@ -72,7 +72,7 @@
             "disabled": true
         },
         "diff": {
-            "type": "text",
+            "type": "jsonObject",
             "notStorable": true,
             "layoutListDisabled": true,
             "layoutListSmallDisabled": true,
