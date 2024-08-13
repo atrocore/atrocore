@@ -36,7 +36,7 @@ Espo.define('collection', [], function () {
 
         name: null,
 
-        total: 0,
+        total: null,
 
         offset: 0,
 
@@ -49,6 +49,8 @@ Espo.define('collection', [], function () {
         where: null,
 
         whereAdditional: null,
+
+        fetchOnlyCollection: true,
 
         lengthCorrection: 0,
 
@@ -76,6 +78,7 @@ Espo.define('collection', [], function () {
 
         reset: function (models, options) {
             this.lengthCorrection = 0;
+            this.total = null;
             Backbone.Collection.prototype.reset.call(this, models, options);
         },
 
@@ -124,7 +127,17 @@ Espo.define('collection', [], function () {
         },
 
         parse: function (response) {
-            this.total = response.total;
+            if (response.total != null) {
+                this.total = response.total;
+            }
+
+            if (this.total == null) {
+                if (response.list.length < this.maxSize) {
+                    this.total = response.list.length
+                } else {
+                    this.fetchTotal()
+                }
+            }
 
             if ('additionalData' in response) {
                 this.dataAdditional = response.additionalData;
@@ -136,6 +149,28 @@ Espo.define('collection', [], function () {
         },
 
         fetch: function (options) {
+            this.lastXhr = Backbone.Collection.prototype.fetch.call(this, this.getRequestOptions(options));
+            return this.lastXhr;
+        },
+
+        fetchTotal(options) {
+            options = this.getRequestOptions(options);
+            delete options.data.collectionOnly
+            options.data.totalOnly = true
+
+            options = _.extend(options, {
+                error: (resp) => {
+                    this.trigger('error', this, resp, options);
+                },
+                success: (resp) => {
+                    this.total = resp.total
+                    this.trigger('update-total', this, options)
+                }
+            })
+            return this.sync('read', this, options);
+        },
+
+        getRequestOptions(options) {
             var options = options || {};
             options.data = _.extend(options.data || {}, this.data);
 
@@ -143,6 +178,7 @@ Espo.define('collection', [], function () {
             this.sortBy = options.sortBy || this.sortBy;
             this.asc = options.asc || this.asc;
             this.where = options.where || this.where;
+            this.fetchOnlyCollection = options.fetchOnlyCollection || this.fetchOnlyCollection
 
             if (!('maxSize' in options)) {
                 options.data.maxSize = options.more ? this.maxSize : ((this.length > this.maxSize) ? this.length : this.maxSize);
@@ -154,10 +190,11 @@ Espo.define('collection', [], function () {
             options.data.sortBy = this.sortBy;
             options.data.asc = this.asc;
             options.data.where = this.getWhere();
+            if (this.fetchOnlyCollection) {
+                options.data.collectionOnly = this.fetchOnlyCollection
+            }
 
-            this.lastXhr = Backbone.Collection.prototype.fetch.call(this, options);
-
-            return this.lastXhr;
+            return options;
         },
 
         abortLastFetch: function () {

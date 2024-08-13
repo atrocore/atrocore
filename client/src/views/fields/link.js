@@ -338,7 +338,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function () {
-            let url = this.foreignScope + '?disableCount=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+            let url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
 
             let boolList = this.getSelectBoolFilterList();
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {

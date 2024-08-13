@@ -319,7 +319,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?disableCount=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
+            var url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
                 boolList = this.getSelectBoolFilterList();
 
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
