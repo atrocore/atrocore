@@ -131,7 +131,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 }
             ];
 
-            if(this.selectDuplicateEnabled){
+            if (this.selectDuplicateEnabled) {
                 this.buttonList.unshift({
                     name: 'selectDuplicate',
                     style: 'primary',
@@ -199,6 +199,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             this.listenTo(this.collection, 'sync', () => {
                 this.findInTree();
             });
+
+            this.listenTo(this.collection, 'update-total', () => {
+                this.$el.find('.for-tree-view .total-count-span').html(this.collection.total);
+                this.$el.find('.for-tree-view .shown-count-span').html(this.collection.total);
+            })
         },
 
         changeView(e) {
@@ -415,7 +420,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         isHierarchical() {
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
         },
 
         getSelectedViewType() {
@@ -693,7 +698,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 }.bind(this));
             });
         },
-        handleOnSelect(duplicate = false){
+        handleOnSelect(duplicate = false) {
             if (this.getSelectedViewType() === 'tree') {
                 let ids = [];
                 this.selectedItems.forEach(id => {

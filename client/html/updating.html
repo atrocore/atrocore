@@ -3,83 +3,32 @@
     <head>
         <title>{{applicationName}}</title>
         <link rel="stylesheet" href="{{basePath}}client/modules/treo-core/css/treo/treo-dark-theme.css">
+        <link rel="stylesheet" href="{{basePath}}client/css/style.css">
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon.ico" sizes="16x16" type="image/x-icon">
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_32.png" sizes="32x32" type="image/png">
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_48.png" sizes="48x48" type="image/png">
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_96.png" sizes="96x96" type="image/png">
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_144.png" sizes="144x144" type="image/png">
-        <script src="{{basePath}}client/lib/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="{{basePath}}client/atro.min.js?r={{cacheTimestamp}}"></script>
     </head>
     <body style="background-image: url(/?entryPoint=background);background-size: cover;background-repeat: no-repeat;background-position: center;height: 100vh">
     <div class="container content">
-        <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
-            <div id="login" class="panel panel-default panel-updating">
-                <div class="panel-heading">
-                    <div class="logo-container">
-                        <img src="{{basePath}}client/modules/treo-core/img/core_logo_dark.svg" class="logo">
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div>
-                        <div class="form-group">
-                            <h3 style="margin-bottom: 19px">System is updating...</h3>
-                            <label>Please wait till this process ends. You can <a href="/">refresh this page</a>, if you think, that it is already finished.</label>
-                            <label>If the update can not be completed, you need to restore the system, please run this command: </label>
-                            <pre style="margin: 10px 0;">php composer.phar restore</pre>
-                            <label>or you can force the restoration, if previous command does not help:</label>
-                            <pre style="margin: 10px 0;">php composer.phar restore --force</pre>
-                            <label>Please run this command as the webserver user, eg www-data, otherwise don't forget to change the ownership of the restored files.</label>
-
-                            <label style="margin-top: 20px;">Update logs:</label>
-                            <pre id="log" style="margin: 10px 0;max-height: 350px;overflow: scroll"></pre>
-                            <script type="text/javascript">
-                                let start = false;
-                                let count = 0;
-                                window.setInterval(function () {
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: `/{{logFile}}`,
-                                        cache: false,
-                                        success: logs => {
-                                            start = true;
-                                            count = count + 1;
-
-                                            let preparedLogs = logs.trim();
-                                            if (preparedLogs.search("composer") < 0) {
-                                                preparedLogs = 'Starting...';
-                                                if (count > 65) {
-                                                    preparedLogs = 'Something wrong. Please, reboot the server.';
-                                                }
-                                            }
-
-                                            $('#log').html(preparedLogs);
-                                        },
-                                        error: () => {
-                                            count = count + 1;
-                                            if (start) {
-                                                setTimeout(() => {
-                                                    location.reload();
-                                                }, 2000);
-                                            } else {
-                                                let message = 'Starting...';
-                                                if (count > 65) {
-                                                    message = 'Something wrong. Please, reboot the server.';
-                                                }
-                                                $('#log').html(message);
-                                            }
-                                        }
-                                    });
-                                }, 1000);
-                            </script>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="app" class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2"></div>
     </div>
-        <footer style="margin-left: 0">
-            <p class="credit small"><a target="_blank" href="https://github.com/atrocore/atrocore/issues/new">Report a Bug</a><span>  |  </span><a target="_blank" href="https://community.atrocore.com">Community</a><span>  |  </span><a target="_blank" href="https://help.atrocore.com">Help Center</a><span>  |  </span><a target="_blank" href="https://my.atrocore.com">Support</a><span>  |  </span><a target="_blank" href="https://atrocore.com/contact">Сontact Us</a><span style="float: right" class="copyright">&copy; <a href="https://atrocore.com" title="AtroCore is based on EspoCRM" target="_blank">AtroCore is based on EspoCRM</a> | <span>AtroСore: {{version}}</span></span></p>
-        </footer>
+    <footer style="margin-left: 0">
+        <p class="credit small"><a target="_blank" href="https://github.com/atrocore/atrocore/issues/new">Report a Bug</a><span>  |  </span><a target="_blank" href="https://community.atrocore.com">Community</a><span>  |  </span><a target="_blank" href="https://help.atrocore.com">Help Center</a><span>  |  </span><a target="_blank" href="https://my.atrocore.com">Support</a><span>  |  </span><a target="_blank" href="https://atrocore.com/contact">Contact Us</a><span style="float: right" class="copyright">&copy; <a href="https://atrocore.com" title="AtroCore is based on EspoCRM" target="_blank">AtroCore is based on EspoCRM</a> | <span>AtroCore: {{version}}</span></span></p>
+    </footer>
+    <script>
+        new Svelte.UpdatePanel({
+            target: document.querySelector('#app'),
+            props: {
+                applicationName: "{{applicationName}}",
+                logoPath: "{{basePath}}client/modules/treo-core/img/core_logo_dark.svg",
+                logFilePath: "{{basePath}}{{logFile}}",
+                restoreLink: "https://help.atrocore.com/installation-and-maintenance/update#restore-a-system"
+            }
+        });
+    </script>
     </body>
 </html>

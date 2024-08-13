@@ -622,7 +622,7 @@ Espo.define(
                     }
                 },
                 dataType: 'json',
-                timeout: 60000,
+                timeout: 120000,
                 contentType: 'application/json'
             });
 
