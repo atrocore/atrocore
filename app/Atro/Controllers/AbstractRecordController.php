@@ -107,7 +107,8 @@ abstract class AbstractRecordController extends AbstractController
             'asc'        => $asc,
             'sortBy'     => $sortBy,
             'q'          => $q,
-            'textFilter' => $textFilter
+            'textFilter' => $textFilter,
+            'disableCount' => $request->get('disableCount', false) === 'true'
         );
 
         $this->fetchListParamsFromRequest($params, $request, $data);
