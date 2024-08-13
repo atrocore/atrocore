@@ -31,7 +31,8 @@
     {{/if}}
 
     {{#if displayTotalCount}}
-    <div class="text-muted total-count">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
+    <div class="text-muted total-count {{#if totalLoading}} hide {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
+    <img class="preloader {{#unless totalLoading}} hide {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
     {{/if}}
 
     {{#each buttonList}}

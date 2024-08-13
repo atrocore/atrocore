@@ -95,28 +95,48 @@ abstract class AbstractRecordController extends AbstractController
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
         $textFilter = $request->get('textFilter');
+        $collectionOnly = $request->get('collectionOnly') === 'true';
+        $totalOnly = $request->get('totalOnly') === 'true';
 
         if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
         }
 
         $params = array(
-            'where'      => $where,
-            'offset'     => $offset,
-            'maxSize'    => $maxSize,
-            'asc'        => $asc,
-            'sortBy'     => $sortBy,
-            'q'          => $q,
-            'textFilter' => $textFilter
+            'where'          => $where,
+            'offset'         => $offset,
+            'maxSize'        => $maxSize,
+            'asc'            => $asc,
+            'sortBy'         => $sortBy,
+            'q'              => $q,
+            'textFilter'     => $textFilter,
+            'totalOnly'      => $totalOnly,
+            'collectionOnly' => $collectionOnly
         );
 
         $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findEntities($params);
 
+        if (!empty($totalOnly)) {
+            return ['total' => $result['total']];
+        }
+
+        if (isset($result['collection'])) {
+            $list = $result['collection']->getValueMapList();
+        } elseif (isset($result['list'])) {
+            $list = $result['list'];
+        } else {
+            $list = [];
+        }
+
+        if (!empty($collectionOnly)) {
+            return ['list' => $list];
+        }
+
         return array(
             'total' => $result['total'],
-            'list'  => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
+            'list'  => $list
         );
     }
 
@@ -188,24 +208,32 @@ abstract class AbstractRecordController extends AbstractController
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
         $textFilter = $request->get('textFilter');
+        $collectionOnly = $request->get('collectionOnly') === 'true';
+        $totalOnly = $request->get('totalOnly') === 'true';
 
         if (empty($maxSize)) {
             $maxSize = self::MAX_SIZE_LIMIT;
         }
 
         $params = array(
-            'where'      => $where,
-            'offset'     => $offset,
-            'maxSize'    => $maxSize,
-            'asc'        => $asc,
-            'sortBy'     => $sortBy,
-            'q'          => $q,
-            'textFilter' => $textFilter
+            'where'          => $where,
+            'offset'         => $offset,
+            'maxSize'        => $maxSize,
+            'asc'            => $asc,
+            'sortBy'         => $sortBy,
+            'q'              => $q,
+            'textFilter'     => $textFilter,
+            'totalOnly'      => $totalOnly,
+            'collectionOnly' => $collectionOnly
         );
 
         $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
+
+        if (!empty($totalOnly)) {
+            return ['total' => $result['total']];
+        }
 
         if (isset($result['collection'])) {
             $list = $result['collection']->getValueMapList();
@@ -213,6 +241,10 @@ abstract class AbstractRecordController extends AbstractController
             $list = $result['list'];
         } else {
             $list = [];
+        }
+
+        if (!empty($collectionOnly)) {
+            return ['list' => $list];
         }
 
         return array(
@@ -364,13 +396,13 @@ abstract class AbstractRecordController extends AbstractController
             if (isset($data->selectData) && is_array($data->selectData)) {
                 $selectData = json_decode(json_encode($data->selectData), true);
             }
-             if($shouldDuplicateForeign){
-                 $this->getRecordService()->duplicateAndLinkEntityMass($id, $link, $where, $selectData);
-             }else{
-                 $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
-             }
-             $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
-             return true;
+            if ($shouldDuplicateForeign) {
+                $this->getRecordService()->duplicateAndLinkEntityMass($id, $link, $where, $selectData);
+            } else {
+                $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
+            }
+            $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
+            return true;
         } else {
             $foreignIdList = array();
             if (isset($data->id)) {
@@ -384,15 +416,15 @@ abstract class AbstractRecordController extends AbstractController
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if($shouldDuplicateForeign){
+                if ($shouldDuplicateForeign) {
                     $result = $this->getRecordService()->duplicateAndLinkEntity($id, $link, $foreignId);
-                }else{
+                } else {
                     $result = $this->getRecordService()->linkEntity($id, $link, $foreignId);
                 }
             }
             if ($result) {
                 $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
-                return  true;
+                return true;
             }
         }
 

@@ -213,6 +213,11 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.viewModeList = ['list'];
             }
 
+            if(this.options.params.viewMode){
+                // do not search in cache if view mode is in params
+                return
+            }
+
             if (this.viewModeList.length > 1 || this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
                 var modeKey = 'listViewMode' + this.scope;
                 if (this.getStorage().has('state', modeKey)) {
