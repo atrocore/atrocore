@@ -181,7 +181,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
                     let htmlTag = 'code';
 
-                    if (type === 'color' || type === 'enum') {
+                    if (['bool', 'color', 'enum', 'multiEnum', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
                         htmlTag = 'span';
                     }
 
