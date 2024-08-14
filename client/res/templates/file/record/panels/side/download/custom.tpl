@@ -1,6 +1,6 @@
 <div class="col-sm-12">
-    <input name="downloadType" type="radio" value="custom">
-    <span class="control-label">Custom Download</span>
+    <input name="downloadType" type="radio" value="custom" id="downloadType-custom">
+    <label class="control-label" for="downloadType-custom">Custom Download</label>
 </div>
 <div class="additional-panel mt-51" style="display: none">
     <div class="cell col-sm-4 form-group" data-name="mode">
