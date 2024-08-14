@@ -84,7 +84,7 @@ Espo.define('collection', [], function () {
 
         remove: function (element, options) {
             const removed = Backbone.Collection.prototype.remove.call(this, element, options);
-            if (this.total > 0) {
+            if (this.total > 0 && removed) {
                 this.total -= _.isArray(removed) ? removed.length : 1
                 this.trigger('update-total', this, options);
             }
@@ -149,6 +149,7 @@ Espo.define('collection', [], function () {
         },
 
         fetch: function (options) {
+            this.total = null
             this.lastXhr = Backbone.Collection.prototype.fetch.call(this, this.getRequestOptions(options));
             return this.lastXhr;
         },
