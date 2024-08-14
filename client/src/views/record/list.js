@@ -1089,6 +1089,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.$el.find('.list-buttons-container .total-count').removeClass('hide')
                     if(this.collection.total>=0){
                         this.$el.find('.total-count-span').html(this.collection.total)
+                        this.$el.find('.shown-count-span').html(this.collection.length)
                     }
                 }else{
                     this.$el.find('.list-buttons-container .preloader').removeClass('hide')
