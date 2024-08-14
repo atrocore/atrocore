@@ -166,10 +166,10 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
         },
 
         getPasswordSendingMessage: function () {
-            if (this.getConfig().get('smtpServer') && this.getConfig().get('smtpServer') !== '') {
+            if (this.getConfig().get('notificationSmtpConnectionId') && this.getConfig().get('notificationSmtpConnectionId') !== '') {
                 return '';
             }
-            return this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/outboundEmails');
+            return this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/settings');
         },
 
         fetch: function () {
