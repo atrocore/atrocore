@@ -112,7 +112,7 @@ class Custom
     {
         $name = explode(".", $this->file->get("name"));
         array_pop($name);
-        $name[] = $this->format === "png" ? "png" : "jpeg";
+        $name[] = $this->format ?? "jpeg";
 
         return str_replace("\"", "\\\"", implode(".", $name));
     }
@@ -126,30 +126,36 @@ class Custom
     {
         switch ($this->scale) {
             case "resize":
-                $this->imagick->resizeImage(
-                    (int)$this->width,
-                    (int)$this->height,
-                    Imagick::FILTER_HAMMING,
-                    1, false
-                );
+                if (!empty($this->width) && !empty($this->height)) {
+                    $this->imagick->resizeImage(
+                        (int)$this->width,
+                        (int)$this->height,
+                        Imagick::FILTER_HAMMING,
+                        1, false
+                    );
+                }
                 break;
             case "byWidth":
-                $this->imagick->resizeImage(
-                    (int)$this->width,
-                    1000000000,
-                    Imagick::FILTER_HAMMING,
-                    1,
-                    true
-                );
+                if (!empty($this->width)) {
+                    $this->imagick->resizeImage(
+                        (int)$this->width,
+                        1000000000,
+                        Imagick::FILTER_HAMMING,
+                        1,
+                        true
+                    );
+                }
                 break;
             case "byHeight" :
-                $this->imagick->resizeImage(
-                    1000000000,
-                    (int)$this->height,
-                    Imagick::FILTER_HAMMING,
-                    1,
-                    true
-                );
+                if (!empty($this->height)) {
+                    $this->imagick->resizeImage(
+                        1000000000,
+                        (int)$this->height,
+                        Imagick::FILTER_HAMMING,
+                        1,
+                        true
+                    );
+                }
                 break;
         }
 
@@ -158,12 +164,8 @@ class Custom
 
     protected function quality(): Custom
     {
-        switch (true) {
-            case $this->format === "jpeg":
-                $this->imagick->setImageCompressionQuality((int)$this->quality);
-                break;
-            case $this->format === "png" :
-                break;
+        if (in_array($this->format, ['jpeg', 'webp'])) {
+            $this->imagick->setImageCompressionQuality((int)$this->quality);
         }
 
         return $this;
