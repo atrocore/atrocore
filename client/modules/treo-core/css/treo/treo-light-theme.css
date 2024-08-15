@@ -2610,7 +2610,7 @@ th {
   text-align: left;
 }
 
-.table {
+.table:not(button) {
   width: 100%;
   max-width: 100%;
   margin-bottom: 19px;
