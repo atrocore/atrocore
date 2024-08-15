@@ -48,12 +48,10 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                     toolbar: ['undo', 'redo', '|', 'heading-1', 'heading-2', 'heading-3', '|', 'bold', 'italic', 'strikethrough', '|', 'table', 'unordered-list', 'ordered-list', 'code', 'quote', 'horizontal-rule', '|', 'link', 'image', '|', 'preview', 'guide']
                 });
 
-                const wrapper = this.editor.codemirror.getWrapperElement();
-                if (wrapper) {
-                    wrapper.style.maxHeight = `${this.maxHeight}px`;
+                const scroller = this.editor.codemirror.getScrollerElement();
+                if (scroller) {
+                    scroller.style.maxHeight = `${this.maxHeight}px`;
                 }
-
-                $('.editor-preview-side').css('max-height', `${this.maxHeight}px`);
             }
         }
     });
