@@ -144,7 +144,7 @@ class Record extends \Espo\Services\RecordService
                 }
             }
 
-            $chunks = array_chunk($ids, $chunkSize);
+            $chunks = array_chunk($ids, (int)$chunkSize);
             $totalChunks = count($chunks);
 
             if ($totalChunks > 1 && count($chunks[$totalChunks - 1]) < $minChunkSize) {
