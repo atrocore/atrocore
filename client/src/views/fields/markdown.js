@@ -45,7 +45,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                     initialValue: this.default,
                     sideBySideFullscreen: false,
                     previewClass: ['editor-preview', 'complex-text'],
-                    toolbar: ['undo', 'redo', '|', 'heading-1', 'heading-2', 'heading-3', '|', 'bold', 'italic', 'strikethrough', '|', 'table', 'unordered-list', 'ordered-list', 'code', 'quote', 'horizontal-rule', '|', 'link', 'image', '|', 'preview', 'guide']
+                    toolbar: ['undo', 'redo', '|', 'heading-1', 'heading-2', 'heading-3', '|', 'bold', 'italic', 'strikethrough', '|', 'unordered-list', 'ordered-list', 'code', 'quote', 'horizontal-rule', '|', 'link', 'image', '|', 'preview', 'guide']
                 });
 
                 const scroller = this.editor.codemirror.getScrollerElement();
