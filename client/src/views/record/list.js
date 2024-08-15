@@ -1380,23 +1380,40 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         initDraggableList() {
             if (this.getAcl().check(this.scope, 'edit')) {
-                this.setCellWidth();
-
                 this.$el.find(this.listContainerEl).sortable({
                     handle: window.innerWidth < 768 ? '.cell[data-name="draggableIcon"]' : false,
                     delay: 150,
                     update: function (e, ui) {
                         this.saveListItemOrder(e, ui);
-                    }.bind(this)
+                    }.bind(this),
+                    helper: (e, ui) => {
+                        this.fitCellWidth(ui);
+                        return ui;
+                    },
+                    stop: (e, ui) => this.fitCellWidth(ui.item, true)
                 });
             }
         },
 
-        setCellWidth() {
-            let el = this.$el.find(this.listContainerEl);
+        fitCellWidth(row, clearValue = false) {
+            const widthData = {};
+            if (!clearValue) {
+                row.children().each(function (i, cell) {
+                    widthData[i] = $(this).outerWidth();
+                });
+            }
 
-            el.find('td').each(function (i) {
-                $(this).css('width', $(this).outerWidth());
+            row.children().each(function (i, cell) {
+                if (!clearValue) {
+                    let width = widthData[i] ?? $(this).outerWidth();
+                    if (cell.width) {
+                        width = cell.width;
+                    }
+
+                    $(this).css('width', width);
+                } else {
+                    $(this).css('width', '');
+                }
             });
         },
 
@@ -1546,7 +1563,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 setWidth();
                 toggleClass();
 
-                $window.on('scroll', toggleClass);
+                $window.on('scroll', () => {
+                    setPosition();
+                    setWidth();
+                    toggleClass();
+                });
                 $window.on('resize tree-width-changed tree-width-unset', function () {
                     this.fullTableScroll();
                     setPosition();
