@@ -15886,6 +15886,10 @@ ul.dropdown-menu > li > a > .check-icon + div {
     .dialog-confirm > .modal-dialog {
         width: 550px
     }
+
+    .dialog-select-record > .modal-dialog{
+        width: 1160px;
+    }
 }
 
 .dialog-confirm > .modal-dialog > .modal-content {
