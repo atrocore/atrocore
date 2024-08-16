@@ -44,6 +44,11 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                     status: false,
                     initialValue: this.default,
                     sideBySideFullscreen: false,
+                    shortcuts: {
+                        toggleFullScreen: null,
+                        drawImage: null,
+                        toggleSideBySide: null
+                    },
                     previewClass: ['editor-preview', 'complex-text'],
                     toolbar: ['undo', 'redo', '|', 'heading-1', 'heading-2', 'heading-3', '|', 'bold', 'italic', 'strikethrough', '|', 'unordered-list', 'ordered-list', 'code', 'quote', 'horizontal-rule', '|', 'link', 'image', '|', 'preview', 'guide']
                 });
