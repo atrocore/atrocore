@@ -382,7 +382,7 @@ class MassActions extends HasContainer
      * @param string $link
      *
      * @return string
-     * @throws \ Atro\Core\Exceptions\Error
+     * @throws \Atro\Core\Exceptions\Error
      */
     protected function getForeignEntityType(string $entityType, string $link): string
     {
