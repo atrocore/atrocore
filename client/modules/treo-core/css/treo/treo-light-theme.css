@@ -2623,6 +2623,11 @@ th {
   border-top: 1px solid #e8eced;
 }
 
+.table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]) {
+  max-width: 16em;
+  min-width: 8em;
+}
+
 .table > thead > tr > th {
   vertical-align: bottom;
   border-bottom: 2px solid #e8eced;
@@ -16073,11 +16078,14 @@ table.no-margin {
 
 .list > table td.cell[data-name="buttons"] {
   overflow: visible;
-  position: sticky;
   background-color: transparent;
   padding-top: 3px;
   padding-bottom: 3px;
   right: 0;
+}
+
+.list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
+  position: sticky;
 }
 
 .panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
@@ -16089,11 +16097,12 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
   border: 0;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
+  line-height: 1;
 }
 
 .dashboard-header .dashboard-buttons {
@@ -21081,9 +21090,14 @@ code.became, span.became {
   overflow-x: auto;
 }
 
-.file-link {
+.attachment-preview ~ .file-link {
   padding-top: 5px;
+}
+
+.file-link {
   white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 code.was .file-link,
@@ -21237,6 +21251,7 @@ select {
 
 .list > table tr.ui-sortable-helper {
   background-color: #f3f3f3;
+  display: table;
 }
 
 .list > table tr.ui-sortable-helper td {

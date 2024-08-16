@@ -100,7 +100,7 @@
                     {#if restoreLink}
                         <a href={restoreLink} target="_blank" class="btn btn-default" role="button"
                            style="float: right;"><i
-                                class="fa fa-history"></i>Restore the system</a>
+                                class="fa fa-history"></i>Recovery Instructions</a>
                     {/if}
                 </div>
                 {#if showLogs && fullLogs}
