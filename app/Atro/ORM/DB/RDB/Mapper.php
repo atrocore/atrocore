@@ -158,7 +158,7 @@ class Mapper implements MapperInterface
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
         }
 
-        if (!empty($params['callbacks'])) {
+        if (!empty($params['callbacks']) && !$innerSql) {
             foreach ($params['callbacks'] as $callback) {
                 call_user_func($callback, $qb, $entity, $params, $this);
             }
