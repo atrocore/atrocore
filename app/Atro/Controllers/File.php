@@ -19,6 +19,29 @@ use Atro\Core\Exceptions\Forbidden;
 
 class File extends Base
 {
+    public function actionPrepareForRichEditor($params, $data, $request)
+    {
+        if (!$request->isPost() || empty($data->fileId)) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check('File', 'read')) {
+            throw new Forbidden();
+        }
+
+        $file = $this->getEntityManager()->getEntity('File', $data->fileId);
+        $result = $file->getValueMap();
+
+        $sharingRepo = $this->getEntityManager()->getRepository('Sharing');
+        $sharing = $sharingRepo->get();
+        $sharing->set('fileId', $file->get('id'));
+        $this->getEntityManager()->saveEntity($sharing);
+        $this->getRecordService('Sharing')->prepareEntityForOutput($sharing);
+        $result->sharedUrl = $sharing->get('link');
+
+        return $result;
+    }
+
     public function actionUploadProxy($params, $data, $request)
     {
         if (!$request->isPost() || !property_exists($data, 'url') || empty($data->url)) {

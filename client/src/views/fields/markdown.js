@@ -49,7 +49,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                     name: "selectImage",
                     action: (editor) => {
                         this.notify('Loading...');
-                        this.createView('selectFileDialog', this.getMetadata().get('clientDefs.File.modalViews.select'), {
+                        this.createView('selectFileDialog', this.getMetadata().get('clientDefs.File.modalViews.select') || 'views/modals/select-records', {
                             scope: 'File',
                             filters: {
                                 fileType: {
@@ -63,9 +63,24 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                             view.render();
                             this.notify(false);
                             this.listenTo(view, 'select', model => {
-                                const file = new File([], model.get('name'));
-                                file.url = model.get('downloadUrl');
-                                this.editor.uploadImageUsingCustomFunction(this.uploadImage.bind(this), file)
+                                this.notify('Loading...');
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'File/action/prepareForRichEditor',
+                                    contentType: "application/json",
+                                    data: JSON.stringify({
+                                        fileId: model.get('id')
+                                    }),
+                                }).done(response => {
+                                    this.notify(false);
+                                    const file = new File([], model.get('name'));
+                                    file.url = response.sharedUrl;
+                                    this.editor.uploadImageUsingCustomFunction(this.uploadImage.bind(this), file)
+                                }).error(response => {
+                                    this.notify(false);
+                                    console.error(response);
+                                    Espo.ui.error('Error while selecting file');
+                                });
                             });
                         });
                     },
@@ -181,8 +196,9 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                                 this.uploadImage(file, onSuccess, onError);
                             }).error(response => {
                                 this.notify(false);
+                                console.error(response);
                                 Espo.ui.error('Error while uploading file');
-                            })
+                            });
                         };
                         reader.readAsDataURL(file);
                     }
@@ -198,8 +214,6 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
         uploadImage(file, onSuccess, onError) {
             if (file.url) {
                 onSuccess(file.url);
-            } else {
-                Espo.ui.error('Cannot upload your image')
             }
         }
     });
