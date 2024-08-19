@@ -140,7 +140,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                         }
 
                         if (file.size >= this.getMaxUploadSize()) {
-                            Espo.ui.notify(`Your file exceeded size limit of ${this.getMaxUploadSize()} MB`);
+                            Espo.ui.notify(`Your file exceeded size limit of ${this.getMaxUploadSize() / 1024 / 1024} MB`);
                             return;
                         }
 
@@ -163,6 +163,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                         }
 
                         const reader = new FileReader();
+                        this.notify('Uploading...');
                         reader.onload = e => {
                             $.ajax({
                                 type: 'POST',
@@ -175,9 +176,11 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                                     share: true
                                 }),
                             }).done(response => {
+                                this.notify(false);
                                 file.url = response.sharedUrl;
                                 this.uploadImage(file, onSuccess, onError);
                             }).error(response => {
+                                this.notify(false);
                                 Espo.ui.error('Error while uploading file');
                             })
                         };
