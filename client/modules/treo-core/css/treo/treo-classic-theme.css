@@ -16978,6 +16978,10 @@ table.table td.cell .complex-text {
     padding-left: 30px
 }
 
+.complex-text img {
+    max-width: 100%;
+}
+
 .field > .html-container h1:first-child, .field > .html-container h2:first-child, .field > .html-container h3:first-child, .field > .html-container h4:first-child, .field > .html-container h5:first-child, .field > .html-container h6:first-child, .field > .html-container > p:first-child, .field > .html-container > ul:first-child, .field > .html-container > ol:first-child, .field > .html-container > pre:first-child, .field > .html-container > blockquote:first-child {
     margin-top: 0
 }
