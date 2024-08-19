@@ -166,7 +166,7 @@ class FieldManagerController extends AbstractListener
     protected function isDefaultValueValid(string $type, $default): bool
     {
         // prepare types
-        $types = ['text', 'textMultiLang', 'wysiwyg', 'wysiwygMultiLang'];
+        $types = ['text', 'textMultiLang', 'wysiwyg', 'wysiwygMultiLang', 'markdown', 'markdownMultiLang'];
 
         if (in_array($type, $types) && is_string($default) && strpos($default, "'") !== false) {
             // prepare message
@@ -257,7 +257,7 @@ class FieldManagerController extends AbstractListener
          $query= $conn->createQueryBuilder()
                 ->update($conn->quoteIdentifier($table));
 
-        if(in_array($data->type, ['varchar', 'url', 'text', 'wysiwyg'])){
+        if(in_array($data->type, ['varchar', 'url', 'text', 'wysiwyg', 'markdown'])){
             $query->set($column, ':default')
                 ->where("$column is NULL")
                 ->setParameter('default',$value = $data->default ?? '', Mapper::getParameterType($value))
