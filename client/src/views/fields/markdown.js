@@ -36,6 +36,82 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
             this.maxHeight = this.params.maxHeight || this.maxHeight;
         },
 
+        getToolbarItems() {
+            const items = [
+                'undo', 'redo', '|',
+                'heading-1', 'heading-2', 'heading-3', '|',
+                'bold', 'italic', 'strikethrough', '|',
+                'unordered-list', 'ordered-list', 'code', 'quote', 'link', 'horizontal-rule', '|',
+            ];
+
+            if (this.getAcl().check('File', 'read')) {
+                items.push({
+                    name: "selectImage",
+                    action: (editor) => {
+                        this.notify('Loading...');
+                        this.createView('selectFileDialog', this.getMetadata().get('clientDefs.File.modalViews.select'), {
+                            scope: 'File',
+                            filters: {
+                                fileType: {
+                                    type: 'in',
+                                    field: 'typeId',
+                                    attribute: 'typeId',
+                                    value: ['a_image', 'a_favicon']
+                                }
+                            },
+                        }, view => {
+                            view.render();
+                            this.notify(false);
+                            this.listenTo(view, 'select', model => {
+                                const file = new File([], model.get('name'));
+                                file.url = model.get('downloadUrl');
+                                this.editor.uploadImageUsingCustomFunction(this.uploadImage.bind(this), file)
+                            });
+                        });
+                    },
+                    className: "fa fa-file-image-o",
+                    title: "Select"
+                });
+            }
+
+            if (this.getAcl().check('File', 'create')) {
+                items.push({
+                    name: "uploadImage",
+                    action: (editor) => {
+                        this.notify('Loading...')
+                        this.createView('upload', 'views/file/modals/upload', {
+                            scope: 'File',
+                            fullFormDisabled: true,
+                            layoutName: 'upload',
+                            multiUpload: false,
+                            attributes: _.extend(this.model.attributes, {share: true}),
+                        }, view => {
+                            view.render();
+                            this.notify(false);
+                            this.listenTo(view.model, 'after:file-upload', entity => {
+                                const file = new File([], entity.name);
+                                file.url = entity.sharedUrl;
+                                this.editor.uploadImageUsingCustomFunction(this.uploadImage.bind(this), file)
+                            });
+                            this.listenToOnce(view, 'close', () => {
+                                this.clearView('upload');
+                            });
+                        });
+                    },
+                    className: "fa fa-download",
+                    title: "Upload from a local filesystem"
+                });
+            }
+
+            if (items[items.length - 1] !== '|') {
+                items.push('|');
+            }
+
+            items.push('preview', 'guide');
+
+            return items;
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             const element = this.$element.get(0);
@@ -55,68 +131,14 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                     },
                     previewRender: (plainText) => marked(plainText),
                     previewClass: ['editor-preview', 'complex-text'],
-                    toolbar: [
-                        'undo', 'redo', '|',
-                        'heading-1', 'heading-2', 'heading-3', '|',
-                        'bold', 'italic', 'strikethrough', '|',
-                        'unordered-list', 'ordered-list', 'code', 'quote', 'link', 'horizontal-rule', '|',
-                        {
-                            name: "selectImage",
-                            action: (editor) => {
-                                this.notify('Loading...');
-                                this.createView('selectFileDialog', this.getMetadata().get('clientDefs.File.modalViews.select'), {
-                                    scope: 'File',
-                                    filters: {
-                                        fileType: {
-                                            type: 'in',
-                                            field: 'typeId',
-                                            attribute: 'typeId',
-                                            value: ['a_image', 'a_favicon']
-                                        }
-                                    },
-                                }, view => {
-                                    view.render();
-                                    this.notify(false);
-                                    this.listenTo(view, 'select', model => {
-                                        const file = new File([], model.get('name'));
-                                        file.url = model.get('downloadUrl');
-                                        this.editor.uploadImageUsingCustomFunction(this.uploadImage.bind(this), file)
-                                    });
-                                });
-                            },
-                            className: "fa fa-file-image-o",
-                            title: "Select"
-                        },
-                        {
-                            name: "uploadImage",
-                            action: (editor) => {
-                                this.notify('Loading...')
-                                this.createView('upload', 'views/file/modals/upload', {
-                                    scope: 'File',
-                                    fullFormDisabled: true,
-                                    layoutName: 'upload',
-                                    multiUpload: false,
-                                    attributes: _.extend(this.model.attributes, {share: true}),
-                                }, view => {
-                                    view.render();
-                                    this.notify(false);
-                                    this.listenTo(view.model, 'after:file-upload', entity => {
-                                        const file = new File([], entity.name);
-                                        file.url = entity.sharedUrl;
-                                        this.editor.uploadImageUsingCustomFunction(this.uploadImage.bind(this), file)
-                                    });
-                                    this.listenToOnce(view, 'close', () => {
-                                        this.clearView('upload');
-                                    });
-                                });
-                            },
-                            className: "fa fa-download",
-                            title: "Upload from a local filesystem"
-                        }, '|',
-                        'preview', 'guide'
-                    ],
-                    uploadImage: true,
+                    toolbar: this.getToolbarItems(),
+                    uploadImage: !!this.getAcl().check('File', 'create'),
                     imageUploadFunction: (file, onSuccess, onError) => {
+                        if (!this.getAcl().check('File', 'create')) {
+                            Espo.ui.error('You are not allowed to upload images');
+                            return;
+                        }
+
                         if (file.size >= this.getMaxUploadSize()) {
                             Espo.ui.notify(`Your file exceeded size limit of ${this.getMaxUploadSize()} MB`);
                             return;
