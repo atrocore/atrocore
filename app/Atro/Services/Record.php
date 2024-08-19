@@ -45,10 +45,10 @@ class Record extends \Espo\Services\RecordService
             };
         }
 
-        list($ids, $errors, $sync) = $this->executeMassAction($params, $callback);
+        list($count, $errors, $sync) = $this->executeMassAction($params, $callback);
 
         return $this
-            ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids, 'sync' => $sync, 'errors' => $errors]]))
+            ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => ['count' => $count, 'sync' => $sync, 'errors' => $errors]]))
             ->getArgument('result');
     }
 
@@ -84,6 +84,7 @@ class Record extends \Espo\Services\RecordService
     protected function executeMassAction(array $params, \Closure $actionOperation): array
     {
         $ids = [];
+        $total = 0;
         $errors = [];
 
         if (empty($params['action']) || empty($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
@@ -103,6 +104,7 @@ class Record extends \Espo\Services\RecordService
 
         if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
             $ids = $params['ids'];
+            $total = count($ids);
         }
 
         if (array_key_exists('where', $params)) {
@@ -114,14 +116,15 @@ class Record extends \Espo\Services\RecordService
             $repository = $this->getEntityManager()->getRepository($this->entityType);
             $repository->handleSelectParams($selectParams);
 
-            $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
-            $ids = array_column($collection->toArray(), 'id');
+            $total = $repository->count(array_merge($selectParams, ['select' => ['id']]));
         }
-
-        $total = count($ids);
 
         $jobIds = [];
         if ($total <= $maxCountWithoutJob) {
+            if (isset($repository) && isset($selectParams)) {
+                $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
+                $ids = array_column($collection->toArray(), 'id');
+            }
             foreach ($ids as $id) {
                 try {
                     $actionOperation($id);
@@ -144,34 +147,51 @@ class Record extends \Espo\Services\RecordService
                 }
             }
 
-            $chunks = array_chunk($ids, (int)$chunkSize);
-            $totalChunks = count($chunks);
+            $chunkSize = (int)$chunkSize;
+            $totalChunks = (int)ceil($total / $chunkSize);
 
-            if ($totalChunks > 1 && count($chunks[$totalChunks - 1]) < $minChunkSize) {
-                $lastChunk = array_pop($chunks);
-                $totalChunks = count($chunks);
-                $chunks[$totalChunks - 1] = array_merge($chunks[$totalChunks - 1], $lastChunk);
-            }
+            $offset = 0;
+            $part = 0;
+            while (true) {
+                if (!empty($ids)) {
+                    $collection = $repository
+                        ->select(['id'])
+                        ->where(['id' => $ids])
+                        ->limit($offset, $chunkSize)
+                        ->find();
+                } else {
+                    $collection = $repository
+                        ->limit($offset, $chunkSize)
+                        ->find(array_merge($selectParams, ['select' => ['id']]));
+                }
 
-            foreach ($chunks as $part => $chunk) {
+                $collectionIds = array_column($collection->toArray(), 'id');
+                if (empty($collectionIds)) {
+                    break;
+                }
+
                 $jobData = array_merge($additionJobData, [
                     'entityType'  => $this->getEntityType(),
                     'total'       => $total,
-                    'chunkSize'   => count($chunk),
+                    'chunkSize'   => count($collectionIds),
                     'totalChunks' => $totalChunks,
-                    'ids'         => $chunk,
+                    'ids'         => $collectionIds,
                 ]);
                 if ($action === 'delete' && !empty($params['permanently'])) {
                     $jobData['deletePermanently'] = true;
                 }
-                $name = $this->getInjection('language')->translate($action, 'massActions', 'Global') . ': ' . $this->entityName;
+                $name = $this->getInjection('language')
+                        ->translate($action, 'massActions', 'Global') . ': ' . $this->entityName;
                 if ($part > 0) {
                     $name .= " ($part)";
                 }
 
-                $jobIds[] = $this
-                    ->getInjection('queueManager')
-                    ->createQueueItem($name, 'Mass' . ucfirst($action), $jobData, 'Crucial');
+//                $jobIds[] = $this
+//                    ->getInjection('queueManager')
+//                    ->createQueueItem($name, 'Mass' . ucfirst($action), $jobData, 'Crucial');
+
+                $offset = $offset + $chunkSize;
+                $part++;
             }
         }
 
@@ -188,6 +208,6 @@ class Record extends \Espo\Services\RecordService
             array_unshift($errors, $this->getInjection('language')->translate($label, 'exceptions'));
         }
 
-        return [$ids, $errors, empty($jobIds)];
+        return [$total, $errors, empty($jobIds)];
     }
 }
