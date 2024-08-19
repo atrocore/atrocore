@@ -45,7 +45,7 @@ class NotificationRule extends Base
         } else {
             $cachedData = $this->getDataManager()->getCacheData(self::CACHE_NAME);
 
-            if (empty($cachedData['notificationRules'] || empty($cachedData['users']))) {
+            if (empty($cachedData['notificationRules']) || empty($cachedData['users'])) {
                 return null;
             }
 

@@ -16,12 +16,9 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Repositories\Relation;
-use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\AclManager;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
@@ -1273,8 +1270,7 @@ class Metadata extends AbstractListener
 
             $users = [];
 
-
-            foreach ($notificationRules as $key => $notificationRule) {
+            foreach ($notificationRules as $notificationRule) {
                 $notificationProfileId = $notificationRule['notification_profile_id'];
 
                 if (!isset($users[$notificationProfileId])) {

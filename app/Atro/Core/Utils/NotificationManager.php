@@ -321,7 +321,6 @@ class NotificationManager
         return $this->notificationRules[$key] = $rule;
     }
 
-
     protected function getSubscriberUserIds(Entity $entity): array
     {
         $key = $entity->getEntityType() . '-' . $entity->get('id');
