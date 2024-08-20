@@ -43,7 +43,7 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
         },
 
         setMode(mode) {
-            this.setTemplateFromMeasureFormat()
+            this.setTemplateFromMeasureFormat(mode)
             Dep.prototype.setMode.call(this, mode)
         },
 
@@ -55,7 +55,6 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
         afterSetup() {
             if (this.measureId) {
                 this.unitFieldName = this.originalName + 'UnitId';
-                this.loadUnitOptions();
                 if (this.model.isNew() && this.defaultUnit) {
                     this.model.set(this.unitFieldName, this.defaultUnit);
                 }
@@ -116,16 +115,23 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
         prepareMeasureData(data) {
             if (this.measureId) {
                 data.unitFieldName = this.unitFieldName;
-                data.unitList = this.unitList;
-                data.unitListTranslates = this.unitListTranslates;
                 data.unitValue = this.model.get(this.unitFieldName);
-                data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
-                data.unitSymbol = this.unitListSymbols[data.unitValue]
+                data.unitList = this.unitList;
+                const unitData = this.model.get(this.originalName + 'UnitData')
+                if (this.mode === 'edit' || !unitData) {
+                    this.loadUnitOptions();
+                    data.unitListTranslates = this.unitListTranslates;
+                    data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
+                    data.unitSymbol = this.unitListSymbols[data.unitValue]
+                } else {
+                    data.unitValueTranslate = unitData['name'];
+                    data.unitSymbol = unitData['symbol']
+                }
             }
             return data;
         },
 
-        setTemplateFromMeasureFormat() {
+        setTemplateFromMeasureFormat(mode) {
             const templates = {
                 detailTemplate1: 'fields/varchar/detail-1',
                 detailTemplate2: 'fields/varchar/detail-2',
@@ -135,8 +141,11 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
                 listLinkTemplate2: 'fields/varchar/list-link-2'
             }
 
-            if (['detail', 'list', 'listLink'].includes(this.mode)) {
-                let prop = this.mode + 'Template' + this.getMeasureFormat();
+            if (['detail', 'list', 'listLink'].includes(mode)) {
+                const data = this.model.get(this.options.name + 'UnitData')
+                const format = (data ? data.displayFormat : this.getMeasureFormat()) ?? '';
+
+                let prop = this.mode + 'Template' + format;
                 if (prop in templates) {
                     if (this.mode === 'list') {
                         this.listTemplate = templates[prop]

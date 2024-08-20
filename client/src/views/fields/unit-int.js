@@ -47,7 +47,7 @@ Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-var
         },
 
         setMode(mode) {
-            Varchar.prototype.setTemplateFromMeasureFormat.call(this);
+            Varchar.prototype.setTemplateFromMeasureFormat.call(this,mode);
             Dep.prototype.setMode.call(this, mode)
         },
 

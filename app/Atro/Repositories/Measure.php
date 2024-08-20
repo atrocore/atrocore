@@ -54,6 +54,25 @@ class Measure extends Base
         return $result;
     }
 
+    public function getPreparedUnit(string $measureId, string $unitId): array
+    {
+        $units = $this->getMeasureUnits($measureId);
+        if (!isset($units[$unitId])) {
+            return [];
+        }
+        $unit = $units[$unitId];
+        $measure = $this->get($measureId);
+        if (empty($measure)) {
+            return [];
+        }
+
+        return [
+            'displayFormat' => $measure->get('displayFormat'),
+            'name'          => $unit->get('name'),
+            'symbol'        => $unit->get('symbol')
+        ];
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('code') === '') {
