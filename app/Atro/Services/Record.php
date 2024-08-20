@@ -83,10 +83,6 @@ class Record extends \Espo\Services\RecordService
 
     protected function executeMassAction(array $params, \Closure $actionOperation): array
     {
-        $ids = [];
-        $total = 0;
-        $errors = [];
-
         if (empty($params['action']) || empty($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
             return [];
         }
@@ -102,26 +98,29 @@ class Record extends \Espo\Services\RecordService
             return [];
         }
 
+        $repository = $this->getEntityManager()->getRepository($this->entityType);
+        $byWhere = array_key_exists('where', $params);
+        $errors = [];
+
         if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
             $ids = $params['ids'];
             $total = count($ids);
-        }
-
-        if (array_key_exists('where', $params)) {
+        } elseif ($byWhere) {
             $selectParams = $this->getSelectParams(['where' => $params['where']], true, true);
             if ($action === 'delete' && !empty($params['permanently'])) {
                 $selectParams['withDeleted'] = true;
             }
 
-            $repository = $this->getEntityManager()->getRepository($this->entityType);
             $repository->handleSelectParams($selectParams);
-
             $total = $repository->count(array_merge($selectParams, ['select' => ['id']]));
+        } else {
+            $ids = [];
+            $total = 0;
         }
 
         $jobIds = [];
         if ($total <= $maxCountWithoutJob) {
-            if (isset($repository) && isset($selectParams)) {
+            if ($byWhere) {
                 $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
                 $ids = array_column($collection->toArray(), 'id');
             }
@@ -185,6 +184,11 @@ class Record extends \Espo\Services\RecordService
                 if ($part > 0) {
                     $name .= " ($part)";
                 }
+
+                echo '<pre>';
+                print_r('123');
+                die();
+
 
 //                $jobIds[] = $this
 //                    ->getInjection('queueManager')
