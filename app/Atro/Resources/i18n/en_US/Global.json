@@ -440,7 +440,8 @@
     "onlyArchived": "Without non-archived",
     "withArchived": "With archived",
     "onlyDeleted": "Deleted",
-    "onlyFollowed": "Followed"
+    "onlyFollowed": "Followed",
+    "onlyMyTeams": "My Teams"
   },
   "presetFilters": {
     "all": "All"
