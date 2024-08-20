@@ -202,6 +202,11 @@ class Record extends RecordService
                 "jobIds" => $jobIds,
                 "total"  => $total
             ]);
+
+            foreach ($this->getEntityManager()->getRepository('QueueItem')->where(['id' => $jobIds])->find() as $job) {
+                $job->set('startFrom', null);
+                $this->getEntityManager()->saveEntity($job);
+            }
         }
 
         if (!empty($errors)) {
