@@ -120,7 +120,8 @@
     "datetimeOptional": "Datum/Datum-Uhrzeit",
     "language": "Sprache",
     "multiLanguage": "Sprachen",
-    "measure": "Messen"
+    "measure": "Messen",
+    "markdown": "Markdown"
   },
   "fields": {
     "script": "Skript",
@@ -149,6 +150,7 @@
     "trim": "Führende und abschließende Leerzeichen entfernen",
     "height": "Höhe (px)",
     "minHeight": "Min. Höhe (px)",
+    "maxHeight": "Max. Höhe (px)",
     "typeList": "Typenliste",
     "rowsMax": "Maximale Anzahl von Zeilen im Textbereich",
     "rowsMin": "Mindestanzahl von Textzeilen",
