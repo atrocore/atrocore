@@ -23102,13 +23102,13 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
 }
 
 
-del {
+del.diffmod, del.diffdel {
   color: red;
   background: #fdd;
   text-decoration: none;
 }
 
-ins {
+ins.diffins, ins.diffmod {
   color: green;
   background: #dfd;
   text-decoration: none;
