@@ -259,7 +259,7 @@ class Cron extends AbstractConsole
         $repository = $this->getEntityManager()->getRepository('QueueItem');
 
         $items = $repository
-            ->select(['id', 'sortOrder', 'priority'])
+            ->select(['id', 'sortOrder', 'priority', 'startFrom'])
             ->where(['status' => 'Pending'])
             ->order('sortOrder')
             ->limit(0, 200)
