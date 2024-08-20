@@ -21,6 +21,7 @@ class QueueItemDTO
     protected string $priority = 'Normal';
     protected string $hash = '';
     protected ?string $parentId = null;
+    protected ?string $startFrom = null;
 
     public function __construct(string $name, string $serviceName, array $data = [])
     {
@@ -72,5 +73,15 @@ class QueueItemDTO
     public function setParentId(string $parentId): void
     {
         $this->parentId = $parentId;
+    }
+
+    public function setStartFrom(\DateTime $dateTime): void
+    {
+        $this->startFrom = $dateTime->format('Y-m-d H:i:s');
+    }
+
+    public function getStartFrom(): ?string
+    {
+        return $this->startFrom;
     }
 }
