@@ -147,6 +147,9 @@ class Record extends RecordService
                 }
             }
 
+            // increase timeout
+            set_time_limit(300);
+
             $chunkSize = (int)$chunkSize;
             $totalChunks = (int)ceil($total / $chunkSize);
 
@@ -158,10 +161,12 @@ class Record extends RecordService
                         ->select(['id'])
                         ->where(['id' => $ids])
                         ->limit($offset, $chunkSize)
+                        ->order('id', 'ASC')
                         ->find();
                 } else {
                     $collection = $repository
                         ->limit($offset, $chunkSize)
+                        ->order('id', 'ASC')
                         ->find(array_merge($selectParams, ['select' => ['id']]));
                 }
 
