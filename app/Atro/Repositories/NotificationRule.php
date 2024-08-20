@@ -159,25 +159,9 @@ class NotificationRule extends Base
         }
     }
 
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if ($entity->isNew()) {
-            return;
-        }
-
-        if ($entity->isAttributeChanged('occurrence') || $entity->isAttributeChanged('entity')) {
-            throw new BadRequest('You cannot update the attribute occcurrence or entity');
-        }
-        parent::beforeSave($entity, $options);
-    }
-
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
-
-        if (($entity->isNew() || !$entity->isAttributeChanged('isActive')) && !$entity->get('isActive')) {
-            return;
-        }
 
         $this->deleteCacheFile();
     }
