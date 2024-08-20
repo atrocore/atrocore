@@ -124,7 +124,8 @@
     "jsonObject": "JSON object",
     "language": "Language",
     "multiLanguage": "Languages",
-    "measure": "Measure"
+    "measure": "Measure",
+    "markdown": "Markdown"
   },
   "fields": {
     "script": "Script",
@@ -165,6 +166,7 @@
     "trim": "Remove leading and trailing whitespaces",
     "height": "Height (px)",
     "minHeight": "Min height (px)",
+    "maxHeight": "Max height (px)",
     "provider": "Provider",
     "typeList": "Type list",
     "rowsMax": "Maximum number of rows of textarea",

@@ -38,10 +38,6 @@ Espo.define('view-helper', [], function () {
 
         this.mdBeforeList = [
             {
-                regex: /\["?(.*?)"?\]\((.*?)\)/g,
-                value: '<a href="$2">$1</a>'
-            },
-            {
                 regex: /\&\#x60;\&\#x60;\&\#x60;\n?([\s\S]*?)\&\#x60;\&\#x60;\&\#x60;/g,
                 value: function (s, string) {
                     return '<pre><code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code></pre>';

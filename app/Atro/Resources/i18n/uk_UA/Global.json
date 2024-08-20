@@ -436,7 +436,8 @@
     "followed": "Ви підписані",
     "onlyArchived": "Без неархівних",
     "withArchived": "З архівом",
-    "onlyFollowed": "Ви підписані"
+    "onlyFollowed": "Ви підписані",
+    "onlyMyTeams": "Мої команди"
   },
   "presetFilters": {
     "all": "Усі"

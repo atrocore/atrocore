@@ -50,7 +50,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         noCreateScopeList: ['User', 'Team', 'Role'],
 
-        className: 'dialog dialog-record',
+        className: 'dialog dialog-record dialog-select-record',
 
         boolFilterData: {},
 

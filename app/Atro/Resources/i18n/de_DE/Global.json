@@ -462,7 +462,8 @@
     "notActive": "Inaktiv",
     "onlyArchived": "Ohne nicht archiviert",
     "withArchived": "Mit archiviert",
-    "onlyFollowed": "Abonniert"
+    "onlyFollowed": "Abonniert",
+    "onlyMyTeams": "Meine Teams"
   },
   "presetFilters": {
     "all": "Alle"
