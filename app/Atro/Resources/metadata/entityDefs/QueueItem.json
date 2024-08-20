@@ -90,6 +90,10 @@
       "massUpdateDisabled": true,
       "layoutListDisabled": true
     },
+    "startFrom": {
+      "type": "datetime",
+      "readOnly": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
