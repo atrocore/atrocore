@@ -116,15 +116,15 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             if (this.measureId) {
                 data.unitFieldName = this.unitFieldName;
                 data.unitValue = this.model.get(this.unitFieldName);
-                data.unitList = this.unitList;
                 const unitData = this.model.get(this.originalName + 'UnitData')
                 if (this.mode === 'edit' || !unitData) {
                     this.loadUnitOptions();
+                    data.unitList = this.unitList;
                     data.unitListTranslates = this.unitListTranslates;
                     data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
                     data.unitSymbol = this.unitListSymbols[data.unitValue]
                 } else {
-                    data.unitValueTranslate = unitData['name'];
+                    data.unitValueTranslate = unitData['name'] || data.unitValue;
                     data.unitSymbol = unitData['symbol']
                 }
             }

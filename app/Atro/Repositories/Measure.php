@@ -17,10 +17,13 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
+use Espo\ORM\IEntity;
 
 class Measure extends Base
 {
     protected array $measureUnits = [];
+
+    protected array $measures = [];
 
     public function getMeasureUnits(string $measureId): array
     {
@@ -37,6 +40,14 @@ class Measure extends Base
         }
 
         return $this->measureUnits[$measureId];
+    }
+
+    public function getMeasure(string $measureId): ?IEntity
+    {
+        if (!isset($this->measures[$measureId])) {
+            $this->measures[$measureId] = $this->get($measureId);
+        }
+        return $this->measures[$measureId];
     }
 
     public function convertMeasureUnit($value, string $measureId, string $unitId): array
@@ -61,7 +72,7 @@ class Measure extends Base
             return [];
         }
         $unit = $units[$unitId];
-        $measure = $this->get($measureId);
+        $measure = $this->getMeasure($measureId);
         if (empty($measure)) {
             return [];
         }
