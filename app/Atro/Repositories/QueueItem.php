@@ -78,18 +78,20 @@ class QueueItem extends Base
     {
         parent::afterSave($entity, $options);
 
-        /**
-         * Create file
-         */
-        if ($entity->get('status') === 'Pending') {
-            $sortOrder = $this->get($entity->get('id'))->get('sortOrder');
-            $priority = $entity->get('priority');
+        if (empty($entity->get('startFrom')) || $entity->get('startFrom') <= (new \DateTime())->format('Y-m-d H:i:s')) {
+            /**
+             * Create file
+             */
+            if ($entity->get('status') === 'Pending') {
+                $sortOrder = $this->get($entity->get('id'))->get('sortOrder');
+                $priority = $entity->get('priority');
 
-            $filePath = $this->getFilePath($sortOrder, $priority, $entity->get('id'));
-            if (!empty($filePath)) {
-                file_put_contents($filePath, $entity->get('id'));
+                $filePath = $this->getFilePath($sortOrder, $priority, $entity->get('id'));
+                if (!empty($filePath)) {
+                    file_put_contents($filePath, $entity->get('id'));
+                }
+                file_put_contents(QueueManager::FILE_PATH, '1');
             }
-            file_put_contents(QueueManager::FILE_PATH, '1');
         }
 
         if (!in_array($entity->get('status'), ['Pending', 'Running'])) {

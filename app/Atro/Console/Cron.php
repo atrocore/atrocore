@@ -267,10 +267,12 @@ class Cron extends AbstractConsole
 
         $created = false;
         foreach ($items as $item) {
-            $filePath = $repository->getFilePath($item->get('sortOrder'), $item->get('priority'), $item->get('id'));
-            if (!empty($filePath) && !file_exists($filePath)) {
-                file_put_contents($filePath, $item->get('id'));
-                $created = true;
+            if (empty($item->get('startFrom')) || $item->get('startFrom') <= (new \DateTime())->format('Y-m-d H:i:s')) {
+                $filePath = $repository->getFilePath($item->get('sortOrder'), $item->get('priority'), $item->get('id'));
+                if (!empty($filePath) && !file_exists($filePath)) {
+                    file_put_contents($filePath, $item->get('id'));
+                    $created = true;
+                }
             }
         }
 

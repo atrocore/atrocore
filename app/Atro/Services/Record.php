@@ -15,9 +15,10 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
+use Atro\DTO\QueueItemDTO;
+use Espo\Services\RecordService;
 
-
-class Record extends \Espo\Services\RecordService
+class Record extends RecordService
 {
     /**
      * @param array $params
@@ -185,14 +186,11 @@ class Record extends \Espo\Services\RecordService
                     $name .= " ($part)";
                 }
 
-                echo '<pre>';
-                print_r('123');
-                die();
+                $qmDto = new QueueItemDTO($name, 'Mass' . ucfirst($action), $jobData);
+                $qmDto->setPriority('Crucial');
+                $qmDto->setStartFrom(new \DateTime('2299-01-01'));
 
-
-//                $jobIds[] = $this
-//                    ->getInjection('queueManager')
-//                    ->createQueueItem($name, 'Mass' . ucfirst($action), $jobData, 'Crucial');
+                $jobIds[] = $this->getInjection('queueManager')->createQueueItem($qmDto);
 
                 $offset = $offset + $chunkSize;
                 $part++;
