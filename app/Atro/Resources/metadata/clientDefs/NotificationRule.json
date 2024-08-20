@@ -1,27 +1,3 @@
 {
-  "controller": "controllers/record",
-  "dynamicLogic": {
-    "fields": {
-      "occurrence": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      },
-      "entity": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
-    }
-  }
+  "controller": "controllers/record"
 }

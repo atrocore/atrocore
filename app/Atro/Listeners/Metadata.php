@@ -18,7 +18,6 @@ use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
@@ -1250,10 +1249,11 @@ class Metadata extends AbstractListener
 
         /** @var DataManager $dataManager */
         $dataManager = $this->getContainer()->get('dataManager');
-        $notificationRules = $dataManager->getCacheData(NotificationRule::CACHE_NAME);
-        if ($notificationRules === null) {
+        $cachedData = $dataManager->getCacheData(NotificationRule::CACHE_NAME);
+        if (!isset($cachedData['notificationRules']) || !isset($cachedData['users']) || !isset($cachedData['notificationProfilesIds'])) {
+            $notificationProfilesIds = [];
+            $connection = $this->getEntityManager()->getConnection();
             try {
-                $connection = $this->getEntityManager()->getConnection();
                 $notificationRules = $connection->createQueryBuilder()
                     ->select('nr.*')
                     ->from($connection->quoteIdentifier('notification_rule'), 'nr')
@@ -1268,10 +1268,37 @@ class Metadata extends AbstractListener
                 $notificationRules = [];
             }
 
-            $dataManager->setCacheData(NotificationRule::CACHE_NAME, $notificationRules);
+            $users = [];
+
+            foreach ($notificationRules as $notificationRule) {
+                $notificationProfileId = $notificationRule['notification_profile_id'];
+
+                if (!isset($users[$notificationProfileId])) {
+                    try{
+                        $users[$notificationProfileId] = $this->getEntityManager()
+                            ->getRepository('NotificationRule')
+                            ->getNotificationProfileUsers($notificationProfileId);
+
+                       if(!empty($users[$notificationProfileId])){
+                           $notificationProfilesIds[] = $notificationProfileId;
+                       }
+
+                   }catch (\Throwable $e){
+                       $users[$notificationProfileId] = [];
+                   }
+                }
+            }
+
+            $dataManager->setCacheData(NotificationRule::CACHE_NAME, $cachedData =  [
+                "notificationProfilesIds" => $notificationProfilesIds,
+                "notificationRules" => $notificationRules,
+                "users" => $users
+            ]);
         }
 
-        foreach ($notificationRules as $notificationRule) {
+        $data['app']['activeNotificationProfilesIds'] = $cachedData['notificationProfilesIds'];
+
+        foreach ($cachedData['notificationRules'] as $notificationRule) {
             if(!empty($notificationRule['entity'])){
                 $data['scopes'][$notificationRule['entity']]['notificationRuleIdByOccurrence'][$notificationRule['occurrence']][] = $notificationRule['id'];
             }else{

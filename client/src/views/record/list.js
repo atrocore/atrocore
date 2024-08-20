@@ -579,19 +579,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         executeDynamicMassActionRequest(data) {
-            let where;
+            let requestData = {
+                actionId: data.id
+            };
+
             if (this.allResultIsChecked) {
-                where = this.collection.getWhere();
-            } else {
-                where = [{type: "in", attribute: "id", value: this.checkedList}];
+                requestData.where = this.collection.getWhere();
+                requestData.massAction = true;
+            } else if (this.checkedList.length > 0) {
+                requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
+                requestData.massAction = true;
             }
 
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {
-                actionId: data.id,
-                where: where,
-                massAction: true
-            }).success(response => {
+            this.ajaxPostRequest('Action/action/executeNow', requestData).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                     setTimeout(() => {
