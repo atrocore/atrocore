@@ -203,15 +203,15 @@ class Record extends RecordService
         }
 
         if (!empty($jobIds)) {
-            QueueManagerBase::updatePublicData('mass' . ucfirst($action), $this->getEntityType(), [
-                "jobIds" => $jobIds,
-                "total"  => $total
-            ]);
-
             foreach ($this->getEntityManager()->getRepository('QueueItem')->where(['id' => $jobIds])->find() as $job) {
                 $job->set('startFrom', null);
                 $this->getEntityManager()->saveEntity($job);
             }
+
+            QueueManagerBase::updatePublicData('mass' . ucfirst($action), $this->getEntityType(), [
+                "jobIds" => $jobIds,
+                "total"  => $total
+            ]);
         }
 
         if (!empty($errors)) {
