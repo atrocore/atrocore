@@ -22616,13 +22616,13 @@ select {
     padding-left: 14px;
 }
 
-del {
+del.diffmod, del.diffdel {
     color: red;
     background: #fdd;
     text-decoration: none;
 }
 
-ins {
+ins.diffins, ins.diffmod {
     color: green;
     background: #dfd;
     text-decoration: none;
