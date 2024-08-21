@@ -3,7 +3,7 @@
     "description": "Beschreibung",
     "entity": "Entität",
     "notificationProfile": "Benachrichtigungsprofil",
-    "occurrence": "Vorkommnis",
+    "occurrence": "Veranstaltung",
     "isActive": "Aktiv",
     "ignoreSelfAction": "Selbstaktionen ignorieren",
     "asOwner": "Als Besitzer",
@@ -18,17 +18,17 @@
   },
   "options": {
     "occurrence": {
-      "creation": "Erstellung",
-      "updating": "Aktualisierung",
-      "linking": "Verlinkung",
-      "unlinking": "Unlinking",
-      "deletion": "Löschung",
-      "note_created": "Erstellen von Notizen",
-      "note_updated": "Aktualisierung von Notizen",
-      "note_deleted": "Löschen von Notizen",
-      "ownership_assignment": "Eigentümerschaft/Zuordnung",
-      "unlinking_ownership_assignment": "Verknüpfung von Eigentum/Zuordnung aufheben",
-      "mentioned": "Erwähnung"
+      "creation": "Erstellen",
+      "updating": "Update",
+      "linking": "Link",
+      "unlinking": "Unlink",
+      "deletion": "Löschen",
+      "note_created": "Notiz erstellen",
+      "note_updated": "Aktualisierungshinweis",
+      "note_deleted": "Notiz löschen",
+      "ownership_assignment": "Eigentümer/Zugeordneter Benutzer festlegen",
+      "unlinking_ownership_assignment": "Nicht festgelegter Eigentümer/zugeordneter Benutzer",
+      "mentioned": "Erwähnen Sie"
     }
   },
   "labels": {

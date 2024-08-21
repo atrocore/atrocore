@@ -88,9 +88,27 @@ class Application
                 $this->showOpenApiJson();
             }
 
+            if (preg_match_all('/^images\/(.*)\.(.*)$/', $query, $matches)) {
+                $_GET['id'] = $matches[1][0];
+                $this->runEntryPoint('image');
+                exit;
+            }
+
+            if (preg_match_all('/^downloads\/(.*)\.(.*)$/', $query, $matches)) {
+                $_GET['id'] = $matches[1][0];
+                $this->runEntryPoint('download');
+                exit;
+            }
+
+            if (preg_match_all('/^sharings\/(.*)\.(.*)$/', $query, $matches)) {
+                $_GET['id'] = $matches[1][0];
+                $this->runEntryPoint('sharing');
+                exit;
+            }
+
             if ($show404) {
                 header('HTTP/1.0 404 Not Found');
-                exit();
+                exit;
             }
         }
 
