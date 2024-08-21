@@ -513,16 +513,17 @@ class NotificationManager
 
         $tmpEntity = $this->getEntityManager()->getEntity('Note');
 
-        $fieldsDefs = $container->get('serviceFactory')->create('Stream')->handleChangedData($data, $tmpEntity, $entity->getEntityType());
+        $container->get('serviceFactory')->create('Stream')->handleChangedData($data, $tmpEntity, $entity->getEntityType());
 
         $data = json_decode(json_encode($data), true);
 
-        foreach ($fieldsDefs as $key => $fieldDefs) {
+        foreach ($tmpEntity->get('fieldDefs') as $key => $fieldDefs) {
             if(!empty($fieldDefs['type'])){
                 $data['fieldTypes'][$key] = $fieldDefs['type'];
             }
         }
 
+        $data['diff'] = $tmpEntity->get('diff');
         sort($data['fields']);
 
         return $data;
