@@ -396,6 +396,26 @@ class Metadata extends AbstractListener
                     if (isset($fieldDefs['multilangLocale'])) {
                         $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits']['multilangLocale'] = $fieldDefs['multilangLocale'];
                     }
+
+                    $data['entityDefs'][$entityType]['fields'][$v . 'UnitData'] = [
+                        "type"                      => "jsonObject",
+                        "notStorable"               => true,
+                        "mainField"                 => $field,
+                        "required"                  => false,
+                        "layoutListDisabled"        => true,
+                        "layoutListSmallDisabled"   => true,
+                        "layoutDetailDisabled"      => true,
+                        "layoutDetailSmallDisabled" => true,
+                        "massUpdateDisabled"        => true,
+                        "filterDisabled"            => true,
+                        "exportDisabled"            => true,
+                        "importDisabled"            => true,
+                        "emHidden"                  => true
+                    ];
+
+                    if (isset($fieldDefs['multilangLocale'])) {
+                        $data['entityDefs'][$entityType]['fields'][$v . 'UnitData']['multilangLocale'] = $fieldDefs['multilangLocale'];
+                    }
                 }
             }
         }
