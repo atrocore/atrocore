@@ -63,12 +63,8 @@ class QueueManagerActionHandler extends QueueManagerBase
 
             foreach ($res['collection'] as $entity) {
                 $input = new \stdClass();
-                unset($data['where']);
-                $data['entityId'] = $entity->get('id');
-
-                foreach ($data as $key => $value){
-                    $input->$key = $value;
-                }
+                $input->entityId = $entity->get('id');
+                $input->queueData = $data;
 
                 try {
                     $actionType->executeNow($action, $input);
