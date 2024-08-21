@@ -161,17 +161,337 @@ class V1Dot10Dot50 extends Base
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
-                                "subject"     => "Update: [{{ entityName }}] {{entity.name | raw}}",
-                                "subjectDeDe" => "Update: [{{ entityName }}] {{entity.name | raw}}",
-                                "subjectUkUa" => "Оновлення: [{{ entityName }}] {{entity.name | raw }}",
-                                "body"        => '<p>{{actionUser.name}} made update on {{entityName}} {{entity.name}}.</p>
-<p><a href="{{entityUrl}}">View</a></p>',
-                                "bodyDeDe"    => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen {{entity.name}}.</p>
+                                "subject"     => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
 
-<p><a href="{{entityUrl}}">Siehe</a></p>',
-                                "bodyUkUa"    => '<p>{{actionUser.name}} зробив оновлення для {{entityName}} {{entity.name}}.</p>
+{% set isOnly = updateData['fields']|length == 1 %}
 
-<p><a href="{{entityUrl}}">Вигляд</a></p>'
+{% set assignedUserId =  entity.assignedUserId %}
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    Assigned to you: [{{entityType}}] {{entity.name | raw}}
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    Assigned to you and update [{{entityType}}] {{entity.name | raw}}
+{% else %}
+    Update: [{{ entityName }}] {{entity.name | raw}}
+{% endif %}",
+                                "subjectDeDe" => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+
+{% set isOnly = updateData['fields']|length == 1 %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    Ihnen zugewiesen: [{{entityType}}] {{entity.name | raw}}
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    Ihnen zugewiesen und aktualisieren [{{entityType}}] {{entity.name | raw}}
+{% else %}
+    Update: [{{ entityName }}] {{entity.name | raw}}
+{% endif %}",
+                                "subjectUkUa" => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+
+{% set isOnly = updateData['fields']|length == 1 %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    Ihnen zugewiesen: [{{entityType}}] {{entity.name | raw}}
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    Ihnen zugewiesen und aktualisieren [{{entityType}}] {{entity.name | raw}}
+{% else %}
+    Update: [{{ entityName }}] {{entity.name | raw}}
+{% endif %}",
+                                "body"        => "{% set  hasAssignment = 'assignedUser' in updateData['fields'] %}
+
+{% set isOnly = updateData['fields']|length == 1 %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% set language = language ?? 'en_US' %}
+
+{% macro changedFieldTable(updateData, language, entityType) %}
+    <style>
+        ins {
+            color: green;
+            background: #dfd;
+            text-decoration: none;
+        }
+        del {
+            color: red;
+            background: #fdd;
+            text-decoration: none;
+        }
+    </style>
+
+    {%  set textFields  = [] %}
+
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for field in updateData['fields'] %}
+            {% if updateData['fieldTypes'][field] in ['text','wysiwyg', 'markdown'] %}
+                {%  set textFields  = textFields|merge([field]) %}
+             {% else %}
+             <tr style=\"padding: 10px 0;\">
+            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'extensibleMultiEnum', 'file'] %}
+                {% set fieldKeyName = field ~ 'Name' %}
+                {% set was = updateData['attributes']['was'][fieldKeyName] %}
+                {% set became = updateData['attributes']['became'][fieldKeyName] %}
+            {% else %}
+                {% set was = updateData['attributes']['was'][field] %}
+                {% set became = updateData['attributes']['became'][field] %}
+            {% endif %}
+
+            {% if  updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+                {% set was = updateData['attributes']['was'][field]|map(id => was[id])|join(', ') %}
+                {% set became = updateData['attributes']['became'][field]|map(id => became[id])|join(', ') %}
+            {% endif %}
+
+            {% if updateData['fieldTypes'][field] == 'enum' %}
+                {% set was = translateOption(was, language, field, entityType) %}
+                {% set became = translateOption(became, language, field, entityType) %}
+            {% endif %}
+
+            {% if updateData['fieldTypes'][field] == 'multiEnum' %}
+                {% set was = was|map(v => translateOption(v, language, field, entityType))|join(', ') %}
+                {% set became = became|map(v => translateOption(v, language,  field, entityType))|join(', ') %}
+            {% endif %}
+              {% if  updateData['fieldTypes'][field]  == 'bool' %}
+                  {%  if was is not null %}
+                      {% set was = was ?  translate('Yes',language): translate('No',language)  %}
+                  {% endif %}
+                 {%  if became is not null %}
+                     {% set became = became ?  translate('Yes',language): translate('No',language)  %}
+                 {% endif %}
+             {% endif %}
+
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            <td style=\"padding: 10px 0;\">{% if was %}<span style=\"padding:0 5px;margin-right:15px;background-color: #F5A8A880;text-decoration: line-through; \">{{ was }}</span> {% endif %}</td>
+            <td style=\"padding: 10px 0;\">{% if became %}<span style=\"padding:0 5px; background-color: #A8F5B880;\">{{ became }}</span> {% endif %}</td>
+        <tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% for field in textFields %}
+        <div style=\"margin: 15px 0\">    <span style=\"padding: 15px 0; margin-right:15px;\"> {{ translate(field, language, 'fields', entityType ) }}: </span> {{ updateData['diff'][field ]|raw }}</div>
+        <br>
+    {% endfor %}
+{% endmacro %}
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId%}
+    {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+   <p> {{ actionUser.name }} has assigned {{ entityName }} to  you.</p>
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+   <p> {{ actionUser.name }} has assigned to you and made update on {{ entityName }}.</p>
+{% else %}
+    <p>{{ actionUser.name }} made update on {{ entityName }}.</p>
+{% endif %}
+{{ _self.changedFieldTable(updateData, language, entityType) }}
+<p><a href=\"{{ entityUrl }}\">View</a></p>",
+                                "bodyDeDe"    => "{% set  hasAssignment = 'assignedUser' in updateData['fields'] %}
+
+{% set isOnly = updateData['fields']|length == 1 %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% set language = language ?? 'en_US' %}
+
+{% macro changedFieldTable(updateData, language, entityType) %}
+    <style>
+        ins {
+            color: green;
+            background: #dfd;
+            text-decoration: none;
+        }
+        del {
+            color: red;
+            background: #fdd;
+            text-decoration: none;
+        }
+    </style>
+
+    {%  set textFields  = [] %}
+
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for field in updateData['fields'] %}
+            {% if updateData['fieldTypes'][field] in ['text','wysiwyg', 'markdown'] %}
+                {%  set textFields  = textFields|merge([field]) %}
+             {% else %}
+             <tr style=\"padding: 10px 0;\">
+            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'extensibleMultiEnum', 'file'] %}
+                {% set fieldKeyName = field ~ 'Name' %}
+                {% set was = updateData['attributes']['was'][fieldKeyName] %}
+                {% set became = updateData['attributes']['became'][fieldKeyName] %}
+            {% else %}
+                {% set was = updateData['attributes']['was'][field] %}
+                {% set became = updateData['attributes']['became'][field] %}
+            {% endif %}
+
+            {% if  updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+                {% set was = updateData['attributes']['was'][field]|map(id => was[id])|join(', ') %}
+                {% set became = updateData['attributes']['became'][field]|map(id => became[id])|join(', ') %}
+            {% endif %}
+
+            {% if updateData['fieldTypes'][field] == 'enum' %}
+                {% set was = translateOption(was, language, field, entityType) %}
+                {% set became = translateOption(became, language, field, entityType) %}
+            {% endif %}
+
+            {% if updateData['fieldTypes'][field] == 'multiEnum' %}
+                {% set was = was|map(v => translateOption(v, language, field, entityType))|join(', ') %}
+                {% set became = became|map(v => translateOption(v, language,  field, entityType))|join(', ') %}
+            {% endif %}
+              {% if  updateData['fieldTypes'][field]  == 'bool' %}
+                  {%  if was is not null %}
+                      {% set was = was ?  translate('Yes',language): translate('No',language)  %}
+                  {% endif %}
+                 {%  if became is not null %}
+                     {% set became = became ?  translate('Yes',language): translate('No',language)  %}
+                 {% endif %}
+             {% endif %}
+             
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            <td style=\"padding: 10px 0;\">{% if was %}<span style=\"padding:0 5px;margin-right:15px;background-color: #F5A8A880;text-decoration: line-through; \">{{ was }}</span> {% endif %}</td>
+            <td style=\"padding: 10px 0;\">{% if became %}<span style=\"padding:0 5px; background-color: #A8F5B880;\">{{ became }}</span> {% endif %}</td>
+        <tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% for field in textFields %}
+        <div style=\"margin: 15px 0\">    <span style=\"padding: 15px 0; margin-right:15px;\"> {{ translate(field, language, 'fields', entityType ) }}: </span> {{ updateData['diff'][field ]|raw }}</div>
+        <br>
+    {% endfor %}
+{% endmacro %}
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId%}
+    {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    <p>  {{ actionUser.name }} hat Ihnen {{ entityName }} zugewiesen. </p>
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+   <p> {{ actionUser.name }} hat Ihnen zugewiesen und eine Aktualisierung an {{ entityName }} vorgenommen </p>
+{% else %}
+    <p>{{ actionUser.name }} hat eine Aktualisierung an {{ entityName }} vorgenommen.</p>
+{% endif %}
+{{ _self.changedFieldTable(updateData, language, entityType) }}
+<p><a href=\"{{ entityUrl }}\">Siehe</a></p>",
+                                "bodyUkUa"    => "{% set  hasAssignment = 'assignedUser' in updateData['fields'] %}
+
+{% set isOnly = updateData['fields']|length == 1 %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% set language = language ?? 'en_US' %}
+
+{% macro changedFieldTable(updateData, language, entityType) %}
+    <style>
+        ins {
+            color: green;
+            background: #dfd;
+            text-decoration: none;
+        }
+        del {
+            color: red;
+            background: #fdd;
+            text-decoration: none;
+        }
+    </style>
+
+    {%  set textFields  = [] %}
+
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for field in updateData['fields'] %}
+            {% if updateData['fieldTypes'][field] in ['text','wysiwyg', 'markdown'] %}
+                {%  set textFields  = textFields|merge([field]) %}
+             {% else %}
+             <tr style=\"padding: 10px 0;\">
+            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'extensibleMultiEnum', 'file'] %}
+                {% set fieldKeyName = field ~ 'Name' %}
+                {% set was = updateData['attributes']['was'][fieldKeyName] %}
+                {% set became = updateData['attributes']['became'][fieldKeyName] %}
+            {% else %}
+                {% set was = updateData['attributes']['was'][field] %}
+                {% set became = updateData['attributes']['became'][field] %}
+            {% endif %}
+
+            {% if  updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+                {% set was = updateData['attributes']['was'][field]|map(id => was[id])|join(', ') %}
+                {% set became = updateData['attributes']['became'][field]|map(id => became[id])|join(', ') %}
+            {% endif %}
+
+            {% if updateData['fieldTypes'][field] == 'enum' %}
+                {% set was = translateOption(was, language, field, entityType) %}
+                {% set became = translateOption(became, language, field, entityType) %}
+            {% endif %}
+
+            {% if updateData['fieldTypes'][field] == 'multiEnum' %}
+                {% set was = was|map(v => translateOption(v, language, field, entityType))|join(', ') %}
+                {% set became = became|map(v => translateOption(v, language,  field, entityType))|join(', ') %}
+            {% endif %}
+            
+          {% if  updateData['fieldTypes'][field]  == 'bool' %}
+              {%  if was is not null %}
+                  {% set was = was ?  translate('Yes',language): translate('No',language)  %}
+              {% endif %}
+             {%  if became is not null %}
+                 {% set became = became ?  translate('Yes',language): translate('No',language)  %}
+             {% endif %}
+         {% endif %}
+
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            <td style=\"padding: 10px 0;\">{% if was %}<span style=\"padding:0 5px;margin-right:15px;background-color: #F5A8A880;text-decoration: line-through; \">{{ was }}</span> {% endif %}</td>
+            <td style=\"padding: 10px 0;\">{% if became %}<span style=\"padding:0 5px; background-color: #A8F5B880;\">{{ became }}</span> {% endif %}</td>
+        <tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% for field in textFields %}
+        <div style=\"margin: 15px 0\">    <span style=\"padding: 15px 0; margin-right:15px;\"> {{ translate(field, language, 'fields', entityType ) }}: </span> {{ updateData['diff'][field ]|raw }}</div>
+        <br>
+    {% endfor %}
+{% endmacro %}
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId%}
+    {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+   <p> {{ actionUser.name }} призначив вам {{ entityName }}</p>
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+   <p>{{ actionUser.name }} призначив вам і оновив {{ entityName }}</p>
+{% else %}
+    <p>{{ actionUser.name }} виконано оновлення на {{ entityName }}.</p>
+{% endif %}
+{{ _self.changedFieldTable(updateData, language, entityType) }}
+<p><a href=\"{{ entityUrl }}\">Вигляд</a></p>"
                             ]
                         ]
                     ]
