@@ -18,9 +18,8 @@ use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\QueueManager;
 use Atro\NotificationTransport\AbstractNotificationTransport;
 use Atro\NotificationTransport\NotificationOccurrence;
-use Atro\ORM\DB\RDB\Mapper;
 use Atro\Repositories\NotificationRule;
-use Doctrine\DBAL\ParameterType;
+use Caxy\HtmlDiff\HtmlDiff;
 use Espo\Core\Factories\AclManager as AclManagerFactory;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Utils\Config;
@@ -30,6 +29,8 @@ use Espo\Entities\User;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Atro\Entities\NotificationRule as RuleEntity;
+use Atro\Core\Utils\Note as NoteUtil;
+
 
 class NotificationManager
 {
@@ -68,6 +69,7 @@ class NotificationManager
 
         $isNote = $entity->getEntityType() === 'Note';
         $noteHasParent = $entity->get('parentType') && $entity->get('parentId');
+        $hasSentUpdateOccurrence = false;
 
         if ($isNote && $entity->get('type') !== 'Post') {
             return;
@@ -94,11 +96,12 @@ class NotificationManager
                 $this->sendNoteNotifications(NotificationOccurrence::NOTE_UPDATED, $entity);
             } else {
                 $this->sendNotifications(NotificationOccurrence::UPDATE, $entity);
+                $hasSentUpdateOccurrence  = true;
             }
         }
 
         foreach (['ownerUser', 'assignedUser'] as $link) {
-            if (($entity->isNew() && $entity->get($link . 'Id') !== null) || $entity->isAttributeChanged($link . 'Id')) {
+            if (($entity->isNew() && $entity->get($link . 'Id') !== null) || (!$hasSentUpdateOccurrence && $entity->isAttributeChanged($link . 'Id'))) {
                 $this->sendNotifications(
                     $entity->get($link . 'Id') ? NotificationOccurrence::OWNERSHIP_ASSIGNMENT : NotificationOccurrence::UNLIKING_OWNERSHIP_ASSIGNMENT,
                     $entity,
@@ -172,13 +175,7 @@ class NotificationManager
             return;
         }
 
-        $dataForTemplate = array_merge($this->transformData($params), [
-            "occurrence" => $occurrence,
-            "actionUser" => $actionUser,
-            "siteUrl" => $this->getConfig()->get('siteUrl'),
-            "entity" => $entity,
-            "parent" => $parent
-        ]);
+        $dataForTemplate = [];
 
         foreach ($this->getMetadata()->get(['app', 'activeNotificationProfilesIds'], []) as $notificationProfileId) {
 
@@ -188,10 +185,28 @@ class NotificationManager
                 continue;
             }
 
+
             foreach ($rule->receiverUsers as $user) {
 
                 if (!$this->userCanBeNotify($user, $occurrence, $entity, $actionUser, $rule, $parent)) {
                     continue;
+                }
+
+                if(empty($dataForTemplate)){
+                    if($occurrence === NotificationOccurrence::UPDATE) {
+                        $updateData = $this->getUpdateData($entity);
+                        if(empty($updateData)){
+                            break;
+                        }
+                        $params['updateData'] = $updateData;
+                    }
+                    $dataForTemplate = array_merge($this->transformData($params), [
+                        "occurrence" => $occurrence,
+                        "actionUser" => $actionUser,
+                        "siteUrl" => $this->getConfig()->get('siteUrl'),
+                        "entity" => $entity,
+                        "parent" => $parent
+                    ]);
                 }
 
                 $dataForTemplate['notifyUser'] = $user;
@@ -303,7 +318,6 @@ class NotificationManager
 
         return true;
     }
-
 
     protected function getNotificationRule(string $notificationProfileId, string $occurrence, string $entityType): ?RuleEntity
     {
@@ -487,6 +501,174 @@ class NotificationManager
         return $this->teamMembers[$key] = $teamsIds;
     }
 
+    protected function getUpdateData(Entity $entity): ?array
+    {
+        $data = $this->getNoteUtil()->getChangedFieldsData($entity);
+
+        if(empty($data['fields']) || empty($data['attributes']['was']) || empty($data['attributes']['became'])) {
+            return null;
+        }
+
+        sort($data['fields']);
+
+        foreach ($data['fields'] as $field) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field]);
+            if (empty($fieldDefs['type'])) {
+                continue;
+            }
+            $data['fieldTypes'][$field] = $fieldDefs['type'];
+            switch ($fieldDefs['type']) {
+                case 'text':
+                    $became = nl2br($data['attributes']['became'][$field]);
+                    $diff = (new HtmlDiff(html_entity_decode($data['attributes']['was'][$field]), html_entity_decode($became)))->build();
+                    $data['attributes']['became'][$field . 'Diff'] = $diff;
+                    break;
+                case 'wysiwyg':
+                    $became = $data['attributes']['became'][$field];
+                    $diff = (new HtmlDiff(html_entity_decode($data['attributes']['was'][$field]), html_entity_decode($became)))->build();
+                    $data['attributes']['became'][$field . 'Diff'] = $diff;
+                    break;
+                case 'link':
+                    foreach (['was', 'became'] as $k) {
+                        if (!isset($data['attributes'][$k][$field . 'Name']) && !empty($data['attributes'][$k][ $field . 'Id'])) {
+                            if (!empty($entity->get($field . 'Name'))) {
+                                $data['attributes'][$k][$field . 'Name'] = $entity->get($field . 'Name');
+                            }
+                            $foreignEntity = $fieldDefs['entity'] ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $field, 'entity']);
+                            if (!empty($foreignEntity)) {
+                                $foreign = $this->getEntityManager()->getRepository($foreignEntity)->get($data['attributes'][$k][$field . 'Id']);
+                                if (!empty($foreign)) {
+                                    $data['attributes'][$k][$field . 'Name'] = $foreign->get('name');
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 'enum':
+                    if (!isset($fieldDefs['optionsIds']) || !isset($fieldDefs['options'])) {
+                        break;
+                    }
+                    if (!empty($data['attributes']['was'][$field])) {
+                        $key = array_search($data['attributes']['was'][$field], $fieldDefs['optionsIds']);
+                        if ($key !== false) {
+                            $data['attributes']['was'][$field] = $fieldDefs['options'][$key];
+                        }
+                    }
+
+                    if (!empty($data['attributes']['became'][$field])) {
+                        $key = array_search($data['attributes']['became'][$field], $fieldDefs['optionsIds']);
+                        if ($key !== false) {
+                            $data['attributes']['became'][$field] = $fieldDefs['options'][$key];
+                        }
+                    }
+                    break;
+                case 'multiEnum':
+                    if (!isset($fieldDefs['optionsIds']) || !isset($fieldDefs['options'])) {
+                        break;
+                    }
+
+                    if (!empty($data['attributes']['was'][$field])) {
+                        $values = [];
+                        foreach ($data['attributes']['was'][$field] as $v) {
+                            $key = array_search($v, $fieldDefs['optionsIds']);
+                            if ($key !== false) {
+                                $values[] = $fieldDefs['options'][$key];
+                            } else {
+                                $values[] = $v;
+                            }
+                        }
+
+                        $data['attributes']['was'][$field] = $values;
+                    }
+
+                    if (!empty($data['attributes']['became'][$field])) {
+                        $values = [];
+                        foreach ($data['attributes']['became'][$field] as $v) {
+                            $key = array_search($v, $fieldDefs['optionsIds']);
+                            if ($key !== false) {
+                                $values[] = $fieldDefs['options'][$key];
+                            } else {
+                                $values[] = $v;
+                            }
+                        }
+
+                        $data['attributes']['became'][$field] = $values;
+                    }
+                    break;
+                case 'measure':
+                    if (empty($fieldDefs['measureId'])) {
+                        break;
+                    }
+                    if (!empty($data['attributes']['was'][$field])) {
+                        $unit = $this->getEntityManager()->getEntity('Unit', $data['attributes']['was'][$field]);
+                        if (!empty($unit)) {
+                            $data['attributes']['was'][$field . 'Name'] = $unit->get('name');
+                        }
+                    }
+
+                    if (!empty($data['attributes']['became'][$field])) {
+                        $unit = $this->getEntityManager()->getEntity('Unit', $data['attributes']['became'][$field]);
+                        if (!empty($unit)) {
+                            $data['attributes']['became'][$field . 'Name'] = $unit->get('name');
+                        }
+                    }
+                    break;
+                case 'extensibleEnum':
+                    if (empty($fieldDefs['extensibleEnumId'])) {
+                        break;
+                    }
+                    $repository = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
+
+                    if (!empty($data['attributes']['was'][$field])) {
+                        $option = $repository->getPreparedOption($fieldDefs['extensibleEnumId'], $data['attributes']['was'][$field]);
+                        if (!empty($option)) {
+                            $data['attributes']['was'][$field . 'Name'] = $option['name'];
+                        }
+                    }
+
+                    if (!empty($data['attributes']['became'][$field])) {
+                        $option = $repository->getPreparedOption($fieldDefs['extensibleEnumId'], $data['attributes']['became'][$field]);
+                        if (!empty($option)) {
+                            $data['attributes']['became'][$field . 'Name'] = $option['name'];
+                        }
+                    }
+                    break;
+                case 'extensibleMultiEnum':
+                    if (empty($fieldDefs['extensibleEnumId'])) {
+                        break;
+                    }
+                    $repository = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
+
+                    if (!empty($data['attributes']['was'][$field])) {
+                        $wasIds = $data['attributes']['was'][$field];
+                        if (is_string($wasIds)) {
+                            $wasIds = @json_decode($wasIds, true);
+                        }
+                        $data['attributes']['was'][$field] = $wasIds;
+                        $options = $repository->getPreparedOptions($fieldDefs['extensibleEnumId'], $wasIds);
+                        if (isset($options[0])) {
+                            $data['attributes']['was'][$field . 'Name'] = array_column($options, 'name', 'id');
+                        }
+                    }
+
+                    if (!empty($data['attributes']['became'][$field])) {
+                        $becameIds = $data['attributes']['became'][$field];
+                        if (is_string($becameIds)) {
+                            $becameIds = @json_decode($becameIds, true);
+                        }
+                        $options = $repository->getPreparedOptions($fieldDefs['extensibleEnumId'], $becameIds);
+                        if (isset($options[0])) {
+                            $data['attributes']['became'][$field . 'Name'] = array_column($options, 'name', 'id');
+                        }
+                    }
+                    break;
+            }
+            
+        }
+
+        return $data;
+    }
+
     protected function getNotificationRuleRepository(): NotificationRule
     {
         return $this->getEntityManager()->getRepository('NotificationRule');
@@ -512,11 +694,6 @@ class NotificationManager
         return $this->container->get('config');
     }
 
-    protected function getQueueManager(): QueueManager
-    {
-        return $this->container->get('queueManager');
-    }
-
     protected function getMemoryStorage(): MemoryStorage
     {
         return $this->container->get('memoryStorage');
@@ -526,17 +703,8 @@ class NotificationManager
     {
         return $this->container->get('language');
     }
-
-    protected function getUsers(int $offset, int $maxSize): EntityCollection
+    protected function getNoteUtil(): NoteUtil
     {
-        $key = 'User' . $offset . '_' . $maxSize;
-        if (!empty($this->users[$key])) {
-            return $this->users[$key];
-        }
-
-        return $this->users[$key] = $this->getEntityManager()->getRepository('User')
-            ->where(['isActive' => true, 'id!=' => 'system'])
-            ->limit($offset, $maxSize)
-            ->find();
+        return $this->container->get(NoteUtil::class);
     }
 }
