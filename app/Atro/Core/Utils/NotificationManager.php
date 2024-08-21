@@ -505,12 +505,11 @@ class NotificationManager
             return null;
         }
 
-        $data = json_decode(json_encode($data));
-
         $container = (new \Atro\Core\Application())->getContainer();
-
         $auth = new \Espo\Core\Utils\Auth($container);
         $auth->useNoAuth();
+
+        $data = json_decode(json_encode($data));
 
         $tmpEntity = $this->getEntityManager()->getEntity('Note');
 
