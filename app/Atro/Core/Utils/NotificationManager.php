@@ -15,11 +15,9 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
 use Atro\Core\KeyValueStorages\MemoryStorage;
-use Atro\Core\QueueManager;
 use Atro\NotificationTransport\AbstractNotificationTransport;
 use Atro\NotificationTransport\NotificationOccurrence;
 use Atro\Repositories\NotificationRule;
-use Caxy\HtmlDiff\HtmlDiff;
 use Espo\Core\Factories\AclManager as AclManagerFactory;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Utils\Config;
