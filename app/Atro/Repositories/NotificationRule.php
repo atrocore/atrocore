@@ -104,7 +104,7 @@ class NotificationRule extends Base
         if (Converter::isPgSQL($connection)) {
             $subquery = "SELECT id FROM preferences WHERE (CAST(data::json->>'receiveNotifications' AS boolean) = :true) AND (data::json->>'notificationProfileId' = :notificationProfileId)";
         } else {
-            $subquery = "SELECT id FROM preferences WHERE JSON_EXTRACT(data, '$.receiveNotifications') = true AND JSON_EXTRACT(data, '$.notificationProfileId') = :notificationProfileId";
+            $subquery = "SELECT id FROM preferences WHERE CAST(JSON_EXTRACT(data, '$.receiveNotifications') as UNSIGNED)= :true AND JSON_EXTRACT(data, '$.notificationProfileId') = :notificationProfileId";
         }
 
         $profileParam = $this->getConfig()->get('defaultNotificationProfileId') === $notificationProfileId
