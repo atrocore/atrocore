@@ -32,32 +32,36 @@ class V1Dot10Dot62 extends Base
 
         $rule = array_values($rules)[0];
 
-        if(!empty($rule['templates']['email']['id']) && !empty($rule['templates']['email']['data'])){
-            try{
-                $result = $this->getConnection()->createQueryBuilder()
-                    ->select('data')
-                    ->from('notification_template')
-                    ->where('id = :id')
-                    ->setParameter('id', $rule['templates']['email']['id'])
-                    ->fetchAssociative();
 
-                $oldData = @json_decode($result['data'], true);
-                $newData = $rule['templates']['email']['data'];
+        foreach (['email','system'] as $transport){
+            if(!empty($rule['templates'][$transport]['id']) && !empty($rule['templates'][$transport]['data'])){
+                try{
+                    $result = $this->getConnection()->createQueryBuilder()
+                        ->select('data')
+                        ->from('notification_template')
+                        ->where('id = :id')
+                        ->setParameter('id', $rule['templates'][$transport]['id'])
+                        ->fetchAssociative();
 
-                if(!empty($oldData['field']) && !empty($newData['field'])){
-                    $newData['field'] = array_merge($oldData['field'], $newData['field']);
+                    $oldData = @json_decode($result['data'], true);
+                    $newData = $rule['templates'][$transport]['data'];
+
+                    if(!empty($oldData['field']) && !empty($newData['field'])){
+                        $newData['field'] = array_merge($oldData['field'], $newData['field']);
+                    }
+
+                    $this->getConnection()->createQueryBuilder()
+                        ->update('notification_template')
+                        ->set('data',':data')
+                        ->where('id = :id')
+                        ->setParameter('id', $rule['templates'][$transport]['id'])
+                        ->setParameter('data', json_encode($newData))
+                        ->executeStatement();
+                }catch (\Throwable $e){
+
                 }
-
-                $this->getConnection()->createQueryBuilder()
-                    ->update('notification_template')
-                    ->set('data',':data')
-                    ->where('id = :id')
-                    ->setParameter('id', $rule['templates']['email']['id'])
-                    ->setParameter('data', json_encode($newData))
-                    ->executeStatement();
-            }catch (\Throwable $e){
-
             }
+
         }
     }
 

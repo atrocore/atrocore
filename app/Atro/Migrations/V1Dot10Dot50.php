@@ -150,9 +150,48 @@ class V1Dot10Dot50 extends Base
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
-                                "body"     => '<p>{{actionUser.name}} made update  on {{entityName}} <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>',
-                                "bodyDeDe" => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>',
-                                "bodyUkUa" => '<p>{{actionUser.name}} зробив оновлення для {{entityName}} <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>'
+                                "body"     => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    <p>{{actionUser.name}} has assigned to you  {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+  <p>{{actionUser.name}} has assigned to you and made update  on {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+{% else %}
+   <p>{{actionUser.name}}  made update  on {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+{% endif %}",
+                                "bodyDeDe" => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    <p>{{actionUser.name}} hat Ihnen {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>  zugewiesen 
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+  <p>{{actionUser.name}} hat Ihnen zugewiesen und eine Aktualisierung an {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a> vorgenommen.</p>
+{% else %}
+   <p>{{actionUser.name}} hat Update auf {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>. vorgenommen. </p>
+{% endif %}",
+                                "bodyUkUa" => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    <p>{{actionUser.name}} призначив вам {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+  <p>c{{actionUser.name}} призначив вам і зробив оновлення на {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+{% else %}
+   <p>{{actionUser.name}} зробив оновлення на {{entityName}}<a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+{% endif %}"
                             ]
                         ]
                     ],
@@ -163,7 +202,7 @@ class V1Dot10Dot50 extends Base
                             "field" => [
                                 "subject"     => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
 
-{% set isOnly = updateData['fields']|length == 1 %}
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
 
 {% set assignedUserId =  entity.assignedUserId %}
 
@@ -208,7 +247,7 @@ class V1Dot10Dot50 extends Base
 {% endif %}",
                                 "body"        => "{% set  hasAssignment = 'assignedUser' in updateData['fields'] %}
 
-{% set isOnly = updateData['fields']|length == 1 %}
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
 
 {% set assignedUserId =  entity.assignedUserId %}
 
@@ -244,7 +283,7 @@ class V1Dot10Dot50 extends Base
                 {%  set textFields  = textFields|merge([field]) %}
              {% else %}
              <tr style=\"padding: 10px 0;\">
-            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'extensibleMultiEnum', 'file'] %}
+            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
                 {% set fieldKeyName = field ~ 'Name' %}
                 {% set was = updateData['attributes']['was'][fieldKeyName] %}
                 {% set became = updateData['attributes']['became'][fieldKeyName] %}
@@ -254,6 +293,8 @@ class V1Dot10Dot50 extends Base
             {% endif %}
 
             {% if  updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+              {% set was = updateData['attributes']['was'][field ~ 'Names'] %}
+                {% set became = updateData['attributes']['became'][field ~ 'Names'] %}
                 {% set was = updateData['attributes']['was'][field]|map(id => was[id])|join(', ') %}
                 {% set became = updateData['attributes']['became'][field]|map(id => became[id])|join(', ') %}
             {% endif %}
@@ -339,7 +380,7 @@ class V1Dot10Dot50 extends Base
                 {%  set textFields  = textFields|merge([field]) %}
              {% else %}
              <tr style=\"padding: 10px 0;\">
-            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'extensibleMultiEnum', 'file'] %}
+            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
                 {% set fieldKeyName = field ~ 'Name' %}
                 {% set was = updateData['attributes']['was'][fieldKeyName] %}
                 {% set became = updateData['attributes']['became'][fieldKeyName] %}
@@ -349,6 +390,8 @@ class V1Dot10Dot50 extends Base
             {% endif %}
 
             {% if  updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+              {% set was = updateData['attributes']['was'][field ~ 'Names'] %}
+                {% set became = updateData['attributes']['became'][field ~ 'Names'] %}
                 {% set was = updateData['attributes']['was'][field]|map(id => was[id])|join(', ') %}
                 {% set became = updateData['attributes']['became'][field]|map(id => became[id])|join(', ') %}
             {% endif %}
@@ -398,7 +441,7 @@ class V1Dot10Dot50 extends Base
 <p><a href=\"{{ entityUrl }}\">Siehe</a></p>",
                                 "bodyUkUa"    => "{% set  hasAssignment = 'assignedUser' in updateData['fields'] %}
 
-{% set isOnly = updateData['fields']|length == 1 %}
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
 
 {% set assignedUserId =  entity.assignedUserId %}
 
@@ -434,7 +477,7 @@ class V1Dot10Dot50 extends Base
                 {%  set textFields  = textFields|merge([field]) %}
              {% else %}
              <tr style=\"padding: 10px 0;\">
-            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'extensibleMultiEnum', 'file'] %}
+            {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure',  'file'] %}
                 {% set fieldKeyName = field ~ 'Name' %}
                 {% set was = updateData['attributes']['was'][fieldKeyName] %}
                 {% set became = updateData['attributes']['became'][fieldKeyName] %}
@@ -444,6 +487,8 @@ class V1Dot10Dot50 extends Base
             {% endif %}
 
             {% if  updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+                  {% set was = updateData['attributes']['was'][field ~ 'Names'] %}
+                {% set became = updateData['attributes']['became'][field ~ 'Names'] %}
                 {% set was = updateData['attributes']['was'][field]|map(id => was[id])|join(', ') %}
                 {% set became = updateData['attributes']['became'][field]|map(id => became[id])|join(', ') %}
             {% endif %}
