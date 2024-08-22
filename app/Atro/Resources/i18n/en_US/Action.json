@@ -27,8 +27,8 @@
   },
   "options": {
     "usage": {
-      "entity": "Entity",
-      "record": "Record"
+      "entity": "Entity level",
+      "record": "Record level"
     },
     "display": {
       "dropdown": "Dropdown",
