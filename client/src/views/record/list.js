@@ -353,7 +353,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 let view = this.getParentView().getParentView();
 
                 if (view.fieldType && view.fieldType === 'linkMultiple') {
-                    return false;
+                    if (!view.mode || view.mode !== 'search') {
+                        return false;
+                    }
                 }
             }
 
