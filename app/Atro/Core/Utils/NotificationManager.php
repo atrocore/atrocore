@@ -15,12 +15,9 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
 use Atro\Core\KeyValueStorages\MemoryStorage;
-use Atro\Core\QueueManager;
 use Atro\NotificationTransport\AbstractNotificationTransport;
 use Atro\NotificationTransport\NotificationOccurrence;
-use Atro\ORM\DB\RDB\Mapper;
 use Atro\Repositories\NotificationRule;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Factories\AclManager as AclManagerFactory;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Utils\Config;
@@ -30,6 +27,7 @@ use Espo\Entities\User;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Atro\Entities\NotificationRule as RuleEntity;
+use Atro\Core\Utils\Note as NoteUtil;
 
 class NotificationManager
 {
@@ -68,6 +66,7 @@ class NotificationManager
 
         $isNote = $entity->getEntityType() === 'Note';
         $noteHasParent = $entity->get('parentType') && $entity->get('parentId');
+        $hasSentUpdateOccurrence = false;
 
         if ($isNote && $entity->get('type') !== 'Post') {
             return;
@@ -94,11 +93,12 @@ class NotificationManager
                 $this->sendNoteNotifications(NotificationOccurrence::NOTE_UPDATED, $entity);
             } else {
                 $this->sendNotifications(NotificationOccurrence::UPDATE, $entity);
+                $hasSentUpdateOccurrence  = true;
             }
         }
 
         foreach (['ownerUser', 'assignedUser'] as $link) {
-            if (($entity->isNew() && $entity->get($link . 'Id') !== null) || $entity->isAttributeChanged($link . 'Id')) {
+            if (($entity->isNew() && $entity->get($link . 'Id') !== null) || (!$hasSentUpdateOccurrence && $entity->isAttributeChanged($link . 'Id'))) {
                 $this->sendNotifications(
                     $entity->get($link . 'Id') ? NotificationOccurrence::OWNERSHIP_ASSIGNMENT : NotificationOccurrence::UNLIKING_OWNERSHIP_ASSIGNMENT,
                     $entity,
@@ -172,13 +172,7 @@ class NotificationManager
             return;
         }
 
-        $dataForTemplate = array_merge($this->transformData($params), [
-            "occurrence" => $occurrence,
-            "actionUser" => $actionUser,
-            "siteUrl" => $this->getConfig()->get('siteUrl'),
-            "entity" => $entity,
-            "parent" => $parent
-        ]);
+        $dataForTemplate = [];
 
         foreach ($this->getMetadata()->get(['app', 'activeNotificationProfilesIds'], []) as $notificationProfileId) {
 
@@ -192,6 +186,23 @@ class NotificationManager
 
                 if (!$this->userCanBeNotify($user, $occurrence, $entity, $actionUser, $rule, $parent)) {
                     continue;
+                }
+
+                if(empty($dataForTemplate)){
+                    if($occurrence === NotificationOccurrence::UPDATE) {
+                        $updateData = $this->getUpdateData($entity);
+                        if(empty($updateData)){
+                            break;
+                        }
+                        $params['updateData'] = $updateData;
+                    }
+                    $dataForTemplate = array_merge($this->transformData($params), [
+                        "occurrence" => $occurrence,
+                        "actionUser" => $actionUser,
+                        "siteUrl" => $this->getConfig()->get('siteUrl'),
+                        "entity" => $entity,
+                        "parent" => $parent
+                    ]);
                 }
 
                 $dataForTemplate['notifyUser'] = $user;
@@ -303,7 +314,6 @@ class NotificationManager
 
         return true;
     }
-
 
     protected function getNotificationRule(string $notificationProfileId, string $occurrence, string $entityType): ?RuleEntity
     {
@@ -487,6 +497,38 @@ class NotificationManager
         return $this->teamMembers[$key] = $teamsIds;
     }
 
+    protected function getUpdateData(Entity $entity): ?array
+    {
+        $data = $this->getNoteUtil()->getChangedFieldsData($entity);
+
+        if(empty($data['fields']) || empty($data['attributes']['was']) || empty($data['attributes']['became'])) {
+            return null;
+        }
+
+        $container = (new \Atro\Core\Application())->getContainer();
+        $auth = new \Espo\Core\Utils\Auth($container);
+        $auth->useNoAuth();
+
+        $data = json_decode(json_encode($data));
+
+        $tmpEntity = $this->getEntityManager()->getEntity('Note');
+
+        $container->get('serviceFactory')->create('Stream')->handleChangedData($data, $tmpEntity, $entity->getEntityType());
+
+        $data = json_decode(json_encode($data), true);
+
+        foreach ($tmpEntity->get('fieldDefs') as $key => $fieldDefs) {
+            if(!empty($fieldDefs['type'])){
+                $data['fieldTypes'][$key] = $fieldDefs['type'];
+            }
+        }
+
+        $data['diff'] = $tmpEntity->get('diff');
+        sort($data['fields']);
+
+        return $data;
+    }
+
     protected function getNotificationRuleRepository(): NotificationRule
     {
         return $this->getEntityManager()->getRepository('NotificationRule');
@@ -512,11 +554,6 @@ class NotificationManager
         return $this->container->get('config');
     }
 
-    protected function getQueueManager(): QueueManager
-    {
-        return $this->container->get('queueManager');
-    }
-
     protected function getMemoryStorage(): MemoryStorage
     {
         return $this->container->get('memoryStorage');
@@ -526,17 +563,8 @@ class NotificationManager
     {
         return $this->container->get('language');
     }
-
-    protected function getUsers(int $offset, int $maxSize): EntityCollection
+    protected function getNoteUtil(): NoteUtil
     {
-        $key = 'User' . $offset . '_' . $maxSize;
-        if (!empty($this->users[$key])) {
-            return $this->users[$key];
-        }
-
-        return $this->users[$key] = $this->getEntityManager()->getRepository('User')
-            ->where(['isActive' => true, 'id!=' => 'system'])
-            ->limit($offset, $maxSize)
-            ->find();
+        return $this->container->get(NoteUtil::class);
     }
 }
