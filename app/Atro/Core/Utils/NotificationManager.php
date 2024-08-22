@@ -481,8 +481,11 @@ class NotificationManager
             return $this->teamMembers[$key];
         }
 
-        $entity->loadLinkMultipleField('teams');
-        $teamsIds = $entity->get('teamsIds');
+        if(!$entity->hasRelation('teams') || !$entity->hasAttribute('teamsIds')){
+            return [];
+        }
+
+        $teamsIds = $entity->getLinkMultipleIdList('teams');
 
         return $this->teamMembers[$key] = $teamsIds;
     }
