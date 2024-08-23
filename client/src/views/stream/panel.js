@@ -129,10 +129,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.on('remove', function () {
                 this.storeControl();
-                $(window).off('beforeunload.stream-'+ this.cid);
+                $(window).off('beforeunload.stream-' + this.cid);
             }, this);
-            $(window).off('beforeunload.stream-'+ this.cid);
-            $(window).on('beforeunload.stream-'+ this.cid, function () {
+            $(window).off('beforeunload.stream-' + this.cid);
+            $(window).on('beforeunload.stream-' + this.cid, function () {
                 this.storeControl();
             }.bind(this));
 
@@ -434,7 +434,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.setFilter(filterInternal);
 
             this.filterList.forEach(function (item) {
-                var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+                var $el = this.$el.closest('.panel').find('[data-name="' + item + '"] span');
                 if (item === filter) {
                     $el.removeClass('hidden');
                 } else {

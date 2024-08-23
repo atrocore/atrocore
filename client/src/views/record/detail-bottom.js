@@ -253,7 +253,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 this.collapseBottomPanel(panel, type);
             });
 
-            this.listenTo(Backbone, 'create-bottom-panel', function(panel){
+            this.listenTo(Backbone, 'create-bottom-panel', function (panel) {
                 this.notify('Loading..');
                 this.$el.find(`.panel[data-name="${panel.name}"]`).removeClass('hidden')
                 panel.hidden = false;
@@ -280,7 +280,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         filterActions: function (actions) {
             var filtered = [];
             actions.forEach(function (item) {
-                if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item) && filtered.findIndex(i => i.action === item.action) === -1) {
+                if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item) &&
+                    filtered.findIndex(i => i.action === item.action && JSON.stringify(i.data) === JSON.stringify(item.data)) === -1) {
                     filtered.push(item);
                 }
             }.bind(this));
@@ -303,41 +304,41 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             return data;
         },
 
-        isPreferenceScopeExists(){
-            let preferences =  this.getPreferences().get('closedPanels') ?? {};
+        isPreferenceScopeExists() {
+            let preferences = this.getPreferences().get('closedPanels') ?? {};
             return preferences.hasOwnProperty(this.scope)
         },
 
-        isPanelClosed(name){
-            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+        isPanelClosed(name) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? {}
             let panels = scopePreferences['closed'] ?? [];
             return panels.includes(name)
         },
 
-        isPanelHiddenPerDefault(name){
-            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+        isPanelHiddenPerDefault(name) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? {}
             let panels = scopePreferences['hiddenPerDefault'] ?? []
             return panels.includes(name)
         },
 
-        addToClosedPanelPreferences(names, isHiddenPerDefault = false){
-            if(names.length === 0) return;
-            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+        addToClosedPanelPreferences(names, isHiddenPerDefault = false) {
+            if (names.length === 0) return;
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? {}
             let panels = scopePreferences['closed'] ?? []
             names.forEach(name => {
-                if(!panels.includes(name)){
+                if (!panels.includes(name)) {
                     panels.push(name)
                 }
             })
             scopePreferences['closed'] = panels;
 
-            if(isHiddenPerDefault){
+            if (isHiddenPerDefault) {
                 panels = scopePreferences['hiddenPerDefault'] ?? []
                 names.forEach(name => {
-                    if(!panels.includes(name)){
+                    if (!panels.includes(name)) {
                         panels.push(name)
                     }
                 })
@@ -350,16 +351,16 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             this.getPreferences().trigger('update');
         },
 
-        removeFromClosedPanelPreferences(names, fromHiddenPerDefault = false){
-            if(names.length === 0) return;
-            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+        removeFromClosedPanelPreferences(names, fromHiddenPerDefault = false) {
+            if (names.length === 0) return;
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? {};
             let panels = scopePreferences['closed'] ?? []
 
             panels = panels.filter(n => !names.includes(n));
             scopePreferences['closed'] = panels;
 
-            if(fromHiddenPerDefault){
+            if (fromHiddenPerDefault) {
                 panels = scopePreferences['hiddenPerDefault'] ?? []
                 panels = panels.filter(n => !names.includes(n));
                 scopePreferences['hiddenPerDefault'] = panels;
@@ -427,14 +428,14 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
                 p.canClose = p.canClose ?? this.canClose
                 p.order = 5;
-                if(p.hiddenPerDefault === true
-                    && !this.isPanelHiddenPerDefault(p.name)){
+                if (p.hiddenPerDefault === true
+                    && !this.isPanelHiddenPerDefault(p.name)) {
                     this.addToClosedPanelPreferences([p.name], true)
-                }else if(p.hiddenPerDefault !== true && this.isPanelHiddenPerDefault(p.name)){
+                } else if (p.hiddenPerDefault !== true && this.isPanelHiddenPerDefault(p.name)) {
                     toRemoveAsHiddenPerDefault.push(p.name)
                 }
 
-                if(this.isPanelClosed(p.name) && !toRemoveAsHiddenPerDefault.includes(p.name)){
+                if (this.isPanelClosed(p.name) && !toRemoveAsHiddenPerDefault.includes(p.name)) {
                     p.hidden = true
                     this.recordHelper.setPanelStateParam(p.name, true);
                 }
@@ -538,7 +539,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 this.listenTo(view, 'collapsePanel', type => this.collapseBottomPanel(p.name, type));
 
                 if (callback) {
-                    callback(view ,p);
+                    callback(view, p);
                 }
             }, this);
         },
@@ -599,7 +600,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             var fields = {};
             this.panelList.forEach(function (p) {
                 var panelView = this.getView(p.name);
-                if (panelView && (!panelView.disabled || withHidden)  && 'getFieldViews' in panelView) {
+                if (panelView && (!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
                     fields = _.extend(fields, panelView.getFieldViews());
                 }
             }, this);
