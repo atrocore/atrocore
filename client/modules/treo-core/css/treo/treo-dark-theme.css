@@ -23695,8 +23695,12 @@ span.CodeMirror-selectedtext {
 .editor-toolbar button {
     font-weight: 700;
     min-width: 30px;
-    padding: 0 6px;
+    padding: 0 5px;
     white-space: nowrap
+}
+
+.editor-toolbar button .fa {
+    font-size: 13px;
 }
 
 .editor-toolbar button.active, .editor-toolbar button:hover {
