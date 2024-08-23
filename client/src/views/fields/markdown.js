@@ -84,7 +84,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                             });
                         });
                     },
-                    className: "fa fa-file-image-o",
+                    className: "fa fa-file-image",
                     title: "Select"
                 });
             }
@@ -134,6 +134,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
             if (this.mode === 'edit' && element && !this.readOnly) {
                 this.editor = new EasyMDE({
                     element: element,
+                    autoDownloadFontAwesome: false,
                     minHeight: `${this.minHeight}px`,
                     forceSync: true,
                     status: false,
