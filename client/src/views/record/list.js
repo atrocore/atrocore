@@ -1081,22 +1081,22 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
             this.listenTo(this.collection, 'update-total', () => {
                 if (this.collection.total > this.collection.length || this.collection.total === -1) {
-                    this.$el.find('.show-more').removeClass('hide')
+                    this.$el.find('.show-more').removeClass('hidden')
                     this.$el.find('.show-more .more-label').text(this.getShowMoreLabel())
                 } else {
-                    this.$el.find('.show-more').addClass('hide')
+                    this.$el.find('.show-more').addClass('hidden')
                 }
 
                 if(this.collection.total !=null){
-                    this.$el.find('.list-buttons-container .preloader').addClass('hide')
-                    this.$el.find('.list-buttons-container .total-count').removeClass('hide')
+                    this.$el.find('.list-buttons-container .preloader').addClass('hidden')
+                    this.$el.find('.list-buttons-container .total-count').removeClass('hidden')
                     if(this.collection.total>=0){
                         this.$el.find('.total-count-span').html(this.collection.total)
                         this.$el.find('.shown-count-span').html(this.collection.length)
                     }
                 }else{
-                    this.$el.find('.list-buttons-container .preloader').removeClass('hide')
-                    this.$el.find('.list-buttons-container .text-count').addClass('hide')
+                    this.$el.find('.list-buttons-container .preloader').removeClass('hidden')
+                    this.$el.find('.list-buttons-container .text-count').addClass('hidden')
                 }
 
             });
