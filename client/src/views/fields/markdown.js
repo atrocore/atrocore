@@ -85,7 +85,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                         });
                     },
                     className: "fa fa-file-image",
-                    title: "Select"
+                    title: this.translate('Select Image')
                 });
             }
 
@@ -114,7 +114,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                         });
                     },
                     className: "fa fa-download",
-                    title: "Upload from a local filesystem"
+                    title: this.translate('Upload Image')
                 });
             }
 

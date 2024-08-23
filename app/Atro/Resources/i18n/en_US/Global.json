@@ -333,7 +333,9 @@
     "Provide Feedback": "Provide Feedback",
     "Instance comparison": "Instance comparison",
     "previewTemplate": "Preview Templates",
-    "Duplicate and Select": "Duplicate and Select"
+    "Duplicate and Select": "Duplicate and Select",
+    "Select Image": "Select existing image",
+    "Upload Image": "Upload image from a local filesystem"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
