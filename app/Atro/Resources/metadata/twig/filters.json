@@ -3,5 +3,7 @@
   "isImage": "\\Atro\\TwigFilter\\IsImage",
   "escapeDoubleQuote": "\\Atro\\TwigFilter\\EscapeDoubleQuote",
   "escapeStr": "\\Atro\\TwigFilter\\EscapeString",
-  "backslashNToBr": "\\Atro\\TwigFilter\\BackslashNToBr"
+  "backslashNToBr": "\\Atro\\TwigFilter\\BackslashNToBr",
+  "generateBorderColor": "\\Atro\\TwigFilter\\GenerateBorderColor",
+  "generateFontColor": "\\Atro\\TwigFilter\\GenerateFontColor"
 }

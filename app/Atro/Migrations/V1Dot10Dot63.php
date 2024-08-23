@@ -15,7 +15,7 @@ use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 
-class V1Dot10Dot62 extends Base
+class V1Dot10Dot63 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -61,12 +61,11 @@ class V1Dot10Dot62 extends Base
 
                 }
             }
-
         }
     }
 
     public function down(): void
     {
+        $this->up();
     }
-
 }
