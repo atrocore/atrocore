@@ -61,12 +61,11 @@ class V1Dot10Dot63 extends Base
 
                 }
             }
-
         }
     }
 
     public function down(): void
     {
+        $this->up();
     }
-
 }
