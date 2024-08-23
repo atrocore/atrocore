@@ -13,6 +13,17 @@ Espo.define('views/notification/items/translated-message', 'views/notification/i
     return Dep.extend({
 
         template: 'notification/items/translated-message',
+        events:_.extend({
+            'click a[data-action="expandDetails"]': function (e) {
+                if (this.$el.find('.details').hasClass('hidden')) {
+                    this.$el.find('.details').removeClass('hidden');
+                    $(e.currentTarget).find('span').removeClass('fa-angle-down').addClass('fa-angle-up');
+                } else {
+                    this.$el.find('.details').addClass('hidden');
+                    $(e.currentTarget).find('span').addClass('fa-angle-down').removeClass('fa-angle-up');
+                }
+            }
+        },Dep.prototype.events),
 
         data: function () {
             return _.extend({
@@ -34,7 +45,6 @@ Espo.define('views/notification/items/translated-message', 'views/notification/i
 
             this.createMessage();
         }
-
     });
 });
 

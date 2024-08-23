@@ -527,6 +527,7 @@ class NotificationManager
         }
 
         $data['diff'] = $tmpEntity->get('diff');
+        $data['fieldDefs'] = $tmpEntity->get('fieldDefs');
         sort($data['fields']);
 
         return $data;

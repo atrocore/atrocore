@@ -24,6 +24,16 @@ class V1Dot10Dot63 extends Base
 
     public function up(): void
     {
+        $this->updateUpdateTemplate();
+    }
+
+    public function down(): void
+    {
+        $this->updateUpdateTemplate();
+    }
+
+    protected function updateUpdateTemplate(): void
+    {
         $rules = array_filter(V1Dot10Dot50::getDefaultRules(), fn($d) => $d['occurrence'] === 'updating' && $d['entity'] === '');
 
         if(empty($rules)){
@@ -61,12 +71,6 @@ class V1Dot10Dot63 extends Base
 
                 }
             }
-
         }
     }
-
-    public function down(): void
-    {
-    }
-
 }
