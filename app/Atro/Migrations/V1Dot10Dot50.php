@@ -163,6 +163,7 @@ class V1Dot10Dot50 extends Base
     {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+        {% set value = updateData['attributes'][type][field] %}
         {%  if value is not null %}
             {% set value = value ?  translate('Yes',language): translate('no',language)  %}
         {% endif %}
@@ -306,6 +307,7 @@ class V1Dot10Dot50 extends Base
     {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+        {% set value = updateData['attributes'][type][field] %}
         {%  if value is not null %}
             {% set value = value ?  translate('Yes',language): translate('no',language)  %}
         {% endif %}
@@ -449,6 +451,7 @@ class V1Dot10Dot50 extends Base
     {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+        {% set value = updateData['attributes'][type][field] %}
         {%  if value is not null %}
             {% set value = value ?  translate('Yes',language): translate('no',language)  %}
         {% endif %}
@@ -649,6 +652,7 @@ class V1Dot10Dot50 extends Base
     {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+         {% set value = updateData['attributes'][type][field] %}
         {%  if value is not null %}
             {% set value = value ?  translate('Yes',language): translate('no',language)  %}
         {% endif %}
@@ -721,14 +725,16 @@ class V1Dot10Dot50 extends Base
     </thead>
     <tbody>
     {% for field in updateData['fields'] %}
-    {% if not updateData['diff'][field] %}
-    <tr>
-        <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
-        <td style=\"padding: 10px 0;\">{% if updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}<span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} {% endif %}</span></td>
-        <td style=\"padding: 10px 0;\">{% if updateData['attributes']['became'][field] or updateData['attributes']['was'][field ~ 'Name'] %}<span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span> {% endif %}</td>
-    <tr>
+        {% if not updateData['diff'][field] %}
+        <tr>
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            {%  set hasWasValue = updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}
+            {%  set hasBeforeValue = updateData['attributes']['became'][field] or updateData['attributes']['became'][field ~ 'Name'] %}
+            {% if hasWasValue %}<td style=\"padding: 10px 0;\"  {% if not hasBeforeValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} </span></td> {% endif %}
+            {% if hasBeforeValue %}<td style=\"padding: 10px 0;\" {% if not hasWasValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span></td>{% endif %}
+        <tr>
         {% endif %}
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>
 <div>
@@ -768,6 +774,7 @@ class V1Dot10Dot50 extends Base
     {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+        {% set value = updateData['attributes'][type][field] %}
         {%  if value is not null %}
             {% set value = value ?  translate('Yes',language): translate('no',language)  %}
         {% endif %}
@@ -841,14 +848,16 @@ class V1Dot10Dot50 extends Base
     </thead>
     <tbody>
     {% for field in updateData['fields'] %}
-    {% if not updateData['diff'][field] %}
-    <tr>
-        <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
-        <td style=\"padding: 10px 0;\">{% if updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}<span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} {% endif %}</span></td>
-        <td style=\"padding: 10px 0;\">{% if updateData['attributes']['became'][field] or updateData['attributes']['was'][field ~ 'Name'] %}<span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span> {% endif %}</td>
-    <tr>
+        {% if not updateData['diff'][field] %}
+        <tr>
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            {%  set hasWasValue = updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}
+            {%  set hasBeforeValue = updateData['attributes']['became'][field] or updateData['attributes']['became'][field ~ 'Name'] %}
+            {% if hasWasValue %}<td style=\"padding: 10px 0;\"  {% if not hasBeforeValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} </span></td> {% endif %}
+            {% if hasBeforeValue %}<td style=\"padding: 10px 0;\" {% if not hasWasValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span></td>{% endif %}
+        <tr>
         {% endif %}
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>
 <div>
@@ -888,6 +897,7 @@ class V1Dot10Dot50 extends Base
     {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
         {% set value = updateData['attributes'][type][field ~ 'Name'] %}
     {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+         {% set value = updateData['attributes'][type][field] %}
         {%  if value is not null %}
             {% set value = value ?  translate('Yes',language): translate('no',language)  %}
         {% endif %}
@@ -961,15 +971,17 @@ class V1Dot10Dot50 extends Base
     </tr>
     </thead>
     <tbody>
-    {% for field in updateData['fields'] %}
-    {% if not updateData['diff'][field] %}
-    <tr>
-        <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
-        <td style=\"padding: 10px 0;\">{% if updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}<span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} {% endif %}</span></td>
-        <td style=\"padding: 10px 0;\">{% if updateData['attributes']['became'][field] or updateData['attributes']['was'][field ~ 'Name'] %}<span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span> {% endif %}</td>
-    <tr>
+   {% for field in updateData['fields'] %}
+        {% if not updateData['diff'][field] %}
+        <tr>
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            {%  set hasWasValue = updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}
+            {%  set hasBeforeValue = updateData['attributes']['became'][field] or updateData['attributes']['became'][field ~ 'Name'] %}
+            {% if hasWasValue %}<td style=\"padding: 10px 0;\"  {% if not hasBeforeValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} </span></td> {% endif %}
+            {% if hasBeforeValue %}<td style=\"padding: 10px 0;\" {% if not hasWasValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span></td>{% endif %}
+        <tr>
         {% endif %}
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>
 <div>
