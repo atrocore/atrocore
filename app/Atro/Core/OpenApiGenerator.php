@@ -241,9 +241,6 @@ class OpenApiGenerator
         /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->container->get('entityManager');
-
         /** @var Config $config */
         $config = $this->container->get('config');
 
