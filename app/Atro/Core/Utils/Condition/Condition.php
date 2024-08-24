@@ -312,7 +312,7 @@ class Condition
      * @return bool
      * @throws Error
      */
-    protected function checkNotContains(array $values): bool
+    protected static function checkNotContains(array $values): bool
     {
         return !self::checkContains($values);
     }
@@ -326,7 +326,7 @@ class Condition
      * @return bool
      * @throws Error
      */
-    protected function checkHas(array $values): bool
+    protected static function checkHas(array $values): bool
     {
         return self::checkContains($values);
     }
@@ -340,7 +340,7 @@ class Condition
      * @return bool
      * @throws Error
      */
-    protected function checkNotHas(array $values): bool
+    protected static function checkNotHas(array $values): bool
     {
         return !self::checkHas($values);
     }
@@ -354,7 +354,7 @@ class Condition
      * @return bool
      * @throws Error
      */
-    protected function checkGreaterThan(array $values): bool
+    protected static function checkGreaterThan(array $values): bool
     {
         self::isValidCountArray(2, $values);
 
@@ -373,7 +373,7 @@ class Condition
      * @return bool
      * @throws Error
      */
-    protected function checkLessThan(array $values): bool
+    protected static function checkLessThan(array $values): bool
     {
         self::isValidCountArray(2, $values);
 
