@@ -353,7 +353,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 let view = this.getParentView().getParentView();
 
                 if (view.fieldType && view.fieldType === 'linkMultiple') {
-                    return false;
+                    if (!view.mode || view.mode !== 'search') {
+                        return false;
+                    }
                 }
             }
 
@@ -579,19 +581,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         executeDynamicMassActionRequest(data) {
-            let where;
+            let requestData = {
+                actionId: data.id
+            };
+
             if (this.allResultIsChecked) {
-                where = this.collection.getWhere();
-            } else {
-                where = [{type: "in", attribute: "id", value: this.checkedList}];
+                requestData.where = this.collection.getWhere();
+                requestData.massAction = true;
+            } else if (this.checkedList.length > 0) {
+                requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
+                requestData.massAction = true;
             }
 
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {
-                actionId: data.id,
-                where: where,
-                massAction: true
-            }).success(response => {
+            this.ajaxPostRequest('Action/action/executeNow', requestData).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                     setTimeout(() => {
@@ -1078,22 +1081,22 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
             this.listenTo(this.collection, 'update-total', () => {
                 if (this.collection.total > this.collection.length || this.collection.total === -1) {
-                    this.$el.find('.show-more').removeClass('hide')
+                    this.$el.find('.show-more').removeClass('hidden')
                     this.$el.find('.show-more .more-label').text(this.getShowMoreLabel())
                 } else {
-                    this.$el.find('.show-more').addClass('hide')
+                    this.$el.find('.show-more').addClass('hidden')
                 }
 
                 if(this.collection.total !=null){
-                    this.$el.find('.list-buttons-container .preloader').addClass('hide')
-                    this.$el.find('.list-buttons-container .total-count').removeClass('hide')
+                    this.$el.find('.list-buttons-container .preloader').addClass('hidden')
+                    this.$el.find('.list-buttons-container .total-count').removeClass('hidden')
                     if(this.collection.total>=0){
                         this.$el.find('.total-count-span').html(this.collection.total)
                         this.$el.find('.shown-count-span').html(this.collection.length)
                     }
                 }else{
-                    this.$el.find('.list-buttons-container .preloader').removeClass('hide')
-                    this.$el.find('.list-buttons-container .text-count').addClass('hide')
+                    this.$el.find('.list-buttons-container .preloader').removeClass('hidden')
+                    this.$el.find('.list-buttons-container .text-count').addClass('hidden')
                 }
 
             });

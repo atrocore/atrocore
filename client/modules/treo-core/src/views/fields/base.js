@@ -18,14 +18,28 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
             }
 
             let confirmMessage = null;
+            if (this.model.get('id')) {
+                let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+                $.each(confirmations, (field, data) => {
+                    if (_prev[field] !== attrs[field]) {
+                        let key = null;
+                        if (typeof data.values !== 'undefined') {
+                            data.values.forEach(value => {
+                                if (attrs[field] === value) {
+                                    key = data.message;
+                                }
+                            });
+                        } else {
+                            key = data;
+                        }
 
-            let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
-            $.each(confirmations, (field, key) => {
-                if (typeof _prev[field] !== 'undefined') {
-                    let parts = key.split('.');
-                    confirmMessage = this.translate(parts[2], parts[1], parts[0]);
-                }
-            });
+                        if (key) {
+                            let parts = key.split('.');
+                            confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                        }
+                    }
+                });
+            }
 
             return confirmMessage;
         },

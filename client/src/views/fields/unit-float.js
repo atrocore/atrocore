@@ -43,7 +43,7 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
         },
 
         setMode(mode) {
-            Varchar.prototype.setTemplateFromMeasureFormat.call(this);
+            Varchar.prototype.setTemplateFromMeasureFormat.call(this,mode);
             Dep.prototype.setMode.call(this, mode)
         },
 

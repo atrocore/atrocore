@@ -150,9 +150,438 @@ class V1Dot10Dot50 extends Base
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
-                                "body"     => '<p>{{actionUser.name}} made update  on {{entityName}} <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>',
-                                "bodyDeDe" => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>',
-                                "bodyUkUa" => '<p>{{actionUser.name}} зробив оновлення для {{entityName}} <a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a>.</p>'
+                                "body"     => "{% macro translateField(field, context) %}
+    {{ translate(field, context.language, 'fields', context.entityType) }}
+{% endmacro %}
+
+{% macro getValue(field, type, context)  %}
+    {%  set updateData = context.updateData %}
+    {%  set language = context.language %}
+    {%  set entityType = context.entityType %}
+    {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
+
+    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+        {% set value = updateData['attributes'][type][field ~ 'Name'] %}
+    {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+        {% set value = updateData['attributes'][type][field] %}
+        {%  if value is not null %}
+            {% set value = value ?  translate('Yes',language): translate('no',language)  %}
+        {% endif %}
+    {% else %}
+        {% set value = updateData['attributes'][type][field] %}
+    {% endif %}
+
+    {% if value is null %}
+        {% set value = 'Null' %}
+    {% endif %}
+
+    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
+        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
+        {% if color %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
+        {% else %}
+            <code> {{ value }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
+            {% if optionData['color'] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{  optionData['name'] }}</span>
+            {% else %}
+                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
+            {% endif %}
+        {% endfor %}
+    {% elseif updateData['fieldTypes'][field] == 'color' %}
+        <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
+    {% elseif updateData['fieldTypes'][field] == 'enum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% if optionColors[value] %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
+        {% else %}
+            <code> {{ translateOption(value, language, field, entityType) }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field] == 'multiEnum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% for v in value %}
+            {% if optionColors[v] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[v]|generateFontColor }}; background-color:{{ optionColors[v] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[v]|generateBorderColor}}\">{{ translateOption(v, language, field, entityType) }}</span>
+            {% else %}
+                <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <code>{{ value }}</code>
+    {% endif %}
+{% endmacro %}
+
+{% macro getMessage(context) %}
+    {% set updateData = context.updateData %}
+    {% set language = context.language %}
+    {% set entity = context.entity %}
+    {% set entityType = context.entityType %}
+    {% set entityName = context.entityName %}
+    {% set entityUrl = context.entityUrl %}
+    {% set actionUser = context.actionUser %}
+    {% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+    {% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+    {% set assignedUserId =  entity.assignedUserId %}
+
+    {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+        {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+        {{actionUser.name}} has assigned to you  {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.
+    {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+        {{actionUser.name}} has assigned to you {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a> and updated
+    {% else %}
+        {{actionUser.name}}  in {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>  updated
+    {% endif %}
+{% endmacro %}
+
+{%  set shouldShowInLine = updateData['fields']|length == 1 and not updateData['diff'] %}
+
+<div class=\"stream-head-container\">
+    <div class=\"stream-head-text-container\">
+        {% if  shouldShowInLine %}
+            {% for field in  updateData['fields'] %}
+                <span class=\"text-muted message\">{{ _self.getMessage(_context) }} <code>{{_self.translateField(field, _context)}}</code> {{translate('from', language, 'streamMessages', 'Global')}}&nbsp;<span class=\"was\">{{_self.getValue(field, 'was',_context)}}</span>&nbsp;{{translate('to', language, 'streamMessages')}} <span class=\"became\">{{_self.getValue(field, 'became', _context)}}</span></span>
+            {% endfor %}
+        {% else %}
+            <span class=\"text-muted message\"> {{ _self.getMessage(_context) }} {{ updateData['fields']|map(f => translate(f, language, 'fields', entityType))|map(f => '<code> ' ~ f ~' </code>')|join(', ')|raw }}</span>
+            <a href=\"javascript:\" data-action=\"expandDetails\"><span class=\"fas fa-angle-down\"></span></a>
+        {% endif %}
+    </div>
+</div>
+
+<div class=\"hidden details stream-details-container\">
+
+    {% if not shouldShowInLine %}
+        {%  set hasNonDiffField = updateData['fields']|keys|length != updateData['diff']|keys|length %}
+        {% if hasNonDiffField %}
+            <div class=\"panel\">
+                {% for field in  updateData['fields'] %}
+                    {% if not updateData['diff'][field] %}
+                        <div class=\"row\">
+                            <div class=\"cell col-md-12 col-lg-6 form-group\">
+                                <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('was', language, 'streamMessages')}}</label>
+                                <div class=\"field\">{{_self.getValue(field, 'was', _context) }}</div>
+                            </div>
+                            <div class=\"cell col-md-12 col-lg-6 form-group\">
+                                <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('become', language, 'streamMessages')}}</label>
+                                <div class=\"field\">{{_self.getValue(field, 'became', _context) }}</div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif%}
+    {%if updateData['diff'] %}
+        <div class=\"panel diff\">
+            {% for field, diff in updateData['diff'] %}
+                <div class=\"row\">
+                    <div class=\"cell col-md-12 col-lg-12 form-group\">
+                        <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('changed', language, 'streamMessages')}}</label>
+                        <div class=\"field\">{{diff|raw}}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        <div>
+    {% endif %}
+</div>",
+                                "bodyDeDe" => "{% macro translateField(field, context) %}
+    {{ translate(field, context.language, 'fields', context.entityType) }}
+{% endmacro %}
+
+{% macro getValue(field, type, context)  %}
+    {%  set updateData = context.updateData %}
+    {%  set language = context.language %}
+    {%  set entityType = context.entityType %}
+    {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
+
+    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+        {% set value = updateData['attributes'][type][field ~ 'Name'] %}
+    {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+        {% set value = updateData['attributes'][type][field] %}
+        {%  if value is not null %}
+            {% set value = value ?  translate('Yes',language): translate('no',language)  %}
+        {% endif %}
+    {% else %}
+        {% set value = updateData['attributes'][type][field] %}
+    {% endif %}
+
+    {% if value is null %}
+        {% set value = 'Null' %}
+    {% endif %}
+
+    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
+        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
+        {% if color %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
+        {% else %}
+            <code> {{ value }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
+            {% if optionData['color'] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{  optionData['name'] }}</span>
+            {% else %}
+                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
+            {% endif %}
+        {% endfor %}
+    {% elseif updateData['fieldTypes'][field] == 'color' %}
+        <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
+    {% elseif updateData['fieldTypes'][field] == 'enum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% if optionColors[value] %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
+        {% else %}
+            <code> {{ translateOption(value, language, field, entityType) }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field] == 'multiEnum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% for v in value %}
+            {% if optionColors[v] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[v]|generateFontColor }}; background-color:{{ optionColors[v] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[v]|generateBorderColor}}\">{{ translateOption(v, language, field, entityType) }}</span>
+            {% else %}
+                <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <code>{{ value }}</code>
+    {% endif %}
+{% endmacro %}
+
+{% macro getMessage(context) %}
+    {% set updateData = context.updateData %}
+    {% set language = context.language %}
+    {% set entity = context.entity %}
+    {% set entityType = context.entityType %}
+    {% set entityName = context.entityName %}
+    {% set entityUrl = context.entityUrl %}
+    {% set actionUser = context.actionUser %}
+    {% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+    {% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+    {% set assignedUserId =  entity.assignedUserId %}
+
+    {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+        {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+        <p>{{actionUser.name}} hat Ihnen {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>  zugewiesen
+    {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+        <p>{{actionUser.name}} hat Ihnen zugewiesen und eine Aktualisierung an {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a> vorgenommen.</p>
+    {% else %}
+        <p>{{actionUser.name}} hat Update auf {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>. vorgenommen. </p>
+    {% endif %}
+{% endmacro %}
+
+{%  set shouldShowInLine = updateData['fields']|length == 1 and not updateData['diff'] %}
+
+<div class=\"stream-head-container\">
+    <div class=\"stream-head-text-container\">
+        {% if  shouldShowInLine %}
+            {% for field in  updateData['fields'] %}
+                <span class=\"text-muted message\">{{ _self.getMessage(_context) }} <code>{{_self.translateField(field, _context)}}</code> {{translate('from', language, 'streamMessages', 'Global')}}&nbsp;<span class=\"was\">{{_self.getValue(field, 'was',_context)}}</span>&nbsp;{{translate('to', language, 'streamMessages')}} <span class=\"became\">{{_self.getValue(field, 'became', _context)}}</span></span>
+            {% endfor %}
+        {% else %}
+            <span class=\"text-muted message\"> {{ _self.getMessage(_context) }} {{ updateData['fields']|map(f => translate(f, language, 'fields', entityType))|map(f => '<code> ' ~ f ~' </code>')|join(', ')|raw }}</span>
+            <a href=\"javascript:\" data-action=\"expandDetails\"><span class=\"fas fa-angle-down\"></span></a>
+        {% endif %}
+    </div>
+</div>
+
+<div class=\"hidden details stream-details-container\">
+
+    {% if not shouldShowInLine %}
+        {%  set hasNonDiffField = updateData['fields']|keys|length != updateData['diff']|keys|length %}
+        {% if hasNonDiffField %}
+            <div class=\"panel\">
+                {% for field in  updateData['fields'] %}
+                    {% if not updateData['diff'][field] %}
+                        <div class=\"row\">
+                            <div class=\"cell col-md-12 col-lg-6 form-group\">
+                                <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('was', language, 'streamMessages')}}</label>
+                                <div class=\"field\">{{_self.getValue(field, 'was', _context) }}</div>
+                            </div>
+                            <div class=\"cell col-md-12 col-lg-6 form-group\">
+                                <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('become', language, 'streamMessages')}}</label>
+                                <div class=\"field\">{{_self.getValue(field, 'became', _context) }}</div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif%}
+    {%if updateData['diff'] %}
+        <div class=\"panel diff\">
+            {% for field, diff in updateData['diff'] %}
+                <div class=\"row\">
+                    <div class=\"cell col-md-12 col-lg-12 form-group\">
+                        <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('changed', language, 'streamMessages')}}</label>
+                        <div class=\"field\">{{diff|raw}}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        <div>
+    {% endif %}
+</div>",
+                                "bodyUkUa" => "{% macro translateField(field, context) %}
+    {{ translate(field, context.language, 'fields', context.entityType) }}
+{% endmacro %}
+
+{% macro getValue(field, type, context)  %}
+    {%  set updateData = context.updateData %}
+    {%  set language = context.language %}
+    {%  set entityType = context.entityType %}
+    {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
+
+    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+        {% set value = updateData['attributes'][type][field ~ 'Name'] %}
+    {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+        {% set value = updateData['attributes'][type][field] %}
+        {%  if value is not null %}
+            {% set value = value ?  translate('Yes',language): translate('no',language)  %}
+        {% endif %}
+    {% else %}
+        {% set value = updateData['attributes'][type][field] %}
+    {% endif %}
+
+    {% if value is null %}
+        {% set value = 'Null' %}
+    {% endif %}
+
+    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
+        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
+        {% if color %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
+        {% else %}
+            <code> {{ value }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
+            {% if optionData['color'] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{  optionData['name'] }}</span>
+            {% else %}
+                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
+            {% endif %}
+        {% endfor %}
+    {% elseif updateData['fieldTypes'][field] == 'color' %}
+        <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
+    {% elseif updateData['fieldTypes'][field] == 'enum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% if optionColors[value] %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
+        {% else %}
+            <code> {{ translateOption(value, language, field, entityType) }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field] == 'multiEnum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% for v in value %}
+            {% if optionColors[v] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[v]|generateFontColor }}; background-color:{{ optionColors[v] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[v]|generateBorderColor}}\">{{ translateOption(v, language, field, entityType) }}</span>
+            {% else %}
+                <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <code>{{ value }}</code>
+    {% endif %}
+{% endmacro %}
+
+{% macro getMessage(context) %}
+    {% set updateData = context.updateData %}
+    {% set language = context.language %}
+    {% set entity = context.entity %}
+    {% set entityType = context.entityType %}
+    {% set entityName = context.entityName %}
+    {% set entityUrl = context.entityUrl %}
+    {% set actionUser = context.actionUser %}
+    {% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+    {% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+    {% set assignedUserId =  entity.assignedUserId %}
+
+    {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+        {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+        <p>{{actionUser.name}} призначив вам {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+    {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+        <p>c{{actionUser.name}} призначив вам і зробив оновлення на {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+    {% else %}
+        <p>{{actionUser.name}} зробив оновлення на {{entityName}}<a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+    {% endif %}
+{% endmacro %}
+
+{%  set shouldShowInLine = updateData['fields']|length == 1 and not updateData['diff'] %}
+
+<div class=\"stream-head-container\">
+    <div class=\"stream-head-text-container\">
+        {% if  shouldShowInLine %}
+            {% for field in  updateData['fields'] %}
+                <span class=\"text-muted message\">{{ _self.getMessage(_context) }} <code>{{_self.translateField(field, _context)}}</code> {{translate('from', language, 'streamMessages', 'Global')}}&nbsp;<span class=\"was\">{{_self.getValue(field, 'was',_context)}}</span>&nbsp;{{translate('to', language, 'streamMessages')}} <span class=\"became\">{{_self.getValue(field, 'became', _context)}}</span></span>
+            {% endfor %}
+        {% else %}
+            <span class=\"text-muted message\"> {{ _self.getMessage(_context) }} {{ updateData['fields']|map(f => translate(f, language, 'fields', entityType))|map(f => '<code> ' ~ f ~' </code>')|join(', ')|raw }}</span>
+            <a href=\"javascript:\" data-action=\"expandDetails\"><span class=\"fas fa-angle-down\"></span></a>
+        {% endif %}
+    </div>
+</div>
+
+<div class=\"hidden details stream-details-container\">
+
+    {% if not shouldShowInLine %}
+        {%  set hasNonDiffField = updateData['fields']|keys|length != updateData['diff']|keys|length %}
+        {% if hasNonDiffField %}
+            <div class=\"panel\">
+                {% for field in  updateData['fields'] %}
+                    {% if not updateData['diff'][field] %}
+                        <div class=\"row\">
+                            <div class=\"cell col-md-12 col-lg-6 form-group\">
+                                <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('was', language, 'streamMessages')}}</label>
+                                <div class=\"field\">{{_self.getValue(field, 'was', _context) }}</div>
+                            </div>
+                            <div class=\"cell col-md-12 col-lg-6 form-group\">
+                                <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('become', language, 'streamMessages')}}</label>
+                                <div class=\"field\">{{_self.getValue(field, 'became', _context) }}</div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif%}
+    {%if updateData['diff'] %}
+        <div class=\"panel diff\">
+            {% for field, diff in updateData['diff'] %}
+                <div class=\"row\">
+                    <div class=\"cell col-md-12 col-lg-12 form-group\">
+                        <label class=\"control-label\"><code>{{_self.translateField(field, _context)}}</code> {{translate('changed', language, 'streamMessages')}}</label>
+                        <div class=\"field\">{{diff|raw}}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        <div>
+    {% endif %}
+</div>"
                             ]
                         ]
                     ],
@@ -161,17 +590,419 @@ class V1Dot10Dot50 extends Base
                         "name" => "Entity Updated",
                         "data" => [
                             "field" => [
-                                "subject"     => "Update: [{{ entityName }}] {{entity.name | raw}}",
-                                "subjectDeDe" => "Update: [{{ entityName }}] {{entity.name | raw}}",
-                                "subjectUkUa" => "Оновлення: [{{ entityName }}] {{entity.name | raw }}",
-                                "body"        => '<p>{{actionUser.name}} made update on {{entityName}} {{entity.name}}.</p>
-<p><a href="{{entityUrl}}">View</a></p>',
-                                "bodyDeDe"    => '<p>{{actionUser.name}} hat eine Aktualisierung an {{entityName}} vorgenommen {{entity.name}}.</p>
+                                "subject"     => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
 
-<p><a href="{{entityUrl}}">Siehe</a></p>',
-                                "bodyUkUa"    => '<p>{{actionUser.name}} зробив оновлення для {{entityName}} {{entity.name}}.</p>
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
 
-<p><a href="{{entityUrl}}">Вигляд</a></p>'
+{% set assignedUserId =  entity.assignedUserId %}
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    Assigned to you: [{{entityType}}] {{entity.name | raw}}
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    Assigned to you and update [{{entityType}}] {{entity.name | raw}}
+{% else %}
+    Update: [{{ entityName }}] {{entity.name | raw}}
+{% endif %}",
+                                "subjectDeDe" => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+
+{% set isOnly = updateData['fields']|length == 1 %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    Ihnen zugewiesen: [{{entityType}}] {{entity.name | raw}}
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    Ihnen zugewiesen und aktualisieren [{{entityType}}] {{entity.name | raw}}
+{% else %}
+    Update: [{{ entityName }}] {{entity.name | raw}}
+{% endif %}",
+                                "subjectUkUa" => "{% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
+
+{% set isOnly = updateData['fields']|length == 1 %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
+     {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    Ihnen zugewiesen: [{{entityType}}] {{entity.name | raw}}
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    Ihnen zugewiesen und aktualisieren [{{entityType}}] {{entity.name | raw}}
+{% else %}
+    Update: [{{ entityName }}] {{entity.name | raw}}
+{% endif %}",
+                                "body"         => "{% set  hasAssignment = 'assignedUser' in updateData['fields'] %}
+
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% set language = language ?? 'en_US' %}
+
+{% macro getValue(field, type, context)  %}
+    {%  set updateData = context.updateData %}
+    {%  set language = context.language %}
+    {%  set entityType = context.entityType %}
+    {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
+
+    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+        {% set value = updateData['attributes'][type][field ~ 'Name'] %}
+    {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+         {% set value = updateData['attributes'][type][field] %}
+        {%  if value is not null %}
+            {% set value = value ?  translate('Yes',language): translate('no',language)  %}
+        {% endif %}
+    {% else %}
+        {% set value = updateData['attributes'][type][field] %}
+    {% endif %}
+
+    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
+        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
+        {% if color %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
+        {% else %}
+            <code> {{ value }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
+            {% if optionData['color'] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{ optionData['name'] }}</span>
+            {% else %}
+                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
+            {% endif %}
+        {% endfor %}
+    {% elseif updateData['fieldTypes'][field] == 'color' %}
+        <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
+    {% elseif updateData['fieldTypes'][field] == 'enum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% if optionColors[value] %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
+        {% else %}
+            <code> {{ translateOption(value, language, field, entityType) }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field] == 'multiEnum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% for v in value %}
+            {% if optionColors[v] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[v]|generateFontColor }}; background-color:{{ optionColors[v] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[v]|generateBorderColor}}\">{{ translateOption(v, language, field, entityType) }}</span>
+            {% else %}
+                <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {{ value }}
+    {% endif %}
+{% endmacro %}
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId %}
+    {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    <p> {{ actionUser.name }} has assigned {{ entityName }} to  you.</p>
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    <p> {{ actionUser.name }} has assigned to you and made update on {{ entityName }}.</p>
+{% else %}
+    <p>{{ actionUser.name }} made update on {{ entityName }}.</p>
+{% endif %}
+<table>
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for field in updateData['fields'] %}
+        {% if not updateData['diff'][field] %}
+        <tr>
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            {%  set hasWasValue = updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}
+            {%  set hasBeforeValue = updateData['attributes']['became'][field] or updateData['attributes']['became'][field ~ 'Name'] %}
+            {% if hasWasValue %}<td style=\"padding: 10px 0;\"  {% if not hasBeforeValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} </span></td> {% endif %}
+            {% if hasBeforeValue %}<td style=\"padding: 10px 0;\" {% if not hasWasValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span></td>{% endif %}
+        <tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+<div>
+    <style>
+        ins {
+            color: green;
+            background: #dfd;
+            text-decoration: none;
+        }
+        del {
+            color: red;
+            background: #fdd;
+            text-decoration: none;
+        }
+    </style>
+    {% for field, diff in updateData['diff'] %}
+        <div style=\"margin: 15px 0\">    <span style=\"padding: 15px 0; margin-right:15px;\"> {{ translate(field, language, 'fields', entityType ) }}: </span> {{ diff|raw }}</div>
+        <br>
+    {% endfor %}
+</div>
+<p><a href=\"{{ entityUrl }}\">View</a></p>
+",
+                                "bodyDeDe"    =>"{% set  hasAssignment = 'assignedUser' in updateData['fields'] %}
+
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% set language = language ?? 'en_US' %}
+
+{% macro getValue(field, type, context)  %}
+    {%  set updateData = context.updateData %}
+    {%  set language = context.language %}
+    {%  set entityType = context.entityType %}
+    {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
+
+    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+        {% set value = updateData['attributes'][type][field ~ 'Name'] %}
+    {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+        {% set value = updateData['attributes'][type][field] %}
+        {%  if value is not null %}
+            {% set value = value ?  translate('Yes',language): translate('no',language)  %}
+        {% endif %}
+    {% else %}
+        {% set value = updateData['attributes'][type][field] %}
+    {% endif %}
+
+    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
+        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
+        {% if color %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
+        {% else %}
+            <code> {{ value }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
+            {% if optionData['color'] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{ optionData['name'] }}</span>
+            {% else %}
+                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
+            {% endif %}
+        {% endfor %}
+    {% elseif updateData['fieldTypes'][field] == 'color' %}
+        <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
+    {% elseif updateData['fieldTypes'][field] == 'enum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% if optionColors[value] %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
+        {% else %}
+            <code> {{ translateOption(value, language, field, entityType) }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field] == 'multiEnum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% for v in value %}
+            {% if optionColors[v] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[v]|generateFontColor }}; background-color:{{ optionColors[v] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[v]|generateBorderColor}}\">{{ translateOption(v, language, field, entityType) }}</span>
+            {% else %}
+                <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {{ value }}
+    {% endif %}
+{% endmacro %}
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId%}
+    {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    <p>  {{ actionUser.name }} hat Ihnen {{ entityName }} zugewiesen. </p>
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    <p> {{ actionUser.name }} hat Ihnen zugewiesen und eine Aktualisierung an {{ entityName }} vorgenommen </p>
+{% else %}
+    <p>{{ actionUser.name }} hat eine Aktualisierung an {{ entityName }} vorgenommen.</p>
+{% endif %}
+
+<table>
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for field in updateData['fields'] %}
+        {% if not updateData['diff'][field] %}
+        <tr>
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            {%  set hasWasValue = updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}
+            {%  set hasBeforeValue = updateData['attributes']['became'][field] or updateData['attributes']['became'][field ~ 'Name'] %}
+            {% if hasWasValue %}<td style=\"padding: 10px 0;\"  {% if not hasBeforeValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} </span></td> {% endif %}
+            {% if hasBeforeValue %}<td style=\"padding: 10px 0;\" {% if not hasWasValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span></td>{% endif %}
+        <tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+<div>
+    <style>
+        ins {
+            color: green;
+            background: #dfd;
+            text-decoration: none;
+        }
+        del {
+            color: red;
+            background: #fdd;
+            text-decoration: none;
+        }
+    </style>
+    {% for field, diff in updateData['diff'] %}
+        <div style=\"margin: 15px 0\">    <span style=\"padding: 15px 0; margin-right:15px;\"> {{ translate(field, language, 'fields', entityType ) }}: </span> {{ diff|raw }}</div>
+        <br>
+    {% endfor %}
+</div>
+<p><a href=\"{{ entityUrl }}\">Siehe</a></p>
+",
+                                "bodyUkUa"    =>"{% set  hasAssignment = 'assignedUser' in updateData['fields'] %}
+
+{% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
+
+{% set assignedUserId =  entity.assignedUserId %}
+
+{% set language = language ?? 'en_US' %}
+
+{% macro getValue(field, type, context)  %}
+    {%  set updateData = context.updateData %}
+    {%  set language = context.language %}
+    {%  set entityType = context.entityType %}
+    {%  set fieldDefs = context.updateData['fieldDefs'][field] %}
+
+    {% if updateData['fieldTypes'][field] in ['extensibleEnum', 'link', 'measure', 'file'] %}
+        {% set value = updateData['attributes'][type][field ~ 'Name'] %}
+    {% elseif updateData['fieldTypes'][field]  == 'bool' %}
+         {% set value = updateData['attributes'][type][field] %}
+        {%  if value is not null %}
+            {% set value = value ?  translate('Yes',language): translate('no',language)  %}
+        {% endif %}
+    {% else %}
+        {% set value = updateData['attributes'][type][field] %}
+    {% endif %}
+
+    {% if  updateData['fieldTypes'][field]  == 'extensibleEnum' %}
+        {%  set color = updateData['attributes'][type][field ~ 'OptionData']['color'] %}
+        {% if color %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ color|generateFontColor }}; background-color:{{ color }};font-size:100%;font-weight:normal; border: solid 1px {{ color|generateBorderColor}}\">{{ value }}</span>
+        {% else %}
+            <code> {{ value }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field]  == 'extensibleMultiEnum' %}
+        {% for optionData in updateData['attributes'][type][field ~ 'OptionsData'] %}
+            {% if optionData['color'] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionData['color']|generateFontColor }}; background-color:{{ optionData['color'] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionData['color']|generateBorderColor}}\">{{ optionData['name'] }}</span>
+            {% else %}
+                <code style=\"background-color:{{ optionData['color'] }}\"> {{ optionData['name'] }}</code> &nbsp;
+            {% endif %}
+        {% endfor %}
+    {% elseif updateData['fieldTypes'][field] == 'color' %}
+        <code style=\"color:{{ value|generateFontColor }}; background-color:{{ value }}\"> {{ value }}</code>
+    {% elseif updateData['fieldTypes'][field] == 'enum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% if optionColors[value] %}
+            <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
+        {% else %}
+            <code> {{ translateOption(value, language, field, entityType) }}</code>
+        {% endif %}
+    {% elseif updateData['fieldTypes'][field] == 'multiEnum' %}
+        {%  set optionColors = {} %}
+        {% for option in fieldDefs['options'] %}
+            {%  set color = fieldDefs['optionColors'][loop.index0] %}
+            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+        {% endfor %}
+        {% for v in value %}
+            {% if optionColors[v] %}
+                <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[v]|generateFontColor }}; background-color:{{ optionColors[v] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[v]|generateBorderColor}}\">{{ translateOption(v, language, field, entityType) }}</span>
+            {% else %}
+                <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {{ value }}
+    {% endif %}
+{% endmacro %}
+
+
+
+{% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId%}
+    {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
+    <p> {{ actionUser.name }} призначив вам {{ entityName }}</p>
+{% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
+    <p>{{ actionUser.name }} призначив вам і оновив {{ entityName }}</p>
+{% else %}
+    <p>{{ actionUser.name }} виконано оновлення на {{ entityName }}.</p>
+{% endif %}
+
+<table>
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+   {% for field in updateData['fields'] %}
+        {% if not updateData['diff'][field] %}
+        <tr>
+            <td> <span style=\"padding: 15px 0\"> {{ translate(field, language, 'fields', entityType ) }}:</span></td>
+            {%  set hasWasValue = updateData['attributes']['was'][field] or updateData['attributes']['was'][field ~ 'Name'] %}
+            {%  set hasBeforeValue = updateData['attributes']['became'][field] or updateData['attributes']['became'][field ~ 'Name'] %}
+            {% if hasWasValue %}<td style=\"padding: 10px 0;\"  {% if not hasBeforeValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #F5A8A844;text-decoration: line-through;\">{{ _self.getValue(field, 'was', _context) }} </span></td> {% endif %}
+            {% if hasBeforeValue %}<td style=\"padding: 10px 0;\" {% if not hasWasValue %} rowspan=\"2\" {% endif %}><span style=\"padding:3px 5px; background-color: #A8F5B851;\">{{  _self.getValue(field, 'became', _context)  }}</span></td>{% endif %}
+        <tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+<div>
+    <style>
+        ins {
+            color: green;
+            background: #dfd;
+            text-decoration: none;
+        }
+        del {
+            color: red;
+            background: #fdd;
+            text-decoration: none;
+        }
+    </style>
+    {% for field, diff in updateData['diff'] %}
+        <div style=\"margin: 15px 0\">    <span style=\"padding: 15px 0; margin-right:15px;\"> {{ translate(field, language, 'fields', entityType ) }}: </span> {{ diff|raw }}</div>
+        <br>
+    {% endfor %}
+</div>
+<p><a href=\"{{ entityUrl }}\">Вигляд</a></p>"
                             ]
                         ]
                     ]

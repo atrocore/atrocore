@@ -83,6 +83,62 @@ class Note
         return $this->streamEnabled[$entityType];
     }
 
+    public function getChangedFieldsData(OrmEntity $entity): array
+    {
+        $auditedFields = $this->getAuditedFieldsData($entity);
+
+        $updatedFieldList = [];
+        $was = [];
+        $became = [];
+
+        foreach ($auditedFields as $field => $item) {
+            $updated = false;
+            foreach ($item['actualList'] as $attribute) {
+                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
+                    $updated = true;
+                }
+            }
+            if ($updated) {
+                $updatedFieldList[] = $field;
+
+                foreach (['actualList', 'notActualList'] as $key) {
+                    foreach ($item[$key] as $attribute) {
+                        if ($entity->isAttributeChanged($attribute)) {
+                            $valueWas = $entity->getFetched($attribute);
+                            $valueBecame = $entity->get($attribute);
+
+                            if (!(($valueWas === null || $valueWas === '') && ($valueBecame === null || $valueBecame === ''))) {
+                                $was[$attribute] = $valueWas;
+                                $became[$attribute] = $valueBecame;
+                            }
+                        }
+                    }
+                }
+
+                if ($item['fieldType'] === 'linkParent') {
+                    $wasParentType = $was[$field . 'Type'];
+                    $wasParentId = $was[$field . 'Id'];
+                    if ($wasParentType && $wasParentId) {
+                        if ($this->getEntityManager()->hasRepository($wasParentType)) {
+                            $wasParent = $this->getEntityManager()->getEntity($wasParentType, $wasParentId);
+                            if ($wasParent) {
+                                $was[$field . 'Name'] = $wasParent->get('name');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return [
+            'fields'     => $updatedFieldList,
+            'attributes' => [
+                'was'    => $was,
+                'became' => $became
+            ]
+        ];
+    }
+
     protected function followCreatedEntity(OrmEntity $entity): void
     {
         $userIdList = [];
@@ -132,63 +188,10 @@ class Note
 
     protected function handleAudited(OrmEntity $entity): void
     {
-        $auditedFields = $this->getAuditedFieldsData($entity);
+        $data = $this->getChangedFieldsData($entity);
 
-        $updatedFieldList = [];
-        $was = [];
-        $became = [];
-
-        foreach ($auditedFields as $field => $item) {
-            $updated = false;
-            foreach ($item['actualList'] as $attribute) {
-                if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
-                    $updated = true;
-                }
-            }
-            if ($updated) {
-                $updatedFieldList[] = $field;
-
-                foreach (['actualList', 'notActualList'] as $key) {
-                    foreach ($item[$key] as $attribute) {
-                        if ($entity->isAttributeChanged($attribute)) {
-                            $valueWas = $entity->getFetched($attribute);
-                            $valueBecame = $entity->get($attribute);
-
-                            if (!(($valueWas === null || $valueWas === '') && ($valueBecame === null || $valueBecame === ''))) {
-                                $was[$attribute] = $valueWas;
-                                $became[$attribute] = $valueBecame;
-                            }
-                        }
-                    }
-                }
-
-                if ($item['fieldType'] === 'linkParent') {
-                    $wasParentType = $was[$field . 'Type'];
-                    $wasParentId = $was[$field . 'Id'];
-                    if ($wasParentType && $wasParentId) {
-                        if ($this->getEntityManager()->hasRepository($wasParentType)) {
-                            $wasParent = $this->getEntityManager()->getEntity($wasParentType, $wasParentId);
-                            if ($wasParent) {
-                                $was[$field . 'Name'] = $wasParent->get('name');
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (empty($was) && empty($became)) {
-            return;
-        }
-
-        if (!empty($updatedFieldList)) {
-            $this->createNote('Update', $entity->getEntityType(), $entity->id, [
-                'fields'     => $updatedFieldList,
-                'attributes' => [
-                    'was'    => $was,
-                    'became' => $became
-                ]
-            ]);
+        if (!empty($data['fields']) && !empty($data['attributes']['was']) && !empty($data['attributes']['became'])) {
+            $this->createNote('Update', $entity->getEntityType(), $entity->id, $data);
         }
     }
 

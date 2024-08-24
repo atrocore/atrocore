@@ -76,5 +76,8 @@
   },
   "crypto": {
     "path": "client/modules/dam/lib/crypto-js.min.js"
+  },
+  "EasyMDE": {
+    "path": "client/lib/easymde.min.js"
   }
 }

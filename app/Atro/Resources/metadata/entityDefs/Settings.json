@@ -305,9 +305,6 @@
     },
     "sendOutNotifications": {
       "type": "bool"
-    },
-    "sendNotificationInSync": {
-      "type": "bool"
     }
   },
   "links": {
