@@ -36,7 +36,7 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
 
         layoutDisabledParameter: 'layoutListDisabled',
 
-        dataAttributeList: ['name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'],
+        dataAttributeList: ['id', 'name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'],
 
         dataAttributesDefs: {
             link: {type: 'bool'},

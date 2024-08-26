@@ -5,7 +5,7 @@
       "required": true,
       "trim": true
     },
-    "layoutSection": {
+    "section": {
       "type": "link"
     },
     "columnIndex": {
@@ -45,9 +45,10 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "layoutSection": {
+    "section": {
       "type": "belongsTo",
-      "entity": "LayoutSection"
+      "entity": "LayoutSection",
+      "foreign": "rowItems"
     }
   },
   "collection": {

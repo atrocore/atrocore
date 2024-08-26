@@ -64,7 +64,8 @@
     },
     "layout": {
       "type": "belongsTo",
-      "entity": "Layout"
+      "entity": "Layout",
+      "foreign": "sidePanelItems"
     }
   },
   "collection": {

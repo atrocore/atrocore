@@ -5,33 +5,10 @@
       "required": true,
       "trim": true
     },
-    "layout": {
-      "type": "link"
+    "description": {
+      "type": "text"
     },
-    "sortOrder": {
-      "type": "int"
-    },
-    "style": {
-      "type": "enum",
-      "prohibitedEmptyValue": false,
-      "options": [
-        "default",
-        "success",
-        "danger",
-        "primary",
-        "info",
-        "warning"
-      ],
-      "optionsIds": [
-        "default",
-        "success",
-        "danger",
-        "primary",
-        "info",
-        "warning"
-      ]
-    },
-    "hiddenPerDefault": {
+    "isActive": {
       "type": "bool"
     },
     "createdAt": {
@@ -54,6 +31,11 @@
     }
   },
   "links": {
+    "layouts": {
+      "type": "hasMany",
+      "entity": "Layout",
+      "foreign": "layoutProfile"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -61,14 +43,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "layout": {
-      "type": "belongsTo",
-      "entity": "Layout"
     }
-  },
-  "collection": {
-    "sortBy": "createdAt",
-    "asc": false
   }
 }

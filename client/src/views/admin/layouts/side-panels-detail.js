@@ -34,7 +34,7 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style', 'sticked'],
+        dataAttributeList: ['id','name', 'style', 'sticked'],
 
         dataAttributesDefs: {
             style: {

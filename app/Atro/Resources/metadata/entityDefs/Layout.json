@@ -4,7 +4,7 @@
       "type": "varchar",
       "view": "views/fields/entity-type"
     },
-    "type": {
+    "viewType": {
       "type": "enum",
       "required": true,
       "prohibitedEmptyValue": false,
@@ -23,8 +23,8 @@
         "relationship"
       ]
     },
-    "preference": {
-      "type": "link"
+    "preferencesId": {
+      "type": "varchar"
     },
     "createdAt": {
       "type": "datetime",
@@ -54,9 +54,30 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "preference": {
+    "listItems": {
+      "type": "hasMany",
+      "entity": "LayoutListItem",
+      "foreign": "layout"
+    },
+    "relationshipItems": {
+      "type": "hasMany",
+      "entity": "LayoutRelationshipItem",
+      "foreign": "layout"
+    },
+    "sections": {
+      "type": "hasMany",
+      "entity": "LayoutSection",
+      "foreign": "layout"
+    },
+    "sidePanelItems": {
+      "type": "hasMany",
+      "entity": "LayoutSidePanelItem",
+      "foreign": "layout"
+    },
+    "layoutProfile": {
       "type": "belongsTo",
-      "entity": "Preference"
+      "entity": "LayoutProfile",
+      "foreign": "layouts"
     }
   },
   "collection": {

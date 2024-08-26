@@ -14,6 +14,9 @@
     "link": {
       "type": "bool"
     },
+    "notSortable": {
+      "type": "bool"
+    },
     "align": {
       "type": "enum",
       "prohibitedEmptyValue": false,
@@ -62,7 +65,8 @@
     },
     "layout": {
       "type": "belongsTo",
-      "entity": "Layout"
+      "entity": "Layout",
+      "foreign": "listItems"
     }
   },
   "collection": {

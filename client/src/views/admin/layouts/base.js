@@ -149,7 +149,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', {
                 name: attributes.name,
                 scope: this.scope,
-                attributeList: this.dataAttributeList,
+                attributeList: this.dataAttributeList.slice(1),
                 attributeDefs: this.dataAttributesDefs,
                 attributes: attributes,
                 languageCategory: this.languageCategory

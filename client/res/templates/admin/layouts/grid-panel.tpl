@@ -11,6 +11,7 @@
         {{#each this}}
             {{#if this}}
             <li class="cell"
+                data-id="{{id}}"
                 data-name="{{name}}"
                 data-full-width="{{#if fullWidth}}true{{/if}}"
                 {{#if hasCustomLabel}}

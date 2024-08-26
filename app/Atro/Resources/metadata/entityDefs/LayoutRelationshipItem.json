@@ -8,6 +8,9 @@
     "layout": {
       "type": "link"
     },
+    "sortOrder": {
+      "type": "int"
+    },
     "style": {
       "type": "enum",
       "prohibitedEmptyValue": false,
@@ -28,11 +31,8 @@
         "warning"
       ]
     },
-    "dynamicLogicVisible": {
-      "type": "jsonObject"
-    },
-    "sortOrder": {
-      "type": "int"
+    "hiddenPerDefault": {
+      "type": "bool"
     },
     "createdAt": {
       "type": "datetime",
@@ -65,12 +65,7 @@
     "layout": {
       "type": "belongsTo",
       "entity": "Layout",
-      "foreign": "sections"
-    },
-    "rowItems": {
-      "type": "hasMany",
-      "entity": "LayoutRowItem",
-      "foreign": "section"
+      "foreign": "relationshipItems"
     }
   },
   "collection": {
