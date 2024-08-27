@@ -53,7 +53,7 @@ class Layout extends Base
                 $data = [];
                 foreach ($this->get('sections', ['orderBy' => 'sortOrder']) ?? [] as $section) {
                     $sectionData = ['label' => $section->get('name')];
-                    foreach ($this->getKeyList(['style', 'dynamicLogicVisible'], $withIds) as $key) {
+                    foreach ($this->getKeyList(['style'], $withIds) as $key) {
                         if (!empty($section->get($key))) {
                             $sectionData[$key] = $section->get($key);
                         }
