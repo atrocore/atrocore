@@ -25,7 +25,65 @@ class V1Dot10Dot64 extends Base
     public function up(): void
     {
 
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE TABLE layout (id VARCHAR(24) NOT NULL, deleted BOOLEAN DEFAULT 'false', entity VARCHAR(255) DEFAULT NULL, view_type VARCHAR(255) DEFAULT NULL, preferences_id VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, layout_profile_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
 
+            $this->exec("CREATE INDEX IDX_LAYOUT_CREATED_BY_ID ON layout (created_by_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_MODIFIED_BY_ID ON layout (modified_by_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_LAYOUT_PROFILE_ID ON layout (layout_profile_id, deleted);");
+
+            $this->exec("CREATE TABLE layout_list_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', sort_order INT DEFAULT NULL, link BOOLEAN DEFAULT 'false' NOT NULL, not_sortable BOOLEAN DEFAULT 'false' NOT NULL, align VARCHAR(255) DEFAULT NULL, width DOUBLE PRECISION DEFAULT NULL, width_px DOUBLE PRECISION DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_LIST_ITEM_LAYOUT_ID ON layout_list_item (layout_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_LIST_ITEM_CREATED_BY_ID ON layout_list_item (created_by_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_LIST_ITEM_MODIFIED_BY_ID ON layout_list_item (modified_by_id, deleted);");
+
+            $this->exec("CREATE TABLE layout_profile (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', description TEXT DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_PROFILE_CREATED_BY_ID ON layout_profile (created_by_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_PROFILE_MODIFIED_BY_ID ON layout_profile (modified_by_id, deleted);");
+
+            $this->exec("CREATE TABLE layout_relationship_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', sort_order INT DEFAULT NULL, style VARCHAR(255) DEFAULT NULL, hidden_per_default BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_RELATIONSHIP_ITEM_LAYOUT_ID ON layout_relationship_item (layout_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_RELATIONSHIP_ITEM_CREATED_BY_ID ON layout_relationship_item (created_by_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_RELATIONSHIP_ITEM_MODIFIED_BY_ID ON layout_relationship_item (modified_by_id, deleted);");
+
+            $this->exec("CREATE TABLE layout_row_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', column_index INT DEFAULT NULL, row_index INT DEFAULT NULL, full_width BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, section_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_ROW_ITEM_SECTION_ID ON layout_row_item (section_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_ROW_ITEM_CREATED_BY_ID ON layout_row_item (created_by_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_ROW_ITEM_MODIFIED_BY_ID ON layout_row_item (modified_by_id, deleted);");
+
+            $this->exec("CREATE TABLE layout_section (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', style VARCHAR(255) DEFAULT NULL, dynamic_logic_visible TEXT DEFAULT NULL, sort_order INT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_SECTION_LAYOUT_ID ON layout_section (layout_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_SECTION_CREATED_BY_ID ON layout_section (created_by_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_SECTION_MODIFIED_BY_ID ON layout_section (modified_by_id, deleted);");
+
+            $this->exec("COMMENT ON COLUMN layout_section.dynamic_logic_visible IS '(DC2Type:jsonObject)';");
+
+            $this->exec("CREATE TABLE layout_side_panel_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', sort_order INT DEFAULT NULL, style VARCHAR(255) DEFAULT NULL, sticked BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_SIDE_PANEL_ITEM_LAYOUT_ID ON layout_side_panel_item (layout_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_SIDE_PANEL_ITEM_CREATED_BY_ID ON layout_side_panel_item (created_by_id, deleted);");
+
+            $this->exec("CREATE INDEX IDX_LAYOUT_SIDE_PANEL_ITEM_MODIFIED_BY_ID ON layout_side_panel_item (modified_by_id, deleted);");
+        }else{
+
+        }
 
         $types = ['list', 'listSmall', 'detail', 'detailSmall', 'relationships', 'sidePanelsDetail', 'sidePanelsEdit', 'sidePanelsDetailSmall', 'sidePanelsEditSmall'];
         // Migrate layout from custom to database
