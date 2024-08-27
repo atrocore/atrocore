@@ -174,6 +174,11 @@ class Note
 
             $auditedFields = [];
             foreach ($fields as $field => $d) {
+
+                if(!empty($d['auditableDisabled'])){
+                    continue;
+                }
+
                 if (!empty($d['type']) && in_array($d['type'], $auditableTypes) && !in_array($field, $systemFields) && empty($d['notStorable'])) {
                     $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
                     $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
