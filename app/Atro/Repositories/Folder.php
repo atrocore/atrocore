@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
+use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\Templates\Repositories\Hierarchy;
 use Atro\Entities\Storage as StorageEntity;
 use Atro\Entities\Folder as FolderEntity;
@@ -155,23 +156,24 @@ class Folder extends Hierarchy
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
+        parent::afterRemove($entity, $options);
+
         $this->removeItem($entity);
 
-        if (!$this->getStorage($entity)->deleteFolder($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+        $storage = $this->getStorage($entity);
+        if ($storage instanceof HasBasketInterface) {
+            if (!$storage->deleteFolder($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('folderDeleteFailed', 'exceptions', 'File'));
+            }
+        } else {
+            $this->deleteFromDb($entity->get('id'));
         }
+    }
 
-        /** @var FolderHierarchy $folderHierarchyRepository */
-        $folderHierarchyRepository = $this->getEntityManager()->getRepository('FolderHierarchy');
-
-        foreach ($folderHierarchyRepository->where(['entityId' => $entity->get('id')])->find() as $folderHierarchy) {
-            $this->getEntityManager()->removeEntity($folderHierarchy, ['ignoreValidation' => true]);
-        }
-        foreach ($folderHierarchyRepository->where(['parentId' => $entity->get('id')])->find() as $folderHierarchy) {
-            $this->getEntityManager()->removeEntity($folderHierarchy, ['ignoreValidation' => true]);
-        }
-
-        parent::afterRemove($entity, $options);
+    protected function afterRestore($entity)
+    {
+        $this->restoreItem($entity);
+        $this->getStorage($entity)->restoreFolder($entity);
     }
 
     public function deleteFiles(FolderEntity $folder): void
@@ -308,6 +310,13 @@ class Folder extends Hierarchy
         }
     }
 
+    public function deleteFromDb(string $id): bool
+    {
+        $this->deleteItemPermanently($id);
+
+        return parent::deleteFromDb($id);
+    }
+
     public function removeItem(Entity $entity): void
     {
         $storage = $entity->getStorage();
@@ -328,6 +337,46 @@ class Folder extends Hierarchy
         }
 
         $this->getEntityManager()->removeEntity($fileFolderLinker);
+    }
+
+    public function restoreItem(Entity $entity): void
+    {
+        $storage = $entity->getStorage();
+        if (empty($storage)) {
+            return;
+        }
+
+        if ($storage->get('type') === 'local' && empty($storage->get('syncFolders'))) {
+            return;
+        }
+
+        $folderHierarchy = $this->getEntityManager()->getRepository('FolderHierarchy')
+            ->select(['parentId'])
+            ->where(['entityId' => $entity->get('id')])
+            ->findOne();
+
+        $fileFolderLinker = $this->getEntityManager()->getRepository('FileFolderLinker')->get();
+        $fileFolderLinker->set([
+            'name'     => $entity->get('name'),
+            'parentId' => !empty($folderHierarchy) ? $folderHierarchy->get('parentId') : '',
+            'folderId' => $entity->get('id')
+        ]);
+
+        try {
+            $this->getEntityManager()->saveEntity($fileFolderLinker);
+        } catch (UniqueConstraintViolationException $e) {
+            throw new NotUnique($this->getInjection('language')->translate('suchItemNameCannotBeUsedHere', 'exceptions'));
+        }
+    }
+
+    public function deleteItemPermanently(string $folderId): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('file_folder_linker')
+            ->where('folder_id = :folderId')
+            ->andWhere('file_id IS NULL')
+            ->setParameter('folderId', $folderId)
+            ->executeQuery();
     }
 
     public function getStorage(FolderEntity $folder): FileStorageInterface

@@ -138,10 +138,10 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 }
             }
 
-            if(['detail','list'].includes(this.mode) && this.model.get(this.name)){
-                let value = this.model.get(this.name)
-                let trimValue = value.trim()
-                data['value'] = value.replace(trimValue, 'word').replaceAll(' ','⎵').replace('word',trimValue)
+            if (['detail', 'list'].includes(this.mode) && this.model.get(this.name)) {
+                let value = this.model.get(this.name).toString();
+                let trimValue = value.trim();
+                data['value'] = value.replace(trimValue, 'word').replaceAll(' ', '⎵').replace('word', trimValue);
             }
             return data;
         },

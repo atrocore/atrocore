@@ -52,36 +52,24 @@ class Hierarchy extends RDB
         return parent::findRelated($entity, $relationName, $params);
     }
 
-    protected function afterRemove(Entity $entity, array $options = [])
+    protected function beforeRestore($id)
     {
-        parent::afterRemove($entity, $options);
+        parent::beforeRestore($id);
 
-        if ($this->getConnection()->createSchemaManager()->tablesExist(array($this->hierarchyTableName))) {
-            $this->getConnection()
-                ->createQueryBuilder()
-                ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
-                ->set('deleted', ':deleted')
-                ->setParameter('deleted', true, ParameterType::BOOLEAN)
-                ->where('entity_id = :entityId')
-                ->orWhere('parent_id = :entityId')
-                ->setParameter('entityId', $entity->get('id'))
-                ->executeQuery();
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('h.parent_id, t.deleted')
+            ->from($this->hierarchyTableName, 'h')
+            ->leftJoin('h', $this->tableName, 't', 't.id=h.parent_id')
+            ->where('h.entity_id=:id')
+            ->setParameter('id', $id)
+            ->fetchAssociative();
+
+        if (!empty($res['parent_id']) && !empty($res['deleted'])) {
+            if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+                throw new BadRequest('Restore prohibited for entity with possible multiple parents.');
+            }
+            $this->getInjection('serviceFactory')->create($this->entityType)->restoreEntity($res['parent_id']);
         }
-    }
-
-    protected function afterRestore($entity)
-    {
-        parent::afterRestore($entity);
-
-        $this->getConnection()
-            ->createQueryBuilder()
-            ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
-            ->set('deleted', ':deleted')
-            ->setParameter('deleted', false, ParameterType::BOOLEAN)
-            ->where('entity_id = :entityId')
-            ->orWhere('parent_id = :entityId')
-            ->setParameter('entityId', $entity->get('id'))
-            ->executeQuery();
     }
 
     public function getEntityPosition(Entity $entity, string $parentId): ?int
@@ -771,5 +759,12 @@ class Hierarchy extends RDB
         $result = $this->getMapper()->count($this->entityFactory->create($this->entityName), $selectParams);
 
         return $result;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('serviceFactory');
     }
 }

@@ -77,6 +77,14 @@ Espo.define('views/role/modals/add-field', 'views/modal', function (Dep) {
                 if (this.getMetadata().get(['app', this.options.type, 'mandatory', 'scopeFieldLevel', this.scope, field]) !== null) {
                     return;
                 }
+
+                if (fields[field].type === 'linkMultiple' && field !== 'teams') {
+                    let linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', field]);
+
+                    if (linkDefs && 'relationName' in linkDefs) {
+                        return;
+                    }
+                }
                 fieldList.push(field);
             }, this);
 

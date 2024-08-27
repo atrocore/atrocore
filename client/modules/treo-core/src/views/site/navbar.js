@@ -301,6 +301,19 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         field: 'status',
                         type: 'in',
                         value: ['Running', 'Pending']
+                    },
+                    {
+                        type: 'or',
+                        value: [
+                            {
+                                field: 'startFrom',
+                                type: 'isNull'
+                            },
+                            {
+                                field: 'startFrom',
+                                type: 'ispast'
+                            }
+                        ]
                     }
                 ];
                 this.listenToOnce(collection, 'sync', () => {

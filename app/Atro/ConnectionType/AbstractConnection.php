@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\ConnectionType;
 
 use Atro\Core\Container;
+use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 
 abstract class AbstractConnection
@@ -44,6 +45,8 @@ abstract class AbstractConnection
 
     protected function exception(string $name, string $scope = 'Connection'): string
     {
-        return $this->container->get('language')->translate($name, 'exceptions', 'Connection');
+        /** @var Language $language */
+        $language = $this->container->get('language');
+        return $language->translate($name, 'exceptions', 'Connection');
     }
 }

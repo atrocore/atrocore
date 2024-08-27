@@ -12,9 +12,7 @@
     "street": "Straße",
     "zip": "ZIP",
     "box": "Box",
-    "city": "City",
-    "country": "Land",
-    "countryCode": "Landesvorwahl"
+    "city": "City"
   },
   "links": {
     "accounts": "Konto"

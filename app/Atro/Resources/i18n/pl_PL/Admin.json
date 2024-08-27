@@ -123,7 +123,8 @@
        "jsonObject":"Obiekt JSON",
        "language":"Język",
        "multiLanguage":"Języki",
-       "measure":"Miara"
+       "measure":"Miara",
+       "markdown": "Markdown"
     },
     "fields":{
        "script":"Skrypt",
@@ -164,6 +165,7 @@
        "trim":"Usuń wiodące i końcowe spacje",
        "height":"Wysokość (px)",
        "minHeight":"Minimalna wysokość (px)",
+       "maxHeight":"Maksymalna wysokość (px)",
        "provider":"Dostawca",
        "typeList":"Lista typów",
        "rowsMax": "Maksymalna liczba wierszy obszaru tekstowego",

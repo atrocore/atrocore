@@ -335,15 +335,31 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 showCount: this.showCount && this.collection.total > 0,
                 moreCount: this.collection.total - this.collection.length,
                 checkboxes: this.checkboxes,
+                allowSelectAllResult: this.isAllowedSelectAllResult(),
                 massActionList: this.massActionList,
                 rowList: this.rowList,
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
-                displayTotalCount: this.displayTotalCount && this.collection.total >= 0,
+                displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
+                totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.total && !fixedHeaderRow
+                showNoData: !this.collection.length && !fixedHeaderRow
             };
+        },
+
+        isAllowedSelectAllResult() {
+            if (this.getParentView() && this.getParentView().getParentView()) {
+                let view = this.getParentView().getParentView();
+
+                if (view.fieldType && view.fieldType === 'linkMultiple') {
+                    if (!view.mode || view.mode !== 'search') {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         },
 
         isFixedListHeaderRow() {
@@ -542,20 +558,43 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        getActionDefs(id) {
+            let defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === id)
+            if (!defs) {
+                defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).find(defs => defs.id === id)
+            }
+            return defs
+        },
+
         massActionDynamicMassAction: function (data) {
-            let where;
+            const defs = this.getActionDefs(data.id)
+
+            if (defs && defs.type) {
+                const method = 'massActionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, data);
+                    return
+                }
+            }
+
+            this.executeDynamicMassActionRequest(data)
+        },
+
+        executeDynamicMassActionRequest(data) {
+            let requestData = {
+                actionId: data.id
+            };
+
             if (this.allResultIsChecked) {
-                where = this.collection.getWhere();
-            } else {
-                where = [{type: "in", attribute: "id", value: this.checkedList}];
+                requestData.where = this.collection.getWhere();
+                requestData.massAction = true;
+            } else if (this.checkedList.length > 0) {
+                requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
+                requestData.massAction = true;
             }
 
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {
-                actionId: data.id,
-                where: where,
-                massAction: true
-            }).success(response => {
+            this.ajaxPostRequest('Action/action/executeNow', requestData).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                     setTimeout(() => {
@@ -1040,6 +1079,27 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     $shown.html(this.collection.length);
                 }
             });
+            this.listenTo(this.collection, 'update-total', () => {
+                if (this.collection.total > this.collection.length || this.collection.total === -1) {
+                    this.$el.find('.show-more').removeClass('hidden')
+                    this.$el.find('.show-more .more-label').text(this.getShowMoreLabel())
+                } else {
+                    this.$el.find('.show-more').addClass('hidden')
+                }
+
+                if(this.collection.total !=null){
+                    this.$el.find('.list-buttons-container .preloader').addClass('hidden')
+                    this.$el.find('.list-buttons-container .total-count').removeClass('hidden')
+                    if(this.collection.total>=0){
+                        this.$el.find('.total-count-span').html(this.collection.total)
+                        this.$el.find('.shown-count-span').html(this.collection.length)
+                    }
+                }else{
+                    this.$el.find('.list-buttons-container .preloader').removeClass('hidden')
+                    this.$el.find('.list-buttons-container .text-count').addClass('hidden')
+                }
+
+            });
 
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {
                 document.onselectstart = function () {
@@ -1095,6 +1155,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             };
 
+            if (this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
+                this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
+            }
+
             this.fullTableScroll();
             $(window).on("resize.fixed-scrollbar tree-width-changed tree-width-unset", function () {
                 this.fullTableScroll();
@@ -1104,7 +1168,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         $('.fixed-scrollbar').css('display', 'none');
                     } else {
                         $('.fixed-scrollbar').css('display', 'block');
-                        $('td[data-name="buttons"]').addClass('fixed-button');
                         fixSize();
                     }
                 }
@@ -1149,6 +1212,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             }
                         });
                     }, 50);
+                });
+
+                list.on("scroll", function () {
+                    $bar.scrollLeft(list.scrollLeft());
                 });
 
                 $(window).trigger("scroll.fixed-scrollbar");
@@ -1283,11 +1350,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     let list = this.$el.find('.list');
                     let listPositionTop = list.offset().top;
                     if ((positionTop + menuHeight) > this.getHeightParentPosition()) {
-                        if(menuHeight  <= (positionTop - listPositionTop)  ){
+                        if (menuHeight <= (positionTop - listPositionTop)) {
                             menu.css({
                                 "top": `-${menuHeight}px`
                             })
-                        }else{
+                        } else {
                             let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true);
                             menu.css({
                                 'position': 'fixed',
@@ -1296,33 +1363,60 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             });
                         }
                     }
+
+                    const cellButtons = $(target).closest('.cell[data-name=buttons]');
+                    if (cellButtons.length) {
+                        cellButtons.css('z-index', 1);
+                    }
                 }
             }.bind(this));
 
             el.on('hide.bs.dropdown', function (e) {
                 $(e.relatedTarget).next('.dropdown-menu').removeAttr('style');
+
+                const cellButtons = $(e.relatedTarget).closest('.cell[data-name=buttons]');
+                if (cellButtons.length) {
+                    cellButtons.css('z-index', '');
+                }
             });
         },
 
         initDraggableList() {
             if (this.getAcl().check(this.scope, 'edit')) {
-                this.setCellWidth();
-
                 this.$el.find(this.listContainerEl).sortable({
                     handle: window.innerWidth < 768 ? '.cell[data-name="draggableIcon"]' : false,
                     delay: 150,
                     update: function (e, ui) {
                         this.saveListItemOrder(e, ui);
-                    }.bind(this)
+                    }.bind(this),
+                    helper: (e, ui) => {
+                        this.fitCellWidth(ui);
+                        return ui;
+                    },
+                    stop: (e, ui) => this.fitCellWidth(ui.item, true)
                 });
             }
         },
 
-        setCellWidth() {
-            let el = this.$el.find(this.listContainerEl);
+        fitCellWidth(row, clearValue = false) {
+            const widthData = {};
+            if (!clearValue) {
+                row.children().each(function (i, cell) {
+                    widthData[i] = $(this).outerWidth();
+                });
+            }
 
-            el.find('td').each(function (i) {
-                $(this).css('width', $(this).outerWidth());
+            row.children().each(function (i, cell) {
+                if (!clearValue) {
+                    let width = widthData[i] ?? $(this).outerWidth();
+                    if (cell.width) {
+                        width = cell.width;
+                    }
+
+                    $(this).css('width', width);
+                } else {
+                    $(this).css('width', '');
+                }
             });
         },
 
@@ -1472,7 +1566,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 setWidth();
                 toggleClass();
 
-                $window.on('scroll', toggleClass);
+                $window.on('scroll', () => {
+                    setPosition();
+                    setWidth();
+                    toggleClass();
+                });
                 $window.on('resize tree-width-changed tree-width-unset', function () {
                     this.fullTableScroll();
                     setPosition();
@@ -1487,7 +1585,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (list.length) {
                 let fixedTableHeader = list.find('.fixed-header-table');
                 let fullTable = list.find('.full-table');
-                let scroll = this.getParentView().$el.siblings('.panel-scroll');
+                let scroll = this.$el.find('.list > .panel-scroll');
 
                 if (fullTable.length) {
                     if (scroll.length) {
@@ -1519,19 +1617,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     fixedTableHeader.addClass('table-scrolled');
                     fullTable.addClass('table-scrolled');
 
-                    let rowsButtons = this.$el.find('td[data-name="buttons"]');
-                    if ($(window).outerWidth() > 768 && rowsButtons.length) {
-                        rowsButtons.addClass('fixed-button');
-                        rowsButtons.each(function () {
-                            let a = $(this).find('.list-row-buttons');
-
-                            if (a) {
-                                let width = -1 * (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                a.css('left', width);
-                            }
-                        });
-                    }
-
                     let prevScrollLeft = 0;
 
                     list.off('scroll');
@@ -1539,17 +1624,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         if (prevScrollLeft !== list.scrollLeft()) {
                             let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
                             fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
-
-                            if ($(window).outerWidth() > 768 && rowsButtons.hasClass('fixed-button')) {
-                                rowsButtons.each(function () {
-                                    let a = $(this).find('.list-row-buttons');
-
-                                    if (a) {
-                                        let width = list.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                        a.css('left', width);
-                                    }
-                                });
-                            }
                         }
                         prevScrollLeft = list.scrollLeft();
                     });
@@ -1562,14 +1636,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                             scroll.css({width: list.width(), display: 'block'});
                             scroll.find('div').css('width', fullTable.width());
-                            rowsButtons.each(function () {
-                                let a = $(this).find('.list-row-buttons');
-
-                                if (a) {
-                                    let width = scroll.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                    a.css('left', width);
-                                }
-                            });
 
                             this.listenTo(this.collection, 'sync', function () {
                                 if (!this.hasHorizontalScroll()) {
@@ -1579,14 +1645,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                             scroll.on('scroll', () => {
                                 fullTable.css('left', -1 * scroll.scrollLeft());
-                                rowsButtons.each(function () {
-                                    let a = $(this).find('.list-row-buttons');
-
-                                    if (a) {
-                                        let width = scroll.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                        a.css('left', width);
-                                    }
-                                });
                             });
 
                             if ($(window).width() < 768) {
@@ -1830,6 +1888,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
                 if (!fieldType) return;
                 this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
+                    if (fieldType === 'link' || fieldType === 'linkMultiple') {
+                        const foreignEntity = this.getMetadata().get(['entityDefs', this.scope, 'links', field, 'entity']);
+                        let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'foreignName']);
+                        if (foreignEntity && this.getMetadata().get(['entityDefs', foreignEntity, 'fields', 'name'])) {
+                            foreignName = 'name';
+                        }
+
+                        if (!foreignName && (attribute.endsWith('Name') || attribute.endsWith('Names'))) {
+                            return;
+                        }
+                    }
+
                     list.push(attribute);
                 }, this);
             }, this);
@@ -2401,11 +2471,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         actionDynamicAction: function (data) {
-            this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {
+            const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.action_id)
+            if (defs && defs.type) {
+                const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(defs.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, data);
+                    return
+                }
+            }
+
+            this.executeActionRequest({
                 actionId: data.action_id,
                 entityId: data.entity_id
-            }).success(response => {
+            })
+        },
+
+        executeActionRequest: function (payload, callback) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
@@ -2418,12 +2501,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             })
                             return;
                         }
+                        if (callback) {
+                            callback()
+                        }
                     } else {
                         this.notify(response.message, 'error');
                     }
                 }
                 this.collection.fetch();
-            });
+            })
+                .error(error => {
+                    Espo.ui.error(error.responseText)
+                })
         },
 
         getRowSelector: function (id) {
@@ -2471,8 +2560,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             if (this.getMetadata().get(['scopes', this.scope, 'deleteWithoutConfirmation'])) {
-               action();
-               return;
+                action();
+                return;
             }
 
             this.confirm({
@@ -2511,11 +2600,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.collection.remove(model);
                 this.notify('restoring');
                 $.ajax({
-                    url: this.entityType + '/action/massRestore',
+                    url: this.entityType + '/action/restore',
                     type: 'POST',
-                    data: JSON.stringify({
-                        ids: [id]
-                    })
+                    data: JSON.stringify({id: id})
                 }).done(function (result) {
                         this.notify('Restored', 'success');
                         this.removeRecordFromList(id);

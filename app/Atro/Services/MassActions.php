@@ -44,8 +44,8 @@ class MassActions extends HasContainer
         foreach ($data as $k => $node) {
             if (!property_exists($node, 'entity')) {
                 $result[$k] = [
-                    'status' => 'Failed',
-                    'stored' => false,
+                    'status'  => 'Failed',
+                    'stored'  => false,
                     'message' => "'entity' parameter is required."
                 ];
                 continue 1;
@@ -53,8 +53,8 @@ class MassActions extends HasContainer
 
             if (!property_exists($node, 'payload')) {
                 $result[$k] = [
-                    'status' => 'Failed',
-                    'stored' => false,
+                    'status'  => 'Failed',
+                    'stored'  => false,
                     'message' => "'payload' parameter is required."
                 ];
                 continue 1;
@@ -64,17 +64,17 @@ class MassActions extends HasContainer
                 $service = $this->getContainer()->get('serviceFactory')->create($node->entity);
             } catch (\Throwable $e) {
                 $result[$k] = [
-                    'status' => 'Failed',
-                    'stored' => false,
+                    'status'  => 'Failed',
+                    'stored'  => false,
                     'message' => $e->getMessage()
                 ];
                 continue 1;
             }
 
+            $existed = null;
             if (property_exists($node->payload, 'id')) {
                 $existed = $this->getEntityManager()->getEntity($node->entity, $node->payload->id);
             }
-
             if (empty($existed)) {
                 // Check if entity exists
                 $fields = $this->getMetadata()->get(['entityDefs', $node->entity, 'fields']);
@@ -85,23 +85,18 @@ class MassActions extends HasContainer
                 if (count($uniqueFields) > 0) {
                     $whereClause = [];
                     foreach ($uniqueFields as $key => $field) {
-                        $value = $node->payload->{$key};
-                        if (!empty($value)) {
-                            $whereClause[] = [$key => $value];
+                        if (!empty($node->payload->{$key})) {
+                            $whereClause[] = [$key => $node->payload->{$key}];
                         }
                     }
                     if (count($whereClause) > 0) {
-                        $records = $this->getEntityManager()->getRepository($node->entity)->find([
-                            'whereClause' => $whereClause
-                        ]);
-
-                        if (count($records) > 0) {
-                            $existed = $records[0];
-                        }
+                        $existed = $this->getEntityManager()
+                            ->getRepository($node->entity)
+                            ->where($whereClause)
+                            ->findOne();
                     }
                 }
             }
-
 
             if (!empty($existed)) {
                 try {
@@ -113,12 +108,12 @@ class MassActions extends HasContainer
                     ];
                 } catch (\Throwable $e) {
                     $result[$k] = [
-                        'status' => 'Failed',
-                        'stored' => false,
+                        'status'  => 'Failed',
+                        'stored'  => false,
                         'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
                     ];
                 }
-                continue 1;
+                continue;
             }
 
             try {
@@ -130,8 +125,8 @@ class MassActions extends HasContainer
                 ];
             } catch (\Throwable $e) {
                 $result[$k] = [
-                    'status' => 'Failed',
-                    'stored' => false,
+                    'status'  => 'Failed',
+                    'stored'  => false,
                     'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
                 ];
             }
@@ -382,7 +377,7 @@ class MassActions extends HasContainer
      * @param string $link
      *
      * @return string
-     * @throws \ Atro\Core\Exceptions\Error
+     * @throws \Atro\Core\Exceptions\Error
      */
     protected function getForeignEntityType(string $entityType, string $link): string
     {

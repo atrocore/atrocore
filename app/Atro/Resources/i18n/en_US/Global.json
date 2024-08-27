@@ -100,7 +100,8 @@
     "PreviewTemplate": "Preview Templates",
     "NotificationTemplate": "Notification Templates",
     "NotificationProfile": "Notification Profiles",
-    "NotificationRule": "Notification Rules"
+    "NotificationRule": "Notification Rules",
+    "Country": "Countries"
   },
   "descriptions": {
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications.",
@@ -439,7 +440,8 @@
     "onlyArchived": "Without non-archived",
     "withArchived": "With archived",
     "onlyDeleted": "Deleted",
-    "onlyFollowed": "Followed"
+    "onlyFollowed": "Followed",
+    "onlyMyTeams": "My Teams"
   },
   "presetFilters": {
     "all": "All"
@@ -624,7 +626,8 @@
     "updateOneThis": "{user} in this {entityType} updated",
     "updateFromToThis": "{user} in this {entityType} updated",
     "updateOne": "{user} in {entityType} {entity} updated",
-    "updateFromTo": "{user} in {entityType} {entity} updated"
+    "updateFromTo": "{user} in {entityType} {entity} updated",
+    "changed": "was changed"
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",

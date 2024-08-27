@@ -18,13 +18,21 @@ use Espo\ORM\Entity;
 
 class Sharing extends Base
 {
-    protected $mandatorySelectAttributeList = ['active', 'validTill', 'allowedUsage', 'used'];
+    protected $mandatorySelectAttributeList = ['active', 'validTill', 'allowedUsage', 'used', 'fileId'];
 
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
-        $entity->set('link', $this->getConfig()->get('siteUrl') . '/?entryPoint=sharing&id=' . $entity->get('id'));
+        $file = $entity->get('file');
+
+        if (!empty($file) && is_string($file->get('name'))) {
+            $fileNameParts = explode('.', $file->get('name'));
+            if (count($fileNameParts) > 1) {
+                $extension = strtolower(end($fileNameParts));
+                $entity->set('link', $this->getConfig()->get('siteUrl') . '/sharings/' . $entity->get('id') . '.' . $extension);
+            }
+        }
 
         $availableViaValidTill = empty($entity->get('validTill')) || $entity->get('validTill') >= (new \DateTime())->format('Y-m-d H:i:s');
         $availableViaAllowedUsage = empty($entity->get('allowedUsage')) || (int)$entity->get('used') < $entity->get('allowedUsage');

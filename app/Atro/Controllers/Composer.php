@@ -160,6 +160,19 @@ class Composer extends AbstractController
         throw new Exceptions\NotFound();
     }
 
+    public function actionReleaseNotes($params, \stdClass $data, Request $request): array
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Exceptions\Forbidden();
+        }
+
+        if (!$request->isPost() || !property_exists($data, 'id') || empty($data->id)) {
+            throw new Exceptions\BadRequest();
+        }
+
+        return ['html' => $this->getComposerService()->getReleaseNotes((string)$data->id)];
+    }
+
     public function actionLogs($params, $data, Request $request): array
     {
         if (!$this->getUser()->isAdmin()) {

@@ -241,9 +241,6 @@ class OpenApiGenerator
         /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->container->get('entityManager');
-
         /** @var Config $config */
         $config = $this->container->get('config');
 
@@ -266,8 +263,8 @@ class OpenApiGenerator
             ];
 
             foreach ($data['fields'] as $fieldName => $fieldData) {
-                if (!empty($fieldData['noLoad']) || !empty($fieldData['emHidden'])) {
-                    continue 1;
+                if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
+                    continue;
                 }
 
                 if (!empty($fieldData['required'])) {
@@ -297,11 +294,11 @@ class OpenApiGenerator
                     case "link":
                     case "linkParent":
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = ['type' => 'string'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = ['type' => 'string', 'forRead' => true];
                         break;
                     case "linkMultiple":
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = ['type' => 'array', 'items' => ['type' => 'string']];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = ['type' => 'object'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = ['type' => 'object', 'forRead' => true];
                         break;
                     default:
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
@@ -331,11 +328,10 @@ class OpenApiGenerator
                 foreach ($schema['properties'] as $k => $v) {
                     if (
                         substr($k, 0, 1) === '_'
-                        || substr($k, -4) === 'Name'
-                        || substr($k, -5) === 'Names'
                         || $k === 'createdAt'
                         || $k === 'modifiedAt'
                         || $k === 'createdById'
+                        || !empty($v['forRead'])
                     ) {
                         unset($schema['properties'][$k]);
                     }

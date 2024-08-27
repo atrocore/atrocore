@@ -27,7 +27,6 @@ class File extends Base
 {
     protected $mandatorySelectAttributeList = ['storageId', 'path', 'thumbnailsPath', 'mimeType', 'typeId', 'typeName', 'folderId', 'data'];
 
-
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
@@ -203,6 +202,15 @@ class File extends Base
             if (!empty($duplicate)) {
                 $result['duplicate'] = $duplicate->toArray();
             }
+        }
+
+        if (!empty($attachment->share)) {
+            $sharingRepo = $this->getEntityManager()->getRepository('Sharing');
+            $sharing = $sharingRepo->get();
+            $sharing->set('fileId', $entity->get('id'));
+            $this->getEntityManager()->saveEntity($sharing);
+            $this->getRecordService('Sharing')->prepareEntityForOutput($sharing);
+            $result['sharedUrl'] = $sharing->get('link');
         }
 
         return $result;

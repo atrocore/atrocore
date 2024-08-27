@@ -31,7 +31,8 @@
     {{/if}}
 
     {{#if displayTotalCount}}
-    <div class="text-muted total-count">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
+    <div class="text-muted total-count {{#if totalLoading}} hidden {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
+    <img class="preloader {{#unless totalLoading}} hidden {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
     {{/if}}
 
     {{#each buttonList}}
@@ -47,7 +48,9 @@
             <tr>
                 {{#if checkboxes}}
                 <th width="40" data-name="r-checkbox">
-                    <span class="select-all-container"><input type="checkbox" class="select-all fixed"></span>
+                    {{#if allowSelectAllResult}}
+                        <span class="select-all-container"><input type="checkbox" class="select-all fixed"></span>
+                    {{/if}}
                 </th>
                 {{/if}}
                 {{#each headerDefs}}
@@ -88,7 +91,9 @@
             <tr>
                 {{#if checkboxes}}
                 <th width="40" data-name="r-checkbox">
-                    <span class="select-all-container"><input type="checkbox" class="select-all"></span>
+                    {{#if allowSelectAllResult}}
+                        <span class="select-all-container"><input type="checkbox" class="select-all"></span>
+                    {{/if}}
                 </th>
                 {{/if}}
                 {{#each headerDefs}}
@@ -122,7 +127,7 @@
     </table>
     {{#unless paginationEnabled}}
     {{#if showMoreEnabled}}
-    <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
+    <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
         <a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore" {{#if showCount}}title="{{translate 'Total'}}: {{collection.total}}"{{/if}}>
             <span class="more-label">{{countLabel}}</span>
         </a>

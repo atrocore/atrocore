@@ -22,8 +22,6 @@ class SystemTransport extends AbstractNotificationTransport
 
     public function send(User $user, NotificationTemplate $template, array $params): void
     {
-        $this->addEntitiesViewUrl($params);
-
         $data = [];
         $mainLanguageMessage  = $template->get('body');
         foreach ($this->getConfig()->get('locales') as $locale) {
@@ -35,7 +33,7 @@ class SystemTransport extends AbstractNotificationTransport
             }
 
             if (!empty($template->get($field))) {
-                $this->addEntitiesTypeAndName($params, $locale['language']);
+                $this->addEntitiesAdditionalData($params, $locale['language']);
                 $message = $this->getTwig()->renderTemplate($template->get($field), $params);
             }
 

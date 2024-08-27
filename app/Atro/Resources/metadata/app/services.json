@@ -12,6 +12,5 @@
   "Composer": "\\Atro\\Services\\Composer",
   "TreoStore": "\\Atro\\Services\\TreoStore",
   "MassDownload": "\\Atro\\Services\\MassDownload",
-  "QueueManagerActionHandler": "\\Atro\\Services\\QueueManagerActionHandler",
-  "QueueManagerNotificationSender": "\\Atro\\Services\\QueueManagerNotificationSender"
+  "QueueManagerActionHandler": "\\Atro\\Services\\QueueManagerActionHandler"
 }

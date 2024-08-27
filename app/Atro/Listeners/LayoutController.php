@@ -142,11 +142,21 @@ class LayoutController extends AbstractListener
         foreach ($result[0]['rows'] as $row) {
             $newRows[] = $row;
             if (in_array($row[0]['name'], ['subject', 'body'])) {
-                foreach ($this->getConfig()->get('locales') as $locale) {
-                    if ($locale['language'] === $this->getConfig()->get('mainLanguage')) {
+                $languages = array_map(
+                    function($locale){
+                        return !empty($locale['language']) ? $locale['language'] : $this->getConfig()->get('mainLanguage');
+                    },
+                    $this->getConfig()->get('locales') ?? []
+                );
+
+                // avoid duplicated languages
+                $languages = array_unique($languages);
+
+                foreach ($languages as $language) {
+                    if ($language === $this->getConfig()->get('mainLanguage')) {
                         continue;
                     }
-                    $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
+                    $preparedLocale = ucfirst(Util::toCamelCase(strtolower($language)));
                     $newRows[] = [['name' => $row[0]['name'] . $preparedLocale, 'fullWidth' => true]];
                 }
             }

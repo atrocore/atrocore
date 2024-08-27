@@ -26,8 +26,8 @@
   },
   "options": {
     "usage": {
-      "entity": "Entität",
-      "record": "Datensatz"
+      "entity": "Entitätsebene",
+      "record": "Datensatzebene"
     },
     "display": {
       "dropdown": "Auswahlliste",

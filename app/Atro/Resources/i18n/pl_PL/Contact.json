@@ -12,9 +12,7 @@
 		"street": "Ulica",
 		"zip": "Kod pocztowy",
 		"box": "Skrytka pocztowa",
-		"city": "Miasto",
-		"country": "Kraj",
-		"countryCode": "Kod kraju"
+		"city": "Miasto"
 	},
 	"links": {
 		"accounts": "Konta"

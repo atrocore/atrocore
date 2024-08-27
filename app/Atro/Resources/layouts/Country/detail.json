@@ -1,0 +1,24 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "isActive"
+        },
+        {
+          "name": "name"
+        }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "eu"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  }
+]

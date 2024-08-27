@@ -9,17 +9,18 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+namespace Atro\Core\FileStorage;
 
-namespace Atro\Repositories;
+use Atro\Entities\File;
+use Atro\Entities\Folder;
 
-use Atro\Core\Templates\Repositories\Base;
-use Espo\ORM\Entity;
-
-class FileFolderLinker extends Base
+interface HasBasketInterface
 {
-    protected function deleteEntity(Entity $entity): bool
-    {
-        return $this->deleteFromDb($entity->get('id'));
-    }
+    public function deleteFile(File $file): bool;
+
+    public function restoreFile(File $file): bool;
+
+    public function deleteFolder(Folder $folder): bool;
+
+    public function restoreFolder(Folder $folder): bool;
 }

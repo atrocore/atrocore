@@ -33,6 +33,14 @@ Espo.define('treo-core:views/composer/record/row-actions/installed', 'views/reco
                     }
                 });
 
+                list.push({
+                    action: 'showReleaseNotes',
+                    label: 'showReleaseNotes',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+
                 if (this.model.get('status')) {
                     list.push({
                         action: 'cancelModule',

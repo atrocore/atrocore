@@ -17,12 +17,14 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
+use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\FileValidator;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\FilePathBuilder;
 use Espo\ORM\Entity;
 
@@ -144,9 +146,6 @@ class File extends Base
 
         try {
             $res = parent::deleteEntity($entity);
-            if ($res) {
-                $this->removeItem($entity);
-            }
         } catch (\Throwable $e) {
             if ($inTransaction) {
                 $this->getPDO()->rollBack();
@@ -159,6 +158,80 @@ class File extends Base
         }
 
         return $res;
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->removeItem($entity);
+
+        $storage = $this->getStorage($entity);
+        if ($storage instanceof HasBasketInterface) {
+            if (!$storage->deleteFile($entity)) {
+                throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
+            }
+        } else {
+            $this->deleteFromDb($entity->get('id'));
+        }
+    }
+
+    protected function beforeRestore($id)
+    {
+        parent::beforeRestore($id);
+
+        $rec = $this->getConnection()->createQueryBuilder()
+            ->select('f.id, f.storage_id, st.folder_id as storage_folder_id, f.folder_id as file_folder_id, f1.id as folder_id, f1.deleted as folder_deleted')
+            ->from('file', 'f')
+            ->leftJoin('f', 'folder', 'f1', 'f.folder_id=f1.id')
+            ->leftJoin('f', 'storage', 'st', 'f.storage_id=st.id')
+            ->where('f.id=:id')
+            ->setParameter('id', $id)
+            ->fetchAssociative();
+
+        if (!empty($rec['folder_id']) && !empty($rec['folder_deleted'])) {
+            try {
+                // restore folder
+                $this->getInjection('container')->get('serviceFactory')->create('Folder')->restoreEntity($rec['folder_id']);
+            } catch (\Throwable $e) {
+                $this->changeFileFolderToStorageRoot($id);
+            }
+        }
+
+        if (empty($rec['folder_id']) && !empty($rec['file_folder_id'])) {
+            $this->changeFileFolderToStorageRoot($id);
+        }
+    }
+
+    protected function changeFileFolderToStorageRoot(string $fileId): void
+    {
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->update('file')
+            ->set('folder_id', ':storageFolder')
+            ->where('id=:id')
+            ->setParameter('id', $fileId);
+        if (empty($rec['storage_folder_id'])) {
+            $qb->setParameter('storageFolder', null, ParameterType::NULL);
+        } else {
+            $qb->setParameter('storageFolder', $rec['storage_folder_id']);
+        }
+        $qb->executeQuery();
+    }
+
+    protected function afterRestore($entity)
+    {
+        $this->getStorage($entity)->restoreFile($entity);
+    }
+
+    public function deleteFromDb(string $id): bool
+    {
+        /** @var \Atro\Entities\File $file */
+        $file = $this->getMapper()->selectById($this->entityFactory->create($this->entityType), $id, ['withDeleted' => true]);
+        if (!empty($file)) {
+            $this->getStorage($file)->deleteFilePermanently($file);
+        }
+
+        return parent::deleteFromDb($id);
     }
 
     public function rename(FileEntity $file): void
@@ -208,21 +281,6 @@ class File extends Base
         $ext = array_pop($parts);
 
         return $fetchedExt !== $ext;
-    }
-
-    protected function beforeRemove(Entity $entity, array $options = [])
-    {
-        parent::beforeRemove($entity, $options);
-
-        $this->deleteFile($entity);
-    }
-
-    public function deleteFile(FileEntity $entity): void
-    {
-        // delete origin file
-        if (!$this->getStorage($entity)->deleteFile($entity)) {
-            throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
-        }
     }
 
     public function getContents(FileEntity $file): string
@@ -358,6 +416,10 @@ class File extends Base
 
     public function getDownloadUrl(FileEntity $file): ?string
     {
+        if (empty($file->get('storageId'))) {
+            return null;
+        }
+
         try {
             $url = $this->getStorage($file)->getUrl($file);
         } catch (BadRequest|NotFound $e) {
@@ -369,6 +431,10 @@ class File extends Base
 
     public function getSmallThumbnailUrl(FileEntity $file): ?string
     {
+        if (empty($file->get('storageId'))) {
+            return null;
+        }
+
         try {
             $url = $this->getStorage($file)->getThumbnail($file, 'small');
         } catch (BadRequest|NotFound $e) {
@@ -380,6 +446,10 @@ class File extends Base
 
     public function getMediumThumbnailUrl(FileEntity $file): ?string
     {
+        if (empty($file->get('storageId'))) {
+            return null;
+        }
+
         try {
             $url = $this->getStorage($file)->getThumbnail($file, 'medium');
         } catch (BadRequest|NotFound $e) {
@@ -391,6 +461,10 @@ class File extends Base
 
     public function getLargeThumbnailUrl(FileEntity $file): ?string
     {
+        if (empty($file->get('storageId'))) {
+            return null;
+        }
+
         try {
             $url = $this->getStorage($file)->getThumbnail($file, 'large');
         } catch (BadRequest|NotFound $e) {

@@ -29,6 +29,12 @@ class Locale extends Base
     {
         parent::afterSave($entity, $options);
 
+        if(($entity->isNew() || $entity->isAttributeChanged('language')) && !empty($entity->get('language'))){
+            $this->getEntityManager()
+                ->getRepository('NotificationTemplate')
+                ->addUiHandlerForLanguage($entity->get('language'));
+        }
+
         $this->refreshCache();
     }
 

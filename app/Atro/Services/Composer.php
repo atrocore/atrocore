@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\HasContainer;
 use Atro\Core\Exceptions;
 use Atro\Core\Exceptions\Error;
@@ -106,6 +107,34 @@ class Composer extends HasContainer
         }
 
         return '-';
+    }
+
+    public function getReleaseNotes(string $id): string
+    {
+        $parts = explode('/', $this->getComposerName($id) ?? '');
+        if (empty($parts[1])) {
+            throw new BadRequest();
+        }
+
+        $url = "https://help.atrocore.com/release-notes/" . $parts[1];
+
+        // fetch html
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+        $output = curl_exec($ch);
+        if ($output === false) {
+            throw new BadRequest('Curl error: ' . curl_error($ch));
+        }
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode != 200) {
+            throw new BadRequest("Invalid server response code: " . $httpCode);
+        }
+        return $output;
     }
 
     /**
