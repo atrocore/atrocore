@@ -524,6 +524,9 @@ class NotificationManager
             if(!empty($fieldDefs['type'])){
                 $data['fieldTypes'][$key] = $fieldDefs['type'];
             }
+            if($fieldDefs['type'] == 'link'){
+                $data['linkDefs'][$key] = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $key]);
+            }
         }
 
         $data['diff'] = $tmpEntity->get('diff');
