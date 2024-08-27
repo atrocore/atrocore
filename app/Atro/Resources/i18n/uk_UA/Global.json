@@ -332,7 +332,9 @@
     "Dashboard": "Панелі віджетів",
     "Provide Feedback": "Зворотній зв'язок",
     "Instance comparison": "Порівняння інстансів",
-    "previewTemplate": "Шаблон для перегляду"
+    "previewTemplate": "Шаблон для перегляду",
+    "Select Image": "Обрати існуюче зображення",
+    "Upload Image": "Завантажити зображення з пристрою"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
