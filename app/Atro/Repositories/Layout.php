@@ -90,7 +90,6 @@ class Layout extends Base
                             'layoutId'            => $entity->get('id'),
                             'name'                => $item['customLabel'],
                             'style'               => $item['style'] ?? null,
-                            'dynamicLogicVisible' => $item['dynamicLogicVisible'] ?? null,
                             'sortOrder'           => $index,
                         ]);
                         $this->getEntityManager()->saveEntity($section);

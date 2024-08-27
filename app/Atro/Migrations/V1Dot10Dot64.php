@@ -32,6 +32,10 @@ class V1Dot10Dot64 extends Base
             $this->exec("CREATE INDEX IDX_LAYOUT_MODIFIED_BY_ID ON layout (modified_by_id, deleted);");
 
             $this->exec("CREATE INDEX IDX_LAYOUT_LAYOUT_PROFILE_ID ON layout (layout_profile_id, deleted);");
+            $this->exec("CREATE UNIQUE INDEX IDX_LAYOUT_LAYOUT_PROFILE ON layout (layout_profile_id, entity, view_type, deleted);");
+            $this->exec("CREATE UNIQUE INDEX IDX_LAYOUT_PREFERENCES ON layout (preferences_id, entity, view_type, deleted);");
+            $this->exec("CREATE INDEX IDX_LAYOUT_ENTITY ON layout (entity, deleted);");
+            $this->exec("CREATE INDEX IDX_LAYOUT_VIEW_TYPE ON layout (view_type, deleted)");
 
             $this->exec("CREATE TABLE layout_list_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', sort_order INT DEFAULT NULL, link BOOLEAN DEFAULT 'false' NOT NULL, not_sortable BOOLEAN DEFAULT 'false' NOT NULL, align VARCHAR(255) DEFAULT NULL, width DOUBLE PRECISION DEFAULT NULL, width_px DOUBLE PRECISION DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
 
@@ -81,7 +85,7 @@ class V1Dot10Dot64 extends Base
 
             $this->exec("CREATE INDEX IDX_LAYOUT_SIDE_PANEL_ITEM_MODIFIED_BY_ID ON layout_side_panel_item (modified_by_id, deleted);");
         } else {
-            $this->exec("CREATE TABLE layout (id VARCHAR(24) NOT NULL, deleted TINYINT(1) DEFAULT '0', entity VARCHAR(255) DEFAULT NULL, view_type VARCHAR(255) DEFAULT NULL, preferences_id VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, layout_profile_id VARCHAR(24) DEFAULT NULL, INDEX IDX_LAYOUT_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_LAYOUT_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_LAYOUT_LAYOUT_PROFILE_ID (layout_profile_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
+            $this->exec("CREATE TABLE layout (id VARCHAR(24) NOT NULL, deleted TINYINT(1) DEFAULT '0', entity VARCHAR(255) DEFAULT NULL, view_type VARCHAR(255) DEFAULT NULL, preferences_id VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, layout_profile_id VARCHAR(24) DEFAULT NULL, UNIQUE INDEX IDX_LAYOUT_LAYOUT_PROFILE (layout_profile_id, entity, view_type, deleted), UNIQUE INDEX IDX_LAYOUT_PREFERENCES (preferences_id, entity, view_type, deleted), INDEX IDX_LAYOUT_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_LAYOUT_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_LAYOUT_LAYOUT_PROFILE_ID (layout_profile_id, deleted), INDEX IDX_LAYOUT_ENTITY (entity, deleted), INDEX IDX_LAYOUT_VIEW_TYPE (view_type, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
 
             $this->exec("CREATE TABLE layout_list_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', sort_order INT DEFAULT NULL, link TINYINT(1) DEFAULT '0' NOT NULL, not_sortable TINYINT(1) DEFAULT '0' NOT NULL, align VARCHAR(255) DEFAULT NULL, width DOUBLE PRECISION DEFAULT NULL, width_px DOUBLE PRECISION DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, INDEX IDX_LAYOUT_LIST_ITEM_LAYOUT_ID (layout_id, deleted), INDEX IDX_LAYOUT_LIST_ITEM_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_LAYOUT_LIST_ITEM_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
 
@@ -112,6 +116,32 @@ class V1Dot10Dot64 extends Base
                 ->setParameter('isActive', true, ParameterType::BOOLEAN)
                 ->executeStatement();
         } catch (\Exception $e) {
+
+        }
+
+        // update preferences
+        try {
+            $preferences = $this->getConnection()->createQueryBuilder()
+                ->select('id', 'data')
+                ->from('preferences')
+                ->fetchAllAssociative();
+
+            foreach ($preferences as $preference) {
+                $data = @json_decode($preference['data'], true);
+                if (empty($data)) {
+                    continue;
+                }
+                $data['layoutProfileId'] = $defaultId;
+
+                $this->getConnection()->createQueryBuilder()
+                    ->update('preferences')
+                    ->set('data', ':data')
+                    ->where('id = :id')
+                    ->setParameter('id', $preference['id'])
+                    ->setParameter('data', json_encode($data))
+                    ->executeStatement();
+            }
+        } catch (\Throwable $e) {
 
         }
 

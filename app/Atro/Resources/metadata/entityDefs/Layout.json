@@ -91,5 +91,33 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": false
+  },
+  "indexes": {
+    "entity": {
+      "columns": [
+        "entity",
+        "deleted"
+      ]
+    },
+    "view_type": {
+      "columns": [
+        "view_type",
+        "deleted"
+      ]
+    }
+  },
+  "uniqueIndexes": {
+    "layout_profile": [
+      "layout_profile_id",
+      "entity",
+      "view_type",
+      "deleted"
+    ],
+    "preferences": [
+      "preferences_id",
+      "entity",
+      "view_type",
+      "deleted"
+    ]
   }
 }
