@@ -7,7 +7,7 @@
   "importable": false,
   "notifications": false,
   "streamDisabled": true,
-  "disabled": false,
+  "disabled": true,
   "type": "Base",
   "object": true,
   "notificationDisabled": true

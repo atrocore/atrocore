@@ -24,6 +24,9 @@ class V1Dot10Dot64 extends Base
 
     public function up(): void
     {
+
+
+
         $types = ['list', 'listSmall', 'detail', 'detailSmall', 'relationships', 'sidePanelsDetail', 'sidePanelsEdit', 'sidePanelsDetailSmall', 'sidePanelsEditSmall'];
         // Migrate layout from custom to database
         if (is_dir("data/layouts")) {
