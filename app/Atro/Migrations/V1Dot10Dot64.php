@@ -19,7 +19,7 @@ class V1Dot10Dot64 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-08-26 15:00:00');
+        return new \DateTime('2024-08-27 11:00:00');
     }
 
     public function up(): void
@@ -344,6 +344,13 @@ class V1Dot10Dot64 extends Base
 
     public function down(): void
     {
+        $this->exec("drop table layout");
+        $this->exec("drop table layout_list_item;");
+        $this->exec("drop table layout_profile;");
+        $this->exec("drop table layout_relationship_item;");
+        $this->exec("drop table layout_row_item;");
+        $this->exec("drop table layout_section;");
+        $this->exec("drop table layout_side_panel_item;");
     }
 
     protected function exec(string $query): void
