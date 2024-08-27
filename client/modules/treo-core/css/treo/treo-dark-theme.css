@@ -23950,3 +23950,9 @@ span[data-img-src]::after {
 .CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
     background: rgba(255, 0, 0, .15)
 }
+
+.CodeMirror-wrap.preview-enabled .editor-preview-full.editor-preview {
+    position: relative;
+    margin: -10px;
+    width: auto;
+}

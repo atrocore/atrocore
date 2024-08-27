@@ -122,7 +122,16 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                 items.push('|');
             }
 
-            items.push('preview', 'guide');
+            items.push({
+                name: 'preview',
+                action: editor => {
+                    EasyMDE.togglePreview(editor);
+                    this.trigger('editor:previewToggled', editor)
+                },
+                title: "Toggle Preview",
+                className: "fa fa-eye",
+                noDisable: true
+            }, 'guide');
 
             return items;
         },
@@ -132,6 +141,8 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
             const element = this.$element.get(0);
 
             if (this.mode === 'edit' && element && !this.readOnly) {
+                this.trigger('before:editor:rendered', this.$element);
+
                 this.editor = new EasyMDE({
                     element: element,
                     autoDownloadFontAwesome: false,
@@ -206,9 +217,27 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                 });
 
                 const scroller = this.editor.codemirror.getScrollerElement();
+                const wrapper = this.editor.codemirror.getWrapperElement();
+
                 if (scroller) {
                     scroller.style.maxHeight = `${this.maxHeight}px`;
                 }
+
+                this.trigger('editor:rendered', this.editor);
+
+                this.editor.codemirror.on('focus', (cm, e) => {
+                   this.trigger('focus', cm, e);
+                });
+
+                this.editor.codemirror.on('change', (cm, change) => {
+                    this.model.set(this.name, this.editor.value(), {silent: true});
+                });
+
+                this.on('editor:previewToggled', editor => {
+                    wrapper?.classList.toggle('preview-enabled');
+                    scroller?.classList.toggle('hide');
+                    this.$el.find('.editor-preview-full.editor-preview').css('max-height', `${this.maxHeight}px`);
+                })
             }
         },
 
