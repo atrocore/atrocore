@@ -112,6 +112,22 @@ class Layout extends Base
             case 'sidePanelsEdit':
             case 'sidePanelsDetailSmall':
             case 'sidePanelsEditSmall':
+                $sidePanelItems = $this->get('sidePanelItems');
+                $sidePanelItems = empty($sidePanelItems) ? [] : $sidePanelItems->toArray();
+                usort($sidePanelItems, function ($a, $b) {
+                    return $a['sortOrder'] <=> $b['sortOrder'];
+                });
+                $data = [];
+                foreach ($sidePanelItems as $item) {
+                    $newItem = [];
+                    foreach ($this->getKeyList(['style', 'hiddenPerDefault', 'disabled'], $withIds) as $key) {
+                        if (!empty($item[$key])) {
+                            $newItem[$key] = $item[$key];
+                        }
+                    }
+                    $data[$item['name']] = $newItem;
+                }
+                return $data;
         }
 
         return [];

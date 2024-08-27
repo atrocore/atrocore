@@ -13,14 +13,22 @@
         "listSmall",
         "detail",
         "detailSmall",
-        "relationship"
+        "relationships",
+        "sidePanelsDetail",
+        "sidePanelsDetailSmall",
+        "sidePanelsEdit",
+        "sidePanelsEditSmall"
       ],
       "options": [
         "list",
         "listSmall",
         "detail",
         "detailSmall",
-        "relationship"
+        "relationship",
+        "sidePanelsDetail",
+        "sidePanelsDetailSmall",
+        "sidePanelsEdit",
+        "sidePanelsEditSmall"
       ]
     },
     "preferencesId": {

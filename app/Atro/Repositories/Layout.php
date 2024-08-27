@@ -180,6 +180,42 @@ class Layout extends Base
                 case 'sidePanelsEdit':
                 case 'sidePanelsDetailSmall':
                 case 'sidePanelsEditSmall':
+                    $panelItems = $entity->get('sidePanelItems') ?? [];
+                    $processedItems = [];
+
+                    $index = 0;
+                    foreach ($data as $key => $item) {
+                        $panelItemEntity = null;
+                        if (!empty($item['id'])) {
+                            foreach ($panelItems as $panelItem) {
+                                if ($panelItem->get('id') === $item['id']) {
+                                    $panelItemEntity = $panelItem;
+                                    $processedItems[] = $panelItemEntity;
+                                }
+                            }
+                        }
+                        if (empty($panelItemEntity)) {
+                            $panelItemEntity = $this->getEntityManager()->getRepository('LayoutSidePanelItem')->get();
+                        }
+
+                        $panelItemEntity->set([
+                            'layoutId'  => $entity->get('id'),
+                            'name'      => $key,
+                            'style'     => $item['style'] ?? '',
+                            'sticked'   => $item['sticked'] ?? false,
+                            'disabled'   => $item['disabled'] ?? false,
+                            'sortOrder' => $index,
+                        ]);
+
+                        $this->getEntityManager()->saveEntity($panelItemEntity);
+                        $index++;
+                    }
+
+                    foreach ($panelItems as $panelItem) {
+                        if (!in_array($panelItem, $processedItems)) {
+                            $this->getEntityManager()->removeEntity($panelItem);
+                        }
+                    }
                     break;
             }
 

@@ -28,9 +28,6 @@
         "warning"
       ]
     },
-    "dynamicLogicVisible": {
-      "type": "jsonObject"
-    },
     "sortOrder": {
       "type": "int"
     },
