@@ -683,6 +683,10 @@ class Metadata extends AbstractListener
                 continue;
             }
 
+            if (empty($data['entityDefs'][$scope]['links']['children']['relationName'])) {
+                continue;
+            }
+
             $relationEntityName = ucfirst($data['entityDefs'][$scope]['links']['children']['relationName']);
 
             $data['scopes'][$relationEntityName]['isHierarchyEntity'] = true;
