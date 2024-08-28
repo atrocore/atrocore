@@ -245,6 +245,16 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
             }
         },
 
+        setMode(name) {
+            if (this.editor && name !== 'edit') {
+                this.editor.cleanup();
+                this.editor.toTextArea();
+                this.editor = null;
+            }
+
+            Dep.prototype.setMode.call(this, name);
+        },
+
         uploadImage(file, onSuccess, onError) {
             if (file.url) {
                 onSuccess(file.url);
