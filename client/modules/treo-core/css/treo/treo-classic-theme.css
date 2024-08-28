@@ -23932,3 +23932,33 @@ span[data-img-src]::after {
     margin: -10px;
     width: auto;
 }
+
+.textcomplete-dropdown {
+    border: 1px solid #ddd;
+    background-color: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.textcomplete-dropdown li {
+    margin: 0;
+}
+
+.textcomplete-footer,
+.textcomplete-item {
+    border-top: 1px solid #ddd;
+}
+
+.textcomplete-item {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.textcomplete-item:hover {
+    background-color: #eee;
+}
+
+.textcomplete-item.active {
+    background-color: #ddd;
+}
