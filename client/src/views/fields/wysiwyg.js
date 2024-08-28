@@ -404,6 +404,12 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$element.addClass('hidden');
             this.$summernote.removeClass('hidden');
 
+            const contents = this.getValueForEdit();
+            this.$summernote.html(contents);
+
+            this.$summernote.find('style').remove();
+            this.$summernote.find('link[ref="stylesheet"]').remove();
+
             const options = {
                 lang: this.getConfig().get('language'),
                 callbacks: {
@@ -481,12 +487,6 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             }
 
             this.$summernote.summernote(options);
-
-            const contents = this.getValueForEdit();
-            this.$summernote.html(contents);
-
-            this.$summernote.find('style').remove();
-            this.$summernote.find('link[ref="stylesheet"]').remove();
 
             this.$toolbar = this.$el.find('.note-toolbar');
             this.$area = this.$el.find('.note-editing-area');
