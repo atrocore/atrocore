@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
+Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!TextComplete'], function (Dep, Lib) {
 
     return Dep.extend({
 
@@ -94,10 +94,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.on('remove', function () {
                 this.storeControl();
-                $(window).off('beforeunload.stream-'+ this.cid);
+                $(window).off('beforeunload.stream-' + this.cid);
             }, this);
-            $(window).off('beforeunload.stream-'+ this.cid);
-            $(window).on('beforeunload.stream-'+ this.cid, function () {
+            $(window).off('beforeunload.stream-' + this.cid);
+            $(window).on('beforeunload.stream-' + this.cid, function () {
                 this.storeControl();
             }.bind(this));
 
@@ -159,7 +159,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
 
             var storedText = this.getSessionStorage().get(this.storageTextKey);
@@ -169,6 +168,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 this.seed.set('post', storedText);
             }
 
+            const assignmentPermission = this.getAcl().get('assignmentPermission');
             const buildUserListUrl = function (term) {
                 let url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
                 if (assignmentPermission === 'team') {
@@ -196,7 +196,44 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 });
 
                 view.on('editor:rendered', editor => {
-                    this.$el.find('.editor-toolbar').addClass('disabled');
+                    if (assignmentPermission !== 'no') {
+                        const cmWrapper = new Lib.CodeMirrorEditor(editor.codemirror);
+                        const textcomplete = new Lib.Textcomplete(cmWrapper, [{
+                            match: /(^|\s)@((\w|\.)*)$/,
+                            search: function (term, callback, match) {
+                                if (!match[2]) {
+                                    callback([]);
+                                    return;
+                                }
+                                $.ajax({
+                                    url: buildUserListUrl(match[2])
+                                }).done(function (data) {
+                                    callback(data.list)
+                                });
+                            },
+                            template: function (mention) {
+                                return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
+                            },
+                            replace: function (o) {
+                                return '$1@' + o.userName + '';
+                            }
+                        }], {
+                            dropdown: {
+                                className: "dropdown-menu textcomplete-dropdown",
+                                maxCount: 7,
+                                placement: "auto",
+                                style: {zIndex: 1100},
+                                item: {
+                                    className: "textcomplete-item",
+                                    activeClassName: "textcomplete-item active",
+                                }
+                            },
+                        });
+                    }
+
+                    this.once('remove', function () {
+                        textcomplete.destroy();
+                    }, this);
                 });
 
                 view.on('focus', (editor, e) => {
@@ -239,37 +276,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             }, this);
             if (!this.defs.hidden) {
                 collection.fetch();
-            }
-
-            const assignmentPermission = this.getAcl().get('assignmentPermission');
-            if (assignmentPermission !== 'no') {
-                // this.$textarea.textcomplete([{
-                //     match: /(^|\s)@((\w|\.)*)$/,
-                //     index: 2,
-                //     search: function (term, callback) {
-                //         if (term.length == 0) {
-                //             callback([]);
-                //             return;
-                //         }
-                //         $.ajax({
-                //             url: buildUserListUrl(term),
-                //         }).done(function (data) {
-                //             callback(data.list)
-                //         });
-                //     },
-                //     template: function (mention) {
-                //         return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                //     },
-                //     replace: function (o) {
-                //         return '$1@' + o.userName + '';
-                //     }
-                // }]);
-
-                // this.once('remove', function () {
-                //     if (this.$textarea.size()) {
-                //         this.$textarea.textcomplete('destroy');
-                //     }
-                // }, this);
             }
 
             $a = this.$el.find('.buttons-panel a.stream-post-info');
@@ -395,7 +401,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.setFilter(filterInternal);
 
             this.filterList.forEach(function (item) {
-                var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+                var $el = this.$el.closest('.panel').find('[data-name="' + item + '"] span');
                 if (item === filter) {
                     $el.removeClass('hidden');
                 } else {
