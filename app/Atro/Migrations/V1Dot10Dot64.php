@@ -37,7 +37,7 @@ class V1Dot10Dot64 extends Base
             $this->exec("CREATE INDEX IDX_LAYOUT_ENTITY ON layout (entity, deleted);");
             $this->exec("CREATE INDEX IDX_LAYOUT_VIEW_TYPE ON layout (view_type, deleted)");
 
-            $this->exec("CREATE TABLE layout_list_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', sort_order INT DEFAULT NULL, link BOOLEAN DEFAULT 'false' NOT NULL, not_sortable BOOLEAN DEFAULT 'false' NOT NULL, align VARCHAR(255) DEFAULT NULL, width DOUBLE PRECISION DEFAULT NULL, width_px DOUBLE PRECISION DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+            $this->exec("CREATE TABLE layout_list_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', sort_order INT DEFAULT NULL, link BOOLEAN DEFAULT 'false' NOT NULL, is_large BOOLEAN DEFAULT 'false' NOT NULL, css_style VARCHAR(255) DEFAULT NULL, not_sortable BOOLEAN DEFAULT 'false' NOT NULL, align VARCHAR(255) DEFAULT NULL, width DOUBLE PRECISION DEFAULT NULL, width_px DOUBLE PRECISION DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
 
             $this->exec("CREATE INDEX IDX_LAYOUT_LIST_ITEM_LAYOUT_ID ON layout_list_item (layout_id, deleted);");
 
@@ -87,7 +87,7 @@ class V1Dot10Dot64 extends Base
         } else {
             $this->exec("CREATE TABLE layout (id VARCHAR(24) NOT NULL, deleted TINYINT(1) DEFAULT '0', entity VARCHAR(255) DEFAULT NULL, view_type VARCHAR(255) DEFAULT NULL, preferences_id VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, layout_profile_id VARCHAR(24) DEFAULT NULL, UNIQUE INDEX IDX_LAYOUT_LAYOUT_PROFILE (layout_profile_id, entity, view_type, deleted), UNIQUE INDEX IDX_LAYOUT_PREFERENCES (preferences_id, entity, view_type, deleted), INDEX IDX_LAYOUT_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_LAYOUT_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_LAYOUT_LAYOUT_PROFILE_ID (layout_profile_id, deleted), INDEX IDX_LAYOUT_ENTITY (entity, deleted), INDEX IDX_LAYOUT_VIEW_TYPE (view_type, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
 
-            $this->exec("CREATE TABLE layout_list_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', sort_order INT DEFAULT NULL, link TINYINT(1) DEFAULT '0' NOT NULL, not_sortable TINYINT(1) DEFAULT '0' NOT NULL, align VARCHAR(255) DEFAULT NULL, width DOUBLE PRECISION DEFAULT NULL, width_px DOUBLE PRECISION DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, INDEX IDX_LAYOUT_LIST_ITEM_LAYOUT_ID (layout_id, deleted), INDEX IDX_LAYOUT_LIST_ITEM_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_LAYOUT_LIST_ITEM_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
+            $this->exec("CREATE TABLE layout_list_item (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', sort_order INT DEFAULT NULL, link TINYINT(1) DEFAULT '0' NOT NULL, is_large TINYINT(1) DEFAULT '0' NOT NULL, css_style VARCHAR(255) DEFAULT NULL, not_sortable TINYINT(1) DEFAULT '0' NOT NULL, align VARCHAR(255) DEFAULT NULL, width DOUBLE PRECISION DEFAULT NULL, width_px DOUBLE PRECISION DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, layout_id VARCHAR(24) DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, INDEX IDX_LAYOUT_LIST_ITEM_LAYOUT_ID (layout_id, deleted), INDEX IDX_LAYOUT_LIST_ITEM_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_LAYOUT_LIST_ITEM_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
 
             $this->exec("CREATE TABLE layout_profile (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', description LONGTEXT DEFAULT NULL, is_active TINYINT(1) DEFAULT '0' NOT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, INDEX IDX_LAYOUT_PROFILE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_LAYOUT_PROFILE_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
 
@@ -146,7 +146,7 @@ class V1Dot10Dot64 extends Base
         }
 
 
-        $types = ['list', 'listSmall', 'detail', 'detailSmall', 'relationships', 'sidePanelsDetail', 'sidePanelsEdit', 'sidePanelsDetailSmall', 'sidePanelsEditSmall'];
+        $types = ['list', 'listSmall', 'kanban', 'detail', 'detailSmall', 'relationships', 'sidePanelsDetail', 'sidePanelsEdit', 'sidePanelsDetailSmall', 'sidePanelsEditSmall'];
         // Migrate layout from custom to database
         if (is_dir("data/layouts")) {
             foreach (scandir("data/layouts") as $dir) {
@@ -227,6 +227,43 @@ class V1Dot10Dot64 extends Base
     public function createListSmallLayoutContent($layoutId, $data)
     {
         $this->createListLayoutContent($layoutId, $data);
+    }
+
+    public function createKanbanLayoutContent($layoutId, $data)
+    {
+        foreach ($data as $index => $item) {
+            try {
+                $qb = $this->getConnection()->createQueryBuilder()
+                    ->insert('layout_list_item')
+                    ->values([
+                        'id'         => ':id',
+                        'name'       => ':name',
+                        'sort_order' => ':sortOrder',
+                        'layout_id'  => ':layoutId',
+                    ]);
+
+                if (!empty($item['link'])) {
+                    $qb->setValue('link', ':link');
+                }
+                if (!empty($item['align'])) {
+                    $qb->setValue('align', ':align');
+                }
+                if (!empty($item['width'])) {
+                    $qb->setValue('width', ':width');
+                }
+                if (!empty($item['cssStyle'])) {
+                    $qb->setValue('css_style', ':cssStyle');
+                }
+                if (!empty($item['isLarge'])) {
+                    $qb->setValue('is_large', ':isLarge');
+                }
+
+                $qb->setParameters(array_merge($item, ['id' => Util::generateId(), 'sortOrder' => $index, 'layoutId' => $layoutId]))
+                    ->executeStatement();
+            } catch (\Throwable $e) {
+            }
+
+        }
     }
 
     public function createDetailLayoutContent($layoutId, $data)
