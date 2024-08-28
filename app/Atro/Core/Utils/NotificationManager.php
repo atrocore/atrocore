@@ -52,6 +52,8 @@ class NotificationManager
 
     protected array $users = [];
 
+    protected array $hasSentUpdateOccurrence = [];
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -93,12 +95,11 @@ class NotificationManager
                 $this->sendNoteNotifications(NotificationOccurrence::NOTE_UPDATED, $entity);
             } else {
                 $this->sendNotifications(NotificationOccurrence::UPDATE, $entity);
-                $hasSentUpdateOccurrence  = true;
             }
         }
 
         foreach (['ownerUser', 'assignedUser'] as $link) {
-            if (($entity->isNew() && $entity->get($link . 'Id') !== null) || (!$hasSentUpdateOccurrence && $entity->isAttributeChanged($link . 'Id'))) {
+            if (($entity->isNew() && $entity->get($link . 'Id') !== null) || ($entity->isAttributeChanged($link . 'Id'))) {
                 $this->sendNotifications(
                     $entity->get($link . 'Id') ? NotificationOccurrence::OWNERSHIP_ASSIGNMENT : NotificationOccurrence::UNLIKING_OWNERSHIP_ASSIGNMENT,
                     $entity,
@@ -178,6 +179,14 @@ class NotificationManager
 
             $rule = $this->getNotificationRule($notificationProfileId, $occurrence, $parent ? $parent->getEntityType() : $entity->getEntityType());
 
+            if ($occurrence === NotificationOccurrence::UPDATE) {
+                $this->hasSentUpdateOccurrence[$notificationProfileId] = true;
+            }
+
+            if ($occurrence === NotificationOccurrence::OWNERSHIP_ASSIGNMENT && !empty($this->hasSentUpdateOccurrence[$notificationProfileId])) {
+                continue;
+            }
+
             if (empty($rule) || empty($rule->receiverUsers)) {
                 continue;
             }
@@ -188,10 +197,10 @@ class NotificationManager
                     continue;
                 }
 
-                if(empty($dataForTemplate)){
-                    if($occurrence === NotificationOccurrence::UPDATE) {
+                if (empty($dataForTemplate)) {
+                    if ($occurrence === NotificationOccurrence::UPDATE) {
                         $updateData = $this->getUpdateData($entity);
-                        if(empty($updateData)){
+                        if (empty($updateData)) {
                             break;
                         }
                         $params['updateData'] = $updateData;
@@ -491,7 +500,7 @@ class NotificationManager
             return $this->teamMembers[$key];
         }
 
-        if(!$entity->hasRelation('teams') || !$entity->hasAttribute('teamsIds')){
+        if (!$entity->hasRelation('teams') || !$entity->hasAttribute('teamsIds')) {
             return [];
         }
 
@@ -504,7 +513,7 @@ class NotificationManager
     {
         $data = $this->getNoteUtil()->getChangedFieldsData($entity);
 
-        if(empty($data['fields']) || empty($data['attributes']['was']) || empty($data['attributes']['became'])) {
+        if (empty($data['fields']) || empty($data['attributes']['was']) || empty($data['attributes']['became'])) {
             return null;
         }
 
@@ -521,8 +530,11 @@ class NotificationManager
         $data = json_decode(json_encode($data), true);
 
         foreach ($tmpEntity->get('fieldDefs') as $key => $fieldDefs) {
-            if(!empty($fieldDefs['type'])){
+            if (!empty($fieldDefs['type'])) {
                 $data['fieldTypes'][$key] = $fieldDefs['type'];
+            }
+            if ($fieldDefs['type'] == 'link') {
+                $data['linkDefs'][$key] = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $key]);
             }
         }
 
@@ -567,6 +579,7 @@ class NotificationManager
     {
         return $this->container->get('language');
     }
+
     protected function getNoteUtil(): NoteUtil
     {
         return $this->container->get(NoteUtil::class);
