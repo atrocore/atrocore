@@ -1,0 +1,25 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "isActive"
+        },
+        false
+      ],
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

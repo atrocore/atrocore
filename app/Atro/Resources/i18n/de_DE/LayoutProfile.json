@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "isActive": "Aktiv",
+    "description": "Beschreibung"
+  },
+  "links": {
+    "layouts": "Layout"
+  },
+  "labels": {
+    "Create LayoutProfile": "Layoutprofil erstellen"
+  }
+}

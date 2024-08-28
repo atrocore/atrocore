@@ -29,7 +29,7 @@ Espo.define('treo-core:views/admin/layouts/base', 'class-replace!treo-core:views
                 return false;
             }
 
-            this.getHelper().layoutManager.set(this.scope, this.type, layout, function () {
+            this.getHelper().layoutManager.set(this.scope, this.type, this.layoutProfileId, layout, function () {
                 Espo.Ui.success(this.translate('Saved'));
 
                 if (typeof callback === 'function') {

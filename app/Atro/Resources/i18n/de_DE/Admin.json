@@ -61,8 +61,8 @@
     "lists": "Listen",
     "emailTemplates": "E-Mail-Vorlagen",
     "notificationTemplates": "Benachrichtigungsvorlagen",
-    "notificationProfiles": "Benachrichtigungs-Profile"
-
+    "notificationProfiles": "Benachrichtigungs-Profile",
+    "layoutProfiles": "Layoutprofile"
   },
   "logicalOperators": {
     "and": "UND",
@@ -223,7 +223,8 @@
     "lists": "Verwalten Sie Ihre Listen und deren Optionen für einfache oder mehrwertige Listen.",
     "emailTemplates": "Verwalten Sie E-Mail-Vorlagen für den manuellen oder automatischen E-Mail-Versand (nicht für Standardbenachrichtigungen).",
     "notificationTemplates": "Verwalten Sie die Vorlage für die Standardmeldung des Systems.",
-    "notificationProfiles": "Konfigurieren Sie Benachrichtigungsprofile und -regeln, um Ihren Alarmmanagementprozess effektiv zu optimieren, damit er zeitnah und relevant ist."
+    "notificationProfiles": "Konfigurieren Sie Benachrichtigungsprofile und -regeln, um Ihren Alarmmanagementprozess effektiv zu optimieren, damit er zeitnah und relevant ist.",
+    "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an"
 
   },
   "options": {

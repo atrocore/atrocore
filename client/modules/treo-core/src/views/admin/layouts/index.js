@@ -15,6 +15,7 @@ Espo.define('treo-core:views/admin/layouts/index', 'class-replace!treo-core:view
 
         events: _.extend({}, Dep.prototype.events, {
             'click button[data-action="resetAllToDefault"]': function () {
+                name =
                 this.confirm(this.translate('resetAllToDefaultConfirm', 'messages'), function () {
                     this.resetAllToDefault();
                 }, this);
@@ -23,7 +24,7 @@ Espo.define('treo-core:views/admin/layouts/index', 'class-replace!treo-core:view
 
         resetAllToDefault: function () {
             this.notify('Saving...');
-            this.ajaxPostRequest('Layout/action/resetAllToDefault').then(() => {
+            this.ajaxPostRequest('Layout/action/resetAllToDefault?layoutProfileId=' + this.layoutProfileId).then(() => {
                 this.notify('Done', 'success');
             });
         },

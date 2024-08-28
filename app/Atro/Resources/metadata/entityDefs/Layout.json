@@ -8,6 +8,7 @@
       "type": "enum",
       "required": true,
       "prohibitedEmptyValue": false,
+      "view": "views/layout/fields/view-type",
       "optionsIds": [
         "list",
         "listSmall",
@@ -24,7 +25,7 @@
         "listSmall",
         "detail",
         "detailSmall",
-        "relationship",
+        "relationships",
         "sidePanelsDetail",
         "sidePanelsDetailSmall",
         "sidePanelsEdit",
@@ -51,6 +52,9 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "layoutProfile": {
+      "type": "link"
     }
   },
   "links": {

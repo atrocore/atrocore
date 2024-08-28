@@ -68,7 +68,7 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
         },
 
         loadLayout: function (callback) {
-            this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
+            this.getHelper().layoutManager.get(this.scope, this.type,this.layoutProfileId, function (layout) {
                 this.readDataFromLayout(layout);
                 if (callback) {
                     callback();

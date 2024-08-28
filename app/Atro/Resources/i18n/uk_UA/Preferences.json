@@ -18,7 +18,8 @@
     "assignmentNotifications": "Notifications upon assignment",
     "hideFeedbackIcon": "Приховати іконку зворотнього зв'язку",
     "receiveNotifications": "Отримувати сповіщення",
-    "notificationProfile": "Профіль сповіщень"
+    "notificationProfile": "Профіль сповіщень",
+    "layoutProfiles": "Профілі макета"
   },
   "links": {
   },

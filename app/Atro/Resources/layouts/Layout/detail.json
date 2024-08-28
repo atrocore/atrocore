@@ -1,0 +1,21 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "viewType"
+        }
+      ],
+      [
+        {
+          "name": "layoutProfile"
+        },
+        false
+      ]
+    ]
+  }
+]

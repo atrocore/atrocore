@@ -82,7 +82,7 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
 
         loadLayout: function (callback) {
             this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), function (model) {
-                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
+                this.getHelper().layoutManager.get(this.scope, this.type, this.layoutProfileId, function (layout) {
                     this.readDataFromLayout(model, layout);
                     if (callback) {
                         callback();
