@@ -41,25 +41,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         postDisabled: false,
 
         events: _.extend({
-            'focus textarea.note': function (e) {
-                this.enablePostingMode();
-            },
             'click button.post': function () {
                 this.post();
-            },
-            'keypress textarea.note': function (e) {
-                if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
-                    this.post();
-                } else if (e.keyCode == 9) {
-                    $text = $(e.currentTarget)
-                    if ($text.val() == '') {
-                        this.disablePostingMode();
-                    }
-                }
-            },
-            'input textarea.note': function (e) {
-                this.controlTextareaHeight();
-            },
+            }
         }, Dep.prototype.events),
 
         data: function () {
@@ -69,32 +53,15 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             return data;
         },
 
-        controlTextareaHeight: function (lastHeight) {
-            var scrollHeight = this.$textarea.prop('scrollHeight');
-            var clientHeight = this.$textarea.prop('clientHeight');
-
-            if (clientHeight === lastHeight) return;
-            if (scrollHeight > clientHeight + 1) {
-                this.$textarea.attr('rows', this.$textarea.prop('rows') + 1);
-                this.controlTextareaHeight(clientHeight);
-            }
-            if (this.$textarea.val().length === 0) {
-                this.$textarea.attr('rows', 1);
-            }
-        },
-
         enablePostingMode: function () {
             this.$el.find('.buttons-panel').removeClass('hide');
 
             if (!this.postingMode) {
-                if (this.$textarea.val() && this.$textarea.val().length) {
-                    this.controlTextareaHeight();
-                }
                 $('body').on('click.stream-panel', function (e) {
                     var $target = $(e.target);
                     if ($target.parent().hasClass('remove-attachment')) return;
                     if ($.contains(this.$postContainer.get(0), e.target)) return;
-                    if (this.$textarea.val() !== '') return;
+                    if ((this.seed.get('post') ?? '') !== '') return;
                 }.bind(this));
             }
 
@@ -104,15 +71,13 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         disablePostingMode: function () {
             this.postingMode = false;
 
-            this.$textarea.val('');
+            this.seed.set('post', '');
             if (this.hasView('attachments')) {
                 this.getView('attachments').empty();
             }
             this.$el.find('.buttons-panel').addClass('hide');
 
             $('body').off('click.stream-panel');
-
-            this.$textarea.prop('rows', 1);
         },
 
         setup: function () {
@@ -155,8 +120,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         storeControl: function () {
-            if (this.$textarea && this.$textarea.size()) {
-                var text = this.$textarea.val();
+            if (this.seed) {
+                const text = this.seed.get('post') ?? '';
                 if (text.length) {
                     this.getSessionStorage().set(this.storageTextKey, text);
                 } else {
@@ -165,11 +130,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     }
                 }
 
-                var attachmetIdList = this.seed.get('attachmentsIds') || [];
+                const attachmentIdList = this.seed.get('attachmentsIds') || [];
 
-                if (attachmetIdList.length) {
+                if (attachmentIdList.length) {
                     this.getSessionStorage().set(this.storageAttachmentsKey, {
-                        idList: attachmetIdList,
+                        idList: attachmentIdList,
                         names: this.seed.get('attachmentsNames') || {}
                     });
                 } else {
@@ -194,40 +159,58 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            this.$textarea = this.$el.find('textarea.note');
             this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
-
-            var $textarea = this.$textarea;
 
             var storedText = this.getSessionStorage().get(this.storageTextKey);
 
             if (storedText && storedText.length) {
                 this.hasStoredText = true;
-                this.$textarea.val(storedText);
+                this.seed.set('post', storedText);
             }
 
-            $textarea.off('drop');
-            $textarea.off('dragover');
-            $textarea.off('dragleave');
+            const buildUserListUrl = function (term) {
+                let url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+                if (assignmentPermission === 'team') {
+                    url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
+                }
+                return url;
+            }.bind(this);
 
-            $textarea.on('drop', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.$textarea.attr('placeholder', originalPlaceholderText);
-            }.bind(this));
+            this.createView('post', 'views/fields/markdown', {
+                defs: {
+                    name: 'post'
+                },
+                el: this.options.el + ' .text-container',
+                mode: 'edit',
+                model: this.seed,
+                params: {
+                    maxHeight: 350,
+                    minHeight: 40
+                },
+            }, function (view) {
+                view.render();
 
-            var originalPlaceholderText = this.$textarea.attr('placeholder');
+                view.on('before:editor:rendered', textarea => {
+                    textarea.attr('placeholder', this.placeholderText);
+                });
 
-            $textarea.on('dragover', function (e) {
-                e.preventDefault();
-                this.$textarea.attr('placeholder', this.translate('dropToAttach', 'messages'));
-            }.bind(this));
+                view.on('editor:rendered', editor => {
+                    this.$el.find('.editor-toolbar').addClass('disabled');
+                });
 
-            $textarea.on('dragleave', function (e) {
-                e.preventDefault();
-                this.$textarea.attr('placeholder', originalPlaceholderText);
-            }.bind(this));
+                view.on('focus', (editor, e) => {
+                    this.enablePostingMode();
+                });
+
+                view.on('keypress', (editor, e) => {
+                    if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                        this.post();
+                    } else if (e.keyCode === 9 && !this.seed.get('post')) {
+                        this.disablePostingMode();
+                    }
+                });
+            });
 
             var collection = this.collection;
 
@@ -258,44 +241,35 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 collection.fetch();
             }
 
-            var assignmentPermission = this.getAcl().get('assignmentPermission');
-
-            var buildUserListUrl = function (term) {
-                var url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
-                if (assignmentPermission == 'team') {
-                    url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
-                }
-                return url;
-            }.bind(this);
-
+            const assignmentPermission = this.getAcl().get('assignmentPermission');
             if (assignmentPermission !== 'no') {
-                this.$textarea.textcomplete([{
-                    match: /(^|\s)@((\w|\.)*)$/,
-                    index: 2,
-                    search: function (term, callback) {
-                        if (term.length == 0) {
-                            callback([]);
-                            return;
-                        }
-                        $.ajax({
-                            url: buildUserListUrl(term),
-                        }).done(function (data) {
-                            callback(data.list)
-                        });
-                    },
-                    template: function (mention) {
-                        return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                    },
-                    replace: function (o) {
-                        return '$1@' + o.userName + '';
-                    }
-                }]);
+                // this.$textarea.textcomplete([{
+                //     match: /(^|\s)@((\w|\.)*)$/,
+                //     index: 2,
+                //     search: function (term, callback) {
+                //         if (term.length == 0) {
+                //             callback([]);
+                //             return;
+                //         }
+                //         $.ajax({
+                //             url: buildUserListUrl(term),
+                //         }).done(function (data) {
+                //             callback(data.list)
+                //         });
+                //     },
+                //     template: function (mention) {
+                //         return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
+                //     },
+                //     replace: function (o) {
+                //         return '$1@' + o.userName + '';
+                //     }
+                // }]);
 
-                this.once('remove', function () {
-                    if (this.$textarea.size()) {
-                        this.$textarea.textcomplete('destroy');
-                    }
-                }, this);
+                // this.once('remove', function () {
+                //     if (this.$textarea.size()) {
+                //         this.$textarea.textcomplete('destroy');
+                //     }
+                // }, this);
             }
 
             $a = this.$el.find('.buttons-panel a.stream-post-info');
@@ -327,19 +301,12 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             });
         },
 
-        afterPost: function () {
-            this.$el.find('textarea.note').prop('rows', 1);
-        },
-
         post: function () {
-            var message = this.$textarea.val();
-
-            this.$textarea.prop('disabled', true);
+            const message = this.seed.get('post') ?? '';
 
             this.getModelFactory().create('Note', function (model) {
                 if (message === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                     this.notify('Post cannot be empty', 'error');
-                    this.$textarea.prop('disabled', false);
                     return;
                 }
 
@@ -347,9 +314,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     this.notify('Posted', 'success');
                     this.collection.fetchNew();
 
-                    this.$textarea.prop('disabled', false);
                     this.disablePostingMode();
-                    this.afterPost();
 
                     if (this.getPreferences().get('followEntityOnStreamPost')) {
                         this.model.set('isFollowed', true);
@@ -366,11 +331,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 this.prepareNoteForPost(model);
 
                 this.notify('Posting...');
-                model.save(null, {
-                    error: function () {
-                        this.$textarea.prop('disabled', false);
-                    }.bind(this)
-                });
+                model.save();
             }.bind(this));
         },
 

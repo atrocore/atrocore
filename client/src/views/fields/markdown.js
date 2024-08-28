@@ -233,6 +233,10 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                     this.model.set(this.name, this.editor.value(), {silent: true});
                 });
 
+                this.editor.codemirror.on('keypress', (cm, e) => {
+                    this.trigger('keypress', cm, e);
+                });
+
                 this.on('editor:previewToggled', editor => {
                     wrapper?.classList.toggle('preview-enabled');
                     scroller?.classList.toggle('hide');
