@@ -14,8 +14,8 @@ Espo.define('views/layout/fields/layout-profile-dropdown', 'views/fields/link-dr
 
         prepareOptionsList: function () {
             Dep.prototype.prepareOptionsList.call(this);
-            this.params.options.unshift("user:my")
-            this.translatedOptions["user:my"] = "Custom"
+            this.params.options.unshift("custom")
+            this.translatedOptions["custom"] = "Custom"
         }
     });
 });

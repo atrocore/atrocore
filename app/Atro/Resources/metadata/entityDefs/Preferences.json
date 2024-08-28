@@ -98,8 +98,8 @@
             "type": "link",
             "view": "views/preferences/fields/notification-profile"
         },
-        "layoutProfiles": {
-            "type": "linkMultiple"
+        "layoutProfile": {
+            "type": "link"
         }
     },
     "links": {
@@ -107,10 +107,9 @@
             "type": "belongsTo",
             "entity": "NotificationProfile"
         },
-        "layoutProfiles": {
-            "type": "hasMany",
-            "entity": "LayoutProfile",
-            "relationName": "PreferencesLayoutProfile"
+        "layoutProfile": {
+            "type": "belongsTo",
+            "entity": "LayoutProfile"
         }
     }
 }
