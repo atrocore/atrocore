@@ -18,7 +18,8 @@
         "sidePanelsDetail",
         "sidePanelsDetailSmall",
         "sidePanelsEdit",
-        "sidePanelsEditSmall"
+        "sidePanelsEditSmall",
+        "kanban"
       ],
       "options": [
         "list",
@@ -29,7 +30,8 @@
         "sidePanelsDetail",
         "sidePanelsDetailSmall",
         "sidePanelsEdit",
-        "sidePanelsEditSmall"
+        "sidePanelsEditSmall",
+        "kanban"
       ]
     },
     "preferencesId": {

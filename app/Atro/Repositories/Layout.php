@@ -29,6 +29,7 @@ class Layout extends Base
             switch ($entity->get('viewType')) {
                 case 'list';
                 case 'listSmall':
+                case 'kanban':
                     $listItems = $entity->get('listItems') ?? [];
                     $processedItems = [];
 
@@ -54,6 +55,8 @@ class Layout extends Base
                             'align'       => $item['align'] ?? null,
                             'width'       => $item['width'] ?? null,
                             'widthPx'     => $item['widthPx'] ?? null,
+                            'isLarge'     => $item['isLarge'] ?? false,
+                            'cssStyle'    => $item['cssStyle'] ?? null,
                             'sortOrder'   => $index,
                         ]);
 
@@ -87,10 +90,10 @@ class Layout extends Base
                             }
                         }
                         $section->set([
-                            'layoutId'            => $entity->get('id'),
-                            'name'                => $item['customLabel'],
-                            'style'               => $item['style'] ?? null,
-                            'sortOrder'           => $index,
+                            'layoutId'  => $entity->get('id'),
+                            'name'      => $item['customLabel'],
+                            'style'     => $item['style'] ?? null,
+                            'sortOrder' => $index,
                         ]);
                         $this->getEntityManager()->saveEntity($section);
 
@@ -202,7 +205,7 @@ class Layout extends Base
                             'name'      => $key,
                             'style'     => $item['style'] ?? '',
                             'sticked'   => $item['sticked'] ?? false,
-                            'disabled'   => $item['disabled'] ?? false,
+                            'disabled'  => $item['disabled'] ?? false,
                             'sortOrder' => $index,
                         ]);
 

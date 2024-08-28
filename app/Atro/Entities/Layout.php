@@ -30,6 +30,7 @@ class Layout extends Base
         switch ($this->get('viewType')) {
             case 'list';
             case 'listSmall':
+            case 'kanban':
                 /* @var $listItems EntityCollection */
                 $listItems = $this->get('listItems');
                 $listItems = empty($listItems) ? [] : $listItems->toArray();
@@ -39,7 +40,12 @@ class Layout extends Base
                 $data = [];
                 foreach ($listItems as $item) {
                     $newItem = [];
-                    foreach ($this->getKeyList(['name', 'link', 'align', 'width', 'widthPx', 'notSortable'], $withIds) as $key) {
+                    $keys = ['name', 'link', 'align', 'width', 'widthPx', 'notSortable'];
+                    if ($this->get('viewType') === 'kanban') {
+                        $keys = ['name', 'link', 'align', 'width', 'isLarge', 'cssStyle'];
+                    }
+                    $keys = $this->getKeyList($keys, $withIds);
+                    foreach ($keys as $key) {
                         if (!empty($item[$key])) {
                             $newItem[$key] = $item[$key];
                         }

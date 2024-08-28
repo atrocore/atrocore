@@ -16,6 +16,13 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
             if (!this.params.translation) {
                 this.params.translation = 'Admin.layouts';
             }
+            this.listenTo(this.model, 'change:entity', () => {
+                if (this.getMetadata().get(['clientDefs', this.model.get('entity'), 'kanbanViewMode'])) {
+                    this.resetOptionList()
+                } else {
+                    this.disableOptions(['kanban'])
+                }
+            })
             Dep.prototype.setup.call(this);
         },
     });

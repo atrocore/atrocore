@@ -55,31 +55,7 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
         data: function () {
             return {
                 typeList: this.typeList,
-                scope: this.scope,
-                layoutScopeDataList: (function () {
-                    var dataList = [];
-                    this.scopeList
-                        .filter(scope => {
-                            return !this.getMetadata().get('scopes.' + scope).emHidden
-                        })
-                        .forEach(function (scope) {
-                            var d = {};
-                            d.scope = scope;
-                            d.typeList = _.clone(this.typeList);
-
-                            var additionalLayouts = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts') || {};
-                            for (var item in additionalLayouts) {
-                                d.typeList.push(item);
-                            }
-
-                            if (this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode'])) {
-                                d.typeList.push('kanban');
-                            }
-
-                            dataList.push(d);
-                        }, this);
-                    return dataList;
-                }).call(this)
+                scope: this.scope
             };
         },
 
@@ -113,6 +89,9 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
                 this.listenTo(this.model, 'change:entity change:viewType change:layoutProfileId', () => {
                     console.log('update')
                     if (this.model.get('entity') && this.model.get('viewType') && this.model.get('layoutProfileId')) {
+                        if (this.model.get('viewType') === 'kanban' && !this.getMetadata().get(['clientDefs', this.model.get('entity'), 'kanbanViewMode'])) {
+                            return
+                        }
                         this.openLayout(this.model.get('entity'), this.model.get('viewType'), this.model.get('layoutProfileId'))
                     }
                 })
