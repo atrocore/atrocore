@@ -76,6 +76,10 @@ Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-var
             return data
         },
 
+        validateRequired() {
+            return Varchar.prototype.validateRequired.call(this);
+        },
+
         fetch() {
             let data = Dep.prototype.fetch.call(this);
             Varchar.prototype.addMeasureDataOnFetch.call(this, data)
