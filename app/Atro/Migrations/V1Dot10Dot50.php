@@ -216,6 +216,10 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
+    {% elseif updateData['fieldTypes'][field] == 'file' %}
+        <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>   
+    {% elseif updateData['fieldTypes'][field] == 'link' %}
+        <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
     {% else %}
         <code>{{ value }}</code>
     {% endif %}
@@ -235,11 +239,11 @@ class V1Dot10Dot50 extends Base
 
     {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
         {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
-        {{actionUser.name}} has assigned to you  {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.
+        {{actionUser.name}} has assigned to you  {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.
     {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
-        {{actionUser.name}} has assigned to you {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a> and updated
+        {{actionUser.name}} has assigned to you {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a> and updated
     {% else %}
-        {{actionUser.name}}  in {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>  updated
+        {{actionUser.name}}  in {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>  updated
     {% endif %}
 {% endmacro %}
 
@@ -360,6 +364,10 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
+     {% elseif updateData['fieldTypes'][field] == 'file' %}
+        <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
+    {% elseif updateData['fieldTypes'][field] == 'link' %}
+        <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
     {% else %}
         <code>{{ value }}</code>
     {% endif %}
@@ -379,11 +387,11 @@ class V1Dot10Dot50 extends Base
 
     {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
         {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
-        <p>{{actionUser.name}} hat Ihnen {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>  zugewiesen
+        <p>{{actionUser.name}} hat Ihnen {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.</p>  zugewiesen
     {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
-        <p>{{actionUser.name}} hat Ihnen zugewiesen und eine Aktualisierung an {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a> vorgenommen.</p>
+        <p>{{actionUser.name}} hat Ihnen zugewiesen und eine Aktualisierung an {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a> vorgenommen.</p>
     {% else %}
-        <p>{{actionUser.name}} hat Update auf {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>. vorgenommen. </p>
+        <p>{{actionUser.name}} hat Update auf {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>. vorgenommen. </p>
     {% endif %}
 {% endmacro %}
 
@@ -504,6 +512,10 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
+     {% elseif updateData['fieldTypes'][field] == 'file' %}
+        <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
+    {% elseif updateData['fieldTypes'][field] == 'link' %}
+        <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
     {% else %}
         <code>{{ value }}</code>
     {% endif %}
@@ -523,11 +535,11 @@ class V1Dot10Dot50 extends Base
 
     {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
         {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
-        <p>{{actionUser.name}} призначив вам {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+        <p>{{actionUser.name}} призначив вам {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.</p>
     {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
-        <p>c{{actionUser.name}} призначив вам і зробив оновлення на {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+        <p>c{{actionUser.name}} призначив вам і зробив оновлення на {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.</p>
     {% else %}
-        <p>{{actionUser.name}} зробив оновлення на {{entityName}}<a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+        <p>{{actionUser.name}} зробив оновлення на {{entityName}}<a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.</p>
     {% endif %}
 {% endmacro %}
 
