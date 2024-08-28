@@ -153,21 +153,24 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
 
             this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : ''), {trigger: false});
 
-            this.notify('Loading...');
 
             var typeReal = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
-            this.createView('content', 'Admin.Layouts.' + Espo.Utils.upperCaseFirst(typeReal), {
-                el: '#layout-content',
-                scope: scope,
-                type: type,
-                layoutProfileId: layoutProfileId
-            }, function (view) {
-                this.renderLayoutHeader();
-                view.render();
-                this.notify(false);
-                $(window).scrollTop(0);
-            }.bind(this));
+            if (window.layoutSvelteComponent) {
+                window.layoutSvelteComponent.$destroy()
+            }
+
+            window.layoutSvelteComponent = new Svelte.LayoutComponent({
+                target: $('#svelte-layout').get(0),
+                props: {
+                    type: type,
+                    scope: scope,
+                    layoutProfileId: layoutProfileId,
+                    afterRender: () => {
+                        this.renderLayoutHeader();
+                    }
+                }
+            });
         },
 
         renderDefaultPage: function () {
