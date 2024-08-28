@@ -13,6 +13,38 @@
     },
     "conditions": {
       "auth": false
+    },
+    "description": "Get background data.",
+    "response": {
+      "type": "object",
+      "properties": {
+        "till": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string"
+            },
+            "timezone_type": {
+              "type": "integer"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          }
+        },
+        "imageName": {
+          "type": "string"
+        },
+        "imagePath": {
+          "type": "string"
+        },
+        "authorName": {
+          "type": "string"
+        },
+        "authorLink": {
+          "type": "string"
+        }
+      }
     }
   },
   {
