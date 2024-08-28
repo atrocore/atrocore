@@ -201,6 +201,7 @@ Espo.define('view-helper', [], function () {
             Handlebars.registerHelper('breaklines', function (text) {
                 text = Handlebars.Utils.escapeExpression(text || '');
                 text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+                text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
                 return new Handlebars.SafeString(text);
             });
 

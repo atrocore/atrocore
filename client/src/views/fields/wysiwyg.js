@@ -61,37 +61,31 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             this.useIframe = this.params.useIframe || this.useIframe;
 
+            this.buttons = {};
             this.toolbar = this.params.toolbar || [
                 ['style', ['style']],
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
+                ['list', ['ul', 'ol']],
+                ['para', ['paragraph']],
                 ['height', ['height']],
-                ['table', ['table', 'link', 'picture', 'hr']],
-                ['misc',['codeview', 'fullscreen']]
+                ['table', ['table']],
+                ['link', ['link', 'hr']],
+                ['image', this.getImageButtons()],
+                ['misc', ['codeview', 'fullscreen']]
             ];
-
-            this.buttons = {};
 
             if (!this.params.toolbar) {
                 if (this.params.attachmentField) {
-                    this.toolbar.push([
-                        'attachment',
-                        ['attachment']
-                    ]);
-                    var AttachmentButton = function (context) {
-                        var ui = $.summernote.ui;
-                        var button = ui.button({
-                            contents: '<i class="glyphicon glyphicon-paperclip"></i>',
-                            tooltip: this.translate('Attach File'),
-                            click: function () {
-                                this.attachFile();
-                            }.bind(this)
-                        });
-                        return button.render();
-                    }.bind(this);
-                    this.buttons['attachment'] = AttachmentButton;
+                    const buttons = this.getImageButtons();
+
+                    if (buttons) {
+                        this.toolbar.push([
+                            'attachment',
+                            buttons
+                        ]);
+                    }
                 }
             }
 
@@ -134,6 +128,94 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     this.$scrollable.off('scroll.' + this.cid + '-edit');
                 }
             }.bind(this));
+        },
+
+        getImageButtons() {
+            const buttons = [];
+            const selectImageButton = context => {
+                return $.summernote.ui.button({
+                    contents: '<i class="glyphicon glyphicon-picture"></i>',
+                    tooltip: this.translate('Select Image'),
+                    click: () => {
+                        this.notify('Loading...');
+                        this.createView('selectFileDialog', this.getMetadata().get('clientDefs.File.modalViews.select') || 'views/modals/select-records', {
+                            scope: 'File',
+                            filters: {
+                                fileType: {
+                                    type: 'in',
+                                    field: 'typeId',
+                                    attribute: 'typeId',
+                                    value: ['a_image', 'a_favicon']
+                                }
+                            },
+                        }, view => {
+                            view.render();
+                            this.notify(false);
+                            this.listenTo(view, 'select', model => {
+                                this.notify('Loading...');
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'File/action/prepareForRichEditor',
+                                    contentType: "application/json",
+                                    data: JSON.stringify({
+                                        fileId: model.get('id')
+                                    }),
+                                }).done(response => {
+                                    this.notify(false);
+                                    context.invoke('editor.insertImage', response.sharedUrl);
+                                }).error(response => {
+                                    this.notify(false);
+                                    console.error(response);
+                                    Espo.ui.error('Error while selecting file');
+                                });
+                            });
+                        });
+                    }
+                }).render();
+            };
+
+            const uploadImageButton = context => {
+                return $.summernote.ui.button({
+                    contents: '<i class="glyphicon glyphicon-open"></i>',
+                    tooltip: this.translate('Upload Image'),
+                    click: () => {
+                        this.notify('Loading...')
+                        this.createView('upload', 'views/file/modals/upload', {
+                            scope: 'File',
+                            fullFormDisabled: true,
+                            layoutName: 'upload',
+                            multiUpload: false,
+                            attributes: _.extend(this.model.attributes, {share: true}),
+                        }, view => {
+                            view.render();
+                            this.notify(false);
+                            this.listenTo(view.model, 'after:file-upload', entity => {
+                                if (!this.checkIsImage(entity.name)) {
+                                    Espo.ui.error('Your file is not an image.');
+                                    return;
+                                }
+
+                                context.invoke('editor.insertImage', entity.sharedUrl);
+                            });
+                            this.listenToOnce(view, 'close', () => {
+                                this.clearView('upload');
+                            });
+                        });
+                    }
+                }).render();
+            };
+
+            if (this.getAcl().check('File', 'read')) {
+                this.buttons['selectImage'] = selectImageButton;
+                buttons.push('selectImage');
+            }
+
+            if (this.getAcl().check('File', 'create')) {
+                this.buttons['uploadImage'] = uploadImageButton;
+                buttons.push('uploadImage');
+            }
+
+            return buttons;
         },
 
         data: function () {
@@ -327,44 +409,53 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$element.addClass('hidden');
             this.$summernote.removeClass('hidden');
 
-            var contents = this.getValueForEdit();
-
+            const contents = this.getValueForEdit();
             this.$summernote.html(contents);
 
             this.$summernote.find('style').remove();
             this.$summernote.find('link[ref="stylesheet"]').remove();
 
-            var options = {
+            const options = {
                 lang: this.getConfig().get('language'),
                 callbacks: {
-                    onImageUpload: function (files) {
-                        var file = files[0];
-                        this.notify('Uploading...');
-                        this.getModelFactory().create('Attachment', function (attachment) {
-                            var fileReader = new FileReader();
-                            fileReader.onload = function (e) {
-                                attachment.set('name', file.name);
-                                attachment.set('type', file.type);
-                                attachment.set('role', 'Inline Attachment');
-                                attachment.set('global', true);
-                                attachment.set('size', file.size);
-                                if (this.model.id) {
-                                    attachment.set('relatedId', this.model.id);
-                                }
-                                attachment.set('relatedType', this.model.name);
-                                attachment.set('file', e.target.result);
-                                attachment.set('field', this.name);
+                    onImageUpload: files => {
+                        const file = files[0];
+                        files.pop();
 
-                                attachment.once('sync', function () {
-                                    var url = '?entryPoint=download&id=' + attachment.id;
-                                    this.$summernote.summernote('insertImage', url);
-                                    this.notify(false);
-                                }, this);
-                                attachment.save();
-                            }.bind(this);
-                            fileReader.readAsDataURL(file);
-                        }, this);
-                    }.bind(this),
+                        if (!this.getAcl().check('File', 'create')) {
+                            Espo.ui.error('You are not allowed to upload images');
+                            return;
+                        }
+
+                        if (!this.checkIsImage(file.name)) {
+                            Espo.ui.error('Your file is not an image.');
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        this.notify('Uploading...');
+                        reader.onload = e => {
+                            $.ajax({
+                                type: 'POST',
+                                url: 'File?silent=true',
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    name: file.name,
+                                    fileSize: file.size,
+                                    fileContents: e.target.result,
+                                    share: true
+                                }),
+                            }).done(response => {
+                                this.notify(false);
+                                this.$summernote.summernote('insertImage', response.sharedUrl);
+                            }).error(response => {
+                                this.notify(false);
+                                console.error(response);
+                                Espo.ui.error('Error while uploading file');
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    },
                     onBlur: function () {
                         this.trigger('change')
                     }.bind(this),
@@ -395,6 +486,17 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             this.$toolbar = this.$el.find('.note-toolbar');
             this.$area = this.$el.find('.note-editing-area');
+        },
+
+        checkIsImage(name) {
+            const extensions = this.getMetadata().get(['app', 'file', 'image', 'extensions'], []);
+            for (const ext of extensions) {
+                if (name.endsWith(ext)) {
+                    return true;
+                }
+            }
+
+            return false;
         },
 
         plainToHtml: function (html) {
@@ -502,11 +604,6 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     marginTop: ''
                 });
             }
-        },
-
-        attachFile: function () {
-            var $form = this.$el.closest('.record');
-            $form.find('.field[data-name="' + this.params.attachmentField + '"] input.file').click();
         },
 
         enable() {
