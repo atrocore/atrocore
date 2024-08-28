@@ -517,6 +517,10 @@ class NotificationManager
             return null;
         }
 
+        if(count($data['fields']) === 1 && in_array('modifiedBy',$data['fields'])){
+            return null;
+        }
+
         $container = (new \Atro\Core\Application())->getContainer();
         $auth = new \Espo\Core\Utils\Auth($container);
         $auth->useNoAuth();
