@@ -34,6 +34,8 @@ Espo.define('views/fields/teams', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
+        foreignScope: 'Team',
+
         init: function () {
             this.assignmentPermission = this.getAcl().get('assignmentPermission');
             Dep.prototype.init.call(this);

@@ -189,7 +189,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     minHeight: 40
                 },
             }, function (view) {
-                view.on('before:editor:rendered', textarea => {
+                view.once('before:editor:rendered', textarea => {
                     textarea.attr('placeholder', this.placeholderText);
                 });
 
