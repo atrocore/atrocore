@@ -12,6 +12,7 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 
@@ -24,6 +25,16 @@ class V1Dot10Dot63 extends Base
 
     public function up(): void
     {
+        self::updateTemplate($this->getConnection());
+    }
+
+    public function down(): void
+    {
+        $this->up();
+    }
+
+    public static function updateTemplate(Connection $connection): void
+    {
         $rules = array_filter(V1Dot10Dot50::getDefaultRules(), fn($d) => $d['occurrence'] === 'updating' && $d['entity'] === '');
 
         if(empty($rules)){
@@ -32,11 +43,10 @@ class V1Dot10Dot63 extends Base
 
         $rule = array_values($rules)[0];
 
-
         foreach (['email','system'] as $transport){
             if(!empty($rule['templates'][$transport]['id']) && !empty($rule['templates'][$transport]['data'])){
                 try{
-                    $result = $this->getConnection()->createQueryBuilder()
+                    $result = $connection->createQueryBuilder()
                         ->select('data')
                         ->from('notification_template')
                         ->where('id = :id')
@@ -50,7 +60,7 @@ class V1Dot10Dot63 extends Base
                         $newData['field'] = array_merge($oldData['field'], $newData['field']);
                     }
 
-                    $this->getConnection()->createQueryBuilder()
+                    $connection->createQueryBuilder()
                         ->update('notification_template')
                         ->set('data',':data')
                         ->where('id = :id')
@@ -62,10 +72,5 @@ class V1Dot10Dot63 extends Base
                 }
             }
         }
-    }
-
-    public function down(): void
-    {
-        $this->up();
     }
 }
