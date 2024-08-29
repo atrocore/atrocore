@@ -5,56 +5,6 @@
     "params": "REST API"
   },
   {
-    "route": "/background",
-    "method": "get",
-    "params": {
-      "controller": "App",
-      "action": "background"
-    },
-    "conditions": {
-      "auth": false
-    },
-    "description": "Get background data.",
-    "response": {
-      "type": "object",
-      "properties": {
-        "till": {
-          "type": "object",
-          "properties": {
-            "date": {
-              "type": "string",
-              "example": "2024-08-29 08:52:29.830592"
-            },
-            "timezone_type": {
-              "type": "integer",
-              "example": 3
-            },
-            "timezone": {
-              "type": "string",
-              "example": "UTC"
-            }
-          }
-        },
-        "imageName": {
-          "type": "string",
-          "example": "pexels-pixabay-260689.jpg"
-        },
-        "imagePath": {
-          "type": "string",
-          "example": "client/img/background/pexels-pixabay-260689.jpg"
-        },
-        "authorName": {
-          "type": "string",
-          "example": "Pixabay"
-        },
-        "authorLink": {
-          "type": "string",
-          "example": "https://www.pexels.com/@pixabay"
-        }
-      }
-    }
-  },
-  {
     "route": "/App/user",
     "method": "get",
     "params": {
@@ -104,6 +54,56 @@
         "authorizationToken": {
           "type": "string",
           "example": "YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk="
+        }
+      }
+    }
+  },
+  {
+    "route": "/background",
+    "method": "get",
+    "params": {
+      "controller": "App",
+      "action": "background"
+    },
+    "conditions": {
+      "auth": false
+    },
+    "description": "Get background data.",
+    "response": {
+      "type": "object",
+      "properties": {
+        "till": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "example": "2024-08-29 08:52:29.830592"
+            },
+            "timezone_type": {
+              "type": "integer",
+              "example": 3
+            },
+            "timezone": {
+              "type": "string",
+              "example": "UTC"
+            }
+          }
+        },
+        "imageName": {
+          "type": "string",
+          "example": "pexels-pixabay-260689.jpg"
+        },
+        "imagePath": {
+          "type": "string",
+          "example": "client/img/background/pexels-pixabay-260689.jpg"
+        },
+        "authorName": {
+          "type": "string",
+          "example": "Pixabay"
+        },
+        "authorLink": {
+          "type": "string",
+          "example": "https://www.pexels.com/@pixabay"
         }
       }
     }
