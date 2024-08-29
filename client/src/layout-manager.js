@@ -53,7 +53,7 @@ Espo.define('layout-manager', [], function () {
                 key = this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
             }
             key = this.applicationId + '-' + scope + '-' + type;
-            if (layoutProfileId) {
+            if (layoutProfileId && layoutProfileId !== 'custom') {
                 key += '-' + layoutProfileId
             }
             return key

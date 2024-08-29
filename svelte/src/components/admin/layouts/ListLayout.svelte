@@ -1,18 +1,39 @@
 <script lang="ts">
-    import {onMount} from 'svelte';
     import RowsLayout from './RowsLayout.svelte';
-    import type {Field, LayoutItem} from './interfaces';
+    import type {Field, LayoutItem, Params} from './Interfaces';
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
     import {ModelFactory} from "../../../utils/ModelFactory";
     import {LayoutManager} from "../../../utils/LayoutManager";
     import {Notifier} from "../../../utils/Notifier";
 
-    export let scope: string;
-    export let type: string = 'list';
-    export let layoutProfileId: string;
+    export let params: Params;
 
     const dataAttributeList: string[] = ['id', 'name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'];
+    const dataAttributesDefs = {
+        link: {type: 'bool'},
+        width: {type: 'float'},
+        notSortable: {type: 'bool'},
+        align: {
+            type: 'enum',
+            options: ["left", "right"]
+        },
+        view: {
+            type: 'varchar',
+            readOnly: true
+        },
+        customLabel: {
+            type: 'varchar',
+            readOnly: true
+        },
+        widthPx: {
+            type: 'float'
+        },
+        name: {
+            type: 'varchar',
+            readOnly: true
+        }
+    };
     export let layoutDisabledParameter: string = 'layoutListDisabled';
 
 
@@ -29,7 +50,7 @@
     function loadLayout(): void {
         ModelFactory.create(scope, (model) => {
             Notifier.notify('Loading...')
-            LayoutManager.get(scope, type, (layout) => {
+            LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
                 readDataFromLayout(model, layout);
                 Notifier.notify(false)
                 if (afterRender) afterRender()
@@ -103,9 +124,7 @@
 
 <RowsLayout
         bind:this={rowsLayout}
-        {scope}
-        {type}
-        {layoutProfileId}
+        {params}
         {enabledFields}
         {disabledFields}
         {rowLayout}

@@ -1,7 +1,7 @@
 <script lang="ts">
-    import {afterUpdate, onDestroy, onMount} from 'svelte';
+    import {onDestroy, onMount} from 'svelte';
     import BaseLayout from './BaseLayout.svelte';
-    import type { Field, LayoutItem} from './interfaces';
+    import type {Field, LayoutItem, Params} from './Interfaces';
     import {Language} from "../../../utils/Language";
     import Sortable from 'sortablejs'
     import {Notifier} from "../../../utils/Notifier";
@@ -11,17 +11,13 @@
     let sortableEnabled: Sortable;
     let sortableDisabled: Sortable;
 
-
-    export let scope: string;
-    export let type: string;
-    export let layoutProfileId: string;
+    export let params: Params;
     export let dataAttributeList: string[] = [];
+    export let dataAttributeDefs: any;
     export let enabledFields: Field[] = [];
     export let disabledFields: Field[] = [];
     export let rowLayout: LayoutItem[] = [];
     export let loadLayout: Function;
-
-    export let editable: boolean = false;
 
     let baseLayout: BaseLayout;
 
@@ -33,10 +29,6 @@
         if (sortableEnabled) sortableEnabled.destroy();
         if (sortableDisabled) sortableDisabled.destroy();
     });
-
-    afterUpdate(() => {
-        console.log('update')
-    })
 
     function initializeSortable(): void {
         const options: Sortable.Options = {
@@ -63,7 +55,6 @@
 
     function fetch(): LayoutItem[] {
         const layout: LayoutItem[] = [];
-        console.log('test')
         for (let el of layoutElement.querySelector('ul.enabled').children) {
             const o: LayoutItem = {} as LayoutItem;
             dataAttributeList.forEach(attr => {
@@ -106,9 +97,7 @@
 
 <BaseLayout
         bind:this={baseLayout}
-        {scope}
-        {type}
-        {layoutProfileId}
+        {params}
         {validate}
         {fetch}
         {loadLayout}
@@ -124,7 +113,7 @@
                             <div class="left">
                                 <label>{item.label}</label>
                             </div>
-                            {#if editable}
+                            {#if params.editable}
                                 <div class="right">
                                     <a href="javascript:" data-action="editField" class="edit-field"
                                        on:click={editField}>
@@ -146,7 +135,7 @@
                             <div class="left">
                                 <label>{field.label}</label>
                             </div>
-                            {#if editable}
+                            {#if params.editable}
                                 <div class="right">
                                     <a href="javascript:" data-action="editField" class="edit-field"
                                        on:click={editField}>
@@ -193,14 +182,6 @@
     }
 
     ul.disabled > li .right {
-        display: none;
-    }
-
-    ul > li .width {
-        font-size: small;
-    }
-
-    ul.disabled > li .width {
         display: none;
     }
 

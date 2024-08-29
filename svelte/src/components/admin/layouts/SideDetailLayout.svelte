@@ -1,15 +1,13 @@
 <script lang="ts">
 
     import RowsLayout from './RowsLayout.svelte';
-    import type {Field, LayoutItem} from './interfaces';
+    import type {Field, LayoutItem, Params} from './Interfaces';
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
     import {LayoutManager} from "../../../utils/LayoutManager";
     import {Notifier} from "../../../utils/Notifier";
 
-    export let scope: string;
-    export let type: string;
-    export let layoutProfileId: string;
+    export let params: Params;
     export let viewType: string = 'detail';
     const dataAttributeList: string[] = ['id', 'name', 'style', 'sticked'];
     const dataAttributesDefs: any = {
@@ -26,21 +24,17 @@
         }
     };
 
-
-    export let afterRender: any;
-
     let rowsLayout: RowsLayout;
     let enabledFields: Field[] = [];
     let disabledFields: Field[] = [];
     let rowLayout: LayoutItem[] = [];
-    let editable: boolean = true;
 
     function loadLayout(): void {
         Notifier.notify('Loading...')
-        LayoutManager.get(scope, type, layoutProfileId, (layout) => {
+        LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
             readDataFromLayout(layout);
             Notifier.notify(false)
-            if (afterRender) afterRender()
+            if (params.afterRender) params.afterRender()
         }, false);
     }
 
@@ -49,13 +43,13 @@
         let labels: Record<string, string> = {};
         let params: Record<string, any> = {};
 
-        if (Metadata.get(['clientDefs', scope, 'defaultSidePanel', viewType]) !== false &&
-            !Metadata.get(['clientDefs', scope, 'defaultSidePanelDisabled'])) {
+        if (Metadata.get(['clientDefs', params.scope, 'defaultSidePanel', viewType]) !== false &&
+            !Metadata.get(['clientDefs', params.scope, 'defaultSidePanelDisabled'])) {
             panelListAll.push('default');
             labels['default'] = 'Default';
         }
 
-        (Metadata.get(['clientDefs', scope, 'sidePanels', viewType]) || []).forEach(item => {
+        (Metadata.get(['clientDefs', params.scope, 'sidePanels', viewType]) || []).forEach(item => {
             if (!item.name) return;
             panelListAll.push(item.name);
             if (item.label) {
@@ -78,9 +72,9 @@
             }
             let labelText;
             if (labels[item]) {
-                labelText = Language.translate(labels[item], 'labels', scope);
+                labelText = Language.translate(labels[item], 'labels', params.scope);
             } else {
-                labelText = Language.translate(item, 'panels', scope);
+                labelText = Language.translate(item, 'panels', params.scope);
             }
 
             if (disabled) {
@@ -116,13 +110,10 @@
 
 <RowsLayout
         bind:this={rowsLayout}
-        {scope}
-        {type}
-        {layoutProfileId}
+        {params}
         {enabledFields}
         {disabledFields}
         {rowLayout}
-        {editable}
         {dataAttributeList}
         {dataAttributesDefs}
         {loadLayout}

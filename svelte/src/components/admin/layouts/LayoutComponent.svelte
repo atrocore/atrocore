@@ -2,18 +2,17 @@
     import ListLayout from './ListLayout.svelte';
     import SideDetailLayout from "./SideDetailLayout.svelte";
     import RelationShipsLayout from "./RelationShipsLayout.svelte";
+    import {Params} from "./Interfaces";
+    import GridLayout from "./GridLayout.svelte";
 
-    export let type;
-    export let scope;
-    export let layoutProfileId;
-    export let afterRender: Function;
+    export let params: Params;
 
     let LayoutComponent;
     let layoutDisabledParameter;
     let viewType
 
     $: {
-        switch (type) {
+        switch (params.type) {
             case 'list':
                 layoutDisabledParameter = "layoutListDisabled"
                 LayoutComponent = ListLayout;
@@ -30,7 +29,7 @@
                 break;
             case 'detail':
             case 'detailSmall':
-                LayoutComponent = null;
+                LayoutComponent = GridLayout;
                 break;
             case 'sidePanelsDetail':
                 viewType = "detail"
@@ -52,4 +51,4 @@
     }
 </script>
 
-<LayoutComponent {type} {scope} {layoutProfileId} {layoutDisabledParameter} {viewType} {afterRender}/>
+<LayoutComponent {params} {layoutDisabledParameter} {viewType}/>

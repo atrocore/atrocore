@@ -1,32 +1,25 @@
 <!-- BaseLayout.svelte -->
 <script lang="ts">
     import {onMount, createEventDispatcher} from 'svelte';
-    import type {Button, LayoutItem} from './interfaces';
-    import {Metadata} from "../../../utils/Metadata";
+    import type {Button, Params} from './Interfaces';
     import {Notifier} from "../../../utils/Notifier";
     import {LayoutManager} from "../../../utils/LayoutManager";
 
-    export let scope: string;
-    export let type: string;
-    export let layoutProfileId: string;
-    export let dataAttributeList: string[] = [];
-    export let layout: any = [];
+    export let params: Params;
     export let fetch: any
-
-
-    export function validate(layout: any): boolean {
-        return true;
-    }
-
-
-    export function openEditDialog(attributes: any): void {
-        dispatch('openEditDialog', attributes);
-    }
 
     export let loadLayout = () => {
         LayoutManager.get(scope, type, layoutProfileId, (fetchedLayout) => {
             layout = fetchedLayout;
         }, false);
+    }
+
+    export let validate = () => {
+        return true;
+    }
+
+    export function openEditDialog(attributes: any): void {
+        dispatch('openEditDialog', attributes);
     }
 
     const dispatch = createEventDispatcher();
@@ -51,10 +44,23 @@
         }
         Notifier.notify('Saving...');
 
-        LayoutManager.set(scope, type, layoutProfileId, layoutToSave, () => {
+        LayoutManager.set(params.scope, params.type, params.layoutProfileId, layoutToSave, () => {
             Notifier.notify('Saved', 'success', 2000);
+            emitUpdate()
             enableButtons();
         });
+    }
+
+    function emitUpdate() {
+        console.log('emit update')
+        const customEvent = new CustomEvent('layoutUpdated', {
+            detail: {
+                scope: params.scope,
+                type: params.type,
+                layoutProfileId: params.layoutProfileId
+            }
+        });
+        window.dispatchEvent(customEvent);
     }
 
     function cancel(): void {
@@ -63,7 +69,8 @@
 
     function resetToDefault(): void {
         Notifier.confirm('Are you sure you want to reset to default?', () => {
-            LayoutManager.resetToDefault(scope, type, () => {
+            LayoutManager.resetToDefault(params.scope, params.type, params.layoutProfileId, () => {
+                emitUpdate()
                 cancel();
             });
         });

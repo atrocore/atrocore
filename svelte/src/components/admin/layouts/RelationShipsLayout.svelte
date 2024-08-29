@@ -1,15 +1,13 @@
 <script lang="ts">
     import RowsLayout from './RowsLayout.svelte';
-    import type {Field, LayoutItem} from './interfaces';
+    import type {Field, LayoutItem, Params} from './Interfaces';
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
     import {LayoutManager} from "../../../utils/LayoutManager";
     import {Notifier} from "../../../utils/Notifier";
     import {ModelFactory} from "../../../utils/ModelFactory";
 
-    export let scope: string;
-    export let type: string;
-    export let layoutProfileId: string;
+    export let params: Params;
     const dataAttributeList: string[] = ['id', 'name', 'style', 'hiddenPerDefault'];
     const dataAttributesDefs: any = {
         style: {
@@ -115,13 +113,10 @@
 
 <RowsLayout
         bind:this={rowsLayout}
-        {scope}
-        {type}
-        {layoutProfileId}
+        {params}
         {enabledFields}
         {disabledFields}
         {rowLayout}
-        {editable}
         {dataAttributeList}
         {dataAttributesDefs}
         {loadLayout}

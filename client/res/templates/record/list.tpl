@@ -34,6 +34,10 @@
     <div class="text-muted total-count {{#if totalLoading}} hidden {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
     <img class="preloader {{#unless totalLoading}} hidden {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
     {{/if}}
+    <button class="btn btn-icon layout-editor" style="float:right;margin-right: 5px; padding: 0;background: transparent">
+    <span class="fas fa-columns cursor-pointer" ></span>
+</button>
+
 
     {{#each buttonList}}
         {{button name scope=../../scope label=label style=style}}

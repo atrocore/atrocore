@@ -59,21 +59,6 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
             };
         },
 
-        events: {
-            'click #layouts-menu button.layout-link': function (e) {
-                var scope = $(e.currentTarget).data('scope');
-                var type = $(e.currentTarget).data('type');
-                if (this.getView('content')) {
-                    if (this.scope == scope && this.type == type) {
-                        return;
-                    }
-                }
-                $("#layouts-menu button.layout-link").removeClass('disabled');
-                $(e.target).addClass('disabled');
-                this.openLayout(scope, type, this.layoutProfileId);
-            },
-        },
-
         setup: function () {
             this.scopeList = [];
 
@@ -161,13 +146,16 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
             }
 
             window.layoutSvelteComponent = new Svelte.LayoutComponent({
-                target: $('#svelte-layout').get(0),
+                target: $('#layout-content').get(0),
                 props: {
-                    type: type,
-                    scope: scope,
-                    layoutProfileId: layoutProfileId,
-                    afterRender: () => {
-                        this.renderLayoutHeader();
+                    params: {
+                        type: type,
+                        scope: scope,
+                        layoutProfileId: layoutProfileId,
+                        editable: true,
+                        afterRender: () => {
+                            this.renderLayoutHeader();
+                        }
                     }
                 }
             });

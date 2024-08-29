@@ -8,6 +8,7 @@ export interface Button {
 export interface Field {
     name: string;
     label: string;
+
     [key: string]: any;
 }
 
@@ -21,5 +22,14 @@ export interface LayoutItem {
     align?: 'left' | 'right';
     view?: string;
     customLabel?: string;
+
     [key: string]: any;
+}
+
+export interface Params {
+    scope: string;
+    type: string;
+    layoutProfileId: string;
+    editable: boolean;
+    layout: any;
 }
