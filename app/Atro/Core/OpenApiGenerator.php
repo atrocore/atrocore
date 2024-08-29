@@ -238,6 +238,20 @@ class OpenApiGenerator
             ]
         ];
 
+        foreach ($this->container->get('route')->getAll() as $route) {
+            if (empty($route['description'])) {
+                continue;
+            }
+
+            $result['paths'][$route['route']][$route['method']] = [
+                'tags'        => [$route['params']['controller']],
+                'summary'     => $route['summary'] ?? $route['description'],
+                'description' => $route['description'],
+                'operationId' => md5("{$route['route']}_{$route['method']}"),
+                "responses"   => self::prepareResponses($route['response'])
+            ];
+        }
+
         /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
 
