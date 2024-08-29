@@ -215,7 +215,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                                 return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
                             },
                             replace: function (o) {
-                                return '$1@' + o.userName + '';
+                                return '$1@' + o.userName + ' ';
                             }
                         }], {
                             dropdown: {
