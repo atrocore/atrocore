@@ -55,6 +55,86 @@
     }
   },
   {
+    "route": "/MassActions/action/upsert",
+    "method": "post",
+    "params": {
+      "controller": "MassActions",
+      "action": "upsert"
+    },
+    "summary": "Bulk Create and Bulk Update.",
+    "description": "The system will try to find existing entities based on the identifier or unique fields. If an entity is found, it will be updated, otherwise it will be created by the system.",
+    "requestParameters": [
+      {
+        "name": "Use-Queue",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "example": "false"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entity": {
+                  "type": "string",
+                  "example": "Product"
+                },
+                "payload": {
+                  "type": "object",
+                  "example": {
+                    "id": "yellow_bike_1",
+                    "name": "Yellow Bike"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "Created",
+            "Updated",
+            "CreatFailed"
+          ],
+          "example": "Created"
+        },
+        "stored": {
+          "type": "boolean",
+          "required": true,
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "required": false,
+          "example": "Code: 400. Message: Validation failed. 'Name / de_DE' is required."
+        },
+        "entity": {
+          "type": "object",
+          "required": false,
+          "example": {
+            "id": "yellow_bike_1",
+            "name": "Yellow Bike"
+          }
+        }
+      }
+    }
+  },
+  {
     "route": "/File/action/upload-proxy",
     "method": "post",
     "params": {

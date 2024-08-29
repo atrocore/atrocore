@@ -123,105 +123,6 @@ class OpenApiGenerator
                         ]
                     ]
                 ],
-                '/MassActions/action/upsert' => [
-                    'post' => [
-                        'tags'        => ['MassActions'],
-                        "summary"     => "Bulk create and bulk update.",
-                        "description" => "Bulk create and bulk update.",
-                        "operationId" => "upsert",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                "name"     => "Use-Queue",
-                                "in"       => "header",
-                                "required" => false,
-                                "schema"   => [
-                                    "type"    => "boolean",
-                                    "example" => "false"
-                                ]
-                            ],
-                        ],
-                        'requestBody' => [
-                            'required' => true,
-                            'content'  => [
-                                'application/json' => [
-                                    'schema' => [
-                                        "type"    => "array",
-                                        "items"   => [
-                                            "type" => "object",
-                                        ],
-                                        'example' => [
-                                            [
-                                                'entity'  => 'Brand',
-                                                'payload' => [
-                                                    'id'   => '1111122222',
-                                                    'name' => 'Some Brand name',
-                                                    'nameDeDe' => 'Irgendein Markenname',
-                                                    'code' => 'b_1111122222'
-                                                ]
-                                            ],
-                                            [
-                                                'entity'  => 'Product',
-                                                'payload' => [
-                                                    'name'    => 'Some product name',
-                                                    'brandId' => '1111122222'
-                                                ]
-                                            ]
-                                        ]
-                                    ],
-                                ]
-                            ],
-                        ],
-                        "responses"   => [
-                            "200" => [
-                                "description" => "OK",
-                                "content"     => [
-                                    "application/json" => [
-                                        "schema" => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "object"
-                                            ],
-                                            'example' => [
-                                                [
-                                                    'status'  => 'Failed',
-                                                    'stored'  => false,
-                                                    'message' => "'entity' parameter is required."
-                                                ],
-                                                [
-                                                    'status' => 'Created',
-                                                    'stored' => true,
-                                                    'entity' => [
-                                                        'id'   => 'some-product-id-1',
-                                                        'name' => 'Some product name 1'
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ],
-                            "304" => [
-                                "description" => "Not Modified"
-                            ],
-                            "400" => [
-                                "description" => "Bad Request"
-                            ],
-                            "401" => [
-                                "description" => "Unauthorized"
-                            ],
-                            "403" => [
-                                "description" => "Forbidden"
-                            ],
-                            "404" => [
-                                "description" => "Not Found"
-                            ],
-                            "500" => [
-                                "description" => "Internal Server Error"
-                            ],
-                        ]
-                    ]
-                ]
             ],
             'components' => [
                 'securitySchemes' => [
@@ -253,6 +154,12 @@ class OpenApiGenerator
 
             if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
                 $row['security'] = [['Authorization-Token' => []]];
+            }
+            if (!empty($route['requestParameters'])) {
+                $row['parameters'] = $route['requestParameters'];
+            }
+            if (!empty($route['requestBody'])) {
+                $row['requestBody'] = $route['requestBody'];
             }
 
             $result['paths'][$route['route']][$route['method']] = $row;
