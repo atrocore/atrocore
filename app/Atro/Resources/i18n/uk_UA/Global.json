@@ -419,7 +419,7 @@
     "fieldShouldBeInt": "{field} має бути дійсне ціле число",
     "fieldShouldBeDate": "{field} має бути дійсною датою",
     "fieldShouldBeDatetime": "{field} має бути дійсною датою/часом",
-    "streamPostInfo": "Тип <strong>@username</strong> для згадки користувачів у пошті. </code>```\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~~<del>deleted text</del>~~ \n> blockquote\n[link text](url)",
+    "streamPostInfo": "Вкажіть <strong>@username</strong> для згадки користувачів у пошті.",
     "massFollowResult": "{count} записів зараз відстежуються",
     "massUnfollowResult": "{count} записів зараз не відстежуються",
     "massFollowResultSingle": "{count} запис зараз відстежується",

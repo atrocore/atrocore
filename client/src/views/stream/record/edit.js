@@ -103,19 +103,6 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.seed = this.model.clone();
 
             if (this.options.interactiveMode) {
-                this.events['focus textarea[name="post"]'] = function (e) {
-                    this.enablePostingMode();
-                };
-                this.events['keypress textarea[name="post"]'] = function (e) {
-                    if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
-                        this.post();
-                    } else if (e.keyCode == 9) {
-                        $text = $(e.currentTarget);
-                        if ($text.val() == '') {
-                            this.disablePostingMode();
-                        }
-                    }
-                };
                 this.events['click button.post'] = function (e) {
                     this.post();
                 };
@@ -137,12 +124,15 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             }
 
             this.createField('targetType', 'views/fields/enum', {
-                options: optionList
+                options: optionList,
+                defs: {
+                    name: 'targetType',
+                },
             });
 
             this.createField('users', 'views/fields/users', {});
             this.createField('teams', 'views/fields/teams', {});
-            this.createField('post', 'views/note/fields/post', {required: true, rows: 1});
+            this.createField('post', 'views/note/fields/post', {required: true, minHeight: 40, maxHeight: 250});
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
 
             this.listenTo(this.model, 'change', function () {
@@ -157,8 +147,6 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.$el.find('.post-control').addClass('hidden');
             this.setConfirmLeaveOut(false);
             $('body').off('click.stream-create-post');
-
-            this.getFieldView('post').$element.prop('rows', 1);
         },
 
         enablePostingMode: function () {
@@ -183,13 +171,18 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.$post = this.$el.find('button.post');
 
             var postView = this.getFieldView('post');
-            if (postView) {
-                this.listenTo(postView, 'add-files', function (files) {
+            if (postView && this.options.interactiveMode) {
+                postView.on('focus', (editor, e) => {
                     this.enablePostingMode();
-                    var attachmentsView = this.getFieldView('attachments');
-                    if (!attachmentsView) return;
-                    attachmentsView.uploadFiles(files);
-                }, this);
+                });
+
+                postView.on('editor:keypress', (editor, e) => {
+                    if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                        this.post();
+                    } else if (e.keyCode === 9 && !this.seed.get('post')) {
+                        this.disablePostingMode();
+                    }
+                });
             }
         },
 
@@ -203,12 +196,17 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
         },
 
         postIsFilled: function () {
-            const postValue = this.model.get('post');
+            const postValue = this.model.get('post') ?? '';
 
             return !!postValue && postValue.trim().length;
         },
 
         post: function () {
+            if (!this.postIsFilled() && (this.model.get('attachmentsIds') || []).length === 0) {
+                this.notify('Post cannot be empty', 'error');
+                return;
+            }
+
             this.save();
         },
 
@@ -226,7 +224,6 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
                 this.disablePostingMode();
                 this.$post.removeClass('disabled');
-                this.getFieldView('post').$element.prop('rows', 1);
             }
         },
 

@@ -24360,3 +24360,39 @@ span[data-img-src]::after {
 .CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
   background: rgba(255, 0, 0, .15)
 }
+
+.CodeMirror-wrap.preview-enabled .editor-preview-full.editor-preview {
+  position: relative;
+  margin: -10px;
+  width: auto;
+}
+
+.textcomplete-dropdown {
+  border: 1px solid #ddd;
+  background-color: white;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.textcomplete-dropdown li {
+  margin: 0;
+}
+
+.textcomplete-footer,
+.textcomplete-item {
+  border-top: 1px solid #ddd;
+}
+
+.textcomplete-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.textcomplete-item:hover {
+  background-color: #eee;
+}
+
+.textcomplete-item.active {
+  background-color: #ddd;
+}
