@@ -234,7 +234,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                 });
 
                 this.editor.codemirror.on('keypress', (cm, e) => {
-                    this.trigger('keypress', cm, e);
+                    this.trigger('editor:keypress', cm, e);
                 });
 
                 this.on('editor:previewToggled', editor => {
