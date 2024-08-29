@@ -257,7 +257,7 @@ class V1Dot10Dot50 extends Base
 {%  set shouldShowInLine = updateData['fields']|length == 1 and not updateData['diff'] %}
 
 <div class=\"stream-head-container\">
-    <div class=\"stream-head-text-container\">
+    <div>
         {% if  shouldShowInLine %}
             {% for field in  updateData['fields'] %}
                 <span class=\"text-muted message\">{{ _self.getMessage(_context) }} <code>{{_self.translateField(field, _context)}}</code> {{translate('from', language, 'streamMessages', 'Global')}}&nbsp;<span class=\"was\">{{_self.getValue(field, 'was',_context)}}</span>&nbsp;{{translate('to', language, 'streamMessages')}} <span class=\"became\">{{_self.getValue(field, 'became', _context)}}</span></span>
@@ -412,7 +412,7 @@ class V1Dot10Dot50 extends Base
 {%  set shouldShowInLine = updateData['fields']|length == 1 and not updateData['diff'] %}
 
 <div class=\"stream-head-container\">
-    <div class=\"stream-head-text-container\">
+    <div >
         {% if  shouldShowInLine %}
             {% for field in  updateData['fields'] %}
                 <span class=\"text-muted message\">{{ _self.getMessage(_context) }} <code>{{_self.translateField(field, _context)}}</code> {{translate('from', language, 'streamMessages', 'Global')}}&nbsp;<span class=\"was\">{{_self.getValue(field, 'was',_context)}}</span>&nbsp;{{translate('to', language, 'streamMessages')}} <span class=\"became\">{{_self.getValue(field, 'became', _context)}}</span></span>
@@ -567,7 +567,7 @@ class V1Dot10Dot50 extends Base
 {%  set shouldShowInLine = updateData['fields']|length == 1 and not updateData['diff'] %}
 
 <div class=\"stream-head-container\">
-    <div class=\"stream-head-text-container\">
+    <div>
         {% if  shouldShowInLine %}
             {% for field in  updateData['fields'] %}
                 <span class=\"text-muted message\">{{ _self.getMessage(_context) }} <code>{{_self.translateField(field, _context)}}</code> {{translate('from', language, 'streamMessages', 'Global')}}&nbsp;<span class=\"was\">{{_self.getValue(field, 'was',_context)}}</span>&nbsp;{{translate('to', language, 'streamMessages')}} <span class=\"became\">{{_self.getValue(field, 'became', _context)}}</span></span>
