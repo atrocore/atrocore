@@ -16,7 +16,6 @@ namespace Atro\Core;
 use Espo\Core\ControllerManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 
 class OpenApiGenerator
