@@ -55,6 +55,60 @@
     }
   },
   {
+    "route": "/App/user",
+    "method": "get",
+    "params": {
+      "controller": "App",
+      "action": "user"
+    },
+    "description": "Generate authorization token and return authorized user data.",
+    "security": [
+      {
+        "basicAuth": []
+      }
+    ],
+    "requestParameters": [
+      {
+        "name": "Authorization-Token-Only",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "boolean",
+          "example": "true"
+        }
+      },
+      {
+        "name": "Authorization-Token-Lifetime",
+        "in": "header",
+        "required": false,
+        "description": "Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
+        "schema": {
+          "type": "integer",
+          "example": "0"
+        }
+      },
+      {
+        "name": "Authorization-Token-Idletime",
+        "in": "header",
+        "required": false,
+        "description": "Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
+        "schema": {
+          "type": "integer",
+          "example": "0"
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "authorizationToken": {
+          "type": "string",
+          "example": "YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk="
+        }
+      }
+    }
+  },
+  {
     "route": "/MassActions/action/upsert",
     "method": "post",
     "params": {
@@ -244,14 +298,6 @@
       "controller": "Dashlet",
       "action": "GetDashlet",
       "dashletName": ":dashletName"
-    }
-  },
-  {
-    "route": "/App/user",
-    "method": "get",
-    "params": {
-      "controller": "App",
-      "action": "user"
     }
   },
   {
