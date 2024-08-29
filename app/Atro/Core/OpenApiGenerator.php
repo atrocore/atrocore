@@ -79,6 +79,9 @@ class OpenApiGenerator
             if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
                 $row['security'] = [['Authorization-Token' => []]];
             }
+            if (!empty($route['security'])) {
+                $row['security'] = $route['security'];
+            }
             if (!empty($route['requestParameters'])) {
                 $row['parameters'] = $route['requestParameters'];
             }
