@@ -243,13 +243,19 @@ class OpenApiGenerator
                 continue;
             }
 
-            $result['paths'][$route['route']][$route['method']] = [
+            $row = [
                 'tags'        => [$route['params']['controller']],
                 'summary'     => $route['summary'] ?? $route['description'],
                 'description' => $route['description'],
                 'operationId' => md5("{$route['route']}_{$route['method']}"),
                 "responses"   => self::prepareResponses($route['response'])
             ];
+
+            if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
+                $row['security'] = [['Authorization-Token' => []]];
+            }
+
+            $result['paths'][$route['route']][$route['method']] = $row;
         }
 
         /** @var Metadata $metadata */
