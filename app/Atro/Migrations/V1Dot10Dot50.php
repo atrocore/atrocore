@@ -196,7 +196,9 @@ class V1Dot10Dot50 extends Base
         {%  set optionColors = {} %}
         {% for option in fieldDefs['options'] %}
             {%  set color = fieldDefs['optionColors'][loop.index0] %}
-            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+           {% if color %}
+                {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% endif %}
         {% endfor %}
         {% if optionColors[value] %}
             <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
@@ -207,7 +209,9 @@ class V1Dot10Dot50 extends Base
         {%  set optionColors = {} %}
         {% for option in fieldDefs['options'] %}
             {%  set color = fieldDefs['optionColors'][loop.index0] %}
-            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% if color %}
+                {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% endif %}
         {% endfor %}
         {% for v in value %}
             {% if optionColors[v] %}
@@ -216,6 +220,12 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
+    {% elseif updateData['fieldTypes'][field] == 'file' %}
+        <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>   
+    {% elseif updateData['fieldTypes'][field] == 'link' %}
+        <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
+    {% elseif updateData['fieldTypes'][field] == 'array' %}
+        {{ value|join(', ') }}
     {% else %}
         <code>{{ value }}</code>
     {% endif %}
@@ -229,17 +239,18 @@ class V1Dot10Dot50 extends Base
     {% set entityName = context.entityName %}
     {% set entityUrl = context.entityUrl %}
     {% set actionUser = context.actionUser %}
+    {% set notifyUser = context.notifyUser %}
     {% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
     {% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
     {% set assignedUserId =  entity.assignedUserId %}
 
     {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
         {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
-        {{actionUser.name}} has assigned to you  {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.
+        {{ actionUser.name ?? actionUser.userName }} has assigned to you  {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.
     {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
-        {{actionUser.name}} has assigned to you {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a> and updated
+        {{ actionUser.name ?? actionUser.userName }} has assigned to you {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a> and updated
     {% else %}
-        {{actionUser.name}}  in {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>  updated
+        {{ actionUser.name ?? actionUser.userName }}  in {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>  updated
     {% endif %}
 {% endmacro %}
 
@@ -340,7 +351,9 @@ class V1Dot10Dot50 extends Base
         {%  set optionColors = {} %}
         {% for option in fieldDefs['options'] %}
             {%  set color = fieldDefs['optionColors'][loop.index0] %}
-            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+           {% if color %}
+                {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% endif %}
         {% endfor %}
         {% if optionColors[value] %}
             <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
@@ -351,7 +364,9 @@ class V1Dot10Dot50 extends Base
         {%  set optionColors = {} %}
         {% for option in fieldDefs['options'] %}
             {%  set color = fieldDefs['optionColors'][loop.index0] %}
-            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+           {% if color %}
+                {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% endif %}
         {% endfor %}
         {% for v in value %}
             {% if optionColors[v] %}
@@ -360,6 +375,12 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
+     {% elseif updateData['fieldTypes'][field] == 'file' %}
+        <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
+    {% elseif updateData['fieldTypes'][field] == 'link' %}
+        <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
+     {% elseif updateData['fieldTypes'][field] == 'array' %}
+        {{ value|join(', ') }}
     {% else %}
         <code>{{ value }}</code>
     {% endif %}
@@ -373,17 +394,18 @@ class V1Dot10Dot50 extends Base
     {% set entityName = context.entityName %}
     {% set entityUrl = context.entityUrl %}
     {% set actionUser = context.actionUser %}
+    {% set notifyUser = context.notifyUser %}
     {% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
     {% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
     {% set assignedUserId =  entity.assignedUserId %}
 
     {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
         {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
-        <p>{{actionUser.name}} hat Ihnen {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>  zugewiesen
+        <p>{{ actionUser.name ?? actionUser.userName }} hat Ihnen {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.</p>  zugewiesen
     {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
-        <p>{{actionUser.name}} hat Ihnen zugewiesen und eine Aktualisierung an {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a> vorgenommen.</p>
+        <p>{{ actionUser.name ?? actionUser.userName }} hat Ihnen zugewiesen und eine Aktualisierung an {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a> vorgenommen.</p>
     {% else %}
-        <p>{{actionUser.name}} hat Update auf {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>. vorgenommen. </p>
+        <p>{{ actionUser.name ?? actionUser.userName }} hat Update auf {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>. vorgenommen. </p>
     {% endif %}
 {% endmacro %}
 
@@ -484,7 +506,9 @@ class V1Dot10Dot50 extends Base
         {%  set optionColors = {} %}
         {% for option in fieldDefs['options'] %}
             {%  set color = fieldDefs['optionColors'][loop.index0] %}
-            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% if color %}
+                {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% endif %}
         {% endfor %}
         {% if optionColors[value] %}
             <span class=\"label colored-multi-enum\" style=\"color:{{ optionColors[value]|generateFontColor }}; background-color:{{ optionColors[value] }};font-size:100%;font-weight:normal; border: solid 1px {{ optionColors[value]|generateBorderColor}}\">{{ translateOption(value, language, field, entityType) }}</span>
@@ -495,7 +519,9 @@ class V1Dot10Dot50 extends Base
         {%  set optionColors = {} %}
         {% for option in fieldDefs['options'] %}
             {%  set color = fieldDefs['optionColors'][loop.index0] %}
-            {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% if color %}
+                {% set optionColors = optionColors|merge({(option): (color and '#' in color) ? color : '#'~color }) %}
+            {% endif %}
         {% endfor %}
         {% for v in value %}
             {% if optionColors[v] %}
@@ -504,6 +530,12 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
+     {% elseif updateData['fieldTypes'][field] == 'file' %}
+        <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
+    {% elseif updateData['fieldTypes'][field] == 'link' %}
+        <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
+     {% elseif updateData['fieldTypes'][field] == 'array' %}
+        {{ value|join(', ') }}
     {% else %}
         <code>{{ value }}</code>
     {% endif %}
@@ -517,17 +549,18 @@ class V1Dot10Dot50 extends Base
     {% set entityName = context.entityName %}
     {% set entityUrl = context.entityUrl %}
     {% set actionUser = context.actionUser %}
+    {% set notifyUser = context.notifyUser %}
     {% set  hasAssignment = 'assignedUser' in updateData['fields']  %}
     {% set isOnly = updateData['fields']|length == 1 or ('modifiedBy' in updateData['fields'] and  updateData['fields']|length == 2) %}
     {% set assignedUserId =  entity.assignedUserId %}
 
     {% if hasAssignment  and isOnly and assignedUserId and notifyUser.id == assignedUserId  %}
         {% set assignedUserName =  updateData['attributes']['became']['assignedUserName'] %}
-        <p>{{actionUser.name}} призначив вам {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+        <p>{{ actionUser.name ?? actionUser.userName }} призначив вам {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.</p>
     {% elseif  hasAssignment  and notifyUser.id == assignedUserId %}
-        <p>c{{actionUser.name}} призначив вам і зробив оновлення на {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+        <p>c{{ actionUser.name ?? actionUser.userName }} призначив вам і зробив оновлення на {{entityName}} <a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.</p>
     {% else %}
-        <p>{{actionUser.name}} зробив оновлення на {{entityName}}<a href=\"{{entityUrl}}\"><strong>{{entity.name}}</strong></a>.</p>
+        <p>{{ actionUser.name ?? actionUser.userName }} зробив оновлення на {{entityName}}<a href=\"{{entityUrl}}\"><strong>{{entity.name ?? translate('None', language)}}</strong></a>.</p>
     {% endif %}
 {% endmacro %}
 
@@ -1057,17 +1090,17 @@ class V1Dot10Dot50 extends Base
                         'name' => 'Note Creation',
                         'data' => [
                             'field' => [
-                                "body"     => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a>. {% endif %}</p>
+                                "body"     => '<p>{{ actionUser.name ?? actionUser.userName }} posted  {% if parent %}  on {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a>. {% endif %}</p>
 <p>{{entity.data.post}}</p>
 {% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyDeDe" => '<p>{{actionUser.name}} auf{% if parent %}  {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a> gepostet. {% endif %}</p>
+                                "bodyDeDe" => '<p>{{ actionUser.name ?? actionUser.userName }} auf{% if parent %}  {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a> gepostet. {% endif %}</p>
 <p>{{entity.data.post}}</p>
 {% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyUkUa" => '<p>{{actionUser.name}} опублікував {% if parent %} на {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a>. {% endif %}</p> <p>
+                                "bodyUkUa" => '<p>{{ actionUser.name ?? actionUser.userName }} опублікував {% if parent %} на {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a>. {% endif %}</p> <p>
 <p>{{entity.data.post}}</p>
 {% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">Вигляд</a></p>
@@ -1083,21 +1116,21 @@ class V1Dot10Dot50 extends Base
                                 "subject"     => 'Post: [{{ parentName }}] {{parent.name | raw}}',
                                 "subjectDeDe" => 'Post: [{{ parentName }}] {{parent.name | raw}}',
                                 "subjectUkUa" => 'Post: [{{ parentName }}] {{parent.name | raw}}',
-                                "body"        => '<p>{{actionUser.name}} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
+                                "body"        => '<p>{{ actionUser.name ?? actionUser.userName }} posted  {% if parent %}  on {{parentName}} {{parent.name}}. {% endif %}</p>
 <p>{{entity.data.post | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyDeDe"    => '<p>{{actionUser.name}} auf{% if parent %}  {{parentName}} {{parent.name}} gepostet. {% endif %}</p>
+                                "bodyDeDe"    => '<p>{{ actionUser.name ?? actionUser.userName }} auf{% if parent %}  {{parentName}} {{parent.name}} gepostet. {% endif %}</p>
 <p>{{entity.data.post  | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">View</a></p>
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyUkUa"    => '<p>{{actionUser.name}} опублікував {% if parent %} на {{parentName}} {{parent.name}}. {% endif %}</p> <p>
+                                "bodyUkUa"    => '<p>{{ actionUser.name ?? actionUser.userName }} опублікував {% if parent %} на {{parentName}} {{parent.name}}. {% endif %}</p> <p>
 <p>{{entity.data.post | raw}}</p>
 {% if parent %}
 <p><a href="{{parentUrl}}">Вигляд</a></p>
@@ -1136,7 +1169,7 @@ class V1Dot10Dot50 extends Base
                         "name" => 'Mention',
                         "data" => [
                             "field" => [
-                                "body"     => '<p>You were mentioned in post by {{actionUser.name}}.</p>
+                                "body"     => '<p>You were mentioned in post by {{ actionUser.name ?? actionUser.userName }}.</p>
 {% if parent %}
 <p>Related to: {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a></p>
 {% endif  %}
@@ -1144,7 +1177,7 @@ class V1Dot10Dot50 extends Base
 {% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
-                                "bodyDeDe" => '<p>Sie wurden in einem Beitrag von {{actionUser.name}} erwähnt.</p>
+                                "bodyDeDe" => '<p>Sie wurden in einem Beitrag von {{ actionUser.name ?? actionUser.userName }} erwähnt.</p>
 {% if parent %}
 <p>Verwandt mit:  {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a></p>
 {% endif  %}
@@ -1152,7 +1185,7 @@ class V1Dot10Dot50 extends Base
 {% if not parent %}
 <p><a href="{{siteUrl}}/#Stream">Siehe</a></p>
 {% endif %}',
-                                "bodyUkUa" => '<p>Вас було згадано у дописі користувача {{actionUser.name}}.</p>{% if parent %}
+                                "bodyUkUa" => '<p>Вас було згадано у дописі користувача {{ actionUser.name ?? actionUser.userName }}.</p>{% if parent %}
 <p>Пов\'язано з:  {{parentName}} <a href="{{parentUrl}}">{{parent.name}}</a></p>
 {% endif  %}
 <p>{{entity.data.post}}</p>
@@ -1170,7 +1203,7 @@ class V1Dot10Dot50 extends Base
                                 "subject"     => "You were mentioned",
                                 "subjectDeDe" => "Sie wurden erwähnt",
                                 "subjectUkUa" => "Тебе згадували",
-                                "body"        => '<p>You were mentioned in post by {{actionUser.name}}.</p>
+                                "body"        => '<p>You were mentioned in post by {{ actionUser.name ?? actionUser.userName }}.</p>
 {% if parent %}
 <p>Related to: {{parentName}}</p>
 {% endif  %}
@@ -1181,7 +1214,7 @@ class V1Dot10Dot50 extends Base
 <p><a href="{{siteUrl}}/#Stream">View</a></p>
 {% endif %}',
                                 "bodyDeDe"    => '
- <p>Sie wurden in einem Beitrag von {{actionUser.name}} erwähnt.</p>
+ <p>Sie wurden in einem Beitrag von {{ actionUser.name ?? actionUser.userName }} erwähnt.</p>
 {% if parent %}
 <p>Verwandt mit:  {{parentName}}</p>
 {% endif  %}
@@ -1191,7 +1224,7 @@ class V1Dot10Dot50 extends Base
 {% else %}
 <p><a href="{{siteUrl}}/#Stream">Siehe</a></p>
 {% endif %}',
-                                "bodyUkUa"    => '<p>Вас було згадано у дописі користувача {{actionUser.name}}.</p>{% if parent %}
+                                "bodyUkUa"    => '<p>Вас було згадано у дописі користувача {{ actionUser.name ?? actionUser.userName }}.</p>{% if parent %}
 <p>Пов\'язано з:  {{parentName}}</p>
 {% endif  %}
 <p>{{entity.data.post | raw}}</p>
@@ -1234,28 +1267,28 @@ class V1Dot10Dot50 extends Base
                         "data" => [
                             "field" => [
                                 "body"     => '{% if isAssignment %}
-<p>{{actionUser.name}} has assigned {{entityName}} to  {% if notifyUser.id == assignedUser.id %} you. {% else %}  {{assignedUser.name}}. {% endif %} </p>
+<p>{{ actionUser.name ?? actionUser.userName }} has assigned {{entityName}} to  {% if notifyUser.id == assignedUser.id %} you. {% else %}  {{assignedUser.name}}. {% endif %} </p>
 <p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% else %}
-<p>{{actionUser.name}} has set {% if notifyUser.id == ownerUser.id %} you {% else %}  {{ownerUser.name}} {% endif %} as owner for {{entityName}}.</p>
+<p>{{ actionUser.name ?? actionUser.userName }} has set {% if notifyUser.id == ownerUser.id %} you {% else %}  {{ownerUser.name}} {% endif %} as owner for {{entityName}}.</p>
 <p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% endif %}
 ',
                                 "bodyDeDe" => '
 {% if  isAssignment %}
-<p>{{actionUser.name}} hat Ihnen {{entityName}}   {% if notifyUser.id == assignedUser.id %} zugewiesen. {% else %}  {{assignedUser.name}}. {% endif %} </p>
+<p>{{ actionUser.name ?? actionUser.userName }} hat Ihnen {{entityName}}   {% if notifyUser.id == assignedUser.id %} zugewiesen. {% else %}  {{assignedUser.name}}. {% endif %} </p>
 <p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% else %}
-<p>{{actionUser.name}} hat {% if notifyUser.id == ownerUser.id %} Sie {% else %}  {{ownerUser.name}} {% endif %} als Eigentümer für {{entityName}}.
+<p>{{ actionUser.name ?? actionUser.userName }} hat {% if notifyUser.id == ownerUser.id %} Sie {% else %}  {{ownerUser.name}} {% endif %} als Eigentümer für {{entityName}}.
 <p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% endif %} 
 ',
                                 "bodyUkUa" => '
 {% if isAssignment %}
-<p>{{actionUser.name}} призначив {% if notifyUser.id == assignedUser.id %} вам {% else %} {{assignedUser.name}}. {% endif %} {{entityName}}.</p>
+<p>{{ actionUser.name ?? actionUser.userName }} призначив {% if notifyUser.id == assignedUser.id %} вам {% else %} {{assignedUser.name}}. {% endif %} {{entityName}}.</p>
 <p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% else %}
-<p>{{actionUser.name}} встановив {% if notifyUser.id == ownerUser.id %} вам {% else %}  {{ownerUser.name}} {% endif  %} як власника для {{entityName}}.</p>
+<p>{{ actionUser.name ?? actionUser.userName }} встановив {% if notifyUser.id == ownerUser.id %} вам {% else %}  {{ownerUser.name}} {% endif  %} як власника для {{entityName}}.</p>
 <p><a href="{{entityUrl}}"><strong>{{entity.name}}</strong></a></p>
 {% endif %}
                               '
@@ -1284,32 +1317,32 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
 Позначено як власник: [{{entityType}}] {{entity.name | raw}}
 {% endif %}',
                                 "body"        => '{% if isAssignment %}
-<p>{{actionUser.name}} has assigned {{entityName}} to  {% if notifyUser.id == assignedUser.id %} you. {% else %}  {{assignedUser.name}}. {% endif %} </p>
+<p>{{ actionUser.name ?? actionUser.userName }} has assigned {{entityName}} to  {% if notifyUser.id == assignedUser.id %} you. {% else %}  {{assignedUser.name}}. {% endif %} </p>
 <p><strong>{{entity.name}}</strong></p>
 <p><a href="{{entityUrl}}">View</a></p>
 {% else %}
-<p>{{actionUser.name}} has set {% if notifyUser.id == ownerUser.id %} you {% else %}  {{ownerUser.name}} {% endif %} as owner for {{entityName}}.</p>
+<p>{{ actionUser.name ?? actionUser.userName }} has set {% if notifyUser.id == ownerUser.id %} you {% else %}  {{ownerUser.name}} {% endif %} as owner for {{entityName}}.</p>
 <p><strong>{{entity.name}}</strong></p>
 <p><a href="{{entityUrl}}">View</a></p>
 {% endif %}
 ',
                                 "bodyDeDe"    => '
 {% if isAssignment %}
-<p>{{actionUser.name}} hat Ihnen {{entityName}}   {% if notifyUser.id == assignedUser.id %} zugewiesen. {% else %}  {{assignedUser.name}}. {% endif %} </p>
+<p>{{ actionUser.name ?? actionUser.userName }} hat Ihnen {{entityName}}   {% if notifyUser.id == assignedUser.id %} zugewiesen. {% else %}  {{assignedUser.name}}. {% endif %} </p>
 <p><strong>{{entity.name}}</strong></p>
 <p><a href="{{entityUrl}}">Siehe</a></p>
 {% else %}
-<p>{{actionUser.name}} hat {% if notifyUser.id == ownerUser.id %} Sie {% else %}  {{ownerUser.name}} {% endif %} als Eigentümer für {{entityName}}.</p><p><strong>{{entity.name}}</strong></p>
+<p>{{ actionUser.name ?? actionUser.userName }} hat {% if notifyUser.id == ownerUser.id %} Sie {% else %}  {{ownerUser.name}} {% endif %} als Eigentümer für {{entityName}}.</p><p><strong>{{entity.name}}</strong></p>
 <p><a href="{{entityUrl}}">Siehe</a></p>
 {% endif %} 
 ',
                                 "bodyUkUa"    => '
 {% if isAssignment %}
-<p>{{actionUser.name}} призначив {% if notifyUser.id == assignedUser.id %} вам {% else %} {{assignedUser.name}}. {% endif %} {{entityName}}.</p>
+<p>{{ actionUser.name ?? actionUser.userName }} призначив {% if notifyUser.id == assignedUser.id %} вам {% else %} {{assignedUser.name}}. {% endif %} {{entityName}}.</p>
 <p><strong>{{entity.name}}</strong></p>
 <p><a href="{{entityUrl}}">Вигляд</a></p>
 {% else %}
-<p>{{actionUser.name}} встановив {% if notifyUser.id == ownerUser.id %} вам {% else %}  {{ownerUser.name}} {% endif  %} як власника для {{entityName}}.</p>
+<p>{{ actionUser.name ?? actionUser.userName }} встановив {% if notifyUser.id == ownerUser.id %} вам {% else %}  {{ownerUser.name}} {% endif  %} як власника для {{entityName}}.</p>
 <p><strong>{{entity.name}}</strong></p>
 <p><a href="{{entityUrl}}">Вигляд</a></p>
 {% endif %}
