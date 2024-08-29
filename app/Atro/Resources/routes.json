@@ -22,27 +22,34 @@
           "type": "object",
           "properties": {
             "date": {
-              "type": "string"
+              "type": "string",
+              "example": "2024-08-29 08:52:29.830592"
             },
             "timezone_type": {
-              "type": "integer"
+              "type": "integer",
+              "example": 3
             },
             "timezone": {
-              "type": "string"
+              "type": "string",
+              "example": "UTC"
             }
           }
         },
         "imageName": {
-          "type": "string"
+          "type": "string",
+          "example": "pexels-pixabay-260689.jpg"
         },
         "imagePath": {
-          "type": "string"
+          "type": "string",
+          "example": "client/img/background/pexels-pixabay-260689.jpg"
         },
         "authorName": {
-          "type": "string"
+          "type": "string",
+          "example": "Pixabay"
         },
         "authorLink": {
-          "type": "string"
+          "type": "string",
+          "example": "https://www.pexels.com/@pixabay"
         }
       }
     }
