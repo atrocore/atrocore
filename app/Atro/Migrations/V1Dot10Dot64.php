@@ -29,6 +29,5 @@ class V1Dot10Dot64 extends Base
 
     public function down(): void
     {
-        $this->up();
     }
 }
