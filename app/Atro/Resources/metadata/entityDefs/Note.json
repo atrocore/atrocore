@@ -1,8 +1,10 @@
 {
     "fields": {
         "post": {
-            "type": "text",
-            "notStorable": true
+            "type": "markdown",
+            "notStorable": true,
+            "minHeight": 50,
+            "maxHeight": 300
         },
         "fieldDefs": {
             "type": "jsonObject",

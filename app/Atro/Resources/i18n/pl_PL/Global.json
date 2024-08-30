@@ -386,7 +386,7 @@
     "massRemoveResultSingle":"Usunięto {count} rekord",
     "noRecordsRemoved":"Nie usunięto żadnych rekordów",
     "clickToRefresh":"Kliknij, aby odświeżyć",
-    "streamPostInfo":"Wpisz <strong>@nazwa_użytkownika</strong>, aby wspomnieć użytkowników w poście.\n\nDostępna składnia Markdown:\n`<kod>kod</kod>`\n```<kod>wielowierszowy kod</kod>```\n**<silny>tekst pogrubiony</silny>**\n*<em>tekst pochylony</em>*\n~~<del>skreślony tekst</del>~~\n> blok cytatu\n[tekst linku](url)",
+    "streamPostInfo":"Wpisz <strong>@nazwa_użytkownika</strong>, aby wspomnieć użytkowników w poście.",
     "writeYourCommentHere":"Napisz swój komentarz tutaj",
     "writeMessageToUser":"Napisz wiadomość do {user}",
     "writeMessageToSelf":"Napisz wiadomość na swoim strumieniu",

@@ -354,7 +354,7 @@
     "massRestoreResultSingle": "{count} Datensatz ist jetzt wiederhergestellt",
     "massRestoreZeroResult": "Es wurde nichts wiederhergestellt",
     "posting": "postiere...",
-    "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Post zu nennen.\\nVerfügbare Syntax:`<code>code</code>````<code>multiline code</code>```**<strong>strong text</strong>***<em>emphasized text</em>*~~<del>deleted text</del>~~> blockquote[link text](url)",
+    "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Post zu nennen.",
     "writeMessageToSelf": "Nachricht bei eigenen Aktivitäten erfassen",
     "writeYourCommentHere": "Notiz hier erfassen",
     "massUpdateResult": "{count} Einträge werden aktualisiert",

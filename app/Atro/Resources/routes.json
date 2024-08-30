@@ -5,6 +5,60 @@
     "params": "REST API"
   },
   {
+    "route": "/App/user",
+    "method": "get",
+    "params": {
+      "controller": "App",
+      "action": "user"
+    },
+    "description": "Generate authorization token and return authorized user data.",
+    "security": [
+      {
+        "basicAuth": []
+      }
+    ],
+    "requestParameters": [
+      {
+        "name": "Authorization-Token-Only",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "boolean",
+          "example": "true"
+        }
+      },
+      {
+        "name": "Authorization-Token-Lifetime",
+        "in": "header",
+        "required": false,
+        "description": "Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
+        "schema": {
+          "type": "integer",
+          "example": "0"
+        }
+      },
+      {
+        "name": "Authorization-Token-Idletime",
+        "in": "header",
+        "required": false,
+        "description": "Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
+        "schema": {
+          "type": "integer",
+          "example": "0"
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "authorizationToken": {
+          "type": "string",
+          "example": "YWRtaW46NGQ1NGU5ZTEzYjc0NGQzOGM5ODM2NzIyNDU2YTZmNjk="
+        }
+      }
+    }
+  },
+  {
     "route": "/background",
     "method": "get",
     "params": {
@@ -13,6 +67,125 @@
     },
     "conditions": {
       "auth": false
+    },
+    "description": "Get background data.",
+    "response": {
+      "type": "object",
+      "properties": {
+        "till": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "example": "2024-08-29 08:52:29.830592"
+            },
+            "timezone_type": {
+              "type": "integer",
+              "example": 3
+            },
+            "timezone": {
+              "type": "string",
+              "example": "UTC"
+            }
+          }
+        },
+        "imageName": {
+          "type": "string",
+          "example": "pexels-pixabay-260689.jpg"
+        },
+        "imagePath": {
+          "type": "string",
+          "example": "client/img/background/pexels-pixabay-260689.jpg"
+        },
+        "authorName": {
+          "type": "string",
+          "example": "Pixabay"
+        },
+        "authorLink": {
+          "type": "string",
+          "example": "https://www.pexels.com/@pixabay"
+        }
+      }
+    }
+  },
+  {
+    "route": "/MassActions/action/upsert",
+    "method": "post",
+    "params": {
+      "controller": "MassActions",
+      "action": "upsert"
+    },
+    "summary": "Bulk Create and Bulk Update.",
+    "description": "The system will try to find existing entities based on the identifier or unique fields. If an entity is found, it will be updated, otherwise it will be created by the system.",
+    "requestParameters": [
+      {
+        "name": "Use-Queue",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "example": "false"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entity": {
+                  "type": "string",
+                  "example": "Product"
+                },
+                "payload": {
+                  "type": "object",
+                  "example": {
+                    "id": "yellow_bike_1",
+                    "name": "Yellow Bike"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "Created",
+            "Updated",
+            "CreatFailed"
+          ],
+          "example": "Created"
+        },
+        "stored": {
+          "type": "boolean",
+          "required": true,
+          "example": true
+        },
+        "message": {
+          "type": "string",
+          "required": false,
+          "example": "Code: 400. Message: Validation failed. 'Name / de_DE' is required."
+        },
+        "entity": {
+          "type": "object",
+          "required": false,
+          "example": {
+            "id": "yellow_bike_1",
+            "name": "Yellow Bike"
+          }
+        }
+      }
     }
   },
   {
@@ -125,14 +298,6 @@
       "controller": "Dashlet",
       "action": "GetDashlet",
       "dashletName": ":dashletName"
-    }
-  },
-  {
-    "route": "/App/user",
-    "method": "get",
-    "params": {
-      "controller": "App",
-      "action": "user"
     }
   },
   {
