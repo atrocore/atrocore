@@ -9,32 +9,35 @@
 
     export let params: Params;
     export let viewType: string = 'detail';
-    const dataAttributeList: string[] = ['id', 'name', 'style', 'sticked'];
-    const dataAttributesDefs: any = {
-        style: {
-            type: 'enum',
-            options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
-            translation: 'LayoutManager.options.style'
-        },
-        sticked: {
-            type: 'bool'
-        },
-        name: {
-            readOnly: true
-        }
-    };
+
+    if (!params.dataAttributeList) {
+        params.dataAttributeList = ['id', 'name', 'style', 'sticked'];
+    }
+    if (!params.dataAttributeDefs) {
+        params.dataAttributeDefs = {
+            style: {
+                type: 'enum',
+                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
+                translation: 'LayoutManager.options.style'
+            },
+            sticked: {
+                type: 'bool'
+            },
+            name: {
+                readOnly: true
+            }
+        };
+    }
 
     let rowsLayout: RowsLayout;
     let enabledFields: Field[] = [];
     let disabledFields: Field[] = [];
     let rowLayout: LayoutItem[] = [];
 
-    function loadLayout(): void {
-        Notifier.notify('Loading...')
+    function loadLayout(callback): void {
         LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
             readDataFromLayout(layout);
-            Notifier.notify(false)
-            if (params.afterRender) params.afterRender()
+            if(callback) callback()
         }, false);
     }
 
@@ -114,7 +117,5 @@
         {enabledFields}
         {disabledFields}
         {rowLayout}
-        {dataAttributeList}
-        {dataAttributesDefs}
         {loadLayout}
 />

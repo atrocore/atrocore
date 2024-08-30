@@ -12,8 +12,6 @@
     let sortableDisabled: Sortable;
 
     export let params: Params;
-    export let dataAttributeList: string[] = [];
-    export let dataAttributeDefs: any;
     export let enabledFields: Field[] = [];
     export let disabledFields: Field[] = [];
     export let rowLayout: LayoutItem[] = [];
@@ -47,7 +45,7 @@
         if (!listItem) return;
 
         const data: LayoutItem = {};
-        dataAttributeList.forEach(attr => {
+        params.dataAttributeList.forEach(attr => {
             data[attr] = listItem.dataset[attr] || null;
         });
         baseLayout.openEditDialog(data);
@@ -57,7 +55,7 @@
         const layout: LayoutItem[] = [];
         for (let el of layoutElement.querySelector('ul.enabled').children) {
             const o: LayoutItem = {} as LayoutItem;
-            dataAttributeList.forEach(attr => {
+            params.dataAttributeList.forEach(attr => {
                 const value = (el as HTMLElement).dataset[attr];
                 if (value) {
                     o[attr] = value;
@@ -86,7 +84,7 @@
 
     function getDataAttributeProps(item: LayoutItem): any {
         const dataAttributes = {};
-        dataAttributeList.forEach(attr => {
+        params.dataAttributeList.forEach(attr => {
             if (prop(item, attr) != null) {
                 dataAttributes[`data-${toDom(attr)}`] = prop(item, attr);
             }

@@ -8,20 +8,25 @@
     import {ModelFactory} from "../../../utils/ModelFactory";
 
     export let params: Params;
-    const dataAttributeList: string[] = ['id', 'name', 'style', 'hiddenPerDefault'];
-    const dataAttributesDefs: any = {
-        style: {
-            type: 'enum',
-            options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
-            translation: 'LayoutManager.options.style'
-        },
-        hiddenPerDefault: {
-            type: 'bool',
-        },
-        name: {
-            readOnly: true
-        }
-    };
+
+    if (!params.dataAttributeList) {
+        params.dataAttributeList = ['id', 'name', 'style', 'hiddenPerDefault'];
+    }
+    if (!params.dataAttributesDefs) {
+        params.dataAttributesDefs = {
+            style: {
+                type: 'enum',
+                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
+                translation: 'LayoutManager.options.style'
+            },
+            hiddenPerDefault: {
+                type: 'bool',
+            },
+            name: {
+                readOnly: true
+            }
+        };
+    }
 
 
     export let afterRender: any;
@@ -33,13 +38,11 @@
     let rowLayout: LayoutItem[] = [];
     let editable: boolean = true;
 
-    function loadLayout(): void {
-        Notifier.notify('Loading...')
+    function loadLayout(callback): void {
         ModelFactory.create(params.scope, function (model) {
             LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
                 readDataFromLayout(model, layout);
-                Notifier.notify(false)
-                if (afterRender) afterRender()
+                if (callback) callback()
             }, false);
         })
 
@@ -117,7 +120,5 @@
         {enabledFields}
         {disabledFields}
         {rowLayout}
-        {dataAttributeList}
-        {dataAttributesDefs}
         {loadLayout}
 />

@@ -31,7 +31,11 @@
     ];
 
     onMount(() => {
-        loadLayout();
+        Notifier.notify('Loading...')
+        loadLayout(() => {
+            Notifier.notify(false)
+            if (params.afterRender) params.afterRender()
+        });
     });
 
     export function save(): void {

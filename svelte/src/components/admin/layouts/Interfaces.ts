@@ -32,4 +32,6 @@ export interface Params {
     layoutProfileId: string;
     editable: boolean;
     layout: any;
+    dataAttributeList: string[];
+    dataAttributeDefs: any
 }

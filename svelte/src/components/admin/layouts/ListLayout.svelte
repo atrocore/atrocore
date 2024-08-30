@@ -9,35 +9,36 @@
 
     export let params: Params;
 
-    const dataAttributeList: string[] = ['id', 'name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'];
-    const dataAttributesDefs = {
-        link: {type: 'bool'},
-        width: {type: 'float'},
-        notSortable: {type: 'bool'},
-        align: {
-            type: 'enum',
-            options: ["left", "right"]
-        },
-        view: {
-            type: 'varchar',
-            readOnly: true
-        },
-        customLabel: {
-            type: 'varchar',
-            readOnly: true
-        },
-        widthPx: {
-            type: 'float'
-        },
-        name: {
-            type: 'varchar',
-            readOnly: true
-        }
-    };
+    if (!params.dataAttributeList) {
+        params.dataAttributeList = ['id', 'name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'];
+    }
+    if (!params.dataAttributeDefs) {
+        params.dataAttributesDefs = {
+            link: {type: 'bool'},
+            width: {type: 'float'},
+            notSortable: {type: 'bool'},
+            align: {
+                type: 'enum',
+                options: ["left", "right"]
+            },
+            view: {
+                type: 'varchar',
+                readOnly: true
+            },
+            customLabel: {
+                type: 'varchar',
+                readOnly: true
+            },
+            widthPx: {
+                type: 'float'
+            },
+            name: {
+                type: 'varchar',
+                readOnly: true
+            }
+        };
+    }
     export let layoutDisabledParameter: string = 'layoutListDisabled';
-
-
-    export let afterRender: any;
 
     let rowsLayout: RowsLayout;
     let enabledFields: Field[] = [];
@@ -47,13 +48,11 @@
     const ignoreList: string[] = [];
     const ignoreTypeList: string[] = [];
 
-    function loadLayout(): void {
+    function loadLayout(callback): void {
         ModelFactory.create(params.scope, (model) => {
-            Notifier.notify('Loading...')
             LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
                 readDataFromLayout(model, layout);
-                Notifier.notify(false)
-                if (afterRender) afterRender()
+                if (callback) callback()
             }, false);
         });
     }
@@ -62,7 +61,7 @@
         const allFields = Object.keys(model.defs.fields).filter(field =>
             checkFieldType(model.getFieldParam(field, 'type')) && isFieldEnabled(model, field)
         ).sort((v1, v2) =>
-            Language.translate(v1, 'fields', scope).localeCompare(Language.translate(v2, 'fields', scope))
+            Language.translate(v1, 'fields', params.scope).localeCompare(Language.translate(v2, 'fields', params.scope))
         );
 
         const enabledFieldsList: string[] = [];
@@ -70,7 +69,7 @@
         const duplicateLabelList: string[] = [];
 
         enabledFields = layout.map(item => {
-            const label = Language.translate(item.name, 'fields', scope);
+            const label = Language.translate(item.name, 'fields', params.scope);
             if (labelList.includes(label)) {
                 duplicateLabelList.push(label);
             }
@@ -80,13 +79,13 @@
         });
 
         disabledFields = allFields.filter(field => !enabledFieldsList.includes(field)).map(field => {
-            const label = Language.translate(field, 'fields', scope);
+            const label = Language.translate(field, 'fields', params.scope);
             if (labelList.includes(label)) {
                 duplicateLabelList.push(label);
             }
             labelList.push(label);
             const o: Field = {name: field, label};
-            const fieldType = Metadata.get(['entityDefs', scope, 'fields', field, 'type']);
+            const fieldType = Metadata.get(['entityDefs', params.scope, 'fields', field, 'type']);
             if (fieldType && Metadata.get(['fields', fieldType, 'notSortable'])) {
                 o.notSortable = true;
             }
@@ -103,7 +102,7 @@
 
         rowLayout = layout.map(item => ({
             ...item,
-            label: enabledFields.find(field => field.name === item.name)?.label || Language.translate(item.name, 'fields', scope)
+            label: enabledFields.find(field => field.name === item.name)?.label || Language.translate(item.name, 'fields', params.scope)
         }));
     }
 
@@ -129,6 +128,5 @@
         {disabledFields}
         {rowLayout}
         {editable}
-        {dataAttributeList}
         {loadLayout}
 />

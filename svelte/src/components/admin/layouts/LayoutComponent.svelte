@@ -14,15 +14,31 @@
     $: {
         switch (params.type) {
             case 'list':
-                layoutDisabledParameter = "layoutListDisabled"
-                LayoutComponent = ListLayout;
-                break
             case 'listSmall':
-                layoutDisabledParameter = "layoutListSmallDisabled"
+                layoutDisabledParameter = params.type === 'list' ? "layoutListDisabled" : "layoutListSmallDisabled"
                 LayoutComponent = ListLayout;
                 break
             case 'kanban':
                 LayoutComponent = ListLayout;
+                params.dataAttributeList = ['id', 'name', 'link', 'align', 'view', 'isLarge', 'cssStyle']
+                params.dataAttributesDefs = {
+                    link: {type: 'bool'},
+                    isLarge: {type: 'bool'},
+                    width: {type: 'float'},
+                    cssStyle: {type: 'varchar'},
+                    align: {
+                        type: 'enum',
+                        options: ["left", "right"]
+                    },
+                    view: {
+                        type: 'varchar',
+                        readOnly: true
+                    },
+                    name: {
+                        type: 'varchar',
+                        readOnly: true
+                    }
+                }
                 break;
             case 'relationships':
                 LayoutComponent = RelationShipsLayout;

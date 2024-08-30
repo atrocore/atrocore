@@ -247,10 +247,10 @@
     function addPanel() {
         lastPanelNumber++;
         const newPanel: Panel = {
-            customLabel: 'New panel',
+            label: 'New panel',
             rows: [{
                 number: lastRowNumber++,
-                cells: [[false, false]]
+                cells: [false, false]
             }],
             number: lastPanelNumber,
             name: `panel${lastPanelNumber}`,
