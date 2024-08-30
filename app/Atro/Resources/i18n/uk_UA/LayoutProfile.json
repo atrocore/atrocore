@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "isActive": "активний",
+    "description": "вид"
+  },
+  "links": {
+    "layouts": "влаштовування"
+  },
+  "labels": {
+    "Create LayoutProfile": "Створити профіль макета"
+  }
+}

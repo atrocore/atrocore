@@ -48,8 +48,9 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
         layouts: function (options) {
             var scope = options.scope || null;
             var type = options.type || null;
+            var layoutProfileId = options.layoutProfileId || null
 
-            this.main('views/admin/layouts/index', {scope: scope, type: type});
+            this.main('views/admin/layouts/index', {scope: scope, type: type, layoutProfileId: layoutProfileId});
         },
 
         fieldManager: function (options) {

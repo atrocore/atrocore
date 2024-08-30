@@ -1,26 +1,24 @@
-<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a> &raquo {{translate 'Layout Manager' scope='Admin'}}</h3></div>
+<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a>
+        &raquo {{translate 'Layout Manager' scope='Admin'}}</h3></div>
 
 <div class="row">
     <div id="layouts-menu" class="col-sm-3">
-        <div class="panel-group" id="layout-accordion">
-        {{#each layoutScopeDataList}}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <a class="accordion-toggle" data-parent="#layout-accordion" data-toggle="collapse" href="#collapse-{{toDom scope}}">{{translate scope category='scopeNamesPlural'}}</a>
-                </div>
-                <div id="collapse-{{toDom scope}}" class="panel-collapse collapse{{#ifEqual scope ../scope}} in{{/ifEqual}}">
-                    <div class="panel-body">
-                        <ul class="list-unstyled" style="overflow-x: hidden;";>
-                        {{#each typeList}}
-                            <li>
-                                <button style="display: block;" class="layout-link btn btn-link" data-type="{{./this}}" data-scope="{{../scope}}">{{translate this scope='Admin' category='layouts'}}</button>
-                            </li>
-                        {{/each}}
-                        </ul>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-xs-12 cell form-group">
+                <label class="control-label"
+                       data-name="entity">{{translate 'entity' scope='Layout' category='fields'}}</label>
+                <div class="field" data-name="entity">{{{entity}}}</div>
             </div>
-        {{/each}}
+            <div class="col-xs-12 cell form-group">
+                <label class="control-label"
+                       data-name="viewType">{{translate 'viewType' scope='Layout' category='fields'}}</label>
+                <div class="field" data-name="viewType">{{{viewType}}}</div>
+            </div>
+            <div class="col-xs-12 cell form-group">
+                <label class="control-label"
+                       data-name="layoutProfile">{{translate 'layoutProfile' scope='Layout' category='fields'}}</label>
+                <div class="field" data-name="layoutProfile">{{{layoutProfile}}}</div>
+            </div>
         </div>
     </div>
 

@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "entity": "Entity",
+    "viewType": "View Type",
+    "layoutProfile": "Layout Profile"
+  },
+  "links": {
+    "layoutProfile": "Layout Profile"
+  }
+}
