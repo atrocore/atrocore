@@ -35,8 +35,8 @@
 
     function loadLayout(): void {
         Notifier.notify('Loading...')
-        ModelFactory.create(scope, function (model) {
-            LayoutManager.get(scope, type, layoutProfileId, (layout) => {
+        ModelFactory.create(params.scope, function (model) {
+            LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
                 readDataFromLayout(model, layout);
                 Notifier.notify(false)
                 if (afterRender) afterRender()

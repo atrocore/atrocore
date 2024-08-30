@@ -85,8 +85,12 @@ class Layout extends Base
                         foreach ($row as $item) {
                             $newRow[] = $item;
                         }
-                        if (count($row) === 1 && !isset($row[0])) {
-                            array_unshift($newRow, false);
+                        if (count($row) === 1) {
+                            if (!isset($row[0])) {
+                                array_unshift($newRow, false);
+                            } else if (empty($row[0]['fullWidth'])) {
+                                $newRow[] = false;
+                            }
                         }
                         $sectionData['rows'][] = $newRow;
                     }

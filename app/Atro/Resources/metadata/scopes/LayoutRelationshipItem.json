@@ -8,7 +8,7 @@
   "notifications": false,
   "streamDisabled": true,
   "disabled": false,
-  "type": "true",
+  "type": "Base",
   "object": true,
   "notificationDisabled": true
 }

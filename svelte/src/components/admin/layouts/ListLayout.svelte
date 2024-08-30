@@ -48,7 +48,7 @@
     const ignoreTypeList: string[] = [];
 
     function loadLayout(): void {
-        ModelFactory.create(scope, (model) => {
+        ModelFactory.create(params.scope, (model) => {
             Notifier.notify('Loading...')
             LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
                 readDataFromLayout(model, layout);

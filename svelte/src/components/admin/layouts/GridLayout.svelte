@@ -37,9 +37,10 @@
 
     let defaultPanelFieldList = ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'ownerUser', 'teams'];
 
-    let panels: Panel[] = [];
+    let panels: [] = [];
     let disabledFields: Cell[] = [];
     let lastPanelNumber = -1;
+    let lastRowNumber = -1;
     let sidePanelsLayout: any;
 
     const dispatch = createEventDispatcher();
@@ -159,12 +160,27 @@
         return true;
     }
 
+    function fetch(): [] {
+        return panels.map(panel => {
+            return {
+                ...panel,
+                rows: panel.rows.map(row => row.cells)
+            }
+        })
+    }
 
     function setupPanels() {
         lastPanelNumber = -1;
+        lastRowNumber = -1
         panels = panels.map((panel, i) => {
             panel.number = i;
             lastPanelNumber = i;
+            panel.rows = panel.rows.map(row => {
+                return {
+                    number: lastRowNumber++,
+                    cells: row
+                }
+            })
             return panel;
         });
     }
@@ -175,18 +191,30 @@
             group: 'rows',
             draggable: 'li.row',
             onEnd: function (evt) {
-                const panelNumber = parseInt(evt.to.closest('.panel-layout').getAttribute('data-number'));
-                const rowElements = Array.from(evt.to.children);
-                panels = panels.map(panel => {
-                    if (panel.number === panelNumber) {
-                        panel.rows = rowElements.map(rowElement => {
-                            const rowIndex = Array.from(rowElement.parentNode.children).indexOf(rowElement);
-                            console.log('oldIndex',rowIndex)
-                            return panel.rows[rowIndex];
-                        });
-                    }
-                    return panel;
-                });
+                const panelToNumber = parseInt(evt.to.closest('.panel-layout').getAttribute('data-number'));
+                const panelFromNumber = parseInt(evt.from.closest('.panel-layout').getAttribute('data-number'));
+                if (panelFromNumber === panelToNumber) {
+                    panels = panels.map(panel => {
+                        if (panel.number === panelToNumber) {
+                            const [movedItem] = panel.rows.splice(evt.oldIndex, 1);
+                            // Reinsert the moved item at the new position
+                            panel.rows.splice(evt.newIndex, 0, movedItem);
+                        }
+                        return panel;
+                    });
+                } else {
+                    const panelFrom = panels.find(p => p.number === panelFromNumber)
+                    const movedItem = panelFrom.rows[evt.oldIndex]
+                    panels = panels.map(panel => {
+                        if (panel.number === panelFromNumber) {
+                            panel.rows.splice(evt.oldIndex, 1)
+                        }
+                        if (panel.number === panelToNumber) {
+                            panel.rows.splice(evt.newIndex, 0, movedItem)
+                        }
+                        return panel
+                    })
+                }
                 console.log(panels)
             }
         });
@@ -198,7 +226,7 @@
             animation: 150,
             group: "panels",
             draggable: 'li.panel-layout',
-            onEnd: function(evt) {
+            onEnd: function (evt) {
                 const panelElements = Array.from(evt.to.children);
                 panels = panelElements.map(panelElement => {
                     const panelNumber = parseInt(panelElement.getAttribute('data-number'));
@@ -220,7 +248,10 @@
         lastPanelNumber++;
         const newPanel: Panel = {
             customLabel: 'New panel',
-            rows: [[false, false]],
+            rows: [{
+                number: lastRowNumber++,
+                cells: [[false, false]]
+            }],
             number: lastPanelNumber,
             name: `panel${lastPanelNumber}`,
             isCustomLabel: true
@@ -237,7 +268,7 @@
         panels = panels.filter(p => p !== panel);
         let fields = []
         panel.rows.forEach(row => {
-            row.forEach(cell => {
+            row.cells.forEach(cell => {
                 if (cell) {
                     fields.push(cell)
                 }
@@ -249,34 +280,33 @@
     function addRow(panelNumber: number) {
         panels = panels.map((panel) => {
             if (panel.number === panelNumber) {
-                panel.rows = [...panel.rows, Array(columnCount).fill(false)];
+                panel.rows = [...panel.rows, {number: lastRowNumber++, cells: Array(columnCount).fill(false)}];
             }
             return panel;
         });
     }
 
-    function removeRow(panelNumber: number, rowIndex: number) {
+    function removeRow(panelNumber: number, rowNumber: number) {
         panels = panels.map((panel) => {
             if (panel.number === panelNumber) {
-                const row = panel.rows.find((_, i) => i === rowIndex)
+                const row = panel.rows.find(r => r.number === rowNumber)
                 panel.rows = panel.rows.filter(r => r != row);
-                console.log(row)
-                disabledFields = [...disabledFields, ...row.filter(r => !!r)]
+                disabledFields = [...disabledFields, ...row.cells.filter(r => !!r)]
             }
             return panel;
         });
     }
 
-    function removeField(panelNumber: number, rowIndex: number, cellIndex: number) {
+    function removeField(panelNumber: number, rowNumber: number, cellIndex: number) {
         panels = panels.map(panel => {
             if (panel.number === panelNumber) {
                 panel.rows = panel.rows.map((row, rIndex) => {
-                    if (rIndex === rowIndex) {
-                        const removedCell = row[cellIndex];
+                    if (row.number === rowNumber) {
+                        const removedCell = row.cells[cellIndex];
                         if (removedCell) {
                             disabledFields = [...disabledFields, removedCell];
                         }
-                        row[cellIndex] = false;
+                        row.cells[cellIndex] = false;
                     }
                     return row;
                 });
@@ -285,21 +315,57 @@
         });
     }
 
-    function handleDrop(event, panelNumber, rowIndex, cellIndex) {
+    function handleDrop(event, panelNumber, rowNumber, cellIndex) {
         // get properties of dragged object
         const name = event.dataTransfer.getData('name')
-        const field = disabledFields.find(f => f.name === name)
+        let field = disabledFields.find(f => f.name === name)
+        let oldRowNumber = null
+        let oldPanelNumber = null
         if (!field) {
-            return
+            // search in layout
+            panels.forEach(panel => {
+                panel.rows.forEach((row, rowIndex) => {
+                    row.cells.forEach(cell => {
+                        if (cell && cell.name === name) {
+                            field = cell
+                            oldRowNumber = row.number
+                            oldPanelNumber = panel.number
+                        }
+                    })
+                })
+            })
+            if (!field) return
+            // remove from panel
+            panels = panels.map((panel, pIndex) => {
+                if (oldPanelNumber === panel.number) {
+                    panel.rows = panel.rows.map((row, rIndex) => {
+                        if (row.number === oldRowNumber) {
+                            row.cells = row.cells.map((cell, cIndex) => {
+                                if (cell && cell.name === name) {
+                                    return false
+                                }
+                                return cell
+                            })
+                        }
+                        return row;
+                    });
+                }
+                return panel;
+            });
+        } else {
+            disabledFields = disabledFields.filter(f => f !== field)
         }
-        disabledFields = disabledFields.filter(f => f !== field)
 
-        panels = panels.map((panel, pIndex) => {
+
+        panels = panels.map(panel => {
             if (panelNumber === panel.number) {
-                panel.rows = panel.rows.map((row, rIndex) => {
-                    if (rIndex === rowIndex) {
-                        return row.map((cell, cIndex) => {
+                panel.rows = panel.rows.map(row => {
+                    if (rowNumber === row.number) {
+                        row.cells = row.cells.map((cell, cIndex) => {
                             if (cIndex === cellIndex) {
+                                if (field.fullWidth) {
+                                    delete field.fullWidth
+                                }
                                 return field
                             }
                             return cell
@@ -317,18 +383,18 @@
         // Implement edit panel label logic here
     }
 
-    function minusCell(panelIndex: number, rowIndex: number, cellIndex: number) {
+    function minusCell(panelNumber: number, rowNumber: number, cellIndex: number) {
         if (columnCount < 2) return;
 
-        panels = panels.map((panel, pIndex) => {
-            if (pIndex === panelIndex) {
-                panel.rows = panel.rows.map((row, rIndex) => {
-                    if (rIndex === rowIndex) {
-                        const newRow = row.filter((_, i) => i !== cellIndex);
-                        if (newRow.length === 1) {
-                            newRow[0].fullWidth = true;
+        panels = panels.map(panel => {
+            if (panelNumber === panel.number) {
+                panel.rows = panel.rows.map(row => {
+                    if (rowNumber === row.number) {
+                        const cells = row.cells.filter((_, i) => i !== cellIndex);
+                        if (cells.length === 1) {
+                            cells[0].fullWidth = true;
                         }
-                        return newRow;
+                        row.cells = cells
                     }
                     return row;
                 });
@@ -368,7 +434,7 @@
                     {#each panels as panel (panel.number)}
                         <li data-number={panel.number} class="panel-layout">
                             <header data-name={panel.name}>
-                                <label data-is-custom={panel.isCustomLabel ? 'true' : undefined}>{panel.customLabel || panel.label}</label>&nbsp;
+                                <label data-is-custom={panel.customLabel ? 'true' : undefined}>{panel.customLabel || panel.label || ''}</label>&nbsp;
                                 <a href="#" data-action="edit-panel-label" class="edit-panel-label"
                                    on:click|preventDefault={() => editPanelLabel(panel.number)}>
                                     <i class="fas fa-pencil-alt fa-sm"></i>
@@ -379,18 +445,19 @@
                                 </a>
                             </header>
                             <ul class="rows" on:mousedown|stopPropagation={()=>{}}>
-                                {#each panel.rows as row, rowIndex}
-                                    <li class="row">
+                                {#each panel.rows as row (row.number)}
+                                    <li class="row" data-number={row.number}>
                                         <div>
                                             <a href="#" data-action="removeRow" class="remove-row pull-right"
-                                               on:click|preventDefault={() => removeRow(panel.number, rowIndex)}>
+                                               on:click|preventDefault={() => removeRow(panel.number, row.number)}>
                                                 <i class="fas fa-times"></i>
                                             </a>
                                         </div>
                                         <ul class="cells" on:mousedown|stopPropagation={()=>{}}>
-                                            {#each row as cell, cellIndex}
+                                            {#each row.cells as cell, cellIndex}
                                                 {#if cell}
-                                                    <li class="cell" draggable="true" on:dragstart|stopPropagation={()=>{}}
+                                                    <li class="cell" draggable="true"
+                                                        on:dragstart|stopPropagation={event => {event.dataTransfer.setData('name', cell.name)}}
                                                         data-id={cell.id}
                                                         data-name={cell.name}
                                                         data-full-width={cell.fullWidth ? 'true' : undefined}
@@ -398,16 +465,16 @@
                                                         data-no-label={cell.noLabel}>
                                                         {cell.label}
                                                         <a href="#" data-action="removeField" class="remove-field"
-                                                           on:click|preventDefault={() => removeField(panel.number, rowIndex, cellIndex)}>
+                                                           on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
                                                             <i class="fas fa-times"></i>
                                                         </a>
                                                     </li>
                                                 {:else}
                                                     <li class="empty cell"
                                                         on:dragover|preventDefault={event => event.dataTransfer.dropEffect = 'move'}
-                                                        on:drop={e => handleDrop(e,panel.number,rowIndex,cellIndex)}>
+                                                        on:drop={e => handleDrop(e,panel.number,row.number,cellIndex)}>
                                                         <a href="#" data-action="minusCell" class="remove-field"
-                                                           on:click|preventDefault={() => minusCell(panel.number, rowIndex, cellIndex)}>
+                                                           on:click|preventDefault={() => minusCell(panel.number, row.number, cellIndex)}>
                                                             <i class="fas fa-minus"></i>
                                                         </a>
                                                     </li>
