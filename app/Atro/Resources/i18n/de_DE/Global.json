@@ -331,7 +331,7 @@
     "minimumOneOptionsRequired": "Mindestens ein Optionswert ist erforderlich.",
     "defaultEnumValueCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
     "defaultUnitCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
-    "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
+    "resetAllToDefaultConfirm": "Sind Sie sicher, dass Sie alle Layouts für :name auf die Standardwerte zurücksetzen möchten?",
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
     "fieldIsUploading": "Hochladen läuft",
     "fieldMaxFileSizeError": "Datei sollte {max} Mb nicht überschreiten",

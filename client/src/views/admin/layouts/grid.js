@@ -61,9 +61,9 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
         },
 
         emptyCellTemplate:
-                            '<li class="empty disabled cell">' +
-                            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
-                            '</li>',
+            '<li class="empty disabled cell">' +
+            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
+            '</li>',
 
         events: _.extend({
             'click #layout a[data-action="addPanel"]': function () {
@@ -167,14 +167,18 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 var attributes = {
                     panelName: panelName
                 };
+                var attributeList = []
 
                 this.panelDataAttributeList.forEach(function (item) {
-                    if (item === 'panelName') return;
-                    attributes[item] = this.panelsData[id][item];
+                    if (item !== 'panelName') {
+                        attributes[item] = this.panelsData[id][item];
+                    }
+                    if (item !== 'id') {
+                        attributeList.push(item)
+                    }
 
                 }, this);
 
-                var attributeList = this.panelDataAttributeList;
                 var attributeDefs = this.panelDataAttributesDefs;
 
                 this.createView('dialog', 'views/admin/layouts/modals/panel-attributes', {
@@ -209,7 +213,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
         },
 
         addPanel: function () {
-            this.lastPanelNumber ++;
+            this.lastPanelNumber++;
 
             var number = this.lastPanelNumber;
             var data = {
@@ -247,7 +251,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             this.loadLayout(function () {
                 var countLoaded = 0;
                 this.setupPanels(function () {
-                    countLoaded ++;
+                    countLoaded++;
                     if (countLoaded === this.panels.length) {
                         this.reRender();
                     }
@@ -262,7 +266,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
 
             this.panels.forEach(function (panel, i) {
                 panel.number = i;
-                this.lastPanelNumber ++;
+                this.lastPanelNumber++;
                 this.createPanelView(panel, false, callback);
                 this.panelsData[i.toString()] = panel;
             }, this);
@@ -303,7 +307,7 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             }, this);
 
             this.createView('panel-' + data.number, 'view', {
-                el: this.getSelector() + ' li.panel-layout[data-number="'+data.number+'"]',
+                el: this.getSelector() + ' li.panel-layout[data-number="' + data.number + '"]',
                 template: 'admin/layouts/grid-panel',
                 data: function () {
                     var o = Espo.Utils.clone(data);
@@ -327,7 +331,11 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
             });
             $('#layout ul.rows').disableSelection();
 
-            $('#layout ul.cells > li').draggable({revert: 'invalid', revertDuration: 200, zIndex: 10}).css('cursor', 'pointer');
+            $('#layout ul.cells > li').draggable({
+                revert: 'invalid',
+                revertDuration: 200,
+                zIndex: 10
+            }).css('cursor', 'pointer');
 
             $('#layout ul.cells > li').droppable().droppable('destroy');
 

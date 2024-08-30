@@ -36,9 +36,9 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
         layoutDisabledParameter: 'layoutDetailDisabled',
 
-        dataAttributeList: ['name', 'fullWidth', 'customLabel', 'noLabel'],
+        dataAttributeList: ['id', 'name', 'fullWidth', 'customLabel', 'noLabel'],
 
-        panelDataAttributeList: ['panelName', 'style', 'dynamicLogicVisible'],
+        panelDataAttributeList: ['id', 'panelName', 'style', 'dynamicLogicVisible'],
 
         dataAttributesDefs: {
             fullWidth: {
@@ -111,11 +111,11 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             promiseList.push(
                 new Promise(function (resolve) {
                     this.getModelFactory().create(this.scope, function (m) {
-                        this.getHelper().layoutManager.get(this.scope, this.type, function (layoutLoaded) {
+                        this.getHelper().layoutManager.get(this.scope, this.type, this.layoutProfileId, function (layoutLoaded) {
                             layout = layoutLoaded;
                             model = m;
                             resolve();
-                        });
+                        }, false);
                     }.bind(this));
                 }.bind(this))
             );
@@ -123,10 +123,10 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             if (~['detail', 'detailSmall'].indexOf(this.type)) {
                 promiseList.push(
                     new Promise(function (resolve) {
-                        this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutLoaded) {
+                        this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), this.layoutProfileId, function (layoutLoaded) {
                             this.sidePanelsLayout = layoutLoaded;
                             resolve();
-                        }.bind(this));
+                        }.bind(this), false);
                     }.bind(this))
                 );
             }
@@ -197,7 +197,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             }
         },
 
-        hasField: function(name, list) {
+        hasField: function (name, list) {
             return list.filter(field => field.name == name).length > 0;
         },
 

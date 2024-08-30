@@ -34,7 +34,7 @@ Espo.define('views/admin/layouts/kanban', 'views/admin/layouts/list', function (
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'link', 'align', 'view', 'isLarge', 'cssStyle'],
+        dataAttributeList: ['id','name', 'link', 'align', 'view', 'isLarge', 'cssStyle'],
 
         dataAttributesDefs: {
             link: {type: 'bool'},

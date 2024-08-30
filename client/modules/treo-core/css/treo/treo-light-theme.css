@@ -24039,7 +24039,8 @@ span.CodeMirror-selectedtext {
   border-left: 1px solid #ced4da;
   border-right: 1px solid #ced4da;
   border-top-left-radius: 4px;
-  border-top-right-radius: 4px
+  border-top-right-radius: 4px;
+  background-color: #ffffff;
 }
 
 .editor-toolbar.fullscreen {

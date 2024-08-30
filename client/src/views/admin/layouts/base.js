@@ -42,7 +42,9 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             'click button[data-action="save"]': function () {
                 this.disableButtons();
                 this.notify('Saving...');
-                this.save(this.enableButtons.bind(this));
+                if (!this.save(this.enableButtons.bind(this))) {
+                    this.notify(false)
+                }
             },
             'click button[data-action="cancel"]': function () {
                 this.cancel();
@@ -90,7 +92,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
                 return false;
             }
 
-            this.getHelper().layoutManager.set(this.scope, this.type, layout, function () {
+            this.getHelper().layoutManager.set(this.scope, this.type, this.layoutProfileId, layout, function () {
                 this.notify('Saved', 'success', 2000);
 
                 if (typeof callback == 'function') {
@@ -100,7 +102,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
         },
 
         resetToDefault: function () {
-            this.getHelper().layoutManager.resetToDefault(this.scope, this.type, function () {
+            this.getHelper().layoutManager.resetToDefault(this.scope, this.type,this.layoutProfileId, function () {
                 this.cancel();
             }.bind(this));
         },
@@ -109,13 +111,15 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             this.render();
         },
 
-        fetch: function () {},
+        fetch: function () {
+        },
 
         setup: function () {
             this.buttonList = _.clone(this.buttonList);
             this.events = _.clone(this.events);
             this.scope = this.options.scope;
             this.type = this.options.type;
+            this.layoutProfileId = this.options.layoutProfileId
 
             this.dataAttributeList =
                 this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.type, 'dataAttributeList'])
@@ -149,7 +153,7 @@ Espo.define('views/admin/layouts/base', 'view', function (Dep) {
             this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', {
                 name: attributes.name,
                 scope: this.scope,
-                attributeList: this.dataAttributeList,
+                attributeList: this.dataAttributeList.slice(1),
                 attributeDefs: this.dataAttributesDefs,
                 attributes: attributes,
                 languageCategory: this.languageCategory

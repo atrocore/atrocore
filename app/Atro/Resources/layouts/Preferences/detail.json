@@ -25,7 +25,9 @@
         {
           "name": "theme"
         },
-        false
+        {
+          "name": "layoutProfile"
+        }
       ],
       [
         {

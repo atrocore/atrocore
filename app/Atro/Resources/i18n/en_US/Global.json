@@ -349,7 +349,7 @@
     "minimumOneOptionsRequired": "Minimum one option value is required.",
     "defaultEnumValueCannotBeEmpty": "Default value should be selected if empty value is disabled.",
     "defaultUnitCannotBeEmpty": "Default unit value should be selected if empty value is disabled.",
-    "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
+    "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values for :name?",
     "testEmailSent": "Test email has been sent",
     "massUpdateResult": "Updating {count} records",
     "isRequiredAndUnique": "{field} is required and should be unique.",

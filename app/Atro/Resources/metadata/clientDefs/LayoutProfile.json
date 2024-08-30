@@ -1,0 +1,12 @@
+{
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyActive"
+  ],
+  "hiddenBoolFilterList": [
+    "onlyActive"
+  ],
+  "views": {
+    "detail": "views/layout-profile/detail"
+  }
+}

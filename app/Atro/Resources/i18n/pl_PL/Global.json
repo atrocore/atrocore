@@ -331,7 +331,7 @@
     "minimumOneOptionsRequired":"Wymagana jest co najmniej jedna wartość opcji.",
     "defaultEnumValueCannotBeEmpty":"Należy wybrać wartość domyślną, jeśli wartość pusta jest wyłączona.",
     "defaultUnitCannotBeEmpty":"Należy wybrać wartość domyślną jednostki, jeśli wartość pusta jest wyłączona.",
-    "resetAllToDefaultConfirm":"Czy na pewno chcesz zresetować wszystkie układy do wartości domyślnych?",
+    "resetAllToDefaultConfirm":"Czy na pewno chcesz zresetować wszystkie układy do wartości domyślnych dla :name?",
     "testEmailSent":"Testowy email został wysłany",
     "massUpdateResult":"Aktualizacja {count} rekordów",
     "isRequiredAndUnique":"{field} jest wymagane i powinno być unikalne.",

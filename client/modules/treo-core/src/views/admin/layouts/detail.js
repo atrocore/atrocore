@@ -18,7 +18,7 @@ Espo.define('treo-core:views/admin/layouts/detail', 'class-replace!treo-core:vie
             promiseList.push(
                 new Promise(function (resolve) {
                     this.getModelFactory().create(this.scope, function (m) {
-                        this.getHelper().layoutManager.get(this.scope, this.type, function (layoutLoaded) {
+                        this.getHelper().layoutManager.get(this.scope, this.type, this.layoutProfileId, function (layoutLoaded) {
                             layout = layoutLoaded;
                             model = m;
                             resolve();
@@ -30,7 +30,7 @@ Espo.define('treo-core:views/admin/layouts/detail', 'class-replace!treo-core:vie
             if (~['detail', 'detailSmall'].indexOf(this.type)) {
                 promiseList.push(
                     new Promise(function (resolve) {
-                        this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutLoaded) {
+                        this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), this.layoutProfileId, function (layoutLoaded) {
                             this.sidePanelsLayout = layoutLoaded;
                             resolve();
                         }.bind(this), false);

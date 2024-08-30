@@ -145,6 +145,11 @@
         "description": "layoutManager"
       },
       {
+        "url": "#LayoutProfile",
+        "label": "layoutProfiles",
+        "description": "layoutProfiles"
+      },
+      {
         "url": "#Admin/entityManager",
         "label": "Entity Manager",
         "description": "entityManager"

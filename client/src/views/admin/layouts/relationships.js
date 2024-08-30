@@ -34,7 +34,7 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style', 'hiddenPerDefault'],
+        dataAttributeList: ['id','name', 'style', 'hiddenPerDefault'],
 
         editable: true,
 
@@ -65,7 +65,7 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
         loadLayout: function (callback) {
             this.getModelFactory().create(this.scope, function (model) {
-                this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
+                this.getHelper().layoutManager.get(this.scope, this.type,this.layoutProfileId, function (layout) {
 
                     var allFields = [];
                     for (var field in model.defs.links) {
