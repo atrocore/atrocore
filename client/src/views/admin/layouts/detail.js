@@ -36,9 +36,9 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
         layoutDisabledParameter: 'layoutDetailDisabled',
 
-        dataAttributeList: ['name', 'fullWidth', 'customLabel', 'noLabel'],
+        dataAttributeList: ['id', 'name', 'fullWidth', 'customLabel', 'noLabel'],
 
-        panelDataAttributeList: ['panelName', 'style', 'dynamicLogicVisible'],
+        panelDataAttributeList: ['id', 'panelName', 'style', 'dynamicLogicVisible'],
 
         dataAttributesDefs: {
             fullWidth: {
@@ -197,7 +197,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             }
         },
 
-        hasField: function(name, list) {
+        hasField: function (name, list) {
             return list.filter(field => field.name == name).length > 0;
         },
 

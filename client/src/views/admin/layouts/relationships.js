@@ -34,7 +34,7 @@ Espo.define('views/admin/layouts/relationships', 'views/admin/layouts/rows', fun
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style', 'hiddenPerDefault'],
+        dataAttributeList: ['id','name', 'style', 'hiddenPerDefault'],
 
         editable: true,
 

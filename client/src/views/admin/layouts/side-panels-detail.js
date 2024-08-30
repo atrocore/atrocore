@@ -34,7 +34,7 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style', 'sticked'],
+        dataAttributeList: ['id', 'name', 'style', 'sticked'],
 
         dataAttributesDefs: {
             style: {
@@ -153,7 +153,8 @@ Espo.define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows'
             $("#layout ul.disabled > li").each(function (i, el) {
                 var name = $(el).attr('data-name');
                 layout[name] = {
-                    disabled: true
+                    disabled: true,
+                    id: $(el).attr('data-id')
                 };
             }.bind(this));
 

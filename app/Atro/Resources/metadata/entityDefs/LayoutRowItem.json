@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "section": {
+      "type": "link"
+    },
+    "columnIndex": {
+      "type": "int"
+    },
+    "rowIndex": {
+      "type": "int"
+    },
+    "fullWidth": {
+      "type": "bool"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "section": {
+      "type": "belongsTo",
+      "entity": "LayoutSection",
+      "foreign": "rowItems"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  }
+}
