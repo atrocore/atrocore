@@ -94,7 +94,7 @@ class Layout extends Base
                         }
                         $section->set([
                             'layoutId'  => $entity->get('id'),
-                            'name'      => $item['customLabel'],
+                            'name'      => $item['label'],
                             'style'     => $item['style'] ?? null,
                             'sortOrder' => $index,
                         ]);

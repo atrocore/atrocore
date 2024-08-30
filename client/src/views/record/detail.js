@@ -166,6 +166,30 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             'click a[data-action="expandAllPanels"]': function (e) {
                 this.collapseAllPanels('show');
             },
+            'click .layout-editor': function (e) {
+                // open modal view
+                this.createView('dialog', 'views/admin/layouts/modals/edit', {
+                    scope: this.scope,
+                    type: this.layoutName,
+                    el: '[data-view="dialog"]',
+                }, view => {
+                    view.render()
+                    this.listenToOnce(view, 'close', (data) => {
+                        this.clearView('dialog');
+                        if (data && data.layoutIsUpdated) {
+                            this.detailLayout = null
+                            this.gridLayout = null
+                            this.getGridLayout((layout) => {
+                                const middle = this.getView('middle')
+                                if (middle) {
+                                    middle._layout = layout
+                                    middle.reRender()
+                                }
+                            })
+                        }
+                    });
+                });
+            }
         },
 
         collapseAllPanels(type) {
@@ -1686,6 +1710,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         `${this.getLanguage().translate('expandAllPanels', 'labels', 'Global')}` +
                         `</a>`;
                     view.$el.find('.panel-heading:first').append(html);
+                }
+                // add layout configuration button
+                if (bottom) {
+                    let html = `<a class="btn btn-link collapsing-button " style="margin-left: 5px; padding: 0;">
+                         <span class="fas fa-th cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
+                    </a>`
+                    view.$el.find('.panel-heading:first').append(html)
                 }
             });
         },

@@ -58,7 +58,7 @@ class Layout extends Base
             case 'detailSmall':
                 $data = [];
                 foreach ($this->get('sections', ['orderBy' => 'sortOrder']) ?? [] as $section) {
-                    $sectionData = ['label' => $section->get('name')];
+                    $sectionData = ['label' => $section->get('name') ?? ''];
                     foreach ($this->getKeyList(['style'], $withIds) as $key) {
                         if (!empty($section->get($key))) {
                             $sectionData[$key] = $section->get($key);
