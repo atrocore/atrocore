@@ -259,6 +259,12 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
             if (file.url) {
                 onSuccess(file.url);
             }
+        },
+
+        empty() {
+            if (this.editor) {
+                this.editor.codemirror.setValue('');
+            }
         }
     });
 });
