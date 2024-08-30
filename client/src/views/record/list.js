@@ -141,10 +141,26 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click .select-all': function (e) {
-                if (this.allResultIsChecked) {
-                    this.unselectAllResult();
+                if (e.shiftKey) {
+                    let checked = $(e.currentTarget).prop('checked');
+
+                    if (this.allResultIsChecked) {
+                        this.unselectAllResult();
+                    }
+
+                    this.$el.find('.record-checkbox').each(function (i, elem) {
+                        if (checked) {
+                            this.checkRecord($(elem).data('id'), $(elem));
+                        } else {
+                            this.uncheckRecord($(elem).data('id'), $(elem));
+                        }
+                    }.bind(this));
                 } else {
-                    this.selectAllResult();
+                    if (this.allResultIsChecked) {
+                        this.unselectAllResult();
+                    } else {
+                        this.selectAllResult();
+                    }
                 }
                 return;
 
