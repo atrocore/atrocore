@@ -15676,6 +15676,10 @@ ul.dropdown-menu > li.checkbox:last-child {
     padding: 6px 0
 }
 
+.list-buttons-container > div.selected-count {
+    float: right;
+}
+
 .list-container .pagination {
     margin: 0
 }
