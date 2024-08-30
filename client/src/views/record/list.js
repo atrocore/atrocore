@@ -449,6 +449,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.$el.find('.list > table tbody tr').removeClass('active');
 
+            this.$el.find('.selected-count').removeClass('hidden');
+            this.$el.find('.selected-count > .selected-count-span').text(this.collection.total);
+
             this.trigger('select-all-results');
         },
 
@@ -458,6 +461,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
             this.$el.find('input.select-all').prop('checked', false);
 
+            this.$el.find('.selected-count').addClass('hidden');
+            this.$el.find('.selected-count > .selected-count-span').text(0);
 
             this.massActionList.forEach(function (item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
@@ -2064,9 +2069,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
         handleAfterCheck: function (isSilent) {
             if (this.checkedList.length) {
                 this.$el.find('.actions-button').removeAttr('disabled');
+                this.$el.find('.selected-count').removeClass('hidden');
             } else {
                 this.$el.find('.actions-button').attr('disabled', true);
+                this.$el.find('.selected-count').addClass('hidden');
             }
+
+            this.$el.find('.selected-count > .selected-count-span').text(this.checkedList.length);
 
             if (this.checkedList.length == this.collection.models.length) {
                 this.$el.find('.select-all').prop('checked', true);
