@@ -169,39 +169,51 @@
         });
     }
 
-    function initEmptyCell(el){
+    function initPanel(el) {
         Sortable.create(el, {
-            group: 'cells',
             animation: 150,
-            onAdd: function (evt) {
-                console.log(`Item ${evt.item.textContent.trim()} dropped into droppable zone`);
+            group: 'rows',
+            draggable: 'li.row',
+            onEnd: function (evt) {
+                const panelNumber = parseInt(evt.to.closest('.panel-layout').getAttribute('data-number'));
+                const rowElements = Array.from(evt.to.children);
+                panels = panels.map(panel => {
+                    if (panel.number === panelNumber) {
+                        panel.rows = rowElements.map(rowElement => {
+                            const rowIndex = Array.from(rowElement.parentNode.children).indexOf(rowElement);
+                            console.log('oldIndex',rowIndex)
+                            return panel.rows[rowIndex];
+                        });
+                    }
+                    return panel;
+                });
+                console.log(panels)
             }
         });
     }
+
     function initializeSortable() {
 
         Sortable.create(document.querySelector('ul.panels'), {
             animation: 150,
             group: "panels",
-            draggable: 'li.panel-layout'
+            draggable: 'li.panel-layout',
+            onEnd: function(evt) {
+                const panelElements = Array.from(evt.to.children);
+                panels = panelElements.map(panelElement => {
+                    const panelNumber = parseInt(panelElement.getAttribute('data-number'));
+                    return panels.find(panel => panel.number === panelNumber);
+                });
+                console.log(panels)
+            }
         });
         document.querySelectorAll('ul.rows').forEach(el => {
-            console.log(el)
-            Sortable.create(el, {
-                animation: 150,
-                group: 'rows',
-                draggable: 'li.row'
-            });
+            initPanel(el)
         });
         document.querySelectorAll('ul.cells.disabled').forEach(el => {
             Sortable.create(el, {animation: 150, group: 'cells', draggable: 'li.cell'});
         });
-
-        document.querySelectorAll('ul.cells .cell.empty').forEach(el => {
-           initEmptyCell(el)
-        })
     }
-
 
 
     function addPanel() {
@@ -216,31 +228,40 @@
         panels = [...panels, newPanel];
         tick().then(() => {
             const el = document.querySelector(`.panel-layout[data-number="${newPanel.number}"] > .rows`);
-            Sortable.create(el, {
-                animation: 150,
-                group: 'rows',
-                draggable: 'li.row'
-            });
+            initPanel(el)
         })
     }
 
     function removePanel(number: number) {
-        panels = panels.filter(panel => panel.number !== number);
+        const panel = panels.find(p => p.number === number)
+        panels = panels.filter(p => p !== panel);
+        let fields = []
+        panel.rows.forEach(row => {
+            row.forEach(cell => {
+                if (cell) {
+                    fields.push(cell)
+                }
+            })
+        })
+        disabledFields = [...disabledFields, ...fields]
     }
 
-    function addRow(panelIndex: number) {
-        panels = panels.map((panel, index) => {
-            if (index === panelIndex) {
-                panel.rows = [...panel.rows, Array(columnCount).fill(null)];
+    function addRow(panelNumber: number) {
+        panels = panels.map((panel) => {
+            if (panel.number === panelNumber) {
+                panel.rows = [...panel.rows, Array(columnCount).fill(false)];
             }
             return panel;
         });
     }
 
-    function removeRow(panelIndex: number, rowIndex: number) {
-        panels = panels.map((panel, index) => {
-            if (index === panelIndex) {
-                panel.rows = panel.rows.filter((_, i) => i !== rowIndex);
+    function removeRow(panelNumber: number, rowIndex: number) {
+        panels = panels.map((panel) => {
+            if (panel.number === panelNumber) {
+                const row = panel.rows.find((_, i) => i === rowIndex)
+                panel.rows = panel.rows.filter(r => r != row);
+                console.log(row)
+                disabledFields = [...disabledFields, ...row.filter(r => !!r)]
             }
             return panel;
         });
@@ -255,13 +276,41 @@
                         if (removedCell) {
                             disabledFields = [...disabledFields, removedCell];
                         }
-                        row[cellIndex] = null;
+                        row[cellIndex] = false;
                     }
                     return row;
                 });
             }
             return panel;
         });
+    }
+
+    function handleDrop(event, panelNumber, rowIndex, cellIndex) {
+        // get properties of dragged object
+        const name = event.dataTransfer.getData('name')
+        const field = disabledFields.find(f => f.name === name)
+        if (!field) {
+            return
+        }
+        disabledFields = disabledFields.filter(f => f !== field)
+
+        panels = panels.map((panel, pIndex) => {
+            if (panelNumber === panel.number) {
+                panel.rows = panel.rows.map((row, rIndex) => {
+                    if (rIndex === rowIndex) {
+                        return row.map((cell, cIndex) => {
+                            if (cIndex === cellIndex) {
+                                return field
+                            }
+                            return cell
+                        })
+                    }
+                    return row;
+                });
+            }
+            return panel;
+        });
+        console.log(panels)
     }
 
     function editPanelLabel(panelIndex: number) {
@@ -294,7 +343,7 @@
         layout.forEach(panel => {
             panel.rows.forEach(row => {
                 row.forEach(cell => {
-                    if (cell !== null) {
+                    if (cell) {
                         fieldCount++;
                     }
                 });
@@ -341,7 +390,7 @@
                                         <ul class="cells" on:mousedown|stopPropagation={()=>{}}>
                                             {#each row as cell, cellIndex}
                                                 {#if cell}
-                                                    <li class="cell" draggable="true"
+                                                    <li class="cell" draggable="true" on:dragstart|stopPropagation={()=>{}}
                                                         data-id={cell.id}
                                                         data-name={cell.name}
                                                         data-full-width={cell.fullWidth ? 'true' : undefined}
@@ -354,7 +403,9 @@
                                                         </a>
                                                     </li>
                                                 {:else}
-                                                    <li class="empty cell">
+                                                    <li class="empty cell"
+                                                        on:dragover|preventDefault={event => event.dataTransfer.dropEffect = 'move'}
+                                                        on:drop={e => handleDrop(e,panel.number,rowIndex,cellIndex)}>
                                                         <a href="#" data-action="minusCell" class="remove-field"
                                                            on:click|preventDefault={() => minusCell(panel.number, rowIndex, cellIndex)}>
                                                             <i class="fas fa-minus"></i>
@@ -381,12 +432,9 @@
                 <header>{Language.translate('Available Fields', 'Admin')}</header>
                 <ul class="disabled cells clearfix">
                     {#each disabledFields as field}
-                        <li class="cell" data-name={field.name}>
+                        <li class="cell" data-name={field.name}
+                            on:dragstart={event => {event.dataTransfer.setData('name', field.name)}}>
                             {field.label}
-                            <a href="#" data-action="removeField" class="remove-field"
-                               on:click|preventDefault={() => removeField(-1, -1, disabledFields.indexOf(field))}>
-                                <i class="fas fa-times"></i>
-                            </a>
                         </li>
                     {/each}
                 </ul>
