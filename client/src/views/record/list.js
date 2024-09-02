@@ -100,7 +100,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         options.rootUrl = this.getRouter().getCurrentUrl();
                     }
 
-                    this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: false });
+                    this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
                     this.getRouter().dispatch(scope, 'view', options);
                 });
             },
@@ -215,8 +215,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             this._internalLayout = null
                             this.getInternalLayout(() => {
                                 this.notify('Loading...')
-                                this.collection.fetch({ keepSelected: true })
-                                this.collection.once('sync', ()=> {
+                                this.collection.fetch({keepSelected: true})
+                                this.collection.once('sync', () => {
                                     this.notify(false);
                                 })
                             })
@@ -281,7 +281,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.notify('Please wait...');
             this.collection.once('sync', function () {
                 this.notify(false);
-                this.trigger('sort', { sortBy: field, asc: asc });
+                this.trigger('sort', {sortBy: field, asc: asc});
             }, this);
             var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
             while (this.collection.length > maxSizeLimit) {
@@ -370,7 +370,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.length && !fixedHeaderRow
+                showNoData: !this.collection.length && !fixedHeaderRow,
+                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts'])
             };
         },
 
@@ -615,7 +616,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 requestData.where = this.collection.getWhere();
                 requestData.massAction = true;
             } else if (this.checkedList.length > 0) {
-                requestData.where = [{ type: "in", attribute: "id", value: this.checkedList }];
+                requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
                 requestData.massAction = true;
             }
 
@@ -647,7 +648,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
-                var data = { permanently: permanently };
+                var data = {permanently: permanently};
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
                     data.selectData = this.collection.data || {};
@@ -859,7 +860,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
             this.checkedList.sort();
             var url = '#' + this.entityType + '/merge/ids=' + this.checkedList.join(',');
-            this.getRouter().navigate(url, { trigger: false });
+            this.getRouter().navigate(url, {trigger: false});
             this.getRouter().dispatch(this.entityType, 'merge', {
                 ids: this.checkedList.join(','),
                 collection: this.collection
@@ -1660,7 +1661,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         if (scroll.length) {
                             scroll.removeClass('hidden');
 
-                            scroll.css({ width: list.width(), display: 'block' });
+                            scroll.css({width: list.width(), display: 'block'});
                             scroll.find('div').css('width', fullTable.width());
 
                             this.listenTo(this.collection, 'sync', function () {
@@ -1821,7 +1822,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({ number: k, relEntity: parts[0] });
+                        toRemove.push({number: k, relEntity: parts[0]});
                     }
                 });
 
@@ -2375,7 +2376,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }, this);
 
                     this.listenToOnce(view, 'after:edit-cancel', function () {
-                        this.actionQuickView({ id: view.model.id, scope: view.model.name });
+                        this.actionQuickView({id: view.model.id, scope: view.model.name});
                     }, this);
 
                     this.listenToOnce(view, 'after:save', function (model) {
@@ -2383,7 +2384,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }, this);
                 }, this);
             } else {
-                this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: true });
+                this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
             }
         },
 
@@ -2404,7 +2405,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 fullFormDisabled: true,
                 layoutName: 'upload',
                 multiUpload: false,
-                attributes: _.extend(model.attributes, { reupload: model.id }),
+                attributes: _.extend(model.attributes, {reupload: model.id}),
             }, view => {
                 view.render();
                 this.notify(false);
@@ -2491,7 +2492,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
-                this.getRouter().navigate('#' + scope + '/edit/' + id, { trigger: false });
+                this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
                 this.getRouter().dispatch(scope, 'edit', options);
             }
         },
@@ -2521,7 +2522,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     if (response.success) {
                         this.notify(response.message, 'success');
                         if (response.redirect) {
-                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, { trigger: false });
+                            this.getRouter().navigate('#' + response.scope + '/view/' + response.entityId, {trigger: false});
                             this.getRouter().dispatch(response.scope, 'view', {
                                 id: response.entityId,
                             })
@@ -2628,11 +2629,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 $.ajax({
                     url: this.entityType + '/action/restore',
                     type: 'POST',
-                    data: JSON.stringify({ id: id })
+                    data: JSON.stringify({id: id})
                 }).done(function (result) {
-                    this.notify('Restored', 'success');
-                    this.removeRecordFromList(id);
-                }.bind(this)
+                        this.notify('Restored', 'success');
+                        this.removeRecordFromList(id);
+                    }.bind(this)
                 ).fail(function () {
                     this.notify('Error occured', 'error');
                     this.collection.push(model);
@@ -2641,7 +2642,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         actionDeletePermanently(data) {
-            let id = (data || { id: null }).id;
+            let id = (data || {id: null}).id;
             if (!id) {
                 return;
             }
@@ -2729,7 +2730,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.notify(false)
                     })
                 }, this);
-                model.fetch({ main: true });
+                model.fetch({main: true});
             }, this);
         },
     });

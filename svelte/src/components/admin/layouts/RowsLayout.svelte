@@ -14,7 +14,6 @@
     export let params: Params;
     export let enabledFields: Field[] = [];
     export let disabledFields: Field[] = [];
-    export let rowLayout: LayoutItem[] = [];
     export let loadLayout: Function;
 
     let baseLayout: BaseLayout;
@@ -35,35 +34,54 @@
             animation: 150
         };
 
-        sortableEnabled = Sortable.create(layoutElement.querySelector('ul.enabled'), {...options});
-        sortableDisabled = Sortable.create(layoutElement.querySelector('ul.disabled'), {...options});
+        sortableEnabled = Sortable.create(layoutElement.querySelector('ul.enabled'), {
+            ...options,
+            onEnd: function (evt) {
+                if (evt.to.closest('.connected').classList.contains('enabled')) {
+                    const [movedItem] = enabledFields.splice(evt.oldIndex, 1);
+                    enabledFields.splice(evt.newIndex, 0, movedItem);
+                } else {
+                    const movedItem = enabledFields[evt.oldIndex]
+                    enabledFields.splice(evt.oldIndex, 1)
+                    disabledFields.splice(evt.newIndex, 0, movedItem)
+                    disabledFields = [...disabledFields]
+                }
+                enabledFields = [...enabledFields];
+            }
+        });
+        sortableDisabled = Sortable.create(layoutElement.querySelector('ul.disabled'), {
+            ...options,
+            onEnd: function (evt) {
+                if (evt.to.closest('.connected').classList.contains('disabled')) {
+                    const [movedItem] = disabledFields.splice(evt.oldIndex, 1);
+                    disabledFields.splice(evt.newIndex, 0, movedItem);
+                } else {
+                    const movedItem = disabledFields[evt.oldIndex]
+                    disabledFields.splice(evt.oldIndex, 1)
+                    enabledFields.splice(evt.newIndex, 0, movedItem)
+                    enabledFields = [...enabledFields]
+                }
+                disabledFields = [...disabledFields];
+            }
+        });
     }
 
-    function editField(event: Event): void {
-        const target = event.target as HTMLElement;
-        const listItem = target.closest('li');
-        if (!listItem) return;
-
-        const data: LayoutItem = {};
-        params.dataAttributeList.forEach(attr => {
-            data[attr] = listItem.dataset[attr] || null;
+    function editField(field): void {
+        params.openEditDialog(field, params.scope, params.dataAttributeList, params.dataAttributesDefs, (attributes) => {
+            console.log('attributes')
+            enabledFields = enabledFields.map(item => {
+                if (item.name === field.name) {
+                    for (let key in attributes) {
+                        item[key] = attributes[key]
+                    }
+                }
+                return item
+            })
         });
-        baseLayout.openEditDialog(data);
     }
 
     function fetch(): LayoutItem[] {
-        const layout: LayoutItem[] = [];
-        for (let el of layoutElement.querySelector('ul.enabled').children) {
-            const o: LayoutItem = {} as LayoutItem;
-            params.dataAttributeList.forEach(attr => {
-                const value = (el as HTMLElement).dataset[attr];
-                if (value) {
-                    o[attr] = value;
-                }
-            });
-            layout.push(o);
-        }
-        return layout;
+        return enabledFields;
     }
 
     function validate(layout: LayoutItem[]): boolean {
@@ -106,7 +124,7 @@
             <div class="well">
                 <header>{Language.translate('Enabled', 'labels', 'Admin')}</header>
                 <ul class="enabled connected">
-                    {#each rowLayout as item}
+                    {#each enabledFields as item (item.name)}
                         <li {...getDataAttributeProps(item)}>
                             <div class="left">
                                 <label>{item.label}</label>
@@ -114,7 +132,7 @@
                             {#if params.editable}
                                 <div class="right">
                                     <a href="javascript:" data-action="editField" class="edit-field"
-                                       on:click={editField}>
+                                       on:click={()=>editField(item)}>
                                         <i class="fas fa-pencil-alt fa-sm"></i>
                                     </a>
                                 </div>
@@ -128,19 +146,11 @@
             <div class="well">
                 <header>{Language.translate('Disabled', 'labels', 'Admin')}</header>
                 <ul class="disabled connected">
-                    {#each disabledFields as field}
+                    {#each disabledFields as field (field.name)}
                         <li {...getDataAttributeProps(field)}>
                             <div class="left">
                                 <label>{field.label}</label>
                             </div>
-                            {#if params.editable}
-                                <div class="right">
-                                    <a href="javascript:" data-action="editField" class="edit-field"
-                                       on:click={editField}>
-                                        <i class="fas fa-pencil-alt fa-sm"></i>
-                                    </a>
-                                </div>
-                            {/if}
                         </li>
                     {/each}
                 </ul>

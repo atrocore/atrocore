@@ -13,8 +13,8 @@
     if (!params.dataAttributeList) {
         params.dataAttributeList = ['id', 'name', 'style', 'sticked'];
     }
-    if (!params.dataAttributeDefs) {
-        params.dataAttributeDefs = {
+    if (!params.dataAttributesDefs) {
+        params.dataAttributesDefs = {
             style: {
                 type: 'enum',
                 options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
@@ -32,12 +32,11 @@
     let rowsLayout: RowsLayout;
     let enabledFields: Field[] = [];
     let disabledFields: Field[] = [];
-    let rowLayout: LayoutItem[] = [];
 
     function loadLayout(callback): void {
         LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
             readDataFromLayout(layout);
-            if(callback) callback()
+            if (callback) callback()
         }, false);
     }
 
@@ -65,7 +64,7 @@
 
         layout = layout || {};
 
-        rowLayout = [];
+        enabledFields = [];
 
         panelListAll.forEach((item, index) => {
             let disabled = false;
@@ -91,7 +90,7 @@
                     label: labelText
                 };
                 if (o.name in params) {
-                    dataAttributeList.forEach(attribute => {
+                    params.dataAttributeList.forEach(attribute => {
                         if (attribute === 'name') return;
                         let itemParams = params[o.name] || {};
                         if (attribute in itemParams) {
@@ -103,10 +102,10 @@
                     o[i] = itemData[i];
                 }
                 o.index = ('index' in itemData) ? itemData.index : index;
-                rowLayout.push(o);
+                enabledFields.push(o);
             }
         });
-        rowLayout.sort((v1, v2) => v1.index - v2.index);
+        enabledFields.sort((v1, v2) => v1.index - v2.index);
     }
 
 </script>
@@ -116,6 +115,5 @@
         {params}
         {enabledFields}
         {disabledFields}
-        {rowLayout}
         {loadLayout}
 />

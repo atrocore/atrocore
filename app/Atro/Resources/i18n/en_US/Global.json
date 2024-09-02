@@ -108,6 +108,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "customizeLayout": "Customize Layout",
     "deletePermanently": "Delete Permanently",
     "Reupload": "Reupload",
     "attachFiles":"Attach Files",

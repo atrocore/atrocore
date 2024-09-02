@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/layouts/index', 'view', function (Dep) {
+Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-utils'], function (Dep, LayoutUtils) {
 
     return Dep.extend({
 
@@ -88,6 +88,7 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
 
             this.getModelFactory().create('Layout', (model) => {
                 this.model = model;
+                model.set('id', '1')
                 model.set('entity', this.scope)
                 model.set('viewType', this.type)
                 model.set('layoutProfileId', this.layoutProfileId)
@@ -141,24 +142,15 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
 
             var typeReal = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
-            if (window.layoutSvelteComponent) {
-                window.layoutSvelteComponent.$destroy()
-            }
-
-            window.layoutSvelteComponent = new Svelte.LayoutComponent({
-                target: $('#layout-content').get(0),
-                props: {
-                    params: {
-                        type: type,
-                        scope: scope,
-                        layoutProfileId: layoutProfileId,
-                        editable: true,
-                        afterRender: () => {
-                            this.renderLayoutHeader();
-                        }
-                    }
-                }
-            });
+            LayoutUtils.renderComponent.call(this, {
+                type: type,
+                scope: scope,
+                layoutProfileId: layoutProfileId,
+                editable: true,
+                afterRender: () => {
+                    this.renderLayoutHeader();
+                },
+            })
         },
 
         renderDefaultPage: function () {

@@ -1712,7 +1712,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     view.$el.find('.panel-heading:first').append(html);
                 }
                 // add layout configuration button
-                if (bottom) {
+                if (bottom && this.getMetadata().get(['scopes', this.model.name, 'layouts'])) {
                     let html = `<a class="btn btn-link collapsing-button " style="margin-left: 5px; padding: 0;">
                          <span class="fas fa-th cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
                     </a>`

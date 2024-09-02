@@ -33,5 +33,5 @@ export interface Params {
     editable: boolean;
     layout: any;
     dataAttributeList: string[];
-    dataAttributeDefs: any
+    dataAttributesDefs: any
 }

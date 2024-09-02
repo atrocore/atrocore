@@ -29,13 +29,8 @@
     }
 
 
-    export let afterRender: any;
-
-    let rowsLayout: RowsLayout;
     let enabledFields: Field[] = [];
-    let enabledFieldsList: Field[] = [];
     let disabledFields: Field[] = [];
-    let rowLayout: LayoutItem[] = [];
     let editable: boolean = true;
 
     function loadLayout(callback): void {
@@ -83,7 +78,7 @@
                 o.label = Language.translate(o.name, 'links', 'scope');
             }
 
-            dataAttributeList.forEach(attribute => {
+            params.dataAttributeList.forEach(attribute => {
                 if (attribute === 'name') return;
                 if (attribute in o) return;
 
@@ -105,9 +100,7 @@
             }
         }
 
-        rowLayout = enabledFields;
-
-        for (let item of rowLayout) {
+        for (let item of enabledFields) {
             item.label = Language.translate(item.name, 'links', 'scope');
         }
     }
@@ -115,10 +108,8 @@
 </script>
 
 <RowsLayout
-        bind:this={rowsLayout}
         {params}
         {enabledFields}
         {disabledFields}
-        {rowLayout}
         {loadLayout}
 />

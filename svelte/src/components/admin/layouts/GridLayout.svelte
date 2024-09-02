@@ -13,7 +13,7 @@
     export let columnCount: number = 2;
     export let layoutDisabledParameter = 'layoutDetailDisabled';
     let dataAttributeList = ['id', 'name', 'fullWidth', 'customLabel', 'noLabel'];
-    let panelDataAttributeList = ['id', 'panelName', 'style'];
+    let panelDataAttributeList = ['id', 'label', 'style'];
 
     let dataAttributesDefs = {
         fullWidth: {type: 'bool'},
@@ -23,7 +23,7 @@
     };
 
     let panelDataAttributesDefs = {
-        panelName: {type: 'varchar'},
+        label: {type: 'varchar'},
         style: {
             type: 'enum',
             options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
@@ -379,8 +379,18 @@
         console.log(panels)
     }
 
-    function editPanelLabel(panelIndex: number) {
-        // Implement edit panel label logic here
+    function editPanelLabel(panel: any) {
+        params.onEditPanel(panel, panelDataAttributeList, panelDataAttributesDefs, (attributes) => {
+            console.log(attributes)
+            panels = panels.map(p => {
+                if (p.number === panel.number) {
+                    panelDataAttributeList.forEach(item => {
+                        panel[item] = attributes[item]
+                    })
+                }
+                return p;
+            })
+        })
     }
 
     function minusCell(panelNumber: number, rowNumber: number, cellIndex: number) {
@@ -436,7 +446,7 @@
                             <header data-name={panel.name}>
                                 <label data-is-custom={panel.customLabel ? 'true' : undefined}>{panel.customLabel || panel.label || ''}</label>&nbsp;
                                 <a href="#" data-action="edit-panel-label" class="edit-panel-label"
-                                   on:click|preventDefault={() => editPanelLabel(panel.number)}>
+                                   on:click|preventDefault={() => editPanelLabel(panel)}>
                                     <i class="fas fa-pencil-alt fa-sm"></i>
                                 </a>
                                 <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"

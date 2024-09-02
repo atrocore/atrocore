@@ -18,12 +18,6 @@
         return true;
     }
 
-    export function openEditDialog(attributes: any): void {
-        dispatch('openEditDialog', attributes);
-    }
-
-    const dispatch = createEventDispatcher();
-
     let buttonList: Button[] = [
         {name: 'save', label: 'Save', style: 'primary'},
         {name: 'cancel', label: 'Cancel'},
@@ -56,15 +50,13 @@
     }
 
     function emitUpdate() {
-        console.log('emit update')
-        const customEvent = new CustomEvent('layoutUpdated', {
-            detail: {
+        if (params.onUpdate) {
+            params.onUpdate({
                 scope: params.scope,
                 type: params.type,
                 layoutProfileId: params.layoutProfileId
-            }
-        });
-        window.dispatchEvent(customEvent);
+            })
+        }
     }
 
     function cancel(): void {

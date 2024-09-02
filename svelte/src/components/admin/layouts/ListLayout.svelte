@@ -12,7 +12,7 @@
     if (!params.dataAttributeList) {
         params.dataAttributeList = ['id', 'name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'];
     }
-    if (!params.dataAttributeDefs) {
+    if (!params.dataAttributesDefs) {
         params.dataAttributesDefs = {
             link: {type: 'bool'},
             width: {type: 'float'},
@@ -75,7 +75,10 @@
             }
             labelList.push(label);
             enabledFieldsList.push(item.name);
-            return {name: item.name, label};
+            return {
+                ...item,
+                label: item.label || label
+            };
         });
 
         disabledFields = allFields.filter(field => !enabledFieldsList.includes(field)).map(field => {
@@ -99,11 +102,6 @@
                 }
             });
         });
-
-        rowLayout = layout.map(item => ({
-            ...item,
-            label: enabledFields.find(field => field.name === item.name)?.label || Language.translate(item.name, 'fields', params.scope)
-        }));
     }
 
     function checkFieldType(type: string): boolean {
@@ -126,7 +124,6 @@
         {params}
         {enabledFields}
         {disabledFields}
-        {rowLayout}
         {editable}
         {loadLayout}
 />
