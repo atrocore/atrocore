@@ -215,7 +215,6 @@
                         return panel
                     })
                 }
-                console.log(panels)
             }
         });
     }
@@ -232,7 +231,6 @@
                     const panelNumber = parseInt(panelElement.getAttribute('data-number'));
                     return panels.find(panel => panel.number === panelNumber);
                 });
-                console.log(panels)
             }
         });
         document.querySelectorAll('ul.rows').forEach(el => {
@@ -376,12 +374,10 @@
             }
             return panel;
         });
-        console.log(panels)
     }
 
     function editPanelLabel(panel: any) {
         params.onEditPanel(panel, panelDataAttributeList, panelDataAttributesDefs, (attributes) => {
-            console.log(attributes)
             panels = panels.map(p => {
                 if (p.number === panel.number) {
                     panelDataAttributeList.forEach(item => {

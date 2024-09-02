@@ -68,7 +68,6 @@
 
     function editField(field): void {
         params.openEditDialog(field, params.scope, params.dataAttributeList, params.dataAttributesDefs, (attributes) => {
-            console.log('attributes')
             enabledFields = enabledFields.map(item => {
                 if (item.name === field.name) {
                     for (let key in attributes) {
