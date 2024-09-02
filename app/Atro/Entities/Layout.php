@@ -58,7 +58,7 @@ class Layout extends Base
             case 'detailSmall':
                 $data = [];
                 foreach ($this->get('sections', ['orderBy' => 'sortOrder']) ?? [] as $section) {
-                    $sectionData = ['label' => $section->get('name')];
+                    $sectionData = ['label' => $section->get('name') ?? ''];
                     foreach ($this->getKeyList(['style'], $withIds) as $key) {
                         if (!empty($section->get($key))) {
                             $sectionData[$key] = $section->get($key);
@@ -85,8 +85,12 @@ class Layout extends Base
                         foreach ($row as $item) {
                             $newRow[] = $item;
                         }
-                        if (count($row) === 1 && !isset($row[0])) {
-                            array_unshift($newRow, false);
+                        if (count($row) === 1) {
+                            if (!isset($row[0])) {
+                                array_unshift($newRow, false);
+                            } else if (empty($row[0]['fullWidth'])) {
+                                $newRow[] = false;
+                            }
                         }
                         $sectionData['rows'][] = $newRow;
                     }

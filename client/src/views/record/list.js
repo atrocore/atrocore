@@ -214,6 +214,32 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 } else {
                     this.massAction(action);
                 }
+            },
+            'click .layout-editor': function (e) {
+                // open modal view
+                this.createView('dialog', 'views/admin/layouts/modals/edit', {
+                    scope: this.scope,
+                    type: this.layoutName,
+                    el: '[data-view="dialog"]',
+                }, view => {
+                    view.render()
+                    this.listenToOnce(view, 'close', (data) => {
+                        this.clearView('dialog');
+                        console.log('data', data)
+                        if (data && data.layoutIsUpdated) {
+                            this.listLayout = null
+                            this._internalLayout = null
+                            this.getInternalLayout(() => {
+                                this.notify('Loading...')
+                                this.collection.fetch({keepSelected: true})
+                                this.collection.once('sync', () => {
+                                    this.notify(false);
+                                })
+                            })
+
+                        }
+                    });
+                });
             }
         },
 
@@ -360,7 +386,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.length && !fixedHeaderRow
+                showNoData: !this.collection.length && !fixedHeaderRow,
+                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts'])
             };
         },
 
@@ -1108,14 +1135,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.$el.find('.show-more').addClass('hidden')
                 }
 
-                if(this.collection.total !=null){
+                if (this.collection.total != null) {
                     this.$el.find('.list-buttons-container .preloader').addClass('hidden')
                     this.$el.find('.list-buttons-container .total-count').removeClass('hidden')
-                    if(this.collection.total>=0){
+                    if (this.collection.total >= 0) {
                         this.$el.find('.total-count-span').html(this.collection.total)
                         this.$el.find('.shown-count-span').html(this.collection.length)
                     }
-                }else{
+                } else {
                     this.$el.find('.list-buttons-container .preloader').removeClass('hidden')
                     this.$el.find('.list-buttons-container .text-count').addClass('hidden')
                 }

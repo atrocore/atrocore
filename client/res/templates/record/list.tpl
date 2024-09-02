@@ -30,6 +30,12 @@
         {{/if}}
     {{/if}}
 
+    {{#if hasLayoutEditor}}
+    <a class="btn btn-link layout-editor" style="padding: 0;margin-top: -3px;">
+        <span class="fas fa-columns cursor-pointer" ></span>
+    </a>
+    {{/if}}
+
     {{#if displayTotalCount}}
     <div class="text-muted total-count {{#if totalLoading}} hidden {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
     <img class="preloader {{#unless totalLoading}} hidden {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />

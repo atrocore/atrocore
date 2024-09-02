@@ -34,9 +34,7 @@
 
     <div id="layouts-panel" class="col-sm-9">
         <h4 id="layout-header" style="margin-top: 0px;"></h4>
-        <div id="layout-content">
-            {{{content}}}
-        </div>
+        <div id="layout-content"></div>
     </div>
 </div>
 

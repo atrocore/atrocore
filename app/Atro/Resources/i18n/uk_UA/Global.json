@@ -112,6 +112,7 @@
 
   },
   "labels": {
+    "customizeLayout": "Налаштувати макет",
     "Reupload": "Перезавантажити",
     "attachFiles":"Прикріпити файли",
     "typeToSearch": "Введ. і натисн. Enter...",

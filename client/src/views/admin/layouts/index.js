@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/layouts/index', 'view', function (Dep) {
+Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-utils'], function (Dep, LayoutUtils) {
 
     return Dep.extend({
 
@@ -57,21 +57,6 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
                 typeList: this.typeList,
                 scope: this.scope
             };
-        },
-
-        events: {
-            'click #layouts-menu button.layout-link': function (e) {
-                var scope = $(e.currentTarget).data('scope');
-                var type = $(e.currentTarget).data('type');
-                if (this.getView('content')) {
-                    if (this.scope == scope && this.type == type) {
-                        return;
-                    }
-                }
-                $("#layouts-menu button.layout-link").removeClass('disabled');
-                $(e.target).addClass('disabled');
-                this.openLayout(scope, type, this.layoutProfileId);
-            },
         },
 
         setup: function () {
@@ -103,6 +88,7 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
 
             this.getModelFactory().create('Layout', (model) => {
                 this.model = model;
+                model.set('id', '1')
                 model.set('entity', this.scope)
                 model.set('viewType', this.type)
                 model.set('layoutProfileId', this.layoutProfileId)
@@ -153,21 +139,18 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
 
             this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : ''), {trigger: false});
 
-            this.notify('Loading...');
 
             var typeReal = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
-            this.createView('content', 'Admin.Layouts.' + Espo.Utils.upperCaseFirst(typeReal), {
-                el: '#layout-content',
-                scope: scope,
+            LayoutUtils.renderComponent.call(this, {
                 type: type,
-                layoutProfileId: layoutProfileId
-            }, function (view) {
-                this.renderLayoutHeader();
-                view.render();
-                this.notify(false);
-                $(window).scrollTop(0);
-            }.bind(this));
+                scope: scope,
+                layoutProfileId: layoutProfileId,
+                editable: true,
+                afterRender: () => {
+                    this.renderLayoutHeader();
+                },
+            })
         },
 
         renderDefaultPage: function () {

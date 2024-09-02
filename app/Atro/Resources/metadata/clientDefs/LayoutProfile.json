@@ -8,5 +8,12 @@
   ],
   "views": {
     "detail": "views/layout-profile/detail"
+  },
+  "relationshipPanels": {
+    "layouts": {
+      "create": false,
+      "select": false,
+      "rowActionsView": "views/record/row-actions/edit-and-remove"
+    }
   }
 }

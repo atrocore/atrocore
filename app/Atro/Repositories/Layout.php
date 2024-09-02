@@ -30,7 +30,8 @@ class Layout extends Base
                 case 'list';
                 case 'listSmall':
                 case 'kanban':
-                    $listItems = $entity->get('listItems') ?? [];
+                    $repository = $this->getEntityManager()->getRepository('LayoutListItem');
+                    $listItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
                     $processedItems = [];
 
                     foreach ($data as $index => $item) {
@@ -44,7 +45,7 @@ class Layout extends Base
                             }
                         }
                         if (empty($listItemEntity)) {
-                            $listItemEntity = $this->getEntityManager()->getRepository('LayoutListItem')->get();
+                            $listItemEntity = $repository->get();
                         }
 
                         $listItemEntity->set([
@@ -71,12 +72,14 @@ class Layout extends Base
                     break;
                 case 'detail':
                 case 'detailSmall':
-                    $sections = $entity->get('sections') ?? [];
+                    $repository = $this->getEntityManager()->getRepository('LayoutSection');
+                    $rowItemRepository = $this->getEntityManager()->getRepository('LayoutRowItem');
+                    $sections = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
                     $processedSections = [];
 
                     foreach ($data as $index => $item) {
                         if (empty($item['id'])) {
-                            $section = $this->getEntityManager()->getRepository('LayoutSection')->get();
+                            $section = $repository->get();
                         } else {
                             foreach ($sections as $s) {
                                 if ($s->get('id') === $item['id']) {
@@ -91,7 +94,7 @@ class Layout extends Base
                         }
                         $section->set([
                             'layoutId'  => $entity->get('id'),
-                            'name'      => $item['customLabel'],
+                            'name'      => $item['label'],
                             'style'     => $item['style'] ?? null,
                             'sortOrder' => $index,
                         ]);
@@ -99,7 +102,7 @@ class Layout extends Base
 
 
                         //create row items
-                        $rowItems = $section->get('rowItems') ?? [];
+                        $rowItems = $rowItemRepository->where(['sectionId' => $section->get('id')])->find() ?? [];
                         $processedItems = [];
                         foreach ($item['rows'] as $rowIndex => $row) {
                             foreach ($row as $columnIndex => $column) {
@@ -114,7 +117,7 @@ class Layout extends Base
                                     }
                                     // create new entity
                                     if (empty($rowItemEntity)) {
-                                        $rowItemEntity = $this->getEntityManager()->getRepository('LayoutRowItem')->get();
+                                        $rowItemEntity = $rowItemRepository->get();
                                     }
                                     $rowItemEntity->set([
                                         'sectionId'   => $section->get('id'),
@@ -144,7 +147,8 @@ class Layout extends Base
                     }
                     break;
                 case 'relationships':
-                    $relationshipItems = $entity->get('relationshipItems') ?? [];
+                    $repository = $this->getEntityManager()->getRepository('LayoutRelationshipItem');
+                    $relationshipItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
                     $processedRelationships = [];
 
                     foreach ($data as $index => $item) {
@@ -158,7 +162,7 @@ class Layout extends Base
                             }
                         }
                         if (empty($relationshipItemEntity)) {
-                            $relationshipItemEntity = $this->getEntityManager()->getRepository('LayoutRelationshipItem')->get();
+                            $relationshipItemEntity = $repository->get();
                         }
 
                         $relationshipItemEntity->set([
@@ -182,7 +186,8 @@ class Layout extends Base
                 case 'sidePanelsEdit':
                 case 'sidePanelsDetailSmall':
                 case 'sidePanelsEditSmall':
-                    $panelItems = $entity->get('sidePanelItems') ?? [];
+                    $repository = $this->getEntityManager()->getRepository('LayoutSidePanelItem');
+                    $panelItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
                     $processedItems = [];
 
                     $index = 0;
@@ -197,7 +202,7 @@ class Layout extends Base
                             }
                         }
                         if (empty($panelItemEntity)) {
-                            $panelItemEntity = $this->getEntityManager()->getRepository('LayoutSidePanelItem')->get();
+                            $panelItemEntity = $repository->get();
                         }
 
                         $panelItemEntity->set([
