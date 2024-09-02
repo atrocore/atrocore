@@ -56,7 +56,7 @@ Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
             this.assignedUserId = data.userId || null;
             this.assignedUserName = data.userName || null;
 
-            this.messageData['assignee'] = '<a href="#User/view/' + this.assignedUserId + '">' + this.assignedUserName + '</a>';
+            this.messageData['assignee'] = '<a href="#User/view/' + this.assignedUserId + '">' + Handlebars.Utils.escapeExpression(this.assignedUserName) + '</a>';
 
             if (this.isUserStream) {
                 if (this.assignedUserId) {

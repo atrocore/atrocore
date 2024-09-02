@@ -414,7 +414,7 @@ Espo.define(
                 helper.basePath = this.basePath;
                 helper.appParams = this.appParams;
 
-                window.SvelteLayoutManager.setLayoutManager(helper.layoutManager);
+                window.SvelteLayoutManager.setLayoutManager(helper.layoutManager)
                 window.SvelteMetadata.setMetadata(helper.metadata)
                 window.SvelteModelFactory.setModelFactory(helper.modelFactory)
 

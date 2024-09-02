@@ -41,7 +41,7 @@
     <img class="preloader {{#unless totalLoading}} hidden {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
     {{/if}}
 
-
+    <div class="text-muted selected-count hidden">{{translate 'Selected'}}: <span class="selected-count-span">0</span></div>
 
     {{#each buttonList}}
         {{button name scope=../../scope label=label style=style}}
