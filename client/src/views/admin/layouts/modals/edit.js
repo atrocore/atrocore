@@ -25,7 +25,7 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
             LayoutUtils.renderComponent.call(this, {
                 type: this.options.type,
                 scope: this.options.scope,
-                layoutProfileId: 'custom',
+                layoutProfileId: this.options.layoutProfileId ?? 'custom',
                 editable: true,
                 onUpdate: this.layoutUpdated.bind(this)
             })
