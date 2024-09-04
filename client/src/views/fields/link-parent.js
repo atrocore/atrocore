@@ -282,7 +282,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         minChars: 1,
                         paramName: 'q',
                         formatResult: function (suggestion) {
-                            return suggestion.name;
+                            return Handlebars.Utils.escapeExpression(suggestion.name);
                         },
                         transformResult: function (response) {
                             var response = JSON.parse(response);

@@ -44,6 +44,7 @@ abstract class AbstractNotificationTransport
         $languageManager = $this->getLanguage();
         $initialLanguage = $languageManager->getLanguage();
         $languageManager->setLanguage($language);
+        $params['language'] = $language;
         foreach ($params as $key => $param) {
             if ($param instanceof Entity) {
                 $params[$key . 'Type'] = $param->getEntityType();

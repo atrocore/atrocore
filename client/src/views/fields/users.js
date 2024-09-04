@@ -34,6 +34,8 @@ Espo.define('views/fields/users', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
+        foreignScope: 'User',
+
         init: function () {
             this.assignmentPermission = this.getAcl().get('assignmentPermission');
             if (this.assignmentPermission == 'no') {

@@ -95,6 +95,7 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "customizeLayout": "Layout anpassen",
     "deletePermanently": "Dauerhaft löschen",
     "Reupload": "Neu hochladen",
     "attachFiles":"Dateien anhängen",
@@ -284,6 +285,7 @@
     "Tree View": "Baumansicht",
     "Unlink All": "Alle Links entfernen",
     "Total": "Gesamt",
+    "Selected": "Ausgewählte",
     "Print to PDF": "Als PDF drucken",
     "Default": "Standard",
     "Number": "Nummer",
@@ -315,7 +317,9 @@
     "Provide Feedback": "Feedback geben",
     "Instance comparison": "Instanzvergleich",
     "previewTemplate": "Vorschau Vorlage",
-    "Duplicate and Select": "Duplizieren und Auswählen"
+    "Duplicate and Select": "Duplizieren und Auswählen",
+    "Select Image": "Vorhandenes Bild auswählen",
+    "Upload Image": "Bild von einem lokalen Dateisystem hochladen"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -328,7 +332,7 @@
     "minimumOneOptionsRequired": "Mindestens ein Optionswert ist erforderlich.",
     "defaultEnumValueCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
     "defaultUnitCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
-    "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
+    "resetAllToDefaultConfirm": "Sind Sie sicher, dass Sie alle Layouts für :name auf die Standardwerte zurücksetzen möchten?",
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
     "fieldIsUploading": "Hochladen läuft",
     "fieldMaxFileSizeError": "Datei sollte {max} Mb nicht überschreiten",
@@ -352,7 +356,7 @@
     "massRestoreResultSingle": "{count} Datensatz ist jetzt wiederhergestellt",
     "massRestoreZeroResult": "Es wurde nichts wiederhergestellt",
     "posting": "postiere...",
-    "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Post zu nennen.\\nVerfügbare Syntax:`<code>code</code>````<code>multiline code</code>```**<strong>strong text</strong>***<em>emphasized text</em>*~~<del>deleted text</del>~~> blockquote[link text](url)",
+    "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Post zu nennen.",
     "writeMessageToSelf": "Nachricht bei eigenen Aktivitäten erfassen",
     "writeYourCommentHere": "Notiz hier erfassen",
     "massUpdateResult": "{count} Einträge werden aktualisiert",

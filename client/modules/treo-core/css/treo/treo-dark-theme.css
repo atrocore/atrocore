@@ -15743,6 +15743,10 @@ ul.dropdown-menu > li.checkbox:last-child {
     padding: 6px 0
 }
 
+.list-buttons-container > div.selected-count {
+    float: right;
+}
+
 .list-container .pagination {
     margin: 0
 }
@@ -22616,13 +22620,13 @@ select {
     padding-left: 14px;
 }
 
-del {
+del.diffmod, del.diffdel {
     color: red;
     background: #fdd;
     text-decoration: none;
 }
 
-ins {
+ins.diffins, ins.diffmod {
     color: green;
     background: #dfd;
     text-decoration: none;
@@ -23625,7 +23629,8 @@ span.CodeMirror-selectedtext {
     border-left: 1px solid #ced4da;
     border-right: 1px solid #ced4da;
     border-top-left-radius: 4px;
-    border-top-right-radius: 4px
+    border-top-right-radius: 4px;
+    background-color: #ffffff;
 }
 
 .editor-toolbar.fullscreen {
@@ -23695,8 +23700,12 @@ span.CodeMirror-selectedtext {
 .editor-toolbar button {
     font-weight: 700;
     min-width: 30px;
-    padding: 0 6px;
+    padding: 0 5px;
     white-space: nowrap
+}
+
+.editor-toolbar button .fa {
+    font-size: 13px;
 }
 
 .editor-toolbar button.active, .editor-toolbar button:hover {
@@ -23945,4 +23954,40 @@ span[data-img-src]::after {
 
 .CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
     background: rgba(255, 0, 0, .15)
+}
+
+.CodeMirror-wrap.preview-enabled .editor-preview-full.editor-preview {
+    position: relative;
+    margin: -10px;
+    width: auto;
+}
+
+.textcomplete-dropdown {
+    border: 1px solid #ddd;
+    background-color: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.textcomplete-dropdown li {
+    margin: 0;
+}
+
+.textcomplete-footer,
+.textcomplete-item {
+    border-top: 1px solid #ddd;
+}
+
+.textcomplete-item {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.textcomplete-item:hover {
+    background-color: #eee;
+}
+
+.textcomplete-item.active {
+    background-color: #ddd;
 }

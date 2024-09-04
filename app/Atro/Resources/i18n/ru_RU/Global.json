@@ -374,7 +374,7 @@
     "fieldShouldBeInt": "{field} должно быть действительное целое число",
     "fieldShouldBeDate": "{field} должно быть действительной датой",
     "fieldShouldBeDatetime": "{field} должно быть действительной датой/временем",
-    "streamPostInfo": "Тип <strong>@username</strong> для упоминания пользователей в почте.\n\nAvailable markdown syntax:\n`<code>code</code>`\n```<code>multiline code</code>```\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~~<del>deleted text</del>~~\n> blockquote\n[link text](url)",
+    "streamPostInfo": "Тип <strong>@username</strong> для упоминания пользователей в почте.",
     "massFollowResult": "{count} записей сейчас отслеживаются",
     "massUnfollowResult": "{count} записей сейчас не отслеживаются",
     "massFollowResultSingle": "{count} запись сейчас отслеживается",

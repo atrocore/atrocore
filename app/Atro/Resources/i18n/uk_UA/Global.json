@@ -112,6 +112,7 @@
 
   },
   "labels": {
+    "customizeLayout": "Налаштувати макет",
     "Reupload": "Перезавантажити",
     "attachFiles":"Прикріпити файли",
     "typeToSearch": "Введ. і натисн. Enter...",
@@ -270,6 +271,7 @@
     "Tree View": "Відображати у вигляді дерева",
     "Unlink All": "Прибрати всі посилання",
     "Total": "Усього",
+    "Selected": "Вибране",
     "Print to PDF": "Роздрукувати у PDF",
     "Default": "За замовчуванням",
     "Number": "Номер",
@@ -332,7 +334,9 @@
     "Dashboard": "Панелі віджетів",
     "Provide Feedback": "Зворотній зв'язок",
     "Instance comparison": "Порівняння інстансів",
-    "previewTemplate": "Шаблон для перегляду"
+    "previewTemplate": "Шаблон для перегляду",
+    "Select Image": "Обрати існуюче зображення",
+    "Upload Image": "Завантажити зображення з пристрою"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
@@ -344,7 +348,7 @@
     "minimumOneOptionsRequired": "Потрібно мінімум одне значення параметра.",
     "defaultEnumValueCannotBeEmpty": "Якщо порожні значення заборонені, слід вибрати значення за замовчуванням.",
     "defaultUnitCannotBeEmpty": "Якщо порожні значення заборонено, слід вибрати значення одиниці виміру за замовчуванням.",
-    "resetAllToDefaultConfirm": "Ви впевнені, що хочете відновити всі макети за замовчуванням?",
+    "resetAllToDefaultConfirm": "Ви впевнені, що бажаєте скинути всі макети до значень за замовчуванням для :name?",
     "pleaseWait": "Будь ласка, зачекайте...",
     "posting": "Розміщується...",
     "confirmLeaveOutMessage": "Ви справді хочете покинути цю форму?",
@@ -417,7 +421,7 @@
     "fieldShouldBeInt": "{field} має бути дійсне ціле число",
     "fieldShouldBeDate": "{field} має бути дійсною датою",
     "fieldShouldBeDatetime": "{field} має бути дійсною датою/часом",
-    "streamPostInfo": "Тип <strong>@username</strong> для згадки користувачів у пошті. </code>```\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~~<del>deleted text</del>~~ \n> blockquote\n[link text](url)",
+    "streamPostInfo": "Вкажіть <strong>@username</strong> для згадки користувачів у пошті.",
     "massFollowResult": "{count} записів зараз відстежуються",
     "massUnfollowResult": "{count} записів зараз не відстежуються",
     "massFollowResultSingle": "{count} запис зараз відстежується",

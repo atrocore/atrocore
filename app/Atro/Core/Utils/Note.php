@@ -83,54 +83,7 @@ class Note
         return $this->streamEnabled[$entityType];
     }
 
-    protected function followCreatedEntity(OrmEntity $entity): void
-    {
-        $userIdList = [];
-        if ($this->isFollowCreatedEntities() && $entity->get('createdById') && $entity->get('createdById') === $this->getUser()->id) {
-            $this->getStreamService()->followEntity($entity, $entity->get('createdById'));
-            $userIdList[] = $entity->get('createdById');
-        }
-        if (!empty($entity->get('assignedUserId')) && !in_array($entity->get('assignedUserId'), $userIdList)) {
-            $this->getStreamService()->followEntity($entity, $entity->get('assignedUserId'));
-            $userIdList[] = $entity->get('assignedUserId');
-        }
-
-        if (in_array($this->getUser()->id, $userIdList)) {
-            $entity->set('isFollowed', true);
-        }
-    }
-
-    protected function getAuditedFieldsData(OrmEntity $entity): array
-    {
-        $entityType = $entity->getEntityType();
-
-        if (!array_key_exists($entityType, $this->auditedFieldsCache)) {
-            $auditableTypes = [];
-            foreach ($this->getMetadata()->get('fields') as $type => $typeData) {
-                if (!empty($typeData['auditable'])) {
-                    $auditableTypes[] = $type;
-                }
-            }
-
-            $systemFields = ['id', 'deleted', 'createdAt', 'modifiedAt', 'createdBy'];
-
-            $fields = $this->getMetadata()->get('entityDefs.' . $entityType . '.fields');
-
-            $auditedFields = [];
-            foreach ($fields as $field => $d) {
-                if (!empty($d['type']) && in_array($d['type'], $auditableTypes) && !in_array($field, $systemFields) && empty($d['notStorable'])) {
-                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
-                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
-                    $auditedFields[$field]['fieldType'] = $d['type'];
-                }
-            }
-            $this->auditedFieldsCache[$entityType] = $auditedFields;
-        }
-
-        return $this->auditedFieldsCache[$entityType];
-    }
-
-    protected function handleAudited(OrmEntity $entity): void
+    public function getChangedFieldsData(OrmEntity $entity): array
     {
         $auditedFields = $this->getAuditedFieldsData($entity);
 
@@ -177,18 +130,73 @@ class Note
             }
         }
 
-        if (empty($was) && empty($became)) {
-            return;
+        return [
+            'fields'     => $updatedFieldList,
+            'attributes' => [
+                'was'    => $was,
+                'became' => $became
+            ]
+        ];
+    }
+
+    protected function followCreatedEntity(OrmEntity $entity): void
+    {
+        $userIdList = [];
+        if ($this->isFollowCreatedEntities() && $entity->get('createdById') && $entity->get('createdById') === $this->getUser()->id) {
+            $this->getStreamService()->followEntity($entity, $entity->get('createdById'));
+            $userIdList[] = $entity->get('createdById');
+        }
+        if (!empty($entity->get('assignedUserId')) && !in_array($entity->get('assignedUserId'), $userIdList)) {
+            $this->getStreamService()->followEntity($entity, $entity->get('assignedUserId'));
+            $userIdList[] = $entity->get('assignedUserId');
         }
 
-        if (!empty($updatedFieldList)) {
-            $this->createNote('Update', $entity->getEntityType(), $entity->id, [
-                'fields'     => $updatedFieldList,
-                'attributes' => [
-                    'was'    => $was,
-                    'became' => $became
-                ]
-            ]);
+        if (in_array($this->getUser()->id, $userIdList)) {
+            $entity->set('isFollowed', true);
+        }
+    }
+
+    protected function getAuditedFieldsData(OrmEntity $entity): array
+    {
+        $entityType = $entity->getEntityType();
+
+        if (!array_key_exists($entityType, $this->auditedFieldsCache)) {
+            $auditableTypes = [];
+            foreach ($this->getMetadata()->get('fields') as $type => $typeData) {
+                if (!empty($typeData['auditable'])) {
+                    $auditableTypes[] = $type;
+                }
+            }
+
+            $systemFields = ['id', 'deleted', 'createdAt', 'modifiedAt', 'createdBy'];
+
+            $fields = $this->getMetadata()->get('entityDefs.' . $entityType . '.fields');
+
+            $auditedFields = [];
+            foreach ($fields as $field => $d) {
+
+                if(!empty($d['auditableDisabled'])){
+                    continue;
+                }
+
+                if (!empty($d['type']) && in_array($d['type'], $auditableTypes) && !in_array($field, $systemFields) && empty($d['notStorable'])) {
+                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['fieldType'] = $d['type'];
+                }
+            }
+            $this->auditedFieldsCache[$entityType] = $auditedFields;
+        }
+
+        return $this->auditedFieldsCache[$entityType];
+    }
+
+    protected function handleAudited(OrmEntity $entity): void
+    {
+        $data = $this->getChangedFieldsData($entity);
+
+        if (!empty($data['fields']) && !empty($data['attributes']['was']) && !empty($data['attributes']['became'])) {
+            $this->createNote('Update', $entity->getEntityType(), $entity->id, $data);
         }
     }
 

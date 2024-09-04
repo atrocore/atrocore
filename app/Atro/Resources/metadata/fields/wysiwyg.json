@@ -47,11 +47,6 @@
          "type":"bool"
       },
       {
-         "name": "attachmentField",
-         "type": "varchar",
-         "hidden": true
-      },
-      {
          "name": "useIframe",
          "type": "bool"
       }

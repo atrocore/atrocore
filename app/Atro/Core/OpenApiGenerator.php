@@ -16,7 +16,6 @@ namespace Atro\Core;
 use Espo\Core\ControllerManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 
 class OpenApiGenerator
@@ -47,182 +46,7 @@ class OpenApiGenerator
             'tags'       => [
                 ['name' => 'App']
             ],
-            'paths'      => [
-                '/App/user'                  => [
-                    'get' => [
-                        'tags'        => ['App'],
-                        "summary"     => "Generate authorization token and return authorized user data.",
-                        "description" => "Generate authorization token and return authorized user data.",
-                        "operationId" => "getAuthorizedUserData",
-                        'security'    => [['basicAuth' => []]],
-                        'parameters'  => [
-                            [
-                                "name"     => "Authorization-Token-Only",
-                                "in"       => "header",
-                                "required" => true,
-                                "schema"   => [
-                                    "type"    => "boolean",
-                                    "example" => "true"
-                                ]
-                            ],
-                            [
-                                "name"        => "Authorization-Token-Lifetime",
-                                "in"          => "header",
-                                "required"    => false,
-                                "description" => "Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
-                                "schema"      => [
-                                    "type"    => "integer",
-                                    "example" => "0"
-                                ]
-                            ],
-                            [
-                                "name"        => "Authorization-Token-Idletime",
-                                "in"          => "header",
-                                "required"    => false,
-                                "description" => "Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
-                                "schema"      => [
-                                    "type"    => "integer",
-                                    "example" => "0"
-                                ]
-                            ],
-                        ],
-                        "responses"   => [
-                            "200" => [
-                                "description" => "OK",
-                                "content"     => [
-                                    "application/json" => [
-                                        "schema" => [
-                                            "type"       => "object",
-                                            "properties" => [
-                                                "authorizationToken" => [
-                                                    "type" => "string",
-                                                ],
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ],
-                            "304" => [
-                                "description" => "Not Modified"
-                            ],
-                            "400" => [
-                                "description" => "Bad Request"
-                            ],
-                            "401" => [
-                                "description" => "Unauthorized"
-                            ],
-                            "403" => [
-                                "description" => "Forbidden"
-                            ],
-                            "404" => [
-                                "description" => "Not Found"
-                            ],
-                            "500" => [
-                                "description" => "Internal Server Error"
-                            ],
-                        ]
-                    ]
-                ],
-                '/MassActions/action/upsert' => [
-                    'post' => [
-                        'tags'        => ['MassActions'],
-                        "summary"     => "Bulk create and bulk update.",
-                        "description" => "Bulk create and bulk update.",
-                        "operationId" => "upsert",
-                        'security'    => [['Authorization-Token' => []]],
-                        'parameters'  => [
-                            [
-                                "name"     => "Use-Queue",
-                                "in"       => "header",
-                                "required" => false,
-                                "schema"   => [
-                                    "type"    => "boolean",
-                                    "example" => "false"
-                                ]
-                            ],
-                        ],
-                        'requestBody' => [
-                            'required' => true,
-                            'content'  => [
-                                'application/json' => [
-                                    'schema' => [
-                                        "type"    => "array",
-                                        "items"   => [
-                                            "type" => "object",
-                                        ],
-                                        'example' => [
-                                            [
-                                                'entity'  => 'Brand',
-                                                'payload' => [
-                                                    'id'   => '1111122222',
-                                                    'name' => 'Some Brand name',
-                                                    'nameDeDe' => 'Irgendein Markenname',
-                                                    'code' => 'b_1111122222'
-                                                ]
-                                            ],
-                                            [
-                                                'entity'  => 'Product',
-                                                'payload' => [
-                                                    'name'    => 'Some product name',
-                                                    'brandId' => '1111122222'
-                                                ]
-                                            ]
-                                        ]
-                                    ],
-                                ]
-                            ],
-                        ],
-                        "responses"   => [
-                            "200" => [
-                                "description" => "OK",
-                                "content"     => [
-                                    "application/json" => [
-                                        "schema" => [
-                                            "type"    => "array",
-                                            "items"   => [
-                                                "type" => "object"
-                                            ],
-                                            'example' => [
-                                                [
-                                                    'status'  => 'Failed',
-                                                    'stored'  => false,
-                                                    'message' => "'entity' parameter is required."
-                                                ],
-                                                [
-                                                    'status' => 'Created',
-                                                    'stored' => true,
-                                                    'entity' => [
-                                                        'id'   => 'some-product-id-1',
-                                                        'name' => 'Some product name 1'
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ],
-                            "304" => [
-                                "description" => "Not Modified"
-                            ],
-                            "400" => [
-                                "description" => "Bad Request"
-                            ],
-                            "401" => [
-                                "description" => "Unauthorized"
-                            ],
-                            "403" => [
-                                "description" => "Forbidden"
-                            ],
-                            "404" => [
-                                "description" => "Not Found"
-                            ],
-                            "500" => [
-                                "description" => "Internal Server Error"
-                            ],
-                        ]
-                    ]
-                ]
-            ],
+            'paths'      => [],
             'components' => [
                 'securitySchemes' => [
                     'basicAuth'           => [
@@ -238,11 +62,37 @@ class OpenApiGenerator
             ]
         ];
 
+        foreach ($this->container->get('route')->getAll() as $route) {
+            if (empty($route['description'])) {
+                continue;
+            }
+
+            $row = [
+                'tags'        => [$route['params']['controller']],
+                'summary'     => $route['summary'] ?? $route['description'],
+                'description' => $route['description'],
+                'operationId' => md5("{$route['route']}_{$route['method']}"),
+                "responses"   => self::prepareResponses($route['response'])
+            ];
+
+            if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
+                $row['security'] = [['Authorization-Token' => []]];
+            }
+            if (!empty($route['security'])) {
+                $row['security'] = $route['security'];
+            }
+            if (!empty($route['requestParameters'])) {
+                $row['parameters'] = $route['requestParameters'];
+            }
+            if (!empty($route['requestBody'])) {
+                $row['requestBody'] = $route['requestBody'];
+            }
+
+            $result['paths'][$route['route']][$route['method']] = $row;
+        }
+
         /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->container->get('entityManager');
 
         /** @var Config $config */
         $config = $this->container->get('config');
@@ -266,8 +116,8 @@ class OpenApiGenerator
             ];
 
             foreach ($data['fields'] as $fieldName => $fieldData) {
-                if (!empty($fieldData['noLoad']) || !empty($fieldData['emHidden'])) {
-                    continue 1;
+                if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
+                    continue;
                 }
 
                 if (!empty($fieldData['required'])) {
@@ -297,11 +147,11 @@ class OpenApiGenerator
                     case "link":
                     case "linkParent":
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = ['type' => 'string'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = ['type' => 'string', 'forRead' => true];
                         break;
                     case "linkMultiple":
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = ['type' => 'array', 'items' => ['type' => 'string']];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = ['type' => 'object'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = ['type' => 'object', 'forRead' => true];
                         break;
                     default:
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
@@ -331,11 +181,10 @@ class OpenApiGenerator
                 foreach ($schema['properties'] as $k => $v) {
                     if (
                         substr($k, 0, 1) === '_'
-                        || substr($k, -4) === 'Name'
-                        || substr($k, -5) === 'Names'
                         || $k === 'createdAt'
                         || $k === 'modifiedAt'
                         || $k === 'createdById'
+                        || !empty($v['forRead'])
                     ) {
                         unset($schema['properties'][$k]);
                     }

@@ -79,5 +79,10 @@
   },
   "EasyMDE": {
     "path": "client/lib/easymde.min.js"
+  },
+  "TextComplete": {
+    "path": "client/lib/textcomplete-bundle.js",
+    "exportsTo": "window",
+    "exportsAs": "TextCompleteBundle"
   }
 }

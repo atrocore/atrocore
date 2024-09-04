@@ -30,10 +30,18 @@
         {{/if}}
     {{/if}}
 
-    {{#if displayTotalCount}}
-    <div class="text-muted total-count {{#if totalLoading}} hide {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
-    <img class="preloader {{#unless totalLoading}} hide {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
+    {{#if hasLayoutEditor}}
+    <a class="btn btn-link layout-editor" style="padding: 0;margin-top: -3px;">
+        <span class="fas fa-columns cursor-pointer" ></span>
+    </a>
     {{/if}}
+
+    {{#if displayTotalCount}}
+    <div class="text-muted total-count {{#if totalLoading}} hidden {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
+    <img class="preloader {{#unless totalLoading}} hidden {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
+    {{/if}}
+
+    <div class="text-muted selected-count hidden">{{translate 'Selected'}}: <span class="selected-count-span">0</span></div>
 
     {{#each buttonList}}
         {{button name scope=../../scope label=label style=style}}
@@ -127,7 +135,7 @@
     </table>
     {{#unless paginationEnabled}}
     {{#if showMoreEnabled}}
-    <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
+    <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
         <a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore" {{#if showCount}}title="{{translate 'Total'}}: {{collection.total}}"{{/if}}>
             <span class="more-label">{{countLabel}}</span>
         </a>

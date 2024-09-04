@@ -19,7 +19,13 @@ class ConvertFileToBase64FromUrl extends AbstractTwigFunction
 {
     public function run(string $url, ?string $type = null)
     {
-        $data = base64_encode(file_get_contents($url));
+        $content = file_get_contents($url);
+
+        if(empty($content)){
+            return false;
+        }
+
+        $data = base64_encode($content);
 
         if($type){
             $data = "data:". $type . ';base64,' . $data;

@@ -26,8 +26,9 @@ class QueueManagerEmailSender extends QueueManagerBase
         $params = !empty($data['params']) ? $data['params'] : [];
         $connectionEntity = $this->getEntityManager()->getEntity('Connection', $data['connectionId']);
 
-        if (empty($connectionEntity)) {
-            throw new \Exception("Connection entity not found : " . $data['connectionId']);
+        if (empty($connectionEntity) || empty($connectionEntity->id)) {
+            $GLOBALS['log']->error("SMTP Connection entity not found : " . $data['connectionId']);
+            return true;
         }
 
         try {

@@ -259,19 +259,6 @@ class Application
     }
 
     /**
-     * Get route list
-     *
-     * @return mixed
-     */
-    protected function getRouteList()
-    {
-        $routes = new Route($this->getContainer()->get('fileManager'), $this->getContainer()->get('moduleManager'), $this->getContainer()->get('dataManager'));
-        $routeList = $routes->getAll();
-
-        return $routeList;
-    }
-
-    /**
      * Run API for installer
      */
     protected function runInstallerApi()
@@ -417,7 +404,7 @@ class Application
     {
         $crudList = array_keys($this->getConfig()->get('crud'));
 
-        foreach ($this->getRouteList() as $route) {
+        foreach ($this->getContainer()->get('route')->getAll() as $route) {
             $method = strtolower($route['method']);
             if (!in_array($method, $crudList) && $method !== 'options') {
                 $message = "Route: Method [$method] does not exist. Please check your route [" . $route['route'] . "]";
