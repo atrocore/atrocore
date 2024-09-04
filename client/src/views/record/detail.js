@@ -166,7 +166,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             'click a[data-action="expandAllPanels"]': function (e) {
                 this.collapseAllPanels('show');
             },
-            'click .layout-editor': function (e) {
+            'click a[data-action="layoutEditor"]': function (e) {
                 // open modal view
                 this.createView('dialog', 'views/admin/layouts/modals/edit', {
                     scope: this.scope,
@@ -183,7 +183,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 const middle = this.getView('middle')
                                 if (middle) {
                                     middle._layout = layout
-                                    middle.reRender()
+                                    middle._loadNestedViews(() => {
+                                        middle.reRender()
+                                    })
+                                    
+                                    // update panel navigation
+                                    let bottom = this.getView('bottom')
+                                    if(bottom){
+                                        for (let key of ['panelDetailNavigation', 'panelEditNavigation']) {
+                                            let navigation = this.getView(key)
+                                            if (navigation) {
+                                                navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
+                                                navigation.reRender()
+                                            }
+                                        }
+                                    }
                                 }
                             })
                         }
@@ -1712,11 +1726,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     view.$el.find('.panel-heading:first').append(html);
                 }
                 // add layout configuration button
-                if (bottom && this.getMetadata().get(['scopes', this.model.name, 'layouts'])) {
-                    let html = `<a class="btn btn-link collapsing-button " style="margin-left: 5px; padding: 0;">
+                if (this.getMetadata().get(['scopes', this.model.name, 'layouts'])) {
+                    let html = `<a class="btn btn-link collapsing-button" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
                          <span class="fas fa-th cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
                     </a>`
-                    view.$el.find('.panel-heading:first').append(html)
+                    const $parent = view.$el.find('.panel-heading:first')
+                    if ($parent.length > 0) {
+                        $parent.append(html)
+                    } else {
+                        // detail small case with no header
+                        view.$el.find('.panel:first').prepend(`<div class="panel-heading">${html}</div>`)
+                    }
                 }
             });
         },
@@ -2221,19 +2241,23 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 recordViewObject: this
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
-                    let middlePanels = [];
-                    if (this.gridLayout && 'layout' in this.gridLayout) {
-                        Object.values(this.gridLayout.layout).forEach(panel => {
-                            let name = panel.label || panel.customLabel;
-
-                            if (name) {
-                                middlePanels.push({title: name, name: panel.name});
-                            }
-                        });
-                    }
-                    this.createPanelNavigationView(middlePanels.concat(view.panelList));
+                    this.createPanelNavigationView(this.getMiddlePanels().concat(view.panelList));
                 })
             });
+        },
+
+        getMiddlePanels() {
+            let middlePanels = [];
+            if (this.gridLayout && 'layout' in this.gridLayout) {
+                Object.values(this.gridLayout.layout).forEach(panel => {
+                    let name = panel.label || panel.customLabel;
+
+                    if (name) {
+                        middlePanels.push({title: name, name: panel.name});
+                    }
+                });
+            }
+            return middlePanels
         },
 
         createPanelNavigationView(panelList) {

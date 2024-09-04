@@ -217,30 +217,34 @@ Espo.define('views/record/list', 'view', function (Dep) {
             },
             'click .layout-editor': function (e) {
                 // open modal view
-                this.createView('dialog', 'views/admin/layouts/modals/edit', {
-                    scope: this.scope,
-                    type: this.layoutName,
-                    el: '[data-view="dialog"]',
-                }, view => {
-                    view.render()
-                    this.listenToOnce(view, 'close', (data) => {
-                        this.clearView('dialog');
-                        console.log('data', data)
-                        if (data && data.layoutIsUpdated) {
-                            this.listLayout = null
-                            this._internalLayout = null
-                            this.getInternalLayout(() => {
-                                this.notify('Loading...')
-                                this.collection.fetch({keepSelected: true})
-                                this.collection.once('sync', () => {
-                                    this.notify(false);
-                                })
-                            })
-
-                        }
-                    });
-                });
+                this.showLayoutEditorModal()
             }
+        },
+
+        showLayoutEditorModal() {
+            this.createView('dialog', 'views/admin/layouts/modals/edit', {
+                scope: this.scope,
+                type: this.layoutName,
+                el: '[data-view="dialog"]',
+            }, view => {
+                view.render()
+                this.listenToOnce(view, 'close', (data) => {
+                    this.clearView('dialog');
+                    console.log('data', data)
+                    if (data && data.layoutIsUpdated) {
+                        this.listLayout = null
+                        this._internalLayout = null
+                        this.getInternalLayout(() => {
+                            this.notify('Loading...')
+                            this.collection.fetch({keepSelected: true})
+                            this.collection.once('sync', () => {
+                                this.notify(false);
+                            })
+                        })
+
+                    }
+                });
+            });
         },
 
         checkIntervalRecords(e, $target) {
