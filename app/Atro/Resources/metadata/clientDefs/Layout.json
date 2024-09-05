@@ -1,3 +1,6 @@
 {
-  "controller": "controllers/record"
+  "controller": "controllers/record",
+  "recordViews": {
+    "list": "views/layout/record/list"
+  }
 }
