@@ -28,6 +28,7 @@ class Container
 
     protected array $classAliases
         = [
+            'route'                    => \Atro\Core\Factories\RouteFactory::class,
             'fileManager'              => \Atro\Core\Utils\FileManager::class,
             'localStorage'             => \Atro\Core\FileStorage\LocalStorage::class,
             'consoleManager'           => \Atro\Core\ConsoleManager::class,

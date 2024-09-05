@@ -141,10 +141,26 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click .select-all': function (e) {
-                if (this.allResultIsChecked) {
-                    this.unselectAllResult();
+                if (e.shiftKey) {
+                    let checked = $(e.currentTarget).prop('checked');
+
+                    if (this.allResultIsChecked) {
+                        this.unselectAllResult();
+                    }
+
+                    this.$el.find('.record-checkbox').each(function (i, elem) {
+                        if (checked) {
+                            this.checkRecord($(elem).data('id'), $(elem));
+                        } else {
+                            this.uncheckRecord($(elem).data('id'), $(elem));
+                        }
+                    }.bind(this));
                 } else {
-                    this.selectAllResult();
+                    if (this.allResultIsChecked) {
+                        this.unselectAllResult();
+                    } else {
+                        this.selectAllResult();
+                    }
                 }
                 return;
 
@@ -198,7 +214,37 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 } else {
                     this.massAction(action);
                 }
+            },
+            'click .layout-editor': function (e) {
+                // open modal view
+                this.showLayoutEditorModal()
             }
+        },
+
+        showLayoutEditorModal() {
+            this.createView('dialog', 'views/admin/layouts/modals/edit', {
+                scope: this.scope,
+                type: this.layoutName,
+                el: '[data-view="dialog"]',
+            }, view => {
+                view.render()
+                this.listenToOnce(view, 'close', (data) => {
+                    this.clearView('dialog');
+                    console.log('data', data)
+                    if (data && data.layoutIsUpdated) {
+                        this.listLayout = null
+                        this._internalLayout = null
+                        this.getInternalLayout(() => {
+                            this.notify('Loading...')
+                            this.collection.fetch({keepSelected: true})
+                            this.collection.once('sync', () => {
+                                this.notify(false);
+                            })
+                        })
+
+                    }
+                });
+            });
         },
 
         checkIntervalRecords(e, $target) {
@@ -344,7 +390,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.length && !fixedHeaderRow
+                showNoData: !this.collection.length && !fixedHeaderRow,
+                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts'])
             };
         },
 
@@ -449,6 +496,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.$el.find('.list > table tbody tr').removeClass('active');
 
+            this.$el.find('.selected-count').removeClass('hidden');
+            this.$el.find('.selected-count > .selected-count-span').text(this.collection.total);
+
             this.trigger('select-all-results');
         },
 
@@ -458,6 +508,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
             this.$el.find('input.select-all').prop('checked', false);
 
+            this.$el.find('.selected-count').addClass('hidden');
+            this.$el.find('.selected-count > .selected-count-span').text(0);
 
             this.massActionList.forEach(function (item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
@@ -1087,14 +1139,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.$el.find('.show-more').addClass('hidden')
                 }
 
-                if(this.collection.total !=null){
+                if (this.collection.total != null) {
                     this.$el.find('.list-buttons-container .preloader').addClass('hidden')
                     this.$el.find('.list-buttons-container .total-count').removeClass('hidden')
-                    if(this.collection.total>=0){
+                    if (this.collection.total >= 0) {
                         this.$el.find('.total-count-span').html(this.collection.total)
                         this.$el.find('.shown-count-span').html(this.collection.length)
                     }
-                }else{
+                } else {
                     this.$el.find('.list-buttons-container .preloader').removeClass('hidden')
                     this.$el.find('.list-buttons-container .text-count').addClass('hidden')
                 }
@@ -2064,9 +2116,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
         handleAfterCheck: function (isSilent) {
             if (this.checkedList.length) {
                 this.$el.find('.actions-button').removeAttr('disabled');
+                this.$el.find('.selected-count').removeClass('hidden');
             } else {
                 this.$el.find('.actions-button').attr('disabled', true);
+                this.$el.find('.selected-count').addClass('hidden');
             }
+
+            this.$el.find('.selected-count > .selected-count-span').text(this.checkedList.length);
 
             if (this.checkedList.length == this.collection.models.length) {
                 this.$el.find('.select-all').prop('checked', true);

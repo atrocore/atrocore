@@ -308,6 +308,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         }.bind(this));
                     });
                     this.setupTotal.call(this)
+                    this.setupLayoutEditor()
                 }, this);
                 this.wait(false);
             }, this);
@@ -357,6 +358,28 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
                 $buttonHtml.show()
             })
+        },
+
+        setupLayoutEditor: function () {
+            if (this.getMetadata().get(['scopes', this.scope, 'layouts'])) {
+                let $span = $(`<span data-action="layoutEditor" data-panel="${this.panelName}" class="collapser fas fa-columns action layout-editor" style="font-size: 14px"></span>`)
+                const $container = this.$el.parent().find('.panel-heading .panel-title')
+
+                $container.find('.layout-editor').remove()
+
+                $container.append($span)
+                $span.hide()
+                this.listenTo(this.collection, 'update', () => {
+                    if (this.collection.length > 0) {
+                        $span.show()
+                    }
+                })
+            }
+        },
+
+        actionLayoutEditor: function (data, event) {
+            event.stopPropagation();
+            this.getView('list').showLayoutEditorModal()
         },
 
         setupListLayout: function () {

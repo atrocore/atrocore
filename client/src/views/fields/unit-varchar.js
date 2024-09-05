@@ -158,6 +158,18 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             }
         },
 
+        validateRequired: function () {
+            if (this.isRequired()) {
+                if (!this.model.get(this.originalName)) {
+                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    this.showValidationMessage(msg);
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
         addMeasureDataOnFetch(data) {
             let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
             data[this.unitFieldName] = $unit ? $unit.val() : null;

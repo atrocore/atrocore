@@ -126,11 +126,6 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
                 optionColors = [];
             }
 
-            if (!this.model.getFieldParam(this.name, 'prohibitedEmptyValue') && options[0] && options[0] !== '') {
-                options.unshift('');
-                optionColors.unshift(this.defaultBackgroundColor);
-            }
-
             let key = 0;
             options.forEach(function (item, k) {
                 if (fieldValue === item) {

@@ -47,23 +47,32 @@ Espo.define('layout-manager', [], function () {
 
         data: null,
 
-        getKey: function (scope, type) {
+        getKey: function (scope, type, layoutProfileId) {
+            let key;
             if (this.userId) {
-                return this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
+                key = this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
             }
-            return this.applicationId + '-' + scope + '-' + type;
+            key = this.applicationId + '-' + scope + '-' + type;
+            if (layoutProfileId && layoutProfileId !== 'custom') {
+                key += '-' + layoutProfileId
+            }
+            return key
         },
 
-        getUrl: function (scope, type) {
-            return scope + '/layout/' + type;
+        getUrl: function (scope, type, layoutProfileId) {
+            return scope + '/layout/' + type + "?isAdminPage=" + (window.location.hash.search("#Admin") === 0) + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : '');
         },
 
-        get: function (scope, type, callback, cache) {
+        get: function (scope, type, layoutProfileId, callback, cache) {
             if (typeof cache == 'undefined') {
                 cache = true;
             }
+            if (typeof layoutProfileId == 'function') {
+                callback = layoutProfileId
+                layoutProfileId = null
+            }
 
-            var key = this.getKey(scope, type);
+            var key = this.getKey(scope, type, layoutProfileId);
 
             if (cache) {
                 if (key in this.data) {
@@ -86,7 +95,7 @@ Espo.define('layout-manager', [], function () {
             }
 
             this.ajax({
-                url: this.getUrl(scope, type),
+                url: this.getUrl(scope, type, layoutProfileId),
                 type: 'GET',
                 dataType: 'json',
                 success: function (layout) {
@@ -101,11 +110,11 @@ Espo.define('layout-manager', [], function () {
             });
         },
 
-        set: function (scope, type, layout, callback) {
-            var key = this.getKey(scope, type);
+        set: function (scope, type, layoutProfileId, layout, callback) {
+            var key = this.getKey(scope, type, layoutProfileId);
 
             this.ajax({
-                url: this.getUrl(scope, type),
+                url: this.getUrl(scope, type, layoutProfileId),
                 type: 'PUT',
                 data: JSON.stringify(layout),
                 success: function () {
@@ -121,8 +130,8 @@ Espo.define('layout-manager', [], function () {
             });
         },
 
-        resetToDefault: function (scope, type, callback) {
-            var key = this.getKey(scope, type);
+        resetToDefault: function (scope, type, layoutProfileId, callback) {
+            var key = this.getKey(scope, type, layoutProfileId);
 
             Espo.Ui.notify('Saving...');
             this.ajax({
@@ -130,7 +139,8 @@ Espo.define('layout-manager', [], function () {
                 type: 'POST',
                 data: JSON.stringify({
                     scope: scope,
-                    name: type
+                    name: type,
+                    layoutProfileId: layoutProfileId
                 }),
                 success: function (layout) {
                     if (this.cache) {

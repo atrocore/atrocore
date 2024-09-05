@@ -62,6 +62,8 @@
             </button>
         </div>
     </div>
+
+    <div class="text-muted selected-count hidden">{{translate 'Selected'}}: <span class="selected-count-span">0</span></div>
 </div>
 {{/if}}
 

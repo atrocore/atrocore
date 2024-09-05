@@ -108,6 +108,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "customizeLayout": "Customize Layout",
     "deletePermanently": "Delete Permanently",
     "Reupload": "Reupload",
     "attachFiles":"Attach Files",
@@ -295,6 +296,7 @@
     "Tree View": "Tree View",
     "Unlink All": "Unlink All",
     "Total": "Total",
+    "Selected": "Selected",
     "Print to PDF": "Print to PDF",
     "Default": "Default",
     "Number": "Number",
@@ -348,7 +350,7 @@
     "minimumOneOptionsRequired": "Minimum one option value is required.",
     "defaultEnumValueCannotBeEmpty": "Default value should be selected if empty value is disabled.",
     "defaultUnitCannotBeEmpty": "Default unit value should be selected if empty value is disabled.",
-    "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
+    "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values for :name?",
     "testEmailSent": "Test email has been sent",
     "massUpdateResult": "Updating {count} records",
     "isRequiredAndUnique": "{field} is required and should be unique.",
@@ -405,7 +407,7 @@
     "massRemoveResultSingle": "{count} record has been deleted",
     "noRecordsRemoved": "No records were deleted",
     "clickToRefresh": "Click to refresh",
-    "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.\n\nAvailable markdown syntax:\n`<code>code</code>`\n```<code>multiline code</code>```\n**<strong>strong text</strong>**\n*<em>emphasized text</em>*\n~~<del>deleted text</del>~~\n> blockquote\n[link text](url)",
+    "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.",
     "writeYourCommentHere": "Write your comment here",
     "writeMessageToUser": "Write a message to {user}",
     "writeMessageToSelf": "Write a message on your stream",

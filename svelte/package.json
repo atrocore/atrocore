@@ -10,6 +10,8 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@types/sortablejs": "^1.15.8",
+    "sortablejs": "^1.15.2",
     "svelte": "^4.2.18",
     "vite": "^5.3.1"
   }

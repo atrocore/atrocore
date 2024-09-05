@@ -1,0 +1,20 @@
+{
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyActive"
+  ],
+  "hiddenBoolFilterList": [
+    "onlyActive"
+  ],
+  "recordViews": {
+    "detail": "views/layout-profile/record/detail"
+  },
+  "relationshipPanels": {
+    "layouts": {
+      "create": false,
+      "select": false,
+      "hideShowFullList": true,
+      "rowActionsView": "views/record/row-actions/edit-and-remove"
+    }
+  }
+}

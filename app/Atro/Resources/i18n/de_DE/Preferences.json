@@ -17,7 +17,8 @@
     "tabColorsDisabled": "Tabfarben deaktivieren",
     "hideFeedbackIcon": "Feedback-Icon ausblenden",
     "receiveNotifications": "Erhalten Sie Benachrichtigungen",
-    "notificationProfile": "Benachrichtigungsprofil"
+    "notificationProfile": "Benachrichtigungsprofil",
+    "layoutProfiles": "Layoutprofile"
   },
   "labels": {
     "Notifications": "Benachrichtigungen",

@@ -59,7 +59,7 @@ Espo.define('views/stream/notes/unrelate', 'views/stream/note', function (Dep) {
             this.entityName = this.model.get('relatedName') ||  data.entityName || null;
 
             this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
-            this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
+            this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + Handlebars.Utils.escapeExpression(this.entityName) +'</a>';
 
             this.createMessage();
         },

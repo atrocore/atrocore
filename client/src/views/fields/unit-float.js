@@ -64,6 +64,10 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
             return Varchar.prototype.getAttributeList.call(this)
         },
 
+        validateRequired() {
+            return Varchar.prototype.validateRequired.call(this);
+        },
+
         setDataWithOriginalName() {
             const data = Dep.prototype.data.call(this);
             const value = isNaN(this.model.get(this.originalName)) ? null : this.model.get(this.originalName);

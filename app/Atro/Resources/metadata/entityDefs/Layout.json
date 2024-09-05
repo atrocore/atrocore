@@ -1,0 +1,129 @@
+{
+  "fields": {
+    "entity": {
+      "type": "varchar",
+      "view": "views/fields/entity-type"
+    },
+    "viewType": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": false,
+      "view": "views/layout/fields/view-type",
+      "optionsIds": [
+        "list",
+        "listSmall",
+        "detail",
+        "detailSmall",
+        "relationships",
+        "sidePanelsDetail",
+        "sidePanelsDetailSmall",
+        "sidePanelsEdit",
+        "sidePanelsEditSmall",
+        "kanban"
+      ],
+      "options": [
+        "list",
+        "listSmall",
+        "detail",
+        "detailSmall",
+        "relationships",
+        "sidePanelsDetail",
+        "sidePanelsDetailSmall",
+        "sidePanelsEdit",
+        "sidePanelsEditSmall",
+        "kanban"
+      ]
+    },
+    "preferencesId": {
+      "type": "varchar"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "layoutProfile": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "listItems": {
+      "type": "hasMany",
+      "entity": "LayoutListItem",
+      "foreign": "layout"
+    },
+    "relationshipItems": {
+      "type": "hasMany",
+      "entity": "LayoutRelationshipItem",
+      "foreign": "layout"
+    },
+    "sections": {
+      "type": "hasMany",
+      "entity": "LayoutSection",
+      "foreign": "layout"
+    },
+    "sidePanelItems": {
+      "type": "hasMany",
+      "entity": "LayoutSidePanelItem",
+      "foreign": "layout"
+    },
+    "layoutProfile": {
+      "type": "belongsTo",
+      "entity": "LayoutProfile",
+      "foreign": "layouts"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "entity": {
+      "columns": [
+        "entity",
+        "deleted"
+      ]
+    },
+    "view_type": {
+      "columns": [
+        "view_type",
+        "deleted"
+      ]
+    }
+  },
+  "uniqueIndexes": {
+    "layout_profile": [
+      "layout_profile_id",
+      "entity",
+      "view_type",
+      "deleted"
+    ],
+    "preferences": [
+      "preferences_id",
+      "entity",
+      "view_type",
+      "deleted"
+    ]
+  }
+}
