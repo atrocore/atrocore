@@ -60,7 +60,7 @@
             Language.translate(v1, 'links', 'scope').localeCompare(Language.translate(v2, 'links', 'scope'))
         );
 
-        enabledFieldsList = [];
+        let enabledFieldsList = [];
         enabledFields = [];
         disabledFields = [];
 
