@@ -40,7 +40,6 @@
         disabledFields.forEach(f => {
             res[f.name] = {...f, disabled: true}
         })
-        debugger
         return res
     }
 
