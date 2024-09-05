@@ -363,7 +363,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         setupLayoutEditor: function () {
             if (this.getMetadata().get(['scopes', this.scope, 'layouts'])) {
                 let $span = $(`<span data-action="layoutEditor" data-panel="${this.panelName}" class="collapser fas fa-columns action layout-editor" style="font-size: 14px"></span>`)
-                this.$el.parent().find('.panel-heading .panel-title').append($span)
+                const $container = this.$el.parent().find('.panel-heading .panel-title')
+
+                $container.find('.layout-editor').remove()
+
+                $container.append($span)
                 $span.hide()
                 this.listenTo(this.collection, 'update', () => {
                     if (this.collection.length > 0) {
