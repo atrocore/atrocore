@@ -98,19 +98,31 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 }
             }
 
+            if (this.model.get('data').entityType) {
+                this.messageName += 'In'
+            }
+
             Dep.prototype.init.call(this);
 
         },
 
         setup: function () {
             var data = this.model.get('data');
-
+            let parentType = data.entityType ?? this.model.get('parentType')
             var fields = data.fields || [];
 
+            if (data.entityType) {
+                const entityType = this.model.get('relatedType') || data.relatedType || null;
+                const entityId = this.model.get('relatedId') || data.relatedId || null;
+                const entityName = this.model.get('relatedName') || data.relatedName || null
+
+                this.messageData['relatedEntityType'] = this.translateEntityType(entityType);
+                this.messageData['relatedEntity'] = '<a href="#' + entityType + '/view/' + entityId + '">' + Handlebars.Utils.escapeExpression(entityName) + '</a>';
+            }
             this.createMessage();
 
             this.wait(true);
-            this.getModelFactory().create(this.model.get('parentType'), function (model) {
+            this.getModelFactory().create(parentType, function (model) {
                 var modelWas = model;
                 var modelBecame = model.clone();
 
@@ -122,7 +134,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.fieldsArr = [];
 
                 fields.forEach(function (field) {
-                    let fieldDefs = this.model.get('fieldDefs') || this.getMetadata().get(['entityDefs', this.model.get('parentType'), 'fields']) || {};
+                    let fieldDefs = this.model.get('fieldDefs') || this.getMetadata().get(['entityDefs', parentType, 'fields']) || {};
                     if (!fieldDefs[field] || !fieldDefs[field]['type']) {
                         return;
                     }
@@ -150,7 +162,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         params.options = data.typeValueIds[field];
                         params.translatedOptions = {};
                         params.options.forEach((option, k) => {
-                           params.translatedOptions[option] = data.typeValue[field][k];
+                            params.translatedOptions[option] = data.typeValue[field][k];
                         });
                     }
 

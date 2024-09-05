@@ -171,6 +171,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                 }
             }
 
+
             this.createView('message', 'views/stream/message', {
                 messageTemplate: this.messageTemplate,
                 el: this.options.el + ' .message',

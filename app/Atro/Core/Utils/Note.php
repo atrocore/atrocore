@@ -175,7 +175,7 @@ class Note
             $auditedFields = [];
             foreach ($fields as $field => $d) {
 
-                if(!empty($d['auditableDisabled'])){
+                if (!empty($d['auditableDisabled'])) {
                     continue;
                 }
 
@@ -197,6 +197,29 @@ class Note
 
         if (!empty($data['fields']) && !empty($data['attributes']['was']) && !empty($data['attributes']['became'])) {
             $this->createNote('Update', $entity->getEntityType(), $entity->id, $data);
+
+            $this->setRelationEntityData($entity);
+            if (empty($this->relationEntityData[$entity->getEntityType()])) {
+                return;
+            }
+
+            $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity1'],
+                $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), array_merge($data, [
+                        'entityId'    => $entity->id,
+                        'entityType'  => $entity->getEntityType(),
+                        'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                        'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2']
+                    ]
+                ));
+
+            $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity2'],
+                $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), array_merge($data, [
+                        'entityId'    => $entity->id,
+                        'entityType'  => $entity->getEntityType(),
+                        'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                        'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1']
+                    ]
+                ));
         }
     }
 
@@ -259,7 +282,7 @@ class Note
         $this->getEntityManager()->saveEntity($note);
     }
 
-    protected function handleRelationEntity(OrmEntity $entity, string $type): void
+    protected function setRelationEntityData($entity)
     {
         if (!isset($this->relationEntityData[$entity->getEntityType()])) {
             $this->relationEntityData[$entity->getEntityType()] = [];
@@ -276,7 +299,11 @@ class Note
                 }
             }
         }
+    }
 
+    protected function handleRelationEntity(OrmEntity $entity, string $type): void
+    {
+        $this->setRelationEntityData($entity);
         if (empty($this->relationEntityData[$entity->getEntityType()])) {
             return;
         }

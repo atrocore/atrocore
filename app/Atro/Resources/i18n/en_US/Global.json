@@ -628,9 +628,13 @@
     "unrelate": "{user} unlinked {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
     "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} with this {entityType}",
     "updateOneThis": "{user} in this {entityType} updated",
+    "updateOneInThis": "{user} in this {entityType} updated in {relatedEntityType} {relatedEntity}",
     "updateFromToThis": "{user} in this {entityType} updated",
+    "updateFromToInThis": "{user} in this {entityType} updated in {relatedEntityType} {relatedEntity}",
     "updateOne": "{user} in {entityType} {entity} updated",
+    "updateOneIn": "{user} in {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
     "updateFromTo": "{user} in {entityType} {entity} updated",
+    "updateFromToIn": "{user} in {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
     "changed": "was changed"
   },
   "streamMessagesMale": {
