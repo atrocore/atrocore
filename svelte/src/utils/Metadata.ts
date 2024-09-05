@@ -13,10 +13,12 @@ export const Metadata = {
     },
 
     get(path: string[]): any {
+        let res = null
         data.subscribe((current: MetadataInterface) => {
             if (current) {
-                current.get(path);
+                res = current.get(path);
             }
         })();
+        return res
     },
 };

@@ -1,11 +1,10 @@
 <script lang="ts">
 
     import RowsLayout from './RowsLayout.svelte';
-    import type {Field, LayoutItem, Params} from './Interfaces';
+    import type {Field, Params} from './Interfaces';
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
     import {LayoutManager} from "../../../utils/LayoutManager";
-    import {Notifier} from "../../../utils/Notifier";
 
     export let params: Params;
     export let viewType: string = 'detail';
@@ -33,6 +32,18 @@
     let enabledFields: Field[] = [];
     let disabledFields: Field[] = [];
 
+    let fetch = () => {
+        let res = {}
+        enabledFields.forEach(f => {
+            res[f.name] = f
+        })
+        disabledFields.forEach(f => {
+            res[f.name] = {...f, disabled: true}
+        })
+        debugger
+        return res
+    }
+
     function loadLayout(callback): void {
         LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
             readDataFromLayout(layout);
@@ -43,7 +54,7 @@
     function readDataFromLayout(layout: Layout) {
         let panelListAll: string[] = [];
         let labels: Record<string, string> = {};
-        let params: Record<string, any> = {};
+        let panelsMap: Record<string, any> = {};
 
         if (Metadata.get(['clientDefs', params.scope, 'defaultSidePanel', viewType]) !== false &&
             !Metadata.get(['clientDefs', params.scope, 'defaultSidePanelDisabled'])) {
@@ -57,7 +68,7 @@
             if (item.label) {
                 labels[item.name] = item.label;
             }
-            params[item.name] = item;
+            panelsMap[item.name] = item;
         });
 
         disabledFields = [];
@@ -89,10 +100,10 @@
                     name: item,
                     label: labelText
                 };
-                if (o.name in params) {
+                if (o.name in panelsMap) {
                     params.dataAttributeList.forEach(attribute => {
                         if (attribute === 'name') return;
-                        let itemParams = params[o.name] || {};
+                        let itemParams = panelsMap[o.name] || {};
                         if (attribute in itemParams) {
                             o[attribute] = itemParams[attribute];
                         }
@@ -116,4 +127,5 @@
         {enabledFields}
         {disabledFields}
         {loadLayout}
+        {fetch}
 />

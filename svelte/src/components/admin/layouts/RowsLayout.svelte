@@ -79,7 +79,7 @@
         });
     }
 
-    function fetch(): LayoutItem[] {
+    export let fetch = () => {
         return enabledFields;
     }
 
