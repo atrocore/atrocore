@@ -95,6 +95,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 exportAllField: this.model.get('exportAllField'),
                 fieldList: this.model.get('fieldList'),
                 ignoreFilter: this.model.get('ignoreFilter'),
+                scope: this.scope,
                 entityFilterData: this.options.entityFilterData
             };
 
