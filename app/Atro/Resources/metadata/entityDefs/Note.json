@@ -49,6 +49,11 @@
             "readOnly": true,
             "notStorable": true
         },
+        "relatedEntityData": {
+            "type": "jsonObject",
+            "notStorable": true,
+            "readOnly": true
+        },
         "attachments": {
             "type": "linkMultiple",
             "entity": "File"

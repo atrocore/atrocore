@@ -186,10 +186,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     middle._loadNestedViews(() => {
                                         middle.reRender()
                                     })
-                                    
+
                                     // update panel navigation
                                     let bottom = this.getView('bottom')
-                                    if(bottom){
+                                    if (bottom) {
                                         for (let key of ['panelDetailNavigation', 'panelEditNavigation']) {
                                             let navigation = this.getView(key)
                                             if (navigation) {
