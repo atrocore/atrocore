@@ -84,8 +84,13 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
         },
 
         actionExport: function () {
-            if (!this.model.get('exportFeed') && !this.model.get('exportAllField') && !this.model.get('fieldList')?.length) {
+            if (!this.model.get('useExistingExportFeed') && !this.model.get('exportAllField') && !this.model.get('fieldList')?.length) {
                 this.notify(this.translate('noFieldSelected', 'messages', 'ExportFeed'), 'error');
+                return
+            }
+
+            if (this.model.get('useExistingExportFeed') && !this.model.get('exportFeed')) {
+                this.notify(this.translate('noExportFeedSelected', 'messages', 'ExportFeed'), 'error');
                 return
             }
 
@@ -99,7 +104,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 entityFilterData: this.options.entityFilterData
             };
 
-            let actionName = this.model.get('exportFeed') ? 'exportFile' : 'directExportFile'
+            let actionName = this.model.get('useExistingExportFeed') ? 'exportFile' : 'directExportFile'
 
             this.ajaxPostRequest(`ExportFeed/action/${actionName}`, data).then(response => {
                 if (response) {
