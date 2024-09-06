@@ -41,14 +41,27 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
 
             this.scope = this.options.scope;
 
+            this.createView('useExistingExportFeed', 'views/fields/bool', {
+                model: this.model,
+                el: `${this.options.el} .field[data-name="useExistingExportFeed"]`,
+                defs: {
+                    name: 'useExistingExportFeed',
+                },
+                mode: 'edit'
+            });
+
             let exportFeedOptions = [];
             let exportFeedTranslatedOptions = {};
             this.options.exportFeeds.forEach(function (row) {
                 exportFeedOptions.push(row.id);
                 exportFeedTranslatedOptions[row.id] = row.name;
+                if (!this.model.get('exportFeed')) {
+                    this.model.set('exportFeed', row.id)
+                }
             }, this);
 
             this.createView('exportFeed', 'views/fields/enum', {
+                prohibitedEmptyValue: true,
                 model: this.model,
                 el: `${this.options.el} .field[data-name="exportFeed"]`,
                 defs: {
@@ -125,11 +138,12 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
 
             this.model.set('ignoreFilter', true);
 
-            this.listenTo(this.model, 'change:exportFeed', () => {
-                if (this.model.get('exportFeed')) {
+            this.listenTo(this.model, 'change:useExistingExportFeed', () => {
+                if (this.model.get('useExistingExportFeed')) {
                     ['fileType', 'exportAllField', 'fieldList'].forEach((field) => {
                         $(`${this.options.el} [data-name="${field}"]`).hide();
                     })
+                    $(`${this.options.el} [data-name="exportFeed"]`).show();
                 } else {
                     ['fileType', 'exportAllField'].forEach((field) => {
                         $(`${this.options.el} [data-name="${field}"]`).show();
@@ -137,6 +151,7 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                     if (!this.model.get('exportAllField')) {
                         $(`${this.options.el} [data-name="fieldList"]`).show();
                     }
+                    $(`${this.options.el} [data-name="exportFeed"]`).hide();
                 }
             });
 
@@ -148,7 +163,11 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 }
             })
         },
-
+        afterRender() {
+            if(!this.model.get('useExistingExportFeed'))  {
+                $(`${this.options.el} [data-name="exportFeed"]`).hide();
+            }
+        }
     });
 
 });

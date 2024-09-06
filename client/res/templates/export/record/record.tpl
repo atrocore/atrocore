@@ -1,3 +1,8 @@
+<div class="cell form-group" data-name="useExistingExportFeed">
+    <label class="control-label" data-name="useExistingExportFeed">{{translate 'useExistingExportFeed' category='fields' scope='ExportFeed'}}</label>
+    <div class="field" data-name="useExistingExportFeed">{{{useExistingExportFeed}}}</div>
+</div>
+
 <div class="cell form-group" data-name="fileType">
     <label class="control-label" data-name="fileType">{{translate 'fileType' category='fields' scope='ExportFeed'}}</label>
     <div class="field" data-name="fileType">{{{fileType}}}</div>
