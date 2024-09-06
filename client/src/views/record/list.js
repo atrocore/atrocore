@@ -480,6 +480,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         selectAllResult: function () {
             this.allResultIsChecked = true;
+            this.checkedList = [];
 
             this.$el.find('input.record-checkbox').prop('checked', true).attr('disabled', 'disabled');
             this.$el.find('input.select-all').prop('checked', true);
@@ -504,12 +505,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         unselectAllResult: function () {
             this.allResultIsChecked = false;
+            this.checkedList = [];
 
             this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
             this.$el.find('input.select-all').prop('checked', false);
 
             this.$el.find('.selected-count').addClass('hidden');
             this.$el.find('.selected-count > .selected-count-span').text(0);
+
+            if (this.checkAllResultMassActionList.length) {
+                this.$el.find('.actions-button').attr('disabled', true);
+            }
 
             this.massActionList.forEach(function (item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
