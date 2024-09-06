@@ -391,7 +391,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.length && !fixedHeaderRow,
-                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts'])
+                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list','listSmall'].includes(this.layoutName)
             };
         },
 
