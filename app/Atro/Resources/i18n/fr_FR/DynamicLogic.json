@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Field": "Champ"
+  },
+  "options": {
+    "operators": {
+      "equals": "Équivalents",
+      "notEquals": "Pas égaux",
+      "greaterThan": "Plus que",
+      "lessThan": "Moins de",
+      "greaterThanOrEquals": "Plus grand que ou égal",
+      "lessThanOrEquals": "Inférieur ou égal",
+      "in": "En",
+      "notIn": "Pas dans",
+      "inPast": "Dans le passé",
+      "inFuture": "Est l'avenir",
+      "isToday": "C'est aujourd'hui",
+      "isTrue": "Est vrai",
+      "isFalse": "Est faux"
+    }
+  }
+}

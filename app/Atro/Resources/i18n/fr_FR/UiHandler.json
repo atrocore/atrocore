@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "isActive": "Actif",
+    "type": "Type",
+    "entityType": "Entité",
+    "fields": "Champs cibles",
+    "relationships": "Panneaux de relations avec les cibles",
+    "conditionsType": "Type de conditions",
+    "conditions": "Conditions",
+    "triggerAction": "Déclencheur",
+    "triggerFields": "Champs de déclenchement"
+  },
+  "exceptions": {
+    "systemHandler": "Le gestionnaire \"%s\" est requis par le système et ne peut être ni modifié ni supprimé."
+  },
+  "labels": {
+    "Create UiHandler": "Créer un gestionnaire d'interface utilisateur"
+  }
+}

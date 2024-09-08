@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "user": "Utilisateur",
+    "ipAddress": "Adresse IP",
+    "lastAccess": "Dernière date d'accès",
+    "createdAt": "Date de connexion",
+    "isActive": "Actif",
+    "lifetime": "Durée de vie",
+    "idleTime": "Temps d'inactivité",
+    "authToken": "Jeton d'autorisation"
+  },
+  "links": {
+    "actionHistoryRecords": "Historique de l'action"
+  },
+  "tooltips": {
+    "lifetime": "La durée de vie doit être définie en heures. Zéro signifie qu'il n'y a pas d'expiration.",
+    "idleTime": "Le temps d'inactivité doit être défini en heures. Zéro signifie qu'il n'y a pas d'expiration."
+  }
+}

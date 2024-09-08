@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "name": "Nom",
+    "description": "Description",
+    "units": "Unités",
+    "displayFormat": "Format d'affichage"
+  },
+  "links": {
+    "units": "Unités"
+  },
+  "labels": {
+    "Create Measure": "Créer une mesure"
+  },
+  "options": {
+    "displayFormat": {
+      "format1": "10€",
+      "format2": "€10"
+    }
+  },
+  "exceptions": {
+    "measureIsUsed": "La mesure \"%s\" est utilisée par le champ \"%s\" dans l'entité \"%s\"."
+  }
+}

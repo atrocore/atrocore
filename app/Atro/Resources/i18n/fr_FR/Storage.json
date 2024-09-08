@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "type": "Type",
+    "path": "Chemin d'accès",
+    "files": "Fichiers",
+    "folder": "Dossier monté",
+    "folders": "Dossiers",
+    "syncFolders": "Maintenir la structure des fichiers et des dossiers"
+  },
+  "links": {
+    "files": "Fichiers",
+    "folders": "Dossiers"
+  },
+  "options": {
+    "type": {
+      "local": "Local (Linux)"
+    }
+  },
+  "tooltips": {
+    "syncFolders": "Si cette case est cochée, la structure physique des fichiers et des dossiers dans le stockage sera la même que dans le système. Cela signifie qu'un seul fichier/dossier portant un nom similaire peut être stocké dans le même chemin."
+  },
+  "labels": {
+    "Create Storage": "Créer un espace de stockage",
+    "scan": "Scanner",
+    "scanDone": "L'analyse du stockage \"%s\" est terminée."
+  },
+  "exceptions": {
+    "itemCannotBeMovedToAnotherStorage": "Le dossier/fichier ne peut pas être déplacé d'une mémoire à l'autre.",
+    "folderInUse": "Seul un dossier vide peut être sélectionné comme dossier monté.",
+    "storageHasItems": "Le dossier monté ne peut pas être modifié si le stockage n'est pas vide.",
+    "storagePathNotUnique": "Le chemin de stockage doit être unique.",
+    "storagePathContainFilesFromAnotherStorage": "L'arborescence de dossiers démarrée par le chemin de stockage sélectionné ne peut pas contenir de dossiers/fichiers associés à un autre stockage.",
+    "storageTypeCannotBeChanged": "Le type de stockage ne peut pas être modifié.",
+    "storagePathCannotBeChanged": "Le chemin de stockage ne peut pas être modifié."
+  }
+}

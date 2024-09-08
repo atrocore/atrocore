@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "width": "Largeur (%)",
+    "widthPx": "Largeur (px)",
+    "link": "Lien",
+    "notSortable": "Non triable",
+    "align": "Aligner",
+    "panelName": "Nom du groupe",
+    "style": "Style",
+    "sticked": "Collé",
+    "isLarge": "Grande taille de police",
+    "cssStyle": "Styles CSS",
+    "dynamicLogicVisible": "Conditions de visibilité du panneau",
+    "hiddenPerDefault": "Caché par défaut"
+  },
+  "options": {
+    "align": {
+      "left": "Gauche",
+      "right": "Droit"
+    }
+  }
+}

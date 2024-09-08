@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Nom",
+    "emailAddress": "Courriel",
+    "phoneNumber": "Téléphone",
+    "description": "Description",
+    "type": "Type",
+    "role": "Rôle",
+    "number": "Nombre",
+    "language": "Langue"
+  },
+  "options": {
+    "type": {
+      "individual": "Individuel",
+      "company": "Entreprise"
+    },
+    "role": {
+      "supplier": "Fournisseur",
+      "customer": "Client"
+    }
+  },
+  "labels": {
+    "Create Account": "Créer un compte"
+  },
+  "links": {
+    "addresses": "Adresses"
+  }
+}

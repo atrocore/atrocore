@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "host": "Nom de l'hôte",
+    "dbname": "Nom de la base de données",
+    "user": "Nom de l'utilisateur de la base de données",
+    "username": "Nom de l'utilisateur",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe"
+  },
+  "labels": {
+    "licenseAgreement": "Accord de licence",
+    "databaseConfiguration": "Configuration de la base de données",
+    "administratorSetup": "Configuration de l'administrateur",
+    "requiredSettings": "Paramètres requis",
+    "chooseYourLanguage": "Choisissez votre langue",
+    "acceptTheAgreement": "J'accepte l'accord",
+    "reportingEnabled": "Envoyez des rapports d'erreur anonymes pour une identification et une résolution plus rapides des problèmes.",
+    "dbSystem": "Système de base de données",
+    "testConnection": "Test de connexion",
+    "currentVersion": "Version actuelle",
+    "status": "Statut"
+  },
+  "errors": {
+    "alreadyInstalled": "AtroCore déjà installé",
+    "languageNotCorrect": "La langue d'entrée n'est pas correcte",
+    "differentPass": "Mots de passe différents",
+    "notCorrectDatabaseConfig": "Paramètres de la base de données invalides",
+    "filePermissionsError": "Les droits d'accès aux fichiers sont insuffisants. Veuillez configurer les autorisations conformément aux instructions."
+  },
+  "messages": {
+    "youMustAgreeToTheLicenseAgreement": "Vous devez accepter l'accord de licence",
+    "fieldIsRequired": "{champ} est requis",
+    "connectionSuccessful": "Connexion réussie !",
+    "pleaseConfigureYourSystemToStart": "Veuillez configurer votre système pour qu'il démarre"
+  },
+  "requirements": {
+    "phpVersion": "Version PHP",
+    "mysqlVersion": "Version de MySQL"
+  }
+}

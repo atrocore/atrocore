@@ -1,0 +1,43 @@
+{
+  "fields": {
+    "type": "Type",
+    "dbName": "Nom de la base de données",
+    "host": "Hôte",
+    "port": "Port",
+    "user": "Utilisateur",
+    "ftpSsl": "TLS/SSL",
+    "password": "Mot de passe",
+    "oauthUrl": "URL OAuth",
+    "oauthGrantType": "Type de subvention OAuth",
+    "oauthClientId": "ID du client OAuth",
+    "oauthClientSecret": "Secret du client OAuth",
+    "oauthScope": "Champ d'application Oauth",
+    "vendorOauthUrl": "URL Oauth du fournisseur",
+    "vendorOauthScopes": "Champ d'application Oauth du fournisseur",
+    "atrocoreToken": "Jeton d'autorisation",
+    "openAiOrganizationId": "ID de l'organisation",
+    "openAiApiKey": "Clé Api",
+    "openAiModel": "Modèle",
+    "openAiTemperature": "Température",
+    "additionalParameters": "Paramètres supplémentaires"
+  },
+  "labels": {
+    "connectionSuccess": "La connexion est établie avec succès",
+    "testConnection": "Test de connexion",
+    "atrocore": "AtroCore",
+    "mysql": "Serveur MySQL",
+    "psql": "Serveur PostgreSQL",
+    "msql": "Microsoft SQL Server",
+    "ftp": "FTP",
+    "sftp": "SFTP",
+    "oauth2": "OAuth 2.0",
+    "otto": "Otto oauth",
+    "cookie": "Session de cookies",
+    "client_credentials": "Références du client",
+    "Create Connection": "Créer une connexion",
+    "orders": "Commandes",
+    "shipments": "Envois",
+    "quantities": "Quantités",
+    "returns": "Retours"
+  }
+}

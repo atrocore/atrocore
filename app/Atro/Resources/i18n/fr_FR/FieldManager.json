@@ -1,0 +1,46 @@
+{
+  "labels": {
+    "Dynamic Logic": "Logique dynamique",
+    "Name": "Nom",
+    "Label": "Étiquette",
+    "Type": "Type"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Aucun",
+      "javascript: return this.dateTime.getNow(1);": "Maintenant",
+      "javascript: return this.dateTime.getNow(5);": "Maintenant (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Maintenant (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Maintenant (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 heure",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 heures"
+    },
+    "dateDefault": {
+      "": "Aucun",
+      "javascript: return this.dateTime.getToday();": "Aujourd'hui",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 jour",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 jours",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 semaine",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 semaines",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 semaines",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mois"
+    }
+  }
+}

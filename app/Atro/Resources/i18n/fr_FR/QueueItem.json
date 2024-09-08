@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "serviceName": "Service",
+    "stream": "File d'attente",
+    "isWriting": "La mise à jour est-elle un travail ?",
+    "data": "Données",
+    "pid": "Pid",
+    "sortOrder": "Ordre de tri",
+    "status": "Statut",
+    "message": "Message",
+    "priority": "Priorité"
+  },
+  "labels": {
+    "Create QueueItem": "Créer un élément de la file d'attente",
+    "showMessage": "Afficher le message",
+    "message": "Message",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "Pending": "En attente",
+    "Success": "Succès",
+    "Running": "En cours d'exécution",
+    "Failed": "Échec"
+  },
+  "options": {
+    "status": {
+      "Closed": "Fermé"
+    },
+    "priority": {
+      "Low": "Faible",
+      "Normal": "Normal",
+      "Crucial": "Crucial",
+      "High": "Haut"
+    }
+  },
+  "exceptions": {
+    "jobExist": "Ce travail est déjà ajouté à la file d'attente.",
+    "queueItemCannotBeChanged": "L'élément de la file d'attente ne peut pas être modifié.",
+    "jobIsRunning": "Un élément de la file d'attente en cours ne peut pas être supprimé."
+  },
+  "notificationMessages": {
+    "success": "%s a été exécuté avec succès",
+    "error": "%s a échoué",
+    "queueItemDone": "L'élément de la file d'attente \"%s\" a été exécuté avec le statut \"%s\"."
+  }
+}

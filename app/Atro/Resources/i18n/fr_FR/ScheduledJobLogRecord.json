@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "status": "Statut",
+    "executionTime": "Temps d'exécution",
+    "target": "Cible"
+  }
+}

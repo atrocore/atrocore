@@ -1,0 +1,48 @@
+{
+  "labels": {
+    "Fields": "Domaines",
+    "Relationships": "Les relations",
+    "Schedule": "Calendrier",
+    "Log": "Journal",
+    "accessManagement": "Gestion de l'accès",
+    "hierarchyManagement": "Gestion de la hiérarchie",
+    "other": "Autre"
+  },
+  "fields": {
+    "multiParents": "Parents multiples",
+    "dragAndDrop": "Glisser-déposer",
+    "fieldValueInheritance": "Héritage des valeurs de champ",
+    "unInheritedFields": "Champs non hérités",
+    "relationInheritance": "Héritage des relations",
+    "unInheritedRelations": "Relations sans héritage",
+    "name": "Nom",
+    "type": "Type",
+    "linkForeign": "Lien avec l'étranger",
+    "link": "Lien",
+    "labelForeign": "Label étranger",
+    "sortBy": "Ordre par défaut (champ)",
+    "sortDirection": "Ordre par défaut (direction)",
+    "relationName": "Nom de la table du milieu",
+    "linkMultipleField": "Lier plusieurs champs",
+    "linkMultipleFieldForeign": "Lien étranger Champ multiple",
+    "disabled": "Désactivée",
+    "textFilterFields": "Champs de filtrage de texte",
+    "audited": "Suivre les changements",
+    "auditedForeign": "Étranger audité",
+    "statusField": "Champ d'état",
+    "beforeSaveCustomScript": "Avant d'enregistrer le script personnalisé",
+    "color": "Couleur",
+    "kanbanViewMode": "Vue Kanban",
+    "kanbanStatusIgnoreList": "Groupes ignorés dans la vue Kanban",
+    "iconClass": "Icône",
+    "disableHierarchy": "Désactiver la hiérarchie",
+    "modifiedExtendedRelations": "Relations effectuant la modification date/heure",
+    "duplicatableRelations": "Relations duplicables",
+    "nonComparableFields": "Champs non comparables"
+  },
+  "options": {
+    "linkType": {
+      "manyToMany": "Plusieurs à plusieurs"
+    }
+  }
+}

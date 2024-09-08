@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "code": "Code",
+    "files": "Fichiers",
+    "storages": "Stockages"
+  },
+  "links": {
+    "files": "Fichiers",
+    "storages": "Stockages"
+  },
+  "labels": {
+    "Create Folder": "Créer un dossier"
+  },
+  "exceptions": {
+    "folderStorageCannotBeChanged": "Il n'est pas possible de modifier le stockage des dossiers.",
+    "folderCreateFailed": "La création du dossier a échoué.",
+    "folderRenameFailed": "Le renommage du dossier a échoué.",
+    "folderMoveFailed": "Le déplacement du dossier a échoué.",
+    "folderDeleteFailed": "La suppression du dossier a échoué."
+  }
+}

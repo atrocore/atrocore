@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "username": "Nom d'utilisateur",
+    "ipAddress": "Adresse IP",
+    "requestTime": "Heure de la demande",
+    "createdAt": "Demandé à",
+    "isDenied": "Est refusée",
+    "denialReason": "Raison du refus",
+    "user": "Utilisateur",
+    "authToken": "Création du jeton d'authentification",
+    "requestUrl": "URL de la demande",
+    "requestMethod": "Méthode de demande",
+    "authTokenIsActive": "Le jeton d'authentification est actif"
+  },
+  "links": {
+    "authToken": "Création du jeton d'authentification",
+    "user": "Utilisateur",
+    "actionHistoryRecords": "Historique de l'action"
+  }
+}

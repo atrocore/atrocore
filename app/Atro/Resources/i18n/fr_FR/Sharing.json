@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "active": "Actif",
+    "available": "Disponible",
+    "validTill": "Valable jusqu'au",
+    "allowedUsage": "Utilisation autorisée",
+    "used": "Utilisé",
+    "link": "Lien"
+  },
+  "labels": {
+    "copiedToClipboard": "Copié dans le presse-papiers"
+  }
+}

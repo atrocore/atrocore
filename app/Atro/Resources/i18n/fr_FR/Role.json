@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Nom",
+    "roles": "Rôles",
+    "assignmentPermission": "Autorisation d'affectation",
+    "dataPrivacyPermission": "Autorisation de confidentialité des données"
+  },
+  "links": {
+    "users": "Utilisateurs",
+    "teams": "Les équipes"
+  },
+  "tooltips": {
+    "assignmentPermission": "Permet de restreindre la possibilité d'attribuer des enregistrements et de publier des messages à d'autres utilisateurs.\n\ntous - aucune restriction\n\néquipe - peut assigner et poster des messages uniquement aux coéquipiers\n\nno - peut assigner et poster uniquement à soi-même",
+    "dataPrivacyPermission": "Permet de consulter et d'effacer des données personnelles."
+  },
+  "labels": {
+    "Access": "Accès",
+    "Create Role": "Créer un rôle",
+    "Scope Level": "Niveau du champ d'application",
+    "Field Level": "Niveau du terrain"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "non défini",
+      "enabled": "activé"
+    }
+  }
+}

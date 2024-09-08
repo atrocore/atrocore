@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "locale": "Local",
+    "assignmentNotifications": "Notifications lors de l'affectation",
+    "defaultCurrency": "Monnaie par défaut",
+    "emailAddress": "Courriel",
+    "receiveAssignmentEmailNotifications": "Notifications lors de l'affectation",
+    "receiveMentionEmailNotifications": "Notifications sur les mentions dans les messages",
+    "receiveStreamEmailNotifications": "Notifications sur les mises à jour du flux",
+    "autoFollowEntityTypeList": "Auto-suivi global",
+    "dashboardTabList": "Liste des onglets",
+    "theme": "Thème",
+    "useCustomTabList": "Liste d'onglets personnalisée",
+    "tabList": "Menu de navigation",
+    "dashboardLayout": "Présentation du tableau de bord",
+    "followEntityOnStreamPost": "Suivi automatique d'un enregistrement après la publication d'un message dans un flux"
+  },
+  "labels": {
+    "Notifications": "Notifications",
+    "Locale": "Local"
+  }
+}

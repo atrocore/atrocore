@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "buyer": "Acheteur",
+    "email": "Courriel",
+    "phone": "Téléphone",
+    "street": "Rue",
+    "zip": "ZIP",
+    "box": "Boîte",
+    "city": "Ville",
+    "country": "Pays",
+    "countryCode": "Code du pays",
+    "type": "Type",
+    "account": "Compte",
+    "contactName": "Nom du contact",
+    "name": "Nom de l'entreprise"
+  },
+  "options": {
+    "type": {
+      "billing": "Facturation",
+      "delivery": "Livraison"
+    }
+  },
+  "labels": {
+    "Create Address": "Créer une adresse"
+  }
+}
