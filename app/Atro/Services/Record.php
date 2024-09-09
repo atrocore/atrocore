@@ -16,7 +16,6 @@ namespace Atro\Services;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\QueueManager;
-use Atro\DTO\QueueItemDTO;
 use Espo\Services\RecordService;
 
 class Record extends RecordService
