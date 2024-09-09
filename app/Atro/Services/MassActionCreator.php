@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\ORM\Repositories\RDB;
+use Doctrine\DBAL\Connection;
 use Espo\ORM\Entity;
 
 class MassActionCreator extends QueueManagerBase
@@ -26,6 +27,8 @@ class MassActionCreator extends QueueManagerBase
         $chunkSize = $data['chunkSize'];
         $totalChunks = (int)ceil($total / $chunkSize);
 
+        $sp = array_merge($data['selectParams'], ['select' => ['id']]);
+
         /** @var RDB $repository */
         $repository = $this->getEntityManager()->getRepository($entityName);
 
@@ -34,22 +37,51 @@ class MassActionCreator extends QueueManagerBase
 
         $jobIds = [];
 
+        $idsToSkip = [];
+
+        $createdAt = null;
+
         while (true) {
+            $collectionIds = [];
+
             if (!empty($ids)) {
                 $collection = $repository
                     ->select(['id'])
                     ->where(['id' => $ids])
                     ->limit($offset, $chunkSize)
-                    ->order('id', 'ASC')
                     ->find();
+                $collectionIds = array_column($collection->toArray(), 'id');
             } else {
-                $collection = $repository
-                    ->limit($offset, $chunkSize)
-                    ->order('id', 'ASC')
-                    ->find(array_merge($data['selectParams'], ['select' => ['id']]));
+                $qb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
+                $qb->select('id, created_at');
+
+                if (!empty($idsToSkip)) {
+                    $qb->andWhere('id NOT IN (:idsToSkip)')
+                        ->setParameter('idsToSkip', $idsToSkip, Connection::PARAM_STR_ARRAY);
+                }
+
+                if (!empty($createdAt)) {
+                    $qb->andWhere('created_at >= :createdAt')
+                        ->setParameter('createdAt', $createdAt);
+                }
+
+                $qb->setFirstResult(0);
+                $qb->setMaxResults($chunkSize);
+                $qb->orderBy('created_at,id');
+
+                foreach ($qb->fetchAllAssociative() as $row) {
+                    $collectionIds[] = $row['id'];
+                    $idsToSkip[] = $row['id'];
+                    if (count($idsToSkip) > 50000) {
+                        array_shift($idsToSkip);
+                    }
+                }
+
+                $createdAt = $row['created_at'];
+
+                $idsToSkip = array_values($idsToSkip);
             }
 
-            $collectionIds = array_column($collection->toArray(), 'id');
             if (empty($collectionIds)) {
                 break;
             }
