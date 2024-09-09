@@ -49,6 +49,7 @@
 
     function readDataFromLayout(model, layout: Layout) {
         let allFields: string[] = [];
+
         for (let field in model.defs.links) {
             if (['hasMany', 'hasChildren'].includes(model.defs.links[field].type)) {
                 if (isLinkEnabled(model, field)) {
@@ -56,9 +57,31 @@
                 }
             }
         }
-        allFields.sort((v1, v2) =>
-            Language.translate(v1, 'links', 'scope').localeCompare(Language.translate(v2, 'links', 'scope'))
-        );
+        const bottomPanels = Metadata.get(['clientDefs', params.scope, 'bottomPanels', 'detail']) || [];
+        for (let panel of bottomPanels) {
+            if (!panel.layoutRelationshipsDisabled) {
+                allFields.push(panel.name);
+            }
+        }
+
+        allFields.sort(function (v1, v2) {
+            let v1Name, v2Name;
+            let v1Options = bottomPanels.find(panel => panel.name === v1);
+            let v2Options = bottomPanels.find(panel => panel.name === v2);
+
+            if (v1 in model.defs.links) {
+                v1Name = Language.translate(v1, 'links', params.scope);
+            } else if (v1Options) {
+                v1Name = Language.translate(v1Options.label, 'labels', params.scope);
+            }
+
+            if (v2 in model.defs.links) {
+                v2Name = Language.translate(v2, 'links', params.scope);
+            } else if (v2Options) {
+                v2Name = Language.translate(v2Options.label, 'labels', params.scope);
+            }
+            return v1Name.localeCompare(v2Name);
+        });
 
         let enabledFieldsList = [];
         enabledFields = [];
@@ -68,21 +91,23 @@
             let item = layout[i];
             let o: any;
 
-            if (typeof item === 'string') {
+            let options = bottomPanels.find(panel => panel.name === item.name);
+            if (typeof item === 'string' || item instanceof String) {
                 o = {
                     name: item,
-                    label: Language.translate(item, 'links', 'scope')
+                    label: options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(item, 'links', params.scope)
                 };
             } else {
                 o = item;
-                o.label = Language.translate(o.name, 'links', 'scope');
+                o.label = options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(o.name, 'links', params.scope);
+
             }
 
             params.dataAttributeList.forEach(attribute => {
                 if (attribute === 'name') return;
                 if (attribute in o) return;
 
-                let value = Metadata.get(['clientDefs', 'scope', 'relationshipPanels', o.name, attribute]);
+                let value = Metadata.get(['clientDefs', params.scope, 'relationshipPanels', o.name, attribute]);
                 if (value === null) return;
                 o[attribute] = value;
             });
@@ -93,15 +118,12 @@
 
         for (let field of allFields) {
             if (!enabledFieldsList.includes(field)) {
+                let options = bottomPanels.find(panel => panel.name === field);
                 disabledFields.push({
                     name: field,
-                    label: Language.translate(field, 'links', 'scope')
+                    label: options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(field, 'links', params.scope)
                 });
             }
-        }
-
-        for (let item of enabledFields) {
-            item.label = Language.translate(item.name, 'links', 'scope');
         }
     }
 
