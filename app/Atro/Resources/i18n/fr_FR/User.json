@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "department": "Département",
+    "name": "Nom d'affichage",
+    "userName": "Nom de l'utilisateur",
+    "title": "Titre",
+    "isAdmin": "Est administrateur",
+    "defaultTeam": "Équipe par défaut",
+    "emailAddress": "Courriel",
+    "phoneNumber": "Téléphone",
+    "roles": "Rôles",
+    "teamRole": "Position",
+    "password": "Mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "passwordConfirm": "Confirmer le mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "account": "Compte",
+    "gender": "Genre",
+    "ipAddress": "Adresse IP",
+    "type": "Type"
+  },
+  "links": {
+    "teams": "Les équipes",
+    "roles": "Rôles",
+    "notes": "Notes",
+    "account": "Compte",
+    "tasks": "Tâches"
+  },
+  "labels": {
+    "Create User": "Créer un utilisateur",
+    "Generate": "Générer",
+    "Access": "Accès",
+    "Preferences": "Préférences",
+    "Change Password": "Modifier le mot de passe",
+    "Teams and Access Control": "Équipes et contrôle d'accès",
+    "Forgot Password?": "Vous avez oublié votre mot de passe ?",
+    "Password Change Request": "Demande de changement de mot de passe",
+    "Email Address": "Adresse électronique",
+    "External Accounts": "Comptes externes",
+    "Email Accounts": "Comptes de courrier électronique"
+  },
+  "tooltips": {
+    "defaultTeam": "Tous les enregistrements créés par cet utilisateur seront par défaut liés à cette équipe.",
+    "userName": "Les lettres a-z, les chiffres 0-9, les points, les traits d'union, les signes @ et les traits de soulignement sont autorisés.",
+    "isAdmin": "L'utilisateur Admin peut accéder à tout.",
+    "isActive": "Si cette case n'est pas cochée, l'utilisateur ne pourra pas se connecter.",
+    "teams": "Équipes auxquelles cet utilisateur appartient. Le niveau de contrôle d'accès est hérité des rôles de l'équipe.",
+    "roles": "Rôles d'accès supplémentaires. Utilisez-le si l'utilisateur n'appartient à aucune équipe ou si vous devez étendre le niveau de contrôle d'accès exclusivement pour cet utilisateur.",
+    "password": "Laissez ce champ vide si vous souhaitez conserver l'ancien mot de passe.",
+    "passwordConfirm": "Laissez ce champ vide si vous souhaitez conserver l'ancien mot de passe."
+  },
+  "messages": {
+    "accountInfoEmailSubject": "Informations sur l'accès des utilisateurs d'AtroCore"
+  }
+}

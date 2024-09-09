@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "name": "Nom",
+    "roles": "Rôles",
+    "positionList": "Liste des postes"
+  },
+  "links": {
+    "users": "Utilisateurs",
+    "notes": "Notes",
+    "roles": "Rôles"
+  },
+  "tooltips": {
+    "roles": "Rôles d'accès. Les utilisateurs de cette équipe obtiennent le niveau de contrôle d'accès à partir des rôles sélectionnés.",
+    "positionList": "Postes disponibles dans cette équipe. Par exemple, vendeur, directeur."
+  },
+  "labels": {
+    "Create Team": "Créer une équipe"
+  }
+}

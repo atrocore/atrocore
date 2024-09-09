@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "type": "Type",
+    "folder": "Dossier",
+    "storage": "Stockage",
+    "mimeType": "Type MIME",
+    "path": "Chemin d'accès",
+    "thumbnailsPath": "Chemin d'accès aux vignettes",
+    "preview": "Aperçu",
+    "hash": "Hachures",
+    "fileSize": "Taille du fichier (octets)",
+    "fileMtime": "Date de modification du dossier",
+    "url": "URL"
+  },
+  "links": {
+    "folder": "Dossier",
+    "storage": "Stockage"
+  },
+  "labels": {
+    "Create File": "Créer un fichier",
+    "Upload": "Télécharger"
+  },
+  "exceptions": {
+    "fileCreateFailed": "La création du fichier a échoué.",
+    "fileMoveFailed": "Le déplacement du fichier a échoué.",
+    "fileRenameFailed": "Le renommage de fichier a échoué.",
+    "fileDeleteFailed": "La suppression du fichier a échoué.",
+    "fileNameNotValidByUserRegex": "Le nom de fichier n'est pas valide. Il doit correspondre à la regex '%s'."
+  }
+}

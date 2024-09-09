@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "validateBy": "Valider par",
+    "isActive": "Actif",
+    "type": "Type",
+    "ratio": "Ratio",
+    "pattern": "Modèle",
+    "min": "Min",
+    "max": "Max",
+    "colorDepth": "Profondeur de couleur",
+    "colorSpace": "Espace couleur",
+    "minWidth": "Largeur",
+    "minHeight": "Hauteur",
+    "extension": "Extension",
+    "mimeList": "Liste",
+    "fileType": "Type de fichier"
+  }
+}

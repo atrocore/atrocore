@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "name": "Nom",
+    "firstName": "Prénom",
+    "secondName": "Deuxième nom",
+    "gender": "Genre",
+    "title": "Titre",
+    "jobPosition": "Poste de travail",
+    "email": "Courriel",
+    "phone": "Téléphone",
+    "mobile": "Mobile",
+    "street": "Rue",
+    "zip": "ZIP",
+    "box": "Boîte",
+    "city": "Ville",
+    "country": "Pays",
+    "countryCode": "Code du pays"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "title": "Titre",
+    "dateFrom": "Date de début",
+    "dateTo": "Date à",
+    "autorefreshInterval": "Intervalle de rafraîchissement automatique",
+    "displayRecords": "Afficher les enregistrements",
+    "isDoubleHeight": "Hauteur 2x",
+    "mode": "Mode",
+    "enabledScopeList": "Ce qu'il faut afficher",
+    "users": "Utilisateurs",
+    "entityType": "Type d'entité",
+    "primaryFilter": "Filtre primaire",
+    "boolFilterList": "Filtres supplémentaires",
+    "sortBy": "Ordre (champ)",
+    "sortDirection": "Ordre (direction)"
+  }
+}

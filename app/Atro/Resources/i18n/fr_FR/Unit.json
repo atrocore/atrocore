@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "name": "Nom",
+    "description": "Description",
+    "measure": "Mesure",
+    "isMain": "Principal",
+    "multiplier": "Multiplicateur",
+    "convertTo": "Convertir en",
+    "symbol": "Symbole",
+    "isActive": "Actif"
+  },
+  "links": {
+    "measure": "Mesure",
+    "convertTo": "Convertir en"
+  },
+  "labels": {
+    "Create Unit": "Créer une unité",
+    "unitSetDefault": "Défini comme valeur par défaut"
+  },
+  "exceptions": {
+    "defaultIsRequired": "La mesure doit avoir une unité par défaut.",
+    "unitIsUsed": "L'unité '%s' est utilisée par le champ '%s' dans l'entité '%s' pour l'enregistrement '%s'."
+  }
+}

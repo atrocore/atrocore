@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "user": "Utilisateur",
+    "action": "Action",
+    "createdAt": "Date",
+    "target": "Cible",
+    "targetType": "Type de cible",
+    "authToken": "Jeton d'authentification",
+    "ipAddress": "Adresse IP",
+    "authLogRecord": "Enregistrement du journal d'authentification"
+  },
+  "links": {
+    "authToken": "Jeton d'authentification",
+    "authLogRecord": "Enregistrement du journal d'authentification",
+    "user": "Utilisateur",
+    "target": "Cible"
+  },
+  "presetFilters": {
+    "onlyMy": "Seul mon"
+  },
+  "options": {
+    "action": {
+      "read": "Lire",
+      "update": "Mise à jour",
+      "delete": "Supprimer",
+      "create": "Créer"
+    }
+  }
+}

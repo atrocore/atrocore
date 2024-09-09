@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "isActive": "Actif",
+    "type": "Type",
+    "sourceEntity": "Entité source",
+    "inBackground": "Exécuter en arrière-plan",
+    "usage": "Utilisation",
+    "massAction": "Action de masse",
+    "display": "Affichage",
+    "actionsSet": "Ensemble d'actions",
+    "actions": "Actions"
+  },
+  "links": {
+    "actionsSet": "Ensemble d'actions",
+    "actions": "Actions"
+  },
+  "labels": {
+    "Create Action": "Créer une action",
+    "execute": "Exécuter"
+  },
+  "massActions": {
+    "execute": "Exécuter"
+  },
+  "messages": {
+    "executeNow": "Êtes-vous sûr de vouloir exécuter l'action sélectionnée ?"
+  },
+  "options": {
+    "usage": {
+      "entity": "Entité",
+      "record": "Enregistrement"
+    },
+    "display": {
+      "dropdown": "Liste déroulante",
+      "single": "Unique"
+    },
+    "type": {
+      "set": "Ensemble d'actions"
+    }
+  },
+  "tooltips": {
+    "inBackground": "L'action sera exécutée en arrière-plan sans message direct de succès ou d'erreur. Utilisez-le si l'exécution de l'action peut prendre plus de 30 secondes.",
+    "usage": "L'utilisation prescrit l'emplacement de l'action. Une action sur les enregistrements exige que les enregistrements concernés soient présélectionnés."
+  }
+}

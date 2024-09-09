@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "extensibleEnumOptions": "Liste des options",
+    "multilingual": "Multilingue"
+  },
+  "links": {
+    "extensibleEnumOptions": "Liste des options"
+  },
+  "labels": {
+    "Create ExtensibleEnum": "Créer une liste"
+  },
+  "exceptions": {
+    "extensibleEnumIsUsed": "La liste \"%s\" est utilisée par le champ \"%s\" dans l'entité \"%s\"."
+  }
+}

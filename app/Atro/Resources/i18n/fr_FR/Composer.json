@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "status": "Statut",
+    "settingVersion": "Version de réglage",
+    "currentVersion": "Version actuelle",
+    "latestVersion": "Dernière version",
+    "availableVersions": "Versions disponibles"
+  },
+  "options": {
+    "status": {
+      "install": "Installer",
+      "update": "Mise à jour",
+      "delete": "Enlever"
+    }
+  },
+  "exceptions": {
+    "hasRequireds": "Le module n'a pas satisfait aux exigences",
+    "hasRequiredsDelete": "Vous ne pouvez pas supprimer le module requis",
+    "suchModuleIsAlreadyInstalled": "Ce module est déjà installé",
+    "suchModuleVersionAlreadyInstalled": "Cette version du module est déjà installée",
+    "noSuchModuleVersion": "Aucune version de module de ce type",
+    "versionIsInvalid": "La version n'est pas valide"
+  },
+  "labels": {
+    "updateStarted": "La mise à jour a été lancée",
+    "canceling": "Annulation...",
+    "canceled": "Annulé",
+    "dependencies": "Dépendances",
+    "version": "Version",
+    "Run Update": "Mise à jour",
+    "updateFailed": "La mise à jour a échoué. Impossible d'établir une connexion avec le serveur de modules. Veuillez réessayer",
+    "settingModuleForRemoving": "Module de réglage pour retirer...",
+    "setModuleForRemoving": "Le module a été défini pour être supprimé. Cliquez sur le bouton \"Mise à jour\" pour appliquer l'installation ou la suppression du module.",
+    "settingModuleForInstalling": "Module de réglage pour l'installation...",
+    "settingModuleForUpdating": "Module de réglage pour la mise à jour...",
+    "setModuleForInstalling": "Le module a été configuré pour l'installation. Cliquez sur le bouton \"Mise à jour\" pour appliquer l'installation ou la suppression du module.",
+    "setModuleForUpdating": "Le module a été défini pour être supprimé. Cliquez sur le bouton \"Mise à jour\" pour appliquer l'installation ou la suppression du module.",
+    "cancelingModuleInstall": "Annulation de l'installation du module...",
+    "canceledModuleInstall": "L'installation du module a été annulée",
+    "Log": "Journal",
+    "confirmRun": "Après la mise à jour, tous les utilisateurs se déconnecteront du système. Êtes-vous sûr de vouloir mettre à jour votre système ?",
+    "daemonDisabled": "<b>Le démon de composition ne fonctionne pas!</b><br>Probablement le démon est en train de se recharger et vous devriez attendre une minute ou la crontab n'est pas configurée. Vous trouverez des instructions sur la configuration de la crontab <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">ici</a>.",
+    "queueManagerRunning": "<b>Le gestionnaire de files d'attente est en cours d'exécution!</b><br>La possibilité de mettre à jour les modules est bloquée. Veuillez réessayer plus tard."
+  },
+  "notifications": {
+    "Module update": "Le module {module} a été mis à jour. De la version {from} à {to}",
+    "System update": "Le système a été mis à jour. De la version {from} à {to}",
+    "Module install": "Le module {module} v.{version} a été installé",
+    "Module delete": "Le module {module} a été supprimé"
+  }
+}
