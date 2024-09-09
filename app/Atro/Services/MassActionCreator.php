@@ -24,6 +24,7 @@ class MassActionCreator extends QueueManagerBase
     {
         $entityName = $data['entityName'];
         $action = $data['action'];
+        $ids = $data['ids'];
         $total = (int)$data['total'];
         $chunkSize = $data['chunkSize'];
         $totalChunks = (int)ceil($total / $chunkSize);
@@ -55,6 +56,9 @@ class MassActionCreator extends QueueManagerBase
                     ->find();
                 $collectionIds = array_column($collection->toArray(), 'id');
                 $offset = $offset + $chunkSize;
+
+                // remove already found
+                $ids = array_diff($ids, $collectionIds);
             } else {
                 $qb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
                 if ($hasCreatedAt) {

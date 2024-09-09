@@ -50,7 +50,8 @@ class Record extends RecordService
         list($count, $errors, $sync) = $this->executeMassAction($params, $callback);
 
         return $this
-            ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => ['count' => $count, 'sync' => $sync, 'errors' => $errors]]))
+            ->dispatchEvent('afterMassDelete',
+                new Event(['service' => $this, 'result' => ['count' => $count, 'sync' => $sync, 'errors' => $errors]]))
             ->getArgument('result');
     }
 
@@ -154,6 +155,7 @@ class Record extends RecordService
                 "Create jobs for Mass $action",
                 'MassActionCreator',
                 [
+                    'ids'             => $ids ?? [],
                     'action'          => $action,
                     'entityName'      => $this->entityType,
                     'chunkSize'       => (int)$chunkSize,
