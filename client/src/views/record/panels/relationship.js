@@ -308,7 +308,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         }.bind(this));
                     });
                     this.setupTotal.call(this)
-                    this.setupLayoutEditor()
+                    this.setupLayoutEditor(layoutName)
                 }, this);
                 this.wait(false);
             }, this);
@@ -360,8 +360,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             })
         },
 
-        setupLayoutEditor: function () {
-            if (this.getMetadata().get(['scopes', this.scope, 'layouts'])) {
+        setupLayoutEditor: function (layoutName) {
+            if (this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall'].includes(layoutName)) {
                 let $span = $(`<span data-action="layoutEditor" data-panel="${this.panelName}" class="collapser fas fa-columns action layout-editor" style="font-size: 14px"></span>`)
                 const $container = this.$el.parent().find('.panel-heading .panel-title')
 

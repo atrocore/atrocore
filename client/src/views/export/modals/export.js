@@ -84,18 +84,29 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
         },
 
         actionExport: function () {
-            if (!this.model.get('exportFeed')) {
+            if (!this.model.get('useExistingExportFeed') && !this.model.get('exportAllField') && !this.model.get('fieldList')?.length) {
+                this.notify(this.translate('noFieldSelected', 'messages', 'ExportFeed'), 'error');
+                return
+            }
+
+            if (this.model.get('useExistingExportFeed') && !this.model.get('exportFeed')) {
                 this.notify(this.translate('noExportFeedSelected', 'messages', 'ExportFeed'), 'error');
                 return
             }
 
             let data = {
                 id: this.model.get('exportFeed'),
+                fileType: this.model.get('fileType'),
+                exportAllField: this.model.get('exportAllField'),
+                fieldList: this.model.get('fieldList'),
                 ignoreFilter: this.model.get('ignoreFilter'),
+                scope: this.scope,
                 entityFilterData: this.options.entityFilterData
             };
 
-            this.ajaxPostRequest('ExportFeed/action/exportFile', data).then(response => {
+            let actionName = this.model.get('useExistingExportFeed') ? 'exportFile' : 'directExportFile'
+
+            this.ajaxPostRequest(`ExportFeed/action/${actionName}`, data).then(response => {
                 if (response) {
                     this.notify(this.translate('jobCreated'), 'success');
                 } else {
