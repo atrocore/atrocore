@@ -545,17 +545,6 @@
               ]
             }
           ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "smtp"
-              ]
-            }
-          ]
         }
       },
       "smtpPort": {
@@ -584,17 +573,6 @@
       },
       "smtpUsername": {
         "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "smtp"
-              ]
-            }
-          ]
-        },
-        "required": {
           "conditionGroup": [
             {
               "type": "in",
