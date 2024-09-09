@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\ORM\Repositories\RDB;
 use Doctrine\DBAL\Connection;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 class MassActionCreator extends QueueManagerBase
@@ -41,6 +42,8 @@ class MassActionCreator extends QueueManagerBase
 
         $createdAt = null;
 
+        $hasCreatedAt = !empty($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'createdAt']));
+
         while (true) {
             $collectionIds = [];
 
@@ -51,33 +54,43 @@ class MassActionCreator extends QueueManagerBase
                     ->limit($offset, $chunkSize)
                     ->find();
                 $collectionIds = array_column($collection->toArray(), 'id');
+                $offset = $offset + $chunkSize;
             } else {
                 $qb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
-                $qb->select('id, created_at');
+                if ($hasCreatedAt) {
+                    $qb->select('id, created_at');
+                } else {
+                    $qb->select('id');
+                }
 
                 if (!empty($idsToSkip)) {
                     $qb->andWhere('id NOT IN (:idsToSkip)')
                         ->setParameter('idsToSkip', $idsToSkip, Connection::PARAM_STR_ARRAY);
                 }
 
-                if (!empty($createdAt)) {
+                if ($hasCreatedAt && !empty($createdAt)) {
                     $qb->andWhere('created_at >= :createdAt')
                         ->setParameter('createdAt', $createdAt);
                 }
 
                 $qb->setFirstResult(0);
                 $qb->setMaxResults($chunkSize);
-                $qb->orderBy('created_at,id');
+                if ($hasCreatedAt) {
+                    $qb->orderBy('created_at,id');
+                } else {
+                    $qb->orderBy('id');
+                }
 
                 foreach ($qb->fetchAllAssociative() as $row) {
+                    if ($hasCreatedAt) {
+                        $createdAt = $row['created_at'];
+                    }
                     $collectionIds[] = $row['id'];
                     $idsToSkip[] = $row['id'];
                     if (count($idsToSkip) > 50000) {
                         array_shift($idsToSkip);
                     }
                 }
-
-                $createdAt = $row['created_at'];
 
                 $idsToSkip = array_values($idsToSkip);
             }
@@ -106,7 +119,6 @@ class MassActionCreator extends QueueManagerBase
             $jobIds[] = $this->getContainer()->get('queueManager')
                 ->createQueueItem($name, 'Mass' . ucfirst($action), $jobData);
 
-            $offset = $offset + $chunkSize;
             $part++;
 
             QueueManagerBase::updatePublicData('mass' . ucfirst($action), $entityName, [
@@ -121,5 +133,10 @@ class MassActionCreator extends QueueManagerBase
     public function getNotificationMessage(Entity $queueItem): string
     {
         return '';
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->getContainer()->get('metadata');
     }
 }
