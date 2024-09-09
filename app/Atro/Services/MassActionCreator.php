@@ -123,7 +123,7 @@ class MassActionCreator extends QueueManagerBase
             $jobIds[] = $this->getContainer()->get('queueManager')
                 ->createQueueItem($name, 'Mass' . ucfirst($action), $jobData);
 
-            if (($part % 5) === 0) {
+            if ($part === 0 || ($part % 5) === 0) {
                 QueueManagerBase::updatePublicData('mass' . ucfirst($action), $entityName, [
                     "jobIds" => $jobIds,
                     "total"  => $total
