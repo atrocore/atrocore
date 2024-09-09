@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\ORM\Repositories\RDB;
-use Doctrine\DBAL\Connection;
+use Atro\DTO\QueueItemDTO;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
@@ -24,12 +24,18 @@ class MassActionCreator extends QueueManagerBase
     {
         $entityName = $data['entityName'];
         $action = $data['action'];
-        $ids = $data['ids'];
+        $ids = $data['ids'] ?? [];
         $total = (int)$data['total'];
         $chunkSize = $data['chunkSize'];
         $totalChunks = (int)ceil($total / $chunkSize);
 
-        $sp = array_merge($data['selectParams'], ['select' => ['id']]);
+        $additionJobData = $data['params']['additionalJobData'] ?? [];
+
+        if (empty($ids)) {
+            $sp = $this->getContainer()->get('selectManagerFactory')->create($entityName)
+                ->getSelectParams(['where' => $data['params']['where']], true, true);
+            $sp['select'] = ['id'];
+        }
 
         /** @var RDB $repository */
         $repository = $this->getEntityManager()->getRepository($entityName);
@@ -39,71 +45,27 @@ class MassActionCreator extends QueueManagerBase
 
         $jobIds = [];
 
-        $idsToSkip = [];
-
-        $createdAt = null;
-
-        $hasCreatedAt = !empty($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'createdAt']));
-
         while (true) {
-            $collectionIds = [];
-
             if (!empty($ids)) {
                 $collection = $repository
                     ->select(['id'])
                     ->where(['id' => $ids])
                     ->limit($offset, $chunkSize)
                     ->find();
-                $collectionIds = array_column($collection->toArray(), 'id');
-                $offset = $offset + $chunkSize;
 
-                // remove already found
-                $ids = array_diff($ids, $collectionIds);
             } else {
-                $qb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
-                if ($hasCreatedAt) {
-                    $qb->select('id, created_at');
-                } else {
-                    $qb->select('id');
-                }
-
-                if (!empty($idsToSkip)) {
-                    $qb->andWhere('id NOT IN (:idsToSkip)')
-                        ->setParameter('idsToSkip', $idsToSkip, Connection::PARAM_STR_ARRAY);
-                }
-
-                if ($hasCreatedAt && !empty($createdAt)) {
-                    $qb->andWhere('created_at >= :createdAt')
-                        ->setParameter('createdAt', $createdAt);
-                }
-
-                $qb->setFirstResult(0);
-                $qb->setMaxResults($chunkSize);
-                if ($hasCreatedAt) {
-                    $qb->orderBy('created_at,id');
-                } else {
-                    $qb->orderBy('id');
-                }
-
-                foreach ($qb->fetchAllAssociative() as $row) {
-                    if ($hasCreatedAt) {
-                        $createdAt = $row['created_at'];
-                    }
-                    $collectionIds[] = $row['id'];
-                    $idsToSkip[] = $row['id'];
-                    if (count($idsToSkip) > 50000) {
-                        array_shift($idsToSkip);
-                    }
-                }
-
-                $idsToSkip = array_values($idsToSkip);
+                $collection = $repository
+                    ->limit($offset, $chunkSize)
+                    ->find($sp);
             }
+            $offset = $offset + $chunkSize;
 
+            $collectionIds = array_column($collection->toArray(), 'id');
             if (empty($collectionIds)) {
                 break;
             }
 
-            $jobData = array_merge($data['additionJobData'], [
+            $jobData = array_merge($additionJobData, [
                 'entityType'  => $entityName,
                 'total'       => $total,
                 'chunkSize'   => count($collectionIds),
@@ -120,20 +82,21 @@ class MassActionCreator extends QueueManagerBase
                 $name .= " ($part)";
             }
 
-            $jobIds[] = $this->getContainer()->get('queueManager')
-                ->createQueueItem($name, 'Mass' . ucfirst($action), $jobData);
+            $qmDto = new QueueItemDTO($name, 'Mass' . ucfirst($action), $jobData);
+            $qmDto->setPriority('Crucial');
+            $qmDto->setStartFrom(new \DateTime('2299-01-01'));
 
-            if ($part === 0 || ($part % 5) === 0) {
-                QueueManagerBase::updatePublicData('mass' . ucfirst($action), $entityName, [
-                    "jobIds" => $jobIds,
-                    "total"  => $total
-                ]);
-            }
+            $jobIds[] = $this->getContainer()->get('queueManager')->createQueueItem($qmDto);
 
             $part++;
         }
 
         if (!empty($jobIds)) {
+            foreach ($this->getEntityManager()->getRepository('QueueItem')->where(['id' => $jobIds])->find() as $job) {
+                $job->set('startFrom', null);
+                $this->getEntityManager()->saveEntity($job);
+            }
+
             QueueManagerBase::updatePublicData('mass' . ucfirst($action), $entityName, [
                 "jobIds" => $jobIds,
                 "total"  => $total

@@ -152,16 +152,15 @@ class Record extends RecordService
             $sync = false;
 
             $this->getQueueManager()->createQueueItem(
-                "Create jobs for Mass $action",
+                "Create jobs for mass $action",
                 'MassActionCreator',
                 [
-                    'ids'             => $ids ?? [],
-                    'action'          => $action,
-                    'entityName'      => $this->entityType,
-                    'chunkSize'       => (int)$chunkSize,
-                    'total'           => $total,
-                    'selectParams'    => $selectParams ?? null,
-                    'additionJobData' => $params['additionalJobData'] ?? []
+                    'ids'        => $ids ?? [],
+                    'action'     => $action,
+                    'entityName' => $this->entityType,
+                    'chunkSize'  => (int)$chunkSize,
+                    'total'      => $total,
+                    'params'     => $params,
                 ]
             );
         }
