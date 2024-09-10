@@ -76,6 +76,12 @@ Espo.define('views/main', 'view', function (Dep) {
             this.updateLastUrl();
             this.enableMassActions.forEach(action => this.setupMassActionNotification(action));
 
+            this.listenTo(Backbone.Events, 'publicData', data => {
+                if (data.entityMessage && data.entityMessage[this.scope] && data.entityMessage[this.scope].message) {
+                    Espo.Ui.notify(data.entityMessage[this.scope].message, null, 3000);
+                }
+            });
+
             $(document).on('click', '.show-hidden', function () {
                 let message = $(this).parent().find('textarea.hidden').val();
                 Espo.Ui.notify(message, 'info', 1000 * 60 * 60, true);

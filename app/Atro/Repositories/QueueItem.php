@@ -121,6 +121,25 @@ class QueueItem extends Base
             $actionTypeService = $this->getInjection('container')->get($className);
             $actionTypeService->checkQueueItem($entity);
         }
+
+        if ($entity->isAttributeChanged('status') && $entity->get('serviceName') === 'MassActionCreator') {
+            if (!empty($entity->get('data')) && !empty($entity->get('data')->entityName)) {
+                $entityName = $entity->get('data')->entityName;
+                switch ($entity->get('status')) {
+                    case 'Pending':
+                    case 'Running':
+                        QueueManagerBase::updatePublicData('entityMessage', $entityName, [
+                            "message" => "Test message 55"
+                        ]);
+                        break;
+                    case 'Success':
+                    case 'Failed':
+                    case 'Canceled':
+                        QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
+                        break;
+                }
+            }
+        }
     }
 
     public function getFilePath(float $sortOrder, string $priority, string $itemId): ?string
