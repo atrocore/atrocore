@@ -15,7 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
-use Atro\DTO\QueueItemDTO;
+use Atro\Core\QueueManager;
 use Espo\Services\RecordService;
 
 class Record extends RecordService
@@ -49,7 +49,8 @@ class Record extends RecordService
         list($count, $errors, $sync) = $this->executeMassAction($params, $callback);
 
         return $this
-            ->dispatchEvent('afterMassDelete', new Event(['service' => $this, 'result' => ['count' => $count, 'sync' => $sync, 'errors' => $errors]]))
+            ->dispatchEvent('afterMassDelete',
+                new Event(['service' => $this, 'result' => ['count' => $count, 'sync' => $sync, 'errors' => $errors]]))
             ->getArgument('result');
     }
 
@@ -92,7 +93,6 @@ class Record extends RecordService
         $maxCountWithoutJob = $params['maxCountWithoutJob'];
         $maxChunkSize = $params['maxChunkSize'];
         $minChunkSize = $params['minChunkSize'];
-        $additionJobData = !empty($params['additionalJobData']) ? $params['additionalJobData'] : [];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
         if (!in_array($action, ['restore', 'delete', 'update'])) {
@@ -119,7 +119,8 @@ class Record extends RecordService
             $total = 0;
         }
 
-        $jobIds = [];
+        $sync = true;
+
         if ($total <= $maxCountWithoutJob) {
             if ($byWhere) {
                 $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
@@ -147,71 +148,20 @@ class Record extends RecordService
                 }
             }
 
-            // increase timeout
-            set_time_limit(300);
+            $sync = false;
 
-            $chunkSize = (int)$chunkSize;
-            $totalChunks = (int)ceil($total / $chunkSize);
-
-            $offset = 0;
-            $part = 0;
-            while (true) {
-                if (!empty($ids)) {
-                    $collection = $repository
-                        ->select(['id'])
-                        ->where(['id' => $ids])
-                        ->limit($offset, $chunkSize)
-                        ->order('id', 'ASC')
-                        ->find();
-                } else {
-                    $collection = $repository
-                        ->limit($offset, $chunkSize)
-                        ->order('id', 'ASC')
-                        ->find(array_merge($selectParams, ['select' => ['id']]));
-                }
-
-                $collectionIds = array_column($collection->toArray(), 'id');
-                if (empty($collectionIds)) {
-                    break;
-                }
-
-                $jobData = array_merge($additionJobData, [
-                    'entityType'  => $this->getEntityType(),
-                    'total'       => $total,
-                    'chunkSize'   => count($collectionIds),
-                    'totalChunks' => $totalChunks,
-                    'ids'         => $collectionIds,
-                ]);
-                if ($action === 'delete' && !empty($params['permanently'])) {
-                    $jobData['deletePermanently'] = true;
-                }
-                $name = $this->getInjection('language')
-                        ->translate($action, 'massActions', 'Global') . ': ' . $this->entityName;
-                if ($part > 0) {
-                    $name .= " ($part)";
-                }
-
-                $qmDto = new QueueItemDTO($name, 'Mass' . ucfirst($action), $jobData);
-                $qmDto->setPriority('Crucial');
-                $qmDto->setStartFrom(new \DateTime('2299-01-01'));
-
-                $jobIds[] = $this->getInjection('queueManager')->createQueueItem($qmDto);
-
-                $offset = $offset + $chunkSize;
-                $part++;
-            }
-        }
-
-        if (!empty($jobIds)) {
-            foreach ($this->getEntityManager()->getRepository('QueueItem')->where(['id' => $jobIds])->find() as $job) {
-                $job->set('startFrom', null);
-                $this->getEntityManager()->saveEntity($job);
-            }
-
-            QueueManagerBase::updatePublicData('mass' . ucfirst($action), $this->getEntityType(), [
-                "jobIds" => $jobIds,
-                "total"  => $total
-            ]);
+            $this->getQueueManager()->createQueueItem(
+                "Create jobs for mass $action",
+                'MassActionCreator',
+                [
+                    'ids'        => $ids ?? [],
+                    'action'     => $action,
+                    'entityName' => $this->entityType,
+                    'chunkSize'  => (int)$chunkSize,
+                    'total'      => $total,
+                    'params'     => $params,
+                ]
+            );
         }
 
         if (!empty($errors)) {
@@ -220,6 +170,11 @@ class Record extends RecordService
             array_unshift($errors, $this->getInjection('language')->translate($label, 'exceptions'));
         }
 
-        return [$total, $errors, empty($jobIds)];
+        return [$total, $errors, $sync];
+    }
+
+    protected function getQueueManager(): QueueManager
+    {
+        return $this->getInjection('queueManager');
     }
 }

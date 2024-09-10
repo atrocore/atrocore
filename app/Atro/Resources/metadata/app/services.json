@@ -6,6 +6,7 @@
   "QueueManagerCreateThumbnails": "\\Atro\\Services\\QueueManagerCreateThumbnails",
   "QueueManagerUpsert": "\\Atro\\Services\\QueueManagerUpsert",
   "MassActions": "\\Atro\\Services\\MassActions",
+  "MassActionCreator": "\\Atro\\Services\\MassActionCreator",
   "MassUpdate": "\\Atro\\Services\\MassUpdate",
   "MassDelete": "\\Atro\\Services\\MassDelete",
   "ScheduledJob": "\\Espo\\Services\\ScheduledJob",

@@ -121,6 +121,37 @@ class QueueItem extends Base
             $actionTypeService = $this->getInjection('container')->get($className);
             $actionTypeService->checkQueueItem($entity);
         }
+
+        if ($entity->isAttributeChanged('status') && $entity->get('serviceName') === 'MassActionCreator') {
+            if (!empty($entity->get('data')) && !empty($entity->get('data')->entityName)) {
+                switch ($entity->get('status')) {
+                    case 'Running':
+                        QueueManagerBase::updatePublicData('entityMessage', $entity->get('data')->entityName, [
+                            "message" => $this->getInjection('language')
+                                ->translate("prepareRecordsFor" . ucfirst($entity->get('data')->action))
+                        ]);
+                        break;
+                    case 'Success':
+                    case 'Failed':
+                    case 'Canceled':
+                        QueueManagerBase::updatePublicData('entityMessage', $entity->get('data')->entityName, null);
+                        break;
+                }
+
+                if ($entity->get('status') === 'Canceled') {
+                    $actionItems = $this
+                        ->where([
+                            'data*'  => '%"creatorId":"' . $entity->get('id') . '"%',
+                            'status' => 'Pending'
+                        ])
+                        ->find();
+                    foreach ($actionItems as $qi) {
+                        $qi->set('status', 'Canceled');
+                        $this->getEntityManager()->saveEntity($qi);
+                    }
+                }
+            }
+        }
     }
 
     public function getFilePath(float $sortOrder, string $priority, string $itemId): ?string
@@ -218,6 +249,19 @@ class QueueItem extends Base
         $fileName = $this->getFilePath($entity->get('sortOrder'), $entity->get('priority'), $entity->get('id'));
         if (!empty($fileName) && file_exists($fileName)) {
             unlink($fileName);
+        }
+
+        if ($entity->get('serviceName') === 'MassActionCreator') {
+            $actionItems = $this
+                ->where([
+                    'data*'  => '%"creatorId":"' . $entity->get('id') . '"%',
+                    'status' => 'Pending'
+                ])
+                ->find();
+            foreach ($actionItems as $qi) {
+                $qi->set('status', 'Canceled');
+                $this->getEntityManager()->saveEntity($qi);
+            }
         }
 
         $this->deleteFromDb($entity->get('id'));
