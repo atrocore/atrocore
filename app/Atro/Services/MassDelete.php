@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
 class MassDelete extends QueueManagerBase
@@ -34,6 +35,8 @@ class MassDelete extends QueueManagerBase
         foreach ($data['ids'] as $id) {
             try {
                 $service->$method($id);
+            } catch (NotFound $e) {
+                // ignore
             } catch (\Throwable $e) {
                 $message = "MassDelete {$entityType} '$id', failed: {$e->getMessage()}";
                 $GLOBALS['log']->error($message);
