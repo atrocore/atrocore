@@ -66,6 +66,7 @@ class MassActionCreator extends QueueManagerBase
             }
 
             $jobData = array_merge($additionJobData, [
+                'creatorId'   => $this->qmItem->get('id'),
                 'entityType'  => $entityName,
                 'total'       => $total,
                 'chunkSize'   => count($collectionIds),
