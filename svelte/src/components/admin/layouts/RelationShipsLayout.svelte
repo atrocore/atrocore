@@ -51,7 +51,7 @@
         let allFields: string[] = [];
 
         for (let field in model.defs.links) {
-            if (['hasMany', 'hasChildren'].includes(model.defs.links[field].type)) {
+            if (['belongsTo', 'hasMany', 'hasChildren'].includes(model.defs.links[field].type)) {
                 if (isLinkEnabled(model, field)) {
                     allFields.push(field);
                 }
