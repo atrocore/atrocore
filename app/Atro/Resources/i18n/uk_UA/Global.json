@@ -57,7 +57,8 @@
     "PreviewTemplate": "Шаблон перегляду",
     "NotificationTemplate": "Шаблон сповіщення",
     "NotificationProfile": "Профіль сповіщень",
-    "NotificationRule": "Правило сповіщення"
+    "NotificationRule": "Правило сповіщення",
+    "copyConfigurations": "Копіювання конфігурацій"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Шаблони електронної пошти",

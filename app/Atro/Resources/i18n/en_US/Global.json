@@ -340,7 +340,8 @@
     "previewTemplate": "Preview Templates",
     "Duplicate and Select": "Duplicate and Select",
     "Select Image": "Select existing image",
-    "Upload Image": "Upload image from a local filesystem"
+    "Upload Image": "Upload image from a local filesystem",
+    "copyConfigurations": "Copy Configurations"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
