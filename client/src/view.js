@@ -247,6 +247,42 @@ Espo.define('view', [], function () {
                 confirmStyle: confirmStyle
             }, callback, context);
         },
+        copyToClipboard(text, callback) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                // Clipboard API method
+                navigator.clipboard.writeText(text).then(function () {
+                    if(callback){
+                        callback(true);
+                    }
+                }, function (err) {
+                    console.error('Could not copy text: ', err);
+                    if(callback){
+                        callback(false);
+                    }
+                });
+            } else {
+                // Fallback method
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";  // Avoid scrolling to bottom
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    if(callback){
+                        callback(true);
+                    }
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                    if(callback){
+                        callback(false);
+                    }
+                }
+
+                document.body.removeChild(textArea);
+            }
+        }
     });
 
 });

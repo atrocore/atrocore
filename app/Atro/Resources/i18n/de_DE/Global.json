@@ -319,7 +319,8 @@
     "previewTemplate": "Vorschau Vorlage",
     "Duplicate and Select": "Duplizieren und Auswählen",
     "Select Image": "Vorhandenes Bild auswählen",
-    "Upload Image": "Bild von einem lokalen Dateisystem hochladen"
+    "Upload Image": "Bild von einem lokalen Dateisystem hochladen",
+    "copyConfigurations": "Konfigurationen kopieren"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

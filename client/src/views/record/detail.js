@@ -565,6 +565,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     };
                 }
             }, this);
+
+            if(this.getMetadata().get(['scopes', this.scope, 'enabledCopyConfigurations']) && this.getAcl().check(this.entityType, 'read')) {
+                this.dropdownItemList.push({
+                    'label': this.translate('copyConfigurations', 'labels', 'Global'),
+                    'name': 'copyConfigurations'
+                });
+            }
         },
 
         isHierarchical() {
@@ -2368,8 +2375,58 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this.getRouter().navigate(url, {trigger: true});
-        }
+        },
 
+        actionCopyConfigurations() {
+            let select = [];
+            let  disabledFields = this.getMetadata().get(['scopes', this.scope, 'disabledFieldsForCopyConfigurations'], []);
+
+            Object.entries(this.getMetadata().get(['entityDefs', this.scope, 'fields'])).forEach(([field, fieldDefs]) => {
+                if(['createdBy', 'modifiedBy', 'teams', 'assignedAccounts', 'assignedUser', 'ownerUser'].includes(field)) {
+                    return true;
+                }
+
+                if(fieldDefs['exportDisabled']) {
+                    return true;
+                }
+
+                if(!disabledFields.includes(field) && fieldDefs['type'] !== 'file'){
+                    select.push(field);
+                }
+
+                if(['link' ,'file'].includes(fieldDefs['type']) && !disabledFields.includes(field + 'Id')) {
+                    select.push(field + 'Id');
+                }
+
+                if(fieldDefs['type'] === 'linkMultiple' && !disabledFields.includes(field + 'Ids')){
+                    select.push(field + 'Ids');
+                }
+            });
+
+            this.notify(this.translate('pleaseWait..', 'messages'));
+
+            this.ajaxGetRequest(this.scope, {
+                select: select.join(','),
+                where: [
+                    {
+                        type: "equals",
+                        attribute: "id",
+                        value: this.model.get('id')
+                    }
+                ]
+            }).then(data => {
+                if(data.list && data.list.length){
+                    this.copyToClipboard(JSON.stringify(data.list[0]), (copied) => {
+                        if(copied){
+                            this.notify(this.translate('Done'), 'success');
+                        }else{
+                            this.notify('Error copying text to clipboard', 'danger');
+                        }
+                    })
+
+                }
+            })
+        },
     });
 
 });
