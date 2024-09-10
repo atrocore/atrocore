@@ -127,7 +127,8 @@ class QueueItem extends Base
                 switch ($entity->get('status')) {
                     case 'Running':
                         QueueManagerBase::updatePublicData('entityMessage', $entity->get('data')->entityName, [
-                            "message" => "Preparing data for " . $entity->get('data')->action . "..."
+                            "message" => $this->getInjection('language')
+                                ->translate("prepareRecordsFor" . ucfirst($entity->get('data')->action))
                         ]);
                         break;
                     case 'Success':
