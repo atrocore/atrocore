@@ -45,19 +45,27 @@ class MassActionCreator extends QueueManagerBase
 
         $jobIds = [];
 
+        $orderBy = 'id';
+        if (!empty($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'createdAt']))) {
+            $orderBy = 'createdAt';
+        }
+
         while (true) {
             if (!empty($ids)) {
                 $collection = $repository
                     ->select(['id'])
                     ->where(['id' => $ids])
                     ->limit($offset, $chunkSize)
+                    ->order($orderBy)
                     ->find();
 
             } else {
                 $collection = $repository
                     ->limit($offset, $chunkSize)
+                    ->order($orderBy)
                     ->find($sp);
             }
+
             $offset = $offset + $chunkSize;
 
             $collectionIds = array_column($collection->toArray(), 'id');
