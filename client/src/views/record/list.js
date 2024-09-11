@@ -391,7 +391,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.length && !fixedHeaderRow,
-                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list','listSmall'].includes(this.layoutName)
+                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall'].includes(this.layoutName)
             };
         },
 
@@ -1407,7 +1407,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     let positionTop = $(target).offset().top + $(target).outerHeight(true);
                     let list = this.$el.find('.list');
                     let listPositionTop = list.offset().top;
-                    if ((positionTop + menuHeight) > this.getHeightParentPosition()) {
+                    const parentPosition = this.getHeightParentPosition()
+                    if ((positionTop + menuHeight) > parentPosition) {
                         if (menuHeight <= (positionTop - listPositionTop)) {
                             menu.css({
                                 "top": `-${menuHeight}px`
@@ -1416,7 +1417,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true);
                             menu.css({
                                 'position': 'fixed',
-                                'top': `${positionTop}px`,
+                                'top': `${window.innerHeight - (parentPosition - $(target).offset().top) - menuHeight}px`,
                                 'right': `${rightOffset}px`
                             });
                         }
