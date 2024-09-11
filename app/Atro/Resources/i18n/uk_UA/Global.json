@@ -57,8 +57,7 @@
     "PreviewTemplate": "Шаблон перегляду",
     "NotificationTemplate": "Шаблон сповіщення",
     "NotificationProfile": "Профіль сповіщень",
-    "NotificationRule": "Правило сповіщення",
-    "copyConfigurations": "Копіювання конфігурацій"
+    "NotificationRule": "Правило сповіщення"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Шаблони електронної пошти",
@@ -337,7 +336,8 @@
     "Instance comparison": "Порівняння інстансів",
     "previewTemplate": "Шаблон для перегляду",
     "Select Image": "Обрати існуюче зображення",
-    "Upload Image": "Завантажити зображення з пристрою"
+    "Upload Image": "Завантажити зображення з пристрою",
+    "copyConfigurations": "Копіювання конфігурацій"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
