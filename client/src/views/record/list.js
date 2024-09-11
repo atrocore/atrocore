@@ -236,10 +236,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this._internalLayout = null
                         this.getInternalLayout(() => {
                             this.notify('Loading...')
-                            this.collection.fetch({keepSelected: true})
-                            this.collection.once('sync', () => {
-                                this.notify(false);
-                            })
+                            this.getSelectAttributeList(selectAttributeList => {
+                                if (selectAttributeList) {
+                                    this.collection.data.select = selectAttributeList.join(',');
+                                }
+                                this.collection.fetch({keepSelected: true})
+                                this.collection.once('sync', () => {
+                                    this.notify(false);
+                                })
+                            });
                         })
 
                     }
