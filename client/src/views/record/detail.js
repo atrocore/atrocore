@@ -2380,7 +2380,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionCopyConfigurations() {
             let select = [];
             let  disabledFields = this.getMetadata().get(['scopes', this.scope, 'disabledFieldsForCopyConfigurations'], []);
-
+            let linksFields = [];
             Object.entries(this.getMetadata().get(['entityDefs', this.scope, 'fields'])).forEach(([field, fieldDefs]) => {
                 if(['createdBy', 'modifiedBy', 'teams', 'assignedAccounts', 'assignedUser', 'ownerUser'].includes(field)) {
                     return true;
@@ -2401,9 +2401,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if(fieldDefs['type'] === 'linkMultiple' && !disabledFields.includes(field + 'Ids')){
                     select.push(field + 'Ids');
                 }
+
+                if(['link' ,'linkMultiple'].includes(fieldDefs['type'])){
+                    linksFields.push(field);
+                }
             });
 
-            this.notify(this.translate('pleaseWait..', 'messages'));
+            this.notify(this.translate('pleaseWait', 'messages'));
 
             this.ajaxGetRequest(this.scope, {
                 select: select.join(','),
@@ -2415,8 +2419,57 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 ]
             }).then(data => {
+                let cleanseItem = (item) => {
+                    Object.entries(item).forEach(([key, value]) =>{
+                        if(!value || ['createdById', 'modifiedById', 'modifiedAt', 'createdAt', 'assignedUserId', 'ownerUserId'].includes(key)){
+                            delete item[key];
+                            return true;
+                        }
+                    });
+                }
+
                 if(data.list && data.list.length){
-                    this.copyToClipboard(JSON.stringify(data.list[0]), (copied) => {
+                    let item = data.list[0];
+                    let configurations = [];
+                    linksFields.forEach((link) => {
+                        let linkData = item[link];
+                        delete item[link];
+
+                        if(_.isEmpty(linkData)){
+                            return true;
+                        }
+
+                        let linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]);
+
+                        if(!linkDefs['entity']){
+                            return true;
+                        }
+
+                        if(linkDefs['type'] === 'belongsTo'){
+                            cleanseItem(linkData);
+                            configurations.push({
+                                entity: linkDefs['entity'],
+                                payload: linkData
+                            });
+                        }
+
+                        if(linkDefs['type'] === 'hasMany'){
+                           linkData.forEach(subItem => {
+                               cleanseItem(subItem);
+                               configurations.push({
+                                   entity: linkDefs['entity'],
+                                   payload: subItem
+                               });
+                           });
+                        }
+                    });
+
+                    configurations.push({
+                        entity: this.scope,
+                        payload: item
+                    });
+
+                    this.copyToClipboard(JSON.stringify(configurations), (copied) => {
                         if(copied){
                             this.notify(this.translate('Done'), 'success');
                         }else{
