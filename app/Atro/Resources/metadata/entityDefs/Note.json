@@ -28,7 +28,7 @@
             "type": "varchar",
             "readOnly": true,
             "view": "views/fields/enum",
-            "options": ["Post"]
+            "options": ["Post","Relate","UnRelate"]
         },
         "parent": {
             "type": "linkParent",
