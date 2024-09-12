@@ -429,17 +429,17 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         },
 
         afterRender: function () {
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit' && this.$el.length) {
                 this.$attachments = this.$el.find('div.attachments');
 
-                var ids = this.model.get(this.idsName) || [];
-                var hameHash = this.model.get(this.nameHashName);
-                var typeHash = this.model.get(this.typeHashName) || {};
+                let ids = this.model.get(this.idsName) || [],
+                    nameHash = this.model.get(this.nameHashName),
+                    typeHash = this.model.get(this.typeHashName) || {};
 
                 ids.forEach(function (id) {
-                    if (hameHash) {
-                        var name = hameHash[id];
-                        var type = typeHash[id] || null;
+                    if (nameHash) {
+                        let name = nameHash[id],
+                            type = typeHash[id] || null;
                         this.addAttachmentBox(name, type, id);
                     }
                 }, this);
@@ -465,8 +465,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 }.bind(this));
             }
 
-            if (this.mode == 'search') {
-                var type = this.$el.find('select.search-type').val();
+            if (this.mode === 'search') {
+                let type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
             }
 
