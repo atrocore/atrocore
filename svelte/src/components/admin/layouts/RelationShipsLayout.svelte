@@ -36,8 +36,10 @@
     function loadLayout(callback): void {
         ModelFactory.create(params.scope, function (model) {
             LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
-                readDataFromLayout(model, layout);
-                if (callback) callback()
+                if (callback) {
+                    readDataFromLayout(model, layout);
+                    callback();
+                }
             }, false);
         })
 
