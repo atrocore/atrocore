@@ -11,5 +11,6 @@
     "relationInheritance": true,
     "disabled": false,
     "type": "Hierarchy",
-    "object": true
+    "object": true,
+    "showTour": true
 }

@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -38,7 +37,7 @@ Espo.define('view', [], function () {
         addActionHandler: function (action, handler) {
             this.events = this.events || {};
 
-            var fullAction = 'click button[data-action=\"'+action+'\"]';
+            var fullAction = 'click button[data-action=\"' + action + '\"]';
             this.events[fullAction] = handler;
         },
 
@@ -251,12 +250,12 @@ Espo.define('view', [], function () {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 // Clipboard API method
                 navigator.clipboard.writeText(text).then(function () {
-                    if(callback){
+                    if (callback) {
                         callback(true);
                     }
                 }, function (err) {
                     console.error('Could not copy text: ', err);
-                    if(callback){
+                    if (callback) {
                         callback(false);
                     }
                 });
@@ -270,12 +269,12 @@ Espo.define('view', [], function () {
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    if(callback){
+                    if (callback) {
                         callback(true);
                     }
                 } catch (err) {
                     console.error('Fallback: Oops, unable to copy', err);
-                    if(callback){
+                    if (callback) {
                         callback(false);
                     }
                 }
@@ -284,29 +283,29 @@ Espo.define('view', [], function () {
             }
         },
 
-        setupTourButton(){
+        setupTourButton() {
             let type = this.mode ?? this.type;
 
-            if($(this.options.el).parent().hasClass('panel-body')) {
+            if (this.$el.parent()?.hasClass('panel-body') || this.layoutName === 'listSmall' || !this.model || this.model.name !== this.scope) {
                 return;
             }
 
-            if(this.previousTourType === type) {
+            if (this.previousTourType === type) {
                 return;
             }
 
             this.previousTourType = type;
             $('[data-action="showTour"]').remove();
 
-            if(!this.getMetadata().get(['scopes', this.scope, 'showTour'])){
+            if (!this.getMetadata().get(['scopes', this.scope, 'showTour'])) {
                 return;
             }
 
-            if(!this.getMetadata().get(['tourData', this.scope, type])){
+            if (!this.getMetadata().get(['tourData', this.scope, type])) {
                 return;
             }
 
-            if(!this.getPreparedTourData(this.mode ?? this.type).length){
+            if (!this.getPreparedTourData(this.mode ?? this.type).length) {
                 return;
             }
 
@@ -315,7 +314,7 @@ Espo.define('view', [], function () {
             $('.page-header .header-title').append(button)
         },
 
-        showTour(type){
+        showTour(type) {
             let data = this.getPreparedTourData(type);
 
             const driver = window.driver({
@@ -324,32 +323,45 @@ Espo.define('view', [], function () {
             });
             driver.drive();
         },
-        getPreparedTourData(type){
-            if(this.preparedTourData){
-                return this.preparedTourData;
+        getPreparedTourData(type) {
+            if (this.preparedTourData && this.preparedTourData[type]) {
+                return this.preparedTourData[type];
+            }else if(!this.preparedTourData){
+                this.preparedTourData = {};
             }
 
             let language = this.getPreferences().get('language') ?? 'en_US';
-            let tourData = this.getMetadata().get(['tourData', this.scope, type]) ?? [];
+            let tourData = this.getMetadata().get(['tourData', this.scope, type]);
+            if (!tourData) {
+                return []
+            }
             let preparedData = [];
-            tourData.forEach((item, i) => {
-                if (!('element' in item) || !('popover' in item) || !('description' in item['popover'])) {
+
+            Object.entries(tourData).forEach(([key, value]) => {
+                if (!('description' in value)) {
                     return true;
                 }
+                let driverElement = {
+                    element: key,
+                    popover: {}
+                };
                 ['title', 'description'].forEach(key => {
-                    if ((key in item['popover']) && (language in item['popover'])) {
-                        tourData[i]['popover'][key] = tourData[i]['popover'][key][language] ?? tourData[i]['popover'][key]['en_US'];
-                    } else if ((key in item['popover']) && ('en_US' in tourData[i]['popover'][key])) {
-                        tourData[i]['popover'][key] = tourData[i]['popover'][key]['en_US'];
+                    if ((key in value) && (language in value)) {
+                        driverElement['popover'][key] = value[key][language] ?? value[key]['en_US'];
+                    } else if ((key in value) && ('en_US' in value[key])) {
+                        driverElement['popover'][key] = value[key]['en_US'];
                     } else {
-                        if(key === 'description'){
+                        if (key === 'description') {
                             return true
                         }
                     }
                 });
 
-                if($(item['element']).length && $(item['element']).css('display') !== 'none'){
-                    preparedData.push(tourData[i]);
+                if ($(key).length && $(key).css('display') !== 'none') {
+                    let elementId   = Math.random().toString(36).substring(2, 10);
+                    $(key).attr("driver-id", elementId)
+                    driverElement.element = `[driver-id="${elementId}"]`;
+                    preparedData.push(driverElement);
                 }
             });
 

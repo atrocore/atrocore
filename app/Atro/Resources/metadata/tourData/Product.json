@@ -1,17 +1,52 @@
 {
-  "edit": [
-    {
-      "element": ".detail-button-container .btn-group",
-      "popover": {
-        "title": {
-          "en_US": ""
-        },
-        "description": {
-          "en_US": "Description"
-        }
+  "edit": {},
+  "list": {
+    ".header-buttons-container .header-items": {
+      "description": {
+        "en_US": "Here you can set a visualization of products. You can switch ot at any moment."
+      }
+    },
+    ".list-buttons-container .btn-group.actions": {
+      "description": {
+        "en_US": "You can select all needed products and then select the action you need. There are standard actions and the ones you create yourself."
+      }
+    },
+    ".catalog-tree-panel .category-panel": {
+      "description": {
+        "en_US": "Here you can see the quick search menu. You can sort it by category or product."
       }
     }
-  ],
-  "list": [],
-  "detail": []
+  },
+  "detail": {
+    ".header .header-breadcrumbs": {
+      "description": {
+        "en_US": "Here is the root to the product. It includes parent products."
+      }
+    },
+    ".detail-button-container:not(\".hidden\") .btn-group .dropdown-item-list-button": {
+      "description": {
+        "en_US": "Here you can execute actions for current product."
+      }
+    },
+    ".detail-button-container:not(\".hidden\") .panel-navigation": {
+      "description": {
+        "en_US": "In the navigation tab you can click any element to fast-trek you into it. You can add any tabs or modify any existing ones. Tabs consist of tabs for product fields and simple (usually one-to one) links and linked relationships such as attributes or files that can have their own values."
+      }
+    },
+    ".overview-filters-container": {
+      "description": {
+        "en_US": "You can filter products using these filters."
+      }
+    },
+    ".catalog-tree-panel .category-panel": {
+      "description": {
+        "en_US": "You can filter products using these filters."
+      }
+    },
+    ".panel.panel-stream": {
+      "description": {
+        "en_US": "In the end there is a stream that shows all changes made to the product for all the links or fields you wish to be tracked."
+      }
+    }
+  }
 }
