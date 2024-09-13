@@ -283,6 +283,7 @@ Espo.define('view', [], function () {
                 document.body.removeChild(textArea);
             }
         },
+
         setupTourButton(){
             let type = this.mode ?? this.type;
 
@@ -312,8 +313,8 @@ Espo.define('view', [], function () {
             let button = $(`<a href='javascript:' style="text-decoration:none" data-action='showTour'> <span class='fas fa-question-circle'></span> </a>`);
             button.on('click', () => this.showTour(type))
             $('.page-header .header-title').append(button)
-
         },
+
         showTour(type){
             let data = this.getPreparedTourData(type);
 
