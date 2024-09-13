@@ -1,0 +1,17 @@
+{
+  "edit": [
+    {
+      "element": ".detail-button-container .btn-group",
+      "popover": {
+        "title": {
+          "en_US": ""
+        },
+        "description": {
+          "en_US": "Description"
+        }
+      }
+    }
+  ],
+  "list": [],
+  "detail": []
+}

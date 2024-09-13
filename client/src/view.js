@@ -282,6 +282,77 @@ Espo.define('view', [], function () {
 
                 document.body.removeChild(textArea);
             }
+        },
+        setupTourButton(){
+            let type = this.mode ?? this.type;
+
+            if($(this.options.el).parent().hasClass('panel-body')) {
+                return;
+            }
+
+            if(this.previousTourType === type) {
+                return;
+            }
+
+            this.previousTourType = type;
+            $('[data-action="showTour"]').remove();
+
+            if(!this.getMetadata().get(['scopes', this.scope, 'showTour'])){
+                return;
+            }
+
+            if(!this.getMetadata().get(['tourData', this.scope, type])){
+                return;
+            }
+
+            if(!this.getPreparedTourData(this.mode ?? this.type).length){
+                return;
+            }
+
+            let button = $(`<a href='javascript:' style="text-decoration:none" data-action='showTour'> <span class='fas fa-question-circle'></span> </a>`);
+            button.on('click', () => this.showTour(type))
+            $('.page-header .header-title').append(button)
+
+        },
+        showTour(type){
+            let data = this.getPreparedTourData(type);
+
+            const driver = window.driver({
+                showProgress: true,
+                steps: data
+            });
+            driver.drive();
+        },
+        getPreparedTourData(type){
+            if(this.preparedTourData){
+                return this.preparedTourData;
+            }
+
+            let language = this.getPreferences().get('language') ?? 'en_US';
+            let tourData = this.getMetadata().get(['tourData', this.scope, type]) ?? [];
+            let preparedData = [];
+            tourData.forEach((item, i) => {
+                if (!('element' in item) || !('popover' in item) || !('description' in item['popover'])) {
+                    return true;
+                }
+                ['title', 'description'].forEach(key => {
+                    if ((key in item['popover']) && (language in item['popover'])) {
+                        tourData[i]['popover'][key] = tourData[i]['popover'][key][language] ?? tourData[i]['popover'][key]['en_US'];
+                    } else if ((key in item['popover']) && ('en_US' in tourData[i]['popover'][key])) {
+                        tourData[i]['popover'][key] = tourData[i]['popover'][key]['en_US'];
+                    } else {
+                        if(key === 'description'){
+                            return true
+                        }
+                    }
+                });
+
+                if($(item['element']).length && $(item['element']).css('display') !== 'none'){
+                    preparedData.push(tourData[i]);
+                }
+            });
+
+            return this.preparedTourData = preparedData
         }
     });
 
