@@ -230,7 +230,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 view.render()
                 this.listenToOnce(view, 'close', (data) => {
                     this.clearView('dialog');
-                    console.log('data', data)
                     if (data && data.layoutIsUpdated) {
                         this.listLayout = null
                         this._internalLayout = null
