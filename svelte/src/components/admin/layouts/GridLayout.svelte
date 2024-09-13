@@ -75,12 +75,12 @@
         }
 
         Promise.all(promiseList).then(() => {
-            readDataFromLayout(model, layout);
-            setupPanels();
-            tick().then(() => {
-                initializeSortable();
-            })
             if (callback) {
+                readDataFromLayout(model, layout);
+                setupPanels();
+                tick().then(() => {
+                    initializeSortable();
+                })
                 callback();
             }
         });
@@ -220,19 +220,21 @@
     }
 
     function initializeSortable() {
-
-        Sortable.create(document.querySelector('ul.panels'), {
-            animation: 150,
-            group: "panels",
-            draggable: 'li.panel-layout',
-            onEnd: function (evt) {
-                const panelElements = Array.from(evt.to.children);
-                panels = panelElements.map(panelElement => {
-                    const panelNumber = parseInt(panelElement.getAttribute('data-number'));
-                    return panels.find(panel => panel.number === panelNumber);
-                });
-            }
-        });
+        const panelsList = document.querySelector('ul.panels');
+        if (panelsList) {
+            Sortable.create(panelsList, {
+                animation: 150,
+                group: "panels",
+                draggable: 'li.panel-layout',
+                onEnd: function (evt) {
+                    const panelElements = Array.from(evt.to.children);
+                    panels = panelElements.map(panelElement => {
+                        const panelNumber = parseInt(panelElement.getAttribute('data-number'));
+                        return panels.find(panel => panel.number === panelNumber);
+                    });
+                }
+            });
+        }
         document.querySelectorAll('ul.rows').forEach(el => {
             initPanel(el)
         });

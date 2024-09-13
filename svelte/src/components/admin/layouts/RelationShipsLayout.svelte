@@ -36,8 +36,10 @@
     function loadLayout(callback): void {
         ModelFactory.create(params.scope, function (model) {
             LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
-                readDataFromLayout(model, layout);
-                if (callback) callback()
+                if (callback) {
+                    readDataFromLayout(model, layout);
+                    callback();
+                }
             }, false);
         })
 
@@ -51,7 +53,7 @@
         let allFields: string[] = [];
 
         for (let field in model.defs.links) {
-            if (['hasMany', 'hasChildren'].includes(model.defs.links[field].type)) {
+            if (['belongsTo', 'hasMany', 'hasChildren'].includes(model.defs.links[field].type)) {
                 if (isLinkEnabled(model, field)) {
                     allFields.push(field);
                 }
