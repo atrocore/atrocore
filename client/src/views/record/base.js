@@ -352,7 +352,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }
 
             this.setupBeforeFinal();
-            this.setupTour();
         },
 
         setupBeforeFinal: function () {
@@ -814,8 +813,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
 
         exit: function (after) {
         }
+
     });
-
-
 
 });
