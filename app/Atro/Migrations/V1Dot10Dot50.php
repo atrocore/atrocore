@@ -220,9 +220,9 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
-    {% elseif updateData['fieldTypes'][field] == 'file' %}
+    {% elseif updateData['fieldTypes'][field] == 'file' and value != 'Null' %}
         <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>   
-    {% elseif updateData['fieldTypes'][field] == 'link' %}
+    {% elseif updateData['fieldTypes'][field] == 'link' and value != 'Null' %}
         <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
     {% elseif updateData['fieldTypes'][field] == 'array' %}
         {{ value|join(', ') }}
@@ -375,9 +375,9 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
-     {% elseif updateData['fieldTypes'][field] == 'file' %}
+     {% elseif updateData['fieldTypes'][field] == 'file' and value != 'Null' %}
         <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
-    {% elseif updateData['fieldTypes'][field] == 'link' %}
+    {% elseif updateData['fieldTypes'][field] == 'link' and value != 'Null' %}
         <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
      {% elseif updateData['fieldTypes'][field] == 'array' %}
         {{ value|join(', ') }}
@@ -530,9 +530,9 @@ class V1Dot10Dot50 extends Base
                 <code style=\"\"> {{ translateOption(v, language, field, entityType) }}</code>&nbsp;&nbsp;
             {% endif %}
         {% endfor %}
-     {% elseif updateData['fieldTypes'][field] == 'file' %}
+     {% elseif updateData['fieldTypes'][field] == 'file' and value != 'Null' %}
         <a href=\"{{ siteUrl }}/#File/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
-    {% elseif updateData['fieldTypes'][field] == 'link' %}
+    {% elseif updateData['fieldTypes'][field] == 'link' and value != 'Null' %}
         <a href=\"{{ siteUrl }}/#{{ updateData['linkDefs'][field]['entity'] }}/view/{{ updateData['attributes'][type][field ~ 'Id'] }}\">{{ value }}</a>
      {% elseif updateData['fieldTypes'][field] == 'array' %}
         {{ value|join(', ') }}

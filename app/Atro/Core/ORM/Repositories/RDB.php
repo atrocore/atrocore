@@ -138,7 +138,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $res = parent::deleteFromDb($id);
 
         // remove all many-many relation entities
-        if (!$deleteRelEntities) {
+        if (!$deleteRelEntities && !empty($entity)) {
             $this->getMemoryStorage()->set('deleteRelEntities', true);
             foreach ($entity->getRelations() as $defs) {
                 if (!empty($defs['relationName']) && !empty($defs['key']) && !empty($defs['midKeys'][0])) {

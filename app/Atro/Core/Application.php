@@ -20,7 +20,6 @@ use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Route;
 use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 
@@ -245,8 +244,7 @@ class Application
             $authRequired = $entryPointManager->checkAuthRequired($entryPoint);
             $authNotStrict = $entryPointManager->checkNotStrictAuth($entryPoint);
             $auth = new Auth($this->container, $authNotStrict);
-            $apiAuth = new ApiAuth($auth, $authRequired, true);
-            $slim->add($apiAuth);
+            $slim->add(new ApiAuth($auth, $authRequired, true));
 
             $slim->hook('slim.before.dispatch', function () use ($entryPoint, $entryPointManager, $container, $data) {
                 $entryPointManager->run($entryPoint, $data);
@@ -335,9 +333,7 @@ class Application
             $container->get('output')->processError($e->getMessage(), $e->getCode(), false, $e);
         }
 
-        $apiAuth = new ApiAuth($auth);
-
-        $this->getSlim()->add($apiAuth);
+        $this->getSlim()->add(new ApiAuth($auth));
         $this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
             $route = $slim->router()->getCurrentRoute();
 
@@ -376,8 +372,8 @@ class Application
             }
 
             try {
-                $controllerManager = $this->getContainer()->get('controllerManager');
-                $result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
+                $result = $this->getContainer()->get('controllerManager')
+                    ->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
                 $output->render($result);
             } catch (\Exception $e) {
                 $output->processError($e->getMessage(), $e->getCode(), false, $e);
