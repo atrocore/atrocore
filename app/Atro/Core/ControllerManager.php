@@ -62,10 +62,11 @@ class ControllerManager
     public function process(
         string $controllerName,
         string $actionName,
+        array $routeConfig,
         array $params,
         $data,
         ?Request $request,
-        ?Response $response = null
+        ?Response $response
     ): string {
         $controllerClassName = self::getControllerClassName($controllerName, $this->getMetadata());
 
