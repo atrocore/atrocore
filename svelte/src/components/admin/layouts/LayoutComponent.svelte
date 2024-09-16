@@ -45,6 +45,7 @@
                 break;
             case 'detail':
             case 'detailSmall':
+                layoutDisabledParameter = params.type === 'detail' ? "layoutDetailDisabled" : "layoutDetailSmallDisabled"
                 LayoutComponent = GridLayout;
                 break;
             case 'sidePanelsDetail':
