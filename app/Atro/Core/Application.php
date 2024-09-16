@@ -416,6 +416,10 @@ class Application
             if (isset($route['conditions'])) {
                 $currentRoute->conditions($route['conditions']);
             }
+
+            if (isset($route['description'])) {
+                $currentRoute->_configData = $route;
+            }
         }
     }
 
