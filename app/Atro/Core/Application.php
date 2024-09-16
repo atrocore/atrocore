@@ -372,8 +372,8 @@ class Application
             }
 
             try {
-                $controllerManager = $this->getContainer()->get('controllerManager');
-                $result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
+                $result = $this->getContainer()->get('controllerManager')
+                    ->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
                 $output->render($result);
             } catch (\Exception $e) {
                 $output->processError($e->getMessage(), $e->getCode(), false, $e);
