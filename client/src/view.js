@@ -286,7 +286,7 @@ Espo.define('view', [], function () {
         setupTourButton() {
             let type = this.mode ?? this.type;
 
-            if (this.$el.parent()?.hasClass('panel-body') || this.layoutName === 'listSmall' || !this.model || this.model.name !== this.scope) {
+            if (this.$el.parent()?.hasClass('panel-body') || this.layoutName === 'listSmall' || (this.model && this.model.name !== this.scope)) {
                 return;
             }
 
@@ -331,6 +331,7 @@ Espo.define('view', [], function () {
             }
 
             let language = this.getPreferences().get('language') ?? 'en_US';
+
             let tourData = this.getMetadata().get(['tourData', this.scope, type]);
             if (!tourData) {
                 return []
@@ -346,7 +347,7 @@ Espo.define('view', [], function () {
                     popover: {}
                 };
                 ['title', 'description'].forEach(key => {
-                    if ((key in value) && (language in value)) {
+                    if ((key in value) && (language in value[key])) {
                         driverElement['popover'][key] = value[key][language] ?? value[key]['en_US'];
                     } else if ((key in value) && ('en_US' in value[key])) {
                         driverElement['popover'][key] = value[key]['en_US'];
