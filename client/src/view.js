@@ -297,10 +297,6 @@ Espo.define('view', [], function () {
             this.previousTourType = type;
             $('[data-action="showTour"]').remove();
 
-            if (!this.getMetadata().get(['scopes', this.scope, 'showTour'])) {
-                return;
-            }
-
             if (!this.getMetadata().get(['tourData', this.scope, type])) {
                 return;
             }
@@ -323,6 +319,7 @@ Espo.define('view', [], function () {
             });
             driver.drive();
         },
+
         getPreparedTourData(type) {
             if (this.preparedTourData && this.preparedTourData[type]) {
                 return this.preparedTourData[type];
