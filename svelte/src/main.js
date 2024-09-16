@@ -1,7 +1,7 @@
 import 'driver.js/dist/driver.css'
 import './styles/style.css';
 
-import {driver} from "driver.js"
+import {driver} from 'driver.js'
 
 import {Language} from './utils/Language';
 import {UserData} from './utils/UserData';
