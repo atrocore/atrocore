@@ -363,7 +363,7 @@
                     if (rowNumber === row.number) {
                         row.cells = row.cells.map((cell, cIndex) => {
                             if (cIndex === cellIndex) {
-                                if (field.fullWidth) {
+                                if (field.fullWidth && row.cells.length > 1) {
                                     delete field.fullWidth
                                 }
                                 return field
@@ -392,14 +392,12 @@
     }
 
     function minusCell(panelNumber: number, rowNumber: number, cellIndex: number) {
-        if (columnCount < 2) return;
-
         panels = panels.map(panel => {
             if (panelNumber === panel.number) {
                 panel.rows = panel.rows.map(row => {
                     if (rowNumber === row.number) {
                         const cells = row.cells.filter((_, i) => i !== cellIndex);
-                        if (cells.length === 1) {
+                        if (cells.length === 1 && cells[0]) {
                             cells[0].fullWidth = true;
                         }
                         row.cells = cells
@@ -409,7 +407,6 @@
             }
             return panel;
         });
-        columnCount--;
     }
 
     function validate(layout: Panel[]): boolean {
