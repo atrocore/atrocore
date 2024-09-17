@@ -71,10 +71,18 @@ class ControllerManager
     ): string {
         $controllerClassName = self::getControllerClassName($controllerName, $this->getMetadata());
 
-        /** @var OpenApiGenerator $openApiGenerator */
-        $openApiGenerator = $this->getContainer()->get(OpenApiGenerator::class);
+        if (empty($controllerClassName) || !class_exists($controllerClassName)) {
+            throw new NotFound("Controller '$controllerName' is not found");
+        }
+
+        if (empty($actionName)) {
+            throw new NotFound("Action '$actionName' for controller '$controllerName' is not found");
+        }
 
         if (!empty($routeConfig['description'])) {
+            /** @var OpenApiGenerator $openApiGenerator */
+            $openApiGenerator = $this->getContainer()->get(OpenApiGenerator::class);
+
             $validator = (new \League\OpenAPIValidation\PSR7\ValidatorBuilder())
                 ->fromJson(json_encode($openApiGenerator->getSchemaForRoute($routeConfig)))
                 ->getServerRequestValidator();
@@ -84,14 +92,6 @@ class ControllerManager
             } catch (\Throwable $e) {
                 throw new BadRequest($e->getMessage());
             }
-        }
-
-        if (empty($controllerClassName) || !class_exists($controllerClassName)) {
-            throw new NotFound("Controller '$controllerName' is not found");
-        }
-
-        if (empty($actionName)) {
-            throw new NotFound("Action '$actionName' for controller '$controllerName' is not found");
         }
 
         if ($data && stristr($request->getContentType(), 'application/json')) {
