@@ -1350,6 +1350,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
                 this.reRender()
             }
+
+            if(!this.hasSetupTourButton){
+                this.setupTourButton();
+                this.hasSetupTourButton  = true
+            }
         },
 
         isHierarchical() {
@@ -1733,7 +1738,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         setupMassActionItems() {
-            if (this.getMetadata().get(['scopes', this.scope, 'addRelationEnabled'])) {
+            if (this.isAddRemoveRelationEnabled()) {
                 let foreignEntities = this.getForeignEntities();
                 if (foreignEntities.length) {
                     this.massActionList = Espo.Utils.clone(this.massActionList);
@@ -1744,6 +1749,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.checkAllResultMassActionList.push('removeRelation');
                 }
             }
+        },
+
+        isAddRemoveRelationEnabled() {
+            let result = false;
+
+            if (this.getMetadata().get(['scopes', this.scope, 'addRelationEnabled']) !== false) {
+                let scope = this.getMetadata().get(['scopes', this.scope]);
+
+                if (scope.type && scope.type !== 'Relation' && scope.entity === true && scope.customizable !== false) {
+                    result = true;
+                }
+            }
+
+            return result;
         },
 
         getForeignEntities() {
@@ -1757,7 +1776,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 linkList.forEach(link => {
                     let defs = links[link];
 
-                    if (defs.foreign && defs.entity && this.getAcl().check(defs.entity, 'edit')) {
+                    if (defs.foreign && defs.entity && this.getAcl().check(defs.entity, 'edit') && !defs.readOnly) {
                         let foreignType = this.getMetadata().get(['entityDefs', defs.entity, 'links', defs.foreign, 'type']);
                         if (this.checkRelationshipType(defs.type, foreignType)
                             && (this.getMetadata().get(['scopes', defs.entity, 'entity']) || defs.addRelationCustomDefs)
