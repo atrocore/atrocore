@@ -66,7 +66,6 @@ class ControllerManager
     public function process(
         string $controllerName,
         string $actionName,
-        array $routeConfig,
         array $params,
         $data,
         ?Request $request,
@@ -80,19 +79,6 @@ class ControllerManager
 
         if (empty($actionName)) {
             throw new NotFound("Action '$actionName' for controller '$controllerName' is not found");
-        }
-
-        if (!empty($routeConfig['description'])) {
-            $schema = $this->getContainer()->get(OpenApiGenerator::class)->getSchemaForRoute($routeConfig);
-            $validator = (new \League\OpenAPIValidation\PSR7\ValidatorBuilder())
-                ->fromJson(json_encode($schema))
-                ->getServerRequestValidator();
-
-            try {
-                $validator->validate($request->getPsrRequest());
-            } catch (\Throwable $e) {
-                throw new BadRequest($e->getMessage());
-            }
         }
 
         if ($data && stristr($request->getContentType(), 'application/json')) {
