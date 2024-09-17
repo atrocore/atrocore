@@ -17,7 +17,17 @@
     "account": "Compte",
     "gender": "Genre",
     "ipAddress": "Adresse IP",
-    "type": "Type"
+    "type": "Type",
+    "newPasswordConfirm": "Confirmer le nouveau mot de passe",
+    "avatar": "Avatar",
+    "isActive": "Est actif",
+    "sendAccessInfo": "Envoi d'un courriel contenant les informations d'accès à l'utilisateur",
+    "position": "Position dans l'équipe",
+    "passwordPreview": "Aperçu du mot de passe",
+    "isSuperAdmin": "Est Super Admin",
+    "lastAccess": "Dernier accès",
+    "passwordUpdatedAt": "Mot de passe mis à jour le",
+    "passwordUpdatedBy": "Mot de passe mis à jour par"
   },
   "links": {
     "teams": "Les équipes",
@@ -37,7 +47,8 @@
     "Password Change Request": "Demande de changement de mot de passe",
     "Email Address": "Adresse électronique",
     "External Accounts": "Comptes externes",
-    "Email Accounts": "Comptes de courrier électronique"
+    "Email Accounts": "Comptes de courrier électronique",
+    "Reset Password": "Réinitialiser le mot de passe"
   },
   "tooltips": {
     "defaultTeam": "Tous les enregistrements créés par cet utilisateur seront par défaut liés à cette équipe.",
@@ -48,6 +59,39 @@
     "roles": "Rôles d'accès supplémentaires. Utilisez-le si l'utilisateur n'appartient à aucune équipe ou si vous devez étendre le niveau de contrôle d'accès exclusivement pour cet utilisateur."
   },
   "messages": {
-    "accountInfoEmailSubject": "Informations sur l'accès des utilisateurs d'AtroCore"
+    "accountInfoEmailSubject": "Informations sur l'accès des utilisateurs d'AtroCore",
+    "passwordWillBeSent": "Le mot de passe sera envoyé à l'adresse électronique de l'utilisateur.",
+    "passwordChangeLinkEmailBody": "Vous pouvez modifier votre mot de passe en suivant ce lien {link}. Cette URL unique sera bientôt expirée.",
+    "accountInfoEmailBody": "Vos informations d'accès :\n\nNom d'utilisateur : {userName}\nMot de passe : {password}\n\n{siteUrl}",
+    "passwordChangeLinkEmailSubject": "Demande de changement de mot de passe",
+    "passwordResetEmailSubject": "Réinitialisation du mot de passe",
+    "passwordResetEmailBody": "Vous pouvez restaurer votre mot de passe en suivant ce lien {link}. Cette URL unique sera bientôt expirée.",
+    "passwordExpiredForm": "Votre mot de passe a expiré. Veuillez le mettre à jour en utilisant le formulaire ci-dessous.",
+    "passwordChanged": "Le mot de passe a été modifié",
+    "newPasswordInvalid": "Votre mot de passe doit contenir au moins un symbole, une lettre majuscule et un chiffre et doit comporter au moins 8 caractères.",
+    "emailAddressCantBeEmpty": "L'adresse électronique ne peut pas être vide",
+    "setupSmtpBefore": "Vous devez configurer <a href=\"{url}\">SMTP settings</a> pour que le système puisse envoyer le mot de passe par courrier électronique.",
+    "userCantBeEmpty": "Le nom d'utilisateur ne peut pas être vide !",
+    "wrongUsernamePasword": "Nom d'utilisateur/mot de passe erroné",
+    "userNameEmailAddressNotFound": "Nom d'utilisateur/Adresse électronique introuvable",
+    "forbidden": "Interdit, veuillez réessayer plus tard",
+    "uniqueLinkHasBeenSent": "L'URL unique a été envoyé à l'adresse électronique spécifiée.",
+    "passwordChangedByRequest": "Le mot de passe a été modifié.",
+    "userNameExists": "Le nom d'utilisateur existe déjà",
+    "changePasswordOnResetViaEmailOnly": "Vous ne pouvez pas définir un mot de passe manuellement. Veuillez utiliser l'action \"Réinitialiser le mot de passe\"."
+  },
+  "options": {
+    "gender": {
+      "": "Non défini",
+      "Male": "Homme",
+      "Female": "Femme",
+      "Neutral": "Neutre"
+    }
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Mon équipe"
+  },
+  "presetFilters": {
+    "active": "Actif"
   }
 }

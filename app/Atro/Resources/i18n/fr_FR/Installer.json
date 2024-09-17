@@ -18,7 +18,20 @@
     "dbSystem": "Système de base de données",
     "testConnection": "Test de connexion",
     "currentVersion": "Version actuelle",
-    "status": "Statut"
+    "status": "Statut",
+    "hostName": "Nom de l'hôte",
+    "databaseName": "Nom de la base de données",
+    "databaseUserName": "Nom de l'utilisateur de la base de données",
+    "databaseUserPassword": "Mot de passe de l'utilisateur de la base de données",
+    "port": "Port",
+    "reCheck": "Revérifier",
+    "userName": "Nom de l'utilisateur",
+    "password": "Mot de passe",
+    "confirmYourPassword": "Confirmez votre mot de passe",
+    "back": "Retour",
+    "next": "Suivant",
+    "finish": "Finition",
+    "required": "Exigée"
   },
   "errors": {
     "alreadyInstalled": "AtroCore déjà installé",

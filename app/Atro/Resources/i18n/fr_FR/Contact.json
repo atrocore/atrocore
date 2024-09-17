@@ -13,5 +13,11 @@
     "zip": "ZIP",
     "box": "Boîte",
     "city": "Ville"
+  },
+  "links": {
+    "accounts": "Comptes"
+  },
+  "labels": {
+    "Create Contact": "Créer un contact"
   }
 }

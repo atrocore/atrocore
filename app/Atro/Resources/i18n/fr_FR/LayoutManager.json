@@ -17,6 +17,18 @@
     "align": {
       "left": "Gauche",
       "right": "Droit"
+    },
+    "style": {
+      "default": "Défaut",
+      "success": "Succès",
+      "danger": "Danger",
+      "info": "Info",
+      "warning": "Avertissement",
+      "primary": "Primaire"
     }
+  },
+  "labels": {
+    "New panel": "Nouveau panel",
+    "Layout": "Mise en page"
   }
 }

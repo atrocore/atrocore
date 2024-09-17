@@ -22,7 +22,27 @@
   "options": {
     "accessList": {
       "not-set": "non défini",
-      "enabled": "activé"
+      "enabled": "activé",
+      "disabled": "Désactivée"
+    },
+    "levelList": {
+      "all": "tous",
+      "team": "équipe",
+      "account": "compte",
+      "own": "propre",
+      "no": "non",
+      "yes": "oui",
+      "not-set": "non défini"
     }
+  },
+  "actions": {
+    "read": "Lire",
+    "edit": "Éditer",
+    "delete": "Supprimer",
+    "stream": "Flux",
+    "create": "Créer"
+  },
+  "messages": {
+    "changesAfterClearCache": "Toutes les modifications apportées à un contrôle d'accès seront appliquées après l'effacement du cache."
   }
 }

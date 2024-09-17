@@ -8,6 +8,15 @@
   },
   "filters": {
     "all": "Tous",
-    "posts": "Postes"
+    "posts": "Postes",
+    "updates": "Mises à jour"
+  },
+  "messages": {
+    "writeMessage": "Ecrivez votre message ici"
+  },
+  "options": {
+    "type": {
+      "Post": "Poste"
+    }
   }
 }

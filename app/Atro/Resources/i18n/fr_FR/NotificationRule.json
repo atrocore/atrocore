@@ -1,39 +1,39 @@
 {
   "fields": {
-    "description": "",
-    "entity": "",
-    "notificationProfile": "",
-    "occurrence": "",
-    "isActive": "",
-    "ignoreSelfAction": "",
-    "asOwner": "",
-    "asFollower": "",
-    "asAssignee": "",
-    "asTeamMember": "",
-    "asNotificationProfile": "",
-    "emailActive": "",
-    "systemActive": "",
-    "emailTemplateId": "",
-    "systemTemplateId": ""
+    "description": "Description",
+    "entity": "Entité",
+    "notificationProfile": "Profil de notification",
+    "occurrence": "Événement",
+    "isActive": "Actif",
+    "ignoreSelfAction": "Ignorer ses propres actions",
+    "asOwner": "En tant que propriétaire",
+    "asFollower": "En tant que suiveur",
+    "asAssignee": "En tant que cessionnaire",
+    "asTeamMember": "En tant que membre de l'équipe",
+    "asNotificationProfile": "En tant qu'utilisateur du profil de notification",
+    "emailActive": "Notification par courriel",
+    "systemActive": "Notification du système",
+    "emailTemplateId": "Modèle de courrier électronique",
+    "systemTemplateId": "Modèle de système"
   },
   "options": {
     "occurrence": {
-      "creation": "",
-      "updating": "",
-      "linking": "",
-      "unlinking": "",
-      "deletion": "",
-      "note_created": "",
-      "note_updated": "",
-      "note_deleted": "",
-      "ownership_assignment": "",
-      "unlinking_ownership_assignment": "",
-      "mentioned": ""
+      "creation": "Créer",
+      "updating": "Mise à jour",
+      "linking": "Lien",
+      "unlinking": "Dissocier",
+      "deletion": "Supprimer",
+      "note_created": "Créer une note",
+      "note_updated": "Note de mise à jour",
+      "note_deleted": "Supprimer la note",
+      "ownership_assignment": "Définir le propriétaire/l'utilisateur assigné",
+      "unlinking_ownership_assignment": "Propriétaire non défini/Utilisateur désigné",
+      "mentioned": "Mention"
     }
   },
   "labels": {
-    "Create NotificationRule": "",
-    "Notify User": "",
-    "Transport": ""
+    "Create NotificationRule": "Créer une règle de notification",
+    "Notify User": "Notifier l'utilisateur",
+    "Transport": "Transport"
   }
 }

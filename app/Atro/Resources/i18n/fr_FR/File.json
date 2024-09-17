@@ -18,13 +18,29 @@
   },
   "labels": {
     "Create File": "Créer un fichier",
-    "Upload": "Télécharger"
+    "Upload": "Télécharger",
+    "zipDownloadNotification": "Vous pouvez télécharger <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\"></a> le fichier.",
+    "Preview": "Aperçu",
+    "sort": "Trier",
+    "retry": "Réessayer ?",
+    "uploaded": "téléchargé",
+    "putUploadUrl": "Indiquez l'URL du fichier si vous souhaitez le télécharger via l'URL."
   },
   "exceptions": {
     "fileCreateFailed": "La création du fichier a échoué.",
     "fileMoveFailed": "Le déplacement du fichier a échoué.",
     "fileRenameFailed": "Le renommage de fichier a échoué.",
     "fileDeleteFailed": "La suppression du fichier a échoué.",
-    "fileNameNotValidByUserRegex": "Le nom de fichier n'est pas valide. Il doit correspondre à la regex '%s'."
+    "fileNameNotValidByUserRegex": "Le nom de fichier n'est pas valide. Il doit correspondre à la regex '%s'.",
+    "fileExtensionCannotBeChanged": "L'extension du fichier ne peut pas être modifiée.",
+    "fileStorageCannotBeChanged": "Le stockage de fichiers ne peut pas être modifié.",
+    "fileFolderCannotBeChanged": "Le dossier de fichiers ne peut pas être modifié."
+  },
+  "messages": {
+    "fileHasDuplicate": "Il existe déjà au moins un doublon <a target=\"_blank\" href=\"/#File/view/{{id}}\"></a> de ce dossier.",
+    "notAllFilesWereUploaded": "XX des fichiers YY n'ont pas été téléchargés.",
+    "fileCouldNotBeUploaded": "Le fichier n'a pas pu être téléchargé.",
+    "cannotDefineFileName": "Le système ne peut pas reconnaître le nom du fichier à partir de l'URL.",
+    "urlExpected": "Une URL incorrecte a été donnée"
   }
 }

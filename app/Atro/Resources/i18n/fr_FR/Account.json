@@ -23,6 +23,10 @@
     "Create Account": "Créer un compte"
   },
   "links": {
-    "addresses": "Adresses"
+    "addresses": "Adresses",
+    "contacts": "Contacts"
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": "L'adresse par défaut du compte existe déjà."
   }
 }

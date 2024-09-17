@@ -8,7 +8,8 @@
     "conditionsType": "Type de conditions",
     "conditions": "Conditions",
     "triggerAction": "Déclencheur",
-    "triggerFields": "Champs de déclenchement"
+    "triggerFields": "Champs de déclenchement",
+    "disabledOptions": "Options désactivées"
   },
   "exceptions": {
     "systemHandler": "Le gestionnaire \"%s\" est requis par le système et ne peut être ni modifié ni supprimé."

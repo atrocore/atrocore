@@ -13,6 +13,22 @@
     "primaryFilter": "Filtre primaire",
     "boolFilterList": "Filtres supplémentaires",
     "sortBy": "Ordre (champ)",
-    "sortDirection": "Ordre (direction)"
+    "sortDirection": "Ordre (direction)",
+    "expandedLayout": "Mise en page",
+    "dateFilter": "Filtre de date",
+    "savedFilter": "Filtre sauvegardé"
+  },
+  "messages": {
+    "selectEntityType": "Sélectionnez le type d'entité dans les options du dashlet."
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Semaine (agenda)",
+      "basicWeek": "Semaine",
+      "month": "Mois",
+      "basicDay": "Jour",
+      "agendaDay": "Jour (agenda)",
+      "timeline": "Chronologie"
+    }
   }
 }
