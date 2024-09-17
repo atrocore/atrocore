@@ -45,9 +45,7 @@
     "isAdmin": "L'utilisateur Admin peut accéder à tout.",
     "isActive": "Si cette case n'est pas cochée, l'utilisateur ne pourra pas se connecter.",
     "teams": "Équipes auxquelles cet utilisateur appartient. Le niveau de contrôle d'accès est hérité des rôles de l'équipe.",
-    "roles": "Rôles d'accès supplémentaires. Utilisez-le si l'utilisateur n'appartient à aucune équipe ou si vous devez étendre le niveau de contrôle d'accès exclusivement pour cet utilisateur.",
-    "password": "Laissez ce champ vide si vous souhaitez conserver l'ancien mot de passe.",
-    "passwordConfirm": "Laissez ce champ vide si vous souhaitez conserver l'ancien mot de passe."
+    "roles": "Rôles d'accès supplémentaires. Utilisez-le si l'utilisateur n'appartient à aucune équipe ou si vous devez étendre le niveau de contrôle d'accès exclusivement pour cet utilisateur."
   },
   "messages": {
     "accountInfoEmailSubject": "Informations sur l'accès des utilisateurs d'AtroCore"

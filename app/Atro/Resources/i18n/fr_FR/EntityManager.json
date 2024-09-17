@@ -27,8 +27,6 @@
     "linkMultipleFieldForeign": "Lien étranger Champ multiple",
     "disabled": "Désactivée",
     "textFilterFields": "Champs de filtrage de texte",
-    "audited": "Suivre les changements",
-    "auditedForeign": "Étranger audité",
     "statusField": "Champ d'état",
     "beforeSaveCustomScript": "Avant d'enregistrer le script personnalisé",
     "color": "Couleur",

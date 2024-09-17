@@ -29,7 +29,7 @@
   },
   "messages": {
     "youMustAgreeToTheLicenseAgreement": "Vous devez accepter l'accord de licence",
-    "fieldIsRequired": "{champ} est requis",
+    "fieldIsRequired": "{field} est requis",
     "connectionSuccessful": "Connexion réussie !",
     "pleaseConfigureYourSystemToStart": "Veuillez configurer votre système pour qu'il démarre"
   },

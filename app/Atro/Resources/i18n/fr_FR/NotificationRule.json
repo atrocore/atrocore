@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "description": "",
+    "entity": "",
+    "notificationProfile": "",
+    "occurrence": "",
+    "isActive": "",
+    "ignoreSelfAction": "",
+    "asOwner": "",
+    "asFollower": "",
+    "asAssignee": "",
+    "asTeamMember": "",
+    "asNotificationProfile": "",
+    "emailActive": "",
+    "systemActive": "",
+    "emailTemplateId": "",
+    "systemTemplateId": ""
+  },
+  "options": {
+    "occurrence": {
+      "creation": "",
+      "updating": "",
+      "linking": "",
+      "unlinking": "",
+      "deletion": "",
+      "note_created": "",
+      "note_updated": "",
+      "note_deleted": "",
+      "ownership_assignment": "",
+      "unlinking_ownership_assignment": "",
+      "mentioned": ""
+    }
+  },
+  "labels": {
+    "Create NotificationRule": "",
+    "Notify User": "",
+    "Transport": ""
+  }
+}

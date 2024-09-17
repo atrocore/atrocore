@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "isActive": "Actif",
+    "description": "Description"
+  },
+  "links": {
+    "layouts": "Mise en page"
+  },
+  "labels": {
+    "Create LayoutProfile": "Créer un profil de présentation"
+  }
+}
