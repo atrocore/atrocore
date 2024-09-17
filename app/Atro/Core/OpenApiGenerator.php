@@ -28,66 +28,20 @@ class OpenApiGenerator
         $this->container = $container;
     }
 
-    public function getData(): array
+    public function getSchemaForRoute(array $route): array
     {
-        $result = [
-            'openapi'    => '3.0.0',
-            'info'       => [
-                'version'     => Composer::getCoreVersion(),
-                'title'       => 'AtroCore REST API documentation',
-                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>"
-            ],
-            'servers'    => [
-                [
-                    'url' => '/api/v1'
-                ]
-            ],
-            'tags'       => [
-                ['name' => 'App']
-            ],
-            'paths'      => [],
-            'components' => [
-                'securitySchemes' => [
-                    'basicAuth'           => [
-                        'type'   => 'http',
-                        'scheme' => 'basic',
-                    ],
-                    'Authorization-Token' => [
-                        'type' => 'apiKey',
-                        'name' => 'Authorization-Token',
-                        'in'   => 'header'
-                    ]
-                ]
-            ]
-        ];
+        $result = $this->getBase();
+        $this->pushRoute($result, $route);
+
+        return $result;
+    }
+
+    public function getFullSchema(): array
+    {
+        $result = $this->getBase();
 
         foreach ($this->container->get('route')->getAll() as $route) {
-            if (empty($route['description'])) {
-                continue;
-            }
-
-            $row = [
-                'tags'        => [$route['params']['controller']],
-                'summary'     => $route['summary'] ?? $route['description'],
-                'description' => $route['description'],
-                'operationId' => md5("{$route['route']}_{$route['method']}"),
-                "responses"   => self::prepareResponses($route['response'])
-            ];
-
-            if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
-                $row['security'] = [['Authorization-Token' => []]];
-            }
-            if (!empty($route['security'])) {
-                $row['security'] = $route['security'];
-            }
-            if (!empty($route['requestParameters'])) {
-                $row['parameters'] = $route['requestParameters'];
-            }
-            if (!empty($route['requestBody'])) {
-                $row['requestBody'] = $route['requestBody'];
-            }
-
-            $result['paths'][$route['route']][$route['method']] = $row;
+            $this->pushRoute($result, $route);
         }
 
         /** @var Metadata $metadata */
@@ -140,17 +94,29 @@ class OpenApiGenerator
                         break;
                     case "array":
                     case "multiEnum":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => ['type' => 'string']];
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                            'type'  => 'array',
+                            'items' => ['type' => 'string']
+                        ];
                         break;
                     case "file":
                     case "link":
                     case "linkParent":
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = ['type' => 'string', 'forRead' => true];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
+                            'type'    => 'string',
+                            'forRead' => true
+                        ];
                         break;
                     case "linkMultiple":
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = ['type' => 'array', 'items' => ['type' => 'string']];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = ['type' => 'object', 'forRead' => true];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = [
+                            'type'  => 'array',
+                            'items' => ['type' => 'string']
+                        ];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
+                            'type'    => 'object',
+                            'forRead' => true
+                        ];
                         break;
                     default:
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
@@ -229,8 +195,15 @@ class OpenApiGenerator
                                     "items"   => [
                                         "type" => "object",
                                     ],
-                                    'example' => [['type' => 'or', 'value' => [['type' => 'like', 'attribute' => 'name', 'value' => '%find-me-1%'],
-                                                                               ['type' => 'equals', 'attribute' => 'name', 'value' => 'find-me-2']]]]
+                                    'example' => [
+                                        [
+                                            'type'  => 'or',
+                                            'value' => [
+                                                ['type' => 'like', 'attribute' => 'name', 'value' => '%find-me-1%'],
+                                                ['type' => 'equals', 'attribute' => 'name', 'value' => 'find-me-2']
+                                            ]
+                                        ]
+                                    ]
                                 ],
                             ],
                         ],
@@ -1032,5 +1005,67 @@ class OpenApiGenerator
                 ]
             ]),
         ];
+    }
+
+    protected function getBase(): array
+    {
+        return [
+            'openapi'    => '3.0.0',
+            'info'       => [
+                'version'     => Composer::getCoreVersion(),
+                'title'       => 'AtroCore REST API documentation',
+                'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>"
+            ],
+            'servers'    => [
+                [
+                    'url' => '/api/v1'
+                ]
+            ],
+            'tags'       => [
+                ['name' => 'App']
+            ],
+            'paths'      => [],
+            'components' => [
+                'securitySchemes' => [
+                    'basicAuth'           => [
+                        'type'   => 'http',
+                        'scheme' => 'basic',
+                    ],
+                    'Authorization-Token' => [
+                        'type' => 'apiKey',
+                        'name' => 'Authorization-Token',
+                        'in'   => 'header'
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    protected function pushRoute(array &$result, array $route): void
+    {
+        if (!empty($route['description'])) {
+            $row = [
+                'tags'        => [$route['params']['controller']],
+                'summary'     => $route['summary'] ?? $route['description'],
+                'description' => $route['description'],
+                'operationId' => md5("{$route['route']}_{$route['method']}"),
+                "responses"   => self::prepareResponses($route['response'])
+            ];
+
+            if (!isset($route['conditions']['auth']) || $route['conditions']['auth'] !== false) {
+                $row['security'] = [['Authorization-Token' => []]];
+            }
+            if (!empty($route['security'])) {
+                $row['security'] = $route['security'];
+            }
+            if (!empty($route['requestParameters'])) {
+                $row['parameters'] = $route['requestParameters'];
+            }
+            if (!empty($route['requestBody'])) {
+                $row['requestBody'] = $route['requestBody'];
+            }
+
+            $result['paths'][$route['route']][$route['method']] = $row;
+        }
     }
 }

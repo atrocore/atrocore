@@ -159,7 +159,7 @@ class Application
         $openApiGenerator = $this->getContainer()->get(OpenApiGenerator::class);
 
         header('Content-Type: application/json; charset=utf-8');
-        echo Json::encode($openApiGenerator->getData());
+        echo Json::encode($openApiGenerator->getFullSchema());
         exit;
     }
 

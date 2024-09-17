@@ -74,9 +74,9 @@ class ControllerManager
         /** @var OpenApiGenerator $openApiGenerator */
         $openApiGenerator = $this->getContainer()->get(OpenApiGenerator::class);
 
-        if (!empty($routeConfig['requestParameters'])) {
+        if (!empty($routeConfig['description'])) {
             $validator = (new \League\OpenAPIValidation\PSR7\ValidatorBuilder())
-                ->fromJson(json_encode($openApiGenerator->getData()))
+                ->fromJson(json_encode($openApiGenerator->getSchemaForRoute($routeConfig)))
                 ->getServerRequestValidator();
 
             try {
