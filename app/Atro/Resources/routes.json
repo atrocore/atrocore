@@ -15,13 +15,16 @@
     "security": [
       {
         "basicAuth": []
+      },
+      {
+        "Authorization-Token": []
       }
     ],
     "requestParameters": [
       {
         "name": "Authorization-Token-Only",
         "in": "header",
-        "required": true,
+        "required": false,
         "schema": {
           "type": "boolean",
           "example": "true"
