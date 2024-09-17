@@ -41,7 +41,10 @@ class ControllerManager
         // for modules
         $moduleName = $metadata->getScopeModuleName($controllerName);
         if (!empty($moduleName)) {
-            $controllerClassName = "\\$moduleName\\Controllers\\$className";
+            $moduleControllerClassName = "\\$moduleName\\Controllers\\$className";
+            if (class_exists($moduleControllerClassName)) {
+                $controllerClassName = $moduleControllerClassName;
+            }
         }
 
         if (!class_exists($controllerClassName)) {
@@ -80,11 +83,9 @@ class ControllerManager
         }
 
         if (!empty($routeConfig['description'])) {
-            /** @var OpenApiGenerator $openApiGenerator */
-            $openApiGenerator = $this->getContainer()->get(OpenApiGenerator::class);
-
+            $schema = $this->getContainer()->get(OpenApiGenerator::class)->getSchemaForRoute($routeConfig);
             $validator = (new \League\OpenAPIValidation\PSR7\ValidatorBuilder())
-                ->fromJson(json_encode($openApiGenerator->getSchemaForRoute($routeConfig)))
+                ->fromJson(json_encode($schema))
                 ->getServerRequestValidator();
 
             try {
