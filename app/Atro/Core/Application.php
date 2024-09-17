@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Slim\Validator;
 use Atro\Services\Installer;
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
@@ -372,6 +373,8 @@ class Application
             }
 
             try {
+                // validate request
+                $this->getContainer()->get(Validator::class)->validateRequest($route->_routeConfig ?? []);
                 $result = $this->getContainer()->get('controllerManager')
                     ->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
                 $output->render($result);
@@ -503,10 +506,5 @@ class Application
             ->andwhere('lifetime IS NULL')
             ->andWhere('idle_time IS NULL')
             ->executeQuery();
-    }
-
-    private function getEntityManager(): EntityManager
-    {
-        return $this->getContainer()->get('entityManager');
     }
 }

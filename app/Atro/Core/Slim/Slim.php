@@ -14,12 +14,8 @@ declare(strict_types=1);
 namespace Atro\Core\Slim;
 
 use Atro\Core\Container;
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\OpenApiGenerator;
 use Atro\Core\Slim\Http\Request;
 use Atro\Core\Slim\Http\Response;
-use League\OpenAPIValidation\PSR7\OperationAddress;
-use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 
 class Slim extends \Slim\Slim
 {
@@ -115,21 +111,19 @@ class Slim extends \Slim\Slim
      */
     public function run()
     {
-        $route = null;
-        $validatorBuilder = null;
-
-        // validate request
-        $this->hook('slim.before.dispatch', function () use (&$route, &$validatorBuilder) {
-            $route = $this->router()->getCurrentRoute();
-            if (!empty($route->_routeConfig['description'])) {
-                $schema = $this->atroContainer->get(OpenApiGenerator::class)->getSchemaForRoute($route->_routeConfig);
-                $validatorBuilder = (new ValidatorBuilder())->fromJson(json_encode($schema));
-            }
-        });
-
         $this->middleware[0]->call();
 
         list($status, $headers, $body) = $this->response->finalize();
+
+        // validate response
+        try {
+            $routeConfig = $this->router()->getCurrentRoute()->_routeConfig ?? [];
+            $this->atroContainer->get(Validator::class)->validateResponse($routeConfig);
+        } catch (\Throwable $e) {
+            $status = $e->getCode();
+            $this->contentType('text/html');
+            $body = $e->getMessage();
+        }
 
         \Slim\Http\Util::serializeCookies($headers, $this->response->cookies, $this->settings);
 
@@ -152,16 +146,6 @@ class Slim extends \Slim\Slim
         if (!$this->request->isHead()) {
             echo $body;
         }
-
-//        // validate response
-//        if (!empty($validatorBuilder)) {
-//            try {
-//                $operation = new OperationAddress($route->_routeConfig['route'], $route->_routeConfig['method']);
-//                $validatorBuilder->getResponseValidator()->validate($operation, $this->response()->getPsrResponse());
-//            } catch (\Throwable $e) {
-//                throw new BadRequest($e->getMessage());
-//            }
-//        }
     }
 
     public function printError($error, $status)
