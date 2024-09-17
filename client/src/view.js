@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -38,7 +37,7 @@ Espo.define('view', [], function () {
         addActionHandler: function (action, handler) {
             this.events = this.events || {};
 
-            var fullAction = 'click button[data-action=\"'+action+'\"]';
+            var fullAction = 'click button[data-action=\"' + action + '\"]';
             this.events[fullAction] = handler;
         },
 
@@ -251,12 +250,12 @@ Espo.define('view', [], function () {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 // Clipboard API method
                 navigator.clipboard.writeText(text).then(function () {
-                    if(callback){
+                    if (callback) {
                         callback(true);
                     }
                 }, function (err) {
                     console.error('Could not copy text: ', err);
-                    if(callback){
+                    if (callback) {
                         callback(false);
                     }
                 });
@@ -270,18 +269,101 @@ Espo.define('view', [], function () {
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    if(callback){
+                    if (callback) {
                         callback(true);
                     }
                 } catch (err) {
                     console.error('Fallback: Oops, unable to copy', err);
-                    if(callback){
+                    if (callback) {
                         callback(false);
                     }
                 }
 
                 document.body.removeChild(textArea);
             }
+        },
+
+        setupTourButton() {
+            let type = this.mode ?? this.type;
+
+            if (this.$el.parent()?.hasClass('panel-body') || this.layoutName === 'listSmall' || (this.model && this.model.name !== this.scope)) {
+                return;
+            }
+
+            if (this.previousTourType === type) {
+                return;
+            }
+
+            this.previousTourType = type;
+            $('[data-action="showTour"]').remove();
+
+            if (!this.getMetadata().get(['tourData', this.scope, type])) {
+                return;
+            }
+
+            if (!this.getPreparedTourData(this.mode ?? this.type).length) {
+                return;
+            }
+
+            let button = $(`<a href='javascript:' style="text-decoration:none" data-action='showTour'> <span class='fas fa-question-circle'></span> </a>`);
+            button.on('click', () => this.showTour(type))
+            $('.page-header .header-title').append(button)
+        },
+
+        showTour(type) {
+            let data = this.getPreparedTourData(type);
+
+            const driver = window.driver({
+                showProgress: true,
+                steps: data
+            });
+            driver.drive();
+        },
+
+        getPreparedTourData(type) {
+            if (this.preparedTourData && this.preparedTourData[type]) {
+                return this.preparedTourData[type];
+            }else if(!this.preparedTourData){
+                this.preparedTourData = {};
+            }
+
+            let language = this.getPreferences().get('language') ?? 'en_US';
+
+            let tourData = this.getMetadata().get(['tourData', this.scope, type]);
+            if (!tourData) {
+                return []
+            }
+            let preparedData = [];
+
+            Object.entries(tourData).forEach(([key, value]) => {
+                if (!('description' in value)) {
+                    return true;
+                }
+                let driverElement = {
+                    element: key,
+                    popover: {}
+                };
+                ['title', 'description'].forEach(key => {
+                    if ((key in value) && (language in value[key])) {
+                        driverElement['popover'][key] = value[key][language] ?? value[key]['en_US'];
+                    } else if ((key in value) && ('en_US' in value[key])) {
+                        driverElement['popover'][key] = value[key]['en_US'];
+                    } else {
+                        if (key === 'description') {
+                            return true
+                        }
+                    }
+                });
+
+                if ($(key).length && $(key).css('display') !== 'none') {
+                    let elementId   = Math.random().toString(36).substring(2, 10);
+                    $(key).attr("driver-id", elementId)
+                    driverElement.element = `[driver-id="${elementId}"]`;
+                    preparedData.push(driverElement);
+                }
+            });
+
+            return this.preparedTourData = preparedData
         }
     });
 

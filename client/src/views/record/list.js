@@ -1350,6 +1350,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
                 this.reRender()
             }
+
+            if(!this.hasSetupTourButton){
+                this.setupTourButton();
+                this.hasSetupTourButton  = true
+            }
         },
 
         isHierarchical() {

@@ -1542,6 +1542,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (!this.model.isNew()) {
                 this.createOverviewFilters();
             }
+
+            this.once('after:render', () => this.setupTourButton());
+
+            this.listenTo(this.model, 'after:change-mode', (type) => {
+                this.setupTourButton(type)
+            });
         },
 
         hotKeyEdit: function (e) {
