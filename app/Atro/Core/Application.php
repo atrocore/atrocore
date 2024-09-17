@@ -373,7 +373,7 @@ class Application
 
             try {
                 $result = $this->getContainer()->get('controllerManager')
-                    ->process($controllerName, $actionName, $route->_routeConfig, $params, $data, $slim->request(), $slim->response());
+                    ->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
                 $output->render($result);
             } catch (\Exception $e) {
                 $output->processError($e->getMessage(), $e->getCode(), false, $e);
