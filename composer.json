@@ -33,7 +33,9 @@
     "lazzard/php-ftp-client": "~1.7.0",
     "guzzlehttp/psr7": "^2.6.2",
     "symfony/mailer": "~5.4.39",
-    "erusev/parsedown": "^1.7"
+    "erusev/parsedown": "^1.7",
+    "league/openapi-psr7-validator": "^0.22.0",
+    "nyholm/psr7": "^1.8"
   },
   "conflict": {
     "atrocore/pim": "<1.7.25",
