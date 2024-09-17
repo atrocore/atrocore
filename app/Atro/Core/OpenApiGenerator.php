@@ -56,7 +56,9 @@ class OpenApiGenerator
         }
 
         foreach ($metadata->get(['entityDefs'], []) as $entityName => $data) {
-            if (empty($data['fields'])) {
+            $scopeData = $metadata->get(['scopes', $entityName]);
+
+            if (empty($data['fields']) || !empty($scopeData['emHidden'])) {
                 continue;
             }
 
