@@ -1,4 +1,7 @@
+import 'driver.js/dist/driver.css'
 import './styles/style.css';
+
+import {driver} from 'driver.js'
 
 import {Language} from './utils/Language';
 import {UserData} from './utils/UserData';
@@ -17,5 +20,6 @@ window.SvelteNotifier = Notifier;
 window.SvelteLayoutManager = LayoutManager;
 window.SvelteMetadata = Metadata;
 window.SvelteModelFactory = ModelFactory;
+window.driver = driver;
 
 export {UpdatePanel, QueueManagerIcon, LayoutComponent};

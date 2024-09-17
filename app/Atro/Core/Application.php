@@ -156,7 +156,7 @@ class Application
     protected function showOpenApiJson(): void
     {
         header('Content-Type: application/json; charset=utf-8');
-        echo Json::encode((new OpenApiGenerator($this->getContainer()))->getData());
+        echo Json::encode($this->getContainer()->get(OpenApiGenerator::class)->getFullSchema());
         exit;
     }
 
@@ -373,7 +373,7 @@ class Application
 
             try {
                 $result = $this->getContainer()->get('controllerManager')
-                    ->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
+                    ->process($controllerName, $actionName, $route->_routeConfig, $params, $data, $slim->request(), $slim->response());
                 $output->render($result);
             } catch (\Exception $e) {
                 $output->processError($e->getMessage(), $e->getCode(), false, $e);
@@ -416,6 +416,8 @@ class Application
             if (isset($route['conditions'])) {
                 $currentRoute->conditions($route['conditions']);
             }
+
+            $currentRoute->_routeConfig = $route;
         }
     }
 

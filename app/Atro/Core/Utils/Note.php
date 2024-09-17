@@ -240,7 +240,12 @@ class Note
 
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $defs) {
                 if ($defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->streamEnabled($defs['entity'])) {
-                    $this->createRelatedData[$entity->getEntityType()][$link . 'Id'] = [$defs['entity'], $defs['foreign']];
+                    if ($entity->isNew() && $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation' &&
+                        !empty($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $link, 'relationField']))
+                    ) {
+                        continue;
+                    }
+                    $this->createRelatedData[$entity->getEntityType()][$link . 'Id'] = [$defs['entity'], $defs['foreign'] ?? null];
                 }
             }
         }
@@ -334,12 +339,16 @@ class Note
         }
 
         $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
+            'entityId'    => $entity->id,
+            'entityType'  => $entity->getEntityType(),
             'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
             'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2'],
             'link'        => $this->relationEntityData[$entity->getEntityType()]['link1']
         ]);
 
         $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
+            'entityId'    => $entity->id,
+            'entityType'  => $entity->getEntityType(),
             'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
             'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1'],
             'link'        => $this->relationEntityData[$entity->getEntityType()]['link2']
