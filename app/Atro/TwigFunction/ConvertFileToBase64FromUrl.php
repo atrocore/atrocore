@@ -19,7 +19,11 @@ class ConvertFileToBase64FromUrl extends AbstractTwigFunction
 {
     public function run(string $url, ?string $type = null)
     {
-        $content = file_get_contents($url);
+        $normalizeUrl = $this->normalizeUrl($url);
+        if(!$normalizeUrl){
+            return false;
+        }
+        $content = file_get_contents($normalizeUrl);
 
         if(empty($content)){
             return false;
@@ -28,10 +32,65 @@ class ConvertFileToBase64FromUrl extends AbstractTwigFunction
         $data = base64_encode($content);
 
         if($type){
-            $data = "data:". $type . ';base64,' . $data;
+            $data = 'data:'. $type . ';base64,' . $data;
         }
 
         return $data;
+    }
+
+    protected  function normalizeUrl(string $url): string|bool
+    {
+        // Parse the URL
+        $parts = parse_url($url);
+
+        if ($parts === false) {
+            return false; // Invalid URL
+        }
+
+        // Ensure scheme is present
+        if (!isset($parts['scheme'])) {
+            $parts['scheme'] = 'http';
+        }
+
+        // Normalize scheme and host to lowercase
+        $parts['scheme'] = strtolower($parts['scheme']);
+        if (isset($parts['host'])) {
+            $parts['host'] = strtolower($parts['host']);
+        }
+
+        // Encode the path
+        if (isset($parts['path'])) {
+            $parts['path'] = implode('/', array_map('rawurlencode', explode('/', $parts['path'])));
+        }
+
+        // Encode query string
+        if (isset($parts['query'])) {
+            parse_str($parts['query'], $query);
+            $parts['query'] = http_build_query($query);
+        }
+
+        // Rebuild the URL
+        $normalizedUrl = $parts['scheme'] . '://';
+        if (isset($parts['user']) && isset($parts['pass'])) {
+            $normalizedUrl .= $parts['user'] . ':' . $parts['pass'] . '@';
+        } elseif (isset($parts['user'])) {
+            $normalizedUrl .= $parts['user'] . '@';
+        }
+        $normalizedUrl .= $parts['host'];
+        if (isset($parts['port'])) {
+            $normalizedUrl .= ':' . $parts['port'];
+        }
+        if (isset($parts['path'])) {
+            $normalizedUrl .= $parts['path'];
+        }
+        if (isset($parts['query'])) {
+            $normalizedUrl .= '?' . $parts['query'];
+        }
+        if (isset($parts['fragment'])) {
+            $normalizedUrl .= '#' . $parts['fragment'];
+        }
+
+        return $normalizedUrl;
     }
 
 }
