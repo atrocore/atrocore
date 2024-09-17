@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Core\EventManager\Manager;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Json;
@@ -69,6 +70,21 @@ class ControllerManager
         ?Response $response
     ): string {
         $controllerClassName = self::getControllerClassName($controllerName, $this->getMetadata());
+
+        /** @var OpenApiGenerator $openApiGenerator */
+        $openApiGenerator = $this->getContainer()->get(OpenApiGenerator::class);
+
+        if (!empty($routeConfig['requestParameters'])) {
+            $validator = (new \League\OpenAPIValidation\PSR7\ValidatorBuilder())
+                ->fromJson(json_encode($openApiGenerator->getData()))
+                ->getServerRequestValidator();
+
+            try {
+                $validator->validate($request->getPsrRequest());
+            } catch (\Throwable $e) {
+                throw new BadRequest($e->getMessage());
+            }
+        }
 
         if (empty($controllerClassName) || !class_exists($controllerClassName)) {
             throw new NotFound("Controller '$controllerName' is not found");

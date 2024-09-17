@@ -155,8 +155,11 @@ class Application
 
     protected function showOpenApiJson(): void
     {
+        /** @var OpenApiGenerator $openApiGenerator */
+        $openApiGenerator = $this->getContainer()->get(OpenApiGenerator::class);
+
         header('Content-Type: application/json; charset=utf-8');
-        echo Json::encode((new OpenApiGenerator($this->getContainer()))->getData());
+        echo Json::encode($openApiGenerator->getData());
         exit;
     }
 
