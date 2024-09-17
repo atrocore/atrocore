@@ -19,7 +19,11 @@ class ConvertFileToBase64FromUrl extends AbstractTwigFunction
 {
     public function run(string $url, ?string $type = null)
     {
-        $content = file_get_contents($this->normalizeUrl($url));
+        $normalizeUrl = $this->normalizeUrl($url);
+        if(!$normalizeUrl){
+            return false;
+        }
+        $content = file_get_contents($normalizeUrl);
 
         if(empty($content)){
             return false;
@@ -34,7 +38,8 @@ class ConvertFileToBase64FromUrl extends AbstractTwigFunction
         return $data;
     }
 
-    protected  function normalizeUrl($url) {
+    protected  function normalizeUrl(string $url): string|bool
+    {
         // Parse the URL
         $parts = parse_url($url);
 
