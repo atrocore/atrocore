@@ -297,6 +297,11 @@ class Note
                         ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[0], 'entity']);
                     foreach ($this->getMetadata()->get(['entityDefs', $this->relationEntityData[$entity->getEntityType()]['entity1'], 'links'], []) as $link => $defs) {
                         if (!empty($defs['relationName']) && ucfirst($defs['relationName']) === $entity->getEntityType()) {
+                            if (isset($defs['midKeys'])) {
+                                if ($defs['midKeys'][0] !== $this->relationEntityData[$entity->getEntityType()]['field1']) {
+                                    continue;
+                                }
+                            }
                             $this->relationEntityData[$entity->getEntityType()]['link1'] = $link;
                             break;
                         }
@@ -307,6 +312,11 @@ class Note
                         ->get(['entityDefs', $entity->getEntityType(), 'links', $relationFields[1], 'entity']);
                     foreach ($this->getMetadata()->get(['entityDefs', $this->relationEntityData[$entity->getEntityType()]['entity2'], 'links'], []) as $link => $defs) {
                         if (!empty($defs['relationName']) && ucfirst($defs['relationName']) === $entity->getEntityType()) {
+                            if (isset($defs['midKeys'])) {
+                                if ($defs['midKeys'][0] !== $this->relationEntityData[$entity->getEntityType()]['field2']) {
+                                    continue;
+                                }
+                            }
                             $this->relationEntityData[$entity->getEntityType()]['link2'] = $link;
                             break;
                         }
