@@ -94,7 +94,7 @@ Espo.define('views/admin/api-request/index', 'view', function (Dep) {
                                 this.notify(this.translate('No data provided'), 'danger');
                                 return;
                             }
-                            this.notify(this.translate('pleaseWait'))
+                            this.notify(this.translate('Please Wait...'))
                             this.ajaxPostRequest('MassActions/action/upsert', JSON.parse(model.get('request')))
                                 .success(res => {
                                     this.notify(false)
