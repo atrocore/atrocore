@@ -1,7 +1,7 @@
 {
   "treoNotifications": {
     "newModule": "Nouveau module '{{moduleName}}' disponible. <a href=\"/#ModuleManager/list\">Détails</a>",
-    "newModuleVersion": "Nouvelle version '{{moduleVersion}}' disponible pour le module '{{nomdumodule}}'. <a href=\"/#ModuleManager/list\">Détails</a>",
+    "newModuleVersion": "Nouvelle version '{{moduleVersion}}' disponible pour le module '{{moduleName}}'. <a href=\"/#ModuleManager/list\">Détails</a>",
     "newCoreVersion": "Nouvelle version '%s' disponible pour le système Treo. <a href=\"/#Admin/upgrade\">Détails</a>"
   }
 }

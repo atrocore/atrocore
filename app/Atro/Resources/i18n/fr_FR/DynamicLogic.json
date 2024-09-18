@@ -16,7 +16,13 @@
       "inFuture": "Est l'avenir",
       "isToday": "C'est aujourd'hui",
       "isTrue": "Est vrai",
-      "isFalse": "Est faux"
+      "isFalse": "Est faux",
+      "isEmpty": "Est vide",
+      "isNotEmpty": "N'est pas vide",
+      "contains": "Contient",
+      "notContains": "Ne contient pas",
+      "has": "Contient",
+      "notHas": "Ne contient pas"
     }
   }
 }

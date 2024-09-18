@@ -8,11 +8,13 @@
     "box": "Boîte",
     "city": "Ville",
     "country": "Pays",
-    "countryCode": "Code du pays",
     "type": "Type",
     "account": "Compte",
     "contactName": "Nom du contact",
-    "name": "Nom de l'entreprise"
+    "name": "Nom de l'entreprise",
+    "prospect": "Perspectives",
+    "accounts": "Comptes",
+    "contacts": "Contacts"
   },
   "options": {
     "type": {
@@ -22,5 +24,11 @@
   },
   "labels": {
     "Create Address": "Créer une adresse"
+  },
+  "links": {
+    "contacts": "Contacts",
+    "accounts": "Comptes",
+    "prospect": "Perspectives",
+    "country": "Pays"
   }
 }

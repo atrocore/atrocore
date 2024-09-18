@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "subject": "Sujet",
+    "body": "Corps",
+    "allowAttachments": "Autoriser les pièces jointes",
+    "emailTo": "Email à",
+    "emailCc": "Email CC",
+    "attachments": "Pièces jointes"
+  },
+  "labels": {
+    "send": "Envoyer",
+    "Create EmailTemplate": "Créer un modèle d'e-mail"
+  },
+  "exceptions": {
+    "notificationTemplatesCannotBeDeleted": "Les modèles de notification ne peuvent pas être supprimés"
+  }
+}

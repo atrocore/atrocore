@@ -2,19 +2,21 @@
   "fields": {
     "post": "Poste",
     "attachments": "Pièces jointes",
-    "targetType": "Cible",
-    "teams": "Les équipes",
-    "users": "Utilisateurs",
     "type": "Type",
-    "isGlobal": "Est mondial",
-    "isInternal": "Est interne (pour les utilisateurs internes)",
-    "related": "En rapport",
     "createdByGender": "Créé par le genre",
-    "data": "Données",
-    "number": "Nombre"
+    "data": "Données"
   },
   "filters": {
     "all": "Tous",
-    "posts": "Postes"
+    "posts": "Postes",
+    "updates": "Mises à jour"
+  },
+  "messages": {
+    "writeMessage": "Ecrivez votre message ici"
+  },
+  "options": {
+    "type": {
+      "Post": "Poste"
+    }
   }
 }
