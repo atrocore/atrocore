@@ -286,7 +286,7 @@ Espo.define('view', [], function () {
         setupTourButton() {
             let type = this.mode ?? this.type;
 
-            if (this.$el.parent()?.hasClass('panel-body') || this.layoutName === 'listSmall' || (this.model && this.model.name !== this.scope)) {
+            if (this.$el.parent()?.hasClass('panel-body') || ['listSmall', 'detailSmall'].includes(this.layoutName) || (this.mainScope && this.mainScope !== this.scope)) {
                 return;
             }
 
@@ -294,6 +294,7 @@ Espo.define('view', [], function () {
                 return;
             }
 
+            this.mainScope = this.scope;
             this.previousTourType = type;
             $('[data-action="showTour"]').remove();
 
