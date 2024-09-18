@@ -1046,11 +1046,12 @@ class OpenApiGenerator
     protected function pushRoute(array &$result, array $route): void
     {
         if (!empty($route['description'])) {
+            $routePath = preg_replace('/:(\w+)/', '{$1}', $route['route']);
             $row = [
                 'tags'        => [$route['params']['controller']],
                 'summary'     => $route['summary'] ?? $route['description'],
                 'description' => $route['description'],
-                'operationId' => md5("{$route['route']}_{$route['method']}"),
+                'operationId' => md5("{$routePath}_{$route['method']}"),
                 "responses"   => self::prepareResponses($route['response'])
             ];
 
@@ -1067,7 +1068,7 @@ class OpenApiGenerator
                 $row['requestBody'] = $route['requestBody'];
             }
 
-            $result['paths'][$route['route']][$route['method']] = $row;
+            $result['paths'][$routePath][$route['method']] = $row;
         }
     }
 }
