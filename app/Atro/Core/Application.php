@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Slim\Validator;
 use Atro\Services\Installer;
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
@@ -156,7 +157,7 @@ class Application
     protected function showOpenApiJson(): void
     {
         header('Content-Type: application/json; charset=utf-8');
-        echo Json::encode((new OpenApiGenerator($this->getContainer()))->getData());
+        echo Json::encode($this->getContainer()->get(OpenApiGenerator::class)->getFullSchema());
         exit;
     }
 
@@ -372,6 +373,8 @@ class Application
             }
 
             try {
+                // validate request
+                $this->getContainer()->get(Validator::class)->validateRequest($route->_routeConfig ?? []);
                 $result = $this->getContainer()->get('controllerManager')
                     ->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
                 $output->render($result);
@@ -416,6 +419,8 @@ class Application
             if (isset($route['conditions'])) {
                 $currentRoute->conditions($route['conditions']);
             }
+
+            $currentRoute->_routeConfig = $route;
         }
     }
 
@@ -501,10 +506,5 @@ class Application
             ->andwhere('lifetime IS NULL')
             ->andWhere('idle_time IS NULL')
             ->executeQuery();
-    }
-
-    private function getEntityManager(): EntityManager
-    {
-        return $this->getContainer()->get('entityManager');
     }
 }

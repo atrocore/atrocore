@@ -7,16 +7,28 @@
     "receiveAssignmentEmailNotifications": "Notifications lors de l'affectation",
     "receiveMentionEmailNotifications": "Notifications sur les mentions dans les messages",
     "receiveStreamEmailNotifications": "Notifications sur les mises à jour du flux",
-    "autoFollowEntityTypeList": "Auto-suivi global",
     "dashboardTabList": "Liste des onglets",
     "theme": "Thème",
     "useCustomTabList": "Liste d'onglets personnalisée",
     "tabList": "Menu de navigation",
     "dashboardLayout": "Présentation du tableau de bord",
-    "followEntityOnStreamPost": "Suivi automatique d'un enregistrement après la publication d'un message dans un flux"
+    "followEntityOnStreamPost": "Suivi automatique d'un enregistrement après la publication d'un message dans un flux",
+    "followCreatedEntities": "Suivi automatique des enregistrements créés",
+    "layoutProfile": "Profil de la mise en page",
+    "notificationProfile": "Profil de notification",
+    "scopeColorsDisabled": "Désactiver les couleurs de l'oscilloscope",
+    "tabColorsDisabled": "Désactiver les couleurs des icônes des onglets",
+    "hideFeedbackIcon": "Cacher l'icône de retour d'information",
+    "receiveNotifications": "Recevoir des notifications"
   },
   "labels": {
     "Notifications": "Notifications",
-    "Locale": "Local"
+    "Locale": "Local",
+    "Reset Dashboard to Default": "Rétablir le tableau de bord par défaut",
+    "User Interface": "Interface utilisateur",
+    "General": "Général"
+  },
+  "tooltips": {
+    "followCreatedEntities": "Lorsque vous créez de nouveaux enregistrements, ils seront automatiquement suivis, même s'ils sont attribués à un autre utilisateur."
   }
 }

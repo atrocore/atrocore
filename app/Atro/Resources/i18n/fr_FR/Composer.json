@@ -40,12 +40,29 @@
     "Log": "Journal",
     "confirmRun": "Après la mise à jour, tous les utilisateurs se déconnecteront du système. Êtes-vous sûr de vouloir mettre à jour votre système ?",
     "daemonDisabled": "<b>Le démon de composition ne fonctionne pas!</b><br>Probablement le démon est en train de se recharger et vous devriez attendre une minute ou la crontab n'est pas configurée. Vous trouverez des instructions sur la configuration de la crontab <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">ici</a>.",
-    "queueManagerRunning": "<b>Le gestionnaire de files d'attente est en cours d'exécution!</b><br>La possibilité de mettre à jour les modules est bloquée. Veuillez réessayer plus tard."
+    "queueManagerRunning": "<b>Le gestionnaire de files d'attente est en cours d'exécution!</b><br>La possibilité de mettre à jour les modules est bloquée. Veuillez réessayer plus tard.",
+    "showReleaseNotes": "Notes de mise à jour",
+    "purchased": "Acheté",
+    "rented": "Loué",
+    "purchasedUntil": "Acheté, mises à jour jusqu'à",
+    "rentUntil": "Location, mises à jour jusqu'à",
+    "available": "Disponible",
+    "Installed": "Installé",
+    "Store": "Magasin",
+    "removeModule": "Enlever",
+    "password": "Mot de passe",
+    "cancelModule": "Annuler",
+    "username": "Nom d'utilisateur",
+    "anotherActionInProgress": "Une autre action est en cours. Attendez qu'elle soit terminée",
+    "updating": "Mise à jour..."
   },
   "notifications": {
     "Module update": "Le module {module} a été mis à jour. De la version {from} à {to}",
     "System update": "Le système a été mis à jour. De la version {from} à {to}",
     "Module install": "Le module {module} v.{version} a été installé",
-    "Module delete": "Le module {module} a été supprimé"
+    "Module delete": "Le module {module} a été supprimé",
+    "Module downgrade": "Le module {module} a été déclassé. De la version {from} à {to}",
+    "Composer updated!": "Les dépendances du gestionnaire de modules ont été mises à jour ! <a href=\"/#Composer/list\">Voir les détails</a>",
+    "System downgrade": "Le système a été déclassé. De la version {from} à {to}"
   }
 }

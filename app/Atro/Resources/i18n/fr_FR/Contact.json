@@ -12,8 +12,12 @@
     "street": "Rue",
     "zip": "ZIP",
     "box": "Boîte",
-    "city": "Ville",
-    "country": "Pays",
-    "countryCode": "Code du pays"
+    "city": "Ville"
+  },
+  "links": {
+    "accounts": "Comptes"
+  },
+  "labels": {
+    "Create Contact": "Créer un contact"
   }
 }

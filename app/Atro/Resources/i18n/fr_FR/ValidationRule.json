@@ -14,5 +14,13 @@
     "extension": "Extension",
     "mimeList": "Liste",
     "fileType": "Type de fichier"
+  },
+  "links": {
+    "fileType": "Type de fichier"
+  },
+  "labels": {
+    "Create ValidationRule": "Créer une règle de validation",
+    "minSize": "Min, Kb",
+    "maxSize": "Max, Kb"
   }
 }

@@ -16,5 +16,15 @@
     "authToken": "Création du jeton d'authentification",
     "user": "Utilisateur",
     "actionHistoryRecords": "Historique de l'action"
+  },
+  "presetFilters": {
+    "denied": "Refusé",
+    "accepted": "Accepté"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Informations d'identification invalides",
+      "INACTIVE_USER": "Utilisateur inactif"
+    }
   }
 }

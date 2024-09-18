@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "entity": "Entité",
+    "viewType": "Voir le type",
+    "layoutProfile": "Profil de la mise en page"
+  },
+  "links": {
+    "layoutProfile": "Profil de la mise en page"
+  }
+}

@@ -14,7 +14,6 @@
     "currencyRates": "Valeurs des taux",
     "companyLogo": "Logo de l'en-tête",
     "favicon": "Favicon",
-    "emailAddress": "Courriel",
     "tabList": "Menu de navigation",
     "quickCreateList": "Création rapide d'une liste",
     "globalSearchEntityList": "Liste des entités de recherche globale",
@@ -38,7 +37,44 @@
     "mentionEmailNotifications": "Notifications sur les mentions dans les messages",
     "activitiesEntityList": "Activités Liste des entités",
     "historyEntityList": "Liste des entités historiques",
-    "b2cMode": "Mode B2C"
+    "b2cMode": "Mode B2C",
+    "scopeColorsDisabled": "Désactiver les couleurs de l'oscilloscope",
+    "navigationManuBackgroundColor": "Arrière-plan du menu de navigation",
+    "tabColorsDisabled": "Désactiver les couleurs des icônes des onglets",
+    "textFilterUseContainsForVarchar": "Utilisez l'opérateur 'contains' pour filtrer les champs varchar.",
+    "customStylesheetPath": "Chemin d'accès au fichier СSS",
+    "recordsPerPage": "Enregistrements par page",
+    "notificationSmtpConnection": "Connexion pour les notifications par courrier électronique",
+    "disableEmailDelivery": "Désactiver l'envoi de courrier électronique",
+    "recordsPerPageSmall": "Enregistrements par page (petit)",
+    "aclStrictMode": "Mode ACL strict",
+    "adminNotifications": "Notifications du système dans le panneau d'administration",
+    "authTokenPreventConcurrent": "Un seul jeton d'authentification par utilisateur",
+    "tabIconsDisabled": "Désactiver les icônes des onglets",
+    "emailAddressIsOptedOutByDefault": "Marquer les nouvelles adresses électroniques comme opt-out",
+    "navigationMenuFontColor": "Couleur de la police de navigation",
+    "linkFontColor": "Couleur du lien",
+    "customStylesheet": "CSS",
+    "primaryColor": "Couleur primaire",
+    "secondaryColor": "Couleur secondaire",
+    "primaryFontColor": "Couleur de police primaire",
+    "secondaryFontColor": "Couleur de police secondaire",
+    "labelColor": "Couleur de l'étiquette",
+    "anchorNavigationBackground": "Arrière-plan de la navigation d'ancrage",
+    "iconColor": "Couleur de l'icône",
+    "primaryBorderColor": "Couleur de la bordure primaire",
+    "secondaryBorderColor": "Couleur de la bordure secondaire",
+    "panelTitleColor": "Couleur du titre du panneau",
+    "headerTitleColor": "Couleur du titre de l'en-tête",
+    "success": "Succès",
+    "notice": "Avis",
+    "information": "Informations",
+    "error": "Erreur",
+    "customHeadCode": "Code de la tête",
+    "passwordRegexPattern": "Motif Regex du mot de passe",
+    "passwordExpireDays": "Période d'expiration du mot de passe (en jours)",
+    "sendOutNotifications": "Envoyer des notifications",
+    "sendNotificationInSync": "Envoyer des notifications sans travail"
   },
   "tooltips": {
     "isStreamPanelFirst": "Si cette option est activée : Le panneau de flux s'affichera juste après l'aperçu.",
@@ -55,7 +91,12 @@
     "emailAddressIsOptedOutByDefault": "Lors de la création d'un nouvel enregistrement, l'adresse électronique sera marquée comme opt-out.",
     "cleanupDeletedRecords": "Les enregistrements supprimés seront effacés de la base de données après un certain temps.",
     "customStylesheetPath": "Vos styles CSS personnalisés seront écrits dans ce fichier. Vous pouvez également y apporter des modifications directement.",
-    "customHeadCode": "Ajoutez le code à la fin de la balise <head>. Atrocore ne valide pas le code personnalisé pour vous, alors assurez-vous de vérifier votre code avant de le publier."
+    "customHeadCode": "Ajoutez le code à la fin de la balise <head>. Atrocore ne valide pas le code personnalisé pour vous, alors assurez-vous de vérifier votre code avant de le publier.",
+    "reportingEnabled": "Les rapports d'erreur anonymes seront envoyés à AtroCore pour une identification et une résolution plus rapides des problèmes.",
+    "fileNameRegexPattern": "Pour activer uniquement les lettres minuscules d'une longueur maximale de 24 symboles, utilisez \"/^[a-z]{1,24}$/\". 24 symboles, utilisez \"/^[a-z]{1,24}$/\".",
+    "isStreamSide": "Si elle est activée : Le panneau de flux s'affiche sur le côté.",
+    "passwordRegexPattern": "Définissez des règles de complexité pour les mots de passe à l'aide d'expressions régulières. \nConseil : utilisez des groupes comme (?=.*\\d) pour définir les symboles requis. \n\nSuivez ce lien <a href=\"{message_link}\" target=\"_blank\"></a> pour mettre à jour un message d'erreur de validation.",
+    "passwordExpireDays": "Définissez la période (en jours) après laquelle les utilisateurs doivent mettre à jour leur mot de passe."
   },
   "labels": {
     "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues pour cette locale sont automatiquement supprimées par le biais de la tâche cron <a href=\"/#ScheduledJob\" target=\"_blank\"></a> .",
@@ -68,6 +109,33 @@
     "System": "Système",
     "Locale": "Local",
     "SMTP": "SMTP",
-    "Configuration": "Configuration"
+    "Configuration": "Configuration",
+    "Admin Notifications": "Notifications administratives",
+    "Security": "Sécurité",
+    "In-app Notifications": "Notifications in-app",
+    "Email Notifications": "Notifications par courrier électronique",
+    "Currency Rates": "Taux de change",
+    "Test Connection": "Test de connexion",
+    "Connecting": "Connexion...",
+    "Activities": "Activités",
+    "Theme Configuration": "Configuration du thème",
+    "Custom Code": "Code personnalisé"
+  },
+  "links": {
+    "variables": "Variables"
+  },
+  "options": {
+    "smtpAuthMechanism": {
+      "login": "Connexion",
+      "plain": "Plaine",
+      "crammd5": "CRAM-MD5"
+    }
+  },
+  "exceptions": {
+    "variableKeyInvalid": "La clé doit commencer par une lettre minuscule et ne peut être composée que de lettres et de chiffres.",
+    "variableKeyIsExist": "La clé \"%s\" existe déjà."
+  },
+  "messages": {
+    "languageMustBeSelected": "Au moins une langue doit être sélectionnée."
   }
 }

@@ -8,7 +8,8 @@
     "massAction": "Action de masse",
     "display": "Affichage",
     "actionsSet": "Ensemble d'actions",
-    "actions": "Actions"
+    "actions": "Actions",
+    "webhookUrl": "URL"
   },
   "links": {
     "actionsSet": "Ensemble d'actions",
@@ -34,7 +35,8 @@
       "single": "Unique"
     },
     "type": {
-      "set": "Ensemble d'actions"
+      "set": "Ensemble d'actions",
+      "webhook": "Point d'encrage Web"
     }
   },
   "tooltips": {

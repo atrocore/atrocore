@@ -8,7 +8,8 @@
     "sortOrder": "Ordre de tri",
     "status": "Statut",
     "message": "Message",
-    "priority": "Priorité"
+    "priority": "Priorité",
+    "startFrom": "Commencer à partir de"
   },
   "labels": {
     "Create QueueItem": "Créer un élément de la file d'attente",
@@ -19,11 +20,21 @@
     "Pending": "En attente",
     "Success": "Succès",
     "Running": "En cours d'exécution",
-    "Failed": "Échec"
+    "Failed": "Échec",
+    "showDone": "Spectacle effectué",
+    "download": "Télécharger",
+    "queueManager": "Gestionnaire de files d'attente",
+    "Canceled": "Annulé",
+    "Closed": "Fermé"
   },
   "options": {
     "status": {
-      "Closed": "Fermé"
+      "Closed": "Fermé",
+      "Pending": "En attente",
+      "Success": "Succès",
+      "Failed": "Échec",
+      "Running": "La course à pied",
+      "Canceled": "Annulé"
     },
     "priority": {
       "Low": "Faible",

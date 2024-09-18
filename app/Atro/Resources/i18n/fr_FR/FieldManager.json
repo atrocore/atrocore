@@ -16,7 +16,21 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 heures",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 heures",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 heures",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 heures"
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 jours",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 heures",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 jour",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 jours",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 jours",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 jours",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 jours",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 semaine"
     },
     "dateDefault": {
       "": "Aucun",
@@ -40,7 +54,46 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 mois",
       "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 mois",
       "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 mois",
-      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mois"
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mois",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 an"
     }
+  },
+  "tooltips": {
+    "isMultilang": "Création automatique de champs par clonage du champ actuel autant de fois qu'il y a de langues activées dans les Paramètres multi-langues.",
+    "required": "Le champ sera obligatoire. Il ne peut être laissé vide.",
+    "fontSize": "Taille de la police en em (par rapport à la taille de la police actuelle).",
+    "isSorted": "Les options seront triées après l'enregistrement.",
+    "default": "La valeur sera définie par défaut lors de la création.",
+    "after": "La valeur de la date doit être postérieure à la valeur de la date du champ spécifié.",
+    "maxLength": "Longueur maximale acceptable du texte.",
+    "min": "Valeur minimale acceptable.",
+    "max": "Valeur maximale acceptable.",
+    "seeMoreDisabled": "Si cette case n'est pas cochée, les textes longs à afficher seront raccourcis.",
+    "lengthOfCut": "Les caractères en trop seront masqués dans le mode d'affichage.",
+    "before": "La valeur de la date doit être antérieure à la valeur de la date du champ spécifié.",
+    "readOnly": "La valeur du champ ne peut pas être spécifiée par l'utilisateur.",
+    "maxFileSize": "Si vide ou 0, il n'y a pas de limite.",
+    "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
+    "foreignName": "Champ à indiquer dans la relation."
+  },
+  "messages": {
+    "defaultValidationFailed": "La valeur par défaut ne peut pas contenir de caractères spéciaux"
+  },
+  "fieldParts": {
+    "unit": {
+      "unit": "(Unité)"
+    },
+    "datetimeOptional": {
+      "date": "Date"
+    }
+  },
+  "exceptions": {
+    "regexNotValid": "Ce motif REGEX n'est pas valide.",
+    "someFieldNotUnique": "Certaines valeurs de champ ne sont pas uniques.",
+    "someFieldDontMathToPattern": "Certains champs ne correspondent pas au modèle."
   }
 }

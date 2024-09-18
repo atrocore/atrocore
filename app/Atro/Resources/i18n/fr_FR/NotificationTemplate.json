@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "type": "Type",
+    "subject": "Sujet",
+    "body": "Corps"
+  },
+  "labels": {
+    "Create NotificationTemplate": "Créer un modèle de notification"
+  },
+  "options": {
+    "type": {
+      "system": "Notification du système",
+      "email": "Notification par courriel"
+    }
+  }
+}

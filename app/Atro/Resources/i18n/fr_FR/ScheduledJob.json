@@ -25,6 +25,13 @@
       "UpdateCurrencyExchangeViaECB": "Mise à jour du taux de change via la BCE",
       "CheckUpdates": "Vérifier les mises à jour du système",
       "ScanStorage": "Stockage par balayage"
+    },
+    "status": {
+      "Active": "Actif",
+      "Inactive": "Inactif"
     }
+  },
+  "tooltips": {
+    "scheduling": "Notation Crontab. Définit la fréquence d'exécution des tâches.\n\n*/5 * * * * - toutes les 5 minutes\n\n0 */2 * * * - toutes les 2 heures\n\n30 1 * * * * - à 01:30 une fois par jour\n\n0 0 1 * * - le premier jour du mois"
   }
 }

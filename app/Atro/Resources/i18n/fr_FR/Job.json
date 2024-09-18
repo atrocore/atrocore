@@ -16,5 +16,13 @@
     "Success": "Succès",
     "Running": "En cours d'exécution",
     "Failed": "Échec"
+  },
+  "options": {
+    "status": {
+      "Pending": "En attente",
+      "Success": "Succès",
+      "Failed": "Échec",
+      "Running": "La course à pied"
+    }
   }
 }
