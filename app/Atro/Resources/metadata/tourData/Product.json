@@ -3,7 +3,7 @@
   "list": {
     ".header-buttons-container .header-items": {
       "description": {
-        "en_US": "Here you can set a visualization of products. You can switch ot at any moment.",
+        "en_US": "Here you can set a visualization of products. You can switch it off at any moment.",
         "de_DE": "Hier können Sie eine Visualisierung der Produkte einstellen. Sie können jederzeit umschalten.",
         "uk_UA": "Тут ви можете налаштувати візуалізацію товарів. Ви можете вимкнути її в будь-який момент."
       }
