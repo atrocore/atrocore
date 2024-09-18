@@ -2,11 +2,18 @@
     import {Language} from "../../../utils/Language";
     import {onMount} from "svelte";
     import {ModelFactory} from "../../../utils/ModelFactory";
-    import {LayoutManager} from "../../../utils/LayoutManager";
-
+    import { JSONEditor } from 'svelte-jsoneditor'
     export let  afterOnMount = () => null;
 
+    let content =  null;
+
+    let response = null;
     let model = null;
+
+    function onPaste(e){
+        console.log('passste', e)
+        content = JSON.stringify(JSON.parse(content, undefined, 4))
+    }
 
     onMount(() => {
         ModelFactory.create('', function (m) {
