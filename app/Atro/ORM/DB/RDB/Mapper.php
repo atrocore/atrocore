@@ -148,8 +148,8 @@ class Mapper implements MapperInterface
         if ($this->isSingleParentHierarchy($entity) && empty($params['aggregation']) && !$innerSql) {
             $tableName = $this->getQueryConverter()->toDb($entity->getEntityType());
             $ta = $this->getQueryConverter()::TABLE_ALIAS;
-            $relAlias1 = 'hierarchy_alias_' . Util::generateId();
-            $relAlias2 = 'alias_' . Util::generateId();
+            $relAlias1 = 'hierarchy_alias_' . Util::generateUniqueHash();
+            $relAlias2 = 'alias_' . Util::generateUniqueHash();
 
             $qb->addSelect("$relAlias1.parent_id AS " . $this->getQueryConverter()->fieldToAlias('parentId'));
             $qb->addSelect("$relAlias2.name AS " . $this->getQueryConverter()->fieldToAlias('parentName'));

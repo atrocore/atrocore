@@ -28,6 +28,8 @@ class V1Dot10Dot72 extends Base
         $this->exec("ALTER TABLE user_followed_record ALTER entity_id TYPE VARCHAR(36)");
         $this->exec("ALTER TABLE user_followed_record ALTER user_id TYPE VARCHAR(36)");
         $this->exec("ALTER TABLE entity_team ALTER entity_id TYPE VARCHAR(36)");
+
+        $this->rebuild();
     }
 
     public function down(): void

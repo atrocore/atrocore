@@ -751,7 +751,7 @@ class Installer extends HasContainer
     protected function generateAppId(): void
     {
         // generate id
-        $appId = substr(md5(md5(Util::generateId() . "-atro-salt-") . Util::generateId()), 0, 21);
+        $appId = substr(md5(md5(Util::generateUniqueHash() . "-atro-salt-") . Util::generateUniqueHash()), 0, 21);
 
         if (!empty($_SERVER['ATRO_APP_ID'])) {
             $appId = $_SERVER['ATRO_APP_ID'];

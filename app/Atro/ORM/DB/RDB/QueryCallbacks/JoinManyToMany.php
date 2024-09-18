@@ -75,7 +75,7 @@ class JoinManyToMany
                         $foreignEntity = $mapper->getMetadata()->get(['entityDefs', $data['relationName'], 'links', $data['fieldName'], 'entity']);
                         if (!empty($foreignEntity)) {
                             $relationColumn = $mapper->toDb("{$data['fieldName']}Id");
-                            $relationForeignAlias = $mapper->toDb($foreignEntity) . '_' . Util::generateId();
+                            $relationForeignAlias = $mapper->toDb($foreignEntity) . '_' . Util::generateUniqueHash();
                             $relationCondition = "$relAlias.{$relationColumn} = $relationForeignAlias.id AND $relationForeignAlias.deleted=:deleted_mm2";
 
                             $qb->leftJoin($relAlias, $queryConverter->quoteIdentifier($mapper->toDb($foreignEntity)), $relationForeignAlias, $relationCondition);
