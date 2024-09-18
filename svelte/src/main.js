@@ -13,6 +13,7 @@ import {ModelFactory} from "./utils/ModelFactory";
 import QueueManagerIcon from './components/icons/QueueManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
 import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
+import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -22,4 +23,4 @@ window.SvelteMetadata = Metadata;
 window.SvelteModelFactory = ModelFactory;
 window.driver = driver;
 
-export {UpdatePanel, QueueManagerIcon, LayoutComponent};
+export {UpdatePanel, QueueManagerIcon, LayoutComponent, ApiRequestComponent};
