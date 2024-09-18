@@ -286,7 +286,7 @@ Espo.define('view', [], function () {
         setupTourButton() {
             let type = this.mode ?? this.type;
 
-            if (this.$el.parent()?.hasClass('panel-body') || ['listSmall', 'detailSmall'].includes(this.layoutName) || (this.mainScope && this.mainScope !== this.scope)) {
+            if (this.$el.parent()?.hasClass('panel-body') || ['listSmall', 'detailSmall','editSmall'].includes(this.layoutName) || (this.mainScope && this.mainScope !== this.scope)) {
                 return;
             }
 
