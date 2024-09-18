@@ -2,7 +2,6 @@
     import {Language} from "../../../utils/Language";
     import {onMount} from "svelte";
     import {ModelFactory} from "../../../utils/ModelFactory";
-    import { JSONEditor } from 'svelte-jsoneditor'
     export let  afterOnMount = () => null;
     export let  sendRequest = () => null;
 
