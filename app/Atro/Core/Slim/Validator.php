@@ -44,7 +44,7 @@ class Validator
     {
         if (!empty($validatorBuilder = $this->getValidatorBuilder($routeConfig))) {
             try {
-                $operation = new OperationAddress($routeConfig['route'], $routeConfig['method']);
+                $operation = new OperationAddress(preg_replace('/:(\w+)/', '{$1}', $routeConfig['route']), $routeConfig['method']);
                 $validatorBuilder->getResponseValidator()
                     ->validate($operation, $this->getSlim()->response()->getPsrResponse());
             } catch (\Throwable $e) {
