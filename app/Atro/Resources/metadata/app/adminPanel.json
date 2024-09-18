@@ -208,7 +208,8 @@
     "itemList": [
       {
         "url": "#Admin/apiRequest",
-        "label": "Api Request"
+        "label": "apiRequest",
+        "description": "apiRequest"
       }
     ]
   }
