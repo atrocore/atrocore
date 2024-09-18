@@ -3,67 +3,49 @@
   "list": {
     ".header-buttons-container .header-items": {
       "description": {
-        "en_US": "Here you can set a visualization of products. You can switch it off at any moment.",
-        "de_DE": "Hier können Sie eine Visualisierung der Produkte einstellen. Sie können jederzeit umschalten.",
-        "uk_UA": "Тут ви можете налаштувати візуалізацію товарів. Ви можете вимкнути її в будь-який момент."
+        "en_US": "Here you can set a visualization of products. You can switch it off at any moment."
       }
     },
     ".list-buttons-container .btn-group.actions": {
       "description": {
-        "en_US": "You can select all needed products and then select the action you need. There are standard actions and the ones you create yourself.",
-        "de_DE": "Sie können alle benötigten Produkte auswählen und dann die gewünschte Aktion auswählen. Es gibt Standardaktionen und solche, die Sie selbst erstellen.",
-        "uk_UA": "Ви можете вибрати всі необхідні продукти, а потім вибрати потрібну вам дію. Є стандартні дії та ті, які ви створюєте самостійно."
+        "en_US": "You can select all needed products and then select the action you need. There are standard actions and the ones you create yourself."
       }
     },
     ".catalog-tree-panel .category-panel": {
       "description": {
-        "en_US": "Here you can see the quick search menu. You can sort it by category or product.",
-        "de_DE": "Hier sehen Sie das Menü für die Schnellsuche. Sie können es nach Kategorie oder Produkt sortieren.",
-        "uk_UA": "Тут ви можете побачити меню швидкого пошуку. Ви можете відсортувати його за категорією або продуктом."
+        "en_US": "Here you can see the quick search menu. You can sort it by category or product."
       }
     }
   },
   "detail": {
     ".header .header-breadcrumbs": {
       "description": {
-        "en_US": "Here is the root to the product. It includes parent products.",
-        "de_DE": "Hier ist die Wurzel des Produkts. Es enthält übergeordnete Produkte.",
-        "uk_UA": "Це корінь продукту. Він включає батьківські продукти."
+        "en_US": "Here is the root to the product. It includes parent products."
       }
     },
     ".detail-button-container:not(\".hidden\") .btn-group .dropdown-item-list-button": {
       "description": {
-        "en_US": "Here you can execute actions for current product.",
-        "de_DE": "Hier können Sie Aktionen für das aktuelle Produkt ausführen.",
-        "uk_UA": "Тут ви можете виконати дії для поточного продукту."
+        "en_US": "Here you can execute actions for current product."
       }
     },
     ".detail-button-container:not(\".hidden\") .panel-navigation": {
       "description": {
-        "en_US": "In the navigation tab you can click any element to fast-trek you into it. You can add any tabs or modify any existing ones. Tabs consist of tabs for product fields and simple (usually one-to one) links and linked relationships such as attributes or files that can have their own values.",
-        "de_DE": "In der Navigationsregisterkarte können Sie auf ein beliebiges Element klicken, um schnell dorthin zu gelangen. Sie können beliebige Registerkarten hinzufügen oder vorhandene ändern. Registerkarten bestehen aus Registerkarten für Produktfelder und einfache (in der Regel eins-zu-eins) Links und verknüpfte Beziehungen wie Attribute oder Dateien, die ihre eigenen Werte haben können.",
-        "uk_UA": "У вкладці навігації ви можете натиснути на будь-який елемент, щоб швидко перейти до нього. Ви можете додавати будь-які вкладки або змінювати існуючі. Вкладки складаються з вкладок для полів продуктів і простих посилань (зазвичай один до одного), а також пов'язаних зв'язків, таких як атрибути або файли, які можуть мати власні значення."
+        "en_US": "In the navigation tab you can click any element to fast switch to it. You can add any tabs or modify any existing ones. Tabs consist of tabs for product fields and simple (usually one-to one) links and linked relationships such as attributes or files that can have their own values."
       }
     },
     ".overview-filters-container": {
       "description": {
-        "en_US": "You can filter products using these filters.",
-        "de_DE": "Sie können Produkte mit diesen Filtern filtern.",
-        "uk_UA": "Ви можете відфільтрувати товари за допомогою цих фільтрів."
+        "en_US": "You can filter products using these filters."
       }
     },
     ".catalog-tree-panel .category-panel": {
       "description": {
-        "en_US": "Here you can also see the quick search menu.",
-        "de_DE": "Hier finden Sie auch das Menü für die Schnellsuche. ",
-        "uk_UA": "Тут ви також можете побачити меню швидкого пошуку. "
+        "en_US": "Here you can also see the quick search menu."
       }
     },
     ".panel.panel-stream": {
       "description": {
-        "en_US": "In the end there is a stream that shows all changes made to the product for all the links or fields you wish to be tracked.",
-        "de_DE": "Am Ende gibt es einen Stream, der alle Änderungen am Produkt für alle Links oder Felder anzeigt, die Sie nachverfolgen möchten.",
-        "uk_UA": "В кінці з'являється потік, який показує всі зміни, внесені в продукт за всіма посиланнями або полями, які ви хочете відстежувати."
+        "en_US": "In the end there is a stream that shows all changes made to the product for all the links or fields you wish to be tracked."
       }
     }
   }
