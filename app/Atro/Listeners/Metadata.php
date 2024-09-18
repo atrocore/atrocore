@@ -549,7 +549,7 @@ class Metadata extends AbstractListener
                     if ($entityName === 'EntityTeam') {
                         $res[$entityName]['fields'][$leftId] = [
                             'type'     => 'varchar',
-                            'len'      => 24,
+                            'len'      => 36,
                             'required' => true
                         ];
                     } else {
