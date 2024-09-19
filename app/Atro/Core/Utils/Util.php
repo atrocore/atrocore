@@ -93,38 +93,6 @@ class Util
     }
 
     /**
-     * Copy dir recursively
-     *
-     * @param string $src
-     * @param string $dest
-     *
-     * @return void
-     */
-    public static function copyDir(string $src, string $dest): void
-    {
-        if (!is_dir($src)) {
-            return;
-        }
-
-        if (!is_dir($dest)) {
-            if (!mkdir($dest)) {
-                return;
-            }
-        }
-
-        $i = new \DirectoryIterator($src);
-        foreach ($i as $f) {
-            if ($f->isFile()) {
-                copy($f->getRealPath(), "$dest/" . $f->getFilename());
-            } else {
-                if (!$f->isDot() && $f->isDir()) {
-                    self::copyDir($f->getRealPath(), "$dest/$f");
-                }
-            }
-        }
-    }
-
-    /**
      * Get count folders and files in folder
      *
      * @param $folder
@@ -666,47 +634,6 @@ class Util
         }
 
         return $item;
-    }
-
-    /**
-     * Check if two variables are equals
-     *
-     * @param mixed $var1
-     * @param mixed $var2
-     *
-     * @return boolean
-     */
-    public static function isEquals($var1, $var2)
-    {
-        if (is_array($var1)) {
-            static::ksortRecursive($var1);
-        }
-        if (is_array($var2)) {
-            static::ksortRecursive($var2);
-        }
-
-        return ($var1 === $var2);
-    }
-
-    /**
-     * Sort array recursively
-     *
-     * @param array $array
-     *
-     * @return bool
-     */
-    public static function ksortRecursive(&$array)
-    {
-        if (!is_array($array)) {
-            return false;
-        }
-
-        ksort($array);
-        foreach ($array as $key => $value) {
-            static::ksortRecursive($array[$key]);
-        }
-
-        return true;
     }
 
     public static function isSingleArray(array $array)
