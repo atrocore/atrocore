@@ -16,7 +16,7 @@ namespace Atro\Services;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Exception;
 use Espo\Core\Utils\EntityManager;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class MassDownload extends QueueManagerBase

@@ -19,7 +19,7 @@ use Atro\Core\Exceptions\Exception;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
 use Atro\Entities\QueueItem as QueueItemAlias;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 

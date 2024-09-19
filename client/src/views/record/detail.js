@@ -1548,6 +1548,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:change-mode', (type) => {
                 this.setupTourButton(type)
             });
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.setupTourButton()
+            });
         },
 
         hotKeyEdit: function (e) {

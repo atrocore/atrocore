@@ -27,7 +27,7 @@ use Doctrine\DBAL\Connection;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Psr\Http\Message\StreamInterface;

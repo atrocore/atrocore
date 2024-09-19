@@ -18,7 +18,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Jobs\UpdateCurrencyExchangeViaECB;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class Unit extends Base

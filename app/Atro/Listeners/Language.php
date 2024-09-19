@@ -15,7 +15,7 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Templates\Repositories\Relation;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
 
 class Language extends AbstractListener
