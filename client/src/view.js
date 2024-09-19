@@ -290,12 +290,7 @@ Espo.define('view', [], function () {
                 return;
             }
 
-            if (this.previousTourType === type) {
-                return;
-            }
-
             this.mainScope = this.scope;
-            this.previousTourType = type;
             $('[data-action="showTour"]').remove();
 
             if (!this.getMetadata().get(['tourData', this.scope, type])) {
