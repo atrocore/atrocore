@@ -566,7 +566,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }, this);
 
-            if(this.getMetadata().get(['scopes', this.scope, 'enabledCopyConfigurations']) && this.getAcl().check(this.entityType, 'read')) {
+            if (this.getMetadata().get(['scopes', this.scope, 'enabledCopyConfigurations']) && this.getAcl().check(this.entityType, 'read')) {
                 this.dropdownItemList.push({
                     'label': this.translate('copyConfigurations', 'labels', 'Global'),
                     'name': 'copyConfigurations'
@@ -1739,7 +1739,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     view.$el.find('.panel-heading:first').append(html);
                 }
                 // add layout configuration button
-                if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && ['detail', 'detailSmall'].includes(this.layoutName)) {
+                if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
+                    ['detail', 'detailSmall'].includes(this.layoutName) &&
+                    this.getAcl().check('Layout', 'create')
+                ) {
                     let html = `<a class="btn btn-link collapsing-button" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
                          <span class="fas fa-th cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
                     </a>`
@@ -2385,30 +2388,30 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionCopyConfigurations() {
             let select = [];
-            let  disabledFields = this.getMetadata().get(['scopes', this.scope, 'disabledFieldsForCopyConfigurations'], []);
+            let disabledFields = this.getMetadata().get(['scopes', this.scope, 'disabledFieldsForCopyConfigurations'], []);
             let linksFields = [];
             Object.entries(this.getMetadata().get(['entityDefs', this.scope, 'fields'])).forEach(([field, fieldDefs]) => {
-                if(['createdBy', 'modifiedBy', 'teams', 'assignedAccounts', 'assignedUser', 'ownerUser'].includes(field)) {
+                if (['createdBy', 'modifiedBy', 'teams', 'assignedAccounts', 'assignedUser', 'ownerUser'].includes(field)) {
                     return true;
                 }
 
-                if(fieldDefs['exportDisabled']) {
+                if (fieldDefs['exportDisabled']) {
                     return true;
                 }
 
-                if(!disabledFields.includes(field) && fieldDefs['type'] !== 'file'){
+                if (!disabledFields.includes(field) && fieldDefs['type'] !== 'file') {
                     select.push(field);
                 }
 
-                if(['link' ,'file'].includes(fieldDefs['type']) && !disabledFields.includes(field + 'Id')) {
+                if (['link', 'file'].includes(fieldDefs['type']) && !disabledFields.includes(field + 'Id')) {
                     select.push(field + 'Id');
                 }
 
-                if(fieldDefs['type'] === 'linkMultiple' && !disabledFields.includes(field + 'Ids')){
+                if (fieldDefs['type'] === 'linkMultiple' && !disabledFields.includes(field + 'Ids')) {
                     select.push(field + 'Ids');
                 }
 
-                if(['link' ,'linkMultiple'].includes(fieldDefs['type'])){
+                if (['link', 'linkMultiple'].includes(fieldDefs['type'])) {
                     linksFields.push(field);
                 }
             });
@@ -2426,32 +2429,32 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 ]
             }).then(data => {
                 let cleanseItem = (item) => {
-                    Object.entries(item).forEach(([key, value]) =>{
-                        if(!value || ['createdById', 'modifiedById', 'modifiedAt', 'createdAt', 'assignedUserId', 'ownerUserId'].includes(key)){
+                    Object.entries(item).forEach(([key, value]) => {
+                        if (!value || ['createdById', 'modifiedById', 'modifiedAt', 'createdAt', 'assignedUserId', 'ownerUserId'].includes(key)) {
                             delete item[key];
                             return true;
                         }
                     });
                 }
 
-                if(data.list && data.list.length){
+                if (data.list && data.list.length) {
                     let item = data.list[0];
                     let configurations = [];
                     linksFields.forEach((link) => {
                         let linkData = item[link];
                         delete item[link];
 
-                        if(_.isEmpty(linkData)){
+                        if (_.isEmpty(linkData)) {
                             return true;
                         }
 
                         let linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]);
 
-                        if(!linkDefs['entity']){
+                        if (!linkDefs['entity']) {
                             return true;
                         }
 
-                        if(linkDefs['type'] === 'belongsTo'){
+                        if (linkDefs['type'] === 'belongsTo') {
                             cleanseItem(linkData);
                             configurations.push({
                                 entity: linkDefs['entity'],
@@ -2459,14 +2462,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             });
                         }
 
-                        if(linkDefs['type'] === 'hasMany'){
-                           linkData.forEach(subItem => {
-                               cleanseItem(subItem);
-                               configurations.push({
-                                   entity: linkDefs['entity'],
-                                   payload: subItem
-                               });
-                           });
+                        if (linkDefs['type'] === 'hasMany') {
+                            linkData.forEach(subItem => {
+                                cleanseItem(subItem);
+                                configurations.push({
+                                    entity: linkDefs['entity'],
+                                    payload: subItem
+                                });
+                            });
                         }
                     });
 
@@ -2476,9 +2479,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
 
                     this.copyToClipboard(JSON.stringify(configurations), (copied) => {
-                        if(copied){
+                        if (copied) {
                             this.notify(this.translate('Done'), 'success');
-                        }else{
+                        } else {
                             this.notify('Error copying text to clipboard', 'danger');
                         }
                     })
