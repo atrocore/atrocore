@@ -57,23 +57,16 @@ class Util
     {
         if (file_exists($dir) && is_dir($dir)) {
             foreach (self::scanDir($dir) as $object) {
-                if (is_dir($dir . "/" . $object)) {
-                    self::removeDir($dir . "/" . $object);
+                if (is_dir($dir . self::$separator . $object)) {
+                    self::removeDir($dir . self::$separator . $object);
                 } else {
-                    unlink($dir . "/" . $object);
+                    unlink($dir . self::$separator . $object);
                 }
             }
             rmdir($dir);
         }
     }
 
-    /**
-     * Get count folders and files in folder
-     *
-     * @param $folder
-     *
-     * @return int
-     */
     public static function countItems($folder): int
     {
         if (!is_dir($folder)) {
@@ -84,37 +77,16 @@ class Util
         return iterator_count($fi);
     }
 
-
-    /**
-     * Get a folder separator
-     *
-     * @return string
-     */
     public static function getSeparator()
     {
         return static::$separator;
     }
 
-
-    /**
-     * Convert to format with defined delimeter
-     * ex. Espo/Utils to Espo\Utils
-     *
-     * @param string $name
-     * @param string $delim - delimiter
-     *
-     * @return string
-     */
-    public static function toFormat($name, $delim = '/')
+    public static function toFormat(string $name, string $delim = '/'): string
     {
         return preg_replace("/[\/\\\]/", $delim, $name);
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return string
-     */
     public static function toString($value): string
     {
         if ($value instanceof EntityCollection) {
@@ -137,11 +109,6 @@ class Util
         return (string)$value;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return string
-     */
     public static function toMd5($value): string
     {
         return md5(self::toString($value));
@@ -181,15 +148,6 @@ class Util
         return $result;
     }
 
-    /**
-     * Convert name to Camel Case format, ex. camel_case to camelCase
-     *
-     * @param string  $name
-     * @param string  $symbol
-     * @param boolean $capitaliseFirstChar
-     *
-     * @return string
-     */
     public static function toCamelCase(string $name, string $symbol = '_', bool $capitaliseFirstChar = false): string
     {
         $parts = explode($symbol, $name);
@@ -205,14 +163,6 @@ class Util
         return $camelCaseStr;
     }
 
-    /**
-     * Convert name from Camel Case format to underscore.
-     * ex. camelCase to camel_case
-     *
-     * @param string|array $name
-     *
-     * @return string|array
-     */
     public static function toUnderScore($name)
     {
         if (is_array($name)) {
@@ -245,7 +195,7 @@ class Util
                 return $newArray;
             } else {
                 if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
-                    return array();
+                    return [];
                 }
             }
         }
