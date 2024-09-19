@@ -10,14 +10,10 @@
     let response = null;
     let model = null;
 
-    function onPaste(e){
-        console.log('passste', e)
-        content = JSON.stringify(JSON.parse(content, undefined, 4))
-    }
 
     onMount(() => {
         ModelFactory.create('', function (m) {
-           model = m;
+            model = m;
             afterOnMount(model);
         })
     })
