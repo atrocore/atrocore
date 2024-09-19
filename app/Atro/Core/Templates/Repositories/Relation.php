@@ -20,7 +20,7 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 

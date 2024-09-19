@@ -14,7 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\Error;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class V1Dot9Dot12 extends Base
 {

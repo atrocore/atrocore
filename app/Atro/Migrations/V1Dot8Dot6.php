@@ -15,7 +15,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
 use Atro\Jobs\UpdateCurrencyExchangeViaECB;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class V1Dot8Dot6 extends Base
 {

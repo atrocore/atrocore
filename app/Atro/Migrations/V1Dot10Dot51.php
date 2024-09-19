@@ -17,7 +17,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class V1Dot10Dot51 extends Base
 {

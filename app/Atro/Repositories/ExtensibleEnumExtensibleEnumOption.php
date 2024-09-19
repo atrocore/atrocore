@@ -16,7 +16,7 @@ namespace Atro\Repositories;
 use Atro\Core\Templates\Repositories\Relation;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class ExtensibleEnumExtensibleEnumOption extends Relation

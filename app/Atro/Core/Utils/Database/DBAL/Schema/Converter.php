@@ -17,7 +17,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class Converter
 {
@@ -273,7 +273,7 @@ class Converter
                 'fields' => [
                     'id'   => [
                         'dbType' => 'varchar',
-                        'len'    => 24,
+                        'len'    => 36,
                         'type'   => 'id'
                     ],
                     'data' => [
@@ -291,17 +291,17 @@ class Converter
                     ],
                     'entityId'   => [
                         'type'  => 'varchar',
-                        'len'   => '24',
+                        'len'   => 36,
                         'index' => 'entity',
                     ],
                     'entityType' => [
                         'type'  => 'varchar',
-                        'len'   => '100',
+                        'len'   => 100,
                         'index' => 'entity',
                     ],
                     'userId'     => [
                         'type'  => 'varchar',
-                        'len'   => '24',
+                        'len'   => 36,
                         'index' => true,
                     ]
                 ]

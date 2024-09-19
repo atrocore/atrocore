@@ -15,7 +15,7 @@ namespace Atro\Console;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class RefreshStoragesItems extends AbstractConsole
 {

@@ -17,7 +17,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class ExtensibleEnumOption extends Base

@@ -160,8 +160,8 @@
     "response": {
       "type": "array",
       "items": {
-        "required": ["status", "stored"],
         "type": "object",
+        "required": ["status", "stored"],
         "properties": {
           "status": {
             "type": "string",

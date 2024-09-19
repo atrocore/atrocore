@@ -19,7 +19,7 @@ use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;

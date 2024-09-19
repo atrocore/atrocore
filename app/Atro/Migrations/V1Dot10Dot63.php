@@ -14,7 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class V1Dot10Dot63 extends Base
 {
