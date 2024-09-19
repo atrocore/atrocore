@@ -9,8 +9,6 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
-
 namespace Atro\Core\Utils;
 
 use Espo\Core\Utils\Json;
@@ -656,29 +654,4 @@ class Util
     {
         return uniqid(strtolower(chr(rand(65, 90)))) . substr(md5((string)rand()), 0, 3);
     }
-
-    public static function arrayDiff(array $array1, array $array2)
-    {
-        $diff = array();
-
-        foreach ($array1 as $key1 => $value1) {
-            if (array_key_exists($key1, $array2)) {
-                if ($value1 !== $array2[$key1]) {
-                    $diff[$key1] = $array2[$key1];
-                }
-                continue;
-            }
-
-            $diff[$key1] = $value1;
-        }
-
-        $diff = array_merge($diff, array_diff_key($array2, $array1));
-
-        return $diff;
-    }
-
-    static public function isFloatEquals(float  $value1, float $value2, $epsilon = PHP_FLOAT_EPSILON) : bool {
-        return abs($value1 - $value2) < $epsilon ;
-    }
 }
-
