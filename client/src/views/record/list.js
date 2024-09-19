@@ -1423,10 +1423,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                                 "top": `-${menuHeight}px`
                             })
                         } else {
-                            let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true);
+                            let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true),
+                                topOffset = window.innerHeight < (positionTop + menuHeight) ? window.innerHeight - (parentPosition - $(target).offset().top) - menuHeight : positionTop;
                             menu.css({
                                 'position': 'fixed',
-                                'top': `${window.innerHeight - (parentPosition - $(target).offset().top) - menuHeight}px`,
+                                'top': `${topOffset}px`,
                                 'right': `${rightOffset}px`
                             });
                         }
