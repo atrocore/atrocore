@@ -22,17 +22,15 @@ class V1Dot10Dot73 extends Base
 
     public function up(): void
     {
-        $this->exec("ALTER TABLE preferences ALTER id TYPE VARCHAR(36)");
-        $this->exec("ALTER TABLE user_followed_record ALTER entity_id TYPE VARCHAR(36)");
-        $this->exec("ALTER TABLE user_followed_record ALTER user_id TYPE VARCHAR(36)");
-        $this->exec("ALTER TABLE entity_team ALTER entity_id TYPE VARCHAR(36)");
-
         if ($this->isPgSQL()) {
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('table_name, column_name')
                 ->from('information_schema.columns')
                 ->where("data_type='character varying' AND character_maximum_length=24")
                 ->fetchAllAssociative();
+            foreach ($res as $row) {
+                $this->exec("ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['table_name']) . " ALTER {$row['column_name']} TYPE VARCHAR(36)");
+            }
         } else {
             $dbName = $this->getConfig()->get('database')['dbname'];
             $res = $this->getConnection()->createQueryBuilder()
@@ -40,13 +38,12 @@ class V1Dot10Dot73 extends Base
                 ->from('nformation_schema.columns')
                 ->where("data_type='varchar' AND character_maximum_length=24 AND table_schema='$dbName'")
                 ->fetchAllAssociative();
+            foreach ($res as $row) {
+                $this->exec("ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['table_name']) . " CHANGE {$row['column_name']} {$row['column_name']} VARCHAR(36) NOT NULL");
+            }
         }
 
-        foreach ($res as $row) {
-            $this->exec("ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['table_name']) . " ALTER {$row['column_name']} TYPE VARCHAR(36)");
-        }
-
-        $this->updateComposer('atrocore/core', '^1.10.72');
+        $this->updateComposer('atrocore/core', '^1.10.73');
     }
 
     public function down(): void
