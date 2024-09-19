@@ -15,7 +15,7 @@ namespace Atro\Console;
 
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Doctrine\DBAL\Connection;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 
 class RegenerateUiHandlers extends AbstractConsole

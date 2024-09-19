@@ -21,7 +21,7 @@ use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class Metadata extends AbstractListener
 {
@@ -549,7 +549,7 @@ class Metadata extends AbstractListener
                     if ($entityName === 'EntityTeam') {
                         $res[$entityName]['fields'][$leftId] = [
                             'type'     => 'varchar',
-                            'len'      => 24,
+                            'len'      => 36,
                             'required' => true
                         ];
                     } else {

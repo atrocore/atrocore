@@ -19,7 +19,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Atro\ActionTypes\TypeInterface;
 use Espo\Core\ORM\Entity;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\IEntity;
 
 class EmailTemplate extends Base

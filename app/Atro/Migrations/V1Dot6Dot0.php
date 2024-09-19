@@ -11,7 +11,7 @@
 
 namespace Atro\Migrations;
 
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Atro\Core\Migration\Base;
 
 class V1Dot6Dot0 extends Base

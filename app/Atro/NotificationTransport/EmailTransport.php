@@ -16,7 +16,7 @@ namespace Atro\NotificationTransport;
 use Atro\Core\Container;
 use Atro\Core\Mail\Sender;
 use Atro\Entities\NotificationTemplate;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\Entities\User;
 
 class EmailTransport extends AbstractNotificationTransport

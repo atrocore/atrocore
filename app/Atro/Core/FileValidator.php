@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Entities\File as FileEntity;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 

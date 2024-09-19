@@ -15,7 +15,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Entity;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Atro\Core\Migration\Base;
 
 class V1Dot5Dot0 extends Base
