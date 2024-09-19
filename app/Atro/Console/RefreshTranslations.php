@@ -16,7 +16,7 @@ namespace Atro\Console;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class RefreshTranslations extends AbstractConsole
 {

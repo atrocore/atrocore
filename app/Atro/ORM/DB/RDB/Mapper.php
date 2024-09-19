@@ -20,7 +20,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
 use Espo\Core\Utils\Metadata;
@@ -148,8 +148,8 @@ class Mapper implements MapperInterface
         if ($this->isSingleParentHierarchy($entity) && empty($params['aggregation']) && !$innerSql) {
             $tableName = $this->getQueryConverter()->toDb($entity->getEntityType());
             $ta = $this->getQueryConverter()::TABLE_ALIAS;
-            $relAlias1 = 'hierarchy_alias_' . Util::generateId();
-            $relAlias2 = 'alias_' . Util::generateId();
+            $relAlias1 = 'hierarchy_alias_' . Util::generateUniqueHash();
+            $relAlias2 = 'alias_' . Util::generateUniqueHash();
 
             $qb->addSelect("$relAlias1.parent_id AS " . $this->getQueryConverter()->fieldToAlias('parentId'));
             $qb->addSelect("$relAlias2.name AS " . $this->getQueryConverter()->fieldToAlias('parentName'));

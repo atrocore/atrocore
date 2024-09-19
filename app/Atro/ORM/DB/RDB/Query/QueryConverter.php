@@ -15,7 +15,7 @@ namespace Atro\ORM\DB\RDB\Query;
 
 use Atro\Core\Templates\Repositories\Relation;
 use Doctrine\DBAL\Connection;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
 
@@ -955,7 +955,7 @@ class QueryConverter
                             if ($isNotValue) {
                                 $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
                             } else {
-                                $param = $this->sanitize($field) . '_w1_' . Util::generateId();
+                                $param = $this->sanitize($field) . '_w1_' . Util::generateUniqueHash();
                                 if (in_array($operator, ['LIKE', 'NOT LIKE']) && str_contains($value, '%')) {
                                     $whereParts[] = "LOWER($leftPart) $operator LOWER(:$param)";
                                 } else {
@@ -983,7 +983,7 @@ class QueryConverter
                             if (!isset($value['innerSql'])) {
                                 $parts = explode('.', $field);
                                 $param = $parts[1] ?? $parts[0];
-                                $param = "{$param}_w2_" . Util::generateId();
+                                $param = "{$param}_w2_" . Util::generateUniqueHash();
                                 $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param})";
                                 $this->parameters[$param] = $value;
                             } else {

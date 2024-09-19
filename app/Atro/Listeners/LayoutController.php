@@ -15,7 +15,7 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class LayoutController extends AbstractListener
 {

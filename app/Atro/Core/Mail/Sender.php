@@ -18,7 +18,7 @@ use Atro\Core\QueueManager;
 use Atro\Entities\Connection;
 use Atro\Entities\File;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Transport;
