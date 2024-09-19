@@ -16,15 +16,8 @@ use Espo\ORM\EntityCollection;
 
 class Util
 {
-    /**
-     * @var string - default directory separator
-     */
-    protected static $separator = DIRECTORY_SEPARATOR;
-
-    /**
-     * @var string[]
-     */
-    protected static $reservedWords = ['Case'];
+    protected static string $separator = DIRECTORY_SEPARATOR;
+    protected static array $reservedWords = ['Case'];
 
     public static function unsetProperty(\stdClass $object, string $property): void
     {
@@ -33,14 +26,8 @@ class Util
         }
     }
 
-    /**
-     * @param string $dir
-     *
-     * @return array
-     */
     public static function scanDir(string $dir): array
     {
-        // prepare result
         $result = [];
 
         if (file_exists($dir) && is_dir($dir)) {
@@ -54,9 +41,6 @@ class Util
         return $result;
     }
 
-    /**
-     * @param string $dir
-     */
     public static function createDir(string $dir): void
     {
         if (!file_exists($dir)) {
@@ -69,13 +53,6 @@ class Util
         }
     }
 
-    /**
-     * Remove dir recursively
-     *
-     * @param string $dir
-     *
-     * @return void
-     */
     public static function removeDir(string $dir): void
     {
         if (file_exists($dir) && is_dir($dir)) {
