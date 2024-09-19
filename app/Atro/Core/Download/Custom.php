@@ -18,7 +18,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 use Imagick;
 

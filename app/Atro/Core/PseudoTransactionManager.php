@@ -18,7 +18,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\Entities\User;
 use Atro\Services\Record;
 

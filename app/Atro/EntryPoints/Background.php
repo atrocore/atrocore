@@ -11,7 +11,7 @@
 
 namespace Atro\EntryPoints;
 
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class Background extends AbstractEntryPoint
 {

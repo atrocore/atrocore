@@ -17,7 +17,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class Converter
 {

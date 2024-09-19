@@ -21,7 +21,7 @@ use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 class Metadata extends AbstractListener
 {

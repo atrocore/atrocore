@@ -18,7 +18,7 @@ use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Route;
 use Atro\Core\Container;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 abstract class AbstractModule
 {

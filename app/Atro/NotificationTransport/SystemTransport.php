@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\NotificationTransport;
 
 use Atro\Entities\NotificationTemplate;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\Entities\User;
 
 class SystemTransport extends AbstractNotificationTransport

@@ -16,7 +16,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\DataManager;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class NotificationTemplate extends Base

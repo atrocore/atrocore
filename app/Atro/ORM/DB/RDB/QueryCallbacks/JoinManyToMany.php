@@ -16,7 +16,7 @@ namespace Atro\ORM\DB\RDB\QueryCallbacks;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\IEntity;
 
 class JoinManyToMany

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Migrations;
 
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 
 /**
  * Migration class for version 1.2.57

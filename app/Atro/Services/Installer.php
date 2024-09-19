@@ -22,7 +22,7 @@ use Atro\Core\Exceptions;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\PasswordHash;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\Entities\User;
 
 class Installer extends HasContainer

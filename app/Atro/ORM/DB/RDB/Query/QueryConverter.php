@@ -15,7 +15,7 @@ namespace Atro\ORM\DB\RDB\Query;
 
 use Atro\Core\Templates\Repositories\Relation;
 use Doctrine\DBAL\Connection;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
 
