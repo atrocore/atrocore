@@ -459,6 +459,11 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     onBlur: function () {
                         this.trigger('change')
                     }.bind(this),
+                    onPaste: function(e) {
+                        let bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                        e.preventDefault();
+                        document.execCommand('insertText', false, bufferText);
+                    }.bind(this)
                 },
                 toolbar: this.toolbar,
                 buttons: this.buttons
