@@ -574,7 +574,7 @@ class Util
 
     public static function generateId(): string
     {
-        return \Ramsey\Uuid\Uuid::uuid6()->toString();
+        return \Ramsey\Uuid\Uuid::uuid7()->toString();
     }
 
     public static function generateUniqueHash(): string
