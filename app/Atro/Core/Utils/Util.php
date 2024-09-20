@@ -572,6 +572,10 @@ class Util
         return true;
     }
 
+    static public function isFloatEquals(float  $value1, float $value2, $epsilon = PHP_FLOAT_EPSILON) : bool {
+        return abs($value1 - $value2) < $epsilon ;
+    }
+
     public static function generateId(): string
     {
         return \Ramsey\Uuid\Uuid::uuid7()->toString();
