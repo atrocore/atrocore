@@ -110,7 +110,7 @@ class V1Dot9Dot1 extends Base
                         ->setValue('extensible_enum_option_id', ':extensibleEnumOptionId')
                         ->setValue('created_by_id', ':createdById')
                         ->setValue('modified_by_id', ':createdById')
-                        ->setParameter('id', Util::generateId())
+                        ->setParameter('id', Util::generateUniqueHash())
                         ->setParameter('extensibleEnumId', $option['extensible_enum_id'], Mapper::getParameterType($option['extensible_enum_id']))
                         ->setParameter('extensibleEnumOptionId', $option['id'], Mapper::getParameterType($option['id']))
                         ->setParameter('createdById', 'system', ParameterType::STRING)

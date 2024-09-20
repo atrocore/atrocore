@@ -84,7 +84,7 @@ class V1Dot9Dot12 extends Base
                         )
                         ->setParameter(0, $entity['account_id'])
                         ->setParameter(1, $entity['id'])
-                        ->setParameter(2, Util::generateId())
+                        ->setParameter(2, Util::generateUniqueHash())
                         ->executeStatement();
                 } catch (\Throwable $e) {
 
@@ -122,7 +122,7 @@ class V1Dot9Dot12 extends Base
 
             foreach ($entities as $entity) {
                 try {
-                    $id = Util::generateId();
+                    $id = Util::generateUniqueHash();
                     $this->getConnection()->createQueryBuilder()
                         ->insert('address')
                         ->values(
@@ -162,7 +162,7 @@ class V1Dot9Dot12 extends Base
                         )
                         ->setParameter(0, $entity['id'])
                         ->setParameter(1, $id)
-                        ->setParameter(2, Util::generateId())
+                        ->setParameter(2, Util::generateUniqueHash())
                         ->executeStatement();
                 } catch (\Exception $e) {
 

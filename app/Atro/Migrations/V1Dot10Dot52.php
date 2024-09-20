@@ -58,7 +58,7 @@ class V1Dot10Dot52 extends Base
                         ->setValue('deleted', ':false')
                         ->setValue('is_active', ':true')
                         ->setValue('eu', ':eu')
-                        ->setParameter('id', !empty($country['code']) ? strtolower($country['code']) : Util::generateId())
+                        ->setParameter('id', !empty($country['code']) ? strtolower($country['code']) : Util::generateUniqueHash())
                         ->setParameter('name', $country['name'])
                         ->setParameter('code', $country['code'] ?? null)
                         ->setParameter('false', false, ParameterType::BOOLEAN)

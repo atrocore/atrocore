@@ -35,7 +35,7 @@ class V1Dot10Dot36 extends Base
 
         if (empty($smtpConnection)) {
             $config = $this->getConfig();
-            $id = Util::generateId();
+            $id = Util::generateUniqueHash();
             $name = 'Default SMTP';
             $this->getConnection()->createQueryBuilder()
                 ->insert($this->getConnection()->quoteIdentifier('connection'))
