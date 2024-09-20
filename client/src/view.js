@@ -291,7 +291,7 @@ Espo.define('view', [], function () {
             }
 
             this.mainScope = this.scope;
-            $('[data-action="showTour"]').remove();
+            this.$el.parent().find('[data-action="showTour"]').remove();
 
             if (!this.getMetadata().get(['tourData', this.scope, type])) {
                 return;
@@ -303,7 +303,7 @@ Espo.define('view', [], function () {
 
             let button = $(`<a href='javascript:' style="text-decoration:none" data-action='showTour'> <span class='fas fa-question-circle'></span> </a>`);
             button.on('click', () => this.showTour(type))
-            $('.page-header .header-title').append(button)
+            this.$el.parent().find('.page-header .header-title').append(button)
         },
 
         showTour(type) {
