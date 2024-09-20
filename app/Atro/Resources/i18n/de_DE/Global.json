@@ -1007,6 +1007,7 @@
     "editedByAnotherUser": "Der Datensatz [%s] wurde inzwischen geändert. Sie können die Seite <a href=\"javascript:\" onclick=\"location.reload();\">neu laden</a>, um die neuen Werte zu sehen, mit \"Abbrechen\" zur Bearbeitung zurückkehren oder mit \"Anwenden\" die Daten überschreiben. Möchten Sie die Daten überschreiben?",
     "dontMatchToPattern": "ert des Feldes \"{field}\" entspricht nicht dem Pattern \"{pattern}\".",
     "notUniqueValue": "Der Datensatz kann aufgrund von Datenbankeinschränkungen nicht erstellt/aktualisiert werden.",
+    "notUniqueCreatedValue": "Diese Beziehung(en) bestehen bereits und können daher nicht hinzugefügt werden.",
     "fieldDoesNotExist": "Das Feld \"{field}\" existiert nicht in der entität \"{entityType}\".",
     "optionIsDisabled": "Das Element '%s' ist für das Feld '%s' deaktiviert.",
     "someCouldNotDuplicatedAndLinked": "Einige Datensätze konnten nicht dupliziert und verknüpft werden",
