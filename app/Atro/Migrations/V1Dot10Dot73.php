@@ -35,7 +35,7 @@ class V1Dot10Dot73 extends Base
             $dbName = $this->getConfig()->get('database')['dbname'];
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('table_name, column_name')
-                ->from('nformation_schema.columns')
+                ->from('information_schema.columns')
                 ->where("data_type='varchar' AND character_maximum_length=24 AND table_schema='$dbName'")
                 ->fetchAllAssociative();
             foreach ($res as $row) {
