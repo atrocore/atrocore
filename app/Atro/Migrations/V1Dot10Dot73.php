@@ -31,10 +31,14 @@ class V1Dot10Dot73 extends Base
             foreach ($res as $row) {
                 $this->exec("ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['table_name']) . " ALTER {$row['column_name']} TYPE VARCHAR(36)");
             }
+
+            $this->exec("ALTER TABLE import_job_log ALTER entity_id TYPE VARCHAR(36)");
         } else {
             $this->exec("ALTER TABLE classification_attribute CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
             $this->exec("ALTER TABLE product_attribute_value CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
             $this->exec("ALTER TABLE product_file CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
+
+            $this->exec("ALTER TABLE import_job_log CHANGE entity_id entity_id VARCHAR(36) DEFAULT NULL");
 
             $dbName = $this->getConfig()->get('database')['dbname'];
             $res = $this->getConnection()->createQueryBuilder()
