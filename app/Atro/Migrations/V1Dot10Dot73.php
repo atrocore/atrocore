@@ -32,6 +32,10 @@ class V1Dot10Dot73 extends Base
                 $this->exec("ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['table_name']) . " ALTER {$row['column_name']} TYPE VARCHAR(36)");
             }
         } else {
+            $this->exec("ALTER TABLE classification_attribute CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
+            $this->exec("ALTER TABLE product_attribute_value CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
+            $this->exec("ALTER TABLE product_file CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
+
             $dbName = $this->getConfig()->get('database')['dbname'];
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('table_name, column_name, is_nullable')
