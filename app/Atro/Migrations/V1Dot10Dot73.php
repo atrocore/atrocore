@@ -34,12 +34,19 @@ class V1Dot10Dot73 extends Base
         } else {
             $dbName = $this->getConfig()->get('database')['dbname'];
             $res = $this->getConnection()->createQueryBuilder()
-                ->select('table_name, column_name')
+                ->select('table_name, column_name, is_nullable')
                 ->from('information_schema.columns')
                 ->where("data_type='varchar' AND character_maximum_length=24 AND table_schema='$dbName'")
                 ->fetchAllAssociative();
+
             foreach ($res as $row) {
-                $this->exec("ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['table_name']) . " CHANGE {$row['column_name']} {$row['column_name']} VARCHAR(36) NOT NULL");
+                $sql = "ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['TABLE_NAME']) . " CHANGE {$row['COLUMN_NAME']} {$row['COLUMN_NAME']} VARCHAR(36)";
+                if ($row['IS_NULLABLE'] === 'YES') {
+                    $sql .= " DEFAULT NULL";
+                } else {
+                    $sql .= " NOT NULL";
+                }
+                $this->exec($sql);
             }
         }
 
