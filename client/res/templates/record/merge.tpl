@@ -18,13 +18,13 @@
             {{#if hasCreatedAt}}
             <tr>
                 <td align="right">
-                    {{translate 'createdAt' scope=../scope category='fields'}}
+                    {{translate 'createdAt' scope=scope category='fields'}}
                 </td>
                 {{#each dataList}}
                 <td></td>
                 <td data-id="{{id}}">
                     <div class="field" data-name="createdAt">
-                        {{{var createdAtViewName ../../this}}}
+                        {{{var createdAtViewName ../this}}}
                     </div>
                 </td>
                 {{/each}}

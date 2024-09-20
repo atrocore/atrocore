@@ -8,7 +8,7 @@
                 {{#each items.buttons}}
                 <a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} style="{{cssStyle}}" class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action{{#if hidden}} hidden{{/if}}" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>
                     {{#if iconHtml}}{{{iconHtml}}}{{/if}}
-                    {{#if html}}{{{html}}}{{else}}{{translate label scope=../../scope}}{{/if}}
+                    {{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}
                 </a>
                 {{/each}}
 
@@ -19,7 +19,7 @@
                     </button>
                     <ul class="dropdown-menu pull-right">
                         {{#each items.actions}}
-                        <li class="{{#if hidden}}hidden{{/if}}"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" style="{{cssStyle}}" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../scope}}{{/if}}</a></li>
+                        <li class="{{#if hidden}}hidden{{/if}}"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" style="{{cssStyle}}" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
                         {{/each}}
                     </ul>
                 </div>
@@ -32,7 +32,7 @@
                     </button>
                     <ul class="dropdown-menu pull-right">
                         {{#each items.dropdown}}
-                        <li class="{{#if hidden}}hidden{{/if}}"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if iconHtml}}{{{iconHtml}}} {{/if}}{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../scope}}{{/if}}</a></li>
+                        <li class="{{#if hidden}}hidden{{/if}}"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if iconHtml}}{{{iconHtml}}} {{/if}}{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
                         {{/each}}
                     </ul>
                 </div>

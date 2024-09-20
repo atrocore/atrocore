@@ -109,7 +109,7 @@ class Layout extends Base
                                 if (!empty($column)) {
                                     $rowItemEntity = null;
                                     foreach ($rowItems as $rowItem) {
-                                        if ($rowItem->get('id') === $column['id']) {
+                                        if (!empty($column['id']) && $rowItem->get('id') === $column['id']) {
                                             $rowItemEntity = $rowItem;
                                             $processedItems[] = $rowItem;
                                             break;
