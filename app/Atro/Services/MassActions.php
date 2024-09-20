@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\NotUnique;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\HasContainer;
+use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 
 class MassActions extends HasContainer
@@ -184,7 +186,10 @@ class MassActions extends HasContainer
                     $related++;
                     try {
                         $repository->relate($entity, $link, $foreignEntity);
-                    } catch (UniqueConstraintViolationException $e){
+                    } catch (UniqueConstraintViolationException $e) {
+                    } catch (NotUnique $e) {
+                        $message = $this->getLanguage()->translate('notUniqueCreatedValue', 'exceptions');
+                        throw new NotUnique($message);
                     } catch (BadRequest $e) {
                         $related--;
                         $notRelated[] = [
@@ -408,5 +413,10 @@ class MassActions extends HasContainer
     private function getMetadata(): Metadata
     {
         return $this->getContainer()->get('metadata');
+    }
+
+    private function getLanguage(): Language
+    {
+        return $this->getContainer()->get('language');
     }
 }

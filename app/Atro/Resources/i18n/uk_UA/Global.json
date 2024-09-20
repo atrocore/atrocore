@@ -1030,6 +1030,7 @@
     "editedByAnotherUser": "The data set [%s] був змінений. Ви можете <a href=\"javascript:\" onclick=\"location.reload();\">перевантажити сторінку</a> щоб побачити нові значення, поверніться до редагування, натиснувши \"Cancel\" або перезапишіть дані натиснувши \"Apply\". Ви хочете перезаписати дані?",
     "dontMatchToPattern": "Значення поля \"{field}\" не відповідає патерну \"{pattern}\".",
     "notUniqueValue": "Запис неможливо створити/оновити через обмеження бази даних.",
+    "notUniqueCreatedValue": "Такий(і) зв'язки вже існують і тому не можуть бути додані.",
     "fieldDoesNotExist": "Поле \"{field}\" не існує в сутності \"{entityType}\".",
     "optionIsDisabled": "Елемент '%s' вимкнено для поля '%s'.",
     "someCouldNotDuplicatedAndLinked": "Деякі записи неможливо було продублювати та прив'язати",
