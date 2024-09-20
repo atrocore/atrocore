@@ -203,6 +203,10 @@ class Note
                 return;
             }
 
+            if (is_null($entity->get($this->relationEntityData[$entity->getEntityType()]['field1']))) {
+                return;
+            }
+
             $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity1'],
                 $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), array_merge($data, [
                         'entityId'    => $entity->id,
