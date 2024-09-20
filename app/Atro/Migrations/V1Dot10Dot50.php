@@ -124,7 +124,7 @@ class V1Dot10Dot50 extends Base
         $defaultProfileId = 'defaultProfileId';
         return [
             [
-                "id"                      => Util::generateId(),
+                "id"                      => Util::generateUniqueHash(),
                 "name"                    => "Entity Update",
                 "entity"                  => '',
                 "occurrence"              => 'updating',
@@ -1042,7 +1042,7 @@ class V1Dot10Dot50 extends Base
                 ]
             ],
             [
-                "id"                      => Util::generateId(),
+                "id"                      => Util::generateUniqueHash(),
                 "name"                    => "Note Creation Without parent",
                 "entity"                  => 'Note',
                 "occurrence"              => 'creation',
@@ -1064,7 +1064,7 @@ class V1Dot10Dot50 extends Base
                 ],
             ],
             [
-                "id"                      => Util::generateId(),
+                "id"                      => Util::generateUniqueHash(),
                 "name"                    => "Note Creation in Entity",
                 "entity"                  => '',
                 "occurrence"              => 'note_created',
@@ -1143,7 +1143,7 @@ class V1Dot10Dot50 extends Base
                 ]
             ],
             [
-                "id"                      => Util::generateId(),
+                "id"                      => Util::generateUniqueHash(),
                 "name"                    => "Mention",
                 "entity"                  => '',
                 "occurrence"              => 'mentioned',
@@ -1239,7 +1239,7 @@ class V1Dot10Dot50 extends Base
                 ]
             ],
             [
-                "id"                      => Util::generateId(),
+                "id"                      => Util::generateUniqueHash(),
                 "name"                    => "Assignment/Ownership",
                 "entity"                  => '',
                 "occurrence"              => 'ownership_assignment',

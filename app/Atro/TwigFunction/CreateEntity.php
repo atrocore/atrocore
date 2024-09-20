@@ -28,8 +28,24 @@ class CreateEntity extends AbstractTwigFunction
 
     public function run(string $entityName, array $data): ?Entity
     {
+        $nowString = date('Y-m-d H:i:s');
+        $user = $this->entityManager->getUser();
+
         $entity = $this->entityManager->getRepository($entityName)->get();
         $entity->set($data);
+
+        if ($entity->hasAttribute('createdAt')) {
+            $entity->set('createdAt', $nowString);
+        }
+        if ($entity->hasAttribute('createdById') && $user) {
+            $entity->set('createdById', $user->get('id'));
+        }
+        if ($entity->hasAttribute('modifiedAt')) {
+            $entity->set('modifiedAt', $nowString);
+        }
+        if ($entity->hasAttribute('modifiedById') && $user) {
+            $entity->set('modifiedById', $user->get('id'));
+        }
 
         try {
             $this->entityManager->saveEntity($entity);

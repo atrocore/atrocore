@@ -125,7 +125,7 @@ class V1Dot8Dot6 extends Base
                 'is_internal'    => '?',
                 'status'         => '?'
             ])
-            ->setParameter(0, Util::generateId())
+            ->setParameter(0, Util::generateUniqueHash())
             ->setParameter(1, 'UpdateCurrencyExchangeViaECB')
             ->setParameter(2, 'UpdateCurrencyExchangeViaECB')
             ->setParameter(3, '0 2 * * *')

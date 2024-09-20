@@ -70,7 +70,7 @@ class V1Dot8Dot33 extends Base
                                 ->setValue('conditions_type', ':conditionsType')
                                 ->setValue('conditions', ':conditions')
                                 ->setValue('is_active', ':isActive')
-                                ->setParameter('id', Util::generateId())
+                                ->setParameter('id', Util::generateUniqueHash())
                                 ->setParameter('name', "Make field '{$field}' {$type}")
                                 ->setParameter('entityType', $entityType)
                                 ->setParameter('fields', json_encode([$field]))
