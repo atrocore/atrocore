@@ -583,6 +583,7 @@ class Util
 
     public static function generateUniqueHash(): string
     {
-        return uniqid(strtolower(chr(rand(65, 90)))) . substr(md5((string)rand()), 0, 3);
+        $id = uniqid(strtolower(chr(rand(65, 90)))) . substr(md5((string)rand()), 0, 3);
+        return str_replace('-', '_', $id);
     }
 }
