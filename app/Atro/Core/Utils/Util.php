@@ -578,7 +578,8 @@ class Util
 
     public static function generateId(): string
     {
-        return \Ramsey\Uuid\Uuid::uuid7()->toString();
+        $id = \Ramsey\Uuid\Uuid::uuid7()->toString();
+        return str_replace('-', '_', $id);
     }
 
     public static function generateUniqueHash(): string
