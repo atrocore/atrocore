@@ -93,6 +93,9 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                 model.set('viewType', this.type)
                 model.set('layoutProfileId', this.layoutProfileId)
 
+                // remove caches profiles on page start
+                delete Espo['link_LayoutProfile']
+
                 // create field views
                 this.createView('entity', 'views/layout/fields/entity', {
                     name: 'entity',
@@ -103,7 +106,8 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                         name: 'entity',
                     },
                     mode: 'edit',
-                    inlineEditDisabled: true
+                    inlineEditDisabled: true,
+                    prohibitedEmptyValue: true
                 });
 
                 this.createView('viewType', 'views/layout/fields/view-type', {
@@ -115,7 +119,8 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                         name: 'viewType'
                     },
                     mode: 'edit',
-                    inlineEditDisabled: true
+                    inlineEditDisabled: true,
+                    prohibitedEmptyValue: true
                 });
 
                 this.createView('layoutProfile', 'views/layout/fields/layout-profile-dropdown', {
@@ -127,7 +132,8 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                         name: 'layoutProfile',
                     },
                     mode: 'edit',
-                    inlineEditDisabled: true
+                    inlineEditDisabled: true,
+                    prohibitedEmptyValue: true
                 })
             })
         },
