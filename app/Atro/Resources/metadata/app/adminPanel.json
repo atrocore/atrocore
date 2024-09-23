@@ -202,5 +202,15 @@
         "description": "notificationTemplates"
       }
     ]
+  },
+  "tools": {
+    "label": "Tools",
+    "itemList": [
+      {
+        "url": "#Admin/apiRequest",
+        "label": "apiRequest",
+        "description": "apiRequest"
+      }
+    ]
   }
 }

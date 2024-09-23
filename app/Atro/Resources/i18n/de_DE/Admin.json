@@ -62,7 +62,11 @@
     "emailTemplates": "E-Mail-Vorlagen",
     "notificationTemplates": "Benachrichtigungsvorlagen",
     "notificationProfiles": "Benachrichtigungs-Profile",
-    "layoutProfiles": "Layoutprofile"
+    "layoutProfiles": "Layoutprofile",
+    "upsert": "Upsert",
+    "execute": "Ausführen",
+    "status": "Status",
+    "apiRequest": "API-Anfrag"
   },
   "logicalOperators": {
     "and": "UND",
@@ -124,6 +128,8 @@
     "markdown": "Markdown"
   },
   "fields": {
+    "request": "Request",
+    "response": "Antwort",
     "script": "Skript",
     "preview": "Vorschau",
     "outputType": "Ausgabetyp",
@@ -224,7 +230,8 @@
     "emailTemplates": "Verwalten Sie E-Mail-Vorlagen für den manuellen oder automatischen E-Mail-Versand (nicht für Standardbenachrichtigungen).",
     "notificationTemplates": "Verwalten Sie die Vorlage für die Standardmeldung des Systems.",
     "notificationProfiles": "Konfigurieren Sie Benachrichtigungsprofile und -regeln, um Ihren Alarmmanagementprozess effektiv zu optimieren, damit er zeitnah und relevant ist.",
-    "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an"
+    "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an",
+    "apiRequest": "Führen Sie API-Anfragen aus, indem Sie direkt einen JSON-Text liefern. Verwenden Sie diese Funktion, um schnell komplexe Datenstrukturen zu erstellen, wie z. B. konfigurierte Import- oder Export-Feeds."
 
   },
   "options": {

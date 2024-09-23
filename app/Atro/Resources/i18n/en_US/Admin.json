@@ -68,7 +68,11 @@
     "emailTemplates": "Email Templates",
     "notificationTemplates": "Notification Templates",
     "notificationProfiles": "Notification Profiles",
-    "layoutProfiles": "Layout Profiles"
+    "layoutProfiles": "Layout Profiles",
+    "upsert": "Upsert",
+    "execute": "Execute",
+    "status": "Status",
+    "apiRequest": "API request"
   },
   "layouts": {
     "relationships": "Relation panels",
@@ -129,6 +133,8 @@
     "markdown": "Markdown"
   },
   "fields": {
+    "request": "Request",
+    "response": "Response",
     "script": "Script",
     "preview": "Preview",
     "outputType": "Output Type",
@@ -242,7 +248,8 @@
     "emailTemplates": "Manage email templates for manual or automated email delivery (not for standard notifications).",
     "notificationTemplates": "Manage  template for standard notification of the system.",
     "notificationProfiles": "Configure Notification Profiles and Notification Rules to effectively streamline your alert management process so that it is timely and relevant.",
-    "layoutProfiles": "Manage and customize different layout configurations for the system's user interface"
+    "layoutProfiles": "Manage and customize different layout configurations for the system's user interface",
+    "apiRequest": "Use this feature to quickly create complex data structures such as configured import or export feeds."
   },
   "options": {
     "previewSize": {
