@@ -73,6 +73,10 @@ class ExtensibleEnumOption extends Base
                     ->orderBy('eeeeo.sorting', 'ASC')
                     ->fetchAllAssociative();
 
+                if (!isset($this->cachedOptions[$extensibleEnumId . '_sorting'])) {
+                    $this->cachedOptions[$extensibleEnumId . '_sorting'] = array_column($records, 'id');
+                }
+
                 foreach ($records as $item) {
                     $row = Util::arrayKeysToCamelCase($item);
                     $row['preparedName'] = !empty($row['multilingual']) ? $row[$this->getOptionName()] : $row['name'];
@@ -88,9 +92,13 @@ class ExtensibleEnumOption extends Base
         }
 
         if (count($res) > 1) {
-            usort($res, function ($option1, $option2) {
-                return ($option1['sorting'] < $option2['sorting']) ? -1 : 1;
-            });
+            if (isset($this->cachedOptions[$extensibleEnumId . '_sorting'])) {
+                $sorting = $this->cachedOptions[$extensibleEnumId . '_sorting'];
+
+                usort($res, function ($a, $b) use ($sorting) {
+                    return array_search($a['id'], $sorting) <=> array_search($b['id'], $sorting);
+                });
+            }
         }
         return $res;
     }
