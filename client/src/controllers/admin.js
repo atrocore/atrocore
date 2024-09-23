@@ -72,6 +72,12 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             this.main('views/admin/link-manager/index', {scope: scope});
         },
 
+        apiRequest: function (options) {
+            var scope = options.scope || null;
+
+            this.main('views/admin/api-request/index', {scope: scope});
+        },
+
         getSettingsModel: function () {
             var model = this.getConfig().clone();
             model.defs = this.getConfig().defs;
