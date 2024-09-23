@@ -395,7 +395,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.length && !fixedHeaderRow,
-                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall'].includes(this.layoutName)
+                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall'].includes(this.layoutName) &&
+                    this.getAcl().check('Layout', 'create')
             };
         },
 
@@ -1351,9 +1352,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.reRender()
             }
 
-            if(!this.hasSetupTourButton){
+            if (!this.hasSetupTourButton) {
                 this.setupTourButton();
-                this.hasSetupTourButton  = true
+                this.hasSetupTourButton = true
             }
         },
 
