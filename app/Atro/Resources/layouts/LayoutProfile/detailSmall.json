@@ -6,7 +6,9 @@
         {
           "name": "isActive"
         },
-        false
+        {
+          "name": "isDefault"
+        }
       ],
       [
         {

@@ -29,6 +29,7 @@
   },
   "labels": {
     "New panel": "New panel",
-    "Layout": "Layout"
+    "Layout": "Layout",
+    "resetToDefault": "Reset to Default Profile"
   }
 }

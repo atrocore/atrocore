@@ -69,7 +69,7 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     this.renderDefaultPage();
                 }
                 if (this.scope) {
-                    this.openLayout(this.options.scope, this.options.type, this.options.layoutProfileId);
+                    this.openLayout(this.scope, this.type, this.layoutProfileId);
                 }
                 this.listenTo(this.model, 'change:entity change:viewType change:layoutProfileId', () => {
                     console.log('update')
@@ -82,9 +82,9 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                 })
             });
 
-            this.scope = this.options.scope || null;
-            this.type = this.options.type || null;
-            this.layoutProfileId = this.options.layoutProfileId || null;
+            this.scope = this.options.scope || 'Account';
+            this.type = this.options.type || 'list';
+            this.layoutProfileId = this.options.layoutProfileId || 'custom';
 
             this.getModelFactory().create('Layout', (model) => {
                 this.model = model;

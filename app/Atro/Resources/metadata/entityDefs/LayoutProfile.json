@@ -11,6 +11,9 @@
     "isActive": {
       "type": "bool"
     },
+    "isDefault": {
+      "type": "bool"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
