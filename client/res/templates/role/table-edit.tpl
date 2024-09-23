@@ -22,10 +22,10 @@
                     </td>
 
                     {{#ifNotEqual type 'boolean'}}
-                        {{#each ../list}}
+                        {{#each list}}
                             <td>
                                 {{#if levelList}}
-                                <select name="{{name}}" class="form-control{{#ifNotEqual ../../../access 'enabled'}} hidden{{/ifNotEqual}}" data-scope="{{../../name}}"{{#ifNotEqual ../../access 'enabled'}} disabled{{/ifNotEqual}} title="{{translate action scope='Role' category='actions'}}">
+                                <select name="{{name}}" class="form-control{{#ifNotEqual ../access 'enabled'}} hidden{{/ifNotEqual}}" data-scope="{{../name}}"{{#ifNotEqual ../access 'enabled'}} disabled{{/ifNotEqual}} title="{{translate action scope='Role' category='actions'}}">
                                 {{options levelList level field='levelList' scope='Role'}}
                                 </select>
                                 {{/if}}

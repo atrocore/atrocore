@@ -41,7 +41,8 @@ Espo.define('views/record/panels/side', 'view', function (Dep) {
         data: function () {
             return {
                 fieldList: this.getFieldList(),
-                hiddenFields: this.recordHelper.getHiddenFields()
+                hiddenFields: this.recordHelper.getHiddenFields(),
+                scope: this.model.name
             };
         },
 

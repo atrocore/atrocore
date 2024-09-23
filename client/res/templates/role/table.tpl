@@ -22,10 +22,10 @@
                     </td>
 
                     {{#ifNotEqual type 'boolean'}}
-                        {{#each ../list}}
+                        {{#each list}}
                             <td>
-                                {{#ifNotEqual ../../access 'not-set'}}
-                                    <span style="color: {{prop ../../../../colors level}};">{{translateOption level field='levelList' scope='Role'}}</span>
+                                {{#ifNotEqual ../access 'not-set'}}
+                                    <span style="color: {{prop ../../colors level}};">{{translateOption level field='levelList' scope='Role'}}</span>
                                 {{/ifNotEqual}}
                             </td>
                         {{/each}}
