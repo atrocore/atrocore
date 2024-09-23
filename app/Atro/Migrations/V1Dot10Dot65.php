@@ -159,7 +159,7 @@ class V1Dot10Dot65 extends Base
                     if (file_exists($file)) {
                         $content = @json_decode(file_get_contents($file), true);
                         if (!empty($content)) {
-                            $id = Util::generateId();
+                            $id = Util::generateUniqueHash();
                             $this->getConnection()->createQueryBuilder()
                                 ->insert('layout')
                                 ->values([
@@ -216,7 +216,7 @@ class V1Dot10Dot65 extends Base
                 }
 
 
-                $qb->setParameters(array_merge($item, ['id' => Util::generateId(), 'sortOrder' => $index, 'layoutId' => $layoutId]))
+                $qb->setParameters(array_merge($item, ['id' => Util::generateUniqueHash(), 'sortOrder' => $index, 'layoutId' => $layoutId]))
                     ->executeStatement();
             } catch (\Throwable $e) {
             }
@@ -258,7 +258,7 @@ class V1Dot10Dot65 extends Base
                     $qb->setValue('is_large', ':isLarge');
                 }
 
-                $qb->setParameters(array_merge($item, ['id' => Util::generateId(), 'sortOrder' => $index, 'layoutId' => $layoutId]))
+                $qb->setParameters(array_merge($item, ['id' => Util::generateUniqueHash(), 'sortOrder' => $index, 'layoutId' => $layoutId]))
                     ->executeStatement();
             } catch (\Throwable $e) {
             }
@@ -270,7 +270,7 @@ class V1Dot10Dot65 extends Base
     {
         foreach ($data as $index => $item) {
             try {
-                $id = Util::generateId();
+                $id = Util::generateUniqueHash();
                 $qb = $this->getConnection()->createQueryBuilder()
                     ->insert('layout_section')
                     ->values([
@@ -309,7 +309,7 @@ class V1Dot10Dot65 extends Base
                                 $qb->setValue('full_width', ':fullWidth');
                             }
                             $params = [
-                                'id'          => Util::generateId(),
+                                'id'          => Util::generateUniqueHash(),
                                 'sectionId'   => $id,
                                 'rowIndex'    => $rowIndex,
                                 'columnIndex' => $columnIndex,
@@ -351,7 +351,7 @@ class V1Dot10Dot65 extends Base
                 }
 
 
-                $qb->setParameters(array_merge($item, ['id' => Util::generateId(), 'sortOrder' => $index, 'layoutId' => $layoutId]))
+                $qb->setParameters(array_merge($item, ['id' => Util::generateUniqueHash(), 'sortOrder' => $index, 'layoutId' => $layoutId]))
                     ->executeStatement();
             } catch (\Throwable $e) {
             }
@@ -384,7 +384,7 @@ class V1Dot10Dot65 extends Base
                 }
 
 
-                $qb->setParameters(array_merge($item, ['id' => Util::generateId(), 'name' => $key, 'sortOrder' => $index, 'layoutId' => $layoutId]))
+                $qb->setParameters(array_merge($item, ['id' => Util::generateUniqueHash(), 'name' => $key, 'sortOrder' => $index, 'layoutId' => $layoutId]))
                     ->executeStatement();
                 $index++;
             } catch (\Throwable $e) {

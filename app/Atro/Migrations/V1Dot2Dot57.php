@@ -40,11 +40,11 @@ class V1Dot2Dot57 extends V1Dot2Dot56
         $configData = include "data/config.php";
         if (!empty($configData['unitsOfMeasure'])) {
             foreach ($configData['unitsOfMeasure'] as $name => $records) {
-                $id = Util::generateId();
+                $id = Util::generateUniqueHash();
                 $this->execute("INSERT INTO `measure` (id, name) VALUES ('$id', '$name')");
                 if (!empty($records->unitList)) {
                     foreach ($records->unitList as $item) {
-                        $this->execute("INSERT INTO `unit` (id, name, measure_id) VALUES ('" . Util::generateId() . "', '$item', '$id')");
+                        $this->execute("INSERT INTO `unit` (id, name, measure_id) VALUES ('" . Util::generateUniqueHash() . "', '$item', '$id')");
                     }
                 }
             }

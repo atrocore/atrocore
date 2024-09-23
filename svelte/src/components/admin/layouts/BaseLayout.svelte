@@ -4,6 +4,7 @@
     import type {Button, Params} from './Interfaces';
     import {Notifier} from "../../../utils/Notifier";
     import {LayoutManager} from "../../../utils/LayoutManager";
+    import {Language} from "../../../utils/Language";
 
     export let params: Params;
     export let fetch: any
@@ -19,10 +20,20 @@
     }
 
     let buttonList: Button[] = [
-        {name: 'save', label: 'Save', style: 'primary'},
-        {name: 'cancel', label: 'Cancel'},
-        {name: 'resetToDefault', label: 'Reset to Default'}
+        {name: 'save', label: Language.translate('Save', 'labels'), style: 'primary'},
+        {name: 'cancel', label: Language.translate('Cancel', 'labels')},
+        {name: 'resetToDefault', label: Language.translate('resetToDefault', 'labels', 'LayoutManager')}
     ];
+
+    const profiles = Espo['link_LayoutProfile']
+    if (profiles) {
+        for (const profile of profiles) {
+            if (profile.id === params.layoutProfileId && profile.isDefault) {
+                buttonList.splice(2, 1);
+            }
+        }
+    }
+
 
     onMount(() => {
         Notifier.notify('Loading...')

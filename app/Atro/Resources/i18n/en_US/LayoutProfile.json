@@ -1,6 +1,7 @@
 {
   "fields": {
     "isActive": "Active",
+    "isDefault": "Default",
     "description": "Description"
   },
   "links": {
@@ -8,5 +9,8 @@
   },
   "labels": {
     "Create LayoutProfile": "Create Layout Profile"
+  },
+  "exceptions": {
+    "defaultIsRequired": "A default layout profile should exists in the system"
   }
 }

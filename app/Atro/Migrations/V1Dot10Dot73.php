@@ -22,31 +22,43 @@ class V1Dot10Dot73 extends Base
 
     public function up(): void
     {
-        $this->exec("ALTER TABLE preferences ALTER id TYPE VARCHAR(36)");
-        $this->exec("ALTER TABLE user_followed_record ALTER entity_id TYPE VARCHAR(36)");
-        $this->exec("ALTER TABLE user_followed_record ALTER user_id TYPE VARCHAR(36)");
-        $this->exec("ALTER TABLE entity_team ALTER entity_id TYPE VARCHAR(36)");
-
         if ($this->isPgSQL()) {
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('table_name, column_name')
                 ->from('information_schema.columns')
                 ->where("data_type='character varying' AND character_maximum_length=24")
                 ->fetchAllAssociative();
+            foreach ($res as $row) {
+                $this->exec("ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['table_name']) . " ALTER {$row['column_name']} TYPE VARCHAR(36)");
+            }
+
+            $this->exec("ALTER TABLE import_job_log ALTER entity_id TYPE VARCHAR(36)");
         } else {
+            $this->exec("ALTER TABLE classification_attribute CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
+            $this->exec("ALTER TABLE product_attribute_value CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
+            $this->exec("ALTER TABLE product_file CHANGE channel_id channel_id VARCHAR(36) DEFAULT '' NOT NULL");
+
+            $this->exec("ALTER TABLE import_job_log CHANGE entity_id entity_id VARCHAR(36) DEFAULT NULL");
+
             $dbName = $this->getConfig()->get('database')['dbname'];
             $res = $this->getConnection()->createQueryBuilder()
-                ->select('table_name, column_name')
-                ->from('nformation_schema.columns')
+                ->select('table_name, column_name, is_nullable')
+                ->from('information_schema.columns')
                 ->where("data_type='varchar' AND character_maximum_length=24 AND table_schema='$dbName'")
                 ->fetchAllAssociative();
+
+            foreach ($res as $row) {
+                $sql = "ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['TABLE_NAME']) . " CHANGE {$row['COLUMN_NAME']} {$row['COLUMN_NAME']} VARCHAR(36)";
+                if ($row['IS_NULLABLE'] === 'YES') {
+                    $sql .= " DEFAULT NULL";
+                } else {
+                    $sql .= " NOT NULL";
+                }
+                $this->exec($sql);
+            }
         }
 
-        foreach ($res as $row) {
-            $this->exec("ALTER TABLE " . $this->getConnection()->quoteIdentifier($row['table_name']) . " ALTER {$row['column_name']} TYPE VARCHAR(36)");
-        }
-
-        $this->updateComposer('atrocore/core', '^1.10.72');
+        $this->updateComposer('atrocore/core', '^1.10.73');
     }
 
     public function down(): void
