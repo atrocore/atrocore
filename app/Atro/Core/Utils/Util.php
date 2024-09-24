@@ -588,7 +588,7 @@ class Util
         $bytes = str_pad($uuid->getBytes(), 20, "\x00", STR_PAD_LEFT);
         $encoded = $crockford->encode($bytes);
 
-        return 'a' . substr($encoded, 6);
+        return strtolower('a' . substr($encoded, 6));
     }
 
     public static function generateUniqueHash(): string
