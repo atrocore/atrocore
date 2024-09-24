@@ -7,7 +7,8 @@
     "onlyActive"
   ],
   "recordViews": {
-    "detail": "views/layout-profile/record/detail"
+    "detail": "views/layout-profile/record/detail",
+    "edit": "views/layout-profile/record/edit"
   },
   "relationshipPanels": {
     "layouts": {
