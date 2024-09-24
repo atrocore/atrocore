@@ -14,7 +14,7 @@
 		<span class="record-checkbox-container">
 			<input type="checkbox" class="record-checkbox" data-id="{{model.id}}">
 		</span>
-		<a href="#{{model.name}}/view/{{model.id}}" class="link" data-id="{{model.id}}" title="{{model.attributes.name}}">{{model.attributes.name}}</a>
+		<a href="#{{scope}}/view/{{model.id}}" class="link" data-id="{{model.id}}" title="{{model.attributes.name}}">{{model.attributes.name}}</a>
 	</div>
 </div>
 
