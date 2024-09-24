@@ -25,7 +25,7 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
 
         actionLayouts: function () {
             this.getRouter().navigate('#Admin/layouts?layoutProfileId=' + this.model.get('id'), {trigger: true});
-        },
+        }
     });
 });
 
