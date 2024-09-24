@@ -578,8 +578,17 @@ class Util
 
     public static function generateId(): string
     {
-        $id = \Ramsey\Uuid\Uuid::uuid7()->toString();
-        return str_replace('-', '_', $id);
+        $crockford = new \Tuupola\Base32([
+            'characters' => \Tuupola\Base32::CROCKFORD,
+            'padding'    => false,
+            'crockford'  => true,
+        ]);
+
+        $uuid = \Ramsey\Uuid\Uuid::uuid7();
+        $bytes = str_pad($uuid->getBytes(), 20, "\x00", STR_PAD_LEFT);
+        $encoded = $crockford->encode($bytes);
+
+        return 'a' . substr($encoded, 6);
     }
 
     public static function generateUniqueHash(): string
