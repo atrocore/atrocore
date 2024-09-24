@@ -34,6 +34,7 @@ Espo.define('views/file/record/plate-item', 'view',
                 extension: this.model.get('extension'),
                 name: this.model.get('name'),
                 type: this.model.get('typeName'),
+                scope: this.model.name,
             };
         }
 
