@@ -180,15 +180,18 @@
 
         <div class="row">
             {{#each fields}}
-            {{#each this}}
-            <div class="cell form-group col-md-6" data-name="{{this}}">
-                <label class="control-label"
-                       data-name="{{this}}">{{translate this category='fields' scope='EntityManager'}}</label>
-                <div class="field" data-name="{{this}}">
-                    {{{var this ./../../..}}}
-                </div>
-            </div>
-            {{/each}}
+                {{#each this}}
+                    <div class="cell form-group col-md-6" data-name="{{this}}">
+                        <label class="control-label" data-name="{{this}}">{{translate this category='fields' scope='EntityManager'}}</label>
+                        <div class="field" data-name="{{this}}">
+                            {{#ifNotEqual fields.length 1 }}
+                                {{{var this ./../../..}}}
+                            {{else}}
+                                {{{this}}}
+                            {{/ifNotEqual}}
+                        </div>
+                    </div>
+                {{/each}}
             {{/each}}
         </div>
     </div>
