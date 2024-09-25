@@ -7,8 +7,7 @@
     "onlyActive"
   ],
   "recordViews": {
-    "detail": "views/layout-profile/record/detail",
-    "edit": "views/layout-profile/record/edit"
+    "detail": "views/layout-profile/record/detail"
   },
   "relationshipPanels": {
     "layouts": {
@@ -17,5 +16,14 @@
       "hideShowFullList": true,
       "rowActionsView": "views/record/row-actions/edit-and-remove"
     }
-  }
+  },
+  "confirm": {
+    "isDefault": {
+      "values": [
+        true
+      ],
+      "message": "LayoutProfile.messages.profileWillBeNewDefault"
+    }
+  },
+  "listViewCacheDisabled": true
 }

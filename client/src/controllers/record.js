@@ -86,9 +86,11 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
             if (this.getRouter().backProcessed) {
                 isReturn = true;
             }
+            if (this.getMetadata().get('clientDefs', this.name, 'listViewCacheDisabled')) {
+                isReturn = false;
+            }
 
             var key = this.name + 'List';
-
             if (!isReturn) {
                 var stored = this.getStoredMainView(key);
                 if (stored) {

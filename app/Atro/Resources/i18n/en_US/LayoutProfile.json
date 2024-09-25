@@ -14,6 +14,6 @@
     "defaultIsRequired": "A default layout profile should exist in the system"
   },
   "messages": {
-    "profileWillNewDefault": "This profile will be the new default, are you sure ?"
+    "profileWillBeNewDefault": "This profile will be the new default, are you sure ?"
   }
 }
