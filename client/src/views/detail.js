@@ -320,7 +320,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.notify('Loading...');
             this.createView('dialog', viewName, {
                 scope: scope,
-                multiple: true,
+                multiple: data.multiple ?? true,
                 createButton: false,
                 listLayout:  data.listLayout,
                 filters: filters,
