@@ -185,7 +185,7 @@
                 <label class="control-label"
                        data-name="{{this}}">{{translate this category='fields' scope='EntityManager'}}</label>
                 <div class="field" data-name="{{this}}">
-                    {{{var this ./../../..}}}
+                    {{{var this @root}}}
                 </div>
             </div>
             {{/each}}
