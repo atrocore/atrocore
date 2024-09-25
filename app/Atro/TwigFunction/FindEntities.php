@@ -26,12 +26,12 @@ class FindEntities extends AbstractTwigFunction
         $this->entityManager = $entityManager;
     }
 
-    public function run(string $entityName, array $where = [], string $orderField = 'id', string $orderDirection = 'ASC', int $offset = 0, int $limit = \PHP_INT_MAX): EntityCollection
+    public function run(string $entityName, array $where = [], string $orderField = 'id', string $orderDirection = 'ASC', int $offset = 0, int $limit = \PHP_INT_MAX, bool $withDeleted = false): EntityCollection
     {
         return $this->entityManager->getRepository($entityName)
             ->where($where)
             ->order($orderField, $orderDirection)
             ->limit($offset, $limit)
-            ->find();
+            ->find(['withDeleted' => $withDeleted]);
     }
 }
