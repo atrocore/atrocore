@@ -20,9 +20,9 @@
                 </div>
                 {{#each paramList}}
                     {{#unless hidden}}
-                    <div class="cell form-group" data-name="{{../name}}">
-                        <label class="control-label" data-name="{{../name}}">{{translate ../name scope='Admin' category='fields'}}</label>
-                        <div class="field" data-name="{{../name}}">{{{var ../name ../../this}}}</div>
+                    <div class="cell form-group" data-name="{{name}}">
+                        <label class="control-label" data-name="{{name}}">{{translate name scope='Admin' category='fields'}}</label>
+                        <div class="field" data-name="{{name}}">{{{var name @root}}}</div>
                     </div>
                     {{/unless}}
                 {{/each}}

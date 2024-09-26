@@ -20,10 +20,10 @@
     {{#each fieldDefsArray}}
     <tr>
         {{#if emDisabled}}
-        <td><span class="field-link" data-scope="{{../../scope}}" data-field="{{name}}">{{name}}</td>
+        <td><span class="field-link" data-scope="{{../scope}}" data-field="{{name}}">{{name}}</td>
         {{/if}}
         {{#unless emDisabled}}
-        <td><a href="#Admin/fieldManager/scope={{../../scope}}&field={{name}}" class="field-link" data-scope="{{../../scope}}" data-field="{{name}}">{{name}}</td>
+        <td><a href="#Admin/fieldManager/scope={{../scope}}&field={{name}}" class="field-link" data-scope="{{../scope}}" data-field="{{name}}">{{name}}</td>
         {{/unless}}
         <td>{{label}}</td>
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
