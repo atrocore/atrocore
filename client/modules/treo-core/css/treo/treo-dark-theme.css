@@ -22194,6 +22194,11 @@ code.became, span.became {
     overflow-x: auto;
 }
 
+td .file-link{
+    word-break: break-all;
+    white-space: unset;
+}
+
 .attachment-preview ~ .file-link {
     padding-top: 5px;
 }
