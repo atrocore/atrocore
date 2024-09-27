@@ -15,11 +15,11 @@ use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 
-class V1Dot10Dot74 extends Base
+class V1Dot11Dot3 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-09-23 08:00:00');
+        return new \DateTime('2024-09-27 16:00:00');
     }
 
     public function up(): void
@@ -31,6 +31,12 @@ class V1Dot10Dot74 extends Base
         }
 
         try {
+            $this->getConnection()->createQueryBuilder()
+                ->update('layout_profile')
+                ->set('is_default', ':false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->executeStatement();
+
             $this->getConnection()->createQueryBuilder()
                 ->update('layout_profile')
                 ->set('is_default', ':true')
