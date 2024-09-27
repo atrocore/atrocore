@@ -264,12 +264,13 @@ class Application
     {
         // prepare request
         $request = $this->getSlim()->request();
+        $response = $this->getSlim()->response();
 
         // prepare action
         $action = str_replace("/api/v1/Installer/", "", $request->getPathInfo());
 
         try {
-            $result = $this->getContainer()->get('controllerManager')->process('Installer', $action, [], $request->getBody(), $request);
+            $result = $this->getContainer()->get('controllerManager')->process('Installer', $action, [], $request->getBody(), $request, $response);
         } catch (\Throwable $e) {
             header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
             exit;
