@@ -17,6 +17,8 @@ use Atro\Core\Application;
 use Atro\Core\Monolog\Handler\ReportingHandler;
 use Atro\Core\QueueManager;
 use Atro\Core\Utils\Util;
+use Atro\Services\QueueManagerBase;
+use Espo\Core\DataManager;
 use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 
@@ -109,6 +111,9 @@ class Cron extends AbstractConsole
         // find and close queue item that doe not running
         $this->closeFailedQueueItems();
 
+        // delete message from publicData if such job doesn't exist
+        $this->clearEntityMessages();
+
         // send reports
         $this->sendReports();
 
@@ -125,6 +130,37 @@ class Cron extends AbstractConsole
         $auth->useNoAuth();
 
         $this->getContainer()->get('cronManager')->run();
+    }
+
+    public function clearEntityMessages(): void
+    {
+        $items = DataManager::getPublicData('entityMessage');
+        if (!empty($items) && is_array($items)) {
+            foreach ($items as $entityName => $item) {
+                if (!isset($item['message'])) {
+                    continue;
+                }
+
+                if (empty($item['qmId'])) {
+                    QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
+                    continue;
+                }
+
+                $job = $this->getEntityManager()->getEntity('QueueItem', $item['qmId']);
+                if (empty($job)) {
+                    QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
+                    continue;
+                }
+
+                switch ($job->get('status')) {
+                    case 'Success':
+                    case 'Failed':
+                    case 'Canceled':
+                        QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
+                        break;
+                }
+            }
+        }
     }
 
     public function sendReports(): void

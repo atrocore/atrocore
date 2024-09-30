@@ -158,6 +158,9 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                     }
 
                     let params = {};
+                    if (fieldDefs[field].extensibleEnumId) {
+                        params.extensibleEnumId = fieldDefs[field].extensibleEnumId
+                    }
                     if (('typeValue' in data) && ('typeValueIds' in data)) {
                         params.options = data.typeValueIds[field];
                         params.translatedOptions = {};

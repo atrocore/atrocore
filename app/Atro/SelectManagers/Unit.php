@@ -17,14 +17,6 @@ use Espo\Core\SelectManagers\Base;
 
 class Unit extends Base
 {
-    protected function boolFilterNotEntity(array &$result)
-    {
-        if (!empty($id = $this->getBoolFilterParameter('notEntity'))) {
-            $result['whereClause'][] = [
-                'id!=' => $id
-            ];
-        }
-    }
 
     protected function boolFilterFromMeasure(array &$result)
     {
