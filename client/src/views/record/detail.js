@@ -2443,7 +2443,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 if (data.list && data.list.length) {
                     let item = data.list[0];
-                    let configurations = [];
+                    let configurations = [{
+                        entity: this.scope,
+                        payload: item
+                    }];
+
                     linksFields.forEach((link) => {
                         let linkData = item[link];
                         delete item[link];
@@ -2477,11 +2481,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         }
                     });
 
-                    configurations.push({
-                        entity: this.scope,
-                        payload: item
-                    });
-
                     this.copyToClipboard(JSON.stringify(configurations), (copied) => {
                         if (copied) {
                             this.notify(this.translate('Done'), 'success');
@@ -2494,5 +2493,4 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             })
         },
     });
-
 });
