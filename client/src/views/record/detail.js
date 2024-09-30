@@ -2464,7 +2464,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         if (linkDefs['type'] === 'belongsTo') {
                             cleanseItem(linkData);
-                            configurations.push({
+                            configurations.unshift({
                                 entity: linkDefs['entity'],
                                 payload: linkData
                             });
