@@ -18,15 +18,6 @@ use Espo\Core\SelectManagers\Base;
 
 class Connection extends Base
 {
-    protected function boolFilterNotEntity(array &$result)
-    {
-        if (!empty($id = $this->getBoolFilterParameter('notEntity'))) {
-            $result['whereClause'][] = [
-                'id!=' => $id
-            ];
-        }
-    }
-
     protected function boolFilterConnectionType(array &$result)
     {
         if (!empty($type = $this->getBoolFilterParameter('connectionType'))) {
