@@ -1759,7 +1759,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.getMetadata().get(['scopes', this.scope, 'addRelationEnabled']) !== false) {
                 let scope = this.getMetadata().get(['scopes', this.scope]);
 
-                if (scope.type && scope.type !== 'Relation' && scope.entity === true && scope.customizable !== false) {
+                if (scope && scope.type && scope.type !== 'Relation' && scope.entity === true && scope.customizable !== false) {
                     result = true;
                 }
             }
