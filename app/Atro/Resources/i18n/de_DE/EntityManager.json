@@ -36,7 +36,7 @@
     "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
     "disabled": "Inaktiv",
     "textFilterFields": "Textfilter Felder",
-    "streamDisabled": "Deaktiviert Änderungen verfolgen",
+    "streamDisabled": "Änderungsverfolgung deaktivieren",
     "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
     "color": "Farbe",
     "kanbanViewMode": "Kanban-Ansicht",
