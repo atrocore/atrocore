@@ -26,6 +26,9 @@ class ScheduledJob extends AbstractConsole
             exit(1);
         }
 
+        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
+        $auth->useNoAuth();
+
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 
