@@ -696,13 +696,8 @@ class Hierarchy extends RDB
             }
 
             if (empty($parentId)) {
-
-                $qb->andWhere(
-                    $expr->notIn(
-                        "$tableAlias.id",
-                        "SELECT entity_id FROM $quotedHierarchyTableName qh" . (!$withDeleted ? " WHERE qh.deleted = :deleted" : "")
-                    )
-                )
+                $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'qh', "qh.entity_id = $tableAlias.id" . (!$withDeleted ? " AND qh.deleted = :deleted" : ""))
+                    ->andWhere('qh.entity_id is null')
                     ->orderBy("$tableAlias.sort_order")
                     ->addOrderBy("$tableAlias.$sortBy", $sortOrder)
                     ->addOrderBy("$tableAlias.id");
@@ -737,12 +732,8 @@ class Hierarchy extends RDB
             $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
             if (empty($parentId)) {
-                $qb->andWhere(
-                    $expr->notIn(
-                        "$tableAlias.id",
-                        "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
-                    )
-                );
+                $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'qh', "qh.entity_id = $tableAlias.id" . (!$withDeleted ? " AND qh.deleted = :deleted" : ""))
+                    ->andWhere('qh.entity_id is null');
             } else {
                 $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
                     ->andWhere('h.parent_id = :parentId')
