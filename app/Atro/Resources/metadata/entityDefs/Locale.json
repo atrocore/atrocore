@@ -10,15 +10,8 @@
       "type": "text"
     },
     "language": {
-      "type": "enum",
-      "prohibitedEmptyValue": true,
-      "required": true,
-      "options": [
-        "en_US"
-      ],
-      "default": "en_US",
-      "view": "views/settings/fields/language",
-      "isSorted": true
+      "type": "link",
+      "required": true
     },
     "decimalMark": {
       "type": "varchar",
@@ -954,6 +947,10 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "language": {
+      "type": "belongsTo",
+      "entity": "Language"
     }
   },
   "collection": {
