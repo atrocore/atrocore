@@ -74,6 +74,8 @@ class Metadata extends AbstractListener
 
         $this->addNotificationRulesToCache($data);
 
+        $data['multilang']['languageList'] = $data['entityDefs']['Language']['fields']['isoCode']['options'];
+
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
 
