@@ -1,0 +1,27 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isoCode"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "fallbackLanguage"
+        },
+        false
+      ]
+    ]
+  }
+]
