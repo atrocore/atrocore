@@ -72,7 +72,7 @@ class Translation extends Base
             return;
         }
 
-        $this->getInjection('language')->reload();
+        $this->getInjection('language')->clearCache();
 
         $this->getConfig()->set('cacheTimestamp', time());
         $this->getConfig()->save();

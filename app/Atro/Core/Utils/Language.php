@@ -22,6 +22,12 @@ class Language extends \Espo\Core\Utils\Language
         parent::__construct($container, $currentLanguage);
     }
 
+    public function clearCache(): void
+    {
+        $this->reload();
+        $this->getDataManager()->setCacheData($this->getLanguage(), null);
+    }
+
     protected function getData()
     {
         $currentLanguage = $this->getLanguage();
