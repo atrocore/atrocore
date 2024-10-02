@@ -13,37 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\DataManager;
 use Atro\Core\Templates\Repositories\Base;
+use Espo\Core\DataManager;
 use Espo\ORM\Entity;
 
-class Translation extends Base
+class Language extends Base
 {
-    /**
-     * @inheritDoc
-     *
-     * @throws BadRequest
-     */
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if ($entity->isNew()) {
-            $exist = $this->select(['id'])->where(['name' => $entity->get('name')])->findOne();
-            if (!empty($exist)) {
-                throw new BadRequest($this->getInjection('language')->translate('suchKeyAlreadyExist', 'exceptions', 'Translation'));
-            }
-        }
-
-        if ($entity->get('module') === 'custom' && !$entity->isNew() && !$entity->get('isCustomized')) {
-            $entity->set('isCustomized', true);
-        }
-
-        parent::beforeSave($entity, $options);
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
@@ -51,9 +26,6 @@ class Translation extends Base
         $this->refreshTimestamp($options);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -74,9 +46,6 @@ class Translation extends Base
         DataManager::pushPublicData('dataTimestamp', time());
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function init()
     {
         parent::init();
