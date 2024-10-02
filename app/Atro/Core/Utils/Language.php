@@ -25,7 +25,12 @@ class Language extends \Espo\Core\Utils\Language
     public function clearCache(): void
     {
         $this->reload();
-        $this->getDataManager()->setCacheData($this->getLanguage(), null);
+        foreach ($this->getMetadata()->get('multilang.languageList', []) as $language) {
+            $cacheFile = "data/cache/{$language}.json";
+            if (file_exists($cacheFile)) {
+                @unlink($cacheFile);
+            }
+        }
     }
 
     protected function getData()
