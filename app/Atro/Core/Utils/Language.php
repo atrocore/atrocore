@@ -49,10 +49,10 @@ class Language extends \Espo\Core\Utils\Language
 
             $fallbackLanguage = $this->getMetadata()->get(['multilang', 'fallbackLanguage', $currentLanguage]);
             if ($fallbackLanguage) {
-                $data = \Espo\Core\Utils\Util::merge($data, $this->data[$fallbackLanguage] ?? []);
+                $data = Util::merge($data, $this->data[$fallbackLanguage] ?? []);
             }
 
-            $data = \Espo\Core\Utils\Util::merge($data, $this->data[$currentLanguage] ?? []);
+            $data = Util::merge($data, $this->data[$currentLanguage] ?? []);
 
             $this->getDataManager()->setCacheData($currentLanguage, $data);
         }
