@@ -12,6 +12,8 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 
 class Language extends \Espo\Core\Utils\Language
 {
@@ -47,7 +49,19 @@ class Language extends \Espo\Core\Utils\Language
         if (empty($data = $this->getDataManager()->getCacheData($currentLanguage))) {
             $data = $this->data[self::DEFAULT_LANGUAGE];
 
-            $fallbackLanguage = $this->getMetadata()->get(['multilang', 'fallbackLanguage', $currentLanguage]);
+            /** @var Connection $conn */
+            $conn = $this->container->get('connection');
+
+            /** @var ?string $fallbackLanguage */
+            $fallbackLanguage = $conn->createQueryBuilder()
+                ->select('fallback_language')
+                ->from('language')
+                ->where('iso_code=:code')
+                ->andWhere('deleted=:false')
+                ->setParameter('code', $currentLanguage)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchOne();
+
             if ($fallbackLanguage) {
                 $data = Util::merge($data, $this->data[$fallbackLanguage] ?? []);
             }
