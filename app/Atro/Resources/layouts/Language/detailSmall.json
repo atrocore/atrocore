@@ -12,15 +12,15 @@
       ],
       [
         {
-          "name": "description",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
           "name": "fallbackLanguage"
         },
         false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
       ]
     ]
   }
