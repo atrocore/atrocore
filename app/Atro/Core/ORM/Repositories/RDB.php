@@ -627,7 +627,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterSave($entity, $options);
 
-        if (!$this->processFieldsAfterSaveDisabled) {
+        if (!$this->processFieldsAfterSaveDisabled && empty($options['skipProcessFieldsAfterSave'])) {
             $this->processSpecifiedRelationsSave($entity, $options);
             if (empty($entity->skipProcessFileFieldsSave)) {
                 $this->processFileFieldsSave($entity);
