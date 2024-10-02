@@ -131,6 +131,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 canSelect = false
             }
 
+            let forbiddenFieldsList = this.getAcl().getScopeForbiddenFieldList(this.model.urlRoot, 'edit');
+            if (Array.isArray(forbiddenFieldsList) && forbiddenFieldsList.length) {
+                if (forbiddenFieldsList.includes(this.link)) {
+                    canUnlink = false;
+                    canSelect = false;
+                }
+            }
+
             if (!canUnlink) {
                 this.rowActionsView = 'views/record/row-actions/relationship-no-unlink';
             }

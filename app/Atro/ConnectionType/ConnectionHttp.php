@@ -27,7 +27,7 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
         if (!empty($body)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($headers, $this->getHeaders()));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array_values(array_unique(array_merge($headers, $this->getHeaders()))));
         $output = curl_exec($ch);
         if ($output === false) {
             throw new BadRequest('Curl error: ' . curl_error($ch));
