@@ -5,7 +5,7 @@
       "required": true,
       "trim": true
     },
-    "isoCode": {
+    "code": {
       "type": "enum",
       "required": true,
       "unique": true,
