@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Language": "Language",
     "EmailTemplate": "Email Template",
     "Storage": "Storage",
     "Folder": "Folder",
@@ -60,6 +61,7 @@
     "NotificationRule": "Notification Rule"
   },
   "scopeNamesPlural": {
+    "Language": "Languages",
     "EmailTemplate": "Email Templates",
     "Storage": "Storages",
     "Folder": "Folders",

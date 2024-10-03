@@ -169,7 +169,8 @@
       "options": [
         "main",
         "additional"
-      ]
+      ],
+      "tooltip": true
     },
     "description": {
       "type": "text"

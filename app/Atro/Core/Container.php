@@ -49,6 +49,7 @@ class Container
             'controllerManager'        => \Atro\Core\ControllerManager::class,
             'slim'                     => \Atro\Core\Slim\Slim::class,
             'language'                 => \Atro\Core\Utils\Language::class,
+            'config'                   => \Atro\Core\Utils\Config::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
@@ -80,7 +81,7 @@ class Container
             'dataManager'              => \Espo\Core\Factories\DataManager::class,
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
-            'config'                   => \Espo\Core\Utils\Config::class,
+
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class
         ];
 

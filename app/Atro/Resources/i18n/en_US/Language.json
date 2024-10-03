@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "fallbackLanguage": "Fallback Language",
+    "contentUsage": "Content Usage"
+  },
+  "options": {
+    "contentUsage": {
+      "main": "Main Language",
+      "additional": "Additional Language"
+    }
+  },
+  "tooltips": {
+    "contentUsage": "Select Main Language if you want this language to be the main language for your content. Additional Language should be used for languages to be translated into. Leave this option blank if this language is not relevant to the content."
+  }
+}
