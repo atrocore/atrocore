@@ -69,11 +69,6 @@
       },
       {
         "url": "#Language",
-        "label": "Language",
-        "description": "language"
-      },
-      {
-        "url": "#Settings/inputLanguage",
         "label": "multiLanguages",
         "description": "multiLanguagesSettings"
       },
