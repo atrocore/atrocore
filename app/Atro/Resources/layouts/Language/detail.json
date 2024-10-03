@@ -12,9 +12,11 @@
       ],
       [
         {
-          "name": "fallbackLanguage"
+          "name": "contentUsage"
         },
-        false
+        {
+          "name": "fallbackLanguage"
+        }
       ],
       [
         {

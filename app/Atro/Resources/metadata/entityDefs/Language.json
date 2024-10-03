@@ -164,6 +164,13 @@
         "uk_UA"
       ]
     },
+    "contentUsage": {
+      "type": "enum",
+      "options": [
+        "main",
+        "additional"
+      ]
+    },
     "description": {
       "type": "text"
     },

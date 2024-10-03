@@ -7,6 +7,9 @@
     "name": "code"
   },
   {
+    "name": "contentUsage"
+  },
+  {
     "name": "fallbackLanguage"
   }
 ]
