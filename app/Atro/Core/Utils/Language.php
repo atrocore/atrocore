@@ -12,8 +12,6 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 
 class Language extends \Espo\Core\Utils\Language
 {
