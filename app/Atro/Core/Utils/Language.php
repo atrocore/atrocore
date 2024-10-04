@@ -49,21 +49,9 @@ class Language extends \Espo\Core\Utils\Language
         if (empty($data = $this->getDataManager()->getCacheData($currentLanguage))) {
             $data = $this->data[self::DEFAULT_LANGUAGE];
 
-            /** @var Connection $conn */
-            $conn = $this->container->get('connection');
-
-            /** @var ?string $fallbackLanguage */
-            $fallbackLanguage = $conn->createQueryBuilder()
-                ->select('fallback_language')
-                ->from('language')
-                ->where('code=:code')
-                ->andWhere('deleted=:false')
-                ->setParameter('code', $currentLanguage)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->fetchOne();
-
-            if (!empty($fallbackLanguage)) {
-                $data = Util::merge($data, $this->data[$fallbackLanguage] ?? []);
+            $fallbackLanguage = $this->getConfig()->get('fallbackLanguage') ?? [];
+            if (!empty($fallbackLanguage[$currentLanguage])) {
+                $data = Util::merge($data, $this->data[$fallbackLanguage[$currentLanguage]] ?? []);
             }
 
             $data = Util::merge($data, $this->data[$currentLanguage] ?? []);

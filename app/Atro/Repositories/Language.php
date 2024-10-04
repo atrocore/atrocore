@@ -24,31 +24,32 @@ class Language extends Base
     {
         parent::afterSave($entity, $options);
 
-        $this->refreshCache($options);
+        $this->refreshCache();
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        $this->refreshCache($options);
+        $this->refreshCache();
     }
 
-    protected function refreshCache(array $options): void
+    protected function refreshCache(): void
     {
-        if (!empty($options['keepCache'])) {
-            return;
-        }
-
         $records = $this->getConnection()->createQueryBuilder()
-            ->select('id, code, content_usage')
+            ->select('id, code, content_usage, fallback_language')
             ->from('language')
             ->where('deleted=:false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
+        $fallback = [];
         $inputLanguageList = [];
+
         foreach ($records as $record) {
+            if (!empty($record['fallback_language'])) {
+                $fallback[$record['code']] = $record['fallback_language'];
+            }
             if ($record['content_usage'] === 'main') {
                 $this->getConfig()->set('mainLanguage', $record['code']);
             }
@@ -61,6 +62,7 @@ class Language extends Base
 
         $this->getConfig()->set('isMultilangActive', !empty($inputLanguageList));
         $this->getConfig()->set('inputLanguageList', $inputLanguageList);
+        $this->getConfig()->set('fallbackLanguage', $fallback);
         $this->getConfig()->save();
 
         if ($toRebuild) {
