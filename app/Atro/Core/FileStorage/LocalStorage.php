@@ -94,7 +94,8 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
          * Create via contents
          */
         if (property_exists($input, 'fileContents')) {
-            $result = file_put_contents($fileName, self::parseInputFileContent($input->fileContents));
+            file_put_contents($fileName, self::parseInputFileContent($input->fileContents));
+            $result = true;
         }
 
         /**
