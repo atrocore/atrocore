@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "fallbackLanguage": "Fallback-Sprache",
+    "contentUsage": "Verwendung für Inhalte"
+  },
+  "options": {
+    "contentUsage": {
+      "main": "Hauptsprache",
+      "additional": "Zusätzliche Sprache"
+    }
+  },
+  "tooltips": {
+    "contentUsage": "Wählen Sie Hauptsprache, wenn diese Sprache die Hauptsprache für Ihren Inhalt sein soll. Zusätzliche Sprache sollte für Sprachen verwendet werden, in die übersetzt werden soll. Lassen Sie diese Option leer, wenn diese Sprache für den Inhalt nicht relevant ist."
+  }
+}

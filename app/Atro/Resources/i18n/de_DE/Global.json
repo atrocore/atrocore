@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Language": "Sprache",
     "EmailTemplate": "E-Mail-Vorlage",
     "Storage": "Dateiablage",
     "Folder": "Ordner",
@@ -49,6 +50,7 @@
     "Country": "Land"
   },
   "scopeNamesPlural": {
+    "Language": "Sprachen",
     "EmailTemplate": "E-Mail-Vorlagen",
     "Storage": "Dateiablagen",
     "Folder": "Ordner",
