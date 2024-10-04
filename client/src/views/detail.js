@@ -276,19 +276,25 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             if (foreign) {
                 var foreignType = this.getMetadata().get('entityDefs.' + scope + '.links.' + foreign + '.type');
 
-                if(type === 'hasMany' && foreignType === 'belongsTo'){
+                if (type === 'hasMany' && foreignType === 'belongsTo') {
                     selectDuplicateEnabled = true;
                 }
             }
 
-            let filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
-            for (let filterName in filters) {
-                if (typeof filters[filterName] == 'function') {
-                    let filtersData = filters[filterName].call(this);
-                    if (filtersData) {
-                        filters[filterName] = filtersData;
-                    } else {
-                        delete filters[filterName];
+            let filters;
+
+            if (typeof this.selectRelatedFilters[link] == 'function') {
+                filters = this.selectRelatedFilters[link].call(this) || {}
+            } else {
+                filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
+                for (let filterName in filters) {
+                    if (typeof filters[filterName] == 'function') {
+                        let filtersData = filters[filterName].call(this);
+                        if (filtersData) {
+                            filters[filterName] = filtersData;
+                        } else {
+                            delete filters[filterName];
+                        }
                     }
                 }
             }
@@ -322,7 +328,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 scope: scope,
                 multiple: data.multiple ?? true,
                 createButton: false,
-                listLayout:  data.listLayout,
+                listLayout: data.listLayout,
                 filters: filters,
                 massRelateEnabled: false,
                 primaryFilterName: primaryFilterName,
@@ -332,7 +338,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }, function (dialog) {
                 dialog.render();
                 this.notify(false);
-                dialog.once('select',(selectObj, duplicate) => {
+                dialog.once('select', (selectObj, duplicate) => {
 
                     if (massRelateDisabled && !Array.isArray(selectObj)) {
                         const list = dialog.getView('list');
@@ -362,7 +368,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                                 this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                                 this.updateRelationshipPanel(link);
 
-                                if(this.mode !== 'edit'){
+                                if (this.mode !== 'edit') {
                                     this.model.trigger('after:relate', link);
                                 }
                             });
@@ -474,10 +480,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         getHeader: function () {
             let nameColumn = 'name';
 
-            if(this.getConfig().get('isMultilangActive') && this.model.getFieldParam('name', 'isMultilang')){
+            if (this.getConfig().get('isMultilangActive') && this.model.getFieldParam('name', 'isMultilang')) {
                 var language = this.getPreferences().get('language') || this.getConfig().get('language');
-                if(language !== this.getConfig().get('mainLanguage')){
-                    nameColumn = 'name' + Espo.Utils.upperCaseFirst(Espo.Utils.hyphenToCamelCase(language.toLowerCase().replace('_','-')));
+                if (language !== this.getConfig().get('mainLanguage')) {
+                    nameColumn = 'name' + Espo.Utils.upperCaseFirst(Espo.Utils.hyphenToCamelCase(language.toLowerCase().replace('_', '-')));
                 }
             }
             let name = Handlebars.Utils.escapeExpression(this.model.get(nameColumn) ?? this.model.get('name'));
@@ -506,7 +512,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         isHierarchical() {
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
         },
 
         updatePageTitle: function () {
@@ -540,25 +546,31 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 if (foreignType == 'hasMany') {
                     massRelateEnabled = true;
                 }
-                if(type === 'hasMany' && foreignType === 'belongsTo'){
+                if (type === 'hasMany' && foreignType === 'belongsTo') {
                     selectDuplicateEnabled = true;
                 }
             }
 
             var self = this;
             var attributes = {};
+            let filters;
 
-            var filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
-            for (var filterName in filters) {
-                if (typeof filters[filterName] == 'function') {
-                    var filtersData = filters[filterName].call(this);
-                    if (filtersData) {
-                        filters[filterName] = filtersData;
-                    } else {
-                        delete filters[filterName];
+            if (typeof this.selectRelatedFilters[link] == 'function') {
+                filters = this.selectRelatedFilters[link].call(this) || {}
+            } else {
+                filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
+                for (var filterName in filters) {
+                    if (typeof filters[filterName] == 'function') {
+                        var filtersData = filters[filterName].call(this);
+                        if (filtersData) {
+                            filters[filterName] = filtersData;
+                        } else {
+                            delete filters[filterName];
+                        }
                     }
                 }
             }
+
 
             var primaryFilterName = data.primaryFilterName || this.selectPrimaryFilterNames[link] || null;
             if (typeof primaryFilterName == 'function') {
@@ -637,13 +649,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 success: function () {
                     this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
                     this.updateRelationshipPanel(link);
-                    if(this.mode !== 'edit'){
+                    if (this.mode !== 'edit') {
                         this.model.trigger('after:relate', link);
                     }
                 }.bind(this),
                 error: function () {
                     this.updateRelationshipPanel(link);
-                    if(this.mode !== 'edit'){
+                    if (this.mode !== 'edit') {
                         this.model.trigger('after:relate', link);
                     }
                     this.notify('Error occurred', 'error');
