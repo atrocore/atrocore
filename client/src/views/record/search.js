@@ -65,7 +65,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             kanban: 'fas fa-grip-horizontal'
         },
 
-        typesWithOneFilter: ['array', 'bool', 'enum', 'multiEnum', 'linkMultiple'],
+        typesWithOneFilter: ['array', 'bool', 'enum', 'multiEnum'],
 
         hiddenBoolFilterList: [],
 
