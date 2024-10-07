@@ -1,0 +1,13 @@
+{
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": false,
+  "customizable": true,
+  "importable": false,
+  "notifications": false,
+  "hasOwner": false,
+  "hasAssignedUser": false,
+  "hasTeam": false,
+  "notStorable": true
+}

@@ -1,5 +1,10 @@
 {
   "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -27,20 +32,6 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    }
-  },
-  "indexes": {
-    "createdAt": {
-      "columns": [
-        "createdAt",
-        "deleted"
-      ]
-    },
-    "modifiedAt": {
-      "columns": [
-        "modifiedAt",
-        "deleted"
-      ]
     }
   }
 }
