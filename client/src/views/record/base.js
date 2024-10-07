@@ -421,12 +421,36 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
         },
 
         setupFieldLevelSecurity: function () {
-            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
             forbiddenFieldList.forEach(function (field) {
                 this.hideField(field, true);
             }, this);
 
-            var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+            let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit'),
+                linksList = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
+
+            Object.keys(linksList).forEach((link) => {
+                if (!readOnlyFieldList.includes(link) && linksList[link].entity && linksList[link].type && linksList[link].type === 'hasMany') {
+                    let setReadOnly = false;
+
+                    if (this.getAcl().check(linksList[link].entity, 'read')) {
+                        if (linksList[link].relationName) {
+                            let relationName = linksList[link].relationName.charAt(0).toUpperCase() + linksList[link].relationName.slice(1);
+
+                            if (!this.getAcl().check(relationName, 'edit')) {
+                                setReadOnly = true;
+                            }
+                        }
+                    } else {
+                        setReadOnly = true;
+                    }
+
+                    if (setReadOnly) {
+                        readOnlyFieldList.push(link);
+                    }
+                }
+            });
+
             readOnlyFieldList.forEach(function (field) {
                 this.setFieldReadOnly(field, true);
             }, this);
