@@ -244,6 +244,21 @@ class ReferenceData extends Repository implements Injectable
         $items = $this->getConfig()->get(self::KEY . '.' . $this->entityName, []);
         $items = array_values($items);
 
+        // text filter
+        if (!empty($params['whereClause'][0]['OR'])) {
+            $filtered = [];
+            foreach ($params['whereClause'][0]['OR'] as $k => $v) {
+                $field = str_replace('*', '', $k);
+                $search = str_replace('%', '', $v);
+                foreach ($items as $item) {
+                    if (!isset($filtered[$item['code']]) && strpos($item[$field], $search) !== false) {
+                        $filtered[$item['code']] = $item;
+                    }
+                }
+            }
+            $items = array_values($filtered);
+        }
+
         // sort data
         if (!empty($params['orderBy'])) {
             usort($items, function ($a, $b) use ($params) {
