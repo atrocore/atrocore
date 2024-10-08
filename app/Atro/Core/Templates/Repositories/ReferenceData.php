@@ -238,6 +238,7 @@ class ReferenceData extends Repository implements Injectable
     public function find(array $params)
     {
         $items = $this->getConfig()->get($this->entityName, []);
+        $items = array_values($items);
 
         // sort data
         if (!empty($params['orderBy'])) {
@@ -251,7 +252,18 @@ class ReferenceData extends Repository implements Injectable
             });
         }
 
-        $collection = new EntityCollection(array_values($items), $this->entityName, $this->entityFactory);
+        // limit data
+        if (isset($params['limit']) && isset($params['offset'])) {
+            $prepared = [];
+            foreach ($items as $k => $item) {
+                if ($k >= $params['offset'] && count($prepared) < $params['limit']) {
+                    $prepared[] = $item;
+                }
+            }
+            $items = $prepared;
+        }
+
+        $collection = new EntityCollection($items, $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
 
         return $collection;
