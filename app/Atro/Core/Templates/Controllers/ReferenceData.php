@@ -76,8 +76,8 @@ class ReferenceData extends AbstractRecordController
         throw new BadRequest();
     }
 
-    protected function prepareWhereQuery($where)
-    {
-        return [];
-    }
+//    protected function prepareWhereQuery($where)
+//    {
+//        return [];
+//    }
 }
