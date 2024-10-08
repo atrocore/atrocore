@@ -51,6 +51,10 @@ class ReferenceData extends Repository implements Injectable
     {
         $this->validateUnique($entity);
 
+        if (empty($entity->get('code'))) {
+            throw new BadRequest('Code is required.');
+        }
+
         $this->dispatch('beforeSave', $entity, $options);
     }
 
