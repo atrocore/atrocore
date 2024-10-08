@@ -433,7 +433,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }, this);
 
             this.listenTo(this, 'after:render', () => {
-                debugger
                 let linkFieldList = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {},
                     fieldsList = this.getFieldList() || [];
 
