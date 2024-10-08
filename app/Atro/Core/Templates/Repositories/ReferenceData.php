@@ -13,12 +13,15 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\Core\EventManager\Event;
+use Atro\Core\Utils\Util;
 use Espo\Core\Interfaces\Injectable;
+use Espo\Core\Utils\Config;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\Repository;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
-use Espo\ORM\Repository;
 
 class ReferenceData extends Repository implements Injectable
 {
@@ -32,30 +35,6 @@ class ReferenceData extends Repository implements Injectable
         $this->init();
     }
 
-    protected function init()
-    {
-    }
-
-    public function getDependencyList()
-    {
-        return $this->dependencies;
-    }
-
-    public function inject($name, $object): void
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function addDependency(string $name): void
-    {
-        $this->dependencies[] = $name;
-    }
-
-    protected function getInjection($name)
-    {
-        return $this->injections[$name];
-    }
-
     public function get($id = null)
     {
         if (empty($id)) {
@@ -63,6 +42,98 @@ class ReferenceData extends Repository implements Injectable
         }
 
         return $this->getEntityById($id);
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        $this->dispatch('beforeSave', $entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        $this->dispatch('afterSave', $entity, $options);
+    }
+
+    public function insertEntity(Entity $entity): bool
+    {
+        $items = $this->getConfig()->get($this->entityName, []);
+
+        $entity->id = Util::generateId();
+        $items[] = array_diff($entity->toArray(), ['deleted' => false]);
+
+        $this->getConfig()->set($this->entityName, $items);
+        $this->getConfig()->save();
+
+        return true;
+    }
+
+    public function updateEntity(Entity $entity): bool
+    {
+        $items = $this->getConfig()->get($this->entityName, []);
+
+        foreach ($items as &$item) {
+            if ($item['id'] === $entity->get('id')) {
+                $item = array_diff($entity->toArray(), ['deleted' => false]);
+            }
+        }
+        unset($item);
+
+        $this->getConfig()->set($this->entityName, $items);
+        $this->getConfig()->save();
+
+        return true;
+    }
+
+    public function deleteEntity(Entity $entity): bool
+    {
+        $items = $this->getConfig()->get($this->entityName, []);
+
+        $newItems = [];
+        foreach ($items as $item) {
+            if ($item['id'] !== $entity->get('id')) {
+                $newItems[] = $item;
+            }
+        }
+
+        $this->getConfig()->set($this->entityName, $newItems);
+        $this->getConfig()->save();
+
+        return true;
+    }
+
+    public function save(Entity $entity, array $options = [])
+    {
+        $entity->setAsBeingSaved();
+
+        if (empty($options['skipBeforeSave']) && empty($options['skipAll'])) {
+            $this->beforeSave($entity, $options);
+        }
+
+        if ($entity->isNew() && !$entity->isSaved()) {
+            $result = $this->insertEntity($entity);
+        } else {
+            $result = $this->updateEntity($entity);
+        }
+
+        if ($result) {
+            $entity->setIsSaved(true);
+
+            if (empty($options['skipAfterSave']) && empty($options['skipAll'])) {
+                $this->afterSave($entity, $options);
+            }
+            if ($entity->isNew()) {
+                if (empty($options['keepNew'])) {
+                    $entity->setIsNew(false);
+                }
+            } else {
+                if ($entity->isFetched()) {
+                    $entity->updateFetchedValues();
+                }
+            }
+        }
+        $entity->setAsNotBeingSaved();
+
+        return $result;
     }
 
     protected function getNewEntity()
@@ -76,56 +147,44 @@ class ReferenceData extends Repository implements Injectable
 
     protected function getEntityById($id)
     {
+        $items = $this->getConfig()->get($this->entityName, []);
+        foreach ($items as $item) {
+            if ($item['id'] === $id) {
+                $entity = $this->entityFactory->create($this->entityName);
+                $entity->set($item);
+
+                return $entity;
+            }
+        }
+
         return null;
-//
-//        $entity = $this->entityFactory->create($this->entityType);
-//
-//        if (!$entity) {
-//            return null;
-//        }
-//
-//        $params = [];
-//        $this->handleSelectParams($params);
-//
-//        if (!$this->cacheable) {
-//            return $this->getMapper()->selectById($entity, $id, $params);
-//        }
-//
-//        $key = $this->getCacheKey($id);
-//        if (!$this->getMemoryStorage()->has($key)) {
-//            $this->putToCache($id, $this->getMapper()->selectById($entity, $id, $params));
-//        }
-//
-//        return $this->getMemoryStorage()->get($key);
     }
 
-    public function save(Entity $entity)
+    protected function beforeRemove(Entity $entity, array $options = [])
     {
-        echo '<pre>';
-        print_r('save');
-        die();
+        $this->dispatch('beforeRemove', $entity, $options);
     }
 
-    public function remove(Entity $entity)
+    protected function afterRemove(Entity $entity, array $options = [])
     {
-        echo '<pre>';
-        print_r('remove');
-        die();
+        $this->dispatch('afterRemove', $entity, $options);
+    }
+
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->beforeRemove($entity, $options);
+        $result = $this->deleteEntity($entity);
+        if ($result) {
+            $this->afterRemove($entity, $options);
+        }
+        return $result;
     }
 
     public function find(array $params)
     {
-//        $params = $this->getSelectParams($params);
-//
-//        if (empty($params['skipAdditionalSelectParams'])) {
-//            $this->handleSelectParams($params);
-//        }
-//
-//        $dataArr = !empty($this->seed) ? $this->getMapper()->select($this->seed, $params) : [];
+        $items = $this->getConfig()->get($this->entityName, []);
 
-        $dataArr = [];
-
-        $collection = new EntityCollection($dataArr, $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection($items, $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
 
         return $collection;
@@ -150,5 +209,54 @@ class ReferenceData extends Repository implements Injectable
         echo '<pre>';
         print_r('count');
         die();
+    }
+
+    protected function init()
+    {
+        $this->addDependency('config');
+        $this->addDependency('eventManager');
+    }
+
+    public function getDependencyList()
+    {
+        return $this->dependencies;
+    }
+
+    public function inject($name, $object): void
+    {
+        $this->injections[$name] = $object;
+    }
+
+    protected function addDependency(string $name): void
+    {
+        $this->dependencies[] = $name;
+    }
+
+    protected function getInjection($name)
+    {
+        return $this->injections[$name];
+    }
+
+    protected function dispatch(string $action, Entity $entity, $options, $arg1 = null, $arg2 = null, $arg3 = null)
+    {
+        $event = new Event(
+            [
+                'entityType'     => $this->entityName,
+                'entity'         => $entity,
+                'options'        => $options,
+                'relationName'   => $arg1,
+                'relationParams' => $arg2,
+                'relationData'   => $arg2,
+                'foreign'        => $arg3,
+            ]
+        );
+
+        // dispatch an event
+        $this->getInjection('eventManager')->dispatch('Entity', $action, $event);
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->getInjection('config');
     }
 }
