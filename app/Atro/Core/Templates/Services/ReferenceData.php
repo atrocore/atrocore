@@ -13,12 +13,68 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
+use Atro\Core\Exceptions\NotFound;
 use Atro\Services\Record;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class ReferenceData extends Record
 {
+    public function findLinkedEntities($id, $link, $params)
+    {
+        throw new NotFound();
+    }
+
+    public function linkEntity($id, $link, $foreignId)
+    {
+        throw new NotFound();
+    }
+
+    public function unlinkEntity($id, $link, $foreignId)
+    {
+        throw new NotFound();
+    }
+
+    public function linkEntityMass($id, $link, $where, $selectData = null)
+    {
+        throw new NotFound();
+    }
+
+    public function unlinkAll(string $id, string $link): bool
+    {
+        throw new NotFound();
+    }
+
+    public function massUpdate($data, array $params)
+    {
+        throw new NotFound();
+    }
+
+    public function follow($id, $userId = null)
+    {
+        throw new NotFound();
+    }
+
+    public function unfollow($id, $userId = null)
+    {
+        throw new NotFound();
+    }
+
+    public function massFollow(array $params, $userId = null)
+    {
+        throw new NotFound();
+    }
+
+    public function massUnfollow(array $params, $userId = null)
+    {
+        throw new NotFound();
+    }
+
+    public function massRemove(array $params)
+    {
+        throw new NotFound();
+    }
+
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);

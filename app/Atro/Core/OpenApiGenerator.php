@@ -365,335 +365,337 @@ class OpenApiGenerator
                 "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
-            $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Returns linked entities for the $scopeName",
-                "description" => "Returns linked entities for the $scopeName",
-                "operationId" => "getLinkedItemsFor{$scopeName}Item",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"        => "language",
-                        "in"          => "header",
-                        "required"    => false,
-                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
-                        "schema"      => [
-                            "type" => "string",
-                            "enum" => $languages,
-                        ]
-                    ],
-                    [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                    [
-                        "name"     => "link",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                ],
-                "responses"   => self::prepareResponses([
-                    "type"       => "object",
-                    "properties" => [
-                        "total" => [
-                            "type" => "integer"
-                        ],
-                        "list"  => [
-                            "type"  => "array",
-                            "items" => [
-                                "type" => "object"
+            if ($scopeData['type'] !== 'ReferenceData') {
+                $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Returns linked entities for the $scopeName",
+                    "description" => "Returns linked entities for the $scopeName",
+                    "operationId" => "getLinkedItemsFor{$scopeName}Item",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"        => "language",
+                            "in"          => "header",
+                            "required"    => false,
+                            "description" => self::HEADER_LANGUAGE_DESCRIPTION,
+                            "schema"      => [
+                                "type" => "string",
+                                "enum" => $languages,
                             ]
                         ],
-                    ]
-                ]),
-            ];
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                        [
+                            "name"     => "link",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                    ],
+                    "responses"   => self::prepareResponses([
+                        "type"       => "object",
+                        "properties" => [
+                            "total" => [
+                                "type" => "integer"
+                            ],
+                            "list"  => [
+                                "type"  => "array",
+                                "items" => [
+                                    "type" => "object"
+                                ]
+                            ],
+                        ]
+                    ]),
+                ];
 
-            $result['paths']["/{$scopeName}/action/massUpdate"]['put'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Mass update of $scopeName data",
-                "description" => "Mass update of $scopeName data",
-                "operationId" => "massUpdate{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => [
-                                "type"       => "object",
-                                "properties" => [
-                                    "attributes" => [
-                                        "type"    => "object",
-                                        'example' => ['name' => 'New name', 'description' => 'New description']
-                                    ],
-                                    "ids"        => [
-                                        "type"    => "array",
-                                        "items"   => [
-                                            "type" => "string"
+                $result['paths']["/{$scopeName}/action/massUpdate"]['put'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Mass update of $scopeName data",
+                    "description" => "Mass update of $scopeName data",
+                    "operationId" => "massUpdate{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => [
+                                    "type"       => "object",
+                                    "properties" => [
+                                        "attributes" => [
+                                            "type"    => "object",
+                                            'example' => ['name' => 'New name', 'description' => 'New description']
                                         ],
-                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                        "ids"        => [
+                                            "type"    => "array",
+                                            "items"   => [
+                                                "type" => "string"
+                                            ],
+                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                        ],
                                     ],
+                                ]
+                            ]
+                        ],
+                    ],
+                    "responses"   => self::prepareResponses(['type' => 'boolean'])
+                ];
+
+                $result['paths']["/{$scopeName}/action/massDelete"]['post'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Mass delete of $scopeName data",
+                    "description" => "Mass delete of $scopeName data",
+                    "operationId" => "massDelete{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => [
+                                    "type"       => "object",
+                                    "properties" => [
+                                        "ids"         => [
+                                            "type"    => "array",
+                                            "items"   => [
+                                                "type" => "string"
+                                            ],
+                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                        ],
+                                        "permanently" => [
+                                            "type"    => "boolean",
+                                            'example' => false
+                                        ],
+                                    ],
+                                ]
+                            ]
+                        ],
+                    ],
+                    "responses"   => self::prepareResponses(['type' => 'boolean'])
+                ];
+
+                $result['paths']["/{$scopeName}/{id}/{link}"]['post'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Link $scopeName to Entities",
+                    "description" => "Link $scopeName to Entities",
+                    "operationId" => "link{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                        [
+                            "name"     => "link",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                    ],
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => [
+                                    "type"       => "object",
+                                    "properties" => [
+                                        "ids" => [
+                                            "type"    => "array",
+                                            "items"   => [
+                                                "type" => "string"
+                                            ],
+                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                        ],
+                                    ],
+                                ]
+                            ]
+                        ],
+                    ],
+                    "responses"   => self::prepareResponses(['type' => 'boolean'])
+                ];
+
+                $result['paths']["/{$scopeName}/{id}/{link}"]['delete'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Unlink $scopeName from Entities",
+                    "description" => "Unlink $scopeName from Entities",
+                    "operationId" => "unlink{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                        [
+                            "name"     => "link",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                        [
+                            "name"     => "ids",
+                            "in"       => "query",
+                            "required" => true,
+                            "explode"  => false,
+                            "schema"   => [
+                                "type"  => "array",
+                                "items" => [
+                                    "type" => "string"
+                                ]
+                            ]
+                        ],
+                    ],
+                    "responses"   => self::prepareResponses(['type' => 'boolean'])
+                ];
+
+                $result['paths']["/{$scopeName}/{link}/relation"]['post'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Add relation for $scopeName",
+                    "description" => "Add relation for $scopeName",
+                    "operationId" => "addRelationFor{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "link",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                        [
+                            "name"     => "ids",
+                            "in"       => "query",
+                            "required" => true,
+                            "explode"  => false,
+                            "schema"   => [
+                                "type"  => "array",
+                                "items" => [
+                                    "type" => "string",
+                                ],
+                            ]
+                        ],
+                        [
+                            "name"     => "foreignIds",
+                            "in"       => "query",
+                            "required" => true,
+                            "explode"  => false,
+                            "schema"   => [
+                                "type"  => "array",
+                                "items" => [
+                                    "type" => "string",
                                 ],
                             ]
                         ]
                     ],
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
+                    "responses"   => self::prepareResponses(['type' => 'boolean'])
+                ];
 
-            $result['paths']["/{$scopeName}/action/massDelete"]['post'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Mass delete of $scopeName data",
-                "description" => "Mass delete of $scopeName data",
-                "operationId" => "massDelete{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => [
-                                "type"       => "object",
-                                "properties" => [
-                                    "ids"         => [
-                                        "type"    => "array",
-                                        "items"   => [
-                                            "type" => "string"
-                                        ],
-                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                    ],
-                                    "permanently" => [
-                                        "type"    => "boolean",
-                                        'example' => false
-                                    ],
+                $result['paths']["/{$scopeName}/{link}/relation"]['delete'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Remove relation for $scopeName",
+                    "description" => "Remove relation for $scopeName",
+                    "operationId" => "removeRelationFor{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "link",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                        [
+                            "name"     => "ids",
+                            "in"       => "query",
+                            "required" => true,
+                            "explode"  => false,
+                            "schema"   => [
+                                "type"  => "array",
+                                "items" => [
+                                    "type" => "string",
+                                ],
+                            ]
+                        ],
+                        [
+                            "name"     => "foreignIds",
+                            "in"       => "query",
+                            "required" => true,
+                            "explode"  => false,
+                            "schema"   => [
+                                "type"  => "array",
+                                "items" => [
+                                    "type" => "string",
                                 ],
                             ]
                         ]
                     ],
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
+                    "responses"   => self::prepareResponses(['type' => 'boolean'])
+                ];
 
-            $result['paths']["/{$scopeName}/{id}/{link}"]['post'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Link $scopeName to Entities",
-                "description" => "Link $scopeName to Entities",
-                "operationId" => "link{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                    [
-                        "name"     => "link",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                ],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => [
-                                "type"       => "object",
-                                "properties" => [
-                                    "ids" => [
-                                        "type"    => "array",
-                                        "items"   => [
-                                            "type" => "string"
-                                        ],
-                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                    ],
-                                ],
-                            ]
-                        ]
-                    ],
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
-
-            $result['paths']["/{$scopeName}/{id}/{link}"]['delete'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Unlink $scopeName from Entities",
-                "description" => "Unlink $scopeName from Entities",
-                "operationId" => "unlink{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                    [
-                        "name"     => "link",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                    [
-                        "name"     => "ids",
-                        "in"       => "query",
-                        "required" => true,
-                        "explode"  => false,
-                        "schema"   => [
-                            "type"  => "array",
-                            "items" => [
+                $result['paths']["/{$scopeName}/{id}/subscription"]['put'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Follow the $scopeName stream",
+                    "description" => "Follow the $scopeName stream",
+                    "operationId" => "follow{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
                                 "type" => "string"
                             ]
                         ]
                     ],
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
+                    "responses"   => self::prepareResponses([
+                        "type"       => "object",
+                        "properties" => [
+                            "message" => [
+                                "type" => "string"
+                            ]
+                        ]
+                    ]),
+                ];
 
-            $result['paths']["/{$scopeName}/{link}/relation"]['post'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Add relation for $scopeName",
-                "description" => "Add relation for $scopeName",
-                "operationId" => "addRelationFor{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"     => "link",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
+                $result['paths']["/{$scopeName}/{id}/subscription"]['delete'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Unfollow the $scopeName stream",
+                    "description" => "Unfollow the $scopeName stream",
+                    "operationId" => "unfollow{$scopeName}",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
                         ]
                     ],
-                    [
-                        "name"     => "ids",
-                        "in"       => "query",
-                        "required" => true,
-                        "explode"  => false,
-                        "schema"   => [
-                            "type"  => "array",
-                            "items" => [
-                                "type" => "string",
-                            ],
-                        ]
-                    ],
-                    [
-                        "name"     => "foreignIds",
-                        "in"       => "query",
-                        "required" => true,
-                        "explode"  => false,
-                        "schema"   => [
-                            "type"  => "array",
-                            "items" => [
-                                "type" => "string",
-                            ],
-                        ]
-                    ]
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
-
-            $result['paths']["/{$scopeName}/{link}/relation"]['delete'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Remove relation for $scopeName",
-                "description" => "Remove relation for $scopeName",
-                "operationId" => "removeRelationFor{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"     => "link",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                    [
-                        "name"     => "ids",
-                        "in"       => "query",
-                        "required" => true,
-                        "explode"  => false,
-                        "schema"   => [
-                            "type"  => "array",
-                            "items" => [
-                                "type" => "string",
-                            ],
-                        ]
-                    ],
-                    [
-                        "name"     => "foreignIds",
-                        "in"       => "query",
-                        "required" => true,
-                        "explode"  => false,
-                        "schema"   => [
-                            "type"  => "array",
-                            "items" => [
-                                "type" => "string",
-                            ],
-                        ]
-                    ]
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
-
-            $result['paths']["/{$scopeName}/{id}/subscription"]['put'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Follow the $scopeName stream",
-                "description" => "Follow the $scopeName stream",
-                "operationId" => "follow{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ]
-                ],
-                "responses"   => self::prepareResponses([
-                    "type"       => "object",
-                    "properties" => [
-                        "message" => [
-                            "type" => "string"
-                        ]
-                    ]
-                ]),
-            ];
-
-            $result['paths']["/{$scopeName}/{id}/subscription"]['delete'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Unfollow the $scopeName stream",
-                "description" => "Unfollow the $scopeName stream",
-                "operationId" => "unfollow{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ]
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
+                    "responses"   => self::prepareResponses(['type' => 'boolean'])
+                ];
+            }
         }
 
         $this->pushComposerActions($result, $schemas);
