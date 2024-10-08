@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Util;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
@@ -192,23 +193,17 @@ class ReferenceData extends Repository implements Injectable
 
     public function findOne(array $params)
     {
-        echo '<pre>';
-        print_r('findOne');
-        die();
+        throw new BadRequest('The function is not provided for an entity of this type.');
     }
 
     public function getAll()
     {
-        echo '<pre>';
-        print_r('getAll');
-        die();
+        return $this->find([]);
     }
 
     public function count(array $params)
     {
-        echo '<pre>';
-        print_r('count');
-        die();
+        return count($this->getConfig()->get($this->entityName, []));
     }
 
     protected function init()
