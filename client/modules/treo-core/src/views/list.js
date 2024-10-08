@@ -20,6 +20,10 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
         },
 
         setupSearchPanel() {
+            if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
+                return;
+            }
+
             let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
             let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;
 
