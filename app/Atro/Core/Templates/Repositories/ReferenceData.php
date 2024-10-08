@@ -17,7 +17,6 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
