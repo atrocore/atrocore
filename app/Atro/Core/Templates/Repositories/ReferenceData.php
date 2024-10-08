@@ -239,6 +239,18 @@ class ReferenceData extends Repository implements Injectable
     {
         $items = $this->getConfig()->get($this->entityName, []);
 
+        // sort data
+        if (!empty($params['orderBy'])) {
+            usort($items, function ($a, $b) use ($params) {
+                $field = $params['orderBy'];
+                if (strtolower($params['order']) === 'desc') {
+                    return $b[$field] <=> $a[$field];
+                } else {
+                    return $a[$field] <=> $b[$field];
+                }
+            });
+        }
+
         $collection = new EntityCollection(array_values($items), $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
 
