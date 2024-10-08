@@ -3,7 +3,7 @@
     <div class="form-group {{#if isModalDialog}}col-md-12 col-sm-12{{/if}}">
         <div class="input-group">
             <div class="input-group-btn left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
-                <button type="button" class="btn btn-default dropdown-toggle filters-button" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
+                <button type="button" class="btn btn-default dropdown-toggle filters-button {{#if filtersDisabled}}disabled{{/if}}" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
                     <span class="filters-label"></span>
                     <span class="caret"></span>
                 </button>
