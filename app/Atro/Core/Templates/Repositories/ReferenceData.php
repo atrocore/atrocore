@@ -92,7 +92,7 @@ class ReferenceData extends Repository implements Injectable
         $newItems = [];
         foreach ($items as $item) {
             if ($item['id'] !== $entity->get('id')) {
-                $newItems[] = $item;
+                $newItems[$item['code']] = $item;
             }
         }
 
@@ -202,6 +202,7 @@ class ReferenceData extends Repository implements Injectable
         if ($result) {
             $this->afterRemove($entity, $options);
         }
+
         return $result;
     }
 
