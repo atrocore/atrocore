@@ -5,6 +5,7 @@
   "acl": false,
   "customizable": true,
   "streamDisabled": true,
+  "isActiveUnavailable": true,
   "importable": false,
   "notifications": false,
   "hasOwner": false,

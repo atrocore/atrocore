@@ -28,6 +28,8 @@ use Espo\ORM\EntityManager;
 
 class ReferenceData extends Repository implements Injectable
 {
+    public const KEY = 'referenceData';
+
     protected array $dependencies = [];
     protected array $injections = [];
 
@@ -65,8 +67,6 @@ class ReferenceData extends Repository implements Injectable
 
     public function validateUnique(Entity $entity): void
     {
-        $items = $this->getConfig()->get($this->entityName, []);
-
         $uniques = [];
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) as $field => $fieldDefs) {
             if (!empty($fieldDefs['unique'])) {
@@ -74,7 +74,8 @@ class ReferenceData extends Repository implements Injectable
             }
         }
 
-        foreach ($items as $item) {
+        $items = $this->getConfig()->get(self::KEY, []);
+        foreach ($items[$this->entityName] ?? [] as $item) {
             foreach ($uniques as $unique) {
                 if ($item['id'] !== $entity->get('id') && $item[$unique] === $entity->get($unique)) {
                     throw new NotUnique('The record cannot be created due to database constraints.');
@@ -85,14 +86,15 @@ class ReferenceData extends Repository implements Injectable
 
     public function insertEntity(Entity $entity): bool
     {
-        $items = $this->getConfig()->get($this->entityName, []);
-        $items[$entity->get('code')] = $entity->toArray();
-
-        if (isset($items[$entity->get('code')]['deleted'])) {
-            unset($items[$entity->get('code')]['deleted']);
+        $item = $entity->toArray();
+        if (isset($item['deleted'])) {
+            unset($item['deleted']);
         }
 
-        $this->getConfig()->set($this->entityName, $items);
+        $items = $this->getConfig()->get(self::KEY, []);
+        $items[$this->entityName][$entity->get('code')] = $item;
+
+        $this->getConfig()->set(self::KEY, $items);
         $this->getConfig()->save();
 
         return true;
@@ -100,15 +102,15 @@ class ReferenceData extends Repository implements Injectable
 
     public function updateEntity(Entity $entity): bool
     {
-        $items = $this->getConfig()->get($this->entityName, []);
-        foreach ($items as &$item) {
+        $items = $this->getConfig()->get(self::KEY, []);
+        foreach ($items[$this->entityName] ?? [] as $code => $item) {
             if ($item['id'] === $entity->get('id')) {
-                $item = $entity->toArray();
+                unset($items[$this->entityName][$code]);
+                $items[$this->entityName][$entity->get('code')] = $entity->toArray();
             }
         }
-        unset($item);
 
-        $this->getConfig()->set($this->entityName, $items);
+        $this->getConfig()->set(self::KEY, $items);
         $this->getConfig()->save();
 
         return true;
@@ -116,16 +118,18 @@ class ReferenceData extends Repository implements Injectable
 
     public function deleteEntity(Entity $entity): bool
     {
-        $items = $this->getConfig()->get($this->entityName, []);
+        $items = $this->getConfig()->get(self::KEY, []);
 
         $newItems = [];
-        foreach ($items as $item) {
+        foreach ($items[$this->entityName] ?? [] as $item) {
             if ($item['id'] !== $entity->get('id')) {
                 $newItems[$item['code']] = $item;
             }
         }
 
-        $this->getConfig()->set($this->entityName, $newItems);
+        $items[$this->entityName] = $newItems;
+
+        $this->getConfig()->set(self::KEY, $items);
         $this->getConfig()->save();
 
         return true;
@@ -201,8 +205,8 @@ class ReferenceData extends Repository implements Injectable
 
     protected function getEntityById($id)
     {
-        $items = $this->getConfig()->get($this->entityName, []);
-        foreach ($items as $item) {
+        $items = $this->getConfig()->get(self::KEY, []);
+        foreach ($items[$this->entityName] ?? [] as $item) {
             if ($item['id'] === $id) {
                 $entity = $this->entityFactory->create($this->entityName);
                 $entity->set($item);
@@ -237,7 +241,7 @@ class ReferenceData extends Repository implements Injectable
 
     public function find(array $params)
     {
-        $items = $this->getConfig()->get($this->entityName, []);
+        $items = $this->getConfig()->get(self::KEY . '.' . $this->entityName, []);
         $items = array_values($items);
 
         // sort data
@@ -281,7 +285,7 @@ class ReferenceData extends Repository implements Injectable
 
     public function count(array $params)
     {
-        return count($this->getConfig()->get($this->entityName, []));
+        return count($this->getConfig()->get(self::KEY . '.' . $this->entityName, []));
     }
 
     protected function init()
