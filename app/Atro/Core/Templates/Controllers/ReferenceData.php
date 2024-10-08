@@ -9,8 +9,6 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
-
 namespace Atro\Core\Templates\Controllers;
 
 use Atro\Controllers\AbstractRecordController;
@@ -76,5 +74,10 @@ class ReferenceData extends AbstractRecordController
     public function postActionMassUnfollow($params, $data, $request)
     {
         throw new BadRequest();
+    }
+
+    protected function prepareWhereQuery($where)
+    {
+        return [];
     }
 }
