@@ -16,6 +16,7 @@ namespace Atro\Core\Templates\Repositories;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\ORM\Entity;
@@ -59,8 +60,7 @@ class ReferenceData extends Repository implements Injectable
     {
         $items = $this->getConfig()->get($this->entityName, []);
 
-        $entity->id = Util::generateId();
-        $items[] = array_diff($entity->toArray(), ['deleted' => false]);
+        $items[$entity->get('code')] = array_diff($entity->toArray(), ['deleted' => false]);
 
         $this->getConfig()->set($this->entityName, $items);
         $this->getConfig()->save();
@@ -104,6 +104,30 @@ class ReferenceData extends Repository implements Injectable
 
     public function save(Entity $entity, array $options = [])
     {
+        $nowString = date('Y-m-d H:i:s');
+        $user = $this->getEntityManager()->getUser();
+
+        if ($entity->isNew()) {
+            if (!$entity->has('id')) {
+                $entity->set('id', Util::generateId());
+            }
+
+            if ($entity->hasAttribute('createdAt')) {
+                $entity->set('createdAt', $nowString);
+            }
+            if ($entity->hasAttribute('createdById') && $user) {
+                $entity->set('createdById', $user->get('id'));
+            }
+        }
+
+        if ($entity->hasAttribute('modifiedAt')) {
+            $entity->set('modifiedAt', $nowString);
+        }
+
+        if ($entity->hasAttribute('modifiedById') && $user) {
+            $entity->set('modifiedById', $user->get('id'));
+        }
+
         $entity->setAsBeingSaved();
 
         if (empty($options['skipBeforeSave']) && empty($options['skipAll'])) {
@@ -185,7 +209,7 @@ class ReferenceData extends Repository implements Injectable
     {
         $items = $this->getConfig()->get($this->entityName, []);
 
-        $collection = new EntityCollection($items, $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection(array_values($items), $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
 
         return $collection;
