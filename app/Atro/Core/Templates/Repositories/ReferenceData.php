@@ -87,7 +87,10 @@ class ReferenceData extends Repository implements Injectable
     {
         $items = $this->getConfig()->get($this->entityName, []);
         $items[$entity->get('code')] = $entity->toArray();
-        unset($items[$entity->get('code')]['deleted']);
+
+        if (isset($items[$entity->get('code')]['deleted'])) {
+            unset($items[$entity->get('code')]['deleted']);
+        }
 
         $this->getConfig()->set($this->entityName, $items);
         $this->getConfig()->save();
