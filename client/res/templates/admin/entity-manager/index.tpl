@@ -45,7 +45,7 @@
             {{/if}}
         </td>
         <td width="120">
-            {{#if customizable}}
+            {{#if hasRelationships}}
             <a href="#Admin/linkManager/scope={{name}}">{{translate 'Relationships' scope='EntityManager'}}</a>
             {{/if}}
         </td>

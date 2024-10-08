@@ -157,11 +157,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 readOnly: !isNew
             });
 
-            let linkTypeOptions = ['', 'oneToMany', 'manyToOne', 'manyToMany'];
-            if (this.getMetadata().get(['scopes', scope, 'type']) === 'ReferenceData'){
-                linkTypeOptions = ['', 'manyToOne'];
-            }
-
             this.createView('linkType', this.getMetadata().get('app.viewsMap.adminLinkManagerFieldsLinkType') || 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
@@ -170,7 +165,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     name: 'linkType',
                     params: {
                         required: true,
-                        options: linkTypeOptions
+                        options: ['', 'oneToMany', 'manyToOne', 'manyToMany']
                     }
                 },
                 readOnly: !isNew
