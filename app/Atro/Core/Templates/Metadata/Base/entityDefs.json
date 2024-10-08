@@ -37,10 +37,6 @@
       "entity": "User"
     }
   },
-  "collection": {
-    "sortBy": "createdAt",
-    "asc": false
-  },
   "indexes": {
     "name": {
       "columns": [

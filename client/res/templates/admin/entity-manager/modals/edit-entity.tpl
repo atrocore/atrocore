@@ -144,6 +144,7 @@
             </div>
             {{/unless}}
         </div>
+        {{#if hasDeleteWithoutConfirmation}}
         <div class="row">
             <div class="cell form-group col-md-6" data-name="deleteWithoutConfirmation">
                 <label class="control-label"
@@ -153,6 +154,8 @@
                 </div>
             </div>
         </div>
+        {{/if}}
+        {{#if hasModifiedExtendedRelations}}
         <div class="row">
             <div class="cell form-group col-md-6" data-name="modifiedExtendedRelations">
                 <label class="control-label"
@@ -162,6 +165,8 @@
                 </div>
             </div>
         </div>
+        {{/if}}
+        {{#if hasDuplicatableRelations}}
         <div class="row">
             <div class="cell form-group col-md-6" data-name="duplicatableRelations">
                 <label class="control-label"
@@ -171,6 +176,7 @@
                 </div>
             </div>
         </div>
+        {{/if}}
     </div>
 </div>
 {{#each additionalParamsLayout}}

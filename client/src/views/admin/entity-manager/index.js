@@ -104,6 +104,7 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
                     isCustom: d.isCustom,
                     isRemovable: isRemovable,
                     customizable: d.customizable,
+                    hasRelationships: d.type !== 'ReferenceData' && d.customizable,
                     type: d.type,
                     label: this.getLanguage().translate(scope, 'scopeNames'),
                     layouts: d.layouts

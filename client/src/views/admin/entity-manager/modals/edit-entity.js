@@ -44,7 +44,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 isNew: this.isNew,
                 additionalParamsLayout: this.getMetadata().get('app.additionalEntityParams.layout') || [],
                 isActiveUnavailable: this.getMetadata().get(['scopes', this.scope, 'isActiveUnavailable']) || false,
-                auditable: scopeData && scopeData.object && scopeData.customizable && !['Relation'].includes(scopeData.type)
+                auditable: scopeData && scopeData.object && scopeData.customizable && !['Relation', 'ReferenceData'].includes(scopeData.type)
             };
         },
 
@@ -79,7 +79,12 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 this.model.set('kanbanViewMode', this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false);
                 this.model.set('kanbanStatusIgnoreList', this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []);
+
+                this.model.set('hasDeleteWithoutConfirmation', this.getMetadata().get(['scopes', scope, 'type']) !== 'ReferenceData');
                 this.model.set('deleteWithoutConfirmation', this.getMetadata().get(['scopes', scope, 'deleteWithoutConfirmation']) ||  false);
+
+                this.model.set('hasModifiedExtendedRelations', this.getMetadata().get(['scopes', scope, 'type']) !== 'ReferenceData');
+                this.model.set('hasDuplicatableRelations', this.getMetadata().get(['scopes', scope, 'type']) !== 'ReferenceData');
             }
         },
 

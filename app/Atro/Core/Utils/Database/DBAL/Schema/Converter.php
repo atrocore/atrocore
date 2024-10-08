@@ -68,6 +68,11 @@ class Converter
                 continue;
             }
 
+            $entityType = $this->metadata->get(['scopes', $entityName, 'type']);
+            if ($entityType === 'ReferenceData'){
+                continue;
+            }
+
             $tableName = Util::toUnderScore($entityName);
             if ($schema->hasTable($tableName)) {
                 $table = $schema->getTable($tableName);
