@@ -86,7 +86,8 @@ class ReferenceData extends Repository implements Injectable
     public function insertEntity(Entity $entity): bool
     {
         $items = $this->getConfig()->get($this->entityName, []);
-        $items[$entity->get('code')] = array_diff($entity->toArray(), ['deleted' => false]);
+        $items[$entity->get('code')] = $entity->toArray();
+        unset($items[$entity->get('code')]['deleted']);
 
         $this->getConfig()->set($this->entityName, $items);
         $this->getConfig()->save();
@@ -99,7 +100,7 @@ class ReferenceData extends Repository implements Injectable
         $items = $this->getConfig()->get($this->entityName, []);
         foreach ($items as &$item) {
             if ($item['id'] === $entity->get('id')) {
-                $item = array_diff($entity->toArray(), ['deleted' => false]);
+                $item = $entity->toArray();
             }
         }
         unset($item);
