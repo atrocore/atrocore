@@ -437,7 +437,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                         if (linksList[link].relationName) {
                             let relationName = linksList[link].relationName.charAt(0).toUpperCase() + linksList[link].relationName.slice(1);
 
-                            if (!this.getAcl().check(relationName, 'edit')) {
+                            if (!this.getAcl().check(relationName, 'create') || !this.getAcl().check(relationName, 'delete')) {
                                 setReadOnly = true;
                             }
                         }
