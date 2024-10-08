@@ -27,19 +27,12 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
         $factory = new EsmtpTransportFactory;
 
         $scheme = in_array($connectionEntity->get('smtpSecurity'), ['SSL', 'TLS']) ? ($connectionEntity->get('smtpPort') === 465 ? 'smtps' : 'smtp') : '';
-        $options = [];
-        if (empty($connectionEntity->get('smtpPassword'))) {
-            $options['verify_peer'] = false;
-            $options['verify_peer_name'] = false;
-        }
-
         return $factory->create(new Dsn(
             $scheme,
             $connectionEntity->get('smtpServer') ?? '',
             $connectionEntity->get('smtpUsername') ?? null,
             $connectionEntity->get('smtpPassword') ? $this->decryptPassword($connectionEntity->get('smtpPassword')) : null,
             $connectionEntity->get('smtpPort') ?? null,
-            $options
         ));
     }
 
