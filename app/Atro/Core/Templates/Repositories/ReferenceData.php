@@ -15,10 +15,12 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\Repository;
@@ -48,6 +50,8 @@ class ReferenceData extends Repository implements Injectable
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        $this->validateUnique($entity);
+
         $this->dispatch('beforeSave', $entity, $options);
     }
 
@@ -56,10 +60,29 @@ class ReferenceData extends Repository implements Injectable
         $this->dispatch('afterSave', $entity, $options);
     }
 
-    public function insertEntity(Entity $entity): bool
+    public function validateUnique(Entity $entity): void
     {
         $items = $this->getConfig()->get($this->entityName, []);
 
+        $uniques = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['unique'])) {
+                $uniques[] = $field;
+            }
+        }
+
+        foreach ($items as $item) {
+            foreach ($uniques as $unique) {
+                if ($item['id'] !== $entity->get('id') && $item[$unique] === $entity->get($unique)) {
+                    throw new NotUnique('The record cannot be created due to database constraints.');
+                }
+            }
+        }
+    }
+
+    public function insertEntity(Entity $entity): bool
+    {
+        $items = $this->getConfig()->get($this->entityName, []);
         $items[$entity->get('code')] = array_diff($entity->toArray(), ['deleted' => false]);
 
         $this->getConfig()->set($this->entityName, $items);
@@ -71,7 +94,6 @@ class ReferenceData extends Repository implements Injectable
     public function updateEntity(Entity $entity): bool
     {
         $items = $this->getConfig()->get($this->entityName, []);
-
         foreach ($items as &$item) {
             if ($item['id'] === $entity->get('id')) {
                 $item = array_diff($entity->toArray(), ['deleted' => false]);
@@ -234,6 +256,7 @@ class ReferenceData extends Repository implements Injectable
     protected function init()
     {
         $this->addDependency('config');
+        $this->addDependency('metadata');
         $this->addDependency('eventManager');
     }
 
@@ -278,5 +301,10 @@ class ReferenceData extends Repository implements Injectable
     protected function getConfig(): Config
     {
         return $this->getInjection('config');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->getInjection('metadata');
     }
 }

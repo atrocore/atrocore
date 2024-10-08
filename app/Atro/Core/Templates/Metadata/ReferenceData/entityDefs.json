@@ -5,6 +5,12 @@
       "required": true,
       "trim": true
     },
+    "code": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
