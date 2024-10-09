@@ -1100,7 +1100,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.displayTotalCount = this.options.displayTotalCount;
             }
 
-            if (this.options.massActionsDisabled) {
+            const scopeType = this.getMetadata().get(['scopes', this.scope, 'type']);
+            if (this.options.massActionsDisabled || scopeType === 'ReferenceData') {
                 this.massActionList = [];
             }
 

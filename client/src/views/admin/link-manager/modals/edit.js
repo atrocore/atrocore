@@ -124,7 +124,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             var scopes = this.getMetadata().get('scopes') || null;
             var entityList = (Object.keys(scopes) || []).filter(function (item) {
                 var d = scopes[item];
-                return d.customizable && d.entity;
+                return d.customizable && d.entity && d.type !== 'ReferenceData';
             }, this).sort(function (v1, v2) {
                 var t1 = this.translate(v1, 'scopeNames');
                 var t2 = this.translate(v2, 'scopeNames');
@@ -156,6 +156,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isNew
             });
+
             this.createView('linkType', this.getMetadata().get('app.viewsMap.adminLinkManagerFieldsLinkType') || 'views/fields/enum', {
                 model: model,
                 mode: 'edit',

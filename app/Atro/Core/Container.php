@@ -81,7 +81,6 @@ class Container
             'dataManager'              => \Espo\Core\Factories\DataManager::class,
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
-
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class
         ];
 

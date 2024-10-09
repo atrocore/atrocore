@@ -421,15 +421,43 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
         },
 
         setupFieldLevelSecurity: function () {
-            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
             forbiddenFieldList.forEach(function (field) {
                 this.hideField(field, true);
             }, this);
 
-            var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+            let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+
             readOnlyFieldList.forEach(function (field) {
                 this.setFieldReadOnly(field, true);
             }, this);
+
+            this.listenTo(this, 'after:render', () => {
+                let linkFieldList = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {},
+                    fieldsList = this.getFieldList() || [];
+
+                Object.keys(linkFieldList).forEach((link) => {
+                    if (fieldsList.includes(link) && linkFieldList[link].entity && linkFieldList[link].type && linkFieldList[link].type === 'hasMany') {
+                        let setReadOnly = false;
+
+                        if (this.getAcl().check(linkFieldList[link].entity, 'read')) {
+                            if (linkFieldList[link].relationName) {
+                                let relationName = linkFieldList[link].relationName.charAt(0).toUpperCase() + linkFieldList[link].relationName.slice(1);
+
+                                if (!this.getAcl().check(relationName, 'create') || !this.getAcl().check(relationName, 'delete')) {
+                                    setReadOnly = true;
+                                }
+                            }
+                        } else {
+                            setReadOnly = true;
+                        }
+
+                        if (setReadOnly) {
+                            this.setFieldReadOnly(link, true);
+                        }
+                    }
+                });
+            })
         },
 
         setIsChanged: function () {

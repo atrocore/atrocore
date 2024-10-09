@@ -62,6 +62,9 @@
     "sortDirection": {
       "asc": "Ascending",
       "desc": "Descending"
+    },
+    "type": {
+      "ReferenceData": "Reference Data"
     }
   },
   "messages": {
