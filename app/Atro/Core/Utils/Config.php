@@ -11,6 +11,7 @@
 
 namespace Atro\Core\Utils;
 
+use Atro\Core\Templates\Repositories\ReferenceData;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types as FieldTypes;
 
