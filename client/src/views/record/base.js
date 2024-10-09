@@ -426,34 +426,38 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 this.hideField(field, true);
             }, this);
 
-            let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit'),
-                linksList = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
-
-            Object.keys(linksList).forEach((link) => {
-                if (!readOnlyFieldList.includes(link) && linksList[link].entity && linksList[link].type && linksList[link].type === 'hasMany') {
-                    let setReadOnly = false;
-
-                    if (this.getAcl().check(linksList[link].entity, 'read')) {
-                        if (linksList[link].relationName) {
-                            let relationName = linksList[link].relationName.charAt(0).toUpperCase() + linksList[link].relationName.slice(1);
-
-                            if (!this.getAcl().check(relationName, 'create') || !this.getAcl().check(relationName, 'delete')) {
-                                setReadOnly = true;
-                            }
-                        }
-                    } else {
-                        setReadOnly = true;
-                    }
-
-                    if (setReadOnly) {
-                        readOnlyFieldList.push(link);
-                    }
-                }
-            });
+            let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
 
             readOnlyFieldList.forEach(function (field) {
                 this.setFieldReadOnly(field, true);
             }, this);
+
+            this.listenTo(this, 'after:render', () => {
+                let linkFieldList = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {},
+                    fieldsList = this.getFieldList() || [];
+
+                Object.keys(linkFieldList).forEach((link) => {
+                    if (fieldsList.includes(link) && linkFieldList[link].entity && linkFieldList[link].type && linkFieldList[link].type === 'hasMany') {
+                        let setReadOnly = false;
+
+                        if (this.getAcl().check(linkFieldList[link].entity, 'read')) {
+                            if (linkFieldList[link].relationName) {
+                                let relationName = linkFieldList[link].relationName.charAt(0).toUpperCase() + linkFieldList[link].relationName.slice(1);
+
+                                if (!this.getAcl().check(relationName, 'create') || !this.getAcl().check(relationName, 'delete')) {
+                                    setReadOnly = true;
+                                }
+                            }
+                        } else {
+                            setReadOnly = true;
+                        }
+
+                        if (setReadOnly) {
+                            this.setFieldReadOnly(link, true);
+                        }
+                    }
+                });
+            })
         },
 
         setIsChanged: function () {
