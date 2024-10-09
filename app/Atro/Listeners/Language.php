@@ -105,7 +105,7 @@ class Language extends AbstractListener
             }
         }
 
-        if (!empty($this->getConfig()->get('isMultilangActive')) && !empty($languages = $this->getConfig()->get('interfaceLocales', []))) {
+        if (!empty($this->getConfig()->get('isMultilangActive')) && !empty($languages = $this->getConfig()->get('inputLanguageList', []))) {
             foreach ($data as $locale => $rows) {
                 foreach ($rows as $scope => $items) {
                     foreach (['fields', 'tooltips'] as $type) {

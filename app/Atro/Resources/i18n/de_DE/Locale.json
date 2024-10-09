@@ -1,6 +1,6 @@
 {
   "fields": {
-    "language": "Sprache",
+    "code": "Sprache",
     "fallbackLanguage": "Fallback-Sprache",
     "timeZone": "Zeitzone",
     "dateFormat": "Datumsformat",

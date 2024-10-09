@@ -9,7 +9,7 @@
     "description": {
       "type": "text"
     },
-    "language": {
+    "code": {
       "type": "enum",
       "required": true,
       "unique": true,

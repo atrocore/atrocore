@@ -1,6 +1,6 @@
 {
   "fields": {
-    "language": "Langue",
+    "code": "Langue",
     "timeZone": "Fuseau horaire",
     "dateFormat": "Format de la date",
     "weekStart": "Premier jour de la semaine",

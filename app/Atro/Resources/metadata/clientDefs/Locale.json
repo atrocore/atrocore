@@ -1,5 +1,6 @@
 {
   "controller": "controllers/record",
+  "iconClass": "fas fa-globe",
   "views": {
     "list": "views/locale/list"
   },

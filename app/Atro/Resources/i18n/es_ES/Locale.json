@@ -1,6 +1,6 @@
 {
   "fields": {
-    "language": "Idioma",
+    "code": "Idioma",
     "dateFormat": "Formato de fecha",
     "timeFormat": "Formato de hora",
     "timeZone": "Zona horaria",

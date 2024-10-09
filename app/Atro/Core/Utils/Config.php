@@ -15,52 +15,6 @@ use Atro\Core\Templates\Repositories\ReferenceData;
 
 class Config extends \Espo\Core\Utils\Config
 {
-    public function get($name, $default = null)
-    {
-        if ($name === 'isModulesLoaded') {
-            return $this->container->get('moduleManager')->isLoaded();
-        }
-
-        if ($name === 'interfaceLocales') {
-            $res = $this->loadInterfaceLocales();
-            return $res[$name] ?? null;
-        }
-
-        $keys = explode('.', $name);
-
-        $lastBranch = $this->loadConfig();
-        foreach ($keys as $keyName) {
-            if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
-                if (is_array($lastBranch)) {
-                    $lastBranch = $lastBranch[$keyName];
-                } else {
-                    $lastBranch = $lastBranch->$keyName;
-                }
-            } else {
-                return $default;
-            }
-        }
-
-        return $lastBranch;
-    }
-
-    public function getData($isAdmin = null)
-    {
-        $data = array_merge($this->loadConfig(), $this->loadInterfaceLocales());
-
-        $data = $this->prepareStylesheetConfigForOutput($data);
-        $data = $this->prepareCustomHeadCodeForOutput($data);
-
-        $restrictedConfig = $data;
-        foreach ($this->getRestrictItems($isAdmin) as $name) {
-            if (isset($restrictedConfig[$name])) {
-                unset($restrictedConfig[$name]);
-            }
-        }
-
-        return $restrictedConfig;
-    }
-
     protected function loadConfig($reload = false)
     {
         parent::loadConfig($reload);
