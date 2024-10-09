@@ -53,18 +53,19 @@ class Config extends \Espo\Core\Utils\Config
 
                 // prepare config locales for backward compatibility
                 if ($entityName === 'Locale') {
-                    $locales = [];
                     foreach ($items as $row) {
-                        foreach (self::DEFAULT_LOCALE as $k => $v) {
-                            $locales[$row['id']][$k] = isset($row[$k]) ? $row[$k] : $v;
-                        }
-                        $locales[$row['id']]['name'] = $row['name'];
-                        $locales[$row['id']]['language'] = $row['code'] ?? 'en_US';
-                        $locales[$row['id']]['fallbackLanguage'] = $row['fallbackLanguage'] ?? null;
-                        $locales[$row['id']]['weekStart'] = $locales[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
+                        $this->data['locales'][$row['id']] = [
+                            'name'              => $row['name'],
+                            'language'          => $row['code'] ?? 'en_US',
+                            'fallbackLanguage'  => $row['fallbackLanguage'] ?? null,
+                            'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
+                            'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
+                            'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',
+                            'timeZone'          => $row['timeZone'] ?? 'UTC',
+                            'thousandSeparator' => $row['thousandSeparator'] ?? '',
+                            'decimalMark'       => $row['decimalMark'] ?? '.',
+                        ];
                     }
-
-                    $this->data['locales'] = $locales;
                 }
             }
         }
