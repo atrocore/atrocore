@@ -43,6 +43,7 @@ class Config extends \Espo\Core\Utils\Config
             }
             $result[$row['id']]['name'] = $row['name'];
             $result[$row['id']]['language'] = $row['language'] ?? 'en_US';
+            $result[$row['id']]['fallbackLanguage'] = $row['fallback_language'] ?? null;
             $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
         }
 

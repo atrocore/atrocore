@@ -12,6 +12,8 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
+use Espo\Core\EventManager\Event;
+use Espo\Core\Utils\Util;
 
 class Language extends \Espo\Core\Utils\Language
 {
@@ -33,6 +35,52 @@ class Language extends \Espo\Core\Utils\Language
         }
     }
 
+    protected function init(): void
+    {
+        /** @var bool $installed */
+        $installed = $this->getConfig()->get('isInstalled', false);
+
+        $data = [];
+
+        if ($installed) {
+            $data = $this->getDataManager()->getCacheData('translations');
+            if (empty($data)) {
+                $data = $this->reload();
+            }
+        }
+
+        if (empty($data)) {
+            $data = $this->getModulesData();
+        }
+
+        $fullData = [];
+
+        // load core
+        if (!empty($data['core'])) {
+            $fullData = Util::merge($fullData, $data['core']);
+        }
+
+        // load modules
+        foreach ($this->getMetadata()->getModules() as $name => $module) {
+            if (!empty($data[$name])) {
+                $fullData = Util::merge($fullData, $data[$name]);
+            }
+        }
+
+        // load custom
+        if (!$this->noCustom && !empty($data['custom'])) {
+            $fullData = Util::merge($fullData, $data['custom']);
+        }
+
+        foreach ($fullData as $i18nName => $i18nData) {
+            $this->data[$i18nName] = $i18nData;
+        }
+
+        if ($installed) {
+            $this->data = $this->getEventManager()->dispatch('Language', 'modify', new Event(['data' => $this->data]))->getArgument('data');
+        }
+    }
+
     protected function getData()
     {
         $currentLanguage = $this->getLanguage();
@@ -47,12 +95,22 @@ class Language extends \Espo\Core\Utils\Language
         if (empty($data = $this->getDataManager()->getCacheData($currentLanguage))) {
             $data = $this->data[self::DEFAULT_LANGUAGE];
 
-            $fallbackLanguage = $this->getConfig()->get('fallbackLanguage') ?? [];
-            if (!empty($fallbackLanguage[$currentLanguage])) {
-                $data = Util::merge($data, $this->data[$fallbackLanguage[$currentLanguage]] ?? []);
+            foreach ($this->getConfig()->get('locales', []) as $locale) {
+                if (empty($locale['fallbackLanguage'])) {
+                    continue;
+                }
+                if ($locale['language'] !== $currentLanguage) {
+                    continue;
+                }
+                if (!isset($this->data[$locale['fallbackLanguage']])) {
+                    continue;
+                }
+                $data = Util::merge($data, $this->data[$locale['fallbackLanguage']]);
             }
 
-            $data = Util::merge($data, $this->data[$currentLanguage] ?? []);
+            if (isset($this->data[$currentLanguage])) {
+                $data = Util::merge($data, $this->data[$currentLanguage]);
+            }
 
             $this->getDataManager()->setCacheData($currentLanguage, $data);
         }
