@@ -23,6 +23,7 @@ use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\PasswordHash;
 use Atro\Core\Utils\Util;
+use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\Entities\User;
 
 class Installer extends HasContainer
@@ -620,31 +621,21 @@ class Installer extends HasContainer
             unlink($file);
         }
 
-        $connection = $this->getEntityManager()->getConnection();
-
-        $connection->createQueryBuilder()
-            ->insert($connection->quoteIdentifier('locale'))
-            ->setValue('id', ':id')
-            ->setValue($connection->quoteIdentifier('name'), ':name')
-            ->setValue('language', ':language')
-            ->setValue('date_format', ':dateFormat')
-            ->setValue('time_zone', ':timeZone')
-            ->setValue('week_start', ':weekStart')
-            ->setValue('time_format', ':timeFormat')
-            ->setValue('thousand_separator', ':thousandSeparator')
-            ->setValue('decimal_mark', ':decimalMark')
-            ->setParameters([
-                'id'                => '1',
+        @mkdir(ReferenceData::DIR_PATH);
+        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Locale.json', json_encode([
+            'en_US' => [
                 'name'              => 'Main',
-                'language'          => 'en_US',
+                'code'              => 'en_US',
                 'dateFormat'        => 'DD.MM.YYYY',
                 'timeZone'          => 'UTC',
                 'weekStart'         => 'monday',
                 'timeFormat'        => 'HH:mm',
                 'thousandSeparator' => '.',
                 'decimalMark'       => ',',
-            ])
-            ->executeQuery();
+            ]
+        ]));
+
+        $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
             ->insert($connection->quoteIdentifier('scheduled_job'))
