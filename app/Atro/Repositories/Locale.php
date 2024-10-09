@@ -14,25 +14,24 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
 
-class Locale extends Base
+class Locale extends ReferenceData
 {
     public function refreshCache(): void
     {
         $this->getInjection('dataManager')->clearCache();
-        $this->getInjection('dataManager')->rebuild();
     }
 
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 
-        if(($entity->isNew() || $entity->isAttributeChanged('language')) && !empty($entity->get('language'))){
+        if(($entity->isNew() || $entity->isAttributeChanged('code')) && !empty($entity->get('code'))){
             $this->getEntityManager()
                 ->getRepository('NotificationTemplate')
-                ->addUiHandlerForLanguage($entity->get('language'));
+                ->addUiHandlerForLanguage($entity->get('code'));
         }
 
         $this->refreshCache();
