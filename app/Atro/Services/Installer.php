@@ -107,25 +107,15 @@ class Installer extends HasContainer
         return $result;
     }
 
-    /**
-     * Get license and languages
-     *
-     * @return array
-     */
     public function getLicenseAndLanguages(): array
     {
-        // get languages data
-        $result = [
-            'languageList' => $this->getConfig()->get('languageList'),
-            'language'     => $this->getConfig()->get('language'),
-            'license'      => ''
-        ];
-
-        // get license
         $license = $this->getContents('LICENSE.txt');
-        $result['license'] = $license ? $license : '';
 
-        return $result;
+        return [
+            'languageList' => ['en_US', 'de_DE'],
+            'language'     => $this->getConfig()->get('language'),
+            'license'      => $license ?? ''
+        ];
     }
 
     /**
@@ -149,7 +139,7 @@ class Installer extends HasContainer
     {
         $result = ['status' => false, 'message' => ''];
 
-        if (!in_array($lang, $this->getConfig()->get('languageList'))) {
+        if (!in_array($lang, ['en_US', 'de_DE'])) {
             $result['message'] = $this->translateError('languageNotCorrect');
             $result['status'] = false;
         } else {
