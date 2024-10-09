@@ -36,10 +36,15 @@ class ConnectionHttp extends AbstractConnection implements HttpConnectionInterfa
         curl_close($ch);
 
         if (!empty($validate) && ($httpCode < 200 || $httpCode >= 300)) {
-            throw new BadRequest("Response Code: $httpCode Body: $output");
+            $this->processError($httpCode, $output);
         }
 
         return new HttpResponseDTO($httpCode, $output);
+    }
+
+    public function processError(int $httpCode, ?string $output)
+    {
+        throw new BadRequest("Response Code: $httpCode Body: $output");
     }
 
     public function generateUrlForEntity(string $entityName): string
