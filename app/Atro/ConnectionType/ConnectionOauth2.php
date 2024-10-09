@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\ConnectionType;
 
 use Atro\Core\Exceptions\BadRequest;
+use Espo\Core\DataManager;
 use Espo\ORM\Entity;
 
 class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
@@ -31,6 +32,17 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
                 throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
         }
 
+        $dataManager = $this->getDataManager();
+
+        $key = $this->getCacheKey();
+        $hash = md5($connection->get('oauthUrl') . '-' . json_encode($body));
+
+        $data = $dataManager->getCacheData($key);
+        if (!empty($data['expires_at']) && !empty($data['hash']) &&
+            $data['hash'] === $hash && (time() < $data['expires_at'])) {
+            return $data;
+        }
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $connection->get('oauthUrl'));
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -45,6 +57,12 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
         if (!empty($response)) {
             $result = @json_decode($response, true);
             if (isset($result['access_token'])) {
+                // save in cache
+                if (!empty($result['expires_in'])) {
+                    $result['expires_at'] = time() + ((int)$result['expires_in']) - 60;
+                    $result['hash'] = $hash;
+                    $dataManager->setCacheData($key, $result);
+                }
                 return $result;
             }
         }
@@ -52,10 +70,28 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
         throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
     }
 
+    public function processError(int $httpCode, ?string $output)
+    {
+        if ($httpCode === 401) {
+            $this->getDataManager()->removeCacheData($this->getCacheKey());
+        }
+        parent::processError($httpCode, $output);
+    }
+
+    public function getCacheKey(): string
+    {
+        return 'cron_conn_' . $this->connectionEntity->get('id');
+    }
+
     public function getHeaders(): array
     {
         $connectionData = $this->connect($this->connectionEntity);
 
         return ["Authorization: {$connectionData['token_type']} {$connectionData['access_token']}"];
+    }
+
+    public function getDataManager(): DataManager
+    {
+        return $this->container->get('dataManager');
     }
 }
