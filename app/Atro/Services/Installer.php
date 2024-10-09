@@ -17,13 +17,13 @@ use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
-use Atro\Core\Exceptions;
-use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Language;
-use Espo\Core\Utils\PasswordHash;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Exceptions;
+use Doctrine\DBAL\ParameterType;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
 
 class Installer extends HasContainer
