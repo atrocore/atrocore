@@ -28,14 +28,18 @@ use Espo\ORM\EntityManager;
 
 class ReferenceData extends Repository implements Injectable
 {
-    public const KEY = 'referenceData';
+    public const DIR_PATH = 'data/reference-data';
 
     protected array $dependencies = [];
     protected array $injections = [];
 
+    protected string $filePath;
+
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
+
+        $this->filePath = self::DIR_PATH . "/$this->entityName.json";
 
         $this->init();
     }
@@ -74,8 +78,8 @@ class ReferenceData extends Repository implements Injectable
             }
         }
 
-        $items = $this->getConfig()->get(self::KEY, []);
-        foreach ($items[$this->entityName] ?? [] as $item) {
+        $items = $this->getAllItems();
+        foreach ($items as $item) {
             foreach ($uniques as $unique) {
                 if ($item['id'] !== $entity->get('id') && $item[$unique] === $entity->get($unique)) {
                     throw new NotUnique('The record cannot be created due to database constraints.');
@@ -91,46 +95,44 @@ class ReferenceData extends Repository implements Injectable
             unset($item['deleted']);
         }
 
-        $items = $this->getConfig()->get(self::KEY, []);
-        $items[$this->entityName][$entity->get('code')] = $item;
+        $items = $this->getAllItems();
+        $items[$entity->get('code')] = $item;
 
-        $this->getConfig()->set(self::KEY, $items);
-        $this->getConfig()->save();
+        if (!is_dir(self::DIR_PATH)) {
+            mkdir(self::DIR_PATH);
+        }
+        file_put_contents($this->filePath, json_encode($items));
 
         return true;
     }
 
     public function updateEntity(Entity $entity): bool
     {
-        $items = $this->getConfig()->get(self::KEY, []);
-        foreach ($items[$this->entityName] ?? [] as $code => $item) {
+        $items = $this->getAllItems();
+        foreach ($items as $code => $item) {
             if ($item['id'] === $entity->get('id')) {
-                unset($items[$this->entityName][$code]);
-                $items[$this->entityName][$entity->get('code')] = $entity->toArray();
+                unset($items[$code]);
+                $items[$entity->get('code')] = $entity->toArray();
             }
         }
 
-        $this->getConfig()->set(self::KEY, $items);
-        $this->getConfig()->save();
+        file_put_contents($this->filePath, json_encode($items));
 
         return true;
     }
 
     public function deleteEntity(Entity $entity): bool
     {
-        $items = $this->getConfig()->get(self::KEY, []);
+        $items = $this->getAllItems();
 
         $newItems = [];
-        foreach ($items[$this->entityName] ?? [] as $item) {
+        foreach ($items as $item) {
             if ($item['id'] !== $entity->get('id')) {
                 $newItems[$item['code']] = $item;
             }
         }
 
-        $items[$this->entityName] = $newItems;
-
-        $this->getConfig()->set(self::KEY, $items);
-        $this->getConfig()->save();
+        file_put_contents($this->filePath, json_encode($newItems));
 
         return true;
     }
@@ -205,8 +207,8 @@ class ReferenceData extends Repository implements Injectable
 
     protected function getEntityById($id)
     {
-        $items = $this->getConfig()->get(self::KEY, []);
-        foreach ($items[$this->entityName] ?? [] as $item) {
+        $items = $this->getAllItems();
+        foreach ($items as $item) {
             if ($item['id'] === $id) {
                 $entity = $this->entityFactory->create($this->entityName);
                 $entity->set($item);
@@ -241,7 +243,7 @@ class ReferenceData extends Repository implements Injectable
 
     public function find(array $params)
     {
-        $items = $this->getConfig()->get(self::KEY . '.' . $this->entityName, []);
+        $items = $this->getAllItems();
         $items = array_values($items);
 
         // text filter
@@ -293,14 +295,30 @@ class ReferenceData extends Repository implements Injectable
         throw new BadRequest('The function is not provided for an entity of this type.');
     }
 
+    protected function getAllItems(): array
+    {
+        $items = [];
+        if (file_exists($this->filePath)) {
+            $data = @json_decode(file_get_contents($this->filePath), true);
+            if (is_array($data)) {
+                $items = $data;
+            }
+        }
+
+        return $items;
+    }
+
     public function getAll()
     {
-        return $this->find([]);
+        $collection = new EntityCollection($this->getAllItems(), $this->entityName, $this->entityFactory);
+        $collection->setAsFetched();
+
+        return $collection;
     }
 
     public function count(array $params)
     {
-        return count($this->getConfig()->get(self::KEY . '.' . $this->entityName, []));
+        return count($this->find($params));
     }
 
     protected function init()
