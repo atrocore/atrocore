@@ -632,6 +632,7 @@ class Installer extends HasContainer
                 'timeFormat'        => 'HH:mm',
                 'thousandSeparator' => '.',
                 'decimalMark'       => ',',
+                'createdAt'         => date('Y-m-d H:i:s')
             ]
         ]));
 
