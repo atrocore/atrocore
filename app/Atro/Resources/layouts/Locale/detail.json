@@ -19,8 +19,14 @@
           "name": "language"
         },
         {
-          "name": "timeZone"
+          "name": "fallbackLanguage"
         }
+      ],
+      [
+        {
+          "name": "timeZone"
+        },
+        false
       ],
       [
         {

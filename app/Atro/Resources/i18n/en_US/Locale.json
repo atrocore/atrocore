@@ -1,6 +1,7 @@
 {
   "fields": {
     "language": "Language",
+    "fallbackLanguage": "Fallback Language",
     "timeZone": "Time Zone",
     "dateFormat": "Date Format",
     "weekStart": "First Day of Week",

@@ -29,10 +29,9 @@ class Config extends \Espo\Core\Utils\Config
 
         $qb = $connection->createQueryBuilder();
         $data = $qb
-            ->select('l.*, la.code')
-            ->from($connection->quoteIdentifier('locale'), 'l')
-            ->innerJoin('l', 'language', 'la', 'la.id=l.language_id AND la.deleted=:false')
-            ->where('l.deleted = :false')
+            ->select('*')
+            ->from($connection->quoteIdentifier('locale'))
+            ->where('deleted = :false')
             ->setParameter('false', false, FieldTypes::BOOLEAN)
             ->fetchAllAssociative();
 
@@ -43,7 +42,7 @@ class Config extends \Espo\Core\Utils\Config
                 $result[$row['id']][$k] = isset($row[$preparedKey]) ? $row[$preparedKey] : $v;
             }
             $result[$row['id']]['name'] = $row['name'];
-            $result[$row['id']]['language'] = $row['code'] ?? 'en_US';
+            $result[$row['id']]['language'] = $row['language'] ?? 'en_US';
             $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
         }
 
