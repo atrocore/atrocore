@@ -38,7 +38,8 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
         $hash = md5($connection->get('oauthUrl') . '-' . json_encode($body));
 
         $data = $dataManager->getCacheData($key);
-        if (!empty($data['expires_at']) && $data['hash'] === $hash && (time() < $data['expires_at'])) {
+        if (!empty($data['expires_at']) && !empty($data['hash']) &&
+            $data['hash'] === $hash && (time() < $data['expires_at'])) {
             return $data;
         }
 
@@ -59,6 +60,7 @@ class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
                 // save in cache
                 if (!empty($result['expires_in'])) {
                     $result['expires_at'] = time() + ((int)$result['expires_in']) - 60;
+                    $result['hash'] = $hash;
                     $dataManager->setCacheData($key, $result);
                 }
                 return $result;
