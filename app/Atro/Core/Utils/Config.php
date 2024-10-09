@@ -12,44 +12,53 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Types as FieldTypes;
 
 class Config extends \Espo\Core\Utils\Config
 {
-    public function getCachedLocales(): array
+    public function get($name, $default = null)
     {
-        $data = $this->container->get('dataManager')->getCacheData('locales');
-        if (is_array($data)) {
-            return $data;
+        if ($name === 'isModulesLoaded') {
+            return $this->container->get('moduleManager')->isLoaded();
         }
 
-        /** @var Connection $connection */
-        $connection = $this->container->get('connection');
+        if ($name === 'interfaceLocales') {
+            $res = $this->loadInterfaceLocales();
+            return $res[$name] ?? null;
+        }
 
-        $qb = $connection->createQueryBuilder();
-        $data = $qb
-            ->select('*')
-            ->from($connection->quoteIdentifier('locale'))
-            ->where('deleted = :false')
-            ->setParameter('false', false, FieldTypes::BOOLEAN)
-            ->fetchAllAssociative();
+        $keys = explode('.', $name);
 
-        $result = [];
-        foreach ($data as $row) {
-            foreach (self::DEFAULT_LOCALE as $k => $v) {
-                $preparedKey = Util::toUnderScore($k);
-                $result[$row['id']][$k] = isset($row[$preparedKey]) ? $row[$preparedKey] : $v;
+        $lastBranch = $this->loadConfig();
+        foreach ($keys as $keyName) {
+            if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
+                if (is_array($lastBranch)) {
+                    $lastBranch = $lastBranch[$keyName];
+                } else {
+                    $lastBranch = $lastBranch->$keyName;
+                }
+            } else {
+                return $default;
             }
-            $result[$row['id']]['name'] = $row['name'];
-            $result[$row['id']]['language'] = $row['language'] ?? 'en_US';
-            $result[$row['id']]['fallbackLanguage'] = $row['fallback_language'] ?? null;
-            $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
         }
 
-        $this->container->get('dataManager')->setCacheData('locales', $result);
+        return $lastBranch;
+    }
 
-        return $result;
+    public function getData($isAdmin = null)
+    {
+        $data = array_merge($this->loadConfig(), $this->loadInterfaceLocales());
+
+        $data = $this->prepareStylesheetConfigForOutput($data);
+        $data = $this->prepareCustomHeadCodeForOutput($data);
+
+        $restrictedConfig = $data;
+        foreach ($this->getRestrictItems($isAdmin) as $name) {
+            if (isset($restrictedConfig[$name])) {
+                unset($restrictedConfig[$name]);
+            }
+        }
+
+        return $restrictedConfig;
     }
 
     protected function loadConfig($reload = false)
@@ -57,19 +66,7 @@ class Config extends \Espo\Core\Utils\Config
         parent::loadConfig($reload);
 
         // put reference data
-        if (is_dir(ReferenceData::DIR_PATH)) {
-            foreach (scandir(ReferenceData::DIR_PATH) as $file) {
-                if (!is_file(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file)) {
-                    continue;
-                }
-
-                $entityName = str_replace('.json', '', $file);
-                $items = @json_decode(file_get_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file), true);
-                if (!empty($items)) {
-                    $this->data['referenceData'][$entityName] = $items;
-                }
-            }
-        }
+        $this->putReferenceData();
 
         return $this->data;
     }
@@ -82,5 +79,40 @@ class Config extends \Espo\Core\Utils\Config
         }
 
         parent::set($name, $value, $dontMarkDirty);
+    }
+
+    protected function putReferenceData(): void
+    {
+        if (!is_dir(ReferenceData::DIR_PATH)) {
+            return;
+        }
+
+        foreach (scandir(ReferenceData::DIR_PATH) as $file) {
+            if (!is_file(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file)) {
+                continue;
+            }
+
+            $entityName = str_replace('.json', '', $file);
+            $items = @json_decode(file_get_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file), true);
+            if (!empty($items)) {
+                $this->data['referenceData'][$entityName] = $items;
+
+                // prepare config locales for backward compatibility
+                if ($entityName === 'Locale') {
+                    $locales = [];
+                    foreach ($items as $row) {
+                        foreach (self::DEFAULT_LOCALE as $k => $v) {
+                            $locales[$row['id']][$k] = isset($row[$k]) ? $row[$k] : $v;
+                        }
+                        $locales[$row['id']]['name'] = $row['name'];
+                        $locales[$row['id']]['language'] = $row['code'] ?? 'en_US';
+                        $locales[$row['id']]['fallbackLanguage'] = $row['fallbackLanguage'] ?? null;
+                        $locales[$row['id']]['weekStart'] = $locales[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
+                    }
+
+                    $this->data['locales'] = $locales;
+                }
+            }
+        }
     }
 }
