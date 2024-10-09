@@ -13,7 +13,6 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
 
 class V1Dot11Dot12 extends Base
 {
@@ -24,8 +23,41 @@ class V1Dot11Dot12 extends Base
 
     public function up(): void
     {
-        // 1. locales from db to file
+        try {
+            $locales = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('locale')
+                ->where('deleted=:false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $locales = [];
+        }
 
+        $res = [];
+        foreach ($locales as $locale) {
+            $res[$locale['language']] = [
+                'id'                => $locale['id'],
+                'code'              => $locale['language'],
+                'name'              => $locale['name'],
+                'description'       => $locale['description'],
+                'decimalMark'       => $locale['decimal_mark'],
+                'timeFormat'        => $locale['time_format'],
+                'thousandSeparator' => $locale['thousand_separator'],
+                'weekStart'         => $locale['week_start'],
+                'dateFormat'        => $locale['date_format'],
+                'timeZone'          => $locale['time_zone'],
+                'createdAt'         => $locale['created_at'],
+                'modifiedAt'        => $locale['modified_at'],
+                'createdById'       => $locale['created_by_id'],
+                'modifiedById'      => $locale['modified_by_id'],
+            ];
+        }
+
+        if (!empty($res)) {
+            @mkdir('data/reference-data');
+            file_put_contents('data/reference-data/Locale.json', json_encode($res));
+        }
 
         // 2. input languages to language entity
     }
