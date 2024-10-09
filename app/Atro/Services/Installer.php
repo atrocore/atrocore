@@ -113,7 +113,7 @@ class Installer extends HasContainer
 
         return [
             'languageList' => ['en_US', 'de_DE'],
-            'language'     => $this->getConfig()->get('language'),
+            'language'     => 'en_US',
             'license'      => $license ?? ''
         ];
     }
@@ -592,36 +592,9 @@ class Installer extends HasContainer
         return $this->getFileManager()->getPermissionUtils()->getLastError();
     }
 
-    /**
-     * Get default owner user id
-     *
-     * @param bool $usePosix
-     *
-     * @return int
-     */
-    protected function getDefaultOwner(bool $usePosix)
+    protected function getLanguage(): Language
     {
-        return $this->getFileManager()->getPermissionUtils()->getDefaultOwner($usePosix);
-    }
-
-    /**
-     * get default group user id
-     *
-     * @param bool $usePosix
-     *
-     * @return int
-     */
-    protected function getDefaultGroup(bool $usePosix)
-    {
-        return $this->getFileManager()->getPermissionUtils()->getDefaultGroup($usePosix);
-    }
-
-    /**
-     * @return Language
-     */
-    protected function getLanguage()
-    {
-        return new Language($this->getContainer(), $this->getConfig()->get('language'));
+        return new Language($this->getContainer());
     }
 
     protected function afterInstall(): void
