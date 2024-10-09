@@ -150,22 +150,9 @@
         "zu_ZA"
       ]
     },
-    "fallbackLanguage": {
-      "type": "enum",
-      "maxLength": 6,
-      "len": 6,
-      "options": [
-        "en_US",
-        "de_DE",
-        "fr_FR",
-        "es_ES",
-        "pl_PL",
-        "ru_RU",
-        "uk_UA"
-      ]
-    },
     "contentUsage": {
       "type": "enum",
+      "required": true,
       "options": [
         "main",
         "additional"

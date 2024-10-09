@@ -27,7 +27,7 @@ class V1Dot11Dot12 extends Base
         // 1. locales from db to file
 
 
-        // 2.
+        // 2. input languages to language entity
     }
 
     public function down(): void

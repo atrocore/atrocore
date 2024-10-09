@@ -14,9 +14,7 @@
         {
           "name": "contentUsage"
         },
-        {
-          "name": "fallbackLanguage"
-        }
+        false
       ],
       [
         {
