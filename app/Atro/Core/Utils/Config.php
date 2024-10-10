@@ -43,25 +43,30 @@ class Config extends \Espo\Core\Utils\Config
             switch ($entityName) {
                 case 'Locale':
                     foreach ($items as $row) {
-                        $this->data['locales'][$row['id']] = [
-                            'name'              => $row['name'],
-                            'language'          => $row['code'] ?? 'en_US',
-                            'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
-                            'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
-                            'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
-                            'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',
-                            'timeZone'          => $row['timeZone'] ?? 'UTC',
-                            'thousandSeparator' => $row['thousandSeparator'] ?? '',
-                            'decimalMark'       => $row['decimalMark'] ?? '.',
-                        ];
+                        if (!empty($row['id'])) {
+                            $this->data['locales'][$row['id']] = [
+                                'name'              => $row['name'] ?? 'en_US',
+                                'language'          => $row['code'] ?? 'en_US',
+                                'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
+                                'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
+                                'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
+                                'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',
+                                'timeZone'          => $row['timeZone'] ?? 'UTC',
+                                'thousandSeparator' => $row['thousandSeparator'] ?? '',
+                                'decimalMark'       => $row['decimalMark'] ?? '.',
+                            ];
+                        }
+
                     }
                     break;
                 case 'Language':
                     foreach ($items as $row) {
-                        if ($row['role'] === 'main') {
-                            $this->data['mainLanguage'] = $row['code'];
-                        } elseif ($row['role'] === 'additional') {
-                            $this->data['inputLanguageList'][] = $row['code'];
+                        if (!empty($row['role'])) {
+                            if ($row['role'] === 'main') {
+                                $this->data['mainLanguage'] = $row['code'];
+                            } elseif ($row['role'] === 'additional') {
+                                $this->data['inputLanguageList'][] = $row['code'];
+                            }
                         }
                     }
                     break;
