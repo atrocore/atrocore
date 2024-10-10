@@ -1,6 +1,6 @@
 {
   "fields": {
-    "language": "Язык",
+    "code": "Язык",
     "timeZone": "Часовой пояс",
     "dateFormat": "Формат даты",
     "weekStart": "Первый день недели",

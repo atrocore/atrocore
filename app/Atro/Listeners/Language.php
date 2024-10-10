@@ -79,16 +79,6 @@ class Language extends AbstractListener
                         $data[$locale][$entity]['fields'][$field] = $filterEntity;
                     }
 
-                    if (!empty($fieldDefs['relationVirtualField'])) {
-                        $parts = explode(Relationship::VIRTUAL_FIELD_DELIMITER, (string)$field);
-                        if (count($parts) === 2) {
-                            $fieldLabel = $this->getLabel($data, $locale, $entity, $parts[0]);
-                            $relatedFieldEntity = $this->getMetadata()->get(['entityDefs', $entity, 'links', $parts[0], 'entity']);
-                            $relatedFieldLabel = $this->getLabel($data, $locale, (string)$relatedFieldEntity, $parts[1]);
-                            $data[$locale][$entity]['fields'][$field] = $fieldLabel . ': ' . $relatedFieldLabel;
-                        }
-                    }
-
                     if (!empty($fieldDefs['unitField'])) {
                         $mainField = $fieldDefs['mainField'] ?? $field;
                         $fieldLabel = $this->getLabel($data, $locale, $entity, $mainField);
@@ -105,17 +95,20 @@ class Language extends AbstractListener
             }
         }
 
-        if (!empty($this->getConfig()->get('isMultilangActive')) && !empty($languages = $this->getConfig()->get('interfaceLocales', []))) {
+        if (!empty($this->getConfig()->get('isMultilangActive')) && !empty($languages = $this->getConfig()->get('referenceData.Language', []))) {
             foreach ($data as $locale => $rows) {
                 foreach ($rows as $scope => $items) {
                     foreach (['fields', 'tooltips'] as $type) {
                         if (isset($items[$type])) {
                             foreach ($items[$type] as $field => $value) {
                                 foreach ($languages as $language) {
-                                    $mField = $field . ucfirst(Util::toCamelCase(strtolower($language)));
+                                    if ($language['role'] !== 'additional') {
+                                        continue;
+                                    }
+                                    $mField = $field . ucfirst(Util::toCamelCase(strtolower($language['code'])));
                                     if (!isset($data[$locale][$scope][$type][$mField])) {
                                         if ($type == 'fields') {
-                                            $data[$locale][$scope][$type][$mField] = $value . ' / ' . $language;
+                                            $data[$locale][$scope][$type][$mField] = $value . ' / ' . $language['name'];
                                         } else {
                                             $data[$locale][$scope][$type][$mField] = $value;
                                         }

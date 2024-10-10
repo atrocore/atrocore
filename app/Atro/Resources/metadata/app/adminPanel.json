@@ -68,7 +68,7 @@
         "description": "composer"
       },
       {
-        "url": "#Settings/inputLanguage",
+        "url": "#Language",
         "label": "multiLanguages",
         "description": "multiLanguagesSettings"
       },

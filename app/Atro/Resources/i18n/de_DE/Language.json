@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "role": "Rolle"
+  },
+  "options": {
+    "role": {
+      "main": "Hauptseite",
+      "additional": "Zusätzliche"
+    }
+  },
+  "tooltips": {
+    "role": "Wählen Sie Hauptsprache, wenn diese Sprache die Hauptsprache für Ihren Inhalt sein soll. Zusatz sollte für Sprachen verwendet werden, in die übersetzt werden soll."
+  },
+  "exceptions": {
+    "mainLanguageIsAlreadyExists": "Hauptsprache existiert bereits.",
+    "roleCannotBeChanged": "Die Rolle kann nicht geändert werden.",
+    "codeForAdditionalCannotBeChanged": "Der Code für die zusätzliche Sprache kann nicht geändert werden.",
+    "mainLanguageCannotBeRemoved": "Die Hauptsprache kann nicht entfernt werden."
+  }
+}

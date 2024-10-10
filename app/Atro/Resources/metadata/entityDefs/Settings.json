@@ -12,19 +12,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "mainLanguage": {
-      "type": "varchar",
-      "default": "en_US",
-      "required": true,
-      "view": "views/admin/fields/main-language"
-    },
-    "inputLanguageList": {
-      "type": "multiEnum",
-      "default": [],
-      "options": [],
-      "required": true,
-      "view": "views/admin/fields/input-language-list"
-    },
     "isMultilangActive": {
       "type": "bool",
       "default": false

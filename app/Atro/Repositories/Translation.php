@@ -61,18 +61,13 @@ class Translation extends Base
         $this->refreshTimestamp($options);
     }
 
-    protected function getLocales(): array
-    {
-        return $this->getMetadata()->get('multilang.languageList', []);
-    }
-
     protected function refreshTimestamp(array $options): void
     {
         if (!empty($options['keepCache'])) {
             return;
         }
 
-        $this->getInjection('language')->reload();
+        $this->getInjection('language')->clearCache();
 
         $this->getConfig()->set('cacheTimestamp', time());
         $this->getConfig()->save();
@@ -86,7 +81,6 @@ class Translation extends Base
     {
         parent::init();
 
-        $this->addDependency('container');
         $this->addDependency('language');
     }
 }

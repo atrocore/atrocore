@@ -344,7 +344,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         if (!isset($fieldData['view']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
-            $fieldOptions = empty($fieldData['optionsIds']) ? [] : $fieldData['optionsIds'];
+            $fieldOptions = !isset($fieldData['optionsIds']) ? $fieldData['options'] : $fieldData['optionsIds'];
             if (empty($fieldOptions) && $fieldData['type'] === 'multiEnum' || !empty($fieldData['relationVirtualField'])) {
                 return;
             }

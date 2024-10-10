@@ -17,12 +17,13 @@ use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
-use Atro\Core\Exceptions;
-use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Language;
-use Espo\Core\Utils\PasswordHash;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
+use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Exceptions;
+use Doctrine\DBAL\ParameterType;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
 
 class Installer extends HasContainer
@@ -107,25 +108,15 @@ class Installer extends HasContainer
         return $result;
     }
 
-    /**
-     * Get license and languages
-     *
-     * @return array
-     */
     public function getLicenseAndLanguages(): array
     {
-        // get languages data
-        $result = [
-            'languageList' => $this->getConfig()->get('languageList'),
-            'language'     => $this->getConfig()->get('language'),
-            'license'      => ''
-        ];
-
-        // get license
         $license = $this->getContents('LICENSE.txt');
-        $result['license'] = $license ? $license : '';
 
-        return $result;
+        return [
+            'languageList' => ['en_US', 'de_DE'],
+            'language'     => 'en_US',
+            'license'      => $license ?? ''
+        ];
     }
 
     /**
@@ -149,7 +140,7 @@ class Installer extends HasContainer
     {
         $result = ['status' => false, 'message' => ''];
 
-        if (!in_array($lang, $this->getConfig()->get('languageList'))) {
+        if (!in_array($lang, ['en_US', 'de_DE'])) {
             $result['message'] = $this->translateError('languageNotCorrect');
             $result['status'] = false;
         } else {
@@ -602,36 +593,9 @@ class Installer extends HasContainer
         return $this->getFileManager()->getPermissionUtils()->getLastError();
     }
 
-    /**
-     * Get default owner user id
-     *
-     * @param bool $usePosix
-     *
-     * @return int
-     */
-    protected function getDefaultOwner(bool $usePosix)
+    protected function getLanguage(): Language
     {
-        return $this->getFileManager()->getPermissionUtils()->getDefaultOwner($usePosix);
-    }
-
-    /**
-     * get default group user id
-     *
-     * @param bool $usePosix
-     *
-     * @return int
-     */
-    protected function getDefaultGroup(bool $usePosix)
-    {
-        return $this->getFileManager()->getPermissionUtils()->getDefaultGroup($usePosix);
-    }
-
-    /**
-     * @return Language
-     */
-    protected function getLanguage()
-    {
-        return new Language($this->getContainer(), $this->getConfig()->get('language'));
+        return new Language($this->getContainer());
     }
 
     protected function afterInstall(): void
@@ -657,31 +621,30 @@ class Installer extends HasContainer
             unlink($file);
         }
 
-        $connection = $this->getEntityManager()->getConnection();
-
-        $connection->createQueryBuilder()
-            ->insert($connection->quoteIdentifier('locale'))
-            ->setValue('id', ':id')
-            ->setValue($connection->quoteIdentifier('name'), ':name')
-            ->setValue('language', ':language')
-            ->setValue('date_format', ':dateFormat')
-            ->setValue('time_zone', ':timeZone')
-            ->setValue('week_start', ':weekStart')
-            ->setValue('time_format', ':timeFormat')
-            ->setValue('thousand_separator', ':thousandSeparator')
-            ->setValue('decimal_mark', ':decimalMark')
-            ->setParameters([
-                'id'                => '1',
+        @mkdir(ReferenceData::DIR_PATH);
+        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Locale.json', json_encode([
+            'en_US' => [
                 'name'              => 'Main',
-                'language'          => 'en_US',
+                'code'              => 'en_US',
                 'dateFormat'        => 'DD.MM.YYYY',
                 'timeZone'          => 'UTC',
                 'weekStart'         => 'monday',
                 'timeFormat'        => 'HH:mm',
                 'thousandSeparator' => '.',
                 'decimalMark'       => ',',
-            ])
-            ->executeQuery();
+                'createdAt'         => date('Y-m-d H:i:s')
+            ]
+        ]));
+        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Language.json', json_encode([
+            'en_US' => [
+                'name'         => 'English',
+                'code'         => 'en_US',
+                'role'         => 'main',
+                'createdAt'    => date('Y-m-d H:i:s')
+            ]
+        ]));
+
+        $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
             ->insert($connection->quoteIdentifier('scheduled_job'))

@@ -16,11 +16,17 @@
       ],
       [
         {
-          "name": "language"
+          "name": "code"
         },
         {
-          "name": "timeZone"
+          "name": "fallbackLanguageCode"
         }
+      ],
+      [
+        {
+          "name": "timeZone"
+        },
+        false
       ],
       [
         {

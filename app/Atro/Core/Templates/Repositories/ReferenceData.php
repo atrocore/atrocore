@@ -18,7 +18,8 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
 use Espo\Core\Interfaces\Injectable;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -32,6 +33,7 @@ class ReferenceData extends Repository implements Injectable
 
     protected array $dependencies = [];
     protected array $injections = [];
+    protected FileManager $fileManager;
 
     protected string $filePath;
 
@@ -101,9 +103,8 @@ class ReferenceData extends Repository implements Injectable
         if (!is_dir(self::DIR_PATH)) {
             mkdir(self::DIR_PATH);
         }
-        file_put_contents($this->filePath, json_encode($items));
 
-        return true;
+        return $this->saveDataToFile($items);
     }
 
     public function updateEntity(Entity $entity): bool
@@ -116,9 +117,7 @@ class ReferenceData extends Repository implements Injectable
             }
         }
 
-        file_put_contents($this->filePath, json_encode($items));
-
-        return true;
+        return $this->saveDataToFile($items);
     }
 
     public function deleteEntity(Entity $entity): bool
@@ -132,9 +131,7 @@ class ReferenceData extends Repository implements Injectable
             }
         }
 
-        file_put_contents($this->filePath, json_encode($newItems));
-
-        return true;
+        return $this->saveDataToFile($newItems);
     }
 
     public function save(Entity $entity, array $options = [])
@@ -212,6 +209,7 @@ class ReferenceData extends Repository implements Injectable
             if ($item['id'] === $id) {
                 $entity = $this->entityFactory->create($this->entityName);
                 $entity->set($item);
+                $entity->setAsFetched();
 
                 return $entity;
             }
@@ -319,6 +317,11 @@ class ReferenceData extends Repository implements Injectable
     public function count(array $params)
     {
         return count($this->find($params));
+    }
+
+    protected function saveDataToFile(array $data): bool
+    {
+        return !is_bool(file_put_contents($this->filePath, json_encode($data)));
     }
 
     protected function init()

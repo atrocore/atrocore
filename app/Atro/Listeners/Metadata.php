@@ -41,9 +41,6 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareMultiLang($data);
 
-        // prepare multi-lang labels
-        $data = $this->prepareMultiLangLabels($data);
-
         $data = $this->setForeignName($data);
 
         $data = $this->prepareHierarchyEntities($data);
@@ -73,6 +70,8 @@ class Metadata extends AbstractListener
         $this->prepareNotificationRuleTransportField($data);
 
         $this->addNotificationRulesToCache($data);
+
+        $data['multilang']['languageList'] = $data['entityDefs']['Language']['fields']['code']['options'];
 
         // multiParents is mandatory disabled for Folder
         $data['scopes']['Folder']['multiParents'] = false;
@@ -825,21 +824,6 @@ class Metadata extends AbstractListener
             foreach ($scopeData['fields'] as $fieldName => $fieldData) {
                 if (!empty($fieldData['foreignName'])) {
                     $data['entityDefs'][$scope]['links'][$fieldName]['foreignName'] = $fieldData['foreignName'];
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    protected function prepareMultiLangLabels(array $data): array
-    {
-        foreach ($data['fields'] as $field => $v) {
-            foreach ($this->getConfig()->get('interfaceLocales', []) as $locale) {
-                if (!empty($data['fields'][$field]['params']) && is_array($data['fields'][$field]['params'])) {
-                    $param = ['name' => 'label' . ucfirst(Util::toCamelCase(strtolower($locale))), 'type' => 'varchar'];
-
-                    $data['fields'][$field]['params'] = array_merge([$param], $data['fields'][$field]['params']);
                 }
             }
         }
