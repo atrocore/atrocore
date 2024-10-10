@@ -80,6 +80,11 @@ class V1Dot11Dot12 extends Base
         }
         file_put_contents('data/reference-data/Language.json', json_encode($res));
 
+        $this->getConfig()->remove('mainLanguage');
+        $this->getConfig()->remove('isMultilangActive');
+        $this->getConfig()->remove('inputLanguageList');
+        $this->getConfig()->save();
+
         $this->updateComposer('atrocore/core', '^1.11.12');
     }
 

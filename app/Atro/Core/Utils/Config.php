@@ -22,7 +22,7 @@ class Config extends \Espo\Core\Utils\Config
         parent::loadConfig($reload);
 
         // put reference data into config
-        $this->putReferenceDataToConfig();
+        $this->putReferenceDataIntoConfig();
 
         return $this->data;
     }
@@ -37,28 +37,42 @@ class Config extends \Espo\Core\Utils\Config
         parent::set($name, $value, $dontMarkDirty);
     }
 
-    protected function putReferenceDataToConfig(): void
+    protected function putReferenceDataIntoConfig(): void
     {
+        $this->data['inputLanguageList'] = [];
+
         foreach ($this->getReferenceData() as $entityName => $items) {
             $this->data['referenceData'][$entityName] = $items;
 
-            // prepare config locales for backward compatibility
-            if ($entityName === 'Locale') {
-                foreach ($items as $row) {
-                    $this->data['locales'][$row['id']] = [
-                        'name'              => $row['name'],
-                        'language'          => $row['code'] ?? 'en_US',
-                        'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
-                        'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
-                        'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
-                        'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',
-                        'timeZone'          => $row['timeZone'] ?? 'UTC',
-                        'thousandSeparator' => $row['thousandSeparator'] ?? '',
-                        'decimalMark'       => $row['decimalMark'] ?? '.',
-                    ];
-                }
+            switch ($entityName) {
+                case 'Locale':
+                    foreach ($items as $row) {
+                        $this->data['locales'][$row['id']] = [
+                            'name'              => $row['name'],
+                            'language'          => $row['code'] ?? 'en_US',
+                            'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
+                            'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
+                            'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
+                            'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',
+                            'timeZone'          => $row['timeZone'] ?? 'UTC',
+                            'thousandSeparator' => $row['thousandSeparator'] ?? '',
+                            'decimalMark'       => $row['decimalMark'] ?? '.',
+                        ];
+                    }
+                    break;
+                case 'Language':
+                    foreach ($items as $row) {
+                        if ($row['contentUsage'] === 'main') {
+                            $this->data['mainLanguage'] = $row['code'];
+                        } elseif ($row['contentUsage'] === 'additional') {
+                            $this->data['inputLanguageList'][] = $row['code'];
+                        }
+                    }
+                    break;
             }
         }
+
+        $this->data['isMultilangActive'] = !empty($this->data['inputLanguageList']);
     }
 
     protected function getReferenceData(): array
