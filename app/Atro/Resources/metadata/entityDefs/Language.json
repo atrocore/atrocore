@@ -153,6 +153,7 @@
     "contentUsage": {
       "type": "enum",
       "required": true,
+      "default": "additional",
       "options": [
         "main",
         "additional"

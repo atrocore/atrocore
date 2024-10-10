@@ -13,73 +13,70 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\ReferenceData;
-use Doctrine\DBAL\ParameterType;
-use Espo\Core\DataManager;
 use Espo\ORM\Entity;
 
 class Language extends ReferenceData
 {
-//    protected function afterSave(Entity $entity, array $options = [])
-//    {
-//        parent::afterSave($entity, $options);
-//
-//        $this->refreshCache();
-//    }
-//
-//    protected function afterRemove(Entity $entity, array $options = [])
-//    {
-//        parent::afterRemove($entity, $options);
-//
-//        $this->refreshCache();
-//    }
-//
-//    protected function refreshCache(): void
-//    {
-//        $records = $this->getConnection()->createQueryBuilder()
-//            ->select('id, code, content_usage')
-//            ->from('language')
-//            ->where('deleted=:false')
-//            ->setParameter('false', false, ParameterType::BOOLEAN)
-//            ->fetchAllAssociative();
-//
-//        $fallback = [];
-//        $inputLanguageList = [];
-//
-//        foreach ($records as $record) {
-//            if (!empty($record['fallback_language'])) {
-//                $fallback[$record['code']] = $record['fallback_language'];
-//            }
-//            if ($record['content_usage'] === 'main') {
-//                $this->getConfig()->set('mainLanguage', $record['code']);
-//            }
-//            if ($record['content_usage'] === 'additional') {
-//                $inputLanguageList[] = $record['code'];
-//            }
-//        }
-//
-//        $toRebuild = $inputLanguageList !== $this->getConfig()->get('inputLanguageList');
-//
-//        $this->getConfig()->set('isMultilangActive', !empty($inputLanguageList));
-//        $this->getConfig()->set('inputLanguageList', $inputLanguageList);
-//        $this->getConfig()->save();
-//
-//        if ($toRebuild) {
-//            $this->getInjection('dataManager')->rebuild();
-//        }
-//
-//        $this->getInjection('language')->clearCache();
-//
-//        $this->getConfig()->set('cacheTimestamp', time());
-//        $this->getConfig()->save();
-//        DataManager::pushPublicData('dataTimestamp', time());
-//    }
-//
-//    protected function init()
-//    {
-//        parent::init();
-//
-//        $this->addDependency('dataManager');
-//        $this->addDependency('language');
-//    }
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        $items = $this->getAllItems();
+
+        if ($entity->isNew()) {
+            if ($entity->get('contentUsage') === 'main') {
+                foreach ($items as $item) {
+                    if ($item['contentUsage'] === 'main') {
+                        throw new BadRequest('Main language is already exists.');
+                    }
+                }
+            }
+        } else {
+            if ($entity->isAttributeChanged('contentUsage')) {
+                throw new BadRequest('Content Usage cannot be changed.');
+            }
+            if ($entity->get('contentUsage') === 'additional' && $entity->isAttributeChanged('code')) {
+                throw new BadRequest('Code for Additional language cannot be changed.');
+            }
+        }
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this->rebuild();
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        parent::beforeRemove($entity, $options);
+
+        if ($entity->get('contentUsage') === 'main') {
+            throw new BadRequest('Main language cannot be removed.');
+        }
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->rebuild();
+    }
+
+    protected function rebuild(): void
+    {
+        $this->getConfig()->clearReferenceDataCache();
+        $this->getInjection('dataManager')->rebuild();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('dataManager');
+        $this->addDependency('language');
+    }
 }

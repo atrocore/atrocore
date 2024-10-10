@@ -17,6 +17,11 @@ class Config extends \Espo\Core\Utils\Config
 {
     protected ?array $referenceData = null;
 
+    public function clearReferenceDataCache(): void
+    {
+        $this->referenceData = null;
+    }
+
     protected function loadConfig($reload = false)
     {
         parent::loadConfig($reload);
@@ -27,18 +32,9 @@ class Config extends \Espo\Core\Utils\Config
         return $this->data;
     }
 
-    public function set($name, $value = null, $dontMarkDirty = false)
-    {
-        // ignore referenceData setting
-        if ($name === 'referenceData') {
-            return;
-        }
-
-        parent::set($name, $value, $dontMarkDirty);
-    }
-
     protected function putReferenceDataIntoConfig(): void
     {
+        $this->data['referenceData'] = [];
         $this->data['inputLanguageList'] = [];
 
         foreach ($this->getReferenceData() as $entityName => $items) {
