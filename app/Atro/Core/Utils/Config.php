@@ -15,12 +15,14 @@ use Atro\Core\Templates\Repositories\ReferenceData;
 
 class Config extends \Espo\Core\Utils\Config
 {
+    protected ?array $referenceData = null;
+
     protected function loadConfig($reload = false)
     {
         parent::loadConfig($reload);
 
-        // put reference data
-        $this->putReferenceData();
+        // put reference data into config
+        $this->putReferenceDataToConfig();
 
         return $this->data;
     }
@@ -35,39 +37,51 @@ class Config extends \Espo\Core\Utils\Config
         parent::set($name, $value, $dontMarkDirty);
     }
 
-    protected function putReferenceData(): void
+    protected function putReferenceDataToConfig(): void
     {
-        if (!is_dir(ReferenceData::DIR_PATH)) {
-            return;
-        }
+        foreach ($this->getReferenceData() as $entityName => $items) {
+            $this->data['referenceData'][$entityName] = $items;
 
-        foreach (scandir(ReferenceData::DIR_PATH) as $file) {
-            if (!is_file(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file)) {
-                continue;
-            }
-
-            $entityName = str_replace('.json', '', $file);
-            $items = @json_decode(file_get_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file), true);
-            if (!empty($items)) {
-                $this->data['referenceData'][$entityName] = $items;
-
-                // prepare config locales for backward compatibility
-                if ($entityName === 'Locale') {
-                    foreach ($items as $row) {
-                        $this->data['locales'][$row['id']] = [
-                            'name'              => $row['name'],
-                            'language'          => $row['code'] ?? 'en_US',
-                            'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
-                            'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
-                            'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
-                            'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',
-                            'timeZone'          => $row['timeZone'] ?? 'UTC',
-                            'thousandSeparator' => $row['thousandSeparator'] ?? '',
-                            'decimalMark'       => $row['decimalMark'] ?? '.',
-                        ];
-                    }
+            // prepare config locales for backward compatibility
+            if ($entityName === 'Locale') {
+                foreach ($items as $row) {
+                    $this->data['locales'][$row['id']] = [
+                        'name'              => $row['name'],
+                        'language'          => $row['code'] ?? 'en_US',
+                        'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
+                        'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
+                        'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
+                        'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',
+                        'timeZone'          => $row['timeZone'] ?? 'UTC',
+                        'thousandSeparator' => $row['thousandSeparator'] ?? '',
+                        'decimalMark'       => $row['decimalMark'] ?? '.',
+                    ];
                 }
             }
         }
+    }
+
+    protected function getReferenceData(): array
+    {
+        if ($this->referenceData !== null) {
+            return $this->referenceData;
+        }
+
+        $this->referenceData = [];
+
+        if (is_dir(ReferenceData::DIR_PATH)) {
+            foreach (scandir(ReferenceData::DIR_PATH) as $file) {
+                if (!is_file(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file)) {
+                    continue;
+                }
+                $entityName = str_replace('.json', '', $file);
+                $items = @json_decode(file_get_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $file), true);
+                if (!empty($items)) {
+                    $this->referenceData[$entityName] = $items;
+                }
+            }
+        }
+
+        return $this->referenceData;
     }
 }
