@@ -635,6 +635,14 @@ class Installer extends HasContainer
                 'createdAt'         => date('Y-m-d H:i:s')
             ]
         ]));
+        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Language.json', json_encode([
+            'en_US' => [
+                'name'         => 'English',
+                'code'         => 'en_US',
+                'contentUsage' => 'main',
+                'createdAt'    => date('Y-m-d H:i:s')
+            ]
+        ]));
 
         $connection = $this->getEntityManager()->getConnection();
 
