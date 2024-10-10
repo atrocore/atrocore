@@ -47,7 +47,7 @@ class Language extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isNew()) {
+        if ($entity->isNew() && $entity->get('role') === 'additional') {
             $this->rebuild();
         }
     }
@@ -65,7 +65,9 @@ class Language extends ReferenceData
     {
         parent::afterRemove($entity, $options);
 
-        $this->rebuild();
+        if ($entity->get('role') === 'additional') {
+            $this->rebuild();
+        }
     }
 
     protected function init()
