@@ -47,7 +47,9 @@ class Language extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        $this->rebuild();
+        if ($entity->isNew()) {
+            $this->rebuild();
+        }
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
