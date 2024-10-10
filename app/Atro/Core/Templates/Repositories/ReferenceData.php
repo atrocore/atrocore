@@ -209,6 +209,7 @@ class ReferenceData extends Repository implements Injectable
             if ($item['id'] === $id) {
                 $entity = $this->entityFactory->create($this->entityName);
                 $entity->set($item);
+                $entity->updateFetchedValues();
 
                 return $entity;
             }
