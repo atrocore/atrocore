@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -32,6 +33,7 @@ class ReferenceData extends Repository implements Injectable
 
     protected array $dependencies = [];
     protected array $injections = [];
+    protected FileManager $fileManager;
 
     protected string $filePath;
 
@@ -39,7 +41,8 @@ class ReferenceData extends Repository implements Injectable
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
 
-        $this->filePath = self::DIR_PATH . "/$this->entityName.json";
+        $this->fileManager = new FileManager();
+        $this->filePath = self::DIR_PATH . "/$this->entityName.php";
 
         $this->init();
     }
@@ -101,9 +104,8 @@ class ReferenceData extends Repository implements Injectable
         if (!is_dir(self::DIR_PATH)) {
             mkdir(self::DIR_PATH);
         }
-        file_put_contents($this->filePath, json_encode($items));
 
-        return true;
+        return $this->saveDataToFile($items);
     }
 
     public function updateEntity(Entity $entity): bool
@@ -116,9 +118,7 @@ class ReferenceData extends Repository implements Injectable
             }
         }
 
-        file_put_contents($this->filePath, json_encode($items));
-
-        return true;
+        return $this->saveDataToFile($items);
     }
 
     public function deleteEntity(Entity $entity): bool
@@ -132,9 +132,7 @@ class ReferenceData extends Repository implements Injectable
             }
         }
 
-        file_put_contents($this->filePath, json_encode($newItems));
-
-        return true;
+        return $this->saveDataToFile($newItems);
     }
 
     public function save(Entity $entity, array $options = [])
@@ -299,7 +297,7 @@ class ReferenceData extends Repository implements Injectable
     {
         $items = [];
         if (file_exists($this->filePath)) {
-            $data = @json_decode(file_get_contents($this->filePath), true);
+            $data = include $this->filePath;
             if (is_array($data)) {
                 $items = $data;
             }
@@ -319,6 +317,16 @@ class ReferenceData extends Repository implements Injectable
     public function count(array $params)
     {
         return count($this->find($params));
+    }
+
+    protected function saveDataToFile(array $data): bool
+    {
+        $content = $this->fileManager->wrapForDataExport($data, true);
+        if (strpos($content, '<?php') === false) {
+            return false;
+        }
+
+        return !is_bool(file_put_contents($this->filePath, $content, LOCK_EX));
     }
 
     protected function init()
