@@ -13,6 +13,7 @@ namespace Atro\Core\Templates\Controllers;
 
 use Atro\Controllers\AbstractRecordController;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 
 class ReferenceData extends AbstractRecordController
 {
@@ -76,8 +77,10 @@ class ReferenceData extends AbstractRecordController
         throw new BadRequest();
     }
 
-//    protected function prepareWhereQuery($where)
-//    {
-//        return [];
-//    }
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
 }
