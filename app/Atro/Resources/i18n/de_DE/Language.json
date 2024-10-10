@@ -1,14 +1,14 @@
 {
   "fields": {
-    "contentUsage": "Verwendung für Inhalte"
+    "role": "Rolle"
   },
   "options": {
-    "contentUsage": {
+    "role": {
       "main": "Hauptseite",
       "additional": "Zusätzliche"
     }
   },
   "tooltips": {
-    "contentUsage": "Wählen Sie Hauptsprache, wenn diese Sprache die Hauptsprache für Ihren Inhalt sein soll. Zusatz sollte für Sprachen verwendet werden, in die übersetzt werden soll."
+    "role": "Wählen Sie Hauptsprache, wenn diese Sprache die Hauptsprache für Ihren Inhalt sein soll. Zusatz sollte für Sprachen verwendet werden, in die übersetzt werden soll."
   }
 }

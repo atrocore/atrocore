@@ -58,9 +58,9 @@ class Config extends \Espo\Core\Utils\Config
                     break;
                 case 'Language':
                     foreach ($items as $row) {
-                        if ($row['contentUsage'] === 'main') {
+                        if ($row['role'] === 'main') {
                             $this->data['mainLanguage'] = $row['code'];
-                        } elseif ($row['contentUsage'] === 'additional') {
+                        } elseif ($row['role'] === 'additional') {
                             $this->data['inputLanguageList'][] = $row['code'];
                         }
                     }

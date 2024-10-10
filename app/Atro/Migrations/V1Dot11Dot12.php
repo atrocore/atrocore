@@ -66,7 +66,7 @@ class V1Dot11Dot12 extends Base
             'id'           => Util::generateId(),
             'code'         => $mainLanguage,
             'name'         => $mainLanguage,
-            'contentUsage' => 'main',
+            'role'         => 'main',
             'createdAt'    => date('Y-m-d H:i:s'),
         ];
         foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
@@ -74,7 +74,7 @@ class V1Dot11Dot12 extends Base
                 'id'           => Util::generateId(),
                 'code'         => $v,
                 'name'         => $v,
-                'contentUsage' => 'additional',
+                'role'         => 'additional',
                 'createdAt'    => date('Y-m-d H:i:s'),
             ];
         }

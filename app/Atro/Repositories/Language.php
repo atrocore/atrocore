@@ -26,18 +26,18 @@ class Language extends ReferenceData
         $items = $this->getAllItems();
 
         if ($entity->isNew()) {
-            if ($entity->get('contentUsage') === 'main') {
+            if ($entity->get('role') === 'main') {
                 foreach ($items as $item) {
-                    if ($item['contentUsage'] === 'main') {
+                    if ($item['role'] === 'main') {
                         throw new BadRequest('Main language is already exists.');
                     }
                 }
             }
         } else {
-            if ($entity->isAttributeChanged('contentUsage')) {
+            if ($entity->isAttributeChanged('role')) {
                 throw new BadRequest('Content Usage cannot be changed.');
             }
-            if ($entity->get('contentUsage') === 'additional' && $entity->isAttributeChanged('code')) {
+            if ($entity->get('role') === 'additional' && $entity->isAttributeChanged('code')) {
                 throw new BadRequest('Code for Additional language cannot be changed.');
             }
         }
@@ -54,7 +54,7 @@ class Language extends ReferenceData
     {
         parent::beforeRemove($entity, $options);
 
-        if ($entity->get('contentUsage') === 'main') {
+        if ($entity->get('role') === 'main') {
             throw new BadRequest('Main language cannot be removed.');
         }
     }

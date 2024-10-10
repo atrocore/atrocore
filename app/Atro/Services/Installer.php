@@ -639,7 +639,7 @@ class Installer extends HasContainer
             'en_US' => [
                 'name'         => 'English',
                 'code'         => 'en_US',
-                'contentUsage' => 'main',
+                'role'         => 'main',
                 'createdAt'    => date('Y-m-d H:i:s')
             ]
         ]));

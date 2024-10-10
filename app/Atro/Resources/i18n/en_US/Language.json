@@ -1,14 +1,14 @@
 {
   "fields": {
-    "contentUsage": "Content Usage"
+    "role": "Role"
   },
   "options": {
-    "contentUsage": {
+    "role": {
       "main": "Main",
       "additional": "Additional"
     }
   },
   "tooltips": {
-    "contentUsage": "Select Main if you want this language to be the main language for your content. Additional should be used for languages to be translated into."
+    "role": "Select Main if you want this language to be the main language for your content. Additional should be used for languages to be translated into."
   }
 }
