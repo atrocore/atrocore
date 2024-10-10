@@ -13,73 +13,73 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\ReferenceData;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
 use Espo\ORM\Entity;
 
-class Language extends Base
+class Language extends ReferenceData
 {
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        $this->refreshCache();
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        parent::afterRemove($entity, $options);
-
-        $this->refreshCache();
-    }
-
-    protected function refreshCache(): void
-    {
-        $records = $this->getConnection()->createQueryBuilder()
-            ->select('id, code, content_usage')
-            ->from('language')
-            ->where('deleted=:false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
-
-        $fallback = [];
-        $inputLanguageList = [];
-
-        foreach ($records as $record) {
-            if (!empty($record['fallback_language'])) {
-                $fallback[$record['code']] = $record['fallback_language'];
-            }
-            if ($record['content_usage'] === 'main') {
-                $this->getConfig()->set('mainLanguage', $record['code']);
-            }
-            if ($record['content_usage'] === 'additional') {
-                $inputLanguageList[] = $record['code'];
-            }
-        }
-
-        $toRebuild = $inputLanguageList !== $this->getConfig()->get('inputLanguageList');
-
-        $this->getConfig()->set('isMultilangActive', !empty($inputLanguageList));
-        $this->getConfig()->set('inputLanguageList', $inputLanguageList);
-        $this->getConfig()->save();
-
-        if ($toRebuild) {
-            $this->getInjection('dataManager')->rebuild();
-        }
-
-        $this->getInjection('language')->clearCache();
-
-        $this->getConfig()->set('cacheTimestamp', time());
-        $this->getConfig()->save();
-        DataManager::pushPublicData('dataTimestamp', time());
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
-        $this->addDependency('language');
-    }
+//    protected function afterSave(Entity $entity, array $options = [])
+//    {
+//        parent::afterSave($entity, $options);
+//
+//        $this->refreshCache();
+//    }
+//
+//    protected function afterRemove(Entity $entity, array $options = [])
+//    {
+//        parent::afterRemove($entity, $options);
+//
+//        $this->refreshCache();
+//    }
+//
+//    protected function refreshCache(): void
+//    {
+//        $records = $this->getConnection()->createQueryBuilder()
+//            ->select('id, code, content_usage')
+//            ->from('language')
+//            ->where('deleted=:false')
+//            ->setParameter('false', false, ParameterType::BOOLEAN)
+//            ->fetchAllAssociative();
+//
+//        $fallback = [];
+//        $inputLanguageList = [];
+//
+//        foreach ($records as $record) {
+//            if (!empty($record['fallback_language'])) {
+//                $fallback[$record['code']] = $record['fallback_language'];
+//            }
+//            if ($record['content_usage'] === 'main') {
+//                $this->getConfig()->set('mainLanguage', $record['code']);
+//            }
+//            if ($record['content_usage'] === 'additional') {
+//                $inputLanguageList[] = $record['code'];
+//            }
+//        }
+//
+//        $toRebuild = $inputLanguageList !== $this->getConfig()->get('inputLanguageList');
+//
+//        $this->getConfig()->set('isMultilangActive', !empty($inputLanguageList));
+//        $this->getConfig()->set('inputLanguageList', $inputLanguageList);
+//        $this->getConfig()->save();
+//
+//        if ($toRebuild) {
+//            $this->getInjection('dataManager')->rebuild();
+//        }
+//
+//        $this->getInjection('language')->clearCache();
+//
+//        $this->getConfig()->set('cacheTimestamp', time());
+//        $this->getConfig()->save();
+//        DataManager::pushPublicData('dataTimestamp', time());
+//    }
+//
+//    protected function init()
+//    {
+//        parent::init();
+//
+//        $this->addDependency('dataManager');
+//        $this->addDependency('language');
+//    }
 }
