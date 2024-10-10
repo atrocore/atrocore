@@ -12,6 +12,7 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 
 class V1Dot11Dot12 extends Base
@@ -23,6 +24,8 @@ class V1Dot11Dot12 extends Base
 
     public function up(): void
     {
+        @mkdir('data/reference-data');
+
         try {
             $locales = $this->getConnection()->createQueryBuilder()
                 ->select('*')
@@ -53,17 +56,36 @@ class V1Dot11Dot12 extends Base
                 'modifiedById'      => $locale['modified_by_id'],
             ];
         }
+        file_put_contents('data/reference-data/Locale.json', json_encode($res));
 
-        if (!empty($res)) {
-            @mkdir('data/reference-data');
-            file_put_contents('data/reference-data/Locale.json', json_encode($res));
+
+        $mainLanguage = $this->getConfig()->get('mainLanguage', 'en_US');
+
+        $res = [];
+        $res[$mainLanguage] = [
+            'id'           => Util::generateId(),
+            'code'         => $mainLanguage,
+            'name'         => $mainLanguage,
+            'contentUsage' => 'main',
+            'createdAt'    => date('Y-m-d H:i:s'),
+        ];
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
+            $res[$v] = [
+                'id'           => Util::generateId(),
+                'code'         => $v,
+                'name'         => $v,
+                'contentUsage' => 'additional',
+                'createdAt'    => date('Y-m-d H:i:s'),
+            ];
         }
+        file_put_contents('data/reference-data/Language.json', json_encode($res));
 
-        // 2. input languages to language entity
+        $this->updateComposer('atrocore/core', '^1.11.12');
     }
 
     public function down(): void
     {
+        throw new \Error('Downgrade is prohibited!');
     }
 
     protected function exec(string $query): void
