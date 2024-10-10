@@ -1107,13 +1107,5 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": true
-  },
-  "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    }
   }
 }
