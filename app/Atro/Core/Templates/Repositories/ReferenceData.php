@@ -41,8 +41,7 @@ class ReferenceData extends Repository implements Injectable
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
 
-        $this->fileManager = new FileManager();
-        $this->filePath = self::DIR_PATH . "/$this->entityName.php";
+        $this->filePath = self::DIR_PATH . "/$this->entityName.json";
 
         $this->init();
     }
@@ -297,7 +296,7 @@ class ReferenceData extends Repository implements Injectable
     {
         $items = [];
         if (file_exists($this->filePath)) {
-            $data = include $this->filePath;
+            $data = @json_decode(file_get_contents($this->filePath), true);
             if (is_array($data)) {
                 $items = $data;
             }
@@ -321,12 +320,7 @@ class ReferenceData extends Repository implements Injectable
 
     protected function saveDataToFile(array $data): bool
     {
-        $content = $this->fileManager->wrapForDataExport($data, true);
-        if (strpos($content, '<?php') === false) {
-            return false;
-        }
-
-        return !is_bool(file_put_contents($this->filePath, $content, LOCK_EX));
+        return !is_bool(file_put_contents($this->filePath, json_encode($data)));
     }
 
     protected function init()
