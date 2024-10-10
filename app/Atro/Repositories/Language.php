@@ -37,7 +37,7 @@ class Language extends Base
     protected function refreshCache(): void
     {
         $records = $this->getConnection()->createQueryBuilder()
-            ->select('id, code, content_usage, fallback_language')
+            ->select('id, code, content_usage')
             ->from('language')
             ->where('deleted=:false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -62,7 +62,6 @@ class Language extends Base
 
         $this->getConfig()->set('isMultilangActive', !empty($inputLanguageList));
         $this->getConfig()->set('inputLanguageList', $inputLanguageList);
-        $this->getConfig()->set('fallbackLanguage', $fallback);
         $this->getConfig()->save();
 
         if ($toRebuild) {

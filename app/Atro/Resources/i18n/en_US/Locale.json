@@ -1,7 +1,7 @@
 {
   "fields": {
-    "code": "Language",
-    "fallbackLanguage": "Fallback Language",
+    "code": "Language Code",
+    "fallbackLanguageCode": "Fallback Language Code",
     "timeZone": "Time Zone",
     "dateFormat": "Date Format",
     "weekStart": "First Day of Week",

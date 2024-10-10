@@ -57,7 +57,7 @@ class Config extends \Espo\Core\Utils\Config
                         $this->data['locales'][$row['id']] = [
                             'name'              => $row['name'],
                             'language'          => $row['code'] ?? 'en_US',
-                            'fallbackLanguage'  => $row['fallbackLanguage'] ?? null,
+                            'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
                             'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
                             'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
                             'timeFormat'        => $row['timeFormat'] ?? 'HH:mm',

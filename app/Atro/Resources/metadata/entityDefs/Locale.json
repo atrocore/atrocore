@@ -154,7 +154,7 @@
         "zu_ZA"
       ]
     },
-    "fallbackLanguage": {
+    "fallbackLanguageCode": {
       "type": "enum",
       "maxLength": 6,
       "len": 6,
