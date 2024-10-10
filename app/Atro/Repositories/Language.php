@@ -49,6 +49,8 @@ class Language extends ReferenceData
 
         if ($entity->isNew() && $entity->get('role') === 'additional') {
             $this->rebuild();
+        } else {
+            $this->clearCache();
         }
     }
 
@@ -67,6 +69,8 @@ class Language extends ReferenceData
 
         if ($entity->get('role') === 'additional') {
             $this->rebuild();
+        } else {
+            $this->clearCache();
         }
     }
 
@@ -76,6 +80,12 @@ class Language extends ReferenceData
 
         $this->addDependency('dataManager');
         $this->addDependency('language');
+    }
+
+    protected function clearCache(): void
+    {
+        $this->getConfig()->clearReferenceDataCache();
+        $this->getInjection('dataManager')->clearCache();
     }
 
     protected function rebuild(): void
