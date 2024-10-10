@@ -58,8 +58,9 @@ class V1Dot11Dot12 extends Base
         }
         file_put_contents('data/reference-data/Locale.json', json_encode($res));
 
+        $config = include 'data/config.php';
 
-        $mainLanguage = $this->getConfig()->get('mainLanguage', 'en_US');
+        $mainLanguage = $config['mainLanguage'] ?? 'en_US';
 
         $res = [];
         $res[$mainLanguage] = [
@@ -69,7 +70,7 @@ class V1Dot11Dot12 extends Base
             'role'         => 'main',
             'createdAt'    => date('Y-m-d H:i:s'),
         ];
-        foreach ($this->getConfig()->get('inputLanguageList', []) as $v) {
+        foreach ($config['inputLanguageList'] ?? [] as $v) {
             $res[$v] = [
                 'id'           => Util::generateId(),
                 'code'         => $v,
