@@ -393,7 +393,28 @@ class Composer extends HasContainer
             return $id;
         }
 
-        return $package->get('packageId');
+        $abandoned = [
+            "atrocore/export-database"    => "atrocore/export-feeds-database",
+            "atrocore/export"             => "atrocore/export-feeds",
+            "atrocore/import"             => "atrocore/import-feeds",
+            "atrocore/workflows"          => "atrocore/event-based-jobs",
+            "atrocore/synchronization"    => "atrocore/connector",
+            "atrocore/export-remote-file" => "atrocore/export-feeds-remote-file",
+            "atrocore/import-http"        => "atrocore/import-feeds-http",
+            "atrocore/import-remote-file" => "atrocore/import-feeds-remote-file",
+            "atrocore/export-http"        => "atrocore/export-feeds-http",
+            "atrocore/import-database"    => "atrocore/import-feeds-databases",
+            "atrocore/pm"                 => "atrocore/project-management",
+            "atrocore/tasks"              => "atrocore/activities-tasks",
+        ];
+
+        $name = $package->get('packageId');
+        $installed = self::getComposerJson()['require'] ?? [];
+        if (isset($abandoned[$name]) && isset($installed[$abandoned[$name]])) {
+            $name = $abandoned[$name];
+        }
+
+        return $name;
     }
 
     public function getLogs(Request $request): array
@@ -607,7 +628,7 @@ class Composer extends HasContainer
     /**
      * Get module status
      *
-     * @param array  $diff
+     * @param array $diff
      * @param string $id
      *
      * @return mixed
