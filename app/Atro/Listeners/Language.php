@@ -100,7 +100,7 @@ class Language extends AbstractListener
         }
         foreach ($this->getConfig()->get('referenceData.Locale', []) as $item) {
             if (!isset($languages[$item['code']])) {
-                $languages[$item['code']] = $item['code'];
+                $languages[$item['code']] = $item['name'];
             }
         }
         if (isset($languages[$this->getConfig()->get('mainLanguage')])) {
