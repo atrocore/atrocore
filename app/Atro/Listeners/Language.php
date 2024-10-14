@@ -121,6 +121,16 @@ class Language extends AbstractListener
             }
         }
 
+        $referenceData = $this->getConfig()->get('referenceData.Locale', []);
+        if (!empty($referenceData)) {
+            foreach ($data as $locale => $rows) {
+                foreach ($referenceData as $item) {
+                    $value = $this->getLabel($data, $locale, 'Admin', 'label') . ' / ' . $item['name'];
+                    $data[$locale]['Admin']['fields'][Util::toCamelCase('label_' . strtolower($item['code']))] = $value;
+                }
+            }
+        }
+
         $event->setArgument('data', $data);
     }
 
