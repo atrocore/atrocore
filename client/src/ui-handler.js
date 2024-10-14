@@ -64,7 +64,7 @@ Espo.define('ui-handler', [], function () {
                     });
                 }
                 return res;
-            }.bind(this.recordView),
+            }.bind(this.recordView)
         };
     }
 
