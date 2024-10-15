@@ -15,11 +15,11 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 
-class V1Dot11Dot13 extends Base
+class V1Dot11Dot18 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-10-14 12:00:00');
+        return new \DateTime('2024-10-15 12:00:00');
     }
 
     public function up(): void
