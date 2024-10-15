@@ -624,6 +624,7 @@ class Installer extends HasContainer
         @mkdir(ReferenceData::DIR_PATH);
         @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Locale.json', json_encode([
             'en_US' => [
+                'id'                => 'main',
                 'name'              => 'Main',
                 'code'              => 'en_US',
                 'dateFormat'        => 'DD.MM.YYYY',
