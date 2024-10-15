@@ -112,10 +112,20 @@ class Installer extends HasContainer
     {
         $license = $this->getContents('LICENSE.txt');
 
+        $languages = [
+            "de_DE" => "Deutsch",
+            "en_US" => "English",
+            "es_ES" => "Español",
+            'fr_FR' => 'Français',
+            "pl_PL" => "Polski",
+            "ru_RU" => "Русский",
+            'uk_UA' => 'Українська'
+        ];
+
         return [
-            'translations' => ["en_US" => "English", "de_DE" => "German"],
-            'languageList' => ['en_US', 'de_DE'],
-            'language'     => 'en_US',
+            'languages'    => $languages,
+            'languageList' => array_keys($languages),
+            'language'     => $this->getConfig()->get('language') ?? 'en_US',
             'license'      => $license ?? ''
         ];
     }
@@ -130,26 +140,13 @@ class Installer extends HasContainer
         return $this->getConfig()->get('database');
     }
 
-    /**
-     * Set language
-     *
-     * @param $lang
-     *
-     * @return array
-     */
     public function setLanguage(string $lang): array
     {
-        $result = ['status' => false, 'message' => ''];
-
-        if (!in_array($lang, ['en_US', 'de_DE'])) {
-            $result['message'] = $this->translateError('languageNotCorrect');
-            $result['status'] = false;
-        } else {
-            $this->getConfig()->set('language', $lang);
-            $result['status'] = $this->getConfig()->save();
-        }
-
-        return $result;
+        $this->getConfig()->set('language', $lang);
+        return [
+            'status'  => $this->getConfig()->save(),
+            'message' => '',
+        ];
     }
 
     /**
