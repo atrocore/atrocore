@@ -408,7 +408,11 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
         },
 
         processUiHandler: function (type, field) {
-            this.uiHandler.process(type, field);
+            let additionalParams ={
+                currentUserId: this.getPreferences().get('id')
+            }
+
+            this.uiHandler.process(type, field, additionalParams);
         },
 
         initDependancy: function () {
