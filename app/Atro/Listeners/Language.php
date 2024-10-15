@@ -16,7 +16,6 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\Core\Utils\Util;
-use Espo\Core\Templates\Services\Relationship;
 
 class Language extends AbstractListener
 {
@@ -95,20 +94,30 @@ class Language extends AbstractListener
             }
         }
 
-        if (!empty($this->getConfig()->get('isMultilangActive')) && !empty($languages = $this->getConfig()->get('referenceData.Language', []))) {
+        $languages = [];
+        foreach ($this->getConfig()->get('referenceData.Language', []) as $item) {
+            $languages[$item['code']] = $item['name'];
+        }
+        foreach ($this->getConfig()->get('referenceData.Locale', []) as $item) {
+            if (!isset($languages[$item['code']])) {
+                $languages[$item['code']] = $item['name'];
+            }
+        }
+        if (isset($languages[$this->getConfig()->get('mainLanguage')])) {
+            unset($languages[$this->getConfig()->get('mainLanguage')]);
+        }
+
+        if (!empty($languages)) {
             foreach ($data as $locale => $rows) {
                 foreach ($rows as $scope => $items) {
                     foreach (['fields', 'tooltips'] as $type) {
                         if (isset($items[$type])) {
                             foreach ($items[$type] as $field => $value) {
-                                foreach ($languages as $language) {
-                                    if ($language['role'] !== 'additional') {
-                                        continue;
-                                    }
-                                    $mField = $field . ucfirst(Util::toCamelCase(strtolower($language['code'])));
+                                foreach ($languages as $code => $name) {
+                                    $mField = $field . ucfirst(Util::toCamelCase(strtolower($code)));
                                     if (!isset($data[$locale][$scope][$type][$mField])) {
                                         if ($type == 'fields') {
-                                            $data[$locale][$scope][$type][$mField] = $value . ' / ' . $language['name'];
+                                            $data[$locale][$scope][$type][$mField] = $value . ' / ' . $name;
                                         } else {
                                             $data[$locale][$scope][$type][$mField] = $value;
                                         }
@@ -117,6 +126,15 @@ class Language extends AbstractListener
                             }
                         }
                     }
+                }
+            }
+        }
+
+        if (!empty($referenceData = $this->getConfig()->get('referenceData.Locale', []))) {
+            foreach ($data as $locale => $rows) {
+                foreach ($referenceData as $item) {
+                    $value = $this->getLabel($data, $locale, 'Admin', 'label') . ' / ' . $item['name'];
+                    $data[$locale]['Admin']['fields'][Util::toCamelCase('label_' . strtolower($item['code']))] = $value;
                 }
             }
         }

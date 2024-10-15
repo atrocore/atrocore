@@ -106,7 +106,7 @@
                         <div class="field field-website">
                             <select name="user-lang" class="form-control">
                                 <% _.each(licenseAndLanguages.languageList, function(lang) { %>
-                                <option <%= lang === licenseAndLanguages.language ? selected="selected" : '' %> value="<%= lang %>"><%= translate.labels.languages[lang] %></option>
+                                <option <%= lang === licenseAndLanguages.language ? selected="selected" : '' %> value="<%= lang %>"><%= licenseAndLanguages.languages[lang] %></option>
                                 <% }); %>
                             </select>
                         </div>

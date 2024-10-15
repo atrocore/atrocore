@@ -70,11 +70,15 @@ Espo.define('ui-handler', [], function () {
 
     _.extend(UiHandler.prototype, {
 
-        process: function (type, field) {
+        process: function (type, field, additionalParams = {}) {
             let preparedTriggerType = type === 'onLoad' ? 'onChange' : type;
 
             this.twigTemplateData['triggerType'] = type;
             this.twigTemplateData['triggerField'] = field;
+
+            if('currentUserId' in additionalParams){
+                this.twigTemplateData['currentUserId'] =  additionalParams.currentUserId;
+            }
 
             this.defs.forEach(rule => {
                 let triggerFields = rule.triggerFields || [];
