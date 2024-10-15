@@ -638,6 +638,7 @@ class Installer extends HasContainer
         ]));
         @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Language.json', json_encode([
             'en_US' => [
+                'id'           => 'main',
                 'name'         => 'English',
                 'code'         => 'en_US',
                 'role'         => 'main',
