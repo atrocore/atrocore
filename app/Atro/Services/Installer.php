@@ -113,6 +113,7 @@ class Installer extends HasContainer
         $license = $this->getContents('LICENSE.txt');
 
         return [
+            'translations' => ["en_US" => "English", "de_DE" => "German"],
             'languageList' => ['en_US', 'de_DE'],
             'language'     => 'en_US',
             'license'      => $license ?? ''
