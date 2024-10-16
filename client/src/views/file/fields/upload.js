@@ -170,7 +170,6 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                 }
                 this.attributes = modalView.options.attributes || {}
             }
-            debugger
             return {
                 multiUpload: this.multiUpload,
                 accept: this.attributes.accept ?? false
