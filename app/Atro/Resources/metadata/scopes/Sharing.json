@@ -8,5 +8,6 @@
   "hasOwner": false,
   "hasAssignedUser": false,
   "hasTeam": false,
-  "streamDisabled": true
+  "streamDisabled": true,
+  "hideFieldTypeFilters": true
 }

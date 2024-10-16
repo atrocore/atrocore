@@ -11,5 +11,6 @@
   "dragAndDrop": true,
   "fieldValueInheritance": false,
   "relationInheritance": false,
-  "object": true
+  "object": true,
+  "hideFieldTypeFilters": true
 }

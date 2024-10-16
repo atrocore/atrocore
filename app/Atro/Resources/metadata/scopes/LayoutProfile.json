@@ -10,5 +10,6 @@
   "disabled": false,
   "type": "Base",
   "object": true,
-  "notificationDisabled": true
+  "notificationDisabled": true,
+  "hideFieldTypeFilters": true
 }

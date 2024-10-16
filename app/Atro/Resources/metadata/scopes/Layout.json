@@ -9,5 +9,6 @@
   "streamDisabled": true,
   "type": "Base",
   "object": true,
-  "notificationDisabled": true
+  "notificationDisabled": true,
+  "hideFieldTypeFilters": true
 }

@@ -6,5 +6,6 @@
     "aclActionList": ["read"],
     "aclLevelList": ["all", "team", "no"],
     "streamDisabled": true,
-    "customizable": false
+    "customizable": false,
+    "hideFieldTypeFilters": true
 }

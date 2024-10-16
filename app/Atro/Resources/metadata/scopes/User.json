@@ -17,5 +17,6 @@
   "importable": true,
   "object": true,
   "streamDisabled": true,
-  "isActiveUnavailable": true
+  "isActiveUnavailable": true,
+  "hideFieldTypeFilters": true
 }
