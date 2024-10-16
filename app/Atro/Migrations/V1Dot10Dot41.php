@@ -165,7 +165,7 @@ class V1Dot10Dot41 extends Base
                         'body'    => ':body'
                     ]);
 
-                if (in_array('de_DE', array_column($config->get('locales'), 'language'))) {
+                if (in_array('de_DE', array_column($config->get('locales') ?? [], 'language'))) {
                     $query->setValue('subject_de_de', ':subject_de_de')
                         ->setValue('body_de_de', ':body_de_de');
                 }

@@ -35,7 +35,6 @@
   },
   "errors": {
     "alreadyInstalled": "AtroCore déjà installé",
-    "languageNotCorrect": "La langue d'entrée n'est pas correcte",
     "differentPass": "Mots de passe différents",
     "notCorrectDatabaseConfig": "Paramètres de la base de données invalides",
     "filePermissionsError": "Les droits d'accès aux fichiers sont insuffisants. Veuillez configurer les autorisations conformément aux instructions."

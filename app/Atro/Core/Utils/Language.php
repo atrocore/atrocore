@@ -19,7 +19,8 @@ class Language extends \Espo\Core\Utils\Language
 {
     public function __construct(Container $container)
     {
-        $currentLanguage = self::detectLanguage($container->get('config'), $container->get('preferences'));
+        $preferences = $container->get('config')->get('isInstalled', false) ? $container->get('preferences') : null;
+        $currentLanguage = self::detectLanguage($container->get('config'), $preferences);
 
         parent::__construct($container, $currentLanguage);
     }

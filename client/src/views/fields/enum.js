@@ -54,6 +54,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         prohibitedScopes: ['Settings', 'EntityManager'],
 
+        hasListenOptions: false,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
@@ -238,6 +240,27 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             })
 
             this.setOptionList(options)
+        },
+
+        initElement: function () {
+            if (!this.hasListenOptions) {
+                Dep.prototype.initElement.call(this);
+
+                this.hasListenOptions = true;
+            } else {
+                this.$element = this.$el.find('[name="' + this.name + '"]');
+
+                if (this.mode === 'edit') {
+                    this.$element.on('change', function () {
+                        this.trigger('change');
+                    }.bind(this));
+
+                    this.$element.on('focus', function () {
+                        this.trigger('focus', this.name);
+                        this.model.trigger('focusField', this.name);
+                    }.bind(this));
+                }
+            }
         },
 
         setOptionList: function (optionList) {
