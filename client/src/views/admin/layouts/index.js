@@ -77,7 +77,6 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                         if (viewType && !viewType.getAvailableOptions().includes(this.model.get('viewType'))) {
                             return;
                         }
-                        console.log('update')
                         this.openLayout(this.model.get('entity'), this.model.get('viewType'), this.model.get('layoutProfileId'))
                     }
                 })
