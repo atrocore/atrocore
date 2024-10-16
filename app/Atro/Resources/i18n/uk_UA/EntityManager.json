@@ -48,7 +48,8 @@
     "modifiedExtendedRelations": "Зв'язки, що впливають на дату/час зміни",
     "duplicatableRelations": "Зв'язки, що дублюються",
     "nonComparableFields": "Непорівнянні поля",
-    "deleteWithoutConfirmation": "Видаляти без підтверження"
+    "deleteWithoutConfirmation": "Видаляти без підтверження",
+    "hideFieldTypeFilters": "Приховати фільтри типів полів"
   },
   "options": {
     "linkType": {

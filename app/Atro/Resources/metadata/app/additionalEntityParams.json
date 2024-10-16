@@ -117,6 +117,11 @@
       "type": "bool",
       "default": false,
       "tooltip": true
+    },
+    "hideFieldTypeFilters": {
+      "type": "bool",
+      "default": false,
+      "tooltip": true
     }
   },
   "layout": {
