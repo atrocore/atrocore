@@ -11,5 +11,8 @@
   "type": "Base",
   "object": true,
   "notificationDisabled": true,
+  "duplicatableRelations": [
+    "layouts"
+  ],
   "hideFieldTypeFilters": true
 }

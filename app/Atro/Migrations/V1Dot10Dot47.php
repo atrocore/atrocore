@@ -36,7 +36,7 @@ class V1Dot10Dot47 extends V1Dot10Dot36
                     ->set('subject', ':subject')
                     ->set('body', ':body');
 
-                if (in_array('de_DE', array_column($this->getConfig()->get('locales'), 'language'))) {
+                if (in_array('de_DE', array_column($this->getConfig()->get('locales') ?? [], 'language'))) {
                     $query->set('subject_de_de', ':subject_de_de')
                         ->set('body_de_de', ':body_de_de');
                 }

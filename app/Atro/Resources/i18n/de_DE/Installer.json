@@ -33,7 +33,6 @@
   },
   "errors": {
     "alreadyInstalled": "AtroCore ist schon installiert",
-    "languageNotCorrect": "Die Eingabesprache ist falsch",
     "differentPass": "Verschiedene Passwörter",
     "notCorrectDatabaseConfig": "Ungültige Datenbank Einstellungen",
     "filePermissionsError": "You have insufficient file permissions. Please configure permissions according to instruction."

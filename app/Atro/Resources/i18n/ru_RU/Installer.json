@@ -33,7 +33,6 @@
   },
   "errors": {
     "alreadyInstalled": "AtroCore уже установлен",
-    "languageNotCorrect": "Неправильный язык ввода",
     "differentPass": "Пароль не совпадает",
     "notCorrectDatabaseConfig": "Неверные настройки базы данных",
     "filePermissionsError": "У вас недостаточно прав для файлов. Пожалуйста, настройте разрешения согласно инструкции."

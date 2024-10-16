@@ -11,6 +11,7 @@
 
 namespace Atro\EntryPoints;
 
+use Atro\Core\Download\Custom;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\File;
@@ -51,6 +52,13 @@ class Sharing extends Download
             }
             $sharing->set('used', $used + 1);
             $this->getEntityManager()->saveEntity($sharing);
+        }
+
+        $type = $_GET['type'] ?? null;
+        if ($type === 'custom') {
+            $path = $this->container->get(Custom::class)->convert($file, $_GET);
+            header("Location: $path", true, 302);
+            exit;
         }
 
         $this->downloadByFileStream($file);
