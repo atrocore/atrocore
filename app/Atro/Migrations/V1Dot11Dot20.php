@@ -50,6 +50,10 @@ class V1Dot11Dot20 extends Base
                 ->setParameter('entity', $entityName)
                 ->fetchFirstColumn();
 
+            if (empty($ids)) {
+                return;
+            }
+
             $sectionIds = $this->getConnection()->createQueryBuilder()
                 ->select('id')
                 ->from('layout_section')
