@@ -1,7 +1,8 @@
 {
   "fields": {
     "isActive": "активний",
-    "description": "вид"
+    "description": "вид",
+    "hideShowFullList": "Приховати \"Показати повний список\" на панелях зв'язків"
   },
   "links": {
     "layouts": "влаштовування"

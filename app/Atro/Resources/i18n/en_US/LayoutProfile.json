@@ -2,7 +2,8 @@
   "fields": {
     "isActive": "Active",
     "isDefault": "Default",
-    "description": "Description"
+    "description": "Description",
+    "hideShowFullList": "Hide \"Show Full List\" on Relation Panels"
   },
   "links": {
     "layouts": "Layouts"

@@ -26,7 +26,9 @@ class Layout extends Base
         }
 
         try {
-            switch ($entity->get('viewType')) {
+            $reelType = $this->getMetadata()->get("clientDefs.{$entity->get('entity')}.additionalLayouts.{$entity->get('viewType')}", $entity->get('viewType'));
+
+            switch ($reelType) {
                 case 'list';
                 case 'listSmall':
                 case 'kanban':

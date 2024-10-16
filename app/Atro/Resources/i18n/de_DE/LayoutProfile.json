@@ -1,7 +1,8 @@
 {
   "fields": {
     "isActive": "Aktiv",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "hideShowFullList": "„Vollständige Liste anzeigen“ auf Beziehungsfeldern ausblenden"
   },
   "links": {
     "layouts": "Layout"

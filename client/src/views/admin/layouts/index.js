@@ -72,11 +72,12 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     this.openLayout(this.scope, this.type, this.layoutProfileId);
                 }
                 this.listenTo(this.model, 'change:entity change:viewType change:layoutProfileId', () => {
-                    console.log('update')
                     if (this.model.get('entity') && this.model.get('viewType') && this.model.get('layoutProfileId')) {
-                        if (this.model.get('viewType') === 'kanban' && !this.getMetadata().get(['clientDefs', this.model.get('entity'), 'kanbanViewMode'])) {
-                            return
+                        const viewType = this.getView("viewType")
+                        if (viewType && !viewType.getAvailableOptions().includes(this.model.get('viewType'))) {
+                            return;
                         }
+                        console.log('update')
                         this.openLayout(this.model.get('entity'), this.model.get('viewType'), this.model.get('layoutProfileId'))
                     }
                 })
@@ -144,9 +145,6 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
             this.layoutProfileId = layoutProfileId
 
             this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : ''), {trigger: false});
-
-
-            var typeReal = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
             LayoutUtils.renderComponent.call(this, {
                 type: type,

@@ -11,7 +11,7 @@
 
     export let params: Params;
     export let columnCount: number = 2;
-    export let layoutDisabledParameter = 'layoutDetailDisabled';
+
     let dataAttributeList = ['id', 'name', 'fullWidth', 'customLabel', 'noLabel'];
     let panelDataAttributeList = ['id', 'label', 'style'];
 
@@ -144,7 +144,16 @@
                 return false;
             }
         }
-        return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, layoutDisabledParameter);
+        const disabledParameters = ['disabled', `layout${Espo.utils.upperCaseFirst(params.type)}Disabled`];
+        if (params.reelType) {
+            disabledParameters.push(`layout${Espo.utils.upperCaseFirst(params.reelType)}Disabled`)
+        }
+        for (let param of disabledParameters) {
+            if (model.getFieldParam(name, param)) {
+                return false
+            }
+        }
+        return true
     }
 
     function hasDefaultPanel() {
