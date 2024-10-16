@@ -4,8 +4,8 @@
   },
   "options": {
     "role": {
-      "main": "Hauptseite",
-      "additional": "Zusätzliche"
+      "main": "Hauptsprache",
+      "additional": "Zusatzsprache"
     }
   },
   "tooltips": {
