@@ -8,5 +8,6 @@
   "type": "Base",
   "object": true,
   "hasActive": true,
-  "notificationDisabled": true
+  "notificationDisabled": true,
+  "hideFieldTypeFilters": true
 }

@@ -4,5 +4,6 @@
   "tab": true,
   "acl": false,
   "customizable": false,
-  "streamDisabled": true
+  "streamDisabled": true,
+  "hideFieldTypeFilters": true
 }

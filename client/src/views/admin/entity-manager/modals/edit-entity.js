@@ -85,6 +85,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 this.model.set('hasModifiedExtendedRelations', this.getMetadata().get(['scopes', scope, 'type']) !== 'ReferenceData');
                 this.model.set('hasDuplicatableRelations', this.getMetadata().get(['scopes', scope, 'type']) !== 'ReferenceData');
+
+                this.model.set('hideFieldTypeFilters', this.getMetadata().get(['scopes', scope, 'hideFieldTypeFilters']) ||  false);
             }
         },
 

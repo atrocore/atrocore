@@ -177,6 +177,15 @@
             </div>
         </div>
         {{/if}}
+         <div class="row">
+            <div class="cell form-group col-md-6" data-name="hideFieldTypeFilters">
+                <label class="control-label"
+                       data-name="hideFieldTypeFilters">{{translate 'hideFieldTypeFilters' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="hideFieldTypeFilters">
+                    {{{hideFieldTypeFilters}}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {{#each additionalParamsLayout}}

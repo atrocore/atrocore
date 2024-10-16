@@ -13,5 +13,6 @@
   "notificationDisabled": true,
   "duplicatableRelations": [
     "layouts"
-  ]
+  ],
+  "hideFieldTypeFilters": true
 }

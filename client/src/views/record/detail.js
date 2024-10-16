@@ -1259,7 +1259,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 isSmall: this.type == 'editSmall' || this.type == 'detailSmall'
             };
 
-            if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== false) {
+            if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`)
+                && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== false
+                && this.getMetadata().get(['scopes', this.model.urlRoot, 'hideFieldTypeFilters']) !== true
+            ) {
                 data.overviewFilters = this.getOverviewFiltersList().map(filter => filter.name);
             }
 

@@ -49,7 +49,8 @@
     "modifiedExtendedRelations": "Relations effecting modification date/time",
     "duplicatableRelations": "Duplicatable Relations",
     "nonComparableFields": "Non Comparable Fields",
-    "deleteWithoutConfirmation": "Delete without confirmation"
+    "deleteWithoutConfirmation": "Delete without confirmation",
+    "hideFieldTypeFilters": "Hide field type filters"
   },
   "options": {
     "linkType": {
