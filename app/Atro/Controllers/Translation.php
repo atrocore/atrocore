@@ -18,10 +18,10 @@ use Atro\Console\RefreshTranslations;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Templates\Controllers\Base;
-use Espo\Core\Utils\Language;
+use Atro\Core\Templates\Controllers\ReferenceData;
+use Atro\Core\Utils\Language;
 
-class Translation extends Base
+class Translation extends ReferenceData
 {
     /**
      * @param mixed $params
@@ -52,11 +52,6 @@ class Translation extends Base
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
 
         return true;
-    }
-
-    public function postActionPush(): bool
-    {
-        return $this->getRecordService()->push();
     }
 
     /**

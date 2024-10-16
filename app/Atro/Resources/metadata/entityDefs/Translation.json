@@ -5,6 +5,12 @@
       "required": true,
       "trim": true
     },
+    "code": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
     "module": {
       "type": "varchar",
       "default": "custom",
@@ -600,13 +606,5 @@
       "deDe",
       "ruRu"
     ]
-  },
-  "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    }
   }
 }
