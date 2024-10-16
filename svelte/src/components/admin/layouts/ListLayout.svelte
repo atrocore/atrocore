@@ -38,7 +38,6 @@
             }
         };
     }
-    export let layoutDisabledParameter: string = 'layoutListDisabled';
 
     let rowsLayout: RowsLayout;
     let enabledFields: Field[] = [];
@@ -117,7 +116,17 @@
         if (ignoreTypeList.includes(model.getFieldParam(name, 'type'))) {
             return false;
         }
-        return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, layoutDisabledParameter);
+
+        const disabledParameters = ['disabled', `layout${Espo.utils.upperCaseFirst(params.type)}Disabled`];
+        if (params.reelType) {
+            disabledParameters.push(`layout${Espo.utils.upperCaseFirst(params.reelType)}Disabled`)
+        }
+        for (let param of disabledParameters) {
+            if (model.getFieldParam(name, param)) {
+                return false
+            }
+        }
+        return true;
     }
 </script>
 

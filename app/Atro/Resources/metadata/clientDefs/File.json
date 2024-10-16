@@ -23,6 +23,9 @@
   "modalViews": {
     "select": "views/file/modals/select-records"
   },
+  "additionalLayouts": {
+    "upload": "detailSmall"
+  },
   "treeScopes": [
     "Folder"
   ],

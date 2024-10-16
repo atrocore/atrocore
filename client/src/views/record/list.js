@@ -373,6 +373,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             const fixedHeaderRow = this.isFixedListHeaderRow();
 
+            // add layout configuration button
+            const additionalLayouts = this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts']) || {};
+            const availableLayouts = []
+            for (let key in additionalLayouts) {
+                if (['list', 'listSmall'].includes(additionalLayouts[key])) {
+                    availableLayouts.push(key)
+                }
+            }
+
             return {
                 scope: this.scope,
                 header: this.header,
@@ -395,7 +404,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.length && !fixedHeaderRow,
-                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall'].includes(this.layoutName) &&
+                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall', ...availableLayouts].includes(this.layoutName) &&
                     this.getAcl().check('Layout', 'create')
             };
         },

@@ -10,7 +10,8 @@
     "hash": "Hash",
     "fileSize": "File Size (bytes)",
     "fileMtime": "File Modification Date",
-    "url": "URL"
+    "url": "URL",
+    "uploadUrl": "URL"
   },
   "links": {
     "folder": "Folder",

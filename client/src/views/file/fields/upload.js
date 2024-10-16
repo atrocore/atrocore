@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5'], function (Dep, MD5) {
+Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'lib!MD5'], function (Dep, MD5) {
 
     return Dep.extend({
 
@@ -163,6 +163,13 @@ Espo.define('views/file/upload', ['views/fields/attachment-multiple', 'lib!MD5']
         },
 
         data() {
+            const modalView = this._parentView?._parentView?._parentView
+            if (modalView) {
+                if (modalView.options.multiUpload === false) {
+                    this.multiUpload = false
+                }
+                this.attributes = modalView.options.attributes || {}
+            }
             return {
                 multiUpload: this.multiUpload,
                 accept: this.attributes.accept ?? false
