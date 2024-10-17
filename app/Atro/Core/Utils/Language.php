@@ -145,24 +145,18 @@ class Language
 
     public function save()
     {
-        echo '<pre>';
-        print_r('todo');
-        die();
-
-        $field = Util::toCamelCase(strtolower($this->getLanguage()));
-
         if (!empty($this->changedData)) {
             $simplifiedTranslates = [];
-            RefreshTranslations::toSimpleArray($this->changedData, $simplifiedTranslates);
-
+            \Atro\Repositories\Translation::toSimpleArray($this->changedData, $simplifiedTranslates);
             foreach ($simplifiedTranslates as $key => $value) {
-                $label = $this->getEntityManager()->getRepository('Translation')->where(['name' => $key])->findOne();
+                $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode($key);
                 if (empty($label)) {
                     $label = $this->getEntityManager()->getRepository('Translation')->get();
-                    $label->set(['name' => $key, 'module' => 'custom']);
+                    $label->set(['code' => $key, 'module' => 'custom']);
                 }
                 $label->set('isCustomized', true);
-                $label->set($field, $value);
+                $label->set(Util::toCamelCase(strtolower($this->getLanguage())), $value);
+
                 $this->getEntityManager()->saveEntity($label);
             }
         }
@@ -171,8 +165,8 @@ class Language
             foreach ($this->deletedData as $scope => $unsetData) {
                 foreach ($unsetData as $category => $names) {
                     foreach ($names as $name) {
-                        $label = $this->getEntityManager()->getRepository('Translation')->where(['name' => "$scope.$category.$name", 'module' => 'custom', 'isCustomized' => true])->findOne();
-                        if (!empty($label)) {
+                        $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.$category.$name");
+                        if (!empty($label) && $label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
                             $this->getEntityManager()->removeEntity($label);
                         }
                     }
