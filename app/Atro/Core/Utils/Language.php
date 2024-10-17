@@ -13,6 +13,7 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
+use Atro\Repositories\Translation as TranslationRepository;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Entities\Preferences;
 
@@ -27,7 +28,6 @@ class Language
     protected array $deletedData = [];
     protected array $changedData = [];
     protected string $currentLanguage;
-    protected string $corePath = CORE_PATH . '/Atro/Resources/i18n';
 
     public function __construct(Container $container, string $currentLanguage = null)
     {
@@ -139,7 +139,8 @@ class Language
     {
         if (!empty($this->changedData)) {
             $simplifiedTranslates = [];
-            \Atro\Repositories\Translation::toSimpleArray($this->changedData, $simplifiedTranslates);
+            TranslationRepository::toSimpleArray($this->changedData, $simplifiedTranslates);
+
             foreach ($simplifiedTranslates as $key => $value) {
                 $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode($key);
                 if (empty($label)) {
@@ -183,7 +184,7 @@ class Language
         $data = [];
 
         // load core
-        $data['core'] = $this->unify($this->corePath);
+        $data['core'] = $this->unify(CORE_PATH . '/Atro/Resources/i18n');
 
         // load modules
         foreach ($this->getMetadata()->getModules() as $name => $module) {
