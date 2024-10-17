@@ -13,15 +13,15 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\Core\DataManager;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Utils\Language;
 use Espo\ORM\Entity;
 
-class UiHandler extends Base
+class UiHandler extends ReferenceData
 {
-    public const CACHE_FILE = DataManager::CACHE_DIR_PATH . '/ui_handler.json';
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!$entity->isNew()) {
@@ -37,7 +37,7 @@ class UiHandler extends Base
 
     protected function afterSave(Entity $entity, array $options = [])
     {
-        $this->deleteCacheFile();
+        $this->refreshCache();
 
         parent::afterSave($entity, $options);
     }
@@ -51,32 +51,43 @@ class UiHandler extends Base
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $this->deleteCacheFile();
+        $this->refreshCache();
 
         parent::afterRemove($entity, $options);
     }
 
     public function validateSystemHandler(Entity $entity): void
     {
-        if (!empty($entity->get('hash'))) {
-            throw new BadRequest(
-                sprintf($this->getLanguage()->translate('systemHandler', 'exceptions', 'UiHandler'), $entity->get('name'))
-            );
+        if (!empty($entity->get('system'))) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('systemHandler', 'exceptions', 'UiHandler'), $entity->get('name')));
         }
     }
 
-    public function deleteCacheFile(): void
+    public function refreshCache(): void
     {
         if (empty($this->getMemoryStorage()->get('importJobId'))) {
-            $file = self::CACHE_FILE;
-            if (file_exists($file)) {
-                unlink($file);
-            }
-
             $this->getConfig()->remove('cacheTimestamp');
             $this->getConfig()->save();
 
             DataManager::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
         }
+    }
+
+    protected function getMemoryStorage(): StorageInterface
+    {
+        return $this->getInjection('memoryStorage');
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('language');
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('memoryStorage');
+        $this->addDependency('language');
     }
 }

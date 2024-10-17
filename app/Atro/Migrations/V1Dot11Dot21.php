@@ -47,7 +47,33 @@ class V1Dot11Dot21 extends Base
 
         file_put_contents('data/reference-data/Translation.json', json_encode($res));
 
-        $this->updateComposer('atrocore/core', '^1.11.20');
+        try {
+            $records = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('ui_handler')
+                ->where('deleted=:false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $records = [];
+        }
+
+        $res = [];
+        foreach ($records as $record) {
+            $code = $record['hash'] ?? Util::generateUniqueHash();
+            foreach ($record as $column => $value) {
+                if ($column === 'hash') {
+                    continue;
+                }
+                $res[$code][Util::toCamelCase($column)] = $value;
+            }
+            $res[$code]['code'] = $code;
+            $res[$code]['system'] = !empty($record['hash']);
+        }
+
+        file_put_contents('data/reference-data/UiHandler.json', json_encode($res));
+
+        $this->updateComposer('atrocore/core', '^1.11.21');
     }
 
     public function down(): void
