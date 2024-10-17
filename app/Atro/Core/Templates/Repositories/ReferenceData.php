@@ -251,7 +251,7 @@ class ReferenceData extends Repository implements Injectable
                 $field = str_replace('*', '', $k);
                 $search = str_replace('%', '', $v);
                 foreach ($items as $item) {
-                    if (!isset($filtered[$item['code']]) && strpos($item[$field], $search) !== false) {
+                    if (!isset($filtered[$item['code']]) && is_string($item[$field]) && strpos($item[$field], $search) !== false) {
                         $filtered[$item['code']] = $item;
                     }
                 }
@@ -316,6 +316,14 @@ class ReferenceData extends Repository implements Injectable
 
     public function count(array $params)
     {
+        if (isset($params['offset'])) {
+            unset($params['offset']);
+        }
+
+        if (isset($params['limit'])) {
+            unset($params['limit']);
+        }
+
         return count($this->find($params));
     }
 
