@@ -202,6 +202,20 @@ class ReferenceData extends Repository implements Injectable
         return $entity;
     }
 
+    public function getEntityByCode(string $code): ?Entity
+    {
+        $items = $this->getAllItems();
+        if (isset($items[$code])) {
+            $entity = $this->entityFactory->create($this->entityName);
+            $entity->set($items[$code]);
+            $entity->setAsFetched();
+
+            return $entity;
+        }
+
+        return null;
+    }
+
     protected function getEntityById($id)
     {
         $items = $this->getAllItems();
@@ -239,7 +253,7 @@ class ReferenceData extends Repository implements Injectable
         return $result;
     }
 
-    public function find(array $params)
+    public function find(array $params = [])
     {
         $items = $this->getAllItems();
         $items = array_values($items);
