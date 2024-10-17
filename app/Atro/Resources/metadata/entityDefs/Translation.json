@@ -1,5 +1,10 @@
 {
   "fields": {
+    "name": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
     "code": {
       "type": "varchar",
       "required": true,
