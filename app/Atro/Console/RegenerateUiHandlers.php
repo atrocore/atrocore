@@ -14,9 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\KeyValueStorages\StorageInterface;
-use Doctrine\DBAL\Connection;
 use Atro\Core\Utils\Util;
-use Espo\ORM\EntityManager;
 
 class RegenerateUiHandlers extends AbstractConsole
 {
@@ -39,15 +37,13 @@ class RegenerateUiHandlers extends AbstractConsole
         $clientDefsData = $this->getMetadata()->get('clientDefs', []);
         $this->getMemoryStorage()->set('ignorePushUiHandler', false);
 
-        /** @var Connection $conn */
-        $conn = $this->getContainer()->get('connection');
-        $conn->createQueryBuilder()
-            ->delete('ui_handler', 'q1')
-            ->where('q1.hash IS NOT NULL')
-            ->executeQuery();
+        $data = $this->getConfig()->get('referenceData.UiHandler') ?? [];
 
-        /** @var EntityManager $em */
-        $em = $this->getContainer()->get('entityManager');
+        foreach ($data as $code => $row) {
+            if (!empty($row['system'])) {
+                unset($data[$code]);
+            }
+        }
 
         foreach ($clientDefsData as $entityType => $clientDefs) {
             if (empty($clientDefs['dynamicLogic']['fields'])) {
@@ -85,32 +81,33 @@ class RegenerateUiHandlers extends AbstractConsole
                         continue;
                     }
 
-                    $entity = $em->getRepository('UiHandler')->get();
-                    $entity->id = Util::generateId();
-                    $entity->set([
+                    $code = md5("{$entityType}{$field}{$type}");
+                    $data[$code] = [
+                        'id'             => Util::generateId(),
                         'name'           => "Make field '{$field}' {$type}",
-                        'hash'           => md5("{$entityType}{$field}{$type}"),
+                        'code'           => md5("{$entityType}{$field}{$type}"),
                         'entityType'     => $entityType,
                         'fields'         => [$field],
                         'triggerAction'  => 'ui_on_change',
                         'type'           => $typeId,
                         'conditionsType' => 'basic',
                         'conditions'     => json_encode($fieldData),
-                        'isActive'       => true
-                    ]);
+                        'isActive'       => true,
+                        'system'         => true,
+                        'createdAt'      => date('Y-m-d H:i:s'),
+                        'createdById'    => 'system',
+                    ];
 
                     if ($typeId === 'ui_disable_options') {
-                        $entity->set('disabledOptions', $fieldData['disabledOptions']);
-                    }
-
-                    try {
-                        $em->saveEntity($entity);
-                    } catch (\Throwable $e) {
-                        $GLOBALS['log']->error("UI Handler generation failed: {$e->getMessage()}");
+                        $data[$code]['disabledOptions'] = $fieldData['disabledOptions'];
                     }
                 }
             }
         }
+
+        @mkdir('data/reference-data');
+
+        file_put_contents('data/reference-data/UiHandler.json', json_encode($data));
     }
 
     protected function getMemoryStorage(): StorageInterface
