@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\DataManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
@@ -28,40 +27,40 @@ class Translation extends ReferenceData
 
         parent::beforeSave($entity, $options);
     }
-//
-//    /**
-//     * @inheritDoc
-//     */
-//    protected function afterSave(Entity $entity, array $options = [])
-//    {
-//        parent::afterSave($entity, $options);
-//
-//        $this->refreshTimestamp($options);
-//    }
-//
-//    /**
-//     * @inheritDoc
-//     */
-//    protected function afterRemove(Entity $entity, array $options = [])
-//    {
-//        parent::afterRemove($entity, $options);
-//
-//        $this->refreshTimestamp($options);
-//    }
-//
-//    protected function refreshTimestamp(array $options): void
-//    {
-//        if (!empty($options['keepCache'])) {
-//            return;
-//        }
-//
-//        $this->getInjection('language')->clearCache();
-//
-//        $this->getConfig()->set('cacheTimestamp', time());
-//        $this->getConfig()->save();
-//        DataManager::pushPublicData('dataTimestamp', time());
-//    }
-//
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this->refreshTimestamp($options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->refreshTimestamp($options);
+    }
+
+    protected function refreshTimestamp(array $options): void
+    {
+        if (!empty($options['keepCache'])) {
+            return;
+        }
+
+        $this->getInjection('language')->clearCache();
+
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
+        DataManager::pushPublicData('dataTimestamp', time());
+    }
+
     protected function init()
     {
         parent::init();
