@@ -76,11 +76,6 @@
             "tooltip": true,
             "default": true
         },
-        "isSuperAdmin": {
-            "type": "bool",
-            "default": false,
-            "disabled": true
-        },
         "title": {
             "type": "varchar",
             "maxLength": 100,
