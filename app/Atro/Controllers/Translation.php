@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Console\AbstractConsole;
-use Atro\Console\RefreshTranslations;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Controllers\ReferenceData;
 use Atro\Core\Utils\Language;
+use Atro\Repositories\Translation as TranslationRepository;
 
 class Translation extends ReferenceData
 {
@@ -38,7 +38,7 @@ class Translation extends ReferenceData
             throw new BadRequest();
         }
 
-        $records = RefreshTranslations::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
+        $records = TranslationRepository::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
 
         if (empty($records[$request->get('key')])) {
             throw new NotFound();

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Utils\Util;
+use Atro\Core\Utils\Language;
 use Espo\Core\DataManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
@@ -60,8 +61,8 @@ class Translation extends ReferenceData
                 if (array_key_exists($field, $record) && $record[$field] !== null) {
                     $insideRow = [];
 
-                    $hasDots = strpos($record['name'], '...') !== false;
-                    $parts = explode('.', $record['name']);
+                    $hasDots = strpos($record['code'], '...') !== false;
+                    $parts = explode('.', $record['code']);
                     if ($hasDots) {
                         array_pop($parts);
                         array_pop($parts);
@@ -76,6 +77,49 @@ class Translation extends ReferenceData
             }
         }
         file_put_contents($this->cacheFilePath, json_encode($preparedTranslationData));
+    }
+
+    public function refreshToDefault(): void
+    {
+        $records = self::getSimplifiedTranslates((new Language($this->getInjection('container')))->getModulesData());
+        $this->saveDataToFile($records);
+        $this->refreshTimestamp([]);
+    }
+
+    public static function getSimplifiedTranslates(array $data): array
+    {
+        $records = [];
+        foreach ($data as $module => $moduleData) {
+            foreach ($moduleData as $locale => $localeData) {
+                $preparedLocaleData = [];
+                self::toSimpleArray($localeData, $preparedLocaleData);
+                foreach ($preparedLocaleData as $key => $value) {
+                    $records[$key]['id'] = md5($key);
+                    $records[$key]['code'] = $key;
+                    $records[$key]['module'] = $module;
+                    $records[$key]['isCustomized'] = $module === 'custom';
+                    $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
+                }
+            }
+        }
+
+        return $records;
+    }
+
+    public static function toSimpleArray(array $data, array &$result, array &$parents = []): void
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $parents[] = $key;
+                self::toSimpleArray($value, $result, $parents);
+            } else {
+                $result[implode('.', array_merge($parents, [$key]))] = $value;
+            }
+        }
+
+        if (!empty($parents)) {
+            array_pop($parents);
+        }
     }
 
     protected function saveDataToFile(array $data): bool
@@ -128,6 +172,7 @@ class Translation extends ReferenceData
     {
         parent::init();
 
+        $this->addDependency('container');
         $this->addDependency('language');
     }
 }
