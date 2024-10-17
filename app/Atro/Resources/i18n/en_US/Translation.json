@@ -1,6 +1,5 @@
 {
   "fields": {
-    "name": "Key",
     "module": "Module",
     "isCustomized": "Customized",
     "afZa": "af_ZA",
@@ -139,9 +138,6 @@
     "cyGb": "cy_GB",
     "xhZa": "xh_ZA",
     "zuZa": "zu_ZA"
-  },
-  "exceptions": {
-    "suchKeyAlreadyExist": "Such key already exists."
   },
   "labels": {
     "reset": "Reset to Default",

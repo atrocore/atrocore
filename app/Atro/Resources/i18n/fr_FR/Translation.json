@@ -1,6 +1,5 @@
 {
   "fields": {
-    "name": "Clé",
     "module": "Module",
     "isCustomized": "Personnalisé"
   },
@@ -11,9 +10,6 @@
     "pushFailed": "L'envoi des étiquettes a échoué.",
     "resetConfirm": "Êtes-vous sûr de vouloir rétablir les étiquettes par défaut ?",
     "resetSuccessfully": "Les étiquettes ont été réinitialisées avec succès."
-  },
-  "exceptions": {
-    "suchKeyAlreadyExist": "Cette clé existe déjà."
   },
   "labels": {
     "reset": "Rétablissement des valeurs par défaut",
