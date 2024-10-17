@@ -59,9 +59,8 @@
       "required": true,
       "dropdown": true
     },
-    "hash": {
-      "type": "varchar",
-      "unique": true,
+    "system": {
+      "type": "bool",
       "readOnly": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
