@@ -6,7 +6,7 @@
   "layouts": true,
   "tab": true,
   "acl": false,
-  "customizable": true,
+  "customizable": false,
   "streamDisabled": true,
   "importable": false,
   "notifications": false,

@@ -4,8 +4,8 @@
   },
   "options": {
     "role": {
-      "main": "Hauptseite",
-      "additional": "Zusätzliche"
+      "main": "Hauptsprache",
+      "additional": "Zusatzsprache"
     }
   },
   "tooltips": {
@@ -16,5 +16,8 @@
     "roleCannotBeChanged": "Die Rolle kann nicht geändert werden.",
     "codeForAdditionalCannotBeChanged": "Der Code für die zusätzliche Sprache kann nicht geändert werden.",
     "mainLanguageCannotBeRemoved": "Die Hauptsprache kann nicht entfernt werden."
+  },
+  "labels": {
+     "Create Language": "Sprache anlegen"
   }
 }

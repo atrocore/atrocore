@@ -5,6 +5,12 @@
       "required": true,
       "trim": true
     },
+    "code": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
     "isActive": {
       "type": "bool"
     },
@@ -53,9 +59,8 @@
       "required": true,
       "dropdown": true
     },
-    "hash": {
-      "type": "varchar",
-      "unique": true,
+    "system": {
+      "type": "bool",
       "readOnly": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
@@ -114,15 +119,7 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
-    "asc": false
-  },
-  "indexes": {
-    "createdAt": {
-      "columns": [
-        "createdAt",
-        "deleted"
-      ]
-    }
+    "sortBy": "name",
+    "asc": true
   }
 }

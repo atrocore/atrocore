@@ -5,7 +5,8 @@
       "view": "views/file/fields/name",
       "notNull": true,
       "required": true,
-      "trim": true
+      "trim": true,
+      "layoutUploadDisabled": true
     },
     "description": {
       "type": "text"
@@ -163,6 +164,32 @@
     "type": {
       "type": "link",
       "required": false
+    },
+    "uploadUrl": {
+      "type": "varchar",
+      "view": "views/file/fields/upload-url",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "filterDisabled": true
+    },
+    "files": {
+      "type": "varchar",
+      "notStorable": true,
+      "view": "views/file/fields/upload",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "filterDisabled": true
     },
     "createdAt": {
       "type": "datetime",

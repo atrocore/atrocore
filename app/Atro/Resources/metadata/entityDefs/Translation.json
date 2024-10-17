@@ -2,8 +2,14 @@
   "fields": {
     "name": {
       "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "code": {
+      "type": "varchar",
       "required": true,
-      "trim": true
+      "trim": true,
+      "unique": true
     },
     "module": {
       "type": "varchar",
@@ -14,8 +20,8 @@
     },
     "isCustomized": {
       "type": "bool",
-      "default": "true",
-      "view": "views/translation/fields/is-customized"
+      "readOnly": true,
+      "default": true
     },
     "afZa": {
       "type": "text",
@@ -591,22 +597,11 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
-    "asc": false,
+    "sortBy": "code",
+    "asc": true,
     "textFilterFields": [
-      "name",
-      "module",
-      "enUs",
-      "deDe",
-      "ruRu"
+      "code",
+      "module"
     ]
-  },
-  "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    }
   }
 }

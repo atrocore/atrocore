@@ -202,6 +202,20 @@ class ReferenceData extends Repository implements Injectable
         return $entity;
     }
 
+    public function getEntityByCode(string $code): ?Entity
+    {
+        $items = $this->getAllItems();
+        if (isset($items[$code])) {
+            $entity = $this->entityFactory->create($this->entityName);
+            $entity->set($items[$code]);
+            $entity->setAsFetched();
+
+            return $entity;
+        }
+
+        return null;
+    }
+
     protected function getEntityById($id)
     {
         $items = $this->getAllItems();
@@ -239,7 +253,7 @@ class ReferenceData extends Repository implements Injectable
         return $result;
     }
 
-    public function find(array $params)
+    public function find(array $params = [])
     {
         $items = $this->getAllItems();
         $items = array_values($items);
@@ -251,7 +265,7 @@ class ReferenceData extends Repository implements Injectable
                 $field = str_replace('*', '', $k);
                 $search = str_replace('%', '', $v);
                 foreach ($items as $item) {
-                    if (!isset($filtered[$item['code']]) && strpos($item[$field], $search) !== false) {
+                    if (!isset($filtered[$item['code']]) && is_string($item[$field]) && strpos($item[$field], $search) !== false) {
                         $filtered[$item['code']] = $item;
                     }
                 }
@@ -316,6 +330,14 @@ class ReferenceData extends Repository implements Injectable
 
     public function count(array $params)
     {
+        if (isset($params['offset'])) {
+            unset($params['offset']);
+        }
+
+        if (isset($params['limit'])) {
+            unset($params['limit']);
+        }
+
         return count($this->find($params));
     }
 

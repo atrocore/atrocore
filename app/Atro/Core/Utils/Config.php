@@ -32,6 +32,19 @@ class Config extends \Espo\Core\Utils\Config
         return $this->data;
     }
 
+    public function getData($isAdmin = null)
+    {
+        $res = parent::getData($isAdmin);
+
+        foreach (['Translation', 'UiHandler'] as $entityName) {
+            if (isset($res['referenceData'][$entityName])) {
+                unset($res['referenceData'][$entityName]);
+            }
+        }
+
+        return $res;
+    }
+
     protected function putReferenceDataIntoConfig(): void
     {
         $this->data['referenceData'] = [];

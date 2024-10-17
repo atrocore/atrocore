@@ -1,11 +1,7 @@
 {
   "fields": {
-    "name": "Klucz",
     "module": "Moduł",
     "isCustomized": "Dostosowany"
-  },
-  "exceptions": {
-    "suchKeyAlreadyExist": "Taki klucz już istnieje."
   },
   "labels": {
     "reset": "Przywróć domyślne",
@@ -14,10 +10,6 @@
   },
   "messages": {
     "resetConfirm": "Czy na pewno chcesz przywrócić etykiety do domyślnych?",
-    "resetSuccessfully": "Etykiety zostały pomyślnie przywrócone.",
-    "nothingToPush": "Nic do wysłania.",
-    "pushConfirm": "Czy na pewno chcesz wysłać etykiety do przeglądu?",
-    "pushSuccessfully": "Etykiety zostały pomyślnie wysłane.",
-    "pushFailed": "Wysyłanie etykiet nie powiodło się."
+    "resetSuccessfully": "Etykiety zostały pomyślnie przywrócone."
   }
 }

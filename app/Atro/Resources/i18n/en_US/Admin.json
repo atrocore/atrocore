@@ -86,7 +86,8 @@
     "sidePanelsDetailSmall": "Side panels (Detail Small)",
     "sidePanelsEditSmall": "Side panels (Edit Small)",
     "kanban": "Kanban",
-    "listForAccount": "List (for account)"
+    "listForAccount": "List (for account)",
+    "upload": "Upload"
   },
   "fieldTypes": {
     "color": "Color",

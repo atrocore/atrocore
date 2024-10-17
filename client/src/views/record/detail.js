@@ -1746,8 +1746,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     view.$el.find('.panel-heading:first').append(html);
                 }
                 // add layout configuration button
+                const additionalLayouts = this.getMetadata().get(['clientDefs', this.model.name, 'additionalLayouts']) || {};
+                const availableLayouts = []
+                for (let key in additionalLayouts) {
+                    if (['detail', 'detailSmall'].includes(additionalLayouts[key])) {
+                        availableLayouts.push(key)
+                    }
+                }
+
                 if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
-                    ['detail', 'detailSmall'].includes(this.layoutName) &&
+                    ['detail', 'detailSmall', ...availableLayouts].includes(this.layoutName) &&
                     this.getAcl().check('Layout', 'create')
                 ) {
                     let html = `<a class="btn btn-link collapsing-button" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">

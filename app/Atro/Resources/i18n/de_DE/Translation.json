@@ -6,10 +6,6 @@
   },
   "messages": {
     "resetConfirm": "Möchten Sie die Labels wirklich auf die Standardwerte zurücksetzen?",
-    "resetSuccessfully": "Labels wurden erfolgreich zurückgesetzt.",
-    "nothingToPush": "Nichts zu senden.",
-    "pushConfirm": "Möchten Sie die Labels wirklich zur Überprüfung senden?",
-    "pushSuccessfully": "Labels wurden erfolgreich gesendet.",
-    "pushFailed": "Das Senden von Labels ist fehlgeschlagen."
+    "resetSuccessfully": "Labels wurden erfolgreich zurückgesetzt."
   }
 }

@@ -4,18 +4,22 @@
     import RelationShipsLayout from "./RelationShipsLayout.svelte";
     import {Params} from "./Interfaces";
     import GridLayout from "./GridLayout.svelte";
+    import {Metadata} from "../../../utils/Metadata";
 
     export let params: Params;
 
     let LayoutComponent;
-    let layoutDisabledParameter;
     let viewType
 
+    const reelType = Metadata.get(['clientDefs', params.scope, 'additionalLayouts', params.type]) || params.type
+    if (reelType) {
+        params.reelType = reelType
+    }
+
     $: {
-        switch (params.type) {
+        switch (reelType) {
             case 'list':
             case 'listSmall':
-                layoutDisabledParameter = params.type === 'list' ? "layoutListDisabled" : "layoutListSmallDisabled"
                 LayoutComponent = ListLayout;
                 break
             case 'kanban':
@@ -45,7 +49,6 @@
                 break;
             case 'detail':
             case 'detailSmall':
-                layoutDisabledParameter = params.type === 'detail' ? "layoutDetailDisabled" : "layoutDetailSmallDisabled"
                 LayoutComponent = GridLayout;
                 break;
             case 'sidePanelsDetail':
@@ -68,4 +71,4 @@
     }
 </script>
 
-<LayoutComponent {params} {layoutDisabledParameter} {viewType}/>
+<LayoutComponent {params} {viewType}/>

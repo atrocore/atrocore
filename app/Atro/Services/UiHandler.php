@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Espo\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\ReferenceData;
 use Espo\ORM\Entity;
 
-class UiHandler extends Base
+class UiHandler extends ReferenceData
 {
     protected $mandatorySelectAttributeList = ["conditionsType", "conditions", "data"];
 

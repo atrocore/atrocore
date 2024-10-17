@@ -14,7 +14,9 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "hideShowFullList"
+        }
       ],
       [
         {

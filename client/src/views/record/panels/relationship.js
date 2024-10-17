@@ -369,7 +369,15 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         setupLayoutEditor: function (layoutName) {
-            if (this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall'].includes(layoutName)) {
+            // add layout configuration button
+            const additionalLayouts = this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts']) || {};
+            const availableLayouts = []
+            for (let key in additionalLayouts) {
+                if (['list', 'listSmall'].includes(additionalLayouts[key])) {
+                    availableLayouts.push(key)
+                }
+            }
+            if (this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall', ...availableLayouts].includes(layoutName)) {
                 let $span = $(`<span data-action="layoutEditor" data-panel="${this.panelName}" class="collapser fas fa-columns action layout-editor" style="font-size: 14px"></span>`)
                 const $container = this.$el.parent().find('.panel-heading .panel-title')
 

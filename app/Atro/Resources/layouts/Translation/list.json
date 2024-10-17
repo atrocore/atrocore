@@ -1,8 +1,7 @@
 [
   {
-    "name": "name",
-    "link": true,
-    "width": 25
+    "name": "code",
+    "link": true
   },
   {
     "name": "module"

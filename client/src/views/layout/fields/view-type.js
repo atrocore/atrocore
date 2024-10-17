@@ -16,15 +16,42 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
             if (!this.params.translation) {
                 this.params.translation = 'Admin.layouts';
             }
-            this.listenTo(this.model, 'change:entity', () => {
-                if (this.getMetadata().get(['clientDefs', this.model.get('entity'), 'kanbanViewMode'])) {
-                    this.resetOptionList()
-                } else {
-                    this.disableOptions(['kanban'])
-                }
-            })
             Dep.prototype.setup.call(this);
+
+            this.setAvailableOptions()
+
+            this.listenTo(this.model, 'change:entity', () => {
+                this.setAvailableOptions()
+            })
         },
+
+        setAvailableOptions() {
+            this.params.options = this.getAvailableOptions()
+            this.setupTranslation()
+            this.setOptionList(this.params.options)
+        },
+
+        getAvailableOptions() {
+            const optionList = [
+                "list",
+                "listSmall",
+                "detail",
+                "detailSmall",
+                "relationships",
+                "sidePanelsDetail",
+                "sidePanelsDetailSmall",
+                "sidePanelsEdit",
+                "sidePanelsEditSmall"
+            ]
+            if (this.getMetadata().get(['clientDefs', this.model.get('entity'), 'kanbanViewMode'])) {
+                optionList.push("kanban")
+            }
+            for (const layout in this.getMetadata().get(['clientDefs', this.model.get('entity'), 'additionalLayouts']) || {}) {
+                optionList.push(layout)
+            }
+
+            return optionList
+        }
     });
 });
 

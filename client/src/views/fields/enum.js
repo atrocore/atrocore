@@ -272,12 +272,12 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (this.mode == 'edit') {
                 if (this.isRendered()) {
                     this.reRender();
-                    if (~(this.params.options || []).indexOf(this.model.get(this.name))) {
+                    if (!(this.params.options || []).includes(this.model.get(this.name))) {
                         this.trigger('change');
                     }
                 } else {
                     this.once('after:render', function () {
-                        if (~(this.params.options || []).indexOf(this.model.get(this.name))) {
+                        if (!(this.params.options || []).includes(this.model.get(this.name))) {
                             this.trigger('change');
                         }
                     }, this);
