@@ -60,7 +60,7 @@ class V1Dot11Dot21 extends Base
 
         $res = [];
         foreach ($records as $record) {
-            $code = $record['hash'] ?? $record['name'] . ' ' . Util::generateUniqueHash();
+            $code = $record['hash'] ?? Util::generateUniqueHash();
             foreach ($record as $column => $value) {
                 if ($column === 'hash') {
                     continue;
@@ -68,6 +68,7 @@ class V1Dot11Dot21 extends Base
                 $res[$code][Util::toCamelCase($column)] = $value;
             }
             $res[$code]['code'] = $code;
+            $res[$code]['system'] = !empty($record['hash']);
         }
 
         file_put_contents('data/reference-data/UiHandler.json', json_encode($res));
