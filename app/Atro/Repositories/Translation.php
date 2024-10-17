@@ -82,6 +82,12 @@ class Translation extends ReferenceData
     public function refreshToDefault(): void
     {
         $records = self::getSimplifiedTranslates((new Language($this->getInjection('container')))->getModulesData());
+        foreach ($this->getAllItems() as $item) {
+            if (!empty($item['isCustomized'])) {
+                $records[$item['code']] = $item;
+            }
+        }
+
         $this->saveDataToFile($records);
         $this->refreshTimestamp([]);
     }

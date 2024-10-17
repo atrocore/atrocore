@@ -20,8 +20,8 @@
     },
     "isCustomized": {
       "type": "bool",
-      "default": "true",
-      "view": "views/translation/fields/is-customized"
+      "readOnly": true,
+      "default": true
     },
     "afZa": {
       "type": "text",
