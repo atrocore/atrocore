@@ -5,6 +5,12 @@
       "required": true,
       "trim": true
     },
+    "code": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
     "isActive": {
       "type": "bool"
     },
@@ -114,15 +120,7 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
+    "sortBy": "name",
     "asc": false
-  },
-  "indexes": {
-    "createdAt": {
-      "columns": [
-        "createdAt",
-        "deleted"
-      ]
-    }
   }
 }
