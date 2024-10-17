@@ -1,6 +1,5 @@
 {
   "fields": {
-    "name": "Key",
     "module": "Module",
     "isCustomized": "Customized",
     "afZa": "af_ZA",
@@ -140,9 +139,6 @@
     "xhZa": "xh_ZA",
     "zuZa": "zu_ZA"
   },
-  "exceptions": {
-    "suchKeyAlreadyExist": "Such key already exists."
-  },
   "labels": {
     "reset": "Reset to Default",
     "push": "Send for Review",
@@ -150,10 +146,6 @@
   },
   "messages": {
     "resetConfirm": "Are you sure you want to reset labels to default?",
-    "resetSuccessfully": "Labels have been successfully reset.",
-    "nothingToPush": "Nothing to send.",
-    "pushConfirm": "Are you sure you want to send labels for review?",
-    "pushSuccessfully": "Labels have been successfully sent.",
-    "pushFailed": "Sending Labels failed."
+    "resetSuccessfully": "Labels have been successfully reset."
   }
 }

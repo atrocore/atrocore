@@ -12,9 +12,7 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\ParameterType;
 
 class V1Dot11Dot20 extends Base
 {
