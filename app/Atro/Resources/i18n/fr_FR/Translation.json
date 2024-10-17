@@ -4,10 +4,6 @@
     "isCustomized": "Personnalisé"
   },
   "messages": {
-    "nothingToPush": "Rien à envoyer.",
-    "pushConfirm": "Êtes-vous sûr de vouloir envoyer des étiquettes pour examen ?",
-    "pushSuccessfully": "Les étiquettes ont été envoyées avec succès.",
-    "pushFailed": "L'envoi des étiquettes a échoué.",
     "resetConfirm": "Êtes-vous sûr de vouloir rétablir les étiquettes par défaut ?",
     "resetSuccessfully": "Les étiquettes ont été réinitialisées avec succès."
   },
