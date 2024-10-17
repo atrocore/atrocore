@@ -597,14 +597,11 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
-    "asc": false,
+    "sortBy": "code",
+    "asc": true,
     "textFilterFields": [
-      "name",
-      "module",
-      "enUs",
-      "deDe",
-      "ruRu"
+      "code",
+      "module"
     ]
   }
 }
