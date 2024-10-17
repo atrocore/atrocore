@@ -76,16 +76,6 @@
             "tooltip": true,
             "default": true
         },
-        "isSuperAdmin": {
-            "type": "bool",
-            "default": false,
-            "disabled": true,
-            "filterDisabled": true,
-            "exportDisabled": true,
-            "importDisabled": true,
-            "massUpdateDisabled": true,
-            "emHidden": true
-        },
         "title": {
             "type": "varchar",
             "maxLength": 100,
