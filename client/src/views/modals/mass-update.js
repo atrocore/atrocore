@@ -94,6 +94,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     if (row.massUpdateDisabled) return;
                     this.fields.push(field);
                 });
+                this.fields.sort()
             }.bind(this));
 
             this.fieldList = [];

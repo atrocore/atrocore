@@ -79,7 +79,12 @@
         "isSuperAdmin": {
             "type": "bool",
             "default": false,
-            "disabled": true
+            "disabled": true,
+            "filterDisabled": true,
+            "exportDisabled": true,
+            "importDisabled": true,
+            "massUpdateDisabled": true,
+            "emHidden": true
         },
         "title": {
             "type": "varchar",
