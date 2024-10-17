@@ -120,6 +120,6 @@
   },
   "collection": {
     "sortBy": "name",
-    "asc": false
+    "asc": true
   }
 }
