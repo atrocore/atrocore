@@ -24,6 +24,7 @@ Espo.define('views/layout/record/list', 'views/record/list', function (Dep) {
                 scope: model.get('entity'),
                 type: model.get('viewType'),
                 layoutProfileId: this.getLayoutProfileId(),
+                allowSwitch: false,
                 el: '[data-view="dialog"]',
             }, view => {
                 view.render()
