@@ -282,31 +282,7 @@ class Language
         $data = [];
 
         if ($installed) {
-            $translations = $this->getConfig()->get('referenceData.Translation', []);
-            $languageList = $this->getMetadata()->get('multilang.languageList', []);
-
-            foreach ($translations as $record) {
-                foreach ($languageList as $locale) {
-                    $row = [];
-                    $field = Util::toCamelCase(strtolower($locale));
-                    if (array_key_exists($field, $record) && $record[$field] !== null) {
-                        $insideRow = [];
-
-                        $hasDots = strpos($record['name'], '...') !== false;
-                        $parts = explode('.', $record['name']);
-                        if ($hasDots) {
-                            array_pop($parts);
-                            array_pop($parts);
-                            array_pop($parts);
-                            $parts[] = array_pop($parts) . '...';
-                        }
-
-                        $this->prepareTreeValue($parts, $insideRow, $record[$field]);
-                        $row[$record['module']][$locale] = $insideRow;
-                        $data = Util::merge($data, $row);
-                    }
-                }
-            }
+            $data = $this->getEntityManager()->getRepository('Translation')->getPreparedTranslations();
         }
 
         if (empty($data)) {
@@ -376,18 +352,6 @@ class Language
         }
 
         return $data;
-    }
-
-    protected function prepareTreeValue(array $data, &$result, $value): void
-    {
-        if (!empty($data)) {
-            $first = array_shift($data);
-            if (!empty($data)) {
-                $this->prepareTreeValue($data, $result[$first], $value);
-            } else {
-                $result[$first] = $value;
-            }
-        }
     }
 
     protected function unify(string $path): array
