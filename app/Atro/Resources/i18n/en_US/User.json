@@ -23,7 +23,6 @@
     "position": "Position in Team",
     "ipAddress": "IP Address",
     "passwordPreview": "Password Preview",
-    "isSuperAdmin": "Is Super Admin",
     "lastAccess": "Last Access",
     "type": "Type",
     "passwordUpdatedAt": "Password Updated At",

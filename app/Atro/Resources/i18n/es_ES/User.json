@@ -20,7 +20,6 @@
     "position": "Puesto en el equipo",
     "ipAddress": "Dirección IP",
     "passwordPreview": "Vista previa de la contraseña",
-    "isSuperAdmin": "Es superadministrador",
     "roles": "Roles",
     "avatar": "Avatar",
     "lastAccess": "Last Access"

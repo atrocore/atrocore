@@ -22,7 +22,6 @@
     "position": "Position im Team",
     "ipAddress": "IP Adresse",
     "passwordPreview": "Passwortvorschau",
-    "isSuperAdmin": "Ist Super-Admin",
     "lastAccess": "Letzter Zugriff",
     "type": "Typ",
     "passwordUpdatedAt": "Passwort aktualisiert am",
