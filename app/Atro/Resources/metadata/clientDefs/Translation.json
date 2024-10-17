@@ -5,7 +5,8 @@
     "list": "views/translation/list"
   },
   "recordViews": {
-    "list": "views/translation/record/list"
+    "list": "views/translation/record/list",
+    "detail": "views/translation/record/detail"
   },
   "dynamicLogic": {
     "fields": {
