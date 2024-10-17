@@ -11,9 +11,8 @@
 
 namespace Atro\Core\Utils;
 
-use Atro\Console\RefreshTranslations;
 use Atro\Core\Container;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Entities\Preferences;
 
@@ -28,24 +27,17 @@ class Language
     protected array $deletedData = [];
     protected array $changedData = [];
     protected string $currentLanguage;
-    protected bool $noCustom;
     protected string $corePath = CORE_PATH . '/Atro/Resources/i18n';
 
-    /**
-     * Language constructor.
-     *
-     * @param Container $container
-     * @param string    $currentLanguage
-     * @param bool      $noCustom
-     */
-    public function __construct(Container $container, string $currentLanguage = self::DEFAULT_LANGUAGE, bool $noCustom = false)
+    public function __construct(Container $container, string $currentLanguage = null)
     {
-        $preferences = $container->get('config')->get('isInstalled', false) ? $container->get('preferences') : null;
-        $currentLanguage = self::detectLanguage($container->get('config'), $preferences);
+        if ($currentLanguage === null) {
+            $preferences = $container->get('config')->get('isInstalled', false) ? $container->get('preferences') : null;
+            $currentLanguage = self::detectLanguage($container->get('config'), $preferences);
+        }
 
         $this->container = $container;
         $this->currentLanguage = $currentLanguage;
-        $this->noCustom = $noCustom;
         $this->unifier = new Unifier($this->container->get('fileManager'), $this->getMetadata());
     }
 
@@ -295,11 +287,6 @@ class Language
             if (!empty($data[$name])) {
                 $fullData = Util::merge($fullData, $data[$name]);
             }
-        }
-
-        // load custom
-        if (!$this->noCustom && !empty($data['custom'])) {
-            $fullData = Util::merge($fullData, $data['custom']);
         }
 
         foreach ($fullData as $i18nName => $i18nData) {
