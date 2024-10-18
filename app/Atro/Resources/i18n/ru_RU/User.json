@@ -23,7 +23,6 @@
     "position": "Должность в группе",
     "ipAddress": "IP адрес",
     "passwordPreview": "Предпросмотр пароля",
-    "isSuperAdmin": "Главный Администратор",
     "lastAccess": "Последнее подключение",
     "type": "Тип"
   },

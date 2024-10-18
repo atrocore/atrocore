@@ -23,7 +23,6 @@
 		"position": "Pozycja w Zespole",
 		"ipAddress": "Adres IP",
 		"passwordPreview": "Podgląd Hasła",
-		"isSuperAdmin": "Czy Jest Super Adminem",
 		"lastAccess": "Ostatni Dostęp",
 		"type": "Typ"
 	},

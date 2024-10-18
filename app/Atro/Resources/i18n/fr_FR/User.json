@@ -24,7 +24,6 @@
     "sendAccessInfo": "Envoi d'un courriel contenant les informations d'accès à l'utilisateur",
     "position": "Position dans l'équipe",
     "passwordPreview": "Aperçu du mot de passe",
-    "isSuperAdmin": "Est Super Admin",
     "lastAccess": "Dernier accès",
     "passwordUpdatedAt": "Mot de passe mis à jour le",
     "passwordUpdatedBy": "Mot de passe mis à jour par"
