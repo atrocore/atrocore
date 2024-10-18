@@ -185,7 +185,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
-            if (!this.defs.hideShowFullList && !this.getPreferences().hideShowFullList) {
+            if (!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
                 let foreign = this.model.getLinkParam(this.link, 'foreign');
 
                 if (foreign) {
