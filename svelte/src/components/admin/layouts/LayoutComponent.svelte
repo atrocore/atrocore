@@ -16,6 +16,7 @@
         params.reelType = reelType
     }
 
+
     $: {
         switch (reelType) {
             case 'list':
@@ -70,5 +71,4 @@
         }
     }
 </script>
-
 <LayoutComponent {params} {viewType}/>

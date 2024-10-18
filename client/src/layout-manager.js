@@ -118,6 +118,9 @@ Espo.define('layout-manager', [], function () {
                 type: 'PUT',
                 data: JSON.stringify(layout),
                 success: function () {
+                    if (layoutProfileId) {
+                        this.clearCache(scope, type)
+                    }
                     if (this.cache && key) {
                         this.cache.set('app-layout', key, layout);
                     }
@@ -143,9 +146,7 @@ Espo.define('layout-manager', [], function () {
                     layoutProfileId: layoutProfileId
                 }),
                 success: function (layout) {
-                    if (this.cache) {
-                        this.cache.clear('app-layout', key);
-                    }
+                    this.clearCache(scope, type)
                     this.data[key] = layout;
                     this.trigger('sync');
                     if (typeof callback === 'function') {
@@ -154,6 +155,18 @@ Espo.define('layout-manager', [], function () {
                     Espo.Ui.notify('Done', 'success', 1000 * 3);
                 }.bind(this)
             });
+        },
+
+        clearCache: function (scope, type) {
+            const re = new RegExp('^' + this.getKey(scope, type));
+            for (let i in this.data) {
+                if (re.test(i)) {
+                    delete this.data[i];
+                }
+            }
+            if (this.cache) {
+                this.cache.clear('app-layout', this.getKey(scope, type));
+            }
         }
 
     }, Backbone.Events);

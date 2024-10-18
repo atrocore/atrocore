@@ -19,36 +19,46 @@
         return true;
     }
 
-    let buttonList: Button[] = [
-        {name: 'save', label: Language.translate('Save', 'labels'), style: 'primary'},
-        {name: 'cancel', label: Language.translate('Cancel', 'labels')},
-        {name: 'resetToDefault', label: Language.translate('resetToDefault', 'labels', 'LayoutManager')}
-    ];
+    let disabled = false;
 
-    const profiles = Espo['link_LayoutProfile']
-    if (profiles) {
+    let buttonList: Button[] = [];
+
+    const profiles = Espo['link_LayoutProfile'] ?? []
+
+
+    $:{
+        buttonList = [
+            {name: 'save', label: Language.translate('Save', 'labels'), style: 'primary'},
+            {name: 'cancel', label: Language.translate('Cancel', 'labels')},
+            {name: 'resetToDefault', label: Language.translate('resetToDefault', 'labels', 'LayoutManager')}
+        ]
+
         for (const profile of profiles) {
             if (profile.id === params.layoutProfileId && profile.isDefault) {
-                buttonList.splice(2, 1);
+                buttonList[2].label = Language.translate('resetToSystem', 'labels', 'LayoutManager')
             }
         }
     }
 
-
     onMount(() => {
+        loadData()
+    });
+
+    function loadData() {
         Notifier.notify('Loading...')
         loadLayout(() => {
             Notifier.notify(false)
             if (params.afterRender) params.afterRender()
         });
-    });
+    }
 
     export function save(): void {
-        disableButtons();
+        disabled = true;
         const layoutToSave = fetch();
 
         if (!validate(layoutToSave)) {
-            enableButtons();
+            disabled = false;
+            debugger
             return;
         }
         Notifier.notify('Saving...');
@@ -56,7 +66,7 @@
         LayoutManager.set(params.scope, params.type, params.layoutProfileId, layoutToSave, () => {
             Notifier.notify('Saved', 'success', 2000);
             emitUpdate()
-            enableButtons();
+            disabled = false
         });
     }
 
@@ -83,14 +93,6 @@
         });
     }
 
-    function disableButtons(): void {
-        buttonList = buttonList.map(button => ({...button, disabled: true}));
-    }
-
-    function enableButtons(): void {
-        buttonList = buttonList.map(button => ({...button, disabled: false}));
-    }
-
     function onClick(button): void {
         switch (button.name) {
             case 'save':
@@ -106,15 +108,30 @@
     }
 </script>
 
-<div class="button-container">
-    {#each buttonList as button}
-        <button on:click={()=>onClick(button)}
-                data-action="{button.name}"
-                disabled={button.disabled}
-                type="button"
-                class={`btn action btn-${button.style ?? 'default'}`}>
-            {button.label}
-        </button>
-    {/each}
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="button-container">
+        {#each buttonList as button}
+            <button on:click={()=>onClick(button)}
+                    data-action="{button.name}"
+                    disabled={disabled}
+                    type="button"
+                    class={`btn action btn-${button.style ?? 'default'}`}>
+                {button.label}
+            </button>
+        {/each}
+    </div>
+    {#if params.allowSwitch}
+        <div>
+            <label class="control-label">{Language.translate('layoutProfile', 'fields', 'Layout')}</label>
+            <select disabled="{disabled}" class="form-control" bind:value={params.layoutProfileId} on:change={loadData}
+                    style="width: 150px; display:inline-block">
+                <option value="custom">Custom</option>
+                {#each profiles as profile}
+                    <option value="{profile.id}">{profile.name}</option>
+                {/each}
+            </select>
+        </div>
+    {/if}
 </div>
+
 <slot></slot>

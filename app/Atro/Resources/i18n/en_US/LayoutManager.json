@@ -30,6 +30,7 @@
   "labels": {
     "New panel": "New panel",
     "Layout": "Layout",
-    "resetToDefault": "Reset to Default Profile"
+    "resetToDefault": "Reset to Default Profile",
+    "resetToSystem": "Reset To System Layout"
   }
 }

@@ -21,13 +21,40 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
             this.header = this.getLanguage().translate('customizeLayout', 'labels');
         },
 
+        getLayoutProfiles() {
+            const scope = 'LayoutProfile'
+
+            let key = 'link_' + scope;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(scope, {
+                    offset: 0,
+                    maxSize: 100
+                }, {async: false}).then(res => {
+                    if (res.list) {
+                        Espo[key] = res.list;
+                    }
+                });
+            }
+
+            return Espo[key];
+        },
+
         afterRender() {
+            this.getLayoutProfiles()
+
+            let allowSwitch = this.getUser().isAdmin()
+            if (this.options.allowSwitch === false) {
+                allowSwitch = false
+            }
             LayoutUtils.renderComponent.call(this, {
                 type: this.options.type,
                 scope: this.options.scope,
                 layoutProfileId: this.options.layoutProfileId ?? 'custom',
                 editable: true,
-                onUpdate: this.layoutUpdated.bind(this)
+                onUpdate: this.layoutUpdated.bind(this),
+                allowSwitch: allowSwitch
             })
         },
 
