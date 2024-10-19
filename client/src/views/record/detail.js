@@ -1313,7 +1313,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-
             return result;
         },
 
