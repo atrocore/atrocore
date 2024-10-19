@@ -1284,23 +1284,35 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             ];
 
             if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                let options = ['allLanguages', 'unilingual', 'main'].concat(this.getConfig().get('inputLanguageList'));
-                let translatedOptions = {};
-                options.forEach(option => {
+                let referenceData = this.getConfig().get('referenceData');
 
-                    if (option === 'main') {
-                        translatedOptions[option] = this.getLanguage().translateOption(this.getConfig().get('mainLanguage'), 'languageFilter', 'Global');
-                        return;
-                    }
-                    translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
-                });
+                if (referenceData && referenceData['Language']) {
+                    let languages = referenceData['Language'] || {},
+                        options = ['allLanguages', 'unilingual'],
+                        translatedOptions = {};
 
-                result.push({
-                    name: "languageFilter",
-                    options,
-                    translatedOptions
-                });
+                    options.forEach(option => {
+                        translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
+                    });
+
+                    Object.keys(languages || {}).forEach((lang) => {
+                        if (languages[lang]['role'] === 'main') {
+                            options.push('main');
+                            translatedOptions['main'] = this.getLanguage().translateOption('main', 'languageFilter', 'Global');
+                        } else {
+                            options.push(lang);
+                            translatedOptions[lang] = languages[lang]['name'];
+                        }
+                    });
+
+                    result.push({
+                        name: "languageFilter",
+                        options,
+                        translatedOptions
+                    });
+                }
             }
+
 
             return result;
         },
