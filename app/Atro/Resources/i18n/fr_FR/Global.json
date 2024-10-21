@@ -125,7 +125,7 @@
     "Measure": "Mesure",
     "Unit": "Unité",
     "QueueItem": "Poste de la file d'attente",
-    "TreoStore": "Magasin",
+    "Store": "Magasin",
     "User": "Utilisateur",
     "AuthLogRecord": "Enregistrement du journal d'authentification",
     "AuthFailLogRecord": "Enregistrement du journal d'échec de l'authentification"

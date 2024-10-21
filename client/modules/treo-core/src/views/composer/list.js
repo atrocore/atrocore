@@ -131,7 +131,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         },
 
         loadStoreModulesList() {
-            this.getCollectionFactory().create('TreoStore', collection => {
+            this.getCollectionFactory().create('Store', collection => {
                 this.storeCollection = collection;
                 collection.maxSize = 20;
                 collection.data.isInstalled = false;

@@ -35,7 +35,7 @@
     "Pricing": "Pricing",
     "Unit": "Unit",
     "QueueItem": "Queue Item",
-    "TreoStore": "Store",
+    "Store": "Store",
     "Global": "Global",
     "AuthLogRecord": "Auth Log Record",
     "AuthFailLogRecord": "Auth Fail Log Record"

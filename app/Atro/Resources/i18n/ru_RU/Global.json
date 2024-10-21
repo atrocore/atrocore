@@ -48,7 +48,7 @@
     "Measure": "Мера",
     "Unit": "Единица измерения",
     "QueueItem": "Элемент очереди",
-    "TreoStore": "Магазин"
+    "Store": "Магазин"
   },
   "scopeNamesPlural": {
     "Storage": "Хранилища",
