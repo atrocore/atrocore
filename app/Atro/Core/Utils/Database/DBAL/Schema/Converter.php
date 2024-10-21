@@ -122,13 +122,15 @@ class Converter
 
                     $options = [];
 
-                    if (!self::isPgSQL($this->connection)) {
-                        foreach ($indexParams['columns'] as $column) {
-                            $type = $this->metadata->get(['entityDefs', $entityName, 'fields', Util::toCamelCase($column), 'type'], 'varchar');
-                            if (in_array($type, ['text', 'wysiwyg'])) {
+                    foreach ($indexParams['columns'] as $column) {
+                        $type = $this->metadata->get(['entityDefs', $entityName, 'fields', Util::toCamelCase($column), 'type'], 'varchar');
+                        if (in_array($type, ['text', 'wysiwyg'])) {
+                            if (!self::isPgSQL($this->connection)) {
                                 $options['lengths'] = [200];
-                                break;
+                            } else {
+                                $options['where'] = '(length(text_value) < 1000)';
                             }
+                            break;
                         }
                     }
 
