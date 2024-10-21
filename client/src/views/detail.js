@@ -482,7 +482,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
             if (this.getConfig().get('isMultilangActive') && this.model.getFieldParam('name', 'isMultilang')) {
                 var language = this.getPreferences().get('language') || this.getConfig().get('language');
-                if (language !== this.getConfig().get('mainLanguage')) {
+                if (language && language !== this.getConfig().get('mainLanguage')) {
                     nameColumn = 'name' + Espo.Utils.upperCaseFirst(Espo.Utils.hyphenToCamelCase(language.toLowerCase().replace('_', '-')));
                 }
             }
