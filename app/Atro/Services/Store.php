@@ -23,38 +23,25 @@ class Store extends ReferenceData
     {
         parent::prepareEntityForOutput($entity);
 
-//        [
-//            'id'             => 'TreoCore',
-//            'name'           => $this->translate('Core'),
-//            'description'    => $this->translate('Core', 'descriptions'),
-//            'currentVersion' => self::getCoreVersion(),
-//            'latestVersion'  => $this->getLatestVersion('Atro'),
-//            'isSystem'       => true,
-//            'isComposer'     => true,
-//            'status'         => $this->getModuleStatus($composerDiff, 'Atro'),
-//            'settingVersion' => self::getSettingVersion($composerData, 'atrocore/core')
-//        ]
-//
-//        if ($entity->get('code') === 'atrocore/core') {
-//            $entity->set('status', 'installed');
-//            $entity->set('currentVersion', Composer::getCoreVersion());
-//            $entity->set('latestVersion', '1.11.18');
-//            $entity->set('settingVersion', '^1.11.21');
-//            $entity->set('isSystem', true);
-//            $entity->set('isComposer', true);
-//        }
-
-        $module = $this->getModuleManager()->getModule($entity->get('id'));
-        if (!empty($module)) {
-            $versions = $entity->get('versions') ?? [];
-            $lastVersion = array_shift($versions);
-
-            $entity->set('currentVersion', $module->getVersion());
-            $entity->set('latestVersion', $lastVersion['version'] ?? null);
-            $entity->set('settingVersion', self::getSettingVersion(Composer::getComposerJson(), $module->getComposerName()));
-            $entity->set('isSystem', $module->isSystem());
-            $entity->set('isComposer', !empty($module->getVersion()));
+        if ($entity->get('id') === 'Atro') {
+            $entity->set('currentVersion', Composer::getCoreVersion());
+            $entity->set('settingVersion', self::getSettingVersion(Composer::getComposerJson(), 'atrocore/core'));
+            $entity->set('isSystem', true);
+            $entity->set('isComposer', true);
+        } else {
+            $module = $this->getModuleManager()->getModule($entity->get('id'));
+            if (!empty($module)) {
+                $entity->set('currentVersion', $module->getVersion());
+                $entity->set('settingVersion',
+                    self::getSettingVersion(Composer::getComposerJson(), $module->getComposerName()));
+                $entity->set('isSystem', $module->isSystem());
+                $entity->set('isComposer', !empty($module->getVersion()));
+            }
         }
+
+        $versions = $entity->get('versions') ?? [];
+        $lastVersion = array_shift($versions);
+        $entity->set('latestVersion', $lastVersion['version'] ?? null);
     }
 
     public static function getSettingVersion(array $composerData, string $name): string

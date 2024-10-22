@@ -66,9 +66,6 @@
     "Preferences": "Preferences",
     "Role": "Roles"
   },
-  "descriptions": {
-    "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
-  },
   "labels": {
     "customizeLayout": "Personalizar diseño",
     "Merge": "Unir",
@@ -229,7 +226,6 @@
     "collapseAllPanels": "Collapse All",
     "expandAllPanels": "Expand All",
     "UnitSymbol": "Unit Symbol",
-    "Core": "Core",
     "Ownership Information": "Access Management",
     "New": "New",
     "General": "General",

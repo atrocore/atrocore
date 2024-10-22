@@ -20,9 +20,9 @@
     "usage": {
       "type": "enum",
       "options": [
-        "public",
-        "rent",
-        "purchase"
+        "Public",
+        "Rent",
+        "Purchase"
       ],
       "readOnly": true
     },

@@ -93,7 +93,6 @@
     "Country": "Länder"
   },
   "descriptions": {
-    "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde.",
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
@@ -143,7 +142,6 @@
     "Return to Application": "Zurück zur Anwendung",
     "you": "sie",
     "Collapse": "Ausblenden",
-    "Core": "Kern",
     "expandAllPanels": "Alle einblenden",
     "Loading...": "Ladevorgang...",
     "Merging...": "Zusammenführung...",

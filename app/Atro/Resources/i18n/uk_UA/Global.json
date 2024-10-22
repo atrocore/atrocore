@@ -107,9 +107,7 @@
     "Country": "Країни"
   },
   "descriptions": {
-    "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу.",
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
-
   },
   "labels": {
     "customizeLayout": "Налаштувати макет",
@@ -315,7 +313,6 @@
     "collapseAllPanels": "Згорнути все",
     "expandAllPanels": "Розгорнути все",
     "UnitSymbol": "Символ одиниці виміру",
-    "Core": "Ядро",
     "Ownership Information": "Керування доступом",
     "New": "Новий",
     "General": "Загальний",

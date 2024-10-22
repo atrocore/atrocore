@@ -349,7 +349,6 @@
     "collapseAllPanels": "Réduire tout",
     "expandAllPanels": "Développer tout",
     "UnitSymbol": "Symbole de l'unité",
-    "Core": "Cœur de métier",
     "prepareRecordsForRestore": "Préparer les dossiers pour la restauration...",
     "prepareRecordsForDelete": "Préparer les dossiers pour la suppression...",
     "customizeLayout": "Personnaliser la mise en page",
@@ -507,7 +506,6 @@
     "PasswordChangeRequest": "Demandes de changement de mot de passe"
   },
   "descriptions": {
-    "Core": "AtroCore est un écosystème logiciel conçu pour le développement rapide d'applications professionnelles réactives basées sur le web.",
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
   },
   "links": {

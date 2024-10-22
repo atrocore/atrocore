@@ -46,6 +46,7 @@ class Store extends ReferenceData
             throw new \Error('Failed to retrieve data from the repository.');
         }
 
+        // set status
         foreach ($items as $code => $item) {
             switch ($item['usage']) {
                 case 'Public':
