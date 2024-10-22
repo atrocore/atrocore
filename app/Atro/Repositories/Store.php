@@ -81,6 +81,16 @@ class Store extends ReferenceData
             }
         }
 
+        if (!empty($params['whereClause'][0]['status='])) {
+            foreach ($params['whereClause'][0]['status='] as $status) {
+                foreach ($items as $code => $row) {
+                    if ($row['status'] !== $status) {
+                        unset($items[$code]);
+                    }
+                }
+            }
+        }
+
         return $items;
     }
 

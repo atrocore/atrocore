@@ -41,8 +41,6 @@ class Composer extends HasContainer
      */
     public static $stableComposer = 'data/stable-composer.json';
 
-    private array $packages = [];
-
     /**
      * Get composer.json
      *
@@ -256,44 +254,28 @@ class Composer extends HasContainer
      */
     public function getList(): array
     {
-        $this->loadPackages();
+        /** @var Store $storeService */
+        $storeService = $this->getContainer()->get('serviceFactory')->create('Store');
+
+        $installed = $storeService->findEntities([
+            'maxSize'        => 999,
+            'collectionOnly' => true,
+            'where'          => [
+                [
+                    'field' => 'status',
+                    'type'  => 'in',
+                    'value' => ['installed'],
+                ]
+            ]
+        ]);
+
+        $list = $installed['collection']->toArray();
 
         // prepare composer data
         $composerData = self::getComposerJson();
 
         // get diff
         $composerDiff = $this->getComposerDiff();
-
-        $list = [
-            [
-                'id'             => 'TreoCore',
-                'name'           => $this->translate('Core'),
-                'description'    => $this->translate('Core', 'descriptions'),
-                'currentVersion' => self::getCoreVersion(),
-                'latestVersion'  => $this->getLatestVersion('Atro'),
-                'isSystem'       => true,
-                'isComposer'     => true,
-                'status'         => $this->getModuleStatus($composerDiff, 'Atro'),
-                'settingVersion' => self::getSettingVersion($composerData, 'atrocore/core')
-            ]
-        ];
-
-        // for installed modules
-        foreach ($this->getInstalledModules() as $id => $module) {
-            $list[$id] = [
-                'id'             => $id,
-                'name'           => (empty($module->getName())) ? $id : $module->getName(),
-                'description'    => $module->getDescription(),
-                'currentVersion' => $module->getVersion(),
-                'latestVersion'  => $this->getLatestVersion($id),
-                'isSystem'       => $module->isSystem(),
-                'isComposer'     => !empty($module->getVersion()),
-                'status'         => $this->getModuleStatus($composerDiff, $id),
-                'settingVersion' => self::getSettingVersion($composerData, $module->getComposerName()),
-                'usage'          => $this->getUsage($id),
-                'expirationDate' => $this->getExpirationDate($id),
-            ];
-        }
 
         // for not installed modules
         foreach ($composerDiff['install'] as $row) {
@@ -408,7 +390,7 @@ class Composer extends HasContainer
             "atrocore/tasks"              => "atrocore/activities-tasks",
         ];
 
-        $name = $package->get('packageId');
+        $name = $package->get('code');
         $installed = self::getComposerJson()['require'] ?? [];
         if (isset($abandoned[$name]) && isset($installed[$abandoned[$name]])) {
             $name = $abandoned[$name];
@@ -437,48 +419,6 @@ class Composer extends HasContainer
         }
 
         return $result;
-    }
-
-    public function loadPackages(): void
-    {
-        $this->packages = $this->getContainer()->get('serviceFactory')->create('TreoStore')->getRemotePackages();
-    }
-
-    public function getLatestVersion(string $moduleId): string
-    {
-        foreach ($this->packages as $row) {
-            $id = $row['atroId'] ?? $row['treoId'];
-            if ($id === $moduleId && !empty($row['versions'])) {
-                $latest = array_shift($row['versions']);
-                return $latest['version'];
-            }
-        }
-
-        return '';
-    }
-
-    public function getUsage(string $moduleId): ?string
-    {
-        foreach ($this->packages as $row) {
-            $id = $row['atroId'] ?? $row['treoId'];
-            if ($id === $moduleId && !empty($row['usage'])) {
-                return $row['usage'];
-            }
-        }
-
-        return null;
-    }
-
-    public function getExpirationDate(string $moduleId): ?string
-    {
-        foreach ($this->packages as $row) {
-            $id = $row['atroId'] ?? $row['treoId'];
-            if ($id === $moduleId && !empty($row['expirationDate'])) {
-                return $row['expirationDate'];
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -512,7 +452,7 @@ class Composer extends HasContainer
                 // prepare id
                 $id = $this->getStoredModuleId($package);
 
-                if ($id === 'Treo') {
+                if ($id === 'Atro') {
                     $result['update'][] = [
                         'id'      => $id,
                         'package' => $package,
@@ -550,16 +490,9 @@ class Composer extends HasContainer
      */
     protected function getModuleId(string $packageId): string
     {
-        // prepare result
-        $result = $packageId;
+        $package = $this->getEntityManager()->getRepository('Store')->getEntityByCode($packageId);
 
-        foreach ($this->getPackages() as $package) {
-            if ($package['packageId'] == $packageId) {
-                $result = $package['id'];
-            }
-        }
-
-        return $result;
+        return !empty($package) ? $package->get('id') : $packageId;
     }
 
     /**
@@ -598,52 +531,6 @@ class Composer extends HasContainer
     protected function getModule(string $id)
     {
         return $this->getContainer()->get('moduleManager')->getModule($id);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getPackages(): array
-    {
-        // prepare result
-        $result = [];
-
-        // find
-        $data = $this
-            ->getEntityManager()
-            ->getRepository('TreoStore')
-            ->order('id', true)
-            ->find();
-
-        if (count($data) > 0) {
-            foreach ($data as $row) {
-                $result[$row->get('id')] = $row->toArray();
-                $result[$row->get('id')]['versions'] = json_decode(json_encode($row->get('versions')), true);
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get module status
-     *
-     * @param array $diff
-     * @param string $id
-     *
-     * @return mixed
-     */
-    protected function getModuleStatus(array $diff, string $id)
-    {
-        foreach ($diff as $status => $row) {
-            foreach ($row as $item) {
-                if ($item['id'] == $id) {
-                    return $status;
-                }
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -694,14 +581,6 @@ class Composer extends HasContainer
     }
 
     /**
-     * @return array
-     */
-    private function getInstalledModules(): array
-    {
-        return $this->getModuleManager()->getModules();
-    }
-
-    /**
      * @return mixed
      */
     private function getInstalledModule(string $id)
@@ -717,6 +596,6 @@ class Composer extends HasContainer
      */
     private function getPackage(string $id)
     {
-        return $this->getEntityManager()->getEntity('TreoStore', $id);
+        return $this->getEntityManager()->getEntity('Store', $id);
     }
 }
