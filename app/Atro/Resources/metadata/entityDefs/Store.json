@@ -62,6 +62,10 @@
       "type": "jsonObject",
       "readOnly": true
     },
+    "abandoned": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
     "tags": {
       "type": "multiEnum",
       "readOnly": true,

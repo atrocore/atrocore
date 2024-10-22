@@ -366,7 +366,7 @@ class Composer extends HasContainer
 
     protected function getComposerName(string $id): string
     {
-        if ($id === 'TreoCore') {
+        if (in_array($id, ['Atro', 'TreoCore'])) {
             return 'atrocore/core';
         }
 
@@ -375,28 +375,14 @@ class Composer extends HasContainer
             return $id;
         }
 
-        $abandoned = [
-            "atrocore/export-database"    => "atrocore/export-feeds-database",
-            "atrocore/export"             => "atrocore/export-feeds",
-            "atrocore/import"             => "atrocore/import-feeds",
-            "atrocore/workflows"          => "atrocore/event-based-jobs",
-            "atrocore/synchronization"    => "atrocore/connector",
-            "atrocore/export-remote-file" => "atrocore/export-feeds-remote-file",
-            "atrocore/import-http"        => "atrocore/import-feeds-http",
-            "atrocore/import-remote-file" => "atrocore/import-feeds-remote-file",
-            "atrocore/export-http"        => "atrocore/export-feeds-http",
-            "atrocore/import-database"    => "atrocore/import-feeds-databases",
-            "atrocore/pm"                 => "atrocore/project-management",
-            "atrocore/tasks"              => "atrocore/activities-tasks",
-        ];
-
-        $name = $package->get('code');
         $installed = self::getComposerJson()['require'] ?? [];
-        if (isset($abandoned[$name]) && isset($installed[$abandoned[$name]])) {
-            $name = $abandoned[$name];
+        foreach ($package->get('abandoned') ?? [] as $oldName) {
+            if (isset($installed[$oldName])) {
+                return $oldName;
+            }
         }
 
-        return $name;
+        return $package->get('code');
     }
 
     public function getLogs(Request $request): array
