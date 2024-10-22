@@ -19,6 +19,8 @@ use Espo\ORM\Entity;
 
 class Store extends ReferenceData
 {
+    private ?array $remoteItems = null;
+
     public function insertEntity(Entity $entity): bool
     {
         return false;
@@ -36,33 +38,47 @@ class Store extends ReferenceData
 
     protected function getAllItems(array $params = []): array
     {
-        $contents = @file_get_contents('https://packagist.atrocore.com/store.json?id=' . $this->getConfig()->get('appId'));
-        if (empty($contents)) {
-            throw new \Error('Failed to retrieve data from the repository.');
+        if ($this->remoteItems === null) {
+            $cacheFile = 'data/store-cache.json';
+
+            $contents = @file_get_contents('https://packagist.atrocore.com/store.json?id=' . $this->getConfig()->get('appId'));
+            if (empty($contents)) {
+                if (!file_exists($cacheFile)) {
+                    throw new \Error('Failed to retrieve data from the repository.');
+                } else {
+                    $contents = file_get_contents($cacheFile);
+                }
+            }
+
+            file_put_contents($cacheFile, $contents);
+
+            $remoteItems = @json_decode($contents, true);
+            if (empty($remoteItems)) {
+                throw new \Error('Failed to retrieve data from the repository.');
+            }
+
+            // set status
+            foreach ($remoteItems as $code => $item) {
+                switch ($item['usage']) {
+                    case 'Public':
+                        $remoteItems[$code]['status'] = 'available';
+                        break;
+                    case 'Rent':
+                    case 'Purchase':
+                        $remoteItems[$code]['status'] = !empty($item['expirationDate']) && $item['expirationDate'] >= date('Y-m-d') ? 'available' : 'buyable';
+                        break;
+                    default:
+                        $remoteItems[$code]['status'] = 'buyable';
+                }
+                if ($item['id'] === 'Atro' || !empty($this->getModuleManager()->getModule($item['id']))) {
+                    $remoteItems[$code]['status'] = 'installed';
+                }
+            }
+
+            $this->remoteItems = $remoteItems;
         }
 
-        $items = @json_decode($contents, true);
-        if (empty($items)) {
-            throw new \Error('Failed to retrieve data from the repository.');
-        }
-
-        // set status
-        foreach ($items as $code => $item) {
-            switch ($item['usage']) {
-                case 'Public':
-                    $items[$code]['status'] = 'available';
-                    break;
-                case 'Rent':
-                case 'Purchase':
-                    $items[$code]['status'] = !empty($item['expirationDate']) && $item['expirationDate'] >= date('Y-m-d') ? 'available' : 'buyable';
-                    break;
-                default:
-                    $items[$code]['status'] = 'buyable';
-            }
-            if ($item['id'] === 'Atro' || !empty($this->getModuleManager()->getModule($item['id']))) {
-                $items[$code]['status'] = 'installed';
-            }
-        }
+        $items = $this->remoteItems;
 
         // filter by status
         if (!empty($params['whereClause'][0]['status!='])) {
