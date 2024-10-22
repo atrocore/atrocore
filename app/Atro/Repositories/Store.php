@@ -50,8 +50,8 @@ class Store extends ReferenceData
             'tags'           => []
         ];
 
-        $items['workflows'] = [
-            'id'             => 'workflows',
+        $items['atrocore/workflows'] = [
+            'id'             => 'Workflows',
             'name'           => 'Workflows',
             'code'           => 'atrocore/workflows',
             'description'    => "This module allows you to configure and manage different workflows and their automations. A workflow can include events, conditions of any complexity, states and actions.",
