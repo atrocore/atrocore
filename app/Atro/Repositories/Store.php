@@ -59,14 +59,8 @@ class Store extends ReferenceData
                 default:
                     $items[$code]['status'] = 'buyable';
             }
-
-            if ($item['id'] === 'Atro') {
+            if ($item['id'] === 'Atro' || !empty($this->getModuleManager()->getModule($item['id']))) {
                 $items[$code]['status'] = 'installed';
-            } else {
-                $module = $this->getModuleManager()->getModule($item['id']);
-                if (!empty($module)) {
-                    $items[$code]['status'] = 'installed';
-                }
             }
         }
 
