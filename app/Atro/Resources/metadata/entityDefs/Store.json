@@ -78,5 +78,9 @@
       "type": "bool",
       "readOnly": true
     }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
   }
 }
