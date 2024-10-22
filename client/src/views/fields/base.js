@@ -818,6 +818,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         getListOptionsData(extensibleEnumId) {
             let key = 'extensible_enum_' + extensibleEnumId;
 
+            if (!extensibleEnumId) {
+                return []
+            }
+
             if (!Espo[key]) {
                 Espo[key] = [];
                 this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
