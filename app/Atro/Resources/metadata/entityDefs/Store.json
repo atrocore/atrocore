@@ -11,6 +11,42 @@
       "trim": true,
       "unique": true
     },
+    "description": {
+      "type": "text",
+      "readOnly": true
+    },
+    "packageId": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "url": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "status": {
+      "type": "enum",
+      "fontSize": 1,
+      "options": [
+        "buyable",
+        "available"
+      ],
+      "optionColors": [
+        "FFFF00",
+        "00FF00"
+      ],
+      "default": "buyable",
+      "readOnly": true
+    },
+    "versions": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "tags": {
+      "type": "multiEnum",
+      "fontSize": 1,
+      "optionsIds": [],
+      "options": []
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
