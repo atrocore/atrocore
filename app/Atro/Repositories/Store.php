@@ -36,6 +36,7 @@ class Store extends ReferenceData
     protected function getAllItems(array $params = []): array
     {
         $items = [];
+
         $items['atrocore/core'] = [
             'id'             => 'core',
             'name'           => 'Core',
