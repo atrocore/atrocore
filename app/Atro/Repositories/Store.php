@@ -38,14 +38,16 @@ class Store extends ReferenceData
         $items = [];
 
         $items['core'] = [
-            'id'          => 'core',
-            'name'        => 'Core',
-            'code'        => 'atrocore/core',
-            'description' => "",
-            'url'         => 'git@gitlab.atrocore.com:atrocore/amazon-adapter.git',
-            'status'      => 'available',
-            'versions'    => [],
-            'tags'        => []
+            'id'             => 'core',
+            'name'           => 'Core',
+            'code'           => 'atrocore/core',
+            'description'    => "",
+            'url'            => 'git@gitlab.atrocore.com:atrocore/amazon-adapter.git',
+            'status'         => 'installed',
+            'usage'          => 'public',
+            'expirationDate' => null,
+            'versions'       => [],
+            'tags'           => []
         ];
 
         return $items;
