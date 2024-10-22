@@ -15,8 +15,6 @@ namespace Atro\Services;
 
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Templates\Services\ReferenceData;
-use Atro\Services\Composer;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 class Store extends ReferenceData
