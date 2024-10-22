@@ -146,7 +146,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                     this.createView('listStore', 'views/record/list', {
                         collection: collection,
                         el: `${this.options.el} .list-container.modules-store`,
-                        layoutName: 'list',
+                        layoutName: 'listSmall',
                         searchManager: false,
                         selectable: false,
                         checkboxes: false,
