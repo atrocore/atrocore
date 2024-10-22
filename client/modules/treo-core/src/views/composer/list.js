@@ -133,7 +133,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         loadStoreModulesList() {
             this.getCollectionFactory().create('Store', collection => {
                 this.storeCollection = collection;
-                collection.maxSize = 20;
+                collection.maxSize = 50;
                 collection.where = [
                     {
                         field: 'status',
