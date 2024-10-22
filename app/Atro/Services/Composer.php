@@ -246,18 +246,12 @@ class Composer extends HasContainer
         return $this->compareComposerSchemas();
     }
 
-    /**
-     * Get list
-     *
-     * @return array
-     * @throws Exceptions\Error
-     */
     public function getList(): array
     {
         /** @var Store $storeService */
         $storeService = $this->getContainer()->get('serviceFactory')->create('Store');
 
-        $installed = $storeService->findEntities([
+        $list = $storeService->findEntities([
             'maxSize'        => 999,
             'collectionOnly' => true,
             'where'          => [
@@ -267,15 +261,18 @@ class Composer extends HasContainer
                     'value' => ['installed'],
                 ]
             ]
-        ]);
-
-        $list = $installed['collection']->toArray();
+        ])['collection']->toArray();
 
         // prepare composer data
         $composerData = self::getComposerJson();
 
         // get diff
         $composerDiff = $this->getComposerDiff();
+
+        // prepare status for items
+        foreach ($list as $k => $v) {
+            $list[$k]['status'] = $this->getModuleStatus($composerDiff, $v['id']);
+        }
 
         // for not installed modules
         foreach ($composerDiff['install'] as $row) {
@@ -299,6 +296,10 @@ class Composer extends HasContainer
 
             $list[$row['id']] = $item;
         }
+
+        usort($list, function ($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
 
         return [
             'total' => count($list),
@@ -366,10 +367,6 @@ class Composer extends HasContainer
 
     protected function getComposerName(string $id): string
     {
-        if (in_array($id, ['Atro', 'TreoCore'])) {
-            return 'atrocore/core';
-        }
-
         $package = $this->getPackage($id);
         if (empty($package)) {
             return $id;
@@ -407,9 +404,19 @@ class Composer extends HasContainer
         return $result;
     }
 
-    /**
-     * @return array
-     */
+    protected function getModuleStatus(array $diff, string $id): ?string
+    {
+        foreach ($diff as $status => $row) {
+            foreach ($row as $item) {
+                if ($item['id'] == $id) {
+                    return $status;
+                }
+            }
+        }
+
+        return null;
+    }
+
     protected function compareComposerSchemas(): array
     {
         // prepare result
