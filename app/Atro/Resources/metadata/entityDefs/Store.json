@@ -35,13 +35,11 @@
       "options": [
         "buyable",
         "available",
-        "installed",
-        "install"
+        "installed"
       ],
       "optionColors": [
         "FFFF00",
         "00FF00",
-        "00AFFF",
         "00AFFF"
       ],
       "default": "buyable",
