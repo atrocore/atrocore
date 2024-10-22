@@ -50,6 +50,7 @@ class Store extends ReferenceData
         if (!empty($module)) {
             $versions = $entity->get('versions') ?? [];
             $lastVersion = array_shift($versions);
+
             $entity->set('currentVersion', $module->getVersion());
             $entity->set('latestVersion', $lastVersion['version'] ?? null);
             $entity->set('settingVersion', self::getSettingVersion(Composer::getComposerJson(), $module->getComposerName()));
