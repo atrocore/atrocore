@@ -1298,7 +1298,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     Object.keys(languages || {}).forEach((lang) => {
                         if (languages[lang]['role'] === 'main') {
                             options.push('main');
-                            translatedOptions['main'] = this.getLanguage().translateOption('main', 'languageFilter', 'Global');
+                            translatedOptions['main'] = languages[lang]['name'];
                         } else {
                             options.push(lang);
                             translatedOptions[lang] = languages[lang]['name'];
