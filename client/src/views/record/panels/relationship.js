@@ -315,8 +315,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             collection.fetch();
                         }.bind(this));
                     });
-                    this.setupTotal.call(this)
-                    this.setupLayoutEditor(layoutName)
+                    this.setupTotal.call(this);
                 }, this);
                 this.wait(false);
             }, this);
@@ -392,10 +391,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             $(groupSelector + ' > .list-total').css({minWidth: btnMaxWidth > 0 ? btnMaxWidth : ''});
             $(groupSelector).css({minWidth: maxWidth > 0 ? maxWidth + 14 : ''});
-        },
-
-        setupLayoutEditor: function (layoutName) {
-            console.log('deprecated');
         },
 
         actionLayoutEditor: function (data, event) {
