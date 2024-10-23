@@ -80,7 +80,7 @@ class ReferenceData extends Repository implements Injectable
             }
         }
 
-        $items = $this->getAllItems();
+        $items = $this->getAllItems() ?? [];
         foreach ($items as $item) {
             foreach ($uniques as $unique) {
                 if ($item['id'] !== $entity->get('id') && $item[$unique] === $entity->get($unique)) {
