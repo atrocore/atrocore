@@ -44,7 +44,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 isNew: this.isNew,
                 additionalParamsLayout: this.getMetadata().get('app.additionalEntityParams.layout') || [],
                 isActiveUnavailable: this.getMetadata().get(['scopes', this.scope, 'isActiveUnavailable']) || false,
-                auditable: scopeData && scopeData.object && scopeData.customizable && !['Relation', 'ReferenceData'].includes(scopeData.type)
+                auditable: scopeData && scopeData.object && scopeData.customizable && !['Relation', 'ReferenceData'].includes(scopeData.type),
+                hasModifiedExtendedRelations: scopeData.type !== 'ReferenceData',
+                hasDuplicatableRelations: scopeData.type !== 'ReferenceData',
+                hasDeleteWithoutConfirmation: scopeData.type !== 'ReferenceData'
             };
         },
 
