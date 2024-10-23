@@ -290,6 +290,11 @@ class Language
             }
         }
 
+        // load custom
+        if (!empty($data['custom'])) {
+            $fullData = Util::merge($fullData, $data['custom']);
+        }
+
         foreach ($fullData as $i18nName => $i18nData) {
             $this->data[$i18nName] = $i18nData;
         }
