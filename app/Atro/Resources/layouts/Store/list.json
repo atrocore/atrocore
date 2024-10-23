@@ -1,14 +1,12 @@
 [
   {
     "name": "name",
-    "link": true,
-    "width": 15
+    "link": true
   },
   {
     "name": "description"
   },
   {
-    "name": "status",
-    "width": 15
+    "name": "status"
   }
 ]

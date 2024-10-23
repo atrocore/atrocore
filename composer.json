@@ -57,6 +57,12 @@
     }
   },
   "extra": {
-    "atroId": "Atro"
+    "atroId": "Atro",
+    "name": {
+      "default": "Core"
+    },
+    "description": {
+      "default": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
+    }
   }
 }

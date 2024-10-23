@@ -131,16 +131,22 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         },
 
         loadStoreModulesList() {
-            this.getCollectionFactory().create('TreoStore', collection => {
+            this.getCollectionFactory().create('Store', collection => {
                 this.storeCollection = collection;
-                collection.maxSize = 20;
-                collection.data.isInstalled = false;
+                collection.maxSize = 50;
+                collection.where = [
+                    {
+                        field: 'status',
+                        type: 'notIn',
+                        value: ['installed']
+                    }
+                ];
 
                 this.listenToOnce(collection, 'sync', () => {
                     this.createView('listStore', 'views/record/list', {
                         collection: collection,
                         el: `${this.options.el} .list-container.modules-store`,
-                        layoutName: 'list',
+                        layoutName: 'listSmall',
                         searchManager: false,
                         selectable: false,
                         checkboxes: false,

@@ -1,9 +1,0 @@
-{
-  "entity": true,
-  "type": "Base",
-  "module": "TreoCore",
-  "object": true,
-  "quickCreateListDisabled": true,
-  "streamDisabled": true,
-  "notificationDisabled": true
-}

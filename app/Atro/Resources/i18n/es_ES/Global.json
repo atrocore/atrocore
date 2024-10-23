@@ -35,7 +35,7 @@
     "Pricing": "Pricing",
     "Unit": "Unit",
     "QueueItem": "Queue Item",
-    "TreoStore": "Store",
+    "Store": "Store",
     "Global": "Global",
     "AuthLogRecord": "Auth Log Record",
     "AuthFailLogRecord": "Auth Fail Log Record"
@@ -65,9 +65,6 @@
     "Notification": "Notifications",
     "Preferences": "Preferences",
     "Role": "Roles"
-  },
-  "descriptions": {
-    "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
     "customizeLayout": "Personalizar diseño",
@@ -229,7 +226,6 @@
     "collapseAllPanels": "Collapse All",
     "expandAllPanels": "Expand All",
     "UnitSymbol": "Unit Symbol",
-    "Core": "Core",
     "Ownership Information": "Access Management",
     "New": "New",
     "General": "General",

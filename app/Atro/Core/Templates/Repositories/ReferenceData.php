@@ -255,7 +255,7 @@ class ReferenceData extends Repository implements Injectable
 
     public function find(array $params = [])
     {
-        $items = $this->getAllItems();
+        $items = $this->getAllItems($params);
         $items = array_values($items);
 
         // text filter
@@ -307,7 +307,7 @@ class ReferenceData extends Repository implements Injectable
         throw new BadRequest('The function is not provided for an entity of this type.');
     }
 
-    protected function getAllItems(): array
+    protected function getAllItems(array $params = []): array
     {
         $items = [];
         if (file_exists($this->filePath)) {
