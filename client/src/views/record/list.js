@@ -367,20 +367,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         allResultIsChecked: false,
 
+        hasLayoutEditor: false,
+
         data: function () {
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
 
             const fixedHeaderRow = this.isFixedListHeaderRow();
-
-            // add layout configuration button
-            const additionalLayouts = this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts']) || {};
-            const availableLayouts = []
-            for (let key in additionalLayouts) {
-                if (['list', 'listSmall'].includes(additionalLayouts[key])) {
-                    availableLayouts.push(key)
-                }
-            }
 
             return {
                 scope: this.scope,
@@ -404,8 +397,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.length && !fixedHeaderRow,
-                hasLayoutEditor: !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall', ...availableLayouts].includes(this.layoutName) &&
-                    this.getAcl().check('Layout', 'create')
+                hasLayoutEditor: this.hasLayoutEditor
             };
         },
 
@@ -1141,6 +1133,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.enabledFixedHeader = this.options.enabledFixedHeader || this.enabledFixedHeader;
             this.baseWidth = [];
+
+            // add layout configuration button
+            const additionalLayouts = this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts']) || {};
+            const availableLayouts = []
+            for (let key in additionalLayouts) {
+                if (['list', 'listSmall'].includes(additionalLayouts[key])) {
+                    availableLayouts.push(key)
+                }
+            }
+
+            this.hasLayoutEditor = !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall', ...availableLayouts].includes(this.layoutName) &&
+                this.getAcl().check('Layout', 'create');
 
             this.listenTo(this, 'after:save', () => {
                 this.afterSave();
@@ -2050,7 +2054,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             ;
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 defs.push({
-                    width: this.rowActionsColumnWidth
+                    width: this.rowActionsColumnWidth,
+                    layoutEditor: this.hasLayoutEditor
                 });
             }
 
