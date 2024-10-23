@@ -16097,7 +16097,7 @@ table.no-margin {
 }
 
 .panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
-  padding-right: 0;
+  padding-right: 4px;
 }
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
@@ -20951,15 +20951,29 @@ td[data-name="draggableIcon"] {
 
 .progress-status a:hover,
 .progress-status a:focus {
-  color: #3c763d;
+color: #3c763d;
 }
 
 .bottom .panel-heading > .panel-title > .collapser {
   cursor: pointer;
   top: 2px;
-  margin-left: 2px;
+  margin-left: -4px;
+  margin-right: 4px;
   color: #8e8e8e;
   font-size: 12px;
+  vertical-align: text-top;
+  line-height: 0;
+  user-select: none;
+}
+
+.bottom .panel-heading > .panel-title > .collapser > svg {
+  width: 18px;
+  stroke-width: 18px;
+  stroke: var(--panel-title-color);
+}
+
+.bottom .panel-heading .btn[data-action="closePanel"] > span {
+  font-size: 14px;
 }
 
 .btn[data-action="refresh"] > span.fas.fa-sync {
@@ -22522,6 +22536,17 @@ ul.dropdown-menu > li.checkbox {
   .panel.sticked, .panel.sticked {
     margin-top: 0;
   }
+}
+
+.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group {
+  display: inline-flex;
+  justify-content: flex-end;
+}
+
+.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
+  margin-right: auto;
+  border: 0;
+  text-align: right;
 }
 
 @media screen and (min-width: 768px) {

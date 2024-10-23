@@ -1769,8 +1769,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     ['detail', 'detailSmall', ...availableLayouts].includes(this.layoutName) &&
                     this.getAcl().check('Layout', 'create')
                 ) {
-                    let html = `<a class="btn btn-link collapsing-button" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
-                         <span class="fas fa-th cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
+                    let html = `<a class="btn btn-link collapsing-button pull-right" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
+                         <span class="fas fa-cog cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
                     </a>`
                     const $parent = view.$el.find('.panel-heading:first')
                     if ($parent.length > 0) {

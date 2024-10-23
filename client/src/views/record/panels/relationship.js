@@ -362,35 +362,40 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 if (total == null) {
                     $buttonHtml.find('span').html('<img class="preloader" style="height:12px;" src="client/img/atro-loader.svg" />')
                 } else {
-                    $buttonHtml.find('span').html(`${this.translate('Shown', 'labels', 'Global')}: ${this.collection.length} | ${this.translate('Total', 'labels', 'Global')}: ${total}`)
+                    $buttonHtml.attr('title', `${this.translate('Shown', 'labels', 'Global')}: ${this.collection.length} / ${this.translate('Total', 'labels', 'Global')}: ${total}`)
+                    $buttonHtml.find('span').html(`${this.collection.length} / ${total}`);
                 }
-                $buttonHtml.show()
+                $buttonHtml.show();
+                this.recalculateBtnGroupWidth();
             })
         },
 
-        setupLayoutEditor: function (layoutName) {
-            // add layout configuration button
-            const additionalLayouts = this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts']) || {};
-            const availableLayouts = []
-            for (let key in additionalLayouts) {
-                if (['list', 'listSmall'].includes(additionalLayouts[key])) {
-                    availableLayouts.push(key)
+        recalculateBtnGroupWidth() {
+            let maxWidth = 0;
+            let btnMaxWidth = 0;
+            const groupSelector = '.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group';
+
+            $(groupSelector).css({minWidth: ''});
+            $(groupSelector + ' > .list-total').css({minWidth: ''});
+
+            $(groupSelector).each(function () {
+                const thisWidth = $(this).outerWidth();
+                const btnWidth = $(this).children('.list-total').outerWidth();
+                if (thisWidth > maxWidth) {
+                    maxWidth = thisWidth;
                 }
-            }
-            if (this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall', ...availableLayouts].includes(layoutName)) {
-                let $span = $(`<span data-action="layoutEditor" data-panel="${this.panelName}" class="collapser fas fa-columns action layout-editor" style="font-size: 14px"></span>`)
-                const $container = this.$el.parent().find('.panel-heading .panel-title')
 
-                $container.find('.layout-editor').remove()
+                if (btnWidth > btnMaxWidth) {
+                    btnMaxWidth = btnWidth;
+                }
+            });
 
-                $container.append($span)
-                $span.hide()
-                this.listenTo(this.collection, 'update', () => {
-                    if (this.collection.length > 0) {
-                        $span.show()
-                    }
-                })
-            }
+            $(groupSelector + ' > .list-total').css({minWidth: btnMaxWidth > 0 ? btnMaxWidth : ''});
+            $(groupSelector).css({minWidth: maxWidth > 0 ? maxWidth + 14 : ''});
+        },
+
+        setupLayoutEditor: function (layoutName) {
+            console.log('deprecated');
         },
 
         actionLayoutEditor: function (data, event) {
