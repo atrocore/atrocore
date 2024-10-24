@@ -104,14 +104,6 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 } else if (d.unix() >= ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
                     return this.translate('Yesterday');
                 }
-
-                var readableFormat = this.getDateTime().getReadableDateFormat();
-
-                if (d.format('YYYY') == today.format('YYYY')) {
-                    return d.format(readableFormat);
-                } else {
-                    return d.format(readableFormat + ', YYYY');
-                }
             }
 
             return this.getDateTime().toDisplayDate(value);
