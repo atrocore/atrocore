@@ -51,6 +51,16 @@ Espo.define('views/admin/entity-manager/fields/modified-extended-relations', 'vi
                         this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('name'));
                     }
                 }
+
+                if (
+                    fieldDefs.type === 'linkMultiple'
+                    && fieldDefs.notStorable !== true
+                    && fieldDefs.disabled !== true
+                    && (this.getMetadata().get(['scopes', this.model.get('name'), 'modifiedExtendedLinks']) || []).includes(field)
+                ) {
+                    this.params.options.push(field);
+                    this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('name'));
+                }
             });
 
             let newValue = [];

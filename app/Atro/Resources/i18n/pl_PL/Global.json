@@ -27,7 +27,7 @@
     "Measure":"Pomiar",
     "Unit":"Jednostka",
     "QueueItem":"Element kolejki",
-    "TreoStore":"Sklep",
+    "Store":"Sklep",
     "User":"Użytkownik",
     "Team":"Zespół",
     "Role":"Rola",
@@ -96,9 +96,6 @@
     "AuthToken":"Tokeny autoryzacji",
     "LastViewed":"Ostatnio oglądane"
 },
-"descriptions":{
-    "Core":"AtroCore to ekosystem oprogramowania, zaprojektowany do szybkiego tworzenia responsywnych aplikacji biznesowych opartych na sieci."
-},
 "labels":{
     "customizeLayout": "Dostosuj układ",
     "Reupload": "Prześlij ponownie",
@@ -148,7 +145,6 @@
     "collapseAllPanels":"Zwiń wszystkie",
     "expandAllPanels":"Rozwiń wszystkie",
     "UnitSymbol":"Symbol jednostki",
-    "Core":"Rdzeń",
     "Mark all read":"Oznacz wszystkie jako przeczytane",
     "Ownership Information":"Zarządzanie dostępem",
     "New":"Nowy",

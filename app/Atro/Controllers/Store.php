@@ -13,16 +13,18 @@ declare(strict_types=1);
 
 namespace Atro\Controllers;
 
-use Atro\Core\Templates\Controllers\Base;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Templates\Controllers\ReferenceData;
 
-class TreoStore extends Base
+class Store extends ReferenceData
 {
-    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    public function actionCreate($params, $data, $request)
     {
-        parent::fetchListParamsFromRequest($params, $request, $data);
+        throw new BadRequest();
+    }
 
-        if (!is_null($request->get('isInstalled'))) {
-            $params['isInstalled'] = ($request->get('isInstalled') === 'true');
-        }
+    public function actionDelete($params, $data, $request)
+    {
+        throw new BadRequest();
     }
 }

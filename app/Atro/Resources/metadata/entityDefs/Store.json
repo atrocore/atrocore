@@ -1,0 +1,87 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "code": {
+      "type": "varchar",
+      "readOnly": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text",
+      "readOnly": true
+    },
+    "url": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "usage": {
+      "type": "enum",
+      "options": [
+        "Public",
+        "Rent",
+        "Purchase"
+      ],
+      "readOnly": true
+    },
+    "expirationDate": {
+      "type": "date",
+      "readOnly": true
+    },
+    "status": {
+      "type": "enum",
+      "options": [
+        "buyable",
+        "available",
+        "installed"
+      ],
+      "optionColors": [
+        "FFFF00",
+        "00FF00",
+        "00AFFF"
+      ],
+      "default": "buyable",
+      "readOnly": true
+    },
+    "currentVersion": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "latestVersion": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "settingVersion": {
+      "type": "varchar"
+    },
+    "versions": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "abandoned": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "tags": {
+      "type": "multiEnum",
+      "readOnly": true,
+      "fontSize": 1,
+      "optionsIds": [],
+      "options": []
+    },
+    "isSystem": {
+      "type": "bool",
+      "readOnly": true
+    },
+    "isComposer": {
+      "type": "bool",
+      "readOnly": true
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  }
+}

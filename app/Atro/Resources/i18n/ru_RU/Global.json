@@ -48,7 +48,7 @@
     "Measure": "Мера",
     "Unit": "Единица измерения",
     "QueueItem": "Элемент очереди",
-    "TreoStore": "Магазин"
+    "Store": "Магазин"
   },
   "scopeNamesPlural": {
     "Storage": "Хранилища",
@@ -85,9 +85,6 @@
     "Note": "Примечания",
     "Notification": "Уведомления",
     "Preferences": "Настройки"
-  },
-  "descriptions": {
-    "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."
   },
   "labels": {
     "Reupload": "Повторная загрузка",
@@ -284,7 +281,6 @@
     "collapseAllPanels": "Свернуть все",
     "expandAllPanels": "Развернуть все",
     "UnitSymbol": "Символ единицы измерения",
-    "Core": "Ядро",
     "Ownership Information": "Управление доступом",
     "New": "Новый",
     "General": "Общий",

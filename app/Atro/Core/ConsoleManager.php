@@ -103,7 +103,6 @@ class ConsoleManager
             "sql diff --run"               => Console\SqlDiffRun::class,
             "cron"                         => Console\Cron::class,
             "sj <id> --run"                => Console\ScheduledJob::class,
-            "store --refresh"              => Console\StoreRefresh::class,
             "migrate <module> <from> <to>" => Console\Migrate::class,
             "qm <stream> --run"            => Console\QueueManager::class,
             "qm <stream> <id> --run"       => Console\QueueManager::class,
