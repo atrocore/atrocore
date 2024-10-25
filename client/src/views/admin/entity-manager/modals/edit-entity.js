@@ -39,16 +39,21 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
         template: 'admin/entity-manager/modals/edit-entity',
 
         data: function () {
-            let scopeData = this.getMetadata().get('scopes.' + this.scope);
-            return {
-                isNew: this.isNew,
-                additionalParamsLayout: this.getMetadata().get('app.additionalEntityParams.layout') || [],
-                isActiveUnavailable: this.getMetadata().get(['scopes', this.scope, 'isActiveUnavailable']) || false,
-                auditable: scopeData && scopeData.object && scopeData.customizable && !['Relation', 'ReferenceData'].includes(scopeData.type),
-                hasModifiedExtendedRelations: scopeData.type !== 'ReferenceData',
-                hasDuplicatableRelations: scopeData.type !== 'ReferenceData',
-                hasDeleteWithoutConfirmation: scopeData.type !== 'ReferenceData'
-            };
+            let data = {
+                    isNew: this.isNew,
+                    additionalParamsLayout: this.getMetadata().get('app.additionalEntityParams.layout') || [],
+                    isActiveUnavailable: this.getMetadata().get(['scopes', this.scope, 'isActiveUnavailable']) || false,
+                },
+                scopeData = this.getMetadata().get('scopes.' + this.scope);
+
+            if (scopeData) {
+                data.auditable = scopeData.object && scopeData.customizable && !['Relation', 'ReferenceData'].includes(scopeData.type);
+                data.hasModifiedExtendedRelations = scopeData.type !== 'ReferenceData';
+                data.hasDuplicatableRelations = scopeData.type !== 'ReferenceData';
+                data.hasDeleteWithoutConfirmation = scopeData.type !== 'ReferenceData';
+            }
+
+            return data;
         },
 
         setupData: function () {
