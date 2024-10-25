@@ -19568,13 +19568,13 @@ input#sn-checkbox-open-in-new-window {
     height: inherit;
 }
 
-.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
+.panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
     margin-right: auto;
     text-align: right;
     background-color: transparent;
 }
 
-.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:after {
+.panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:after {
     content: '';
     display: inline-block;
     width: 1px;
@@ -19585,6 +19585,20 @@ input#sn-checkbox-open-in-new-window {
     right: -2px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.panel-extensibleEnumOptions > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
+.panel-variables > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
+.panel-translationsRules > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
+.panel-ldapMappingFields > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
+    margin-right: 14px;
+}
+
+.panel-extensibleEnumOptions > .panel-heading:not(.note-toolbar)  > .btn-group > .btn.dropdown-toggle,
+.panel-variables > .panel-heading:not(.note-toolbar)  > .btn-group > .btn.dropdown-toggle,
+.panel-translationsRules > .panel-heading:not(.note-toolbar)  > .btn-group > .btn.dropdown-toggle,
+.panel-ldapMappingFields > .panel-heading:not(.note-toolbar) > .btn-group > .btn.dropdown-toggle {
+    width: 37px;
 }
 
 .middle > .panel-default > .panel-heading {
@@ -21970,7 +21984,7 @@ td[data-name="draggableIcon"] {
     color: #3c763d;
 }
 
-.bottom .panel-heading > .panel-title > .collapser {
+.panel-heading > .panel-title > .collapser {
     cursor: pointer;
     top: 2px;
     margin-right: 4px;
@@ -21982,15 +21996,15 @@ td[data-name="draggableIcon"] {
     user-select: none;
 }
 
-.bottom .panel-heading > .panel-title > .collapser > svg {
+.panel-heading > .panel-title > .collapser > svg {
     width: 16px;
 }
 
-.bottom .panel-heading .btn[data-action="closePanel"] {
+.panel-heading .btn[data-action="closePanel"] {
     width: 35px;
 }
 
-.bottom .panel-heading .btn[data-action="closePanel"] > span {
+.panel-heading .btn[data-action="closePanel"] > span {
     font-size: 14px;
 }
 

@@ -39,5 +39,4 @@
         {{#unless notRefreshable}}
         </span>
     {{/unless}}
-    <span class="collapser fas {{#if expanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}}" data-action="collapsePanel" data-panel="{{name}}"></span>
 </h4>
