@@ -30,12 +30,6 @@
         {{/if}}
     {{/if}}
 
-    {{#if hasLayoutEditor}}
-    <a class="btn btn-link layout-editor" style="padding: 0;margin-top: -3px;">
-        <span class="fas fa-columns cursor-pointer" ></span>
-    </a>
-    {{/if}}
-
     {{#if displayTotalCount}}
     <div class="text-muted total-count {{#if totalLoading}} hidden {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
     <img class="preloader {{#unless totalLoading}} hidden {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
@@ -83,6 +77,10 @@
                     {{else}}
                         {{#if this.hasCustomLabel}}
                             {{this.customLabel}}
+                        {{else if this.layoutEditor}}
+                            <a class="btn btn-link layout-editor" style="padding: 0;margin-top: -3px;width: 100%;text-align: center">
+                                <span class="fas fa-cog cursor-pointer" style="font-size: 1em;"></span>
+                            </a>
                         {{else}}
                             {{translate this.name scope=../collection.name category='fields'}}
                         {{/if}}
@@ -113,6 +111,10 @@
                         {{else}}
                             {{#if this.hasCustomLabel}}
                                 {{this.customLabel}}
+                            {{else if this.layoutEditor}}
+                                <a class="btn btn-link layout-editor" style="padding: 0;margin-top: -3px;width: 100%;text-align: center">
+                                    <span class="fas fa-cog cursor-pointer" style="font-size: 1em;"></span>
+                                </a>
                             {{else}}
                                 {{translate this.name scope=../collection.name category='fields'}}
                             {{/if}}

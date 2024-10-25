@@ -16284,7 +16284,7 @@ table.no-margin {
 }
 
 .panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
-    padding-right: 0;
+    padding-right: 4px;
 }
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
@@ -19562,6 +19562,31 @@ input#sn-checkbox-open-in-new-window {
     height: 28px;
 }
 
+.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group {
+    display: inline-flex;
+    justify-content: flex-end;
+    height: inherit;
+}
+
+.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
+    margin-right: auto;
+    text-align: right;
+    background-color: transparent;
+}
+
+.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:after {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 100%;
+    margin-left: 7px;
+    background-color: #ccc;
+    position: absolute;
+    right: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .middle > .panel-default > .panel-heading {
     padding-top: 4px;
 }
@@ -21948,9 +21973,25 @@ td[data-name="draggableIcon"] {
 .bottom .panel-heading > .panel-title > .collapser {
     cursor: pointer;
     top: 2px;
-    margin-left: 2px;
+    margin-right: 4px;
+    margin-left: -4px;
     color: #8e8e8e;
     font-size: 12px;
+    vertical-align: text-top;
+    line-height: 0;
+    user-select: none;
+}
+
+.bottom .panel-heading > .panel-title > .collapser > svg {
+    width: 16px;
+}
+
+.bottom .panel-heading .btn[data-action="closePanel"] {
+    width: 35px;
+}
+
+.bottom .panel-heading .btn[data-action="closePanel"] > span {
+    font-size: 14px;
 }
 
 .btn[data-action="refresh"] > span.fas.fa-sync {

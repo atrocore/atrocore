@@ -82,7 +82,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             'hide.bs.collapse div.panel-body.panel-collapse.collapse': function (e) {
                 this.afterPanelCollapsed($(e.currentTarget), true);
             },
-            'click span.collapser[data-action="closePanel"]': function (e) {
+            'click [data-action="closePanel"]': function (e) {
                 let name = $(e.currentTarget).data('panel');
                 this.$el.find(`.panel[data-name="${name}"]`).addClass('hidden');
                 this.addToClosedPanelPreferences([name])
@@ -573,14 +573,6 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         },
 
         afterPanelCollapsed(target, hide) {
-            let collapser = target.prev().find(`span.collapser[data-panel="${target.data('name')}"]`);
-            if (hide) {
-                collapser.removeClass('fa-chevron-up');
-                collapser.addClass('fa-chevron-down');
-            } else {
-                collapser.removeClass('fa-chevron-down');
-                collapser.addClass('fa-chevron-up');
-            }
             this.savePanelStateToStorage(target.data('name'), hide);
         },
 
