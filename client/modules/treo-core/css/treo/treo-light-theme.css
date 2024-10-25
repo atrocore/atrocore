@@ -20954,7 +20954,7 @@ td[data-name="draggableIcon"] {
 color: #3c763d;
 }
 
-.bottom .panel-heading > .panel-title > .collapser {
+.panel-heading > .panel-title > .collapser {
   cursor: pointer;
   top: 2px;
   margin-left: -4px;
@@ -20966,13 +20966,13 @@ color: #3c763d;
   user-select: none;
 }
 
-.bottom .panel-heading > .panel-title > .collapser > svg {
+.panel-heading > .panel-title > .collapser > svg {
   width: 18px;
   stroke-width: 18px;
   stroke: var(--panel-title-color);
 }
 
-.bottom .panel-heading .btn[data-action="closePanel"] > span {
+.panel-heading .btn[data-action="closePanel"] > span {
   font-size: 14px;
 }
 
@@ -22547,6 +22547,14 @@ ul.dropdown-menu > li.checkbox {
   margin-right: auto;
   border: 0;
   text-align: right;
+}
+
+.panel-extensibleEnumOptions > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
+.panel-variables > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
+.panel-translationsRules > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
+.panel-ldapMappingFields > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
+  border: 0;
+  margin-right: 14px;
 }
 
 @media screen and (min-width: 768px) {
