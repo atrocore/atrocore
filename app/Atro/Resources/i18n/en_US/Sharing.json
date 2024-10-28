@@ -5,7 +5,8 @@
     "validTill": "Valid Till",
     "allowedUsage": "Allowed Usage",
     "used": "Used",
-    "link": "Link"
+    "link": "Link",
+    "viewLink": "Link for viewing"
   },
   "labels": {
     "copiedToClipboard": "Copied to clipboard"
