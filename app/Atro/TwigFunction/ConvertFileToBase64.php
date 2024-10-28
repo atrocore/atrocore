@@ -32,7 +32,7 @@ class ConvertFileToBase64 extends AbstractTwigFunction
             $content = $this->entityManager->getRepository('File')->getContents($file);
             return base64_encode($content);
         } catch (\Throwable $e) {
-            return $e->getMessage();
+            return false;
         }
     }
 }
