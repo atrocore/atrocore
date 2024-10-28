@@ -334,7 +334,9 @@
     "previewTemplate": "Шаблон для перегляду",
     "Select Image": "Обрати існуюче зображення",
     "Upload Image": "Завантажити зображення з пристрою",
-    "copyConfigurations": "Копіювання конфігурацій"
+    "copyConfigurations": "Копіювання конфігурацій",
+    "youMustConfigureNotificationConnection": "Щоб сповіщення надсилалися, спочатку потрібно налаштувати підключення до електронної пошти."
+
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",

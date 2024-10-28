@@ -343,7 +343,9 @@
     "Duplicate and Select": "Duplicate and Select",
     "Select Image": "Select existing image",
     "Upload Image": "Upload image from a local filesystem",
-    "copyConfigurations": "Copy Configurations"
+    "copyConfigurations": "Copy Configurations",
+    "youMustConfigureNotificationConnection": "You must first configure the email notification connection for notifications to be sent."
+
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
