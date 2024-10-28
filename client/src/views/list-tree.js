@@ -40,6 +40,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.setupTreePanel();
+            this.modifyCollectionForSelectedNode()
         },
 
         afterRender() {
@@ -94,8 +95,8 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
-                view.listenTo(view, 'tree-load', () => {
-                    this.treeLoad(view);
+                view.listenTo(view, 'tree-refresh', () => {
+                    this.treeRefresh(view);
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
@@ -125,10 +126,35 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             }
         },
 
-        treeLoad(view) {
+        treeRefresh(view) {
             if (this.getStorage().get('selectedNodeId', this.scope)) {
-                this.selectTreeNode();
+                const id = this.getStorage().get('selectedNodeId', this.scope);
+                const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
+                this.getView('treePanel').selectTreeNode(id, route);
             }
+        },
+
+        modifyCollectionForSelectedNode() {
+            const id = this.getStorage().get('selectedNodeId', this.scope);
+            if (!id) {
+                this.collection.whereAdditional = []
+                return
+            }
+            const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
+
+            this.collection.whereAdditional = [
+                {
+                    "type": "bool",
+                    "value": [
+                        filterName
+                    ],
+                    "data": {
+                        [filterName]: id
+                    }
+                }
+            ]
+
+            this.collection.where = this.collection.where.filter(item => !item['value'] || item['value'][0] !== filterName)
         },
 
         selectTreeNode() {
@@ -137,24 +163,8 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
             this.getView('treePanel').selectTreeNode(id, route);
 
-            const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
-
             this.notify('Please wait...');
-
-            let data = {bool: {}, boolData: {}};
-            data['bool'][filterName] = true;
-            data['boolData'][filterName] = id;
-
-            const defaultFilters = Espo.Utils.cloneDeep(this.searchManager.get());
-            const extendedFilters = Espo.Utils.cloneDeep(defaultFilters);
-
-            $.each(data, (key, value) => {
-                extendedFilters[key] = _.extend({}, extendedFilters[key], value);
-            });
-
-            this.searchManager.set(extendedFilters);
-            this.collection.where = this.searchManager.getWhere();
-            this.searchManager.set(defaultFilters);
+            this.modifyCollectionForSelectedNode()
 
             this.collection.fetch().then(() => this.notify(false));
         },
@@ -164,14 +174,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
             this.notify('Please wait...');
 
-            const defaultFilters = Espo.Utils.cloneDeep(this.searchManager.get());
-            const extendedFilters = Espo.Utils.cloneDeep(defaultFilters);
-            $.each({bool: {}, boolData: {}}, (key, value) => {
-                extendedFilters[key] = _.extend({}, extendedFilters[key], value);
-            });
-            this.searchManager.set(extendedFilters);
-            this.collection.where = this.searchManager.getWhere();
-            this.searchManager.set(defaultFilters);
+            this.modifyCollectionForSelectedNode()
 
             this.collection.fetch().then(() => this.notify(false));
         },

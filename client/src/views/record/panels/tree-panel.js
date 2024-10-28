@@ -52,7 +52,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             'click button[data-action="collapsePanel"]': function () {
                 this.actionCollapsePanel();
 
-                if(this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed') {
+                if (this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed') {
                     this.notify('Loading...')
                     this.rebuildTree()
                 }
@@ -93,14 +93,14 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                             this.getStorage().set('treeWhereData', this.treeScope, collection.where);
                         }
 
-                        if(this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed'){
+                        if (this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed') {
                             this.rebuildTree()
                         }
                     }
                 });
             }
 
-            this.listenTo(this, 'tree-load', function(data){
+            this.listenTo(this, 'tree-load', function (data) {
                 this.notify(false)
             })
         },
@@ -128,7 +128,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             this.toggleVisibilityForResetButton();
 
-            if(this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed'){
+            if (this.getStorage().get('catalog-tree-panel', this.scope) !== 'collapsed') {
                 this.buildTree()
             }
         },
@@ -202,25 +202,25 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }
         },
 
-        openNodes($tree, ids) {
-            let result = false
+        openNodes($tree, ids, onFinished) {
+            if (ids.length === 0) {
+                onFinished()
+                return
+            }
 
-            ids.forEach(item => {
-                let $els = $tree.find(`.jqtree-title[data-id="${item}"]`);
-                if ($els.length > 0) {
-                    $els.each((k, el) => {
-                        let $el = $(el);
-                        let $li = $el.parent().parent();
-                        if ($li.hasClass('jqtree-closed')) {
-                            result = true;
-                            let node = $tree.tree('getNodeByHtmlElement', $el);
-                            $tree.tree('openNode', node, false);
-                        }
-                    });
-                }
-            });
-
-            return result;
+            const item = ids[0]
+            let $els = $tree.find(`.jqtree-title[data-id="${item}"]`);
+            if ($els.length > 0) {
+                $els.each((k, el) => {
+                    let $el = $(el);
+                    let $li = $el.parent().parent();
+                    if ($li.hasClass('jqtree-closed')) {
+                        result = true;
+                        let node = $tree.tree('getNodeByHtmlElement', $el);
+                        $tree.tree('openNode', node, false, () => this.openNodes($tree, ids.slice(1), onFinished));
+                    }
+                });
+            }
         },
 
         prepareTreeRoute(list, route) {
@@ -235,12 +235,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         selectTreeNode(id, ids) {
             const locationHash = window.location.hash;
             const $tree = this.getTreeEl();
-
-            let interval = setInterval(() => {
-                if (!this.openNodes($tree, ids) || locationHash !== window.location.hash) {
-                    clearInterval(interval);
-                }
-
+            const onFinished = () => {
                 let node = $tree.tree('getNodeById', id);
                 if (node) {
                     $tree.tree('addToSelection', node);
@@ -257,7 +252,16 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                         $li.addClass('jqtree-selected');
                     }
                 });
-            }, 500);
+            }
+
+            let node = $tree.tree('getNodeById', id);
+            if (node) {
+                onFinished()
+                return
+            }
+
+            this.openNodes($tree, ids, onFinished)
+
         },
 
         unSelectTreeNode(id) {
@@ -468,7 +472,12 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }
 
             $tree.tree(treeData)
-                .on('tree.load_data', e => this.trigger('tree-load', e.tree_data))
+                .on('tree.load_data', e => {
+                    this.trigger('tree-load', e.tree_data)
+                })
+                .on('tree.refresh', e => {
+                    this.trigger('tree-refresh', e)
+                })
                 .on('tree.move', e => {
                     e.preventDefault();
 
