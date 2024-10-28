@@ -5,7 +5,8 @@
     "validTill": "Valable jusqu'au",
     "allowedUsage": "Utilisation autorisée",
     "used": "Utilisé",
-    "link": "Lien"
+    "link": "Lien",
+    "viewLink": "Lien pour la visualisation"
   },
   "labels": {
     "copiedToClipboard": "Copié dans le presse-papiers"

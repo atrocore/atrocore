@@ -61,6 +61,17 @@ class Sharing extends Download
             exit;
         }
 
+        if (!empty($_GET['view']) && $this->isEnabledFilePreview($file)) {
+            header('Content-Type: ' . $file->get('mimeType'));
+            echo $file->getContents();
+            exit;
+        }
+
         $this->downloadByFileStream($file);
+    }
+
+    protected function isEnabledFilePreview(File $file): bool
+    {
+        return !empty($_GET['view']) && in_array($file->get('mimeType'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []));
     }
 }

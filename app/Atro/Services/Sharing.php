@@ -31,6 +31,7 @@ class Sharing extends Base
             if (count($fileNameParts) > 1) {
                 $extension = strtolower(end($fileNameParts));
                 $entity->set('link', $this->getConfig()->get('siteUrl') . '/sharings/' . $entity->get('id') . '.' . $extension);
+                $entity->set('viewLink', $this->getConfig()->get('siteUrl') . '/sharings/' . $entity->get('id') . '.' . $extension . '?view=1');
             }
         }
 

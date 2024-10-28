@@ -40,6 +40,14 @@
       "filterDisabled": true,
       "importDisabled": true
     },
+    "viewLink": {
+      "type": "url",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
