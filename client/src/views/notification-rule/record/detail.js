@@ -19,7 +19,7 @@ Espo.define('views/notification-rule/record/detail', 'views/record/detail', func
                     if (!this.getConfig().get('notificationSmtpConnectionId') && this.model.get('emailActive')) {
                         this.notify('youMustConfigureNotificationConnection', 'warning', 2000)
                     }
-                }, 500);
+                }, 200);
             })
         },
 
