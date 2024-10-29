@@ -11,7 +11,8 @@
       "jpeg",
       "gif",
       "png",
-      "pdf"
+      "pdf",
+      "jfif"
     ],
     "thumbnailSize": {
       "small": [
