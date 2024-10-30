@@ -365,32 +365,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     $buttonHtml.find('span').html(`${this.collection.length} / ${total}`);
                 }
                 $buttonHtml.show();
-                this.recalculateBtnGroupWidth();
             })
-        },
-
-        recalculateBtnGroupWidth() {
-            let maxWidth = 0;
-            let btnMaxWidth = 0;
-            const groupSelector = '.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group';
-
-            $(groupSelector).css({minWidth: ''});
-            $(groupSelector + ' > .list-total').css({minWidth: ''});
-
-            $(groupSelector).each(function () {
-                const thisWidth = $(this).outerWidth();
-                const btnWidth = $(this).children('.list-total').outerWidth();
-                if (thisWidth > maxWidth) {
-                    maxWidth = thisWidth;
-                }
-
-                if (btnWidth > btnMaxWidth) {
-                    btnMaxWidth = btnWidth;
-                }
-            });
-
-            $(groupSelector + ' > .list-total').css({minWidth: btnMaxWidth > 0 ? btnMaxWidth : ''});
-            $(groupSelector).css({minWidth: maxWidth > 0 ? maxWidth + 14 : ''});
         },
 
         actionLayoutEditor: function (data, event) {

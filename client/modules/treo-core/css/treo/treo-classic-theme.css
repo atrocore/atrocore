@@ -19569,29 +19569,17 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
-    margin-right: auto;
     text-align: right;
     background-color: transparent;
+    border-right: 1px solid #ccc;
 }
 
-.panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:after {
-    content: '';
-    display: inline-block;
-    width: 1px;
-    height: 100%;
-    margin-left: 7px;
-    background-color: #ccc;
-    position: absolute;
-    right: -2px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
+.panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total,
 .panel-extensibleEnumOptions > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
 .panel-variables > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
 .panel-translationsRules > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
 .panel-ldapMappingFields > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
-    margin-right: 14px;
+    margin-right: 12px;
 }
 
 .panel-extensibleEnumOptions > .panel-heading:not(.note-toolbar)  > .btn-group > .btn.dropdown-toggle,

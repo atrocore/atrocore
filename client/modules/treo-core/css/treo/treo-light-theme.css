@@ -22544,17 +22544,17 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
-  margin-right: auto;
   border: 0;
   text-align: right;
 }
 
+.bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total,
 .panel-extensibleEnumOptions > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
 .panel-variables > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
 .panel-translationsRules > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
 .panel-ldapMappingFields > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
   border: 0;
-  margin-right: 14px;
+  margin-right: 12px;
 }
 
 @media screen and (min-width: 768px) {
