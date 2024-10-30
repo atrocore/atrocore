@@ -44,7 +44,7 @@ class GetConvertedImageUrl extends AbstractTwigFunction
         }
 
         try {
-            return $this->config->get('siteUrl').'/'. $this->custom->convert($file, $params);
+            return $this->config->get('siteUrl') . '/' . $this->custom->convert($file, $params);
         } catch (\Throwable $e) {
             return false;
         }
