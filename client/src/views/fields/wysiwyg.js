@@ -541,13 +541,13 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         fetch: function () {
             var data = {};
             if (!this.model.has('isHtml') || this.model.get('isHtml')) {
-                data[this.name] = this.$summernote.summernote('code');
+                data[this.name] = this.$summernote ? this.$summernote.summernote('code') : null;
                 //check if empty
                 if (data[this.name] === '') data[this.name] = null;
             } else {
                 data[this.name] = this.$element ? this.$element.val() : null;
                 //check if empty
-                if (data[this.name]==='') data[this.name] = null;
+                if (data[this.name] === '') data[this.name] = null;
             }
 
             if (this.model.has('isHtml')) {
