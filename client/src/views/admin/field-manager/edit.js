@@ -90,10 +90,9 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 this.model.set('name', this.field);
 
                 if (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltip'])) {
-                    const tooltipTextRaw = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltipText']);
                     const tooltipLink = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltipLink']);
                     const tooltipText = this.getLanguage().translate(this.field, 'tooltips', this.scope);
-                    this.model.set('tooltipText', tooltipTextRaw ? tooltipText : null);
+                    this.model.set('tooltipText', tooltipText || null);
                     this.model.set('tooltipLink', tooltipLink || null);
                 }
             } else {
