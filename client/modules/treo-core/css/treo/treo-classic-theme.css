@@ -19610,7 +19610,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading > .btn-group > .btn-default {
-    background-color: #ececec;
+    background-color: transparent;
     border-color: #dcdcdc;
     border-width: 0;
     padding-left: 8px;
