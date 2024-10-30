@@ -336,7 +336,6 @@
     "Upload Image": "Завантажити зображення з пристрою",
     "copyConfigurations": "Копіювання конфігурацій",
     "youMustConfigureNotificationConnection": "Щоб сповіщення надсилалися, спочатку потрібно налаштувати підключення до електронної пошти."
-
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
@@ -966,7 +965,6 @@
     "massUpdateSomeRecordNotProceed": "Деякі записи не були оновлені.",
     "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
     "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити."
-
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",
