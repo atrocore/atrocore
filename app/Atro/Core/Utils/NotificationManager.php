@@ -68,7 +68,6 @@ class NotificationManager
 
         $isNote = $entity->getEntityType() === 'Note';
         $noteHasParent = $entity->get('parentType') && $entity->get('parentId');
-        $hasSentUpdateOccurrence = false;
 
         if ($isNote && $entity->get('type') !== 'Post') {
             return;
@@ -152,7 +151,6 @@ class NotificationManager
         }
 
         if (empty($this->getConfig()->get('sendOutNotifications'))) {
-            $GLOBALS['log']->alert('Notification Not Sent: Send out Notification is deactivated.');
             return;
         }
 

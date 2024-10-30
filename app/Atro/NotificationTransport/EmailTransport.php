@@ -31,6 +31,9 @@ class EmailTransport extends AbstractNotificationTransport
 
     public function send(User $user, NotificationTemplate $template, array $params): void
     {
+        if(empty($this->getConfig()->get('notificationSmtpConnectionId'))) {
+            return;
+        }
 
         if (empty($user->get('emailAddress'))) {
             return;

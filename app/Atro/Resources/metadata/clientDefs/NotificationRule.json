@@ -1,3 +1,6 @@
 {
-  "controller": "controllers/record"
+  "controller": "controllers/record",
+  "recordViews": {
+    "detail": "views/notification-rule/record/detail"
+  }
 }
