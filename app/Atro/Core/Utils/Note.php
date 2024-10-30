@@ -103,14 +103,12 @@ class Note
 
                 foreach (['actualList', 'notActualList'] as $key) {
                     foreach ($item[$key] as $attribute) {
-                        if ($entity->isAttributeChanged($attribute)) {
-                            $valueWas = $entity->getFetched($attribute);
-                            $valueBecame = $entity->get($attribute);
+                        $valueWas = $entity->getFetched($attribute);
+                        $valueBecame = $entity->get($attribute);
 
-                            if (!(($valueWas === null || $valueWas === '') && ($valueBecame === null || $valueBecame === ''))) {
-                                $was[$attribute] = $valueWas;
-                                $became[$attribute] = $valueBecame;
-                            }
+                        if (!(($valueWas === null || $valueWas === '') && ($valueBecame === null || $valueBecame === ''))) {
+                            $was[$attribute] = $valueWas;
+                            $became[$attribute] = $valueBecame;
                         }
                     }
                 }
