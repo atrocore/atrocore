@@ -13,5 +13,6 @@
   "convertFileToBase64FromUrl": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl",
   "translate": "\\Atro\\TwigFunction\\Translate",
   "translateOption": "\\Atro\\TwigFunction\\TranslateOption",
-  "convertFileToBase64": "\\Atro\\TwigFunction\\ConvertFileToBase64"
+  "convertFileToBase64": "\\Atro\\TwigFunction\\ConvertFileToBase64",
+  "getConvertedImageUrl": "\\Atro\\TwigFunction\\GetConvertedImageUrl"
 }
