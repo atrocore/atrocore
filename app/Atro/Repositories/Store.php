@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Services\Composer;
 use Espo\ORM\Entity;
 
 class Store extends ReferenceData
@@ -57,6 +58,8 @@ class Store extends ReferenceData
                 throw new \Error('Failed to retrieve data from the repository.');
             }
 
+            $composerData = Composer::getComposerJson();
+
             // set status
             foreach ($remoteItems as $code => $item) {
                 switch ($item['usage']) {
@@ -70,7 +73,7 @@ class Store extends ReferenceData
                     default:
                         $remoteItems[$code]['status'] = 'buyable';
                 }
-                if ($item['id'] === 'Atro' || !empty($this->getModuleManager()->getModule($item['id']))) {
+                if (!empty($composerData['require'][$code]) || !empty($this->getModuleManager()->getModule($item['id']))) {
                     $remoteItems[$code]['status'] = 'installed';
                 }
             }
