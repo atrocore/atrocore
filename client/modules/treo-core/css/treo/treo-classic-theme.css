@@ -19572,6 +19572,13 @@ input#sn-checkbox-open-in-new-window {
     text-align: right;
     background-color: transparent;
     border-right: 1px solid #ccc;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+.panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:hover {
+    background-color: transparent;
+    cursor: initial;
 }
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total,
@@ -19579,7 +19586,7 @@ input#sn-checkbox-open-in-new-window {
 .panel-variables > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
 .panel-translationsRules > .panel-heading:not(.note-toolbar)  > .btn-group > .list-total,
 .panel-ldapMappingFields > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
-    margin-right: 12px;
+    margin-right: 8px;
 }
 
 .panel-extensibleEnumOptions > .panel-heading:not(.note-toolbar)  > .btn-group > .btn.dropdown-toggle,
@@ -20824,9 +20831,10 @@ button.category:focus {
     }
 
     .detail .bottom .panel-default > .panel-heading > .btn-group:not(.note-btn-group) {
-        top: -1px;
+        top: 0;
         right: 1px;
-        position: absolute
+        position: absolute;
+        height: 100%;
     }
 
     #main {
