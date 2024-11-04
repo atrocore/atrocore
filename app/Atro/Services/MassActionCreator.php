@@ -31,12 +31,6 @@ class MassActionCreator extends QueueManagerBase
 
         $additionJobData = $data['params']['additionalJobData'] ?? [];
 
-        if (empty($ids)) {
-            $sp = $this->getContainer()->get('selectManagerFactory')->create($entityName)
-                ->getSelectParams(['where' => $data['params']['where']], true, true);
-            $sp['select'] = ['id'];
-        }
-
         /** @var RDB $repository */
         $repository = $this->getEntityManager()->getRepository($entityName);
 
@@ -45,15 +39,23 @@ class MassActionCreator extends QueueManagerBase
 
         $jobIds = [];
 
+        $select = ['id'];
         $orderBy = 'id';
         if (!empty($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'createdAt']))) {
             $orderBy = 'createdAt';
+            $select[] = $orderBy;
+        }
+
+        if (empty($ids)) {
+            $sp = $this->getContainer()->get('selectManagerFactory')->create($entityName)
+                ->getSelectParams(['where' => $data['params']['where']], true, true);
+            $sp['select'] = $select;
         }
 
         while (true) {
             if (!empty($ids)) {
                 $collection = $repository
-                    ->select(['id'])
+                    ->select($select)
                     ->where(['id' => $ids])
                     ->limit($offset, $chunkSize)
                     ->order($orderBy)
