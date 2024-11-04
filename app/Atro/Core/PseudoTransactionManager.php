@@ -102,6 +102,10 @@ class PseudoTransactionManager
 
     public function runForEntity(string $entityType, string $entityId): void
     {
+        if ($this->getJobCountForEntity($entityType, $entityId) > $this->container->get('config')->get('maxPseudoJobsToRunForEntity', 10)) {
+            return;
+        }
+
         while (!empty($job = $this->fetchJob($entityType, $entityId))) {
             $this->runJob($job);
         }
@@ -140,6 +144,23 @@ class PseudoTransactionManager
             ->setFirstResult(0)
             ->setMaxResults(50)
             ->fetchAllAssociative();
+    }
+
+    protected function getJobCountForEntity(string $entityType, string $entityId)
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        $res = $qb->select('count(*)')
+            ->from('pseudo_transaction_job')
+            ->where('deleted = :deleted')
+            ->andWhere('entity_type = :entityType')
+            ->andWhere('entity_id = :entityId')
+            ->setParameter('entityType', $entityType)
+            ->setParameter('entityId', $entityId)
+            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->fetchFirstColumn();
+
+        return $res[0];
     }
 
     protected function fetchJob(string $entityType = '', string $entityId = '', string $parentId = ''): array
@@ -259,9 +280,9 @@ class PseudoTransactionManager
                 case 'linkEntity':
                     if (!$inputIsEmpty) {
                         $inputData = Json::decode($job['input_data']);
-                        if(!empty($inputData->duplicateForeign)){
+                        if (!empty($inputData->duplicateForeign)) {
                             $service->duplicateAndLinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
-                        }else{
+                        } else {
                             $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
                         }
                     }
