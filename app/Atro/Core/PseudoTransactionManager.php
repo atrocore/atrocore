@@ -102,11 +102,7 @@ class PseudoTransactionManager
 
     public function runForEntity(string $entityType, string $entityId): void
     {
-        if ($this->getJobCountForEntity($entityType, $entityId) > $this->container->get('config')->get('maxPseudoJobsToRunForEntity', 10)) {
-            return;
-        }
-
-        while (!empty($job = $this->fetchJob($entityType, $entityId))) {
+        while (!empty($job = $this->fetchJob($entityType, $entityId, 'updateEntity', ''))) {
             $this->runJob($job);
         }
     }
@@ -146,24 +142,7 @@ class PseudoTransactionManager
             ->fetchAllAssociative();
     }
 
-    protected function getJobCountForEntity(string $entityType, string $entityId): int
-    {
-        $qb = $this->connection->createQueryBuilder();
-
-        $res = $qb->select('count(*)')
-            ->from('pseudo_transaction_job')
-            ->where('deleted = :deleted')
-            ->andWhere('entity_type = :entityType')
-            ->andWhere('entity_id = :entityId')
-            ->setParameter('entityType', $entityType)
-            ->setParameter('entityId', $entityId)
-            ->setParameter('deleted', false, Mapper::getParameterType(false))
-            ->fetchFirstColumn();
-
-        return (int)$res[0];
-    }
-
-    protected function fetchJob(string $entityType = '', string $entityId = '', string $parentId = ''): array
+    protected function fetchJob(string $entityType = '', string $entityId = '', string $action = '', string $parentId = ''): array
     {
         $qb = $this->connection->createQueryBuilder();
 
@@ -184,6 +163,10 @@ class PseudoTransactionManager
             $qb->andWhere('id = :id')->setParameter('id', $parentId);
         }
 
+        if (!empty($action)) {
+            $qb->andWhere('action = :action')->setParameter('action', $action);
+        }
+
         $qb
             ->orderBy('sort_order', 'ASC')
             ->setFirstResult(0)
@@ -192,7 +175,7 @@ class PseudoTransactionManager
         $record = $qb->fetchAssociative();
         $job = empty($record) ? [] : $record;
 
-        if (!empty($job['parent_id']) && !empty($parentJob = $this->fetchJob($entityType, $entityId, $job['parent_id']))) {
+        if (!empty($job['parent_id']) && !empty($parentJob = $this->fetchJob($entityType, $entityId, $action, $job['parent_id']))) {
             $job = $parentJob;
         }
 
