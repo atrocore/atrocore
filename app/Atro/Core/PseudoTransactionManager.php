@@ -146,7 +146,7 @@ class PseudoTransactionManager
             ->fetchAllAssociative();
     }
 
-    protected function getJobCountForEntity(string $entityType, string $entityId)
+    protected function getJobCountForEntity(string $entityType, string $entityId): int
     {
         $qb = $this->connection->createQueryBuilder();
 
@@ -160,7 +160,7 @@ class PseudoTransactionManager
             ->setParameter('deleted', false, Mapper::getParameterType(false))
             ->fetchFirstColumn();
 
-        return $res[0];
+        return (int)$res[0];
     }
 
     protected function fetchJob(string $entityType = '', string $entityId = '', string $parentId = ''): array
