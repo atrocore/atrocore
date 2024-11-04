@@ -153,7 +153,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                     }
 
                     // skip if empty on both sides
-                    if ((modelWas.get(fieldId) === null || modelWas.get(fieldId) === '') && (modelBecame.get(fieldId) === null || modelBecame.get(fieldId) === '')) {
+                    if ((modelWas.get(fieldId) === null || modelWas.get(fieldId) === '') && (modelBecame.get(fieldId) === null || modelBecame.get(fieldId) === '') && modelWas.get(fieldId) === modelBecame.get(fieldId)) {
                         return;
                     }
 
@@ -180,6 +180,14 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         mode: 'detail',
                         inlineEditDisabled: true,
                         params: params
+                    }, function (view) {
+                        view.render();
+
+                        this.listenTo(view, 'after:render', () => {
+                            if (modelWas.get(field) === '' || (Array.isArray(modelWas.get(field)) && modelWas.get(field).length === 0)) {
+                                view.$el.html('<span class="text-gray">&#9141;</span>');
+                            }
+                        });
                     });
 
                     this.createView(field + 'Became', viewName, {
@@ -192,6 +200,14 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         mode: 'detail',
                         inlineEditDisabled: true,
                         params: params
+                    }, function (view) {
+                        view.render();
+
+                        this.listenTo(view, 'after:render', () => {
+                            if (modelBecame.get(field) === '' || (Array.isArray(modelBecame.get(field)) && modelBecame.get(field).length === 0)) {
+                                view.$el.html('<span class="text-gray">&#9141;</span>');
+                            }
+                        });
                     });
 
                     let htmlTag = 'code';
