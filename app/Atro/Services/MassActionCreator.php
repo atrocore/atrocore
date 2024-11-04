@@ -84,7 +84,7 @@ class MassActionCreator extends QueueManagerBase
                 'ids'         => $collectionIds,
             ]);
 
-            if ($action === 'delete' && !empty($params['permanently'])) {
+            if ($action === 'delete' && !empty($data['params']['permanently'])) {
                 $jobData['deletePermanently'] = true;
             }
 
