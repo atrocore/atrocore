@@ -228,9 +228,10 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             this.forceSelectAllAttributes;
         },
 
-        getAutocompleteUrl: function () {
+        getAutocompleteUrl: function (q) {
             var url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
-                boolList = this.getSelectBoolFilterList();
+                boolList = this.getSelectBoolFilterList(),
+                where = [];
 
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
                 url += '&' + $.param({'boolFilterList': boolList});
@@ -239,6 +240,19 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if (primary) {
                 url += '&' + $.param({'primaryFilter': primary});
             }
+
+            if (q) {
+                let foreignDefs = this.getMetadata().get(['entityDefs', this.foreignScope, 'fields']);
+
+                if (foreignDefs && typeof foreignDefs === 'object' && foreignDefs.name) {
+                    where.push({type: 'contains', attribute: 'name', value: q});
+                }
+            }
+
+            if (where.length) {
+                url += '&' + $.param({'where': where});
+            }
+
             return url;
         },
 
@@ -280,7 +294,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                             return this.getAutocompleteUrl(q);
                         }.bind(this),
                         minChars: 1,
-                        paramName: 'q',
+                        ignoreParams: true,
                         formatResult: function (suggestion) {
                             return Handlebars.Utils.escapeExpression(suggestion.name);
                         },

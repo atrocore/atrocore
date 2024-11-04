@@ -337,8 +337,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             }
         },
 
-        getAutocompleteUrl: function () {
-            let url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+        getAutocompleteUrl: function (q) {
+            let url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
+                where = [];
 
             let boolList = this.getSelectBoolFilterList();
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
@@ -352,7 +353,19 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
             let boolData = this.getBoolFilterData();
             if (boolData && Object.keys(boolData).length > 0) {
-                url += '&' + $.param({'where': [{'type': 'bool', 'data': boolData}]});
+                where.push({'type': 'bool', 'data': boolData});
+            }
+
+            if (q) {
+                let foreignDefs = this.getMetadata().get(['entityDefs', this.foreignScope, 'fields']);
+
+                if (foreignDefs && typeof foreignDefs === 'object' && foreignDefs.name) {
+                    where.push({type: 'contains', attribute: 'name', value: q});
+                }
+            }
+
+            if (where.length) {
+                url += '&' + $.param({'where': where});
             }
 
             return url;
@@ -395,7 +408,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         serviceUrl: function (q) {
                             return this.getAutocompleteUrl(q);
                         }.bind(this),
-                        paramName: 'q',
+                        ignoreParams: true,
                         minChars: 1,
                         autoSelectFirst: true,
                         formatResult: function (suggestion) {
@@ -438,10 +451,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         var $elementOneOf = this.$el.find('input.element-one-of');
                         $elementOneOf.autocomplete({
                             serviceUrl: function (q) {
+                                debugger
                                 return this.getAutocompleteUrl(q);
                             }.bind(this),
                             minChars: 1,
-                            paramName: 'q',
+                            ignoreParams: true,
                             formatResult: function (suggestion) {
                                 return Handlebars.Utils.escapeExpression(suggestion.name);
                             },
