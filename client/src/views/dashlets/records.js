@@ -61,18 +61,6 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', fun
             return data;
         },
 
-        setupActionList: function () {
-            var scope = this.getOption('entityType');
-            if (scope && this.getAcl().checkScope(scope, 'create')) {
-                this.actionList.unshift({
-                    name: 'create',
-                    html: this.translate('Create ' + scope, 'labels', scope),
-                    iconHtml: '<span class="fas fa-plus"></span>',
-                    url: '#' + scope + '/create'
-                });
-            }
-        },
-
     });
 });
 
