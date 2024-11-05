@@ -987,6 +987,10 @@ class Hierarchy extends Record
             return [];
         }
 
+        if (empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'fieldValueInheritance']))) {
+            return [];
+        }
+
         $parents = $this->getRepository()
             ->join('children')
             ->where(['children.id' => $entity->get('id')])
