@@ -46,6 +46,14 @@ Espo.define('views/fields/enum-int', 'views/fields/enum', function (Dep) {
 
         validations: [],
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            (this.params.options || []).forEach(val => {
+                this.translatedOptions[val] = val.toString();
+            });
+        },
+
         fetch: function () {
             var value = parseInt(this.$el.find('[name="' + this.name + '"]').val());
             var data = {};
