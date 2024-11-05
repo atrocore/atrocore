@@ -440,7 +440,9 @@
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
-    "duplicatedAndLinked": "Records were successfully duplicated and linked."
+    "duplicatedAndLinked": "Records were successfully duplicated and linked.",
+    "linked": "Records were successfully linked.",
+    "linkJobsCreated": "Records are being linked in background."
   },
   "boolFilters": {
     "onlyActive": "Active",
