@@ -64,6 +64,10 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             }
         ],
 
+        prepareLayoutAfterConverting(layout) {
+            return layout;
+        },
+
         getDetailLayout: function () {
             var layout = this.getMetadata().get(['dashlets', this.name, 'options', 'layout']);
             if (layout) {

@@ -42,10 +42,6 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
 
         actionOptions: function () {},
 
-        prepareLayoutAfterConverting(layout) {
-            return layout;
-        },
-
         optionsFields: {
             "title": {
                 "type": "varchar",

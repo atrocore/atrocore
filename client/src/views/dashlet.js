@@ -127,7 +127,10 @@ Espo.define('views/dashlet', 'view', function (Dep) {
                         this.trigger('change');
                     }, this);
 
-                    var o = this.getPreferences().get('dashletsOptions') || {};
+                    let o = this.getPreferences().get('dashletsOptions') || {};
+                    if (Array.isArray(o) && o.length === 0) {
+                        o = {};
+                    }
                     o[id] = attributes;
 
                     this.getPreferences().save({
