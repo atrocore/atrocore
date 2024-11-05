@@ -128,7 +128,7 @@ Espo.define('views/dashlet', 'view', function (Dep) {
                     }, this);
 
                     let o = this.getPreferences().get('dashletsOptions') || {};
-                    if (Array.isArray(o) && o.length === 0) {
+                    if (typeof o !== 'object') {
                         o = {};
                     }
                     o[id] = attributes;
