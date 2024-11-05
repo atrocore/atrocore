@@ -102,7 +102,7 @@ class PseudoTransactionManager
 
     public function runForEntity(string $entityType, string $entityId): void
     {
-        while (!empty($job = $this->fetchJob($entityType, $entityId))) {
+        while (!empty($job = $this->fetchJob($entityType, $entityId, 'updateEntity', ''))) {
             $this->runJob($job);
         }
     }
@@ -142,7 +142,7 @@ class PseudoTransactionManager
             ->fetchAllAssociative();
     }
 
-    protected function fetchJob(string $entityType = '', string $entityId = '', string $parentId = ''): array
+    protected function fetchJob(string $entityType = '', string $entityId = '', string $action = '', string $parentId = ''): array
     {
         $qb = $this->connection->createQueryBuilder();
 
@@ -163,6 +163,10 @@ class PseudoTransactionManager
             $qb->andWhere('id = :id')->setParameter('id', $parentId);
         }
 
+        if (!empty($action)) {
+            $qb->andWhere('action = :action')->setParameter('action', $action);
+        }
+
         $qb
             ->orderBy('sort_order', 'ASC')
             ->setFirstResult(0)
@@ -171,7 +175,7 @@ class PseudoTransactionManager
         $record = $qb->fetchAssociative();
         $job = empty($record) ? [] : $record;
 
-        if (!empty($job['parent_id']) && !empty($parentJob = $this->fetchJob($entityType, $entityId, $job['parent_id']))) {
+        if (!empty($job['parent_id']) && !empty($parentJob = $this->fetchJob($entityType, $entityId, $action, $job['parent_id']))) {
             $job = $parentJob;
         }
 
@@ -259,9 +263,9 @@ class PseudoTransactionManager
                 case 'linkEntity':
                     if (!$inputIsEmpty) {
                         $inputData = Json::decode($job['input_data']);
-                        if(!empty($inputData->duplicateForeign)){
+                        if (!empty($inputData->duplicateForeign)) {
                             $service->duplicateAndLinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
-                        }else{
+                        } else {
                             $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
                         }
                     }
