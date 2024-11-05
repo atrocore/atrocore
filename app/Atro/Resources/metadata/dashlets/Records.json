@@ -36,6 +36,10 @@
         "view": "views/dashlets/fields/records/entity-type",
         "translation": "Global.scopeNames"
       },
+      "entityFilter": {
+        "type": "jsonObject",
+        "view": "views/dashlets/fields/records/entity-filter"
+      },
       "sortBy": {
         "type": "enum",
         "prohibitedEmptyValue": true,
@@ -79,6 +83,12 @@
             },
             {
               "name": "sortDirection"
+            }
+          ],
+          [
+            {
+              "name": "filter",
+              "fullWidth": true
             }
           ],
           [
