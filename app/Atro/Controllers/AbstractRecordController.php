@@ -397,12 +397,12 @@ abstract class AbstractRecordController extends AbstractController
                 $selectData = json_decode(json_encode($data->selectData), true);
             }
             if ($shouldDuplicateForeign) {
-                $this->getRecordService()->duplicateAndLinkEntityMass($id, $link, $where, $selectData);
+                $result = $this->getRecordService()->duplicateAndLinkEntityMass($id, $link, $where, $selectData);
             } else {
-                $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
+                $result = $this->getRecordService()->linkEntityMass($id, $link, $where, $selectData);
             }
             $this->getRecordService()->handleLinkEntitiesErrors($id, $link, $shouldDuplicateForeign);
-            return true;
+            return $result;
         } else {
             $foreignIdList = array();
             if (isset($data->id)) {

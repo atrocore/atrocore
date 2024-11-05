@@ -416,7 +416,9 @@
     "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
     "clearAclCacheError": "Cache von Zugriffskontrollliste konnte nicht geleert werden.",
     "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist.",
-    "duplicatedAndLinked": "Die Datensätze wurden erfolgreich dupliziert und verknüpft."
+    "duplicatedAndLinked": "Die Datensätze wurden erfolgreich dupliziert und verknüpft.",
+    "linked": "Datensätze wurden erfolgreich verknüpft.",
+    "linkJobsCreated": "Datensätze werden im Hintergrund verknüpft."
   },
   "unit Length": {
     "mm": "mm",

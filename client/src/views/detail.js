@@ -364,8 +364,12 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                         }
 
                         this.ajaxPostRequest(`${this.scope}/${this.model.id}/${link}`, data)
-                            .then(() => {
-                                this.notify(data.shouldDuplicateForeign ? this.translate('duplicatedAndLinked', 'messages') : 'Linked', 'success');
+                            .then((resp) => {
+                                if (resp) {
+                                    this.notify(this.translate(data.shouldDuplicateForeign ? 'duplicatedAndLinked' : 'linked', 'messages'), 'success');
+                                } else {
+                                    this.notify(this.translate('linkJobsCreated', 'messages'), 'success');
+                                }
                                 this.updateRelationshipPanel(link);
 
                                 if (this.mode !== 'edit') {
