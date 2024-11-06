@@ -368,9 +368,6 @@
   "messages": {
     "fieldIsRequired": "{field} est requis",
     "actionExecuted": "L'action \"%s\" a été exécutée avec succès",
-    "massDeleting": "Suppression : {{proceed}} de {{total}}",
-    "massUpdating": "Mise à jour : {{proceed}} de {{total}}",
-    "massRestoring": "Restauration : {{proceed}} à partir de {{total}}",
     "optionValueCannotBeEmpty": "La valeur de l'option ne peut pas être vide",
     "minimumOneOptionsRequired": "Au moins une valeur d'option est requise.",
     "defaultEnumValueCannotBeEmpty": "La valeur par défaut doit être sélectionnée si la valeur vide est désactivée.",
