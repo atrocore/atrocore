@@ -613,25 +613,6 @@ abstract class AbstractRecordController extends AbstractController
         return $result;
     }
 
-    public function actionGetMassActionItemsCount($params, $data, $request)
-    {
-        if (!$request->isPost() || !property_exists($data, 'jobIds') || !property_exists($data, 'action')) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-        $params = [
-            "jobIds"        => $data->jobIds,
-            "action"        => $data->action,
-            "previousCount" => $data->previousCount ?? 0
-        ];
-
-        return $this->getRecordService()->getMassActionItemsCount($params);
-
-    }
-
     protected function prepareWhereQuery($where)
     {
         if (is_string($where)) {
