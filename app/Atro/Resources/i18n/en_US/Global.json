@@ -111,9 +111,6 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
-    "prepareRecordsForUpdate": "Preparing records for update...",
-    "prepareRecordsForRestore": "Preparing records for restore...",
-    "prepareRecordsForDelete": "Preparing records for delete...",
     "customizeLayout": "Customize Layout",
     "deletePermanently": "Delete Permanently",
     "Reupload": "Reupload",
