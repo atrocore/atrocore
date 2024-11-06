@@ -111,6 +111,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "massActionJobName": "%s on Entity '%s' (%s out of %s)",
     "customizeLayout": "Customize Layout",
     "deletePermanently": "Delete Permanently",
     "Reupload": "Reupload",

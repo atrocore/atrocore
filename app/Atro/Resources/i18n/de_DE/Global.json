@@ -96,6 +96,7 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "massActionJobName": "%s der Entität \"%s\" (%s von %s)",
     "customizeLayout": "Layout anpassen",
     "deletePermanently": "Dauerhaft löschen",
     "Reupload": "Neu hochladen",
