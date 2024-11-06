@@ -183,7 +183,11 @@ class QueryConverter
             $selectPart = [$this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist)];
         }
 
-        $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']), $withDeleted);
+        if (empty($params['skipBelongsToJoins'])) {
+            $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']), $withDeleted);
+        } else {
+            $joinsPart = array();
+        }
 
         if (!empty($params['customWhere'])) {
             throw new \Error('CustomWhere does not supporting. Use callbacks instead.');
@@ -550,7 +554,7 @@ class QueryConverter
                     }
                 }
 
-                $join = $this->getBelongsToJoin($entity, $relationName, $r,null, $withDeleted);
+                $join = $this->getBelongsToJoin($entity, $relationName, $r, null, $withDeleted);
                 if ($join) {
                     $joinsArr[] = array_merge($join, ['type' => 'left']);
                 }
