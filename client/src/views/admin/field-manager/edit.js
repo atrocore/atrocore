@@ -180,12 +180,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
                     this.paramList = [];
 
-                    if (!this.isNew) {
-                        let labelField = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'labelField']) ?? field;
-                        $.each((this.getConfig().get('locales') || {}), (id, row) => {
-                            this.setLocaleLabel(row.language, labelField);
-                        });
-                    }
+                    let labelField = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'labelField']) ?? field;
+                    $.each((this.getConfig().get('locales') || {}), (id, row) => {
+                        this.setLocaleLabel(row.language, labelField);
+                    });
 
                     var paramList = Espo.Utils.clone(this.getFieldManager().getParams(this.type) || []);
 
@@ -295,15 +293,17 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         setLocaleLabel: function (locale, field) {
             let name = 'label' + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
             this.paramList.push({name: name, type: 'varchar'});
-            this.ajaxGetRequest(`I18n?locale=${locale}`).then(responseData => {
-                if (responseData) {
-                    ['Global', this.scope].forEach(scope => {
-                        if (responseData[scope] && responseData[scope]['fields'] && responseData[scope]['fields'][field]) {
-                            this.model.set(name, responseData[scope]['fields'][field]);
-                        }
-                    })
-                }
-            });
+            if (!this.isNew && field) {
+                this.ajaxGetRequest(`I18n?locale=${locale}`).then(responseData => {
+                    if (responseData) {
+                        ['Global', this.scope].forEach(scope => {
+                            if (responseData[scope] && responseData[scope]['fields'] && responseData[scope]['fields'][field]) {
+                                this.model.set(name, responseData[scope]['fields'][field]);
+                            }
+                        })
+                    }
+                });
+            }
         },
 
         afterRender: function () {
