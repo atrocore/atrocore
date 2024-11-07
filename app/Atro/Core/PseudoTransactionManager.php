@@ -16,6 +16,7 @@ namespace Atro\Core;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
@@ -87,11 +88,17 @@ class PseudoTransactionManager
     public function run(): void
     {
         $this->canceledJobs = [];
-        while (!empty($jobs = $this->fetchJobs())) {
+
+        if (!empty($jobs = $this->fetchJobs())) {
             foreach ($jobs as $job) {
                 if (!in_array($job['id'], $this->canceledJobs)) {
                     $this->runJob($job);
                 }
+            }
+
+            if ($this->hasJobsInDatabase()) {
+                // exit process, next one will continue
+                return;
             }
         }
 
@@ -131,15 +138,30 @@ class PseudoTransactionManager
 
     protected function fetchJobs(): array
     {
+        $max = $this->container->get('config')->get('maxTransactionJobsPerProcess', 1000);
+
         return $this->connection->createQueryBuilder()
             ->select('*')
             ->from('pseudo_transaction_job')
             ->where('deleted = :deleted')
-            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->setParameter('deleted', false, ParameterType::BOOLEAN)
             ->orderBy('sort_order', 'ASC')
             ->setFirstResult(0)
-            ->setMaxResults(50)
+            ->setMaxResults($max)
             ->fetchAllAssociative();
+    }
+
+    protected function hasJobsInDatabase(): bool
+    {
+        $res = $this->connection->createQueryBuilder()
+            ->select('id')
+            ->from('pseudo_transaction_job')
+            ->where('deleted = :deleted')
+            ->setParameter('deleted', false, ParameterType::BOOLEAN)
+            ->setFirstResult(0)
+            ->setMaxResults(1)
+            ->fetchFirstColumn();
+        return !empty($res);
     }
 
     protected function fetchJob(string $entityType = '', string $entityId = '', string $action = '', string $parentId = ''): array
@@ -302,7 +324,7 @@ class PseudoTransactionManager
             ->delete('pseudo_transaction_job')
             ->where('id = :id')
             ->setParameter('id', $job['id'])
-            ->executeQuery();
+            ->executeStatement();
     }
 
     protected function collectChildren(string $parentId, array &$childrenIds): void
