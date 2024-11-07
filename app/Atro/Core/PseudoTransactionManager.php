@@ -87,7 +87,13 @@ class PseudoTransactionManager
     public function run(): void
     {
         $this->canceledJobs = [];
+        $iteration = 0;
         while (!empty($jobs = $this->fetchJobs())) {
+            if ($iteration > 20) {
+                // next process will continue
+                return;
+            }
+            $iteration++;
             foreach ($jobs as $job) {
                 if (!in_array($job['id'], $this->canceledJobs)) {
                     $this->runJob($job);
@@ -302,7 +308,7 @@ class PseudoTransactionManager
             ->delete('pseudo_transaction_job')
             ->where('id = :id')
             ->setParameter('id', $job['id'])
-            ->executeQuery();
+            ->executeStatement();
     }
 
     protected function collectChildren(string $parentId, array &$childrenIds): void
