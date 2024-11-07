@@ -87,16 +87,16 @@
           ],
           [
             {
-              "name": "filter",
-              "fullWidth": true
-            }
-          ],
-          [
-            {
               "name": "displayRecords"
             },
             {
               "name": "autorefreshInterval"
+            }
+          ],
+          [
+            {
+              "name": "entityFilter",
+              "fullWidth": true
             }
           ]
         ]
