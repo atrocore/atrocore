@@ -172,8 +172,8 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 return;
             }
 
-            this.trigger('save', attributes);
             this.model.trigger('before:save', attributes);
+            this.trigger('save', attributes);
         },
 
         getFieldViews: function (withHidden) {
