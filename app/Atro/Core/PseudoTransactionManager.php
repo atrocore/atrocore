@@ -89,9 +89,7 @@ class PseudoTransactionManager
     {
         $this->canceledJobs = [];
 
-        $max = $this->container->get('config')->get('maxTransactionJobsPerProcess', 1000);
-
-        if (!empty($jobs = $this->fetchJobs($max))) {
+        if (!empty($jobs = $this->fetchJobs())) {
             foreach ($jobs as $job) {
                 if (!in_array($job['id'], $this->canceledJobs)) {
                     $this->runJob($job);
@@ -138,8 +136,10 @@ class PseudoTransactionManager
         return (string)$data;
     }
 
-    protected function fetchJobs($max): array
+    protected function fetchJobs(): array
     {
+        $max = $this->container->get('config')->get('maxTransactionJobsPerProcess', 1000);
+
         return $this->connection->createQueryBuilder()
             ->select('*')
             ->from('pseudo_transaction_job')
