@@ -8,32 +8,37 @@
       "autorefreshInterval": {
         "type": "enumFloat",
         "prohibitedEmptyValue": true,
-        "options": [0, 0.5, 1, 2, 5, 10]
+        "options": [
+          0,
+          0.5,
+          1,
+          2,
+          5,
+          10
+        ]
       },
       "displayRecords": {
         "type": "enumInt",
         "prohibitedEmptyValue": true,
-        "options": [3, 4, 5, 10, 15, 20, 30, 50]
+        "options": [
+          3,
+          4,
+          5,
+          10,
+          15,
+          20,
+          30,
+          50
+        ]
       },
       "entityType": {
         "type": "enum",
         "view": "views/dashlets/fields/records/entity-type",
         "translation": "Global.scopeNames"
       },
-      "primaryFilter": {
-        "type": "enum",
-        "view": "views/dashlets/fields/records/primary-filter"
-      },
-      "savedFilter": {
-        "type": "enum",
-        "view": "views/dashlets/fields/records/saved-filter"
-      },
-      "saveFilterData": {
-        "type": "jsonObject"
-      },
-      "boolFilterList": {
-        "type": "multiEnum",
-        "view": "views/dashlets/fields/records/bool-filter-list"
+      "entityFilter": {
+        "type": "jsonObject",
+        "view": "views/dashlets/fields/records/entity-filter"
       },
       "sortBy": {
         "type": "enum",
@@ -44,12 +49,11 @@
         "type": "enum",
         "prohibitedEmptyValue": true,
         "view": "views/dashlets/fields/records/sort-direction",
-        "options": ["asc", "desc"],
+        "options": [
+          "asc",
+          "desc"
+        ],
         "translation": "EntityManager.options.sortDirection"
-      },
-      "expandedLayout": {
-        "type": "base",
-        "view": "views/dashlets/fields/records/expanded-layout"
       }
     },
     "defaults": {
@@ -63,31 +67,38 @@
       {
         "rows": [
           [
-            {"name": "title"}
+            {
+              "name": "title",
+              "fullWidth": true
+            }
           ],
           [
-            {"name": "entityType"},
+            {
+              "name": "entityType"
+            },
             false
           ],
           [
-            {"name": "primaryFilter"},
-            {"name": "sortBy"}
+            {
+              "name": "displayRecords"
+            },
+            {
+              "name": "autorefreshInterval"
+            }
           ],
           [
-            {"name": "boolFilterList"},
-            {"name": "sortDirection"}
+            {
+              "name": "sortBy"
+            },
+            {
+              "name": "sortDirection"
+            }
           ],
           [
-            {"name": "savedFilter"},
-            false
-          ],
-          [
-            {"name": "displayRecords"},
-            {"name": "autorefreshInterval"}
-          ],
-          [
-            {"name": "expandedLayout"},
-            false
+            {
+              "name": "entityFilter",
+              "fullWidth": true
+            }
           ]
         ]
       }

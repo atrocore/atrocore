@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/panels/bottom', 'view', function (Dep) {
+Espo.define('views/record/panels/bottom', ['view', 'view-record-helper'], function (Dep, ViewRecordHelper) {
 
     return Dep.extend({
 
@@ -73,7 +73,7 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
         init: function () {
             this.panelName = this.options.panelName;
             this.defs = this.options.defs || {};
-            this.recordHelper = this.options.recordHelper;
+            this.recordHelper = this.options.recordHelper || new ViewRecordHelper();
 
             if ('disabled' in this.options) {
                 this.disabled = this.options.disabled;
