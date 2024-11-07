@@ -103,15 +103,19 @@ class MassActionCreator extends QueueManagerBase
         }
 
         if (!empty($jobIds)) {
-            foreach ($this->getEntityManager()->getRepository('QueueItem')->where(['id' => $jobIds])->find() as $job) {
+            $jobs = $this->getEntityManager()->getRepository('QueueItem')
+                ->where(['id' => $jobIds])
+                ->find();
+
+            $jobsCount = count($jobs);
+
+            $i = 1;
+            foreach ($jobs as $job) {
+                $job->set('name', sprintf($this->translate('massActionJobName'), $this->translate($action, 'massActions'), $entityName, $i, $jobsCount));
                 $job->set('startFrom', null);
                 $this->getEntityManager()->saveEntity($job);
+                $i++;
             }
-
-            QueueManagerBase::updatePublicData('mass' . ucfirst($action), $entityName, [
-                "jobIds" => $jobIds,
-                "total"  => $total
-            ]);
         }
 
         return true;

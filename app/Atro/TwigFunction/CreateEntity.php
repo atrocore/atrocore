@@ -21,17 +21,15 @@ class CreateEntity extends AbstractTwigFunction
 {
     protected EntityManager $entityManager;
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    protected array $dependencyList = ['entityManager'];
 
     public function run(string $entityName, array $data): ?Entity
     {
+        $entityManager = $this->getInjection('entityManager');
         $nowString = date('Y-m-d H:i:s');
-        $user = $this->entityManager->getUser();
+        $user = $entityManager->getUser();
 
-        $entity = $this->entityManager->getRepository($entityName)->get();
+        $entity = $entityManager->getRepository($entityName)->get();
         $entity->set($data);
 
         if ($entity->hasAttribute('createdAt')) {
@@ -48,7 +46,7 @@ class CreateEntity extends AbstractTwigFunction
         }
 
         try {
-            $this->entityManager->saveEntity($entity);
+            $entityManager->saveEntity($entity);
         } catch (\Throwable $e) {
             $entity = null;
             $GLOBALS['log']->error("CreateEntity Twig function failed: " . $e->getMessage());

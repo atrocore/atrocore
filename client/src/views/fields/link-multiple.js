@@ -546,9 +546,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         fetch: function () {
-            var data = {};
-            data[this.idsName] = this.ids;
-            data[this.nameHashName] = this.nameHash;
+            let data = {};
+            data[this.idsName] = (this.ids || []).length ? this.ids : null;
+            data[this.nameHashName] = Object.keys(this.nameHash || {}).length ? this.nameHash : null;
 
             return data;
         },

@@ -406,8 +406,9 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         fetch: function () {
-            var data = {};
-            data[this.name] = Espo.Utils.clone(this.selected || []);
+            let data = {},
+                selected = this.selected || [];
+            data[this.name] = Espo.Utils.clone(selected.length ? selected : null);
             return data;
         },
 
