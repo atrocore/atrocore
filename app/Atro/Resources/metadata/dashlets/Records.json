@@ -68,7 +68,8 @@
         "rows": [
           [
             {
-              "name": "title"
+              "name": "title",
+              "fullWidth": true
             }
           ],
           [
@@ -79,18 +80,18 @@
           ],
           [
             {
-              "name": "sortBy"
-            },
-            {
-              "name": "sortDirection"
-            }
-          ],
-          [
-            {
               "name": "displayRecords"
             },
             {
               "name": "autorefreshInterval"
+            }
+          ],
+          [
+            {
+              "name": "sortBy"
+            },
+            {
+              "name": "sortDirection"
             }
           ],
           [

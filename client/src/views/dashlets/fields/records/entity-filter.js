@@ -30,11 +30,6 @@ Espo.define('views/dashlets/fields/records/entity-filter', 'views/fields/base',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.parent().show();
-            if (!this.model.get('entityType')) {
-                this.$el.parent().hide();
-            }
-
             this.setupSearchPanel()
         },
 

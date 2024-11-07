@@ -36,29 +36,10 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', fun
 
         name: 'Records',
 
-        scope: null,
-
-        rowActionsView: 'views/record/row-actions/view-and-edit',
-
         init: function () {
             Dep.prototype.init.call(this);
+
             this.scope = this.getOption('entityType');
-        },
-
-        getSearchData: function () {
-            var data = {
-                primary: this.getOption('primaryFilter'),
-                advanced: this.getOption('savedFilterData')?.data
-            };
-
-            var bool = {};
-            (this.getOption('boolFilterList') || []).forEach(function (item) {
-                bool[item] = true;
-            }, this);
-
-            data.bool = bool;
-
-            return data;
         },
 
     });

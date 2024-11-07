@@ -60,6 +60,10 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
             return this.getOption('searchData');
         },
 
+        getSearchWhere() {
+            return this.getOption('entityFilter');
+        },
+
         afterRender: function () {
             this.getCollectionFactory().create(this.scope, function (collection) {
                 var searchData = this.getSearchData();
@@ -91,7 +95,13 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                 }
 
                 collection.maxSize = this.getOption('displayRecords');
-                collection.where = searchManager.getWhere();
+
+                let searchWhere = this.getSearchWhere();
+                if (searchWhere && searchWhere.where) {
+                    collection.where = searchWhere.where;
+                } else {
+                    collection.where = searchManager.getWhere();
+                }
 
                 this.createView('list', 'views/record/list', {
                     collection: collection,
