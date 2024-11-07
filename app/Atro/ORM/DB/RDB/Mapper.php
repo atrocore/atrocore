@@ -171,7 +171,7 @@ class Mapper implements MapperInterface
     {
         if (!isset($this->singleParentHierarchy[$entity->getEntityType()])) {
             $scopeDefs = $this->metadata->get(['scopes', $entity->getEntityType()], []);
-            $this->singleParentHierarchy[$entity->getEntityType()] = !empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['multiParents']);
+            $this->singleParentHierarchy[$entity->getEntityType()] = !empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['disableHierarchy']) && empty($scopeDefs['multiParents']);
         }
 
         return $this->singleParentHierarchy[$entity->getEntityType()];
@@ -181,6 +181,7 @@ class Mapper implements MapperInterface
     {
         $params['aggregation'] = 'COUNT';
         $params['aggregationBy'] = 'id';
+        $params['skipBelongsToJoins'] = true;
 
         $res = $this->select($entity, $params);
         foreach ($res as $row) {
