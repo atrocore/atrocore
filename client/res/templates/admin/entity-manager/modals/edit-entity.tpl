@@ -193,19 +193,19 @@
     <div class="panel-heading"><h4 class="panel-title">{{translate title category='labels' scope='EntityManager'}}</h4></div>
     <div class="panel-body-form">
 
-        <div class="row">
-            {{#each fields}}
-            {{#each this}}
-            <div class="cell form-group col-md-6" data-name="{{this}}">
-                <label class="control-label"
-                       data-name="{{this}}">{{translate this category='fields' scope='EntityManager'}}</label>
-                <div class="field" data-name="{{this}}">
-                    {{{var this @root}}}
+        {{#each fields}}
+            <div class="row">
+                {{#each this}}
+                <div class="cell form-group col-md-6" data-name="{{this}}">
+                    <label class="control-label"
+                           data-name="{{this}}">{{translate this category='fields' scope='EntityManager'}}</label>
+                    <div class="field" data-name="{{this}}">
+                        {{{var this @root}}}
+                    </div>
                 </div>
+                {{/each}}
             </div>
-            {{/each}}
-            {{/each}}
-        </div>
+        {{/each}}
     </div>
 </div>
 {{/each}}
