@@ -28,7 +28,7 @@
     },
     "fieldValueInheritance": {
       "type": "bool",
-      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "view": "views/admin/entity-manager/fields/field-value-and-relation-inheritance",
       "types": [
         "Hierarchy"
       ],
@@ -41,7 +41,7 @@
     },
     "relationInheritance": {
       "type": "bool",
-      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "view": "views/admin/entity-manager/fields/field-value-and-relation-inheritance",
       "types": [
         "Hierarchy"
       ],
@@ -149,6 +149,9 @@
       "title": "hierarchyManagement",
       "fields": [
         [
+          "disableHierarchy"
+        ],
+        [
           "multiParents",
           "dragAndDrop"
         ],
@@ -159,9 +162,6 @@
         [
           "relationInheritance",
           "unInheritedRelations"
-        ],
-        [
-          "disableHierarchy"
         ]
       ]
     },
