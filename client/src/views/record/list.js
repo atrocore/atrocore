@@ -652,7 +652,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.allResultIsChecked) {
                 requestData.where = this.collection.getWhere();
                 requestData.massAction = true;
-            } else if (this.checkedList.length > 0) {
+            } else if (this.checkedList && this.checkedList.length > 0) {
                 requestData.where = [{type: "in", attribute: "id", value: this.checkedList}];
                 requestData.massAction = true;
             }
