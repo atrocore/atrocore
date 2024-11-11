@@ -72,18 +72,19 @@ Espo.define('treo-core:views/fields/filtered-link-multiple', 'views/fields/link-
             }
         },
 
-        getAutocompleteUrl() {
-            var url = Dep.prototype.getAutocompleteUrl.call(this);
-            var boolData = this.getBoolFilterData();
+        getAutocompleteAdditionalWhereConditions() {
+            let boolData = this.getBoolFilterData();
             // add boolFilter data
             if (boolData) {
-                url += '&' + $.param({'where':[{
+                return [
+                    {
                         'type': 'bool',
                         'data': boolData
-                    }]});
+                    }
+                ];
             }
 
-            return url;
+            return [];
         }
 
     })
