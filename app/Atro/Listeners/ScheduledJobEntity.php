@@ -38,9 +38,6 @@ class ScheduledJobEntity extends AbstractListener
         if ($this->getConfig()->get('actionHistoryMaxDays') !== 0) {
             $this->createJob('Delete Action History Records', '50 2 * * 0', 'ActionHistoryRecord', 'deleteOld');
         }
-        if ($this->getConfig()->get('deletedAttachmentsMaxDays') !== 0) {
-            $this->createJob('Delete Old Attachments', '0 3 * * 0', 'Attachment', 'deleteOld');
-        }
         if ($this->getConfig()->get('deletedItemsMaxDays') !== 0) {
             $this->createJob('Remove Deleted Items', '20 3 * * 0', 'App', 'cleanupDeleted');
         }
