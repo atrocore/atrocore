@@ -52,7 +52,7 @@ Espo.define('views/stream/record/list', 'views/record/list-expanded', function (
                 model: model,
                 parentModel: this.model,
                 acl: {
-                    edit: this.getAcl().checkModel(model, 'edit')
+                    edit: this.getAcl().checkModel(this.model, 'edit')
                 },
                 isUserStream: this.options.isUserStream,
                 noEdit: this.options.noEdit,

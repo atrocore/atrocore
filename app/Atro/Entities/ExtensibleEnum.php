@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Entities;
 
-use Espo\Core\Templates\Entities\Base;
+use Atro\Core\Templates\Entities\Base;
 
 class ExtensibleEnum extends Base
 {
