@@ -364,11 +364,22 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
             }
 
+            let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
+            if (Array.isArray(additionalWhere) && additionalWhere.length) {
+                additionalWhere.forEach(whereClause => {
+                    where.push(whereClause);
+                })
+            }
+
             if (where.length) {
                 url += '&' + $.param({'where': where});
             }
 
             return url;
+        },
+
+        getAutocompleteAdditionalWhereConditions: function () {
+            return [];
         },
 
         afterRender: function () {
@@ -451,7 +462,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         var $elementOneOf = this.$el.find('input.element-one-of');
                         $elementOneOf.autocomplete({
                             serviceUrl: function (q) {
-                                debugger
                                 return this.getAutocompleteUrl(q);
                             }.bind(this),
                             minChars: 1,
