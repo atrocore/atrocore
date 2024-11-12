@@ -66,5 +66,17 @@ Espo.define('views/file/fields/name', 'views/fields/varchar',
 
             return false;
         },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode === 'list' || this.mode === 'listLink') {
+                let id = this.model.get('id');
+                let name = this.model.get('name');
+
+                this.$el.html('<div class="file-link"><a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" title="' + name + '">' + Handlebars.Utils.escapeExpression(name) + '</a></div>');
+            }
+        },
+
     })
 );
