@@ -21992,7 +21992,7 @@ td[data-name="draggableIcon"] {
     margin-left: -4px;
     color: #8e8e8e;
     font-size: 12px;
-    vertical-align: text-top;
+    vertical-align: bottom;
     line-height: 0;
     user-select: none;
 }
