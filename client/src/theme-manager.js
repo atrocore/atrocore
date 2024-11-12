@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -77,10 +76,10 @@ Espo.define('theme-manager', [], function () {
 
         getCustomStylesheet: function () {
             let currTheme = this.getName(),
-                customThemeList = this.config.get('customStylesheetsList') || [];
+                customThemeList = this.config.get('customStylesheetsList') || {};
 
-            if (customThemeList.length > 0) {
-                let customThemeData = customThemeList[currTheme] || [];
+            if (Object.keys(customThemeList).length > 0) {
+                let customThemeData = customThemeList[currTheme] || {};
 
                 if (customThemeData && customThemeData['customStylesheetPath']) {
                     let link = customThemeData['customStylesheetPath'];
