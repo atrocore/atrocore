@@ -92,7 +92,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                 'entityType': this.translateEntityType(this.model.get('parentType')),
             };
 
-            if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
+            if (this.canShowActionButton()) {
                 this.createView('right', 'views/stream/row-actions/default', {
                     el: this.options.el + ' .right-container',
                     acl: this.options.acl,
@@ -101,6 +101,10 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                     isRemovable: this.isRemovable
                 });
             }
+        },
+
+        canShowActionButton: function () {
+            return !this.options.noEdit && (this.isEditable || this.isRemovable)
         },
 
         translateEntityType: function (entityType, isPlural) {
@@ -192,7 +196,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             if (this.isThis && scope === this.parentModel.name) return;
             var iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
             if (!iconClass) return;
-            return '<span class="'+iconClass+' action text-muted icon" style="cursor: pointer;" title="'+this.translate('View')+'" data-action="quickView" data-id="'+id+'" data-scope="'+scope+'"></span>';
+            return '<span class="' + iconClass + ' action text-muted icon" style="cursor: pointer;" title="' + this.translate('View') + '" data-action="quickView" data-id="' + id + '" data-scope="' + scope + '"></span>';
         }
 
     });
