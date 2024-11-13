@@ -245,7 +245,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 let foreignDefs = this.getMetadata().get(['entityDefs', this.foreignScope, 'fields']);
 
                 if (foreignDefs && typeof foreignDefs === 'object' && foreignDefs.name) {
-                    where.push({type: 'contains', attribute: 'name', value: q});
+                    where.push({type: 'like', attribute: 'name', value: this.prepareAutocompleteQueryText(q)});
                 }
             }
 
@@ -261,6 +261,18 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }
 
             return url;
+        },
+
+        prepareAutocompleteQueryText(q) {
+            if (q.includes('*')) {
+                q = q.replace(/\*/g, '%');
+            }
+
+            if (!q.includes('%')) {
+                q += '%';
+            }
+
+            return q;
         },
 
         getAutocompleteAdditionalWhereConditions: function () {
