@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\HasContainer;
@@ -84,19 +85,35 @@ class MassActions extends HasContainer
                     return isset($field['unique']) && $field['unique'] == true;
                 });
 
+                $uniqueIndexes = [];
+                if (empty($uniqueFields)) {
+                    foreach ($this->getMetadata()->get(['entityDefs', $node->entity, 'uniqueIndexes']) as $indexes) {
+                        $uniqueIndexes[] = array_map(fn($index) => Util::toCamelCase($index), array_diff($indexes, ['deleted']));
+                    }
+                }
+
+                $whereClause = [];
                 if (count($uniqueFields) > 0) {
-                    $whereClause = [];
                     foreach ($uniqueFields as $key => $field) {
                         if (!empty($node->payload->{$key})) {
                             $whereClause[] = [$key => $node->payload->{$key}];
                         }
                     }
-                    if (count($whereClause) > 0) {
-                        $existed = $this->getEntityManager()
-                            ->getRepository($node->entity)
-                            ->where($whereClause)
-                            ->findOne();
+                } else if (count($uniqueIndexes) > 0) {
+                    foreach ($uniqueIndexes as $indexes) {
+                        if (array_reduce($indexes, fn($carry, $index) => $carry && !empty($node->payload->{$index}), true)) {
+                            foreach ($indexes as $index) {
+                                $whereClause[] = [$index => $node->payload->{$index}];
+                            }
+                        }
                     }
+                }
+
+                if (count($whereClause) > 0) {
+                    $existed = $this->getEntityManager()
+                        ->getRepository($node->entity)
+                        ->where($whereClause)
+                        ->findOne();
                 }
             }
 
