@@ -71,10 +71,21 @@ class EmailTemplate extends ReferenceData
         return $attachments;
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        $systemTemplates = $this->getMetadata()->get(['app', 'systemEmailTemplates'], []);
+        if (!$entity->isNew() && $entity->isAttributeChanged('code') && in_array($entity->getFetched('code'), $systemTemplates)) {
+            throw new BadRequest($this->getInjection('language')->translate("systemTemplateCodeChanged", "exceptions", 'EmailTemplate'));
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        if (in_array($entity->get('id'), ['mention', 'notePost', 'notePostNoParent', 'ownership', 'assignment'])) {
-            throw new BadRequest($this->getLanguage()->translate("notificationTemplatesCannotBeDeleted", "exceptions", $this->entityType));
+        $systemTemplates = $this->getMetadata()->get(['app', 'systemEmailTemplates'], []);
+        if (in_array($entity->get('code'), $systemTemplates)) {
+            throw new BadRequest($this->getInjection('language')->translate("systemTemplatesCannotBeDeleted", "exceptions", 'EmailTemplate'));
         }
 
         parent::beforeRemove($entity, $options);
@@ -85,6 +96,7 @@ class EmailTemplate extends ReferenceData
         parent::init();
 
         $this->addDependency('twig');
+        $this->addDependency('language');
     }
 
 }
