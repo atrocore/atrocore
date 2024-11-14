@@ -35,15 +35,17 @@ class Connection implements FactoryInterface
         if (!empty(self::$drivers[$params['driver']])) {
             $params['driverClass'] = self::$drivers[$params['driver']];
         }
+        $params['wrapperClass'] = \Atro\Core\Utils\Database\DBAL\LoggingConnection::class;
 
-        if(!Type::hasType('jsonArray')){
+        if (!Type::hasType('jsonArray')) {
             Type::addType('jsonArray', JsonArrayType::class);
         }
 
-        if(!Type::hasType('jsonObject')){
+        if (!Type::hasType('jsonObject')) {
             Type::addType('jsonObject', JsonObjectType::class);
         }
 
         return \Doctrine\DBAL\DriverManager::getConnection($params, new \Doctrine\DBAL\Configuration());
     }
 }
+
