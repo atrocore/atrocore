@@ -643,6 +643,10 @@ class Installer extends HasContainer
                 'createdAt'    => date('Y-m-d H:i:s')
             ]
         ]));
+        @file_put_contents(
+            ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json',
+            json_encode(\Atro\Migrations\V1Dot11Dot44::getDefaultEmailTemplates())
+        );
 
         $connection = $this->getEntityManager()->getConnection();
 
