@@ -48,7 +48,7 @@ class V1Dot11Dot44 extends Base
         $result = array_merge($result, self::getDefaultEmailTemplates());
         file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json', json_encode($result));
 
-        $this->updateComposer('atrocore/core', '^1.11.41');
+        $this->updateComposer('atrocore/core', '^1.11.44');
     }
 
     public function down(): void
