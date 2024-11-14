@@ -12,6 +12,7 @@
     "Create EmailTemplate": "Créer un modèle d'e-mail"
   },
   "exceptions": {
-    "notificationTemplatesCannotBeDeleted": "Les modèles de notification ne peuvent pas être supprimés"
+    "systemTemplatesCannotBeDeleted": "Les modèles de système ne peuvent pas être supprimés",
+    "systemTemplateCodeChanged": "Le code du modèle de système ne peut pas être modifié"
   }
 }

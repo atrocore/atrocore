@@ -11,6 +11,7 @@
     "Create EmailTemplate": "Utwórz szablon e-maila"
   },
   "exceptions": {
-    "notificationTemplatesCannotBeDeleted": "Szablonów powiadomień nie można usunąć"
+    "systemTemplatesCannotBeDeleted": "Nie można usunąć szablonów systemowych",
+    "systemTemplateCodeChanged": "Kod szablonu systemu nie może być zmieniony"
   }
 }
