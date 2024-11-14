@@ -74,7 +74,7 @@ Espo.define('views/file/fields/name', 'views/fields/varchar',
                 let id = this.model.get('id');
                 let name = this.model.get('name');
 
-                this.$el.html('<div class="file-link"><a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" title="' + name + '">' + Handlebars.Utils.escapeExpression(name) + '</a></div>');
+                this.$el.html('<div class="file-link"><a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" download="" title="' + this.translate('Download') + '"> <span class="glyphicon glyphicon-download-alt small"></span></a> <a href="/#File/view/' + id + '" title="' + name + '" class="link" data-id="' + id + '">' + Handlebars.Utils.escapeExpression(name) + '</a></div>');
             }
         },
 
