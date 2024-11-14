@@ -223,6 +223,11 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }
         },
 
+        clearStorage() {
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
+        },
+
         prepareTreeRoute(list, route) {
             list.forEach(item => {
                 if (item.children) {
@@ -230,10 +235,22 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     this.prepareTreeRoute(item.children, route);
                 }
             });
+
+            if (this.scope && this.model.get('id')) {
+                this.getStorage().set('selectedNodeId', this.scope, this.model.get('id'));
+                this.getStorage().set('selectedNodeRoute', this.scope, route);
+            }
+        },
+
+        treeRefresh() {
+            if (this.getStorage().get('selectedNodeId', this.scope)) {
+                const id = this.getStorage().get('selectedNodeId', this.scope);
+                const route = this.getStorage().get('selectedNodeRoute', this.scope);
+                this.selectTreeNode(id, route);
+            }
         },
 
         selectTreeNode(id, ids) {
-            const locationHash = window.location.hash;
             const $tree = this.getTreeEl();
             const onFinished = () => {
                 let node = $tree.tree('getNodeById', id);
@@ -252,12 +269,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                         $li.addClass('jqtree-selected');
                     }
                 });
-            }
-
-            let node = $tree.tree('getNodeById', id);
-            if (node) {
-                onFinished()
-                return
             }
 
             this.openNodes($tree, ids, onFinished)

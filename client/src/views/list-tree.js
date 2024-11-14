@@ -95,8 +95,11 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
+                view.listenTo(view, 'tree-load', treeData => {
+                    this.treeLoad(view, treeData);
+                });
                 view.listenTo(view, 'tree-refresh', () => {
-                    this.treeRefresh(view);
+                    view.treeRefresh();
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
@@ -114,6 +117,15 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             });
         },
 
+        treeLoad(view, treeData) {
+            view.clearStorage();
+
+            if (view.model && view.model.get('id')) {
+                let route = [];
+                view.prepareTreeRoute(treeData, route);
+            }
+        },
+
         resetSorting() {
             Dep.prototype.resetSorting.call(this);
 
@@ -123,14 +135,6 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             let treeView = this.getView('treePanel');
             if (treeView) {
                 treeView.rebuildTree();
-            }
-        },
-
-        treeRefresh(view) {
-            if (this.getStorage().get('selectedNodeId', this.scope)) {
-                const id = this.getStorage().get('selectedNodeId', this.scope);
-                const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
-                this.getView('treePanel').selectTreeNode(id, route);
             }
         },
 
