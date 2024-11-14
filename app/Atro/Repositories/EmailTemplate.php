@@ -14,13 +14,12 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Repositories\Base;
-use Espo\Core\DataManager;
+use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 
-class EmailTemplate extends Base
+class EmailTemplate extends ReferenceData
 {
     public function getEmailData(IEntity $emailTemplate, ?string $language = null, array $data = []): array
     {
