@@ -63,8 +63,6 @@ class Mapper implements MapperInterface
     {
         $qb = $this->createSelectQueryBuilder($entity, $params);
 
-        $this->debugSql($qb->getSQL());
-
         try {
             $rows = $qb->fetchAllAssociative();
         } catch (\Throwable $e) {
@@ -413,8 +411,6 @@ class Mapper implements MapperInterface
             }
         }
 
-        $this->debugSql($qb->getSQL());
-
         try {
             $qb->executeQuery();
         } catch (\Throwable $e) {
@@ -489,7 +485,6 @@ class Mapper implements MapperInterface
         $qb1->delete($this->connection->quoteIdentifier($relTable))
             ->andWhere('deleted = :true')
             ->setParameter('true', true, ParameterType::BOOLEAN);
-        $this->debugSql($qb1->getSQL());
         try {
             $qb1->executeQuery();
         } catch (\Throwable $e) {
@@ -509,7 +504,6 @@ class Mapper implements MapperInterface
             ->setParameter('currentDate', date('Y-m-d H:i:s'))
             ->setParameter('userId', $this->entityFactory->getEntityManager()->getUser()->get('id'));
 
-        $this->debugSql($qb2->getSQL());
         try {
             $qb2->executeQuery();
         } catch (\Throwable $e) {
@@ -544,8 +538,6 @@ class Mapper implements MapperInterface
                     $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
                 }
             }
-
-            $this->debugSql($sql);
 
             try {
                 $this->connection->executeQuery($sql, $qb->getParameters(), $qb->getParameterTypes());
@@ -596,8 +588,6 @@ class Mapper implements MapperInterface
         $qb->andWhere('deleted = :deleted');
         $qb->setParameter('deleted', false, self::getParameterType(false));
 
-        $this->debugSql($qb->getSQL());
-
         try {
             $qb->executeQuery();
         } catch (\Throwable $e) {
@@ -616,8 +606,6 @@ class Mapper implements MapperInterface
         $qb->delete($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
             ->where('id = :id')
             ->setParameter('id', $entity->id, self::getParameterType($entity->id));
-
-        $this->debugSql($qb->getSQL());
 
         try {
             $qb->executeQuery();
@@ -710,16 +698,6 @@ class Mapper implements MapperInterface
     public function getMetadata(): Metadata
     {
         return $this->metadata;
-    }
-
-    /**
-     * For debug only
-     */
-    protected function debugSql(string $sql): void
-    {
-        if (isset($GLOBALS['debugSQL'])) {
-            $GLOBALS['debugSQL'][] = $sql;
-        }
     }
 
     private function error(string $message): void
