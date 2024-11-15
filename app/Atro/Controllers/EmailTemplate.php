@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Controllers\Base;
+use Atro\Core\Templates\Controllers\ReferenceData;
 
-class EmailTemplate extends Base
+class EmailTemplate extends ReferenceData
 {
     public function actionPreview($params, $data, $request): array
     {
