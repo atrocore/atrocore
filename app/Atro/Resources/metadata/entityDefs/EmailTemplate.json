@@ -7,6 +7,7 @@
     },
     "code": {
       "type": "varchar",
+      "required": true,
       "unique": true,
       "trim": true
     },
@@ -74,13 +75,5 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": false
-  },
-  "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    }
   }
 }

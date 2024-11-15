@@ -11,6 +11,7 @@
     "Create EmailTemplate": "E-Mail-Vorlage erstellen"
   },
   "exceptions": {
-    "notificationTemplatesCannotBeDeleted": "Vorlagen für Benachrichtigungen können nicht gelöscht werden"
+    "systemTemplatesCannotBeDeleted": "Systemvorlagen können nicht gelöscht werden",
+    "systemTemplateCodeChanged": "Code der Systemvorlage kann nicht geändert werden"
   }
 }

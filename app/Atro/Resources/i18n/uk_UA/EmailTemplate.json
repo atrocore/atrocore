@@ -11,6 +11,7 @@
     "Create EmailTemplate": "Створити шаблон електронної пошти"
   },
   "exceptions": {
-    "notificationTemplatesCannotBeDeleted": "Шаблони сповіщень не можна видалити"
+    "systemTemplatesCannotBeDeleted": "Системні шаблони не можна видалити",
+    "systemTemplateCodeChanged": "Код системного шаблону не може бути змінений"
   }
 }

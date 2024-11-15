@@ -6,6 +6,6 @@
   "customizable": true,
   "importable": true,
   "stream": false,
-  "type": "Base",
+  "type": "ReferenceData",
   "object": true
 }

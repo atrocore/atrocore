@@ -12,6 +12,7 @@
     "Create EmailTemplate": "Create Email Template"
   },
   "exceptions": {
-    "notificationTemplatesCannotBeDeleted": "Templates for notifications cannot be deleted"
+    "systemTemplatesCannotBeDeleted": "System Templates cannot be deleted",
+    "systemTemplateCodeChanged": "Code of system template cannot be changed"
   }
 }

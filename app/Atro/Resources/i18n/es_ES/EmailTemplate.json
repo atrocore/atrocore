@@ -11,6 +11,7 @@
     "Create EmailTemplate": "Crear plantilla de correo electrónico"
   },
   "exceptions": {
-    "notificationTemplatesCannotBeDeleted": "Las plantillas para notificaciones no se pueden eliminar"
+    "systemTemplatesCannotBeDeleted": "Las plantillas de sistema no pueden borrarse",
+    "systemTemplateCodeChanged": "El código de la plantilla del sistema no puede modificarse"
   }
 }
