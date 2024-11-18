@@ -327,17 +327,35 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     if (node.showMoreDirection === 'up') {
                         // prepend
                         this.filterResponse(Espo.Utils.cloneDeep(response), 'up').reverse().forEach(item => {
-                            $tree.tree('prependNode', item, node.getParent());
+                            this.prependNode($tree, item, node.getParent());
                         });
                     } else if (node.showMoreDirection === 'down') {
                         // append
                         this.filterResponse(Espo.Utils.cloneDeep(response), 'down').forEach(item => {
-                            $tree.tree('appendNode', item, node.getParent());
+                            this.appendNode($tree, item, node.getParent());
                         });
                     }
                     $tree.tree('removeNode', node);
                 }
             });
+        },
+
+        appendNode($tree, item, parent) {
+            let element = parent || $tree.tree('getTree'),
+                nodes = (element.children || []);
+
+            if (nodes.findIndex(node => item.id === node.id) === -1) {
+                $tree.tree('appendNode', item, parent);
+            }
+        },
+
+        prependNode($tree, item, parent) {
+            let element = parent || $tree.tree('getTree'),
+                nodes = (element.children || []);
+
+            if (nodes.findIndex(node => item.id === node.id) === -1) {
+                $tree.tree('prependNode', item, parent);
+            }
         },
 
         pushShowMore(list, direction) {
