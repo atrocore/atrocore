@@ -49,7 +49,7 @@ Espo.define('views/role/modals/add-field', 'views/modal', function (Dep) {
                 if (i % 4 === 0) {
                     dataList.push([]);
                 }
-                dataList[dataList.length -1].push(field);
+                dataList[dataList.length - 1].push(field);
             }, this);
 
             return {
@@ -69,7 +69,7 @@ Espo.define('views/role/modals/add-field', 'views/modal', function (Dep) {
 
             Object.keys(fields).forEach(function (field) {
                 var d = fields[field];
-                if (field in this.options.ignoreFieldList) return;
+                if ((this.options.ignoreFieldList || []).includes(field)) return;
                 if (d.disabled) return;
                 if (d.aclFieldDisabled) return;
                 if (d.notStorable && d.aclFieldDisabled !== false) return;
