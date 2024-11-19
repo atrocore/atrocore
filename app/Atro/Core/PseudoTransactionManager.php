@@ -22,6 +22,7 @@ use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
 use Espo\Entities\User;
 use Atro\Services\Record;
+use Espo\ORM\EntityManager;
 
 class PseudoTransactionManager
 {
@@ -253,6 +254,7 @@ class PseudoTransactionManager
         $inputIsEmpty = $job['input_data'] === '';
 
         try {
+            $this->setSystemContainerUser($job['created_by_id']);
             $service = $this->getServiceFactory()->create($job['entity_type']);
             if ($service instanceof Record) {
                 $service->setPseudoTransactionId($job['id']);
@@ -350,6 +352,16 @@ class PseudoTransactionManager
     protected function getServiceFactory(): ServiceFactory
     {
         return $this->systemContainer->get('serviceFactory');
+    }
+
+    protected function setSystemContainerUser(string $userId): void
+    {
+        /** @var EntityManager $em */
+        $em = $this->systemContainer->get('entityManager');
+
+        $user = $em->getRepository('User')->get($userId);
+        $em->setUser($user);
+        $this->systemContainer->setUser($user);
     }
 
     protected function getUser(): User
