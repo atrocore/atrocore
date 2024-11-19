@@ -21,37 +21,37 @@ use Espo\ORM\Entity;
 
 class NotificationTemplate extends Base
 {
-   public function addUiHandlerForLanguage(string $language): void
-   {
-       if ($language === $this->getConfig()->get('mainLanguage')) {
-           return;
-       }
-       $preparedLocale = ucfirst(Util::toCamelCase(strtolower($language)));
+    public function addUiHandlerForLanguage(string $language): void
+    {
+        if ($language === $this->getConfig()->get('mainLanguage')) {
+            return;
+        }
+        $preparedLocale = ucfirst(Util::toCamelCase(strtolower($language)));
 
-       foreach (['subject', 'body'] as $field) {
-           // prepare multi-lang field
-           $mField = $field . $preparedLocale;
-           $uiHandlers = $this->getEntityManager()->getRepository('UiHandler')
-               ->where([
-                   'entityType' => 'NotificationTemplate',
-                    'fields' => '["'. $field. '"]',
-               ])
-               ->find();
-           foreach ($uiHandlers as $uiHandler) {
-               /** @var Entity $newUiHandler */
-               try{
-                   $newUiHandler = clone $uiHandler;
-                   $newUiHandler->setIsNew(true);
-                   $newUiHandler->setIsSaved(false);
-                   $newUiHandler->set('name', str_replace($field, $mField, $uiHandler->get('name')));
-                   $newUiHandler->set('id', null);
-                   $newUiHandler->set('hash', null);
-                   $newUiHandler->set('fields', [$mField]);
-                   $this->getEntityManager()->saveEntity($newUiHandler);
-               }catch (\Throwable $e) {
-                    $test = $e;
-               }
-           }
-       }
-   }
+        foreach (['subject', 'body'] as $field) {
+            // prepare multi-lang field
+            $mField = $field . $preparedLocale;
+            $uiHandlers = [];
+            foreach ($this->getEntityManager()->getRepository('UiHandler')->find() as $uiHandler) {
+                if ($uiHandler->get('entityType') === 'NotificationTemplate' && !empty($uiHandler->get('fields')) && $uiHandler->get('fields')[0] === $field) {
+                    $uiHandlers[] = $uiHandler;
+                }
+            }
+            foreach ($uiHandlers as $uiHandler) {
+                /** @var Entity $newUiHandler */
+                try {
+                    $newUiHandler = clone $uiHandler;
+                    $newUiHandler->setIsNew(true);
+                    $newUiHandler->setIsSaved(false);
+                    $newUiHandler->set('name', str_replace($field, $mField, $uiHandler->get('name')));
+                    $newUiHandler->set('id', null);
+                    $newUiHandler->set('hash', null);
+                    $newUiHandler->set('code', ($uiHandler->get('code') ?? '') . $preparedLocale);
+                    $newUiHandler->set('fields', [$mField]);
+                    $this->getEntityManager()->saveEntity($newUiHandler);
+                } catch (\Throwable $e) {
+                }
+            }
+        }
+    }
 }
