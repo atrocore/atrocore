@@ -30,6 +30,10 @@ class HtmlSanitizer extends ReferenceData
             $GLOBALS['log']->error("Failed to parse HTML sanitizer YAML configuration: " . $e->getMessage());
         }
 
+        if (!is_array($result)) {
+            $result = null;
+        }
+
         return $result;
     }
 
