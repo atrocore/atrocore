@@ -6490,7 +6490,7 @@ button.close {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1050;
+    z-index: 2050;
     -webkit-overflow-scrolling: touch;
     outline: 0
 }
@@ -19970,7 +19970,10 @@ ul.dropdown-menu > li.checkbox {
     position: relative;
 }
 
-#main .page-header h3 .header-breadcrumbs div > a::after, #main .page-header h3 .header-breadcrumbs div > span.subsection::after {
+#main .page-header h3 .header-breadcrumbs div > a::after,
+#main .page-header h3 .header-breadcrumbs div > span.subsection::after,
+.full-page-modal .header-container .header-breadcrumbs div > a::after,
+.full-page-modal .header-container .header-breadcrumbs div > span.subsection::after {
     content: '/';
     display: inline-block;
     color: #0081d1;
@@ -21891,6 +21894,63 @@ td[data-name="draggableIcon"] {
 
 .full-page-modal .product-fields-panel .row.stripped:not(.hidden) {
     background-color: #f2f2f2
+}
+
+.full-page-modal .html-preview {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.full-page-modal .html-preview .body-container {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+}
+
+.full-page-modal .html-preview .header-container {
+    border-bottom: 0;
+    padding: 14px 34px 14px 14px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.full-page-modal .html-preview .header-container .screen-size-icons {
+    margin: 0 14px 0 auto;
+    flex-shrink: 0;
+}
+
+.full-page-modal .html-preview .header-container .screen-size-icons > .profile {
+    font-size: 1.25em;
+    width: 50px;
+}
+
+.full-page-modal .html-preview iframe {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid rgba(0,0,0,0.2);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    max-height: 100%;
+    max-width: 100%;
+    overflow: auto;
+    box-sizing: content-box;
+}
+
+@media screen and (max-width: 767px) {
+    .full-page-modal .html-preview .header-container {
+        flex-wrap: wrap;
+    }
+
+    .full-page-modal .html-preview .header-container .header-breadcrumbs {
+        flex-basis: 100%;
+    }
+
+    .full-page-modal .html-preview .header-container .screen-size-icons:not(:first-child) {
+        margin-right: -22px;
+    }
 }
 
 .product-fields-panel .panel .cell {
