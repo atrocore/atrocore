@@ -304,15 +304,8 @@ class ReferenceData extends Repository implements Injectable
 
     public function findByIds(array $ids)
     {
-        $result = [];
-        if (!empty($ids)) {
-            foreach ($this->getAllItems() as $item) {
-                if (in_array($item['id'], $ids)) {
-                    $result[] = $item;
-                }
-            }
-        }
-
+        $result = $this->getAllItems();
+        $result = array_filter(array_values($result), fn($item) => in_array($item['id'], $ids));
         $collection = new EntityCollection($result, $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
 
