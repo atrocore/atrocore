@@ -82,7 +82,7 @@ class Container
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
-            'htmlSanitizer'            => \Atro\Core\Utils\HtmlSanitizer::class,
+            'htmlSanitizer'            => \Atro\Core\Utils\HTMLSanitizer::class,
         ];
 
     public function __construct()
