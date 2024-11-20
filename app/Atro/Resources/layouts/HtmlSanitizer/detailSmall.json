@@ -1,0 +1,22 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "configuration",
+          "fullWidth": true
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  }
+]

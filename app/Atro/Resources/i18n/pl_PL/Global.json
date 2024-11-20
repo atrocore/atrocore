@@ -53,7 +53,8 @@
     "Global":"Globalny",
     "Preferences":"Preferencje",
     "AuthLogRecord":"Rekord dziennika autoryzacji",
-    "AuthFailLogRecord":"Rekord dziennika nieudanych autoryzacji"
+    "AuthFailLogRecord":"Rekord dziennika nieudanych autoryzacji",
+    "HtmlSanitizer": "HTML Sanitizer"
 },
 "scopeNamesPlural":{
     "EmailTemplate": "Szablony wiadomości",
@@ -94,7 +95,8 @@
     "PasswordChangeRequest":"Prośby o zmianę hasła",
     "ActionHistoryRecord":"Historia akcji",
     "AuthToken":"Tokeny autoryzacji",
-    "LastViewed":"Ostatnio oglądane"
+    "LastViewed":"Ostatnio oglądane",
+    "HtmlSanitizer": "HTML Sanitizers"
 },
 "labels":{
     "customizeLayout": "Dostosuj układ",

@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "configuration": "Konfiguration"
+  },
+  "labels": {
+    "Create HtmlSanitizer": "HTML Sanitizer erstellen"
+  },
+  "exceptions": {
+    "notValidYaml": "Konfiguration ist keine gültige YAML."
+  }
+}
