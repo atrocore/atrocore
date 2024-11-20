@@ -302,6 +302,23 @@ class ReferenceData extends Repository implements Injectable
         return $collection;
     }
 
+    public function findByIds(array $ids)
+    {
+        $result = [];
+        if (!empty($ids)) {
+            foreach ($this->getAllItems() as $item) {
+                if (in_array($item['id'], $ids)) {
+                    $result[] = $item;
+                }
+            }
+        }
+
+        $collection = new EntityCollection($result, $this->entityName, $this->entityFactory);
+        $collection->setAsFetched();
+
+        return $collection;
+    }
+
     public function findOne(array $params)
     {
         throw new BadRequest('The function is not provided for an entity of this type.');
