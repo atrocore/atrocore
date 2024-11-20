@@ -162,6 +162,7 @@
     "maxFileSize": "Максимальний розмір файлу (Mb)",
     "isPersonalData": "Особисті дані",
     "useIframe": "Використовувати Iframe",
+    "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Використовувати числовий формат",
     "strip": "Стрип",
     "pattern": "Регулярний вираз",

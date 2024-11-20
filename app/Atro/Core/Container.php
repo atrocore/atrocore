@@ -81,7 +81,8 @@ class Container
             'dataManager'              => \Espo\Core\Factories\DataManager::class,
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
-            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class
+            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
+            'htmlSanitizer'            => \Atro\Core\Utils\HtmlSanitizer::class,
         ];
 
     public function __construct()

@@ -453,6 +453,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function prepareFieldTypeWysiwyg(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if ($entity->isAttributeChanged($fieldName) && !empty($fieldData['htmlSanitizerId'])) {
+            /** @var \Atro\Services\HtmlSanitizer $service */
+            $service = $this->getInjection('container')->get('serviceFactory')->create('HtmlSanitizer');
+
+            $safeHtml = $service->sanitize($fieldData['htmlSanitizerId'], $entity->get($fieldName));
+            $entity->set($fieldName, $safeHtml);
+        }
+    }
+
     public function convertDateWithModifier(string $date, string $modifier, string $format = 'Y-m-d'): string
     {
         $dt = new \DateTime($date);

@@ -154,6 +154,7 @@
     "currentUserAsDefault": "Set current user as default value",
     "isPersonalData": "Is Personal Data",
     "useIframe": "Use Iframe",
+    "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Use Numeric Format",
     "strip": "Strip",
     "pattern": "Regex Pattern",

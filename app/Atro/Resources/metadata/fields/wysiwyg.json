@@ -49,6 +49,12 @@
       {
          "name": "useIframe",
          "type": "bool"
+      },
+      {
+         "name": "htmlSanitizer",
+         "required": true,
+         "entity": "HtmlSanitizer",
+         "type": "link"
       }
    ],
    "filter": true,

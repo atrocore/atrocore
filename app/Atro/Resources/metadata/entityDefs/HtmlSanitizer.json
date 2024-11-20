@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "trim": true
+    },
+    "code": {
+      "type": "varchar",
+      "trim": true,
+      "unique": true
+    },
+    "configuration": {
+      "type": "text",
+      "required": true,
+      "view": "views/html-sanitizer/fields/configuration"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "code"
+    ]
+  }
+}

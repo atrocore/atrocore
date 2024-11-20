@@ -81,7 +81,7 @@ class ReferenceData extends Record
 
         $foreigns = [];
 
-        foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'links']) as $link => $defs) {
+        foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'links'], []) as $link => $defs) {
             if ($defs['type'] === 'belongsTo' && !empty($defs['entity'])) {
                 $foreigns[$link] = $this->getEntityManager()
                     ->getRepository($defs['entity'])
@@ -112,7 +112,7 @@ class ReferenceData extends Record
         parent::prepareEntityForOutput($entity);
 
         if (empty($entity->_preparedForOutput)) {
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links']) as $link => $defs) {
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'links'], []) as $link => $defs) {
                 if (!empty($entity->get("{$link}Id")) && $defs['type'] === 'belongsTo' && !empty($defs['entity'])) {
                     $foreign = $this->getEntityManager()->getEntity($defs['entity'], $entity->get("{$link}Id"));
                     if (!empty($foreign)) {

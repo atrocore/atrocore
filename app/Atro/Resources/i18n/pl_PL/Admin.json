@@ -185,6 +185,7 @@
        "maxFileSize":"Maksymalny rozmiar pliku (Mb)",
        "isPersonalData":"Dane osobowe",
        "useIframe":"Użyj ramki w trybie wyświetlania",
+       "htmlSanitizer": "HTML Sanitizer",
        "useNumericFormat":"Użyj formatu liczbowego",
        "strip":"Usuń",
        "pattern":"Wzorzec Regex",

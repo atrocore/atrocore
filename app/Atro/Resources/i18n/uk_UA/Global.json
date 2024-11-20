@@ -57,7 +57,8 @@
     "PreviewTemplate": "Шаблон перегляду",
     "NotificationTemplate": "Шаблон сповіщення",
     "NotificationProfile": "Профіль сповіщень",
-    "NotificationRule": "Правило сповіщення"
+    "NotificationRule": "Правило сповіщення",
+    "HtmlSanitizer": "HTML Sanitizer"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Шаблони електронної пошти",
@@ -104,7 +105,8 @@
     "NotificationTemplate": "Шаблони сповіщень",
     "NotificationProfile": "Профілі сповіщень",
     "NotificationRule": "Правила повідомлення",
-    "Country": "Країни"
+    "Country": "Країни",
+    "HtmlSanitizer": "HTML Sanitizers"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"

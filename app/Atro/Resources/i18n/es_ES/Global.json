@@ -38,7 +38,8 @@
     "Store": "Store",
     "Global": "Global",
     "AuthLogRecord": "Auth Log Record",
-    "AuthFailLogRecord": "Auth Fail Log Record"
+    "AuthFailLogRecord": "Auth Fail Log Record",
+    "HtmlSanitizer": "HTML Sanitizer"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -64,7 +65,8 @@
     "Note": "Notes",
     "Notification": "Notifications",
     "Preferences": "Preferences",
-    "Role": "Roles"
+    "Role": "Roles",
+    "HtmlSanitizer": "HTML Sanitizers"
   },
   "labels": {
     "customizeLayout": "Personalizar diseño",

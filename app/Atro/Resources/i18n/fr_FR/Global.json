@@ -128,7 +128,8 @@
     "Store": "Magasin",
     "User": "Utilisateur",
     "AuthLogRecord": "Enregistrement du journal d'authentification",
-    "AuthFailLogRecord": "Enregistrement du journal d'échec de l'authentification"
+    "AuthFailLogRecord": "Enregistrement du journal d'échec de l'authentification",
+    "HtmlSanitizer": "HTML Sanitizer"
   },
   "labels": {
     "Preferences": "Préférences",
@@ -497,7 +498,8 @@
     "ScheduledJob": "Jobs programmés",
     "Job": "Emplois",
     "ScheduledJobLogRecord": "Enregistrements du journal des travaux programmés",
-    "PasswordChangeRequest": "Demandes de changement de mot de passe"
+    "PasswordChangeRequest": "Demandes de changement de mot de passe",
+    "HtmlSanitizer": "HTML Sanitizers"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"

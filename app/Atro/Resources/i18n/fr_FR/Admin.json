@@ -148,6 +148,7 @@
     "maxFileSize": "Taille maximale du fichier (Mo)",
     "isPersonalData": "Les données à caractère personnel",
     "useIframe": "Utiliser l'iframe en mode affichage",
+    "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Utiliser le format numérique",
     "strip": "Bande",
     "pattern": "Modèle d'expressions rationnelles",

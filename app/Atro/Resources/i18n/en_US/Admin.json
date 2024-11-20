@@ -194,6 +194,7 @@
     "maxFileSize": "Max file size (Mb)",
     "isPersonalData": "Is personal data",
     "useIframe": "Use iframe in view mode",
+    "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Use numeric format",
     "strip": "Strip",
     "pattern": "Regex pattern",

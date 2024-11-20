@@ -47,7 +47,8 @@
     "NotificationTemplate": "Vorlage für Benachrichtigung",
     "NotificationProfile": "Benachrichtigungsprofil",
     "NotificationRule": "Meldevorschrift",
-    "Country": "Land"
+    "Country": "Land",
+    "HtmlSanitizer": "HTML Sanitizer"
   },
   "scopeNamesPlural": {
     "Language": "Sprachen",
@@ -90,7 +91,8 @@
     "NotificationTemplate": "Benachrichtigungsvorlagen",
     "NotificationProfile": "Benachrichtigungs-Profile",
     "NotificationRule": "Benachrichtigungsregeln",
-    "Country": "Länder"
+    "Country": "Länder",
+    "HtmlSanitizer": "HTML Sanitizers"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"

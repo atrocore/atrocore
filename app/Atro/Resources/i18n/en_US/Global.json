@@ -58,7 +58,8 @@
     "PreviewTemplate": "Preview Template",
     "NotificationTemplate": "Notification Template",
     "NotificationProfile": "Notification Profile",
-    "NotificationRule": "Notification Rule"
+    "NotificationRule": "Notification Rule",
+    "HtmlSanitizer": "HTML Sanitizer"
   },
   "scopeNamesPlural": {
     "Language": "Languages",
@@ -105,7 +106,8 @@
     "NotificationTemplate": "Notification Templates",
     "NotificationProfile": "Notification Profiles",
     "NotificationRule": "Notification Rules",
-    "Country": "Countries"
+    "Country": "Countries",
+    "HtmlSanitizer": "HTML Sanitizers"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"

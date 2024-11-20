@@ -175,6 +175,7 @@
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Gehört zu persönlichen Daten",
     "useIframe": "Iframe im Ansichtsmodus verwenden",
+    "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Verwenden Sie das numerische Format",
     "dataUrl": "Daten-URL",
     "pattern": "Regex-Muster",
