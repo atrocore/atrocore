@@ -467,31 +467,7 @@ class File extends Base
         return $url;
     }
 
-    public function getStorage(FileEntity $file): FileStorageInterface
-    {
-        return $this->getEntityManager()->getRepository('Storage')->getFileStorage($file->get('storageId'));
-    }
-
-    protected function getPathBuilder(): FilePathBuilder
-    {
-        return $this->getInjection('container')->get('filePathBuilder');
-    }
-
-    protected function getFileValidator(): FileValidator
-    {
-        return $this->getInjection('container')->get(FileValidator::class);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-        $this->addDependency('language');
-        $this->addDependency('fileValidator');
-    }
-
-    private function assignTheFileTypeAutomatically(Entity $entity): void
+    protected function assignTheFileTypeAutomatically(Entity $entity): void
     {
         if (empty($entity->get('typeId'))) {
             $fileTypes = $this->getEntityManager()->getRepository('FileType')
@@ -511,7 +487,7 @@ class File extends Base
     {
         $mimes = $this->getMetadata()->get(['app', 'mimeTypeToExtensions'], []);
         if(empty($mimes[$entity->get('mimeType')]) or !is_array($mimes[$entity->get('mimeType')])) {
-           return;
+            return;
         }
 
         $realExtension = $mimes[$entity->get('mimeType')];
@@ -534,5 +510,29 @@ class File extends Base
         }
 
         $this->getStorage($entity)->reupload($entity);
+    }
+
+    public function getStorage(FileEntity $file): FileStorageInterface
+    {
+        return $this->getEntityManager()->getRepository('Storage')->getFileStorage($file->get('storageId'));
+    }
+
+    protected function getPathBuilder(): FilePathBuilder
+    {
+        return $this->getInjection('container')->get('filePathBuilder');
+    }
+
+    protected function getFileValidator(): FileValidator
+    {
+        return $this->getInjection('container')->get(FileValidator::class);
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
+        $this->addDependency('language');
+        $this->addDependency('fileValidator');
     }
 }
