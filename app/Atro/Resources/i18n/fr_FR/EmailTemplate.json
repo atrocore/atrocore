@@ -1,11 +1,7 @@
 {
   "fields": {
     "subject": "Sujet",
-    "body": "Corps",
-    "allowAttachments": "Autoriser les pièces jointes",
-    "emailTo": "Email à",
-    "emailCc": "Email CC",
-    "attachments": "Pièces jointes"
+    "body": "Corps"
   },
   "labels": {
     "send": "Envoyer",

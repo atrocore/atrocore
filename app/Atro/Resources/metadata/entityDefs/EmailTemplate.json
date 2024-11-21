@@ -11,17 +11,6 @@
       "unique": true,
       "trim": true
     },
-    "description": {
-      "type": "text"
-    },
-    "emailTo": {
-      "type": "array",
-      "view": "views/fields/array-email"
-    },
-    "emailCc": {
-      "type": "array",
-      "view": "views/fields/array-email"
-    },
     "subject": {
       "type": "text",
       "required": true,
@@ -31,13 +20,6 @@
       "type": "text",
       "required": true,
       "view": "views/fields/script"
-    },
-    "connection": {
-      "type": "link",
-      "view": "views/email-template/fields/connection"
-    },
-    "allowAttachments": {
-      "type": "bool"
     },
     "createdAt": {
       "type": "datetime",
@@ -66,14 +48,10 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
-    },
-    "connection": {
-      "type": "belongsTo",
-      "entity": "Connection"
     }
   },
   "collection": {
-    "sortBy": "createdAt",
-    "asc": false
+    "sortBy": "name",
+    "asc": true
   }
 }

@@ -1,10 +1,7 @@
 {
   "fields": {
     "subject": "Temat",
-    "body": "Ciało",
-    "allowAttachments": "Zezwalaj na załączniki",
-    "emailTo": "Wyślij email do",
-    "emailCc": "Wyślij e-mail do CC"
+    "body": "Ciało"
   },
   "labels": {
     "send": "Wysłać",

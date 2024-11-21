@@ -11,20 +11,6 @@
       ],
       [
         {
-          "name": "description",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "emailTo"
-        },
-        {
-          "name": "emailCc"
-        }
-      ],
-      [
-        {
           "name": "subject",
           "fullWidth": true
         }
@@ -33,14 +19,6 @@
         {
           "name": "body",
           "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "connection"
-        },
-        {
-          "name": "allowAttachments"
         }
       ]
     ],

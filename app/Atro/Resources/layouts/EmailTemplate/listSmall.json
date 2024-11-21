@@ -4,9 +4,6 @@
     "link": true
   },
   {
-    "name": "connection"
-  },
-  {
-    "name": "allowAttachments"
+    "name": "code"
   }
 ]

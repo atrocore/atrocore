@@ -63,8 +63,6 @@ class Metadata extends AbstractListener
 
         $this->addPreviewTemplates($data);
 
-        $this->prepareEmailTemplateMultilangFields($data);
-
         $this->prepareNotificationTemplateMultilangFields($data);
 
         $this->prepareNotificationRuleTransportField($data);
@@ -91,27 +89,6 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
-    }
-
-    public function prepareEmailTemplateMultilangFields(array &$data): void
-    {
-        foreach ($this->getConfig()->get('locales') ?? [] as $locale) {
-            if ($locale['language'] === 'en_US') {
-                continue;
-            }
-            $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
-
-            foreach (['subject', 'body'] as $field) {
-                // prepare multi-lang field
-                $mField = $field . $preparedLocale;
-
-                $mParams = json_decode(json_encode($data['entityDefs']['EmailTemplate']['fields'][$field]), true);
-                $mParams['isCustom'] = false;
-                $mParams['required'] = false;
-
-                $data['entityDefs']['EmailTemplate']['fields'][$mField] = $mParams;
-            }
-        }
     }
 
     protected function prepareAclActionLevelListMap(array &$data): void
