@@ -13,20 +13,17 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Espo\Core\EventManager\Event;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\ReferenceData;
-use Atro\ActionTypes\TypeInterface;
-use Espo\Core\ORM\Entity;
-use Atro\Core\Utils\Util;
-use Espo\ORM\IEntity;
 
 class EmailTemplate extends ReferenceData
 {
-
     public function getPreview(string $emailTemplateId, string $scope, string $entityId): array
     {
+        echo '<pre>';
+        print_r('todo');
+        die();
+
         $entity = $this->getEntityManager()->getEntity($scope, $entityId);
         $emailTemplate = $this->getEntityManager()->getEntity('EmailTemplate', $emailTemplateId);
 
