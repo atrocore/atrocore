@@ -30,14 +30,14 @@ class Action extends Base
             ->executeNow((string)$data->actionId, $data);
     }
 
-    public function actionEmailPreview($params, $data, $request): array
+    public function actionExecuteRecordAction($params, $data, $request): array
     {
-        if (!$request->isPost() || !property_exists($data, 'actionId') || !property_exists($data, 'entityId')) {
+        if (!$request->isPost() || !property_exists($data, 'actionId') || !property_exists($data, 'entityId') || !property_exists($data, 'actionType')) {
             throw new BadRequest();
         }
 
         return $this
             ->getRecordService()
-            ->getEmailPreview((string)$data->actionId, (string)$data->entityId);
+            ->executeRecordAction((string)$data->actionId, (string)$data->entityId, (string)$data->actionType);
     }
 }
