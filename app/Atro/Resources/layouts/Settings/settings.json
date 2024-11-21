@@ -90,11 +90,13 @@
   },
   {
     "label": "Files",
-    "rows": [[
-      {
-        "name": "automaticFileExtensionCorrection"
-      },
-      false
-    ]]
+    "rows": [
+      [
+        {
+          "name": "automaticFileExtensionCorrection"
+        },
+        false
+      ]
+    ]
   }
 ]
