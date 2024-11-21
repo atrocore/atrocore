@@ -16,6 +16,9 @@
       "required": true,
       "view": "views/fields/script"
     },
+    "isHtml": {
+      "type": "bool"
+    },
     "body": {
       "type": "text",
       "required": true,
