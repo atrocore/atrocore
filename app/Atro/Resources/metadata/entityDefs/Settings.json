@@ -292,6 +292,9 @@
     },
     "sendOutNotifications": {
       "type": "bool"
+    },
+    "automaticFileExtensionCorrection": {
+      "type": "bool"
     }
   },
   "links": {

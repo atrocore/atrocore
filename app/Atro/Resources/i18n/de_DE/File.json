@@ -30,7 +30,8 @@
     "fileCouldNotBeUploaded": "Die Datei konnte nicht hochgeladen werden.",
     "fileHasDuplicate": "Es gibt bereits mindestens ein <a target=\"_blank\" href=\"/#File/view/{{id}}\">Duplikat</a> dieser Datei.",
     "cannotDefineFileName": "Das System kann den Dateinamen aus der URL nicht erkennen.",
-    "urlExpected": "Falsche URL wurde angegeben"
+    "urlExpected": "Falsche URL wurde angegeben",
+    "fileExtensionCorrectedAutomatically": "Dateierweiterung wurde automatisch korrigiert."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Die Dateierweiterung kann nicht geändert werden.",

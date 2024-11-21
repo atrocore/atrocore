@@ -208,6 +208,18 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "extensionCorrected": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     }
   },
   "links": {

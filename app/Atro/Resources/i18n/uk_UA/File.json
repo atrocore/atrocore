@@ -30,7 +30,8 @@
     "fileCouldNotBeUploaded": "Файл не вдалося завантажити.",
     "fileHasDuplicate": "Вже існує принаймні один <a target=\"_blank\" href=\"/#File/view/{{id}}\">дублікат</a> цього файлу.",
     "cannotDefineFileName": "Система не може розпізнати ім'я файлу за URL-адресою.",
-    "urlExpected": "сВказано невірну URL-адресу"
+    "urlExpected": "сВказано невірну URL-адресу",
+    "fileExtensionCorrectedAutomatically": "Розширення файлу було виправлено автоматично."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Розширення файлу не може бути змінено.",

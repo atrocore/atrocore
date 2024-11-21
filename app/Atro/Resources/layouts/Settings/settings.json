@@ -87,5 +87,14 @@
         false
       ]
     ]
+  },
+  {
+    "label": "Files",
+    "rows": [[
+      {
+        "name": "automaticFileExtensionCorrection"
+      },
+      false
+    ]]
   }
 ]

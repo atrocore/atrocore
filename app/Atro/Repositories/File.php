@@ -76,24 +76,17 @@ class File extends Base
             }
         } else {
             // assign the file type automatically
-            if (empty($entity->get('typeId'))) {
-                $fileTypes = $this->getEntityManager()->getRepository('FileType')
-                    ->where(['assignAutomatically' => true])
-                    ->order('priority', 'DESC')
-                    ->find();
-                foreach ($fileTypes as $fileType) {
-                    if ($this->getFileValidator()->validateFile($fileType, $entity)) {
-                        $entity->set('typeId', $fileType->get('id'));
-                        break;
-                    }
-                }
-            }
+            $this->assignTheFileTypeAutomatically($entity);
 
             $this->createItem($entity);
 
             // create origin file
             if (empty($options['scanning']) && !$this->getStorage($entity)->createFile($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
+            }
+
+            if($this->getConfig()->get('automaticFileExtensionCorrection')){
+                $this->automaticallyCorrectExtension($entity);
             }
         }
     }
@@ -496,5 +489,50 @@ class File extends Base
         $this->addDependency('container');
         $this->addDependency('language');
         $this->addDependency('fileValidator');
+    }
+
+    private function assignTheFileTypeAutomatically(Entity $entity): void
+    {
+        if (empty($entity->get('typeId'))) {
+            $fileTypes = $this->getEntityManager()->getRepository('FileType')
+                ->where(['assignAutomatically' => true])
+                ->order('priority', 'DESC')
+                ->find();
+            foreach ($fileTypes as $fileType) {
+                if ($this->getFileValidator()->validateFile($fileType, $entity)) {
+                    $entity->set('typeId', $fileType->get('id'));
+                    break;
+                }
+            }
+        }
+    }
+
+    protected function automaticallyCorrectExtension(Entity $entity): void
+    {
+        $mimes = $this->getMetadata()->get(['app', 'mimeTypeToExtensions'], []);
+        if(empty($mimes[$entity->get('mimeType')]) or !is_array($mimes[$entity->get('mimeType')])) {
+           return;
+        }
+
+        $realExtension = $mimes[$entity->get('mimeType')];
+        $nameParts = explode('.', $entity->get('name'));
+
+        if(count($nameParts) === 1){
+            $nameParts[2] = $realExtension[0];
+        }
+
+        if(!in_array($nameParts[count($nameParts) - 1], $realExtension)) {
+            $nameParts[count($nameParts) - 1] = $realExtension[0];
+        }
+
+        $entity->set('name', join('.', $nameParts));
+        $entity->set('extensionCorrected', true);
+
+        if(empty($entity->_input->typeId)){
+            $entity->set('typeId', null);
+            $this->assignTheFileTypeAutomatically($entity);
+        }
+
+        $this->getStorage($entity)->reupload($entity);
     }
 }
