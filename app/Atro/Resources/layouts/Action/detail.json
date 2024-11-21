@@ -34,7 +34,29 @@
         {
           "name": "display"
         }
-      ],
+      ]
+    ]
+  },
+  {
+    "label": "Parameters",
+    "style": "default",
+    "dynamicLogicVisible": {
+      "conditionGroup": [
+        {
+          "type": "in",
+          "attribute": "type",
+          "value": [
+            "webhook",
+            "email",
+            "create",
+            "update",
+            "error",
+            "upsert"
+          ]
+        }
+      ]
+    },
+    "rows": [
       [
         {
           "name": "webhookUrl"

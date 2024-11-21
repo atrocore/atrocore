@@ -11,36 +11,20 @@
       ],
       [
         {
-          "name": "description",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "emailTo"
-        },
-        {
-          "name": "emailCc"
-        }
-      ],
-      [
-        {
           "name": "subject",
           "fullWidth": true
         }
       ],
       [
         {
-          "name": "body",
-          "fullWidth": true
-        }
+          "name": "isHtml"
+        },
+        false
       ],
       [
         {
-          "name": "connection"
-        },
-        {
-          "name": "allowAttachments"
+          "name": "body",
+          "fullWidth": true
         }
       ]
     ],
