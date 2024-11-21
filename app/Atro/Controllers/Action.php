@@ -29,4 +29,15 @@ class Action extends Base
             ->getRecordService()
             ->executeNow((string)$data->actionId, $data);
     }
+
+    public function actionEmailPreview($params, $data, $request): array
+    {
+        if (!$request->isPost() || !property_exists($data, 'actionId') || !property_exists($data, 'entityId')) {
+            throw new BadRequest();
+        }
+
+        return $this
+            ->getRecordService()
+            ->getEmailPreview((string)$data->actionId, (string)$data->entityId);
+    }
 }

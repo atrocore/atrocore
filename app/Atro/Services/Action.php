@@ -23,6 +23,16 @@ class Action extends Base
 {
     protected $mandatorySelectAttributeList = ['targetEntity', 'data'];
 
+    public function getEmailPreview(string $id, string $entityId): array
+    {
+        $action = $this->getRepository()->where(['id' => $id, 'type' => 'email'])->findOne();
+        if (empty($action)) {
+            throw new NotFound();
+        }
+
+        return $this->getActionType($action->get('type'))->getEmailPreview($action, $entityId);
+    }
+
     public function executeNow(string $id, \stdClass $input): array
     {
         $event = $this->dispatchEvent('beforeExecuteNow', new Event(['id' => $id, 'input' => $input]));
