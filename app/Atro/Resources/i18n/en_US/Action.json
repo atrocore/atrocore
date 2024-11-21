@@ -17,7 +17,8 @@
   },
   "labels": {
     "Create Action": "Create Action",
-    "execute": "Execute"
+    "execute": "Execute",
+    "Parameters": "Parameters"
   },
   "massActions": {
     "execute": "Execute"
