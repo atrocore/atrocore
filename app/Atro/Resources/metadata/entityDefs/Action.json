@@ -15,7 +15,8 @@
     "executeAs": {
       "type": "enum",
       "required": true,
-      "prohibitedEmptyValue": false,
+      "prohibitedEmptyValue": true,
+      "default": "system",
       "optionsIds": [
         "system",
         "sameUser"
