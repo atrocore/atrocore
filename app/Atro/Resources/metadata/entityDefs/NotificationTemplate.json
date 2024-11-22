@@ -10,13 +10,6 @@
       "unique": true,
       "trim": true
     },
-    "type": {
-      "type": "enum",
-      "required": true,
-      "prohibitedEmptyValue": true,
-      "options": ["system", "email"],
-      "optionsIds": ["system", "email"]
-    },
     "data": {
       "type": "jsonObject",
       "layoutDetailDisabled": true,
@@ -33,12 +26,6 @@
     "body": {
       "type": "text",
       "required": true,
-      "notStorable": true,
-      "virtualField": true,
-      "view": "views/fields/script"
-    },
-    "subject": {
-      "type": "text",
       "notStorable": true,
       "virtualField": true,
       "view": "views/fields/script"

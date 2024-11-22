@@ -31,7 +31,7 @@ abstract class AbstractNotificationTransport
         $this->container = $container;
     }
 
-    abstract public function send(User $user, NotificationTemplate $template, array $params): void;
+    abstract public function send(User $user, Entity $template, array $params): void;
 
     protected function getUserLanguage(User $user): string
     {

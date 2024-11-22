@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\NotificationTransport;
 
-use Atro\Entities\NotificationTemplate;
 use Atro\Core\Utils\Util;
 use Espo\Entities\User;
+use Espo\ORM\Entity;
 
 class SystemTransport extends AbstractNotificationTransport
 {
 
-    public function send(User $user, NotificationTemplate $template, array $params): void
+    public function send(User $user, Entity $template, array $params): void
     {
         $data = [];
         $mainLanguageMessage  = $template->get('body');
