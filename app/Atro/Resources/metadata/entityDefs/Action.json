@@ -12,6 +12,20 @@
       "optionsIds": [],
       "options": []
     },
+    "executeAs": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": false,
+      "optionsIds": [
+        "system",
+        "sameUser"
+      ],
+      "options": [
+        "system",
+        "sameUser"
+      ],
+      "tooltip": true
+    },
     "sourceEntity": {
       "type": "varchar",
       "view": "views/fields/entity-type"
