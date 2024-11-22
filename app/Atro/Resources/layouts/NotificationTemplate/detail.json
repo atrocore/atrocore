@@ -11,12 +11,6 @@
       ],
       [
         {
-          "name": "subject",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
           "name": "body",
           "fullWidth": true
         }

@@ -1,7 +1,6 @@
 {
   "fields": {
     "type": "Type",
-    "subject": "Subject",
     "body": "Body"
   },
   "labels": {

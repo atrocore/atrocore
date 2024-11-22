@@ -30,12 +30,6 @@
       "virtualField": true,
       "view": "views/fields/script"
     },
-    "subject": {
-      "type": "text",
-      "notStorable": true,
-      "virtualField": true,
-      "view": "views/fields/script"
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
