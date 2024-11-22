@@ -18,12 +18,9 @@ use Espo\ORM\Entity;
 abstract class AbstractAction implements TypeInterface
 {
     protected Container $container;
-//    protected static Container $actionContainer;
-//    protected Container $previousContainer;
 
     public function __construct(Container $container)
     {
-//        $this->previousContainer = $container;
         $this->container = $container;
     }
 
@@ -71,38 +68,6 @@ abstract class AbstractAction implements TypeInterface
         $this->container->setUser($user);
         return true;
     }
-
-
-//    public function initializeContainer(Entity $action, \stdClass $input): void
-//    {
-//        if (empty($this->previousContainer->get('memoryStorage')()->get('importJobId')) &&
-//            !empty($userId = $this->getExecuteAsUserId($action, $input))) {
-//
-//            if (empty(self::$actionContainer)) {
-//                self::$actionContainer = (new \Atro\Core\Application())->getContainer();
-//            }
-//
-//            /* @var $em EntityManager */
-//            $em = self::$actionContainer->get('entityManager');
-//
-//            if ($userId === 'system') {
-//                (new Auth(self::$actionContainer))->useNoAuth();
-//            } else {
-//                $user = $em->getRepository('User')->get($userId);
-//                if (empty($user)) {
-//                    $this->container = $this->previousContainer;
-//                    return;
-//                }
-//                $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
-//                $em->setUser($user);
-//                self::$actionContainer->setUser($user);
-//            }
-//            $this->container = self::$actionContainer;
-//            return;
-//        }
-//
-//        $this->container = $this->previousContainer;
-//    }
 
     public function createQueueItem(Entity $action, \stdClass $input): bool
     {
