@@ -14,7 +14,6 @@
     },
     "executeAs": {
       "type": "enum",
-      "required": true,
       "prohibitedEmptyValue": true,
       "default": "system",
       "optionsIds": [
