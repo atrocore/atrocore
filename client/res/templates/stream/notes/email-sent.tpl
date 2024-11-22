@@ -41,10 +41,6 @@
             <label class="control-label">{{translate 'body' category='fields' scope='EmailTemplate'}}</label>
             <div class="field">{{{body}}}</div>
         </div>
-         <div class="cell col-md-12  col-lg-6 form-group">
-            <label class="control-label">{{translate 'attachments' category='fields' scope='EmailTemplate'}}</label>
-            <div class="field">{{{attachments}}}</div>
-        </div>
 </div>
 
             </div>

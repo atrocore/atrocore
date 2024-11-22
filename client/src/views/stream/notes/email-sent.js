@@ -112,16 +112,6 @@ Espo.define('views/stream/notes/email-sent', 'views/stream/note', function (Dep)
                     mode: 'detail',
                     inlineEditDisabled: true
                 }, view => view.render());
-                this.createView('attachments', 'views/fields/link-multiple', {
-                    model: this.model,
-                    scope: this.scope,
-                    foreignScope: 'File',
-                    defs: {
-                        name: 'attachments'
-                    },
-                    mode: 'detail',
-                    inlineEditDisabled: true
-                }, view => view.render());
             }
 
             this.messageData['createdAt'] = 'field:createdAt'
