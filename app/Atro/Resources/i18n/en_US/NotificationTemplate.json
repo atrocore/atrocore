@@ -6,11 +6,5 @@
   },
   "labels": {
     "Create NotificationTemplate": "Create Notification Template"
-  },
-  "options": {
-    "type": {
-      "system": "System Notification",
-      "email": "Email Notification"
-    }
   }
 }
