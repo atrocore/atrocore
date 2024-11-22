@@ -5,21 +5,9 @@
     "rows": [
       [
         {
-          "name": "type"
-        },
-        false
-      ],
-      [
-        {
           "name": "name"
         },
         false
-      ],
-      [
-        {
-          "name": "subject",
-          "fullWidth": true
-        }
       ],
       [
         {

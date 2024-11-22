@@ -63,8 +63,6 @@ class Metadata extends AbstractListener
 
         $this->addPreviewTemplates($data);
 
-        $this->prepareNotificationTemplateMultilangFields($data);
-
         $this->prepareNotificationRuleTransportField($data);
 
         $this->addNotificationRulesToCache($data);
@@ -1153,38 +1151,6 @@ class Metadata extends AbstractListener
                     'model'
                 ]
             ];
-        }
-    }
-
-    protected function prepareNotificationTemplateMultilangFields(array &$data): void
-    {
-        $languages = array_map(
-            function($locale){
-                return !empty($locale['language']) ? $locale['language'] : $this->getConfig()->get('mainLanguage');
-                },
-            $this->getConfig()->get('locales') ?? []
-        );
-
-        // avoid duplicated languages
-        $languages = array_unique($languages);
-
-        foreach ($languages as $language) {
-            if ($language === $this->getConfig()->get('mainLanguage')) {
-                continue;
-            }
-            $preparedLocale = ucfirst(Util::toCamelCase(strtolower($language)));
-
-            foreach (['subject', 'body'] as $field) {
-                // prepare multi-lang field
-                $mField = $field . $preparedLocale;
-
-                $mParams = json_decode(json_encode($data['entityDefs']['NotificationTemplate']['fields'][$field]), true);
-                $data['entityDefs']['NotificationTemplate']['fields'][$mField] = $mParams;
-
-                if (!empty($dynamicLogic = $this->getMetadata()->get(['clientDefs', 'NotificationTemplate', 'dynamicLogic', 'fields', $field]))) {
-                    $data['clientDefs']['NotificationTemplate']['dynamicLogic']['fields'][$mField] = $dynamicLogic;
-                }
-            }
         }
     }
 
