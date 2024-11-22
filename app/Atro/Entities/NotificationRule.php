@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Entities;
 
 use Atro\Core\Templates\Entities\Base;
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
 
 class NotificationRule extends Base
 {
@@ -30,8 +30,13 @@ class NotificationRule extends Base
         return !empty($this->get($transportType . 'TemplateId'));
     }
 
-    public function getTransportTemplate($transportType): ?NotificationTemplate
+    public function getTransportTemplate($transportType): ?Entity
     {
-        return $this->getEntityManager()->getEntity('NotificationTemplate', $this->get($transportType . 'TemplateId'));
+        $entityName = 'NotificationTemplate';
+        if ($transportType === 'email') {
+            $entityName = 'EmailTemplate';
+        }
+
+        return $this->getEntityManager()->getEntity($entityName, $this->get($transportType . 'TemplateId'));
     }
 }
