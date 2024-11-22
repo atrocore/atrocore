@@ -499,10 +499,10 @@ class File extends Base
 
         if(!in_array($nameParts[count($nameParts) - 1], $realExtension)) {
             $nameParts[count($nameParts) - 1] = $realExtension[0];
+            $entity->set('extensionCorrected', true);
         }
 
         $entity->set('name', join('.', $nameParts));
-        $entity->set('extensionCorrected', true);
 
         if(empty($entity->_input->typeId)){
             $entity->set('typeId', null);
