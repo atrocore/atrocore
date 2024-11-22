@@ -29,4 +29,15 @@ class Action extends Base
             ->getRecordService()
             ->executeNow((string)$data->actionId, $data);
     }
+
+    public function actionExecuteRecordAction($params, $data, $request): array
+    {
+        if (!$request->isPost() || !property_exists($data, 'actionId') || !property_exists($data, 'entityId') || !property_exists($data, 'actionType')) {
+            throw new BadRequest();
+        }
+
+        return $this
+            ->getRecordService()
+            ->executeRecordAction((string)$data->actionId, (string)$data->entityId, (string)$data->actionType);
+    }
 }

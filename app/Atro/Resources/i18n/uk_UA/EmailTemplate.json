@@ -1,10 +1,7 @@
 {
   "fields": {
     "subject": "Тема",
-    "body": "Тіло",
-    "allowAttachments": "Дозволити вкладення",
-    "emailTo": "Електронна пошта до",
-    "emailCc": "Електронна пошта CC"
+    "body": "Тіло"
   },
   "labels": {
     "send": "Надіслати",

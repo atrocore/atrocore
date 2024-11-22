@@ -1,10 +1,7 @@
 {
   "fields": {
     "subject": "Thema",
-    "body": "Körper",
-    "allowAttachments": "Anhänge zulassen",
-    "emailTo": "E-Mail an",
-    "emailCc": "E-Mail an CC senden"
+    "body": "Körper"
   },
   "labels": {
     "send": "Senden",

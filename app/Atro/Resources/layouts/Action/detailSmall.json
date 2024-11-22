@@ -34,7 +34,13 @@
         {
           "name": "display"
         }
-      ],
+      ]
+    ]
+  },
+  {
+    "label": "Parameters",
+    "style": "default",
+    "rows": [
       [
         {
           "name": "webhookUrl"

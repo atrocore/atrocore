@@ -2,10 +2,7 @@
   "fields": {
     "subject": "Subject",
     "body": "Body",
-    "allowAttachments": "Allow Attachments",
-    "emailTo": "Email To",
-    "emailCc": "Email CC",
-    "attachments": "Attachments"
+    "isHtml": "HTML"
   },
   "labels": {
     "send": "Send",

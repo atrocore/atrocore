@@ -41,7 +41,7 @@ Espo.define('views/fields/script', ['views/fields/text', 'lib!Highlight'], Dep =
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'detail') {
+            if (this.mode === 'detail' && !this.$el.hasClass('hidden')) {
                 hljs.highlightAll();
             }
         },

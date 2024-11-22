@@ -23,6 +23,23 @@ class Action extends Base
 {
     protected $mandatorySelectAttributeList = ['targetEntity', 'data'];
 
+    public function executeRecordAction(string $id, string $entityId, string $actionName): array
+    {
+        $action = $this->getRepository()->where(['id' => $id])->findOne();
+        if (empty($action)) {
+            throw new NotFound();
+        }
+
+        $actionType = $this->getActionType($action->get('type'));
+
+        $method = "execute" . ucfirst($actionName);
+        if (!method_exists($actionType, $method)) {
+            throw new NotFound();
+        }
+
+        return $actionType->$method($action, $entityId);
+    }
+
     public function executeNow(string $id, \stdClass $input): array
     {
         $event = $this->dispatchEvent('beforeExecuteNow', new Event(['id' => $id, 'input' => $input]));
@@ -37,7 +54,8 @@ class Action extends Base
 
         $success = $this->getActionType($action->get('type'))->executeNow($action, $input);
         if ($success) {
-            $message = sprintf($this->getInjection('container')->get('language')->translate('actionExecuted', 'messages'), $action->get('name'));
+            $message = sprintf($this->getInjection('container')->get('language')->translate('actionExecuted',
+                'messages'), $action->get('name'));
         } else {
             $message = 'Something wrong';
         }
@@ -55,7 +73,8 @@ class Action extends Base
 
     public function updateEntity($id, $data)
     {
-        if (property_exists($data, '_link') && $data->_link === 'actions' && !empty($data->_id) && !empty($data->_sortedIds)) {
+        if (property_exists($data,
+                '_link') && $data->_link === 'actions' && !empty($data->_id) && !empty($data->_sortedIds)) {
             $collection = $this->getEntityManager()->getRepository('ActionSetLinker')
                 ->where([
                     'setId'    => $data->_id,

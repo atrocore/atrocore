@@ -1,10 +1,7 @@
 {
   "fields": {
     "subject": "Sujeto",
-    "body": "Cuerpo",
-    "allowAttachments": "Permitir archivos adjuntos",
-    "emailTo": "Email para",
-    "emailCc": "Enviar CC por correo electrónico"
+    "body": "Cuerpo"
   },
   "labels": {
     "send": "Enviar",
