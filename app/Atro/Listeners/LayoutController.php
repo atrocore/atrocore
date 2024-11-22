@@ -101,46 +101,6 @@ class LayoutController extends AbstractListener
         $event->setArgument('result', Json::encode($result));
     }
 
-    protected function modifyNotificationTemplateDetail(Event $event): void
-    {
-        if ($this->getContainer()->get('layout')->isCustom('NotificationTemplate', $event->getArgument('params')['name'])) {
-            return;
-        }
-
-        $result = Json::decode($event->getArgument('result'), true);
-        $newRows = [];
-        foreach ($result[0]['rows'] as $row) {
-            $newRows[] = $row;
-            if (in_array($row[0]['name'], ['subject', 'body'])) {
-                $languages = array_map(
-                    function($locale){
-                        return !empty($locale['language']) ? $locale['language'] : $this->getConfig()->get('mainLanguage');
-                    },
-                    $this->getConfig()->get('locales') ?? []
-                );
-
-                // avoid duplicated languages
-                $languages = array_unique($languages);
-
-                foreach ($languages as $language) {
-                    if ($language === $this->getConfig()->get('mainLanguage')) {
-                        continue;
-                    }
-                    $preparedLocale = ucfirst(Util::toCamelCase(strtolower($language)));
-                    $newRows[] = [['name' => $row[0]['name'] . $preparedLocale, 'fullWidth' => true]];
-                }
-            }
-        }
-        $result[0]['rows'] = $newRows;
-
-        $event->setArgument('result', Json::encode($result));
-    }
-
-    protected function modifyNotificationTemplateDetailSmall(Event $event): void
-    {
-        $this->modifyNotificationTemplateDetail($event);
-    }
-
     protected function modifyNotificationRuleDetail(Event $event): void
     {
 
