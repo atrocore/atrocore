@@ -32,7 +32,8 @@
     "fileCouldNotBeUploaded": "File could not be uploaded.",
     "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file.",
     "cannotDefineFileName": "The system cannot recognize the file name from the URL.",
-    "urlExpected": "Incorrect URL was given"
+    "urlExpected": "Incorrect URL was given",
+    "fileExtensionCorrectedAutomatically": "File extension was corrected automatically."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",

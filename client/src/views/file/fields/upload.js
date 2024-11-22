@@ -493,6 +493,10 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
                     file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<span class="fas fa-trash"></span>');
                 }
                 file.attachmentBox.find('.preview').html(`<a target="_blank" href="/#File/view/${entity.id}">${entity.name}</a>`);
+                if(entity.extensionCorrected) {
+                    let message = this.translate('fileExtensionCorrectedAutomatically', 'messages', 'File');
+                    $message.html(message);
+                }
                 if (entity.duplicate) {
                     let message = this.translate('fileHasDuplicate', 'messages', 'File').replace('{{id}}', entity.duplicate.id);
                     $message.html(message);
