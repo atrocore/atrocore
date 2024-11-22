@@ -15,9 +15,8 @@ namespace Atro\NotificationTransport;
 
 use Atro\Core\Container;
 use Atro\Core\Mail\Sender;
-use Atro\Entities\NotificationTemplate;
-use Atro\Core\Utils\Util;
 use Espo\Entities\User;
+use Espo\ORM\Entity;
 
 class EmailTransport extends AbstractNotificationTransport
 {
@@ -29,9 +28,9 @@ class EmailTransport extends AbstractNotificationTransport
         parent::__construct($container);
     }
 
-    public function send(User $user, NotificationTemplate $template, array $params): void
+    public function send(User $user, Entity $template, array $params): void
     {
-        if(empty($this->getConfig()->get('notificationSmtpConnectionId'))) {
+        if (empty($this->getConfig()->get('notificationSmtpConnectionId'))) {
             return;
         }
 
@@ -42,26 +41,14 @@ class EmailTransport extends AbstractNotificationTransport
         $language = $this->getUserLanguage($user);
         $this->addEntitiesAdditionalData($params, $language);
 
-        $subject = $template->get('subject');
-        $body = $template->get('body');
-
-        if (!empty($language) && $language !== $this->getConfig()->get('mainLanguage')) {
-            $suffix = ucfirst(Util::toCamelCase(strtolower($language)));
-            $field = 'subject' . $suffix;
-            if (!empty($template->get($field))) {
-                $subject = $template->get($field);
-            }
-            $field = 'body' . $suffix;
-            if (!empty($template->get($field))) {
-                $body = $template->get($field);
-            }
-        }
+        $subject = $template->get('subject') ?? '';
+        $body = $template->get('body') ?? '';
 
         $data = [
-            'to' => $user->get('emailAddress'),
+            'to'      => $user->get('emailAddress'),
             'subject' => $this->getTwig()->renderTemplate($subject, $params),
-            'body' => $this->getTwig()->renderTemplate($body, $params),
-            'isHtml' => true
+            'body'    => $this->getTwig()->renderTemplate($body, $params),
+            'isHtml'  => $template->get('isHtml') ?? true
         ];
 
         $this->sender->sendByJob($data);
