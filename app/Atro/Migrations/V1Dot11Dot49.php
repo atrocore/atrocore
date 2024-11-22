@@ -30,9 +30,8 @@ class V1Dot11Dot49 extends Base
 
     public function down(): void
     {
-        throw new Error('Downgrade is prohibited');
-    }
-
+        $this->exec("ALTER TABLE action DROP execute_as");
+}
     protected function exec(string $query): void
     {
         try {
