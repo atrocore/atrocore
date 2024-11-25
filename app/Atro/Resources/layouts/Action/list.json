@@ -11,5 +11,8 @@
   },
   {
     "name": "isActive"
+  },
+  {
+    "name": "executeAs"
   }
 ]

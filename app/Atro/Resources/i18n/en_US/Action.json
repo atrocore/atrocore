@@ -9,7 +9,8 @@
     "display": "Display",
     "actionsSet": "Actions Set",
     "actions": "Actions",
-    "webhookUrl": "URL"
+    "webhookUrl": "URL",
+    "executeAs": "Execute As"
   },
   "links": {
     "actionsSet": "Actions Set",
@@ -38,10 +39,15 @@
     "type": {
       "set": "Action Set",
       "webhook": "Webhook"
+    },
+    "executeAs": {
+      "system": "System",
+      "sameUser": "Same User"
     }
   },
   "tooltips": {
     "inBackground": "Action will be executed in background with no direct success/error message. Use it, if the action's execution till take more than 30 seconds.",
-    "usage": "Usage prescribes placement of the action. A Record Action requires the effected records to be preselected."
+    "usage": "Usage prescribes placement of the action. A Record Action requires the effected records to be preselected.",
+    "executeAs": "Specify which user the system will use to perform the action"
   }
 }

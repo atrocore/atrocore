@@ -28,6 +28,9 @@ class QueueManagerActionHandler extends QueueManagerBase
         if (empty($action->get('sourceEntity'))) {
             return true;
         }
+        if (!empty($data['sourceEntity'])) {
+            $action->set('sourceEntity', $data['sourceEntity']);
+        }
 
         /** @var Metadata $metadata */
         $metadata = $this->getContainer()->get('metadata');
