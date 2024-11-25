@@ -244,6 +244,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionInheritAllFromParent: function () {
+            this.confirm({
+                message: this.translate('confirmInheritAllFromParent', 'messages'),
+                confirmText: this.translate('Apply')
+            }, () => {
+                this.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest(this.scope + '/action/InheritAllFromParent', {id: this.model.id}).then(() => {
+                    this.notify('Done', 'success');
+                });
+            });
+        },
+
         actionDynamicAction: function (data) {
             const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
             if (defs && defs.type) {
@@ -396,10 +408,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.isHierarchical() && !this.model.isNew()) {
-                if (this.getAcl().check(this.entityType, 'edit')) {
+                if (this.getAcl().check(this.entityType, 'edit') && this.model.get('hasChildren')) {
                     this.dropdownItemList.push({
                         'label': 'inheritAllForChildren',
                         'name': 'inheritAllForChildren'
+                    });
+                }
+
+                if (this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true && this.model.get('parentId')) {
+                    this.dropdownItemList.push({
+                        'label': 'inheritAllFromParent',
+                        'name': 'inheritAllFromParent'
                     });
                 }
             }
