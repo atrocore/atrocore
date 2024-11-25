@@ -13,36 +13,16 @@ declare(strict_types=1);
 
 namespace Atro\NotificationTransport;
 
-use Atro\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 class SystemTransport extends AbstractNotificationTransport
 {
-
     public function send(User $user, Entity $template, array $params): void
     {
-        $data = [];
-        $mainLanguageMessage  = $template->get('body');
-        foreach ($this->getConfig()->get('locales') as $locale) {
-            $field = 'body';
-            $message = null;
-            if ($locale['language'] !== $this->getConfig()->get('mainLanguage')) {
-                $suffix = ucfirst(Util::toCamelCase(strtolower($locale['language'])));
-                $field .= $suffix;
-            }
-
-            if (!empty($template->get($field))) {
-                $this->addEntitiesAdditionalData($params, $locale['language']);
-                $message = $this->getTwig()->renderTemplate($template->get($field), $params);
-            }
-
-            $data[$locale['language']] = $message ?? $mainLanguageMessage;
-        }
         $notification = $this->getEntityManager()->getEntity('Notification');
-
-        $notification->set('type', 'TranslatedMessage');
-        $notification->set('data', $data);
+        $notification->set('type', 'Message');
+        $notification->set('message', $this->getTwig()->renderTemplate($template->get('body'), $params));
         $notification->set('userId', $user->get('id'));
         $notification->set('relatedId', $params['entity']->get('id'));
         $notification->set('relatedType', $params['entity']->getEntityType());
