@@ -134,9 +134,6 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
         getValueForDisplay() {
             let text = this.model.get(this.name);
-            if (this.mode === 'list') {
-                text = this.removeTags(text);
-            }
 
             if (this.mode === 'list' || (this.mode === 'detail' && (this.model.has('isHtml') && !this.model.get('isHtml')))) {
                 if (text && !this.showMoreText && !this.seeMoreDisabled) {
