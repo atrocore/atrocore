@@ -38,7 +38,7 @@ class NotificationRule extends Base
 
         if (!empty($templateIds)) {
             $templates = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('id, name, type')
+                ->select('id, name')
                 ->from('notification_template')
                 ->where('id in (:ids)')
                 ->andWhere('deleted = :false')
