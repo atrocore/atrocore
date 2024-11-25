@@ -1,7 +1,17 @@
 <?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
 
 namespace Atro\ActionTypes;
 
+use Atro\Core\ActionManager;
 use Atro\Core\Container;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\KeyValueStorages\StorageInterface;
@@ -12,6 +22,7 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\System;
 use Espo\ORM\Entity;
 
@@ -24,58 +35,13 @@ abstract class AbstractAction implements TypeInterface
         $this->container = $container;
     }
 
-    public function getExecuteAsUserId(Entity $action, \stdClass $input): ?string
-    {
-        switch ($action->get('executeAs')) {
-            case 'system':
-                return 'system';
-            case 'sameUser':
-                return null;
-        }
-
-        return null;
-    }
-
-    abstract public function execute(Entity $action, \stdClass $input): bool;
-
-    public function executeNow(Entity $action, \stdClass $input): bool
-    {
-        // prepare current user ID
-        $currentUserId = $this->container->get('user')->get('id');
-        $userChanged = false;
-
-        if (empty($this->getMemoryStorage()->get('importJobId')) &&
-            !empty($userId = $this->getExecuteAsUserId($action, $input))) {
-            $userChanged = $this->auth($userId);
-        }
-
-        $res = $this->execute($action, $input);
-
-        if ($userChanged) {
-            // auth as current user again
-            $this->auth($currentUserId);
-        }
-        return $res;
-    }
-
-    protected function auth(string $userId): bool
-    {
-        $user = $this->getEntityManager()->getRepository('User')->get($userId);
-        if (empty($user)) {
-            return false;
-        }
-        $this->getEntityManager()->setUser($user);
-        $this->container->setUser($user);
-        return true;
-    }
-
     public function createQueueItem(Entity $action, \stdClass $input): bool
     {
         if (!property_exists($input, 'where')) {
             return false;
         }
 
-        $data = ['actionId' => $action->get('id'), 'where' => $input->where];
+        $data = ['actionId' => $action->get('id'), 'sourceEntity' => $action->get('sourceEntity'), 'where' => $input->where];
         if (property_exists($input, 'actionSetLinkerId')) {
             $data['actionSetLinkerId'] = $input->actionSetLinkerId;
         }
@@ -127,6 +93,16 @@ abstract class AbstractAction implements TypeInterface
     protected function getMemoryStorage(): MemoryStorage
     {
         return $this->container->get('memoryStorage');
+    }
+
+    protected function getActionManager(): ActionManager
+    {
+        return $this->container->get('actionManager');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 
     public function getActionById(string $id): Entity
