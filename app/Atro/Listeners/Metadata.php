@@ -751,8 +751,8 @@ class Metadata extends AbstractListener
                     "notStorable"    => true,
                     "entity"         => $scope,
                     "emHidden"       => true,
-                    "exportDisabled" => true,
-                    "importDisabled" => true
+                    "exportDisabled" => false,
+                    "importDisabled" => false
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'], [
