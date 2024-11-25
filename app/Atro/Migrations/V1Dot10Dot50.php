@@ -1387,19 +1387,20 @@ Markiert als Eigentümer: [{{entityType}}] {{entity.name | raw}}
             if (!empty($rule['templates'])) {
                 $templates = $rule['templates'];
                 foreach ($templates as $type => $template) {
+                    if ($type === 'email') {
+                        continue;
+                    }
                     try {
                         $connection->createQueryBuilder()
                             ->insert('notification_template')
                             ->values([
                                 'id'   => ':id',
                                 'name' => ':name',
-                                'data' => ':data',
-                                'type' => ':type'
+                                'data' => ':data'
                             ])
                             ->setParameter('id', $template['id'])
                             ->setParameter('name', $template['name'])
                             ->setParameter('data', json_encode($template['data']))
-                            ->setParameter('type', $type)
                             ->executeStatement();
                     } catch (\Throwable $e) {
 

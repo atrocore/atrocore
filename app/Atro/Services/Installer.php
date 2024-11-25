@@ -16,12 +16,15 @@ namespace Atro\Services;
 use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
+use Atro\NotificationTransport\NotificationOccurrence;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Exceptions;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
@@ -705,6 +708,26 @@ class Installer extends HasContainer
         \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
 
         \Atro\Migrations\V1Dot10Dot50::createNotificationDefaultNotificationProfile($this->getEntityManager()->getConnection(), $this->getConfig());
+
+        // create default email templates
+        $emailTemplates = [];
+        foreach (\Atro\Migrations\V1Dot10Dot50::getDefaultRules() as $rule) {
+            if (!empty($rule['templates'])) {
+                $templates = $rule['templates'];
+                foreach ($templates as $type => $template) {
+                    if ($type !== 'email') {
+                        continue;
+                    }
+                    $emailTemplates[$template['id']]['id'] = $template['id'];
+                    $emailTemplates[$template['id']]['code'] = $template['id'];
+                    $emailTemplates[$template['id']]['name'] = $template['name'];
+                    $emailTemplates[$template['id']]['subject'] = $template['data']['field']['subject'] ?? '';
+                    $emailTemplates[$template['id']]['body'] = $template['data']['field']['body'] ?? '';
+                    $emailTemplates[$template['id']]['createdAt'] = date('Y-m-d H:i:s');
+                }
+            }
+        }
+        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json', json_encode($emailTemplates));
 
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate lists >/dev/null");
