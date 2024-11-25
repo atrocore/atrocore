@@ -286,7 +286,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.model.fetch();
             })
                 .error(error => {
-                    Espo.ui.error(error.responseText)
+                    let message = error.responseText
+                    if (!message && error.status === 403) {
+                        message = this.translate('Action Forbidden', 'labels')
+                    }
+                    this.notify(message, 'error')
                 })
         },
 
