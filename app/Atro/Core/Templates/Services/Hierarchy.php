@@ -104,6 +104,55 @@ class Hierarchy extends Record
         return true;
     }
 
+    public function inheritAllFromParent(string $id): bool
+    {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'], false)) {
+            throw new BadRequest();
+        }
+
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        $parents = $entity->get('parents');
+        if (empty($parents[0])) {
+            return false;
+        }
+
+        $inheritableFields = [];
+        $inheritableLinks = [];
+        foreach ($this->getRepository()->getInheritableFields() as $field) {
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) === 'linkMultiple') {
+                $inheritableLinks[] = $field;
+            } else {
+                $inheritableFields[] = $field;
+            }
+        }
+
+        foreach ($inheritableFields as $inheritableField) {
+            if ($entity->get($inheritableField) == null) {
+                try {
+                    $this->inheritField($inheritableField, $entity->get('id'));
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error('Inherit field failed: ' . $e->getMessage());
+                }
+            }
+        }
+
+        foreach ($inheritableLinks as $link) {
+            try {
+                $this->inheritAllForLink($entity->get('id'), $link);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('Inherit all for link failed: ' . $e->getMessage());
+            }
+        }
+
+        $this->dispatchEvent('inheritAllFromParent', new Event(['parent' => $parents[0], 'child' => $entity]));
+
+        return true;
+    }
+
     public function getTreeDataForSelectedNode(string $id): array
     {
         $treeBranches = [];
