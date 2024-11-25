@@ -59,7 +59,7 @@ class Download extends AbstractEntryPoint
         header("Cache-Control: public");
         header('Content-Type: application/octet-stream');
         header("Content-Length: {$file->get('fileSize')}");
-        header("Content-Disposition: attachment; filename={$file->get('name')}");
+        header("Content-Disposition: attachment; filename=\"{$file->get('name')}\"");
 
         $stream->rewind();
         while (!$stream->eof()) {
