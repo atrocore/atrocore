@@ -111,6 +111,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.uploadDisabled = this.options.uploadDisabled;
             }
 
+            this.hideTypeField = this.options.hideTypeField || this.params.hideTypeField;
+
             if (!this.uploadDisabled) {
                 if (!this.getAcl().check(this.foreignScope, 'create')) {
                     this.uploadDisabled = true;
@@ -280,6 +282,12 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.listenToOnce(view, 'close', () => {
                     this.clearView('upload');
                 });
+
+                if(this.hideTypeField){
+                    this.listenTo(view, 'after:render', () => {
+                        view.$el.find('[data-name="type"]').hide();
+                    })
+                }
             });
         },
 
