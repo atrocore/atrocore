@@ -20,6 +20,8 @@ class SystemTransport extends AbstractNotificationTransport
 {
     public function send(User $user, Entity $template, array $params): void
     {
+        $this->addEntitiesAdditionalData($params, $this->getLanguage()->getLanguage());
+
         $notification = $this->getEntityManager()->getEntity('Notification');
         $notification->set('type', 'Message');
         $notification->set('message', $this->getTwig()->renderTemplate($template->get('body'), $params));
