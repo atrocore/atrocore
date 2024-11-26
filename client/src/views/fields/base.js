@@ -251,7 +251,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             this.readOnly = this.readOnly || this.name === 'id' || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
-            this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
+            this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.model.getFieldParam(this.name, 'inlineEditDisabled') || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
             this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip') || (this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']));
