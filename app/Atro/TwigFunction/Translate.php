@@ -23,22 +23,17 @@ class Translate extends AbstractTwigFunction
     const FALLBACK_LANGUAGE = 'en_US';
 
     protected Language $language;
-
     public function __construct(Language $language)
     {
         $this->language = $language;
     }
-
-    public function run(string $value, ?string $languageCode = null, string $category = 'labels', string $scope = 'Global'): string
+    public function run(string $value, string $languageCode = 'en_US', string $category = 'labels', string $scope = 'Global'): string
     {
-        if (empty($languageCode)) {
-            $languageCode = 'en_US';
-        }
         $initialLanguage = $this->language->getLanguage();
         $this->language->setLanguage($languageCode);
         $translated = $this->language->translate($value, $category, $scope);
 
-        if ($translated === $value) {
+        if($translated === $value){
             $this->language->setLanguage(self::FALLBACK_LANGUAGE);
             return $this->language->translate($value, $category, $scope);
         }
