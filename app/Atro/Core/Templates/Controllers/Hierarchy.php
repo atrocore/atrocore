@@ -32,6 +32,19 @@ class Hierarchy extends AbstractRecordController
         return $this->getRecordService()->inheritAllForChildren((string)$data->id);
     }
 
+    public function actionInheritAllFromParent($params, $data, $request): bool
+    {
+        if (!$request->isPost() || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->inheritAllFromParent((string)$data->id);
+    }
+
     public function actionTree($params, $data, $request): array
     {
         if (!$request->isGet()) {

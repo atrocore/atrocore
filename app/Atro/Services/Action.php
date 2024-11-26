@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
@@ -52,7 +53,22 @@ class Action extends Base
             throw new NotFound();
         }
 
-        $success = $this->getActionType($action->get('type'))->executeNow($action, $input);
+        if (!empty($action->get('sourceEntity'))) {
+            $dynamicRecordAction = null;
+            foreach ($this->getMetadata()->get(['clientDefs', $action->get('sourceEntity'), 'dynamicRecordActions']) as $dra) {
+                if ($dra['id'] == $action->get('id')) {
+                    $dynamicRecordAction = $dra;
+                    break;
+                }
+            }
+            if (!empty($dynamicRecordAction['acl'])) {
+                if (!$this->getAcl()->check($dynamicRecordAction['acl']['scope'], $dynamicRecordAction['acl']['action'])) {
+                    throw new Forbidden();
+                }
+            }
+        }
+
+        $success = $this->getInjection('actionManager')->executeNow($action, $input);
         if ($success) {
             $message = sprintf($this->getInjection('container')->get('language')->translate('actionExecuted',
                 'messages'), $action->get('name'));
@@ -109,6 +125,7 @@ class Action extends Base
         parent::init();
 
         $this->addDependency('container');
+        $this->addDependency('actionManager');
     }
 
     protected function getActionType(string $type): TypeInterface

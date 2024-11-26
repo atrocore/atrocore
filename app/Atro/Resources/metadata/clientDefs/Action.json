@@ -123,6 +123,30 @@
             }
           ]
         }
+      },
+      "executeAs": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "set"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "set"
+              ]
+            }
+          ]
+        }
       }
     }
   }
