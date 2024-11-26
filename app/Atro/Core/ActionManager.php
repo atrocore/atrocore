@@ -51,7 +51,7 @@ class ActionManager
             $userChanged = $this->auth($userId);
         }
 
-        $res = $this->getActionType($action->get('type'))->executeNow($action,$input);
+        $res = $this->getActionType($action->get('type'))->executeNow($action, $input);
 
         if ($userChanged) {
             // auth as current user again
@@ -68,6 +68,7 @@ class ActionManager
         }
         $this->getEntityManager()->setUser($user);
         $this->container->setUser($user);
+        $this->container->get('acl')->setUser($user);
         return true;
     }
 
