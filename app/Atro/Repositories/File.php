@@ -39,6 +39,9 @@ class File extends Base
         // validate via type
         $this->validateByType($entity);
 
+        //validate via allow types of relation
+        $this->validateByTypeUsingAllowFileTypes($entity);
+
         // validate file name
         $this->validateItemName($entity);
 
@@ -465,6 +468,39 @@ class File extends Base
         }
 
         return $url;
+    }
+
+    protected function validateByTypeUsingAllowFileTypes(FileEntity $file): void
+    {
+        if (!empty($file->get('typeId')) || empty($file->_input) || empty($file->_input->_uploadForEntityData->scope) || empty($file->_input->_uploadForEntityData->link)) {
+            return;
+        }
+
+        $allowFileTypesIds = $this->getMetadata()->get(['entityDefs', $file->_input->_uploadForEntityData->scope, 'fields', $file->_input->_uploadForEntityData->link, 'allowFileTypesIds']);
+
+        if(empty($allowFileTypesIds)) {
+            return;
+        }
+
+        $isValid = false;
+        $message = "";
+        foreach ($allowFileTypesIds as $typeId){
+            try{
+                $fileType = $this->getEntityManager()->getRepository('FileType')->get($typeId);
+                $this->getFileValidator()->validateFile($fileType, $file, true);
+                $isValid = true;
+                break;
+            }catch (\Throwable $e){
+                if(!empty($message)){
+
+                    $message .= ' | ' ;
+                }
+                $message .= $e->getMessage();
+            }
+        }
+        if(!$isValid) {
+            throw new BadRequest($message);
+        }
     }
 
     protected function assignTheFileTypeAutomatically(Entity $entity): void

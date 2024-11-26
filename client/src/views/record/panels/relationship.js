@@ -837,6 +837,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 createAttributes.teamsNames = this.model.get('teamsNames') || null;
             }
 
+            createAttributes._uploadForEntityData = {
+                scope: this.model.urlRoot,
+                link: this.link
+            }
+
             this.notify('Loading...');
             this.createView('upload', 'views/file/modals/upload', {
                 scope: 'File',
