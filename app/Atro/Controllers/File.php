@@ -81,6 +81,8 @@ class File extends Base
             throw new Forbidden();
         }
 
+        $data->fromApi = true;
+
         return $this->getRecordService()->createEntity($data);
     }
 

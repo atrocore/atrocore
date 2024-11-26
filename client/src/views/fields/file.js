@@ -50,6 +50,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         accept: false,
 
+        shouldAvoidAutomaticalExtensionUpdate : false,
+
         events: {
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
@@ -110,8 +112,6 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             if ('uploadDisabled' in this.options) {
                 this.uploadDisabled = this.options.uploadDisabled;
             }
-
-            this.hideTypeField = this.options.hideTypeField || this.params.hideTypeField;
 
             if (!this.uploadDisabled) {
                 if (!this.getAcl().check(this.foreignScope, 'create')) {
@@ -282,18 +282,13 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.listenToOnce(view, 'close', () => {
                     this.clearView('upload');
                 });
-
-                if(this.hideTypeField){
-                    this.listenTo(view, 'after:render', () => {
-                        view.$el.find('[data-name="type"]').hide();
-                    })
-                }
             });
         },
 
         getCreateAttributes: function () {
             let res = {
-                accept: this.accept
+                accept: this.accept,
+                shouldAvoidAutomaticalExtensionUpdate : this.shouldAvoidAutomaticalExtensionUpdate 
             };
 
             if (this.fileTypeId) {
