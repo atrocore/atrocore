@@ -66,6 +66,10 @@ class ActionManager
         if (empty($user)) {
             return false;
         }
+        if ($userId === 'system') {
+            $user->set('isAdmin', true);
+            $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+        }
         $this->getEntityManager()->setUser($user);
         $this->container->setUser($user);
         $this->container->get('acl')->setUser($user);
