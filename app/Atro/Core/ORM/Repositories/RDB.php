@@ -456,10 +456,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function prepareFieldTypeWysiwyg(Entity $entity, string $fieldName, array $fieldData): void
     {
         if ($entity->isAttributeChanged($fieldName) && !empty($fieldData['htmlSanitizerId'])) {
-            /** @var \Atro\Services\HtmlSanitizer $service */
-            $service = $this->getInjection('container')->get('serviceFactory')->create('HtmlSanitizer');
+            /** @var \Atro\Core\Templates\Entities\ReferenceData $htmlSanitizer */
+            $htmlSanitizer = $this->getEntityManager()->getRepository('HtmlSanitizer')->get($fieldData['htmlSanitizerId']);
 
-            $safeHtml = $service->sanitize($fieldData['htmlSanitizerId'], $entity->get($fieldName));
+            /** @var \Atro\Core\Utils\HTMLSanitizer $htmlSanitizerUtil */
+            $htmlSanitizerUtil = $this->getInjection('container')->get('htmlSanitizer');
+
+            $safeHtml = $htmlSanitizerUtil->sanitize($entity->get($fieldName), $htmlSanitizer->get('configuration'));
             $entity->set($fieldName, $safeHtml);
         }
     }

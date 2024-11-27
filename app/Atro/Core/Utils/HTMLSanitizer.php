@@ -13,12 +13,19 @@ namespace Atro\Core\Utils;
 
 use Symfony\Component\HtmlSanitizer\HtmlSanitizer as BaseHtmlSanitizer;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 class HTMLSanitizer
 {
-    public function sanitize(string $content, array $params = []): string
+    public function sanitize(string $content, string $paramsString): string
     {
-        if (empty($content) || empty($params)) {
+        if (empty($content) || empty($paramsString)) {
+            return $content;
+        }
+
+        $params = $this->parse($paramsString);
+        if (empty($params)) {
             return $content;
         }
 
@@ -32,6 +39,23 @@ class HTMLSanitizer
         }
 
         return $sanitized;
+    }
+
+    public function parse(string $configuration)
+    {
+        $result = null;
+
+        try {
+            $result = Yaml::parse($configuration);
+        } catch (ParseException $e) {
+            $GLOBALS['log']->error("Failed to parse HTML sanitizer YAML configuration: " . $e->getMessage());
+        }
+
+        if (!is_array($result)) {
+            $result = null;
+        }
+
+        return $result;
     }
 
     protected function getConfig(array $params): HtmlSanitizerConfig

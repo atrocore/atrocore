@@ -25,6 +25,7 @@ class HtmlSanitizer extends ReferenceData
 
         $this->addDependency('language');
         $this->addDependency('serviceFactory');
+        $this->addDependency('htmlSanitizer');
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -32,7 +33,7 @@ class HtmlSanitizer extends ReferenceData
         parent::beforeSave($entity, $options);
 
         if ($entity->isAttributeChanged('configuration') && !empty($entity->get('configuration'))) {
-            $parsed = $this->getService()->parseConfiguration($entity);
+            $parsed = $this->getHtmlSanitizer()->parse($entity->get('configuration'));
 
             if (!is_array($parsed)) {
                 throw new BadRequest($this->getInvalidYamlMessage());
@@ -50,8 +51,8 @@ class HtmlSanitizer extends ReferenceData
         return $this->getInjection('language');
     }
 
-    protected function getService(): \Atro\Services\HtmlSanitizer
+    protected function getHtmlSanitizer(): \Atro\Core\Utils\HTMLSanitizer
     {
-        return $this->getInjection('serviceFactory')->create($this->entityName);
+        return $this->getInjection('htmlSanitizer');
     }
 }
