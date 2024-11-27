@@ -185,7 +185,8 @@
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
     "setDefaultOnlyIfRequired": "Wenden Sie den Standardwert nur bei Bedarf an",
     "dropdown": "Runterfallen",
-    "notNull": "Deaktivieren Nullwert"
+    "notNull": "Deaktivieren Nullwert",
+    "allowFileTypes": "Dateitypen zulassen"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",

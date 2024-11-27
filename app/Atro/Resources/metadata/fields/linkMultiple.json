@@ -24,6 +24,11 @@
       "hidden": true
     },
     {
+      "name": "allowFileTypes",
+      "type": "linkMultiple",
+      "view": "views/admin/field-manager/fields/linkMultiple/allow-file-types"
+    },
+    {
       "name": "readOnly",
       "type": "bool"
     }

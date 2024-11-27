@@ -4,6 +4,9 @@
   "boolFilterList": [
     "onlyMy"
   ],
+  "hiddenBoolFilterList": [
+    "onlyAllowFileTypes"
+  ],
   "relationshipPanels": {
     "validationRules": {
       "select": false,

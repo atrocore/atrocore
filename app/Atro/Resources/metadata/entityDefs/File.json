@@ -163,6 +163,7 @@
     },
     "type": {
       "type": "link",
+      "view": "views/file/fields/type",
       "required": false
     },
     "uploadUrl": {
