@@ -50,6 +50,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         accept: false,
 
+        shouldAvoidAutomaticalExtensionUpdate : false,
+
         events: {
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
@@ -285,7 +287,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         getCreateAttributes: function () {
             let res = {
-                accept: this.accept
+                accept: this.accept,
+                shouldAvoidAutomaticalExtensionUpdate : this.shouldAvoidAutomaticalExtensionUpdate 
             };
 
             if (this.fileTypeId) {

@@ -485,6 +485,14 @@ class File extends Base
 
     protected function automaticallyCorrectExtension(Entity $entity): void
     {
+        if(empty($entity->_input->fromApi)) {
+            return;
+        }
+
+        if(!empty($entity->_input->shouldAvoidAutomaticalExtensionUpdate )) {
+            return;
+        }
+
         $mimes = $this->getMetadata()->get(['app', 'mimeTypeToExtensions'], []);
         if(empty($mimes[$entity->get('mimeType')]) or !is_array($mimes[$entity->get('mimeType')])) {
             return;
