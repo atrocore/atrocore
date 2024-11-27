@@ -482,15 +482,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         getHeader: function () {
-            let nameColumn = 'name';
-
-            if (this.getConfig().get('isMultilangActive') && this.model.getFieldParam('name', 'isMultilang')) {
-                var language = this.getPreferences().get('language') || this.getConfig().get('language');
-                if (language && language !== this.getConfig().get('mainLanguage')) {
-                    nameColumn = 'name' + Espo.Utils.upperCaseFirst(Espo.Utils.hyphenToCamelCase(language.toLowerCase().replace('_', '-')));
-                }
-            }
-            let name = Handlebars.Utils.escapeExpression(this.model.get(nameColumn) ?? this.model.get('name'));
+            let name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
             if (name === '') {
                 name = this.model.id;
