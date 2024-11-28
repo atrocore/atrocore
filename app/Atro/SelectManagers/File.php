@@ -57,7 +57,7 @@ class File extends Base
 
     protected function boolFilterOnlyType(&$result)
     {
-        $typeId = (string)$this->getBoolFilterParameter('onlyType');
+        $typeId = $this->getBoolFilterParameter('onlyType');
         if (empty($typeId)) {
             return;
         }
