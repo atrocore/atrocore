@@ -807,7 +807,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     }
 
                     if ($entity->has($fieldName)) {
-                        $specifiedIds = $entity->get($fieldName);
+                        $specifiedIds = $entity->get($fieldName) ?? [];
                     } else {
                         $specifiedIds = [];
                         foreach ($entity->get($columnsFieldsName) as $id => $d) {
