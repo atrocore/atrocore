@@ -15,6 +15,7 @@ namespace Atro\NotificationTransport;
 
 use Atro\Core\Container;
 use Atro\Core\Mail\Sender;
+use Atro\Core\Utils\NotificationManager;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 
@@ -39,15 +40,17 @@ class EmailTransport extends AbstractNotificationTransport
         }
 
         $language = $this->getUserLanguage($user);
-        $this->addEntitiesAdditionalData($params, $language);
+        $this->addEntitiesAdditionalData($params, $language, true);
 
         $subject = $template->get('subject') ?? '';
         $body = $template->get('body') ?? '';
 
         $data = [
             'to'      => $user->get('emailAddress'),
-            'subject' => $this->getTwig()->renderTemplate($subject, $params),
-            'body'    => $this->getTwig()->renderTemplate($body, $params),
+            'subject' => $subject,
+            'body'    => $body,
+            'notificationParams' => $params,
+            'shouldBeRendered' => true,
             'isHtml'  => $template->get('isHtml') ?? true
         ];
 

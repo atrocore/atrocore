@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Utils\NotificationManager;
+use Atro\NotificationTransport\EmailTransport;
+use Atro\NotificationTransport\NotificationOccurrence;
 use Espo\ORM\Entity;
 
 class QueueManagerEmailSender extends QueueManagerBase
@@ -29,6 +32,14 @@ class QueueManagerEmailSender extends QueueManagerBase
         if (empty($connectionEntity) || empty($connectionEntity->id)) {
             $GLOBALS['log']->error("SMTP Connection entity not found : " . $data['connectionId']);
             return true;
+        }
+
+        if(!empty($params['shouldBeRendered']) && !empty($params['notificationParams']) &&  !empty($params['subject']) && !empty($params['body']) ) {
+            $emailTransport = $this->getContainer()->get(EmailTransport::class);
+            $params['subject'] = $emailTransport->renderTemplate($params['subject'], $params['notificationParams']);
+            $params['body'] = $emailTransport->renderTemplate($params['body'], $params['notificationParams']);
+            unset($params['notificationParams']);
+            unset($params['shouldBeRendered']);
         }
 
         try {

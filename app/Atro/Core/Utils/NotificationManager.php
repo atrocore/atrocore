@@ -196,13 +196,6 @@ class NotificationManager
                 }
 
                 if (empty($dataForTemplate)) {
-                    if ($occurrence === NotificationOccurrence::UPDATE) {
-                        $updateData = $this->getUpdateData($entity);
-                        if (empty($updateData)) {
-                            break;
-                        }
-                        $params['updateData'] = $updateData;
-                    }
                     $dataForTemplate = array_merge($this->transformData($params), [
                         "occurrence" => $occurrence,
                         "actionUser" => $actionUser,
@@ -507,7 +500,7 @@ class NotificationManager
         return $this->teamMembers[$key] = $teamsIds;
     }
 
-    protected function getUpdateData(Entity $entity): ?array
+    public function getUpdateData(Entity $entity): ?array
     {
         $data = $this->getNoteUtil()->getChangedFieldsData($entity);
 
@@ -519,15 +512,11 @@ class NotificationManager
             return null;
         }
 
-        $container = (new \Atro\Core\Application())->getContainer();
-        $auth = new \Espo\Core\Utils\Auth($container);
-        $auth->useNoAuth();
-
         $data = json_decode(json_encode($data));
 
         $tmpEntity = $this->getEntityManager()->getEntity('Note');
 
-        $container->get('serviceFactory')->create('Stream')->handleChangedData($data, $tmpEntity, $entity->getEntityType());
+        $this->container->get('serviceFactory')->create('Stream')->handleChangedData($data, $tmpEntity, $entity->getEntityType());
 
         $data = json_decode(json_encode($data), true);
 
