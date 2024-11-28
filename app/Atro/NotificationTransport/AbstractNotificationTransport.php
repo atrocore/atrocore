@@ -16,10 +16,10 @@ namespace Atro\NotificationTransport;
 use Atro\Core\Container;
 use Atro\Core\Twig\Twig;
 use Atro\Core\Utils\NotificationManager;
-use Atro\Entities\NotificationTemplate;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 
@@ -84,14 +84,60 @@ abstract class AbstractNotificationTransport
             }
         }
         unset($notificationParams['entityKeys']);
-        if(!empty($notificationParams['entity']) && !empty($notificationParams['occurrence']) && $notificationParams['occurrence'] === NotificationOccurrence::UPDATE) {
-            $updateData = $this->container->get(NotificationManager::class)->getUpdateData($notificationParams['entity']);
+        if(!empty($notificationParams['entity'])
+            && !empty($notificationParams['occurrence'])
+            && $notificationParams['occurrence'] === NotificationOccurrence::UPDATE
+            && !empty($notificationParams['changedFieldsData'])) {
+            $updateData = $this->getUpdateData(
+                $notificationParams['entity'],
+                $notificationParams['changedFieldsData']
+            );
             if(!empty($updateData)){
                 $notificationParams['updateData'] = $updateData;
             }
         }
 
         return $this->regeneratedParams = $notificationParams;
+    }
+
+    protected function getUpdateData(Entity $entity, array $data): ?array
+    {
+
+        if (empty($data['fields']) || empty($data['attributes']['was']) || empty($data['attributes']['became'])) {
+            return null;
+        }
+
+        if(count($data['fields']) === 1 && in_array('modifiedBy',$data['fields'])){
+            return null;
+        }
+
+        $data = json_decode(json_encode($data));
+
+        $tmpEntity = $this->getEntityManager()->getEntity('Note');
+
+        $this->container->get('serviceFactory')->create('Stream')->handleChangedData($data, $tmpEntity, $entity->getEntityType());
+
+        $data = json_decode(json_encode($data), true);
+
+        foreach ($tmpEntity->get('fieldDefs') as $key => $fieldDefs) {
+            if (!empty($fieldDefs['type'])) {
+                $data['fieldTypes'][$key] = $fieldDefs['type'];
+            }
+            if ($fieldDefs['type'] == 'link') {
+                $data['linkDefs'][$key] = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $key]);
+            }
+        }
+
+        $data['diff'] = $tmpEntity->get('diff');
+        $data['fieldDefs'] = $tmpEntity->get('fieldDefs');
+        sort($data['fields']);
+
+        return $data;
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 
     protected function getTwig(): Twig

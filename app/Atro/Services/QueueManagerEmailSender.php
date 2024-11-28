@@ -34,12 +34,12 @@ class QueueManagerEmailSender extends QueueManagerBase
             return true;
         }
 
-        if(!empty($params['shouldBeRendered']) && !empty($params['notificationParams']) &&  !empty($params['subject']) && !empty($params['body']) ) {
+        if(!empty($emailData['shouldBeRendered']) && !empty($emailData['notificationParams']) &&  !empty($emailData['subject']) && !empty($emailData['body']) ) {
             $emailTransport = $this->getContainer()->get(EmailTransport::class);
-            $params['subject'] = $emailTransport->renderTemplate($params['subject'], $params['notificationParams']);
-            $params['body'] = $emailTransport->renderTemplate($params['body'], $params['notificationParams']);
-            unset($params['notificationParams']);
-            unset($params['shouldBeRendered']);
+            $emailData['subject'] = $emailTransport->renderTemplate($emailData['subject'], $emailData['notificationParams']);
+            $emailData['body'] = $emailTransport->renderTemplate($emailData['body'], $emailData['notificationParams']);
+            unset($emailData['notificationParams']);
+            unset($emailData['shouldBeRendered']);
         }
 
         try {
