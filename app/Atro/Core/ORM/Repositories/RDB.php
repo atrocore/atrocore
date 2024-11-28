@@ -874,6 +874,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             }
                         }
 
+                        foreach ($toRemoveIds as $id) {
+                            $this->unrelate($entity, $name, $id, $options);
+                        }
+
                         foreach ($specifiedIds as $id) {
                             if (!in_array($id, $existingIds)) {
                                 $data = null;
@@ -887,9 +891,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             }
                         }
 
-                        foreach ($toRemoveIds as $id) {
-                            $this->unrelate($entity, $name, $id, $options);
-                        }
                         if (!empty($columns)) {
                             foreach ($toUpdateIds as $id) {
                                 $data = $columnData->$id;
