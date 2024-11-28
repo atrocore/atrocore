@@ -15,7 +15,6 @@ namespace Atro\NotificationTransport;
 
 use Atro\Core\Container;
 use Atro\Core\Twig\Twig;
-use Atro\Core\Utils\NotificationManager;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
@@ -27,7 +26,7 @@ abstract class AbstractNotificationTransport
 {
     protected Container $container;
 
-    protected ?array $regeneratedParams = null;
+    protected array $regeneratedParams = [];
 
     public function __construct(Container $container)
     {
@@ -70,8 +69,9 @@ abstract class AbstractNotificationTransport
 
     protected function getRegeneratedParams($params): array
     {
-        if(!empty($this->regeneratedParams)) {
-            return $this->regeneratedParams;
+        $hash = md5(json_encode($params));
+        if(!empty($this->regeneratedParams[$hash])) {
+            return $this->regeneratedParams[$hash];
         }
         $notificationParams = $params;
         $entityKeys = !empty($notificationParams['entityKeys']) ? $notificationParams['entityKeys'] : [];
@@ -83,21 +83,20 @@ abstract class AbstractNotificationTransport
                 $notificationParams[$key] = $this->getEntityManager()->getEntity($notificationParams[$key . 'Type'], $notificationParams[$key . 'Id']);
             }
         }
+
         unset($notificationParams['entityKeys']);
+
         if(!empty($notificationParams['entity'])
             && !empty($notificationParams['occurrence'])
             && $notificationParams['occurrence'] === NotificationOccurrence::UPDATE
             && !empty($notificationParams['changedFieldsData'])) {
-            $updateData = $this->getUpdateData(
-                $notificationParams['entity'],
-                $notificationParams['changedFieldsData']
-            );
+            $updateData = $this->getUpdateData($notificationParams['entity'], $notificationParams['changedFieldsData']);
             if(!empty($updateData)){
                 $notificationParams['updateData'] = $updateData;
             }
         }
 
-        return $this->regeneratedParams = $notificationParams;
+        return $this->regeneratedParams[$hash] = $notificationParams;
     }
 
     protected function getUpdateData(Entity $entity, array $data): ?array

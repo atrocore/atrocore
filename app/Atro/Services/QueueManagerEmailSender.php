@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\Utils\NotificationManager;
 use Atro\NotificationTransport\EmailTransport;
-use Atro\NotificationTransport\NotificationOccurrence;
 use Espo\ORM\Entity;
 
 class QueueManagerEmailSender extends QueueManagerBase

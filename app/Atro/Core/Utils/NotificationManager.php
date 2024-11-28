@@ -208,7 +208,6 @@ class NotificationManager
                     }
                 }
 
-
                 $dataForTemplate['notifyUser'] = $user;
 
                 $this->sendNotificationsToTransports(

@@ -15,7 +15,6 @@ namespace Atro\NotificationTransport;
 
 use Atro\Core\Container;
 use Atro\Core\Mail\Sender;
-use Atro\Core\Utils\NotificationManager;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 
