@@ -23,6 +23,8 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
         originalName: null,
 
+        selectBoolFilterList : [],
+
         setup: function () {
             if (this.nameName == null) {
                 this.nameName = this.name + 'Name';
@@ -30,6 +32,18 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
             if (this.idName == null) {
                 this.idName = this.name + 'Id';
+            }
+
+            if (this.options.customBoolFilterData) {
+                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
+            }
+
+            if (this.options.customSelectBoolFilters) {
+                this.options.customSelectBoolFilters.forEach(item => {
+                    if (!this.selectBoolFilterList.includes(item)) {
+                        this.selectBoolFilterList.push(item);
+                    }
+                });
             }
 
             this.prepareDefaultValue();
@@ -59,13 +73,15 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
         prepareOptionsList: function () {
             this.params.options = [];
             this.translatedOptions = {};
+            this.params.optionColors = [];
 
-            this.getLinkOptions(this.foreignScope).forEach(option => {
+            this.getLinkOptions(this.foreignScope, this.getWhereFilter()).forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option[this.foreignName] || option.id;
+                    this.translatedOptions[option.id] = option.name || option.id;
+                    this.params.optionColors.push(option.color || null);
                 }
-            });
+            })
         },
 
         getValueForDisplay: function () {
@@ -74,6 +90,10 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
         getLabelText: function () {
             return this.options.labelText || this.translate(this.originalName, 'fields', this.model.name);
+        },
+
+        getWhereFilter() {
+            return [];
         }
     });
 });

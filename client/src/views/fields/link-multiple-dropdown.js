@@ -23,12 +23,26 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
 
         originalName: null,
 
+        selectBoolFilterList: [],
+
         setup: function () {
             if (this.namesName === null) {
                 this.namesName = this.name + 'Names';
             }
             if (this.idsName === null) {
                 this.idsName = this.name + 'Ids';
+            }
+
+            if (this.options.customBoolFilterData) {
+                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
+            }
+
+            if (this.options.customSelectBoolFilters) {
+                this.options.customSelectBoolFilters.forEach(item => {
+                    if (!this.selectBoolFilterList.includes(item)) {
+                        this.selectBoolFilterList.push(item);
+                    }
+                });
             }
 
             this.prepareDefaultValue();
@@ -58,6 +72,17 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
 
         prepareOptionsList: function () {
             Link.prototype.prepareOptionsList.call(this);
+            if(this.mode === 'edit') {
+                let newValues = [];
+                (this.model.get(this.idsName) ?? []).forEach((id) => {
+                    if((this.params.options ?? []).includes(id)){
+                        newValues.push(id);
+                    }
+                })
+                if ((this.model.get(this.idsName) ?? []).length  !== newValues.length) {
+                    this.model.set(this.idsName, newValues);
+                }
+            }
         },
 
         getLabelText: function () {
