@@ -25,6 +25,8 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
         selectBoolFilterList : [],
 
+        boolFilterData: {},
+
         setup: function () {
             if (this.nameName == null) {
                 this.nameName = this.name + 'Name';

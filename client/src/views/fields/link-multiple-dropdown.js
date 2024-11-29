@@ -25,6 +25,8 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
 
         selectBoolFilterList: [],
 
+        boolFilterData: {},
+
         setup: function () {
             if (this.namesName === null) {
                 this.namesName = this.name + 'Names';

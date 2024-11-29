@@ -576,6 +576,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 primaryFilterName = primaryFilterName.call(this);
             }
 
+
             var dataBoolFilterList = data.boolFilterList;
             if (typeof data.boolFilterList == 'string') {
                 dataBoolFilterList = data.boolFilterList.split(',');
@@ -591,7 +592,6 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             if (typeof boolFilterList == 'function') {
                 boolFilterList = boolFilterList.call(this);
             }
-
 
             if (boolFilterListCallback && panelView && typeof panelView[boolFilterListCallback] === 'function') {
                 boolFilterList = _.extend(boolFilterList, panelView[boolFilterListCallback]());
