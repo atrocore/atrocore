@@ -423,7 +423,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         getSelectBoolFilterList() {
             if(this.scope === 'File'){
-                return _.extend(this.defs.selectBoolFilterList, ['onlyType'])
+                return _.extend(this.defs.selectBoolFilterList ?? [], ['onlyType'])
             }
             return this.defs.selectBoolFilterList || null
         },
