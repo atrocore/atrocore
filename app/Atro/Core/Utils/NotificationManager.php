@@ -196,13 +196,6 @@ class NotificationManager
                 }
 
                 if (empty($dataForTemplate)) {
-                    if ($occurrence === NotificationOccurrence::UPDATE) {
-                        $updateData = $this->getUpdateData($entity);
-                        if (empty($updateData)) {
-                            break;
-                        }
-                        $params['updateData'] = $updateData;
-                    }
                     $dataForTemplate = array_merge($this->transformData($params), [
                         "occurrence" => $occurrence,
                         "actionUser" => $actionUser,
@@ -210,6 +203,9 @@ class NotificationManager
                         "entity" => $entity,
                         "parent" => $parent
                     ]);
+                    if($occurrence === NotificationOccurrence::UPDATE) {
+                        $dataForTemplate['changedFieldsData'] = $this->getNoteUtil()->getChangedFieldsData($entity);
+                    }
                 }
 
                 $dataForTemplate['notifyUser'] = $user;
@@ -505,46 +501,6 @@ class NotificationManager
         $teamsIds = $entity->getLinkMultipleIdList('teams');
 
         return $this->teamMembers[$key] = $teamsIds;
-    }
-
-    protected function getUpdateData(Entity $entity): ?array
-    {
-        $data = $this->getNoteUtil()->getChangedFieldsData($entity);
-
-        if (empty($data['fields']) || empty($data['attributes']['was']) || empty($data['attributes']['became'])) {
-            return null;
-        }
-
-        if(count($data['fields']) === 1 && in_array('modifiedBy',$data['fields'])){
-            return null;
-        }
-
-        $container = (new \Atro\Core\Application())->getContainer();
-        $auth = new \Espo\Core\Utils\Auth($container);
-        $auth->useNoAuth();
-
-        $data = json_decode(json_encode($data));
-
-        $tmpEntity = $this->getEntityManager()->getEntity('Note');
-
-        $container->get('serviceFactory')->create('Stream')->handleChangedData($data, $tmpEntity, $entity->getEntityType());
-
-        $data = json_decode(json_encode($data), true);
-
-        foreach ($tmpEntity->get('fieldDefs') as $key => $fieldDefs) {
-            if (!empty($fieldDefs['type'])) {
-                $data['fieldTypes'][$key] = $fieldDefs['type'];
-            }
-            if ($fieldDefs['type'] == 'link') {
-                $data['linkDefs'][$key] = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $key]);
-            }
-        }
-
-        $data['diff'] = $tmpEntity->get('diff');
-        $data['fieldDefs'] = $tmpEntity->get('fieldDefs');
-        sort($data['fields']);
-
-        return $data;
     }
 
     protected function getNotificationRuleRepository(): NotificationRule
