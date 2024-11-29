@@ -831,18 +831,20 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return Espo[key];
         },
 
-        getLinkOptions(scope) {
+        getLinkOptions(scope, whereParams = []) {
             if (!scope) {
                 return [];
             }
 
-            let key = 'link_' + scope;
+            let hash = this.simpleHash(JSON.stringify(whereParams))
+            let key = 'link_' + scope + hash;
 
             if (!Espo[key]) {
                 Espo[key] = [];
                 this.ajaxGetRequest(scope, {
                     offset: 0,
-                    maxSize: 100
+                    maxSize: 100,
+                    where: whereParams
                 }, {async: false}).then(res => {
                     if (res.list) {
                         Espo[key] = res.list;
@@ -992,5 +994,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.filterValue;
         },
 
+        simpleHash(str) {
+            let hash = 5381;
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash * 33) ^ str.charCodeAt(i);
+            }
+            return hash >>> 0; // Ensure it's a 32-bit unsigned integer
+        }
     });
 });
