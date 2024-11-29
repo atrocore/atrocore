@@ -79,6 +79,16 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             Dep.prototype.setup.call(this);
         },
 
+        getBoolFilterData() {
+            let data = {};
+            this.selectBoolFilterList.forEach(item => {
+                if (typeof this.boolFilterData[item] === 'function') {
+                    data[item] = this.boolFilterData[item].call(this);
+                }
+            });
+            return data;
+        },
+
         data() {
             let data = Dep.prototype.data.call(this);
 

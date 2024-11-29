@@ -20,20 +20,6 @@ Espo.define('views/fields/extensible-enum-dropdown', 'views/fields/link-dropdown
             Dep.prototype.setup.call(this);
         },
 
-        prepareOptionsList() {
-            this.params.options = [];
-            this.translatedOptions = {};
-            this.params.optionColors = [];
-
-            this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
-                if (option.id) {
-                    this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option.name || option.id;
-                    this.params.optionColors.push(option.color || null);
-                }
-            });
-        },
-
         getExtensibleEnumId() {
             let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
             if (this.params.extensibleEnumId) {
@@ -41,6 +27,36 @@ Espo.define('views/fields/extensible-enum-dropdown', 'views/fields/link-dropdown
             }
 
             return extensibleEnumId;
+        },
+
+        getBoolFilterData() {
+            let data = {};
+            this.selectBoolFilterList.forEach(item => {
+                if (typeof this.boolFilterData[item] === 'function') {
+                    data[item] = this.boolFilterData[item].call(this);
+                }
+            });
+            return data;
+        },
+
+        getWhereFilter() {
+            let boolWhere = {
+                type: 'bool',
+                value:['onlyForExtensibleEnum'],
+                data:{
+                    'onlyForExtensibleEnum': this.getExtensibleEnumId()
+                }
+            };
+
+            if( Array.isArray(this.selectBoolFilterList) && this.selectBoolFilterList.length > 0) {
+                boolWhere.value.push(...this.selectBoolFilterList);
+            }
+
+            let boolData = this.getBoolFilterData();
+            if (boolData && Object.keys(boolData).length > 0) {
+                boolWhere.data = {...boolWhere.data, ...boolData}
+            }
+            return [boolWhere];
         }
     });
 });
