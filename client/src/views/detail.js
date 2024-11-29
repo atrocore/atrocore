@@ -534,6 +534,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             var scope = this.model.defs['links'][link].entity;
             var foreign = this.model.defs['links'][link].foreign;
             let type = this.model.defs['links'][link].type;
+            let panelView = this.getPanelView(link);
+            let boolFilterListCallback = data.boolFilterListCallback;
+            let boolFilterDataCallback = data.boolFilterDataCallback;
 
             var massRelateEnabled = this.getMetadata().get('clientDefs.' + this.scope + '.relationshipPanels.' + link + '.massRelateEnabled')
             let selectDuplicateEnabled = false;
@@ -573,7 +576,6 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 primaryFilterName = primaryFilterName.call(this);
             }
 
-
             var dataBoolFilterList = data.boolFilterList;
             if (typeof data.boolFilterList == 'string') {
                 dataBoolFilterList = data.boolFilterList.split(',');
@@ -590,6 +592,14 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 boolFilterList = boolFilterList.call(this);
             }
 
+            if (boolFilterListCallback && panelView && typeof panelView[boolFilterListCallback] === 'function') {
+                boolFilterList = _.extend(boolFilterList, panelView[boolFilterListCallback]());
+            }
+            let boolFilterData = {}
+            if (boolFilterDataCallback && panelView && typeof panelView[boolFilterDataCallback] === 'function') {
+                boolFilterData = panelView[boolFilterDataCallback](boolFilterList);
+            }
+
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
             this.notify('Loading...');
             this.createView('dialog', viewName, {
@@ -600,6 +610,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 massRelateEnabled: massRelateEnabled,
                 primaryFilterName: primaryFilterName,
                 boolFilterList: boolFilterList,
+                boolFilterData: boolFilterData,
                 selectDuplicateEnabled: selectDuplicateEnabled
             }, function (dialog) {
                 dialog.render();
