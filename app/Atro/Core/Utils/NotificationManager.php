@@ -204,7 +204,11 @@ class NotificationManager
                         "parent" => $parent
                     ]);
                     if($occurrence === NotificationOccurrence::UPDATE) {
-                        $dataForTemplate['changedFieldsData'] = $this->getNoteUtil()->getChangedFieldsData($entity);
+                        $changedFieldData = $this->getNoteUtil()->getChangedFieldsData($entity);
+                        if (empty($changedFieldData['fields']) || empty($changedFieldData['attributes']['was']) || empty($changedFieldData['attributes']['became'])) {
+                            return ;
+                        }
+                        $dataForTemplate['changedFieldsData'] = $changedFieldData;
                     }
                 }
 

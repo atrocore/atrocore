@@ -576,7 +576,6 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 primaryFilterName = primaryFilterName.call(this);
             }
 
-
             var dataBoolFilterList = data.boolFilterList;
             if (typeof data.boolFilterList == 'string') {
                 dataBoolFilterList = data.boolFilterList.split(',');
