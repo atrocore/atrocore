@@ -411,10 +411,20 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                 });
             }
+            if(this.scope === 'File' && !data['onlyType']) {
+                let typeIds = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.link, 'allowFileTypesIds'], []);
+                if(typeIds && typeIds.length) {
+                    data['onlyType'] = typeIds;
+                }
+            }
+
             return data;
         },
 
         getSelectBoolFilterList() {
+            if(this.scope === 'File'){
+                return _.extend(this.defs.selectBoolFilterList, ['onlyType'])
+            }
             return this.defs.selectBoolFilterList || null
         },
 
