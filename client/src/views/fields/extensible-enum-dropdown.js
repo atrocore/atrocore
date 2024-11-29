@@ -31,6 +31,7 @@ Espo.define('views/fields/extensible-enum-dropdown', 'views/fields/link-dropdown
 
         getBoolFilterData() {
             let data = {};
+
             this.selectBoolFilterList.forEach(item => {
                 if (typeof this.boolFilterData[item] === 'function') {
                     data[item] = this.boolFilterData[item].call(this);
