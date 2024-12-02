@@ -831,7 +831,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return Espo[key];
         },
 
-        getLinkOptions(scope, whereParams = []) {
+        getLinkOptions(scope, whereParams = [], maxSize = 100) {
             if (!scope) {
                 return [];
             }
@@ -843,7 +843,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 Espo[key] = [];
                 this.ajaxGetRequest(scope, {
                     offset: 0,
-                    maxSize: 100,
+                    maxSize: maxSize,
                     where: whereParams
                 }, {async: false}).then(res => {
                     if (res.list) {
