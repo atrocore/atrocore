@@ -6490,7 +6490,7 @@ button.close {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 2050;
+    z-index: 1550;
     -webkit-overflow-scrolling: touch;
     outline: 0
 }
@@ -20539,7 +20539,7 @@ button.category:focus {
         position: absolute;
         top: 3px;
         right: 5px;
-        z-index: 2000;
+        z-index: 1500;
         width: 20px;
         height: 20px;
         border-radius: 50%;
@@ -21079,7 +21079,7 @@ button.category:focus {
         left: 0;
         right: 0;
         top: 0;
-        z-index: 2000;
+        z-index: 1500;
     }
 
     .navbar-header {
@@ -21293,7 +21293,7 @@ button.category:focus {
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 2000;
+        z-index: 1500;
         height: 100vh;
         overflow: auto;
     }
@@ -21903,9 +21903,44 @@ td[data-name="draggableIcon"] {
 }
 
 .full-page-modal .html-preview .body-container {
-    flex: 1;
-    width: 100%;
+    flex: 0 1 auto;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
     overflow: hidden;
+    margin-right: -14px;
+    position: relative;
+}
+
+.full-page-modal .html-preview .body-container .main-container {
+    flex: 1;
+    margin-right: 14px;
+}
+
+.full-page-modal .html-preview .body-container .side-container {
+    display: none;
+    margin-right: -28px;
+    padding: 8px 14px 0 0;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 3px 0 0 3px;
+    width: 350px;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.full-page-modal .html-preview .body-container .side-container .side-body {
+    max-height: 100%;
+    overflow-y: auto;
+    padding-bottom: 14px;
+}
+
+.full-page-modal .html-preview .body-container .side-container.active {
+    display: block;
+}
+
+.full-page-modal .html-preview .body-container .side-container > .record-buttons {
+    margin-left: 10px;
+    margin-bottom: 8px;
 }
 
 .full-page-modal .html-preview .header-container {
@@ -21921,7 +21956,14 @@ td[data-name="draggableIcon"] {
     flex-shrink: 0;
 }
 
-.full-page-modal .html-preview .header-container .screen-size-icons > .profile {
+.full-page-modal .html-preview .header-container .screen-size-icons > .editor-toggle {
+    margin-right: 1.5em;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.full-page-modal .html-preview .header-container .screen-size-icons .btn {
     font-size: 1.25em;
     width: 50px;
 }
@@ -21939,6 +21981,24 @@ td[data-name="draggableIcon"] {
     box-sizing: content-box;
 }
 
+@media screen and (max-width: 640px) {
+    .full-page-modal .html-preview .body-container {
+        margin-left: -14px;
+    }
+
+    .full-page-modal .html-preview .body-container .main-container {
+        margin-left: 14px;
+    }
+
+    .full-page-modal .html-preview .body-container .side-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: calc(100vw + 14px);
+    }
+}
+
 @media screen and (max-width: 767px) {
     .full-page-modal .html-preview .header-container {
         flex-wrap: wrap;
@@ -21946,10 +22006,16 @@ td[data-name="draggableIcon"] {
 
     .full-page-modal .html-preview .header-container .header-breadcrumbs {
         flex-basis: 100%;
+        line-height: 1.25;
     }
 
     .full-page-modal .html-preview .header-container .screen-size-icons:not(:first-child) {
         margin-right: -22px;
+    }
+
+    .full-page-modal .html-preview .body-container .side-container .overview {
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 
