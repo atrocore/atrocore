@@ -1,0 +1,48 @@
+/*
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+#dimensions-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 6px 12px;
+    background-color: #ececec;
+    border-bottom-left-radius: 3px;
+    font-size: 0.85em;
+    user-select: none;
+}
+
+body.highlight [data-editor-type]:after,
+[data-editor-type].active:after,
+[data-editor-type]:hover:after {
+    content: '';
+    display: block;
+    width: calc(100% + 6px);
+    height: calc(100% + 6px);
+    position: absolute;
+    top: -3px;
+    left: -5px;
+    border: 1px dashed #06c;
+    border-radius: 3px;
+    pointer-events: none;
+    transition: .3s;
+}
+
+body.highlight [data-editor-type],
+[data-editor-type].active,
+[data-editor-type]:hover {
+    position: relative;
+    cursor: pointer;
+}
+
+[data-editor-type]:hover:after,
+[data-editor-type].active:after {
+    border-color: red !important;
+}
