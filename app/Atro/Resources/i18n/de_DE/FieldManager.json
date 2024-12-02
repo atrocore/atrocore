@@ -77,7 +77,8 @@
     "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden.",
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
-    "foreignName": "In der Relation anzuzeigendes Feld."
+    "foreignName": "In der Relation anzuzeigendes Feld.",
+    "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."
   },
   "fieldParts": {
     "datetimeOptional": {

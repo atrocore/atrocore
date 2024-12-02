@@ -831,21 +831,25 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return Espo[key];
         },
 
-        getLinkOptions(scope, whereParams = []) {
+        getLinkOptions(scope, customOptions = {}) {
             if (!scope) {
                 return [];
             }
 
-            let hash = this.simpleHash(JSON.stringify(whereParams))
+            let hash = this.simpleHash(JSON.stringify(customOptions.where ?? []))
             let key = 'link_' + scope + hash;
-
             if (!Espo[key]) {
                 Espo[key] = [];
-                this.ajaxGetRequest(scope, {
+                let options = {
                     offset: 0,
                     maxSize: 100,
-                    where: whereParams
-                }, {async: false}).then(res => {
+                };
+
+                if(customOptions) {
+                    options = {...options, ...customOptions}
+                }
+
+                this.ajaxGetRequest(scope, options, {async: false}).then(res => {
                     if (res.list) {
                         Espo[key] = res.list;
                     }
