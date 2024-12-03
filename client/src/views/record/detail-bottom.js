@@ -153,29 +153,16 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         },
 
         setupStreamPanel: function () {
-            var streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
-            if (streamAllowed === null) {
-                this.listenToOnce(this.model, 'sync', function () {
-                    streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
-                    if (streamAllowed) {
-                        this.showPanel('stream', function () {
-                            this.getView('stream').collection.fetch();
-                        });
-                    }
-                }, this);
-            }
-            if (streamAllowed !== false) {
-                this.panelList.push({
-                    "name": "stream",
-                    "label": "Stream",
-                    "title": this.translate('Stream', 'labels', this.scope),
-                    "view": "views/stream/panel",
-                    "sticked": false,
-                    "hidden": !streamAllowed || this.isPanelClosed('stream'),
-                    "order": this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
-                    "expanded": !this.isPanelClosed('stream')
-                });
-            }
+            this.panelList.push({
+                "name": "stream",
+                "label": "Stream",
+                "title": this.translate('Stream', 'labels', this.scope),
+                "view": "views/stream/panel",
+                "sticked": false,
+                "hidden": this.isPanelClosed('stream'),
+                "order": this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
+                "expanded": !this.isPanelClosed('stream')
+            });
         },
 
         init: function () {

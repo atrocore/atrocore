@@ -117,6 +117,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     this.wait(false);
                 }, this);
             }, this);
+
+            this.listenTo(this.model, 'sync', () => {
+                this.reRender();
+            });
         },
 
         storeControl: function () {
@@ -159,6 +163,14 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
+            const streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
+            if (!streamAllowed) {
+                this.$el.parent().hide();
+                return;
+            } else {
+                this.$el.parent().show();
+            }
+
             this.$postContainer = this.$el.find('.post-container');
 
             var storedText = this.getSessionStorage().get(this.storageTextKey);
