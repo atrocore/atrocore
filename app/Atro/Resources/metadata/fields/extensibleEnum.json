@@ -18,7 +18,8 @@
       "name": "dropdown",
       "type": "bool",
       "default": false,
-      "view": "views/admin/field-manager/fields/dropdown"
+      "view": "views/admin/field-manager/fields/dropdown",
+      "tooltip": true
     },
     {
       "name": "extensibleEnum",
