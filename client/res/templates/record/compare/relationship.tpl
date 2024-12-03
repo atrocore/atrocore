@@ -24,7 +24,7 @@
             {{#if currentViewKeys }}
             {{#each currentViewKeys}}
             <td class="cell" data-field="{{key}}">
-                {{{var key ../../../this}}}
+                {{{var key ../../this }}}
             </td>
             {{/each}}
             {{else}}
@@ -34,7 +34,7 @@
             {{#if this }}
             {{#each this }}
             <td class="cell" data-field="{{key}}">
-                {{{var key ../../../../this}}}
+                {{{var key ../../../this}}}
             </td>
             {{/each}}
             {{else}}
