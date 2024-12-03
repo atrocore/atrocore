@@ -10,7 +10,7 @@
     export let params: Params;
 
     if (!params.dataAttributeList) {
-        params.dataAttributeList = ['id', 'name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'];
+        params.dataAttributeList = ['id', 'name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel', 'editable'];
     }
     if (!params.dataAttributesDefs) {
         params.dataAttributesDefs = {
@@ -35,6 +35,9 @@
             name: {
                 type: 'varchar',
                 readOnly: true
+            },
+            editable: {
+                type: 'bool'
             }
         };
     }
