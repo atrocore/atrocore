@@ -55,7 +55,7 @@ class Action extends Base
 
         if (!empty($action->get('sourceEntity'))) {
             $dynamicRecordAction = null;
-            foreach ($this->getMetadata()->get(['clientDefs', $action->get('sourceEntity'), 'dynamicRecordActions']) as $dra) {
+            foreach ($this->getMetadata()->get(['clientDefs', $action->get('sourceEntity'), 'dynamicRecordActions'], []) as $dra) {
                 if ($dra['id'] == $action->get('id')) {
                     $dynamicRecordAction = $dra;
                     break;
