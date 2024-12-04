@@ -1,16 +1,15 @@
 {
   "controller": "controllers/record",
-  "relationshipPanels": {
-    "jobs": {
-      "readOnly": true
-    }
-  },
   "recordViews": {
     "detail": "views/scheduled-job/record/detail"
   },
-  "jobWithTargetList": [
-    "CheckEmailAccounts"
-  ],
+  "relationshipPanels": {
+    "jobs": {
+      "create": false,
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+    }
+  },
   "dynamicLogic": {
     "fields": {
       "type": {
