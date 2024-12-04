@@ -5,9 +5,6 @@
     "job": "Zadanie",
     "scheduling": "Harmonogram"
   },
-  "links": {
-    "log": "Logi"
-  },
   "labels": {
     "Create ScheduledJob": "Utwórz Zaplanowane Zadanie",
     "executeNow": "Wykonaj teraz"

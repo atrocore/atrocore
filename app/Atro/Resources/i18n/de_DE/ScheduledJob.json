@@ -5,9 +5,6 @@
     "lastRun": "Zuletzt ausgeführt",
     "scheduling": "Planung"
   },
-  "links": {
-    "log": "Protokoll"
-  },
   "labels": {
     "Create ScheduledJob": "Geplante Aufgabe erstellen",
     "executeNow": "Jetzt ausführen"

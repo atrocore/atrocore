@@ -6,7 +6,7 @@
     "scheduling": "Scheduling"
   },
   "links": {
-    "log": "Log"
+    "jobs": "Jobs"
   },
   "labels": {
     "Create ScheduledJob": "Create Scheduled Job",

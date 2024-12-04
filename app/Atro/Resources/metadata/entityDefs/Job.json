@@ -8,6 +8,14 @@
       "type": "enum",
       "required": true,
       "readOnly": true,
+      "default": "Pending",
+      "optionsIds": [
+        "Pending",
+        "Running",
+        "Success",
+        "Failed",
+        "Canceled"
+      ],
       "options": [
         "Pending",
         "Running",
@@ -15,7 +23,13 @@
         "Failed",
         "Canceled"
       ],
-      "default": "Pending"
+      "optionColors": [
+        "00AFFF",
+        "FFE208",
+        "1DFF08",
+        "FF0000",
+        "DDDDDD"
+      ]
     },
     "pid": {
       "type": "int",
