@@ -17,6 +17,8 @@ class JobManager
 {
     private Container $container;
 
+    public const QUEUE_FILE = 'data/job-queue.log';
+
     public function __construct(Container $container)
     {
         $this->container = $container;

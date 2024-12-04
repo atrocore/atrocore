@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\Application;
+use Atro\Core\JobManager;
 use Atro\Core\PseudoTransactionManager;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
@@ -43,6 +44,11 @@ class Daemon extends AbstractConsole
      */
     public function run(array $data): void
     {
+        if ($data['name'] === 'job-manager') {
+            $this->jobManagerDaemon();
+            return;
+        }
+
         $method = $data['name'] . 'Daemon';
         if (method_exists($this, $method)) {
             $this->$method($data['id']);
@@ -180,6 +186,46 @@ class Daemon extends AbstractConsole
 
             if (PseudoTransactionManager::hasJobs()) {
                 exec($this->getPhpBin() . " index.php pt --run");
+            }
+
+            sleep(1);
+        }
+    }
+
+    protected function jobManagerDaemon(): void
+    {
+        while (true) {
+            if (file_exists(Cron::DAEMON_KILLER)) {
+                break;
+            }
+
+            if (file_exists(JobManager::QUEUE_FILE)) {
+                $workersCount = $this->getConfig()->get('workersCount', 4);
+
+                exec('ps ax | grep index.php', $processes);
+                $processes = implode(' | ', $processes);
+                $numberOfWorkers = (substr_count($processes, $this->getPhpBin() . " index.php job ") - 2);
+
+                if ($numberOfWorkers < $workersCount) {
+                    $jobs = $this->getEntityManager()->getRepository('Job')
+                        ->where([
+                            'status'        => 'Pending',
+                            'executeTime<=' => (new \DateTime())->format('Y-m-d H:i:s')
+                        ])
+                        ->limit(0, $workersCount - $numberOfWorkers)
+                        ->order('priority', 'DESC')
+                        ->find();
+
+                    if (empty($jobs[0])) {
+                        if (file_exists(JobManager::QUEUE_FILE)) {
+                            unlink(JobManager::QUEUE_FILE);
+                        }
+                    } else {
+                        foreach ($jobs as $job) {
+                            exec($this->getPhpBin() . " index.php job {$job->get('id')} --run >/dev/null 2>&1 &");
+                        }
+                    }
+                }
             }
 
             sleep(1);
