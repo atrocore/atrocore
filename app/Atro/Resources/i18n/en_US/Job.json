@@ -23,5 +23,8 @@
       "Canceled": "Canceled",
       "Closed": "Closed"
     }
+  },
+  "tooltips": {
+    "priority": "Higher number means higher priority"
   }
 }

@@ -43,6 +43,7 @@
     "priority": {
       "type": "float",
       "default": 100,
+      "tooltip": true,
       "readOnly": true,
       "required": true
     },
