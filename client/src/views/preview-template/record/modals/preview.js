@@ -42,6 +42,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         selectedElement: null,
 
+        frame: null,
+
+        useAutosave: true,
+
         events: {
             'click [data-action="changeProfile"]': function (e) {
                 this.changeProfile(e);
@@ -72,13 +76,12 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
         changeProfile(e) {
             const data = e.currentTarget.dataset;
             this.profile = data.profile;
-            const iframe = document.querySelector('.html-preview iframe');
-            if (iframe) {
+            if (this.frame) {
                 const profileData = this.profiles[this.profile];
-                iframe.style.width = profileData.width;
-                iframe.style.height = profileData.height;
+                this.frame.style.width = profileData.width;
+                this.frame.style.height = profileData.height;
 
-                this.prepareFrameDimensions(iframe);
+                this.prepareFrameDimensions(this.frame);
             }
 
             const btnGroup = e.currentTarget.parentElement;
@@ -105,13 +108,16 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             };
         },
 
-        loadPreviewFrame() {
+        loadPreviewFrame(afterLoad = null) {
             if (this.htmlContent !== null) {
                 this.loadHtmlPage(this.htmlContent);
+                if (afterLoad instanceof Function) {
+                    afterLoad();
+                }
+
                 return;
             }
 
-            this.notify('Loading...');
             this.ajaxGetRequest('PreviewTemplate/action/getHtmlPreview', {
                 previewTemplateId: this.options.htmlTemplateId,
                 entityId: this.options.entityId
@@ -120,6 +126,9 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
                 this.notify(false);
                 this.loadHtmlPage(this.htmlContent);
+                if (afterLoad instanceof Function) {
+                    afterLoad();
+                }
             });
         },
 
@@ -128,20 +137,19 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 return;
             }
 
-            const iframe = document.querySelector('.html-preview iframe');
-            iframe.contentWindow.document.open();
-            iframe.contentWindow.document.write(htmlContent);
-            iframe.contentWindow.document.close();
+            this.frame.contentWindow.document.open();
+            this.frame.contentWindow.document.write(htmlContent);
+            this.frame.contentWindow.document.close();
 
-            this.prepareFrameDimensions(iframe);
+            this.prepareFrameDimensions(this.frame);
 
-            const link = iframe.contentDocument.createElement("link");
+            const link = this.frame.contentDocument.createElement("link");
             link.rel = "stylesheet";
             link.type = "text/css";
             link.href = "client/css/preview.css";
-            iframe.contentDocument.head.appendChild(link);
+            this.frame.contentDocument.head.appendChild(link);
 
-            this.prepareEditorElements(iframe.contentDocument);
+            this.prepareEditorElements(this.frame.contentDocument);
         },
 
         prepareFrameDimensions(iframe) {
@@ -160,25 +168,27 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         prepareEditorElements(document) {
             document.querySelectorAll('[data-editor-type]').forEach(el => {
-                el.addEventListener('click', e => {
-                    if (this.selectedElement) {
-                        if (this.selectedElement === el) {
-                            return;
-                        }
-
-                        this.selectedElement.classList.remove('active');
-                        this.selectedElement = null;
-                    }
-
-                    this.selectedElement = el;
-                    el.classList.add('active')
-
-                    const scope = el.dataset.editorType;
-                    const id = el.dataset.editorId;
-
-                    this.displaySidePanel(scope, id, el);
-                });
+                el.addEventListener('click', () => this.prepareEditableElement(el));
             });
+        },
+
+        prepareEditableElement(el) {
+            if (this.selectedElement) {
+                if (this.selectedElement === el) {
+                    return;
+                }
+
+                this.selectedElement.classList.remove('active');
+                this.selectedElement = null;
+            }
+
+            this.selectedElement = el;
+            el.classList.add('active')
+
+            const scope = el.dataset.editorType;
+            const id = el.dataset.editorId;
+
+            this.displaySidePanel(scope, id, el);
         },
 
         displaySidePanel(scope, id, trigger = null) {
@@ -193,17 +203,22 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             }
 
             container.classList.add('active');
-            this.prepareFrameDimensions(document.querySelector('.html-preview iframe'));
+            this.prepareFrameDimensions(this.frame);
 
             this.createView('sideEdit', 'views/preview-template/record/panels/side-edit', {
                 el: '.full-page-modal .html-preview .side-container',
                 scope: scope,
-                id: id
+                id: id,
+                autosaveDisabled: !this.useAutosave
             }, view => {
                 this.listenToOnce(view, 'cancel', () => {
                     container.classList.remove('active');
                     trigger?.classList.remove('active');
-                    this.prepareFrameDimensions(document.querySelector('.html-preview iframe'));
+
+                    this.selectedElement.classList.remove('active');
+                    this.selectedElement = null;
+
+                    this.prepareFrameDimensions(this.frame);
                     view.remove();
                 });
 
@@ -211,13 +226,28 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                     this.clearView('sideEdit');
                 });
 
-                this.listenToOnce(view, 'record:after:save', () => {
-                    container.classList.remove('active');
-                    trigger?.classList.remove('active');
+                this.listenTo(view, 'record:after:save', () => {
                     this.htmlContent = null;
-                    this.loadPreviewFrame();
-                    view.remove();
-                }, this);
+                    let callback = null;
+
+                    // if there was a trigger element, activate it after new render
+                    if (trigger) {
+                        callback = () => {
+                            trigger = this.frame?.contentDocument.querySelector(`[data-editor-type=${scope}][data-editor-id=${id}]`);
+                            this.selectedElement = trigger;
+
+                            if (this.getView('sideEdit')) {
+                                trigger?.classList.add('active');
+                            }
+                        }
+                    }
+
+                    this.loadPreviewFrame(callback);
+                });
+
+                this.listenTo(view, 'autosaveChanged', (value) => {
+                    this.useAutosave = value;
+                });
 
                 view.render();
             });
@@ -259,6 +289,9 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
+
+            this.notify('Loading...');
+            this.frame = document.querySelector('.html-preview iframe');
             this.loadPreviewFrame();
             this.loadBreadcrumbs();
             Espo.Ui.notify(false);
