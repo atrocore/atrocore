@@ -4,5 +4,8 @@
   "controller": "controllers/record",
   "boolFilterList": [
     "onlyMy"
-  ]
+  ],
+  "recordViews": {
+    "detail": "views/job/record/detail"
+  }
 }
