@@ -15,7 +15,7 @@
     "jobAlreadyExist": "Zadanie zostało utworzone mniej niż minutę temu"
   },
   "options": {
-    "job": {
+    "type": {
       "ComposerAutoUpdate": "Automatyczna aktualizacja systemu"
     }
   },

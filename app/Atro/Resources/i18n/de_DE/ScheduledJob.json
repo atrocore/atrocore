@@ -13,7 +13,7 @@
     "jobAlreadyExist": "Ein Job wurde vor weniger als einer Minute erstellt"
   },
   "options": {
-    "job": {
+    "type": {
       "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren"
     }
   },
