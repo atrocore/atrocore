@@ -208,6 +208,11 @@ class NotificationManager
                         if (empty($changedFieldData['fields']) || empty($changedFieldData['attributes']['was']) || empty($changedFieldData['attributes']['became'])) {
                             return ;
                         }
+
+                        if(count($changedFieldData['fields']) === 1 && in_array('modifiedBy',$changedFieldData['fields'])){
+                            return;
+                        }
+
                         $dataForTemplate['changedFieldsData'] = $changedFieldData;
                     }
                 }
