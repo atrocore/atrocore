@@ -20,7 +20,7 @@
     "jobAlreadyExist": "A job has been created less than a minute ago"
   },
   "options": {
-    "job": {
+    "type": {
       "ComposerAutoUpdate": "Automatic system update",
       "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
       "CheckUpdates": "Check system updates",
