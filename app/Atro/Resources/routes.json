@@ -451,14 +451,6 @@
     }
   },
   {
-    "route": "/Admin/jobs",
-    "method": "get",
-    "params": {
-      "controller": "Admin",
-      "action": "jobs"
-    }
-  },
-  {
     "route": "/Admin/fieldManager/:scope/:name",
     "method": "get",
     "params": {
