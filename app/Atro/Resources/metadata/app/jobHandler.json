@@ -1,0 +1,6 @@
+{
+  "CheckUpdates": "\\Atro\\Jobs\\CheckUpdates",
+  "ComposerAutoUpdate": "\\Atro\\Jobs\\ComposerAutoUpdate",
+  "ScanStorage": "\\Atro\\Jobs\\ScanStorage",
+  "UpdateCurrencyExchangeViaECB": "\\Atro\\Jobs\\UpdateCurrencyExchangeViaECB"
+}

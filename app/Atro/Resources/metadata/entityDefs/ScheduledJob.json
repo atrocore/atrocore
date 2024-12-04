@@ -4,10 +4,13 @@
       "type": "varchar",
       "required": true
     },
-    "job": {
+    "type": {
       "type": "varchar",
       "required": true,
-      "view": "views/scheduled-job/fields/job"
+      "view": "views/scheduled-job/fields/type"
+    },
+    "job": {
+      "type": "varchar"
     },
     "status": {
       "type": "enum",

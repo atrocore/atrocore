@@ -3,7 +3,13 @@
     "rows": [
       [
         {
-          "name": "job"
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "type"
         },
         {
           "name": "status"
@@ -12,12 +18,6 @@
       [
         {
           "name": "storage"
-        },
-        false
-      ],
-      [
-        {
-          "name": "name"
         },
         false
       ],

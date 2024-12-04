@@ -39,6 +39,8 @@ class V1Dot12Dot0 extends Base
             // ALTER TABLE job ADD assigned_user_id VARCHAR(36) DEFAULT NULL;
             // CREATE INDEX IDX_JOB_OWNER_USER_ID ON job (owner_user_id, deleted);
             // CREATE INDEX IDX_JOB_ASSIGNED_USER_ID ON job (assigned_user_id, deleted)
+
+            // ALTER TABLE scheduled_job ADD type VARCHAR(255) DEFAULT NULL
         } else {
 
         }
