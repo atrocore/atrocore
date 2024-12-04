@@ -204,7 +204,6 @@
     "measure": "Gérez vos mesures et unités de mesure, définissez des unités de mesure par défaut et des multiplicateurs pour la conversion automatique des unités de mesure.",
     "connection": "Gérer les connexions avec d'autres systèmes pour un échange automatique de données.",
     "settings": "Gérez les paramètres généraux du système tels que les paramètres régionaux par défaut, les préférences de recherche, les langues actives de l'interface, l'utilisation du cache et bien plus encore...",
-    "scheduledJob": "Gérez les tâches planifiées du système, comme les tâches cron, exécutées en arrière-plan et consultez leurs journaux.",
     "action": "Configurez des actions qui peuvent être exécutées manuellement, en cliquant sur des boutons ajoutés à l'interface utilisateur, ou de manière entièrement automatique via une tâche du Schedule Manager.",
     "clearCache": "Effacer le cache des métadonnées et les autres caches du système. Utilisez cette option si vous rencontrez des erreurs lorsque vous travaillez avec le système.",
     "rebuildDb": "Aligner la structure de la base de données sur les métadonnées configurées.",
