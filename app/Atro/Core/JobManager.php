@@ -15,8 +15,19 @@ use Espo\ORM\Entity;
 
 class JobManager
 {
+    private Container $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
     public function executeJob(Entity $job): bool
     {
+        // auth as system
+        $auth = new \Espo\Core\Utils\Auth($this->container);
+        $auth->useNoAuth();
+
         $i = 0;
         while ($i < 60) {
             $i++;
