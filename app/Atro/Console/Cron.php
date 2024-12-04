@@ -134,7 +134,45 @@ class Cron extends AbstractConsole
         $auth = new \Espo\Core\Utils\Auth($this->getContainer());
         $auth->useNoAuth();
 
-        $this->getContainer()->get('cronManager')->run();
+        $scheduledJobs = $this->getEntityManager()->getRepository('ScheduledJob')
+            ->where(['isActive' => true])
+            ->find();
+
+        foreach ($scheduledJobs as $scheduledJob) {
+            try {
+                $cronExpression = \Cron\CronExpression::factory($scheduledJob->get('scheduling'));
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error("ScheduledJob '{$scheduledJob->id}' Failed: {$e->getMessage()}.");
+                continue;
+            }
+
+            try {
+                $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error("Unsupported CRON expression '{$scheduledJob->get('scheduling')}'");
+                continue;
+            }
+
+            $exists = $this->getEntityManager()->getRepository('Job')
+                ->where([
+                    'status'         => 'Pending',
+                    'scheduledJobId' => $scheduledJob->get('id'),
+                    'executeTime'    => $nextDate
+                ])
+                ->findOne();
+
+            if (empty($exists)) {
+                $jobEntity = $this->getEntityManager()->getEntity('Job');
+                $jobEntity->set(array(
+                    'name'           => $scheduledJob->get('name'),
+                    'status'         => 'Pending',
+                    'handler'        => $scheduledJob->get('type'),
+                    'scheduledJobId' => $scheduledJob->get('id'),
+                    'executeTime'    => $nextDate
+                ));
+                $this->getEntityManager()->saveEntity($jobEntity);
+            }
+        }
     }
 
     public function clearEntityMessages(): void
@@ -213,7 +251,8 @@ class Cron extends AbstractConsole
                                         'modules'        => [
                                             'Core' => Composer::getCoreVersion()
                                         ],
-                                        'composerConfig' => file_exists('composer.json') ? json_decode(file_get_contents('composer.json'), true) : null
+                                        'composerConfig' => file_exists('composer.json') ? json_decode(file_get_contents('composer.json'),
+                                            true) : null
                                     ],
                                 ];
 
