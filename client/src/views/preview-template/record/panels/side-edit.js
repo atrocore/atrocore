@@ -151,25 +151,24 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
 
                         this.listenTo(model, 'change', () => {
                             clearTimeout(this.timerHandle);
-                            if (view.hasChangedAttributes()) {
-                                this.setButtonDisabledState('save', false);
-                            } else {
+                            if (!view.hasChangedAttributes()) {
                                 this.setButtonDisabledState('save', true);
                                 return;
                             }
+
+                            this.setButtonDisabledState('save', this.isAutosaveEnabled());
 
                             this.timerHandle = this.getAutosaveTimeoutHandle(view);
                         });
 
                         this.listenTo(this, 'text-interact', (element) => {
                             clearTimeout(this.timerHandle);
-                            if (view.hasChangedAttributes()) {
-                                this.setButtonDisabledState('save', false);
-                            } else {
+                            if (!view.hasChangedAttributes()) {
                                 this.setButtonDisabledState('save', true);
                                 return;
                             }
 
+                            this.setButtonDisabledState('save', this.isAutosaveEnabled());
                             this.timerHandle = this.getAutosaveTimeoutHandle(view);
                         }, this);
                     });
