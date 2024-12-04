@@ -107,6 +107,7 @@ class ConsoleManager
             "qm <stream> --run"            => Console\QueueManager::class,
             "qm <stream> <id> --run"       => Console\QueueManager::class,
             "qm item <id> --run"           => Console\QueueItem::class,
+            "job <id> --run"               => Console\Job::class,
             "notifications --refresh"      => Console\Notification::class,
             "kill daemons"                 => Console\KillDaemons::class,
             "daemon <name> <id>"           => Console\Daemon::class,
