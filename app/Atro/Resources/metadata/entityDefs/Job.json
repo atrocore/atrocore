@@ -6,6 +6,7 @@
     },
     "status": {
       "type": "enum",
+      "required": true,
       "options": [
         "Pending",
         "Running",
@@ -16,7 +17,8 @@
       "default": "Pending"
     },
     "pid": {
-      "type": "int"
+      "type": "int",
+      "readOnly": true
     },
     "executeTime": {
       "type": "datetime",
@@ -24,11 +26,13 @@
     },
     "priority": {
       "type": "float",
-      "default": 100
+      "default": 100,
+      "required": true
     },
     "handler": {
       "type": "varchar",
-      "readOnly": true
+      "readOnly": true,
+      "required": true
     },
     "payload": {
       "type": "jsonObject",
