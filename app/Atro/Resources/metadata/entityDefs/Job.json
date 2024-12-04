@@ -41,6 +41,10 @@
       "type": "jsonObject",
       "readOnly": true
     },
+    "scheduledJob": {
+      "type": "link",
+      "readOnly": true
+    },
     "serviceName": {
       "type": "varchar",
       "required": true,
@@ -57,9 +61,6 @@
     },
     "data": {
       "type": "jsonObject"
-    },
-    "scheduledJob": {
-      "type": "link"
     },
     "scheduledJobJob": {
       "type": "foreign",
@@ -99,7 +100,8 @@
     },
     "scheduledJob": {
       "type": "belongsTo",
-      "entity": "ScheduledJob"
+      "entity": "ScheduledJob",
+      "foreign": "jobs"
     }
   },
   "collection": {

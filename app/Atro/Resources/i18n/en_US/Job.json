@@ -5,7 +5,11 @@
     "pid": "PID",
     "priority": "Priority",
     "handler": "Handler",
-    "payload": "Payload"
+    "payload": "Payload",
+    "scheduledJob": "Scheduled Job"
+  },
+  "links": {
+    "scheduledJob": "Scheduled Job"
   },
   "labels": {
     "Create Job": "Create Job"

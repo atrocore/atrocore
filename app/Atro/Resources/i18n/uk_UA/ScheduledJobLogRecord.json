@@ -1,7 +1,0 @@
-{
-  "fields": {
-    "status": "Статус",
-    "executionTime": "Час запуску",
-    "target": "Ціль"
-  }
-}

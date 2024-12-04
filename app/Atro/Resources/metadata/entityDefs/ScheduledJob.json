@@ -56,6 +56,9 @@
     },
     "storage": {
       "type": "link"
+    },
+    "jobs": {
+      "type": "linkMultiple"
     }
   },
   "links": {
@@ -67,9 +70,9 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "log": {
+    "jobs": {
       "type": "hasMany",
-      "entity": "ScheduledJobLogRecord",
+      "entity": "Job",
       "foreign": "scheduledJob"
     },
     "storage": {
