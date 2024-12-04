@@ -1,95 +1,122 @@
 {
-    "fields": {
-        "queueItem": {
-            "type": "link"
-        },
-        "name": {
-            "type": "varchar",
-            "required": true,
-            "view": "views/admin/job/fields/name"
-        },
-        "status": {
-            "type": "enum",
-            "optionsIds": ["Pending", "Running", "Success", "Failed"],
-            "options": ["Pending", "Running", "Success", "Failed"],
-            "default": "Pending"
-        },
-        "executeTime": {
-            "type": "datetime",
-            "required": true
-        },
-        "serviceName": {
-            "type": "varchar",
-            "required": true,
-            "maxLength": 100
-        },
-        "method": {
-            "type": "varchar",
-            "required": true,
-            "maxLength":100
-        },
-        "methodName": {
-            "type": "varchar",
-            "maxLength": 100
-        },
-        "data": {
-            "type": "jsonObject"
-        },
-        "scheduledJob": {
-            "type": "link"
-        },
-        "scheduledJobJob": {
-            "type": "foreign",
-            "link": "scheduledJob",
-            "field": "job"
-        },
-        "pid": {
-            "type": "int"
-        },
-        "attempts": {
-            "type": "int"
-        },
-        "targetId": {
-            "type": "varchar",
-            "maxLength": 48
-        },
-        "targetType": {
-            "type": "varchar",
-            "maxLength": 64
-        },
-        "failedAttempts": {
-            "type": "int"
-        },
-        "createdAt": {
-            "type": "datetime",
-            "readOnly": true
-        },
-        "modifiedAt": {
-            "type": "datetime",
-            "readOnly": true
-        }
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true
     },
-    "links": {
-        "queueItem": {
-            "type": "belongsTo",
-            "entity": "QueueItem"
-        },
-        "scheduledJob": {
-            "type": "belongsTo",
-            "entity": "ScheduledJob"
-        }
+    "status": {
+      "type": "enum",
+      "options": [
+        "Pending",
+        "Running",
+        "Success",
+        "Failed",
+        "Canceled"
+      ],
+      "default": "Pending"
     },
-    "collection": {
-        "sortBy": "createdAt",
-        "asc": false,
-        "textFilterFields": ["name", "methodName", "serviceName", "scheduledJobName"]
+    "pid": {
+      "type": "int"
     },
-    "indexes": {
-        "executeTime": {
-            "columns": ["status", "executeTime"]
-        },
-        "status": {
-            "columns": ["status", "deleted"]
-        }
+    "executeTime": {
+      "type": "datetime",
+      "required": true
+    },
+    "priority": {
+      "type": "float",
+      "default": 100
+    },
+    "handler": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "payload": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "serviceName": {
+      "type": "varchar",
+      "required": true,
+      "maxLength": 100
+    },
+    "method": {
+      "type": "varchar",
+      "required": true,
+      "maxLength": 100
+    },
+    "methodName": {
+      "type": "varchar",
+      "maxLength": 100
+    },
+    "data": {
+      "type": "jsonObject"
+    },
+    "scheduledJob": {
+      "type": "link"
+    },
+    "scheduledJobJob": {
+      "type": "foreign",
+      "link": "scheduledJob",
+      "field": "job"
+    },
+    "attempts": {
+      "type": "int"
+    },
+    "targetId": {
+      "type": "varchar",
+      "maxLength": 48
+    },
+    "targetType": {
+      "type": "varchar",
+      "maxLength": 64
+    },
+    "failedAttempts": {
+      "type": "int"
+    },
+    "queueItem": {
+      "type": "link"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
     }
+  },
+  "links": {
+    "queueItem": {
+      "type": "belongsTo",
+      "entity": "QueueItem"
+    },
+    "scheduledJob": {
+      "type": "belongsTo",
+      "entity": "ScheduledJob"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "methodName",
+      "serviceName",
+      "scheduledJobName"
+    ]
+  },
+  "indexes": {
+    "executeTime": {
+      "columns": [
+        "status",
+        "executeTime"
+      ]
+    },
+    "status": {
+      "columns": [
+        "status",
+        "deleted"
+      ]
+    }
+  }
 }

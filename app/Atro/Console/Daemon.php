@@ -210,6 +210,7 @@ class Daemon extends AbstractConsole
                     $jobs = $this->getEntityManager()->getRepository('Job')
                         ->where([
                             'status'        => 'Pending',
+                            'handler!='     => null,
                             'executeTime<=' => (new \DateTime())->format('Y-m-d H:i:s')
                         ])
                         ->limit(0, $workersCount - $numberOfWorkers)

@@ -29,6 +29,15 @@ class V1Dot12Dot0 extends Base
         $this->getConfig()->set('workersCount', $this->getConfig()->get('queueManagerWorkersCount', 4));
         $this->getConfig()->save();
 
+        if ($this->isPgSQL()) {
+            // ALTER TABLE job ADD priority DOUBLE PRECISION DEFAULT '100';
+            // ALTER TABLE job ADD handler VARCHAR(255) DEFAULT NULL;
+            // ALTER TABLE job ADD payload TEXT DEFAULT NULL;
+            // COMMENT ON COLUMN job.payload IS '(DC2Type:jsonObject)'
+        } else {
+
+        }
+
         $this->updateComposer('atrocore/core', '^1.12.0');
     }
 
