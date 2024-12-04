@@ -83,14 +83,7 @@ Espo.define('views/main', 'view', function (Dep) {
 
         getHashScope(){
             let locationHash = window.location.hash;
-
-            let hashScope = null;
-            if (locationHash === '#Admin/jobs') {
-                hashScope = 'Job';
-            } else {
-                hashScope = locationHash.split('/').shift().replace('#', '');
-            }
-            return hashScope;
+            return locationHash.split('/').shift().replace('#', '');
         },
 
         updateLastUrl: function () {

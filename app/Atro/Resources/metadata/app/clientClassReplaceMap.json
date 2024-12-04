@@ -92,9 +92,6 @@
   "views/record/detail-small": [
     "treo-core"
   ],
-  "views/scheduled-job/list": [
-    "treo-core"
-  ],
   "views/fields/email": [
     "treo-core"
   ],
