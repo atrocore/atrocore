@@ -3,5 +3,6 @@
   "image/png",
   "image/gif",
   "application/pdf",
-  "image/webp"
+  "image/webp",
+  "image/svg+xml"
 ]

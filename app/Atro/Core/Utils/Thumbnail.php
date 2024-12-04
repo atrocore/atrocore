@@ -15,8 +15,10 @@ namespace Atro\Core\Utils;
 
 use Atro\Composer\PostUpdate;
 use Atro\Core\Container;
+use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Composer\Composer;
+use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
@@ -37,6 +39,13 @@ class Thumbnail
         $thumbnailPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), DIRECTORY_SEPARATOR);
         if (!empty($file->get('thumbnailsPath'))) {
             $thumbnailPath .= DIRECTORY_SEPARATOR . trim($file->get('thumbnailsPath'));
+        }
+        if($this->isSvg($file)) {
+            if($this->getEntityManager()->getRepository('File')->getStorage($file) instanceof LocalFileStorageInterface) {
+                return $this->getImageFilePath($file);
+            }
+
+            return $thumbnailPath . DIRECTORY_SEPARATOR . $file->get('name');
         }
         $thumbnailPath .= DIRECTORY_SEPARATOR . trim($size);
 
@@ -65,6 +74,10 @@ class Thumbnail
         if (!$this->hasThumbnail($file, $size)) {
             if ($originFilePath === null) {
                 $originFilePath = $this->getImageFilePath($file);
+            }
+
+            if($this->isSvg($file)) {
+                $this->getFileManager()->putContents($thumbnailPath, $file->getContents());
             }
             // create thumbnail if not exist
             if (!$this->create($originFilePath, $size, $thumbnailPath)) {
@@ -108,6 +121,11 @@ class Thumbnail
         return $this->getFileManager()->putContents($thumbnailPath, $image->getImageAsString());
     }
 
+    protected  function isSvg(FileEntity $file): bool
+    {
+        return $file->get('mimeType') === 'image/svg+xml';
+    }
+
     protected function getImageFilePath(FileEntity $file): string
     {
         return $file->getFilePath();
@@ -144,6 +162,11 @@ class Thumbnail
     protected function getFolderPathOfPdfImage(string $name): string
     {
         return PostUpdate::PDF_IMAGE_DIR . DIRECTORY_SEPARATOR . md5($name);
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
     }
 
     protected function getMetadata(): Metadata
