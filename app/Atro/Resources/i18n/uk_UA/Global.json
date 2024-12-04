@@ -338,7 +338,11 @@
     "Select Image": "Обрати існуюче зображення",
     "Upload Image": "Завантажити зображення з пристрою",
     "copyConfigurations": "Копіювання конфігурацій",
-    "youMustConfigureNotificationConnection": "Щоб сповіщення надсилалися, спочатку потрібно налаштувати підключення до електронної пошти."
+    "youMustConfigureNotificationConnection": "Щоб сповіщення надсилалися, спочатку потрібно налаштувати підключення до електронної пошти.",
+    "Bookmarking": "Встановити закладку",
+    "Unbookmark": "Видалити закладку",
+    "Bookmark": "Додати в закладки",
+    "Unbookmarking": "Видалити закладку"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",

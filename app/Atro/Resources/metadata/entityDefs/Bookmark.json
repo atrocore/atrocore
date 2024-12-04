@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "entityType": {
+      "type": "string",
+      "required": true
+    },
+    "entityId": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "collection": {
+    "sortBy": "entityType",
+    "asc": true
+  },
+  "uniqueIndexes": {
+    "unique_bookmark": [
+      "deleted",
+      "entity_type",
+      "entity_id",
+      "owner_user_id"
+    ]
+  }
+}

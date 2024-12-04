@@ -2628,6 +2628,46 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return 'tr[data-id="' + id + '"]';
         },
 
+        actionBookmark: function(data) {
+            data = data || {}
+            let id = data.id;
+            if (!id) return;
+            let model = null;
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+            if (!model) {
+                return;
+            }
+            if(model.get('bookmarkId')) {
+                this.notify(this.translate('Bookmarking'));
+                $.ajax({
+                    url: `Bookmark/${model.get('bookmarkId')}`,
+                    type: 'DELETE',
+                    headers: {
+                        'permanently': true
+                    }
+                }).done(function (result) {
+                    this.notify(this.translate('Done'), 'success')
+                    this.reRender()
+                }.bind(this));
+            }else{
+                this.notify(this.translate('Unbookmarking'));
+                $.ajax({
+                    url: 'Bookmark',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        entityType: this.entityType,
+                        entityId: model.id
+                    })
+                }).done(function (result) {
+                    model.set('bookmarkId', result.id)
+                    this.notify(this.translate('Done'), 'success')
+                    this.reRender()
+                }.bind(this));
+            }
+        },
+
         actionQuickRemove: function (data) {
             data = data || {}
             var id = data.id;

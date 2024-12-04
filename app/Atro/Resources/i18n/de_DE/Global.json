@@ -327,7 +327,11 @@
     "Select Image": "Vorhandenes Bild auswählen",
     "Upload Image": "Bild von einem lokalen Dateisystem hochladen",
     "copyConfigurations": "Konfigurationen kopieren",
-    "youMustConfigureNotificationConnection": "Sie müssen zunächst die Verbindung für  E-Mail-Benachrichtigung konfigurieren, damit Benachrichtigungen gesendet werden können."
+    "youMustConfigureNotificationConnection": "Sie müssen zunächst die Verbindung für  E-Mail-Benachrichtigung konfigurieren, damit Benachrichtigungen gesendet werden können.",
+    "Bookmarking": "Lesezeichen setzen",
+    "Unbookmark": "Lesezeichen entfernen",
+    "Bookmark": "Lesezeichen",
+    "Unbookmarking": "Lesezeichen entfernen"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

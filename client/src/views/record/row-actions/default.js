@@ -165,6 +165,17 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     }
                 });
             }
+
+            if(!this.getMetadata().get(['scopes', scope, 'disableBookmark'])) {
+                list.push({
+                    action: 'bookmark',
+                    label: this.model.get('bookmarkId') ? 'UnBookmark' : 'Bookmark',
+                    data: {
+                        id: this.model.id
+                    }
+                });
+            }
+
             return list;
         },
         handleDataBeforeRender: function (data) {
