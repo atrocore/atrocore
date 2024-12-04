@@ -6,8 +6,14 @@
         {
           "name": "name"
         },
+        false
+      ],
+      [
         {
           "name": "status"
+        },
+        {
+          "name": "message"
         }
       ],
       [
@@ -16,6 +22,14 @@
         },
         {
           "name": "priority"
+        }
+      ],
+      [
+        {
+          "name": "startedAt"
+        },
+        {
+          "name": "endedAt"
         }
       ],
       [
@@ -31,6 +45,12 @@
           "name": "payload",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "scheduledJob"
+        },
+        false
       ]
     ]
   }

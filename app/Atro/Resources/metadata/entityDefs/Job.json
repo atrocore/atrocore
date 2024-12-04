@@ -31,6 +31,10 @@
         "DDDDDD"
       ]
     },
+    "message": {
+      "type": "text",
+      "readOnly": true
+    },
     "pid": {
       "type": "int",
       "readOnly": true
@@ -39,6 +43,14 @@
       "type": "datetime",
       "readOnly": true,
       "required": true
+    },
+    "startedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "endedAt": {
+      "type": "datetime",
+      "readOnly": true
     },
     "priority": {
       "type": "float",

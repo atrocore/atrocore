@@ -6,7 +6,10 @@
     "priority": "Priority",
     "handler": "Handler",
     "payload": "Payload",
-    "scheduledJob": "Scheduled Job"
+    "scheduledJob": "Scheduled Job",
+    "message": "Message",
+    "startedAt": "Started At",
+    "endedAt": "Ended At"
   },
   "links": {
     "scheduledJob": "Scheduled Job"

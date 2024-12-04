@@ -10,6 +10,12 @@
     "name": "executeTime"
   },
   {
+    "name": "startedAt"
+  },
+  {
+    "name": "endedAt"
+  },
+  {
     "name": "priority"
   },
   {
