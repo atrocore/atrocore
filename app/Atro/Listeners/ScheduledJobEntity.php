@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Espo\Core\CronManager;
 
 class ScheduledJobEntity extends AbstractListener
 {
@@ -28,9 +27,6 @@ class ScheduledJobEntity extends AbstractListener
         }
         if ($this->getConfig()->get('jobsMaxDays') !== 0) {
             $this->createJob('Delete Jobs', '0 2 * * 0', 'Job', 'deleteOld');
-        }
-        if ($this->getConfig()->get('scheduledJobLogsMaxDays') !== 0) {
-            $this->createJob('Delete Scheduled Job Logs', '20 2 * * 0', 'ScheduledJobLogRecord', 'deleteOld');
         }
         if ($this->getConfig()->get('authLogsMaxDays') !== 0) {
             $this->createJob('Delete Auth Logs', '40 2 * * 0', 'AuthLogRecord', 'deleteOld');
@@ -69,7 +65,7 @@ class ScheduledJobEntity extends AbstractListener
         $jobEntity = $this->getEntityManager()->getEntity('Job');
         $jobEntity->set([
             'name'        => $name,
-            'status'      => CronManager::PENDING,
+            'status'      => 'Pending',
             'serviceName' => $serviceName,
             'methodName'  => $methodName,
             'executeTime' => $nextDate
