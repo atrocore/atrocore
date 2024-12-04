@@ -227,7 +227,7 @@
     "connection": "Manage connections with other systems for an automatic data exchange.",
     "settings": "Manage general system settings such as default system locale, search preferences, active interface languages, cache usage and more...",
     "scheduledJob": "Manage scheduled system jobs.",
-    "jobs": "Manage system jobs, like a cron job, executed in the background and see their logs.",
+    "jobs": "Manage system jobs that run in the background without direct user interaction.",
     "action": "Configure actions that can be executed manually, by clicking buttons added to the user interface, or fully automatically via a Schedule Manager job.",
     "clearCache": "Clear metadata cache and other system cache, use this option if you have errors while working with the system.",
     "rebuildDb": "Align the database structure in accordance with the configured metadata.",

@@ -34,6 +34,11 @@ class V1Dot12Dot0 extends Base
             // ALTER TABLE job ADD handler VARCHAR(255) DEFAULT NULL;
             // ALTER TABLE job ADD payload TEXT DEFAULT NULL;
             // COMMENT ON COLUMN job.payload IS '(DC2Type:jsonObject)'
+
+            // ALTER TABLE job ADD owner_user_id VARCHAR(36) DEFAULT NULL;
+            // ALTER TABLE job ADD assigned_user_id VARCHAR(36) DEFAULT NULL;
+            // CREATE INDEX IDX_JOB_OWNER_USER_ID ON job (owner_user_id, deleted);
+            // CREATE INDEX IDX_JOB_ASSIGNED_USER_ID ON job (assigned_user_id, deleted)
         } else {
 
         }
