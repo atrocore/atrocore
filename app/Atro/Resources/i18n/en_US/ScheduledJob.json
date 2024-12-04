@@ -1,8 +1,6 @@
 {
   "fields": {
     "name": "Name",
-    "status": "Status",
-    "job": "Job",
     "scheduling": "Scheduling"
   },
   "links": {
@@ -25,10 +23,6 @@
       "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
       "CheckUpdates": "Check system updates",
       "ScanStorage": "Scan Storage"
-    },
-    "status": {
-      "Active": "Active",
-      "Inactive": "Inactive"
     }
   },
   "tooltips": {

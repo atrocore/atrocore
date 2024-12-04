@@ -12,7 +12,7 @@
           "name": "type"
         },
         {
-          "name": "status"
+          "name": "isActive"
         }
       ],
       [

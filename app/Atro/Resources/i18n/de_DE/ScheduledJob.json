@@ -1,7 +1,6 @@
 {
   "fields": {
     "isInternal": "Ist intern",
-    "job": "Aufgabe",
     "lastRun": "Zuletzt ausgeführt",
     "scheduling": "Planung"
   },
@@ -16,10 +15,6 @@
   "options": {
     "job": {
       "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren"
-    },
-    "status": {
-      "Active": "Aktiv",
-      "Inactive": "Inaktiv"
     }
   },
   "tooltips": {

@@ -1,8 +1,6 @@
 {
   "fields": {
     "name": "Назва",
-    "status": "Статус",
-    "job": "Завдання",
     "scheduling": "Планування"
   },
   "labels": {
@@ -19,10 +17,6 @@
   "options": {
     "job": {
       "ComposerAutoUpdate": "Автооновлення модулів"
-    },
-    "status": {
-      "Active": "Активно",
-      "Inactive": "Неактивно"
     }
   },
   "tooltips": {

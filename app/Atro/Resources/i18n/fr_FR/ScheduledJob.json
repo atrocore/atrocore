@@ -1,8 +1,6 @@
 {
   "fields": {
     "name": "Nom",
-    "status": "Statut",
-    "job": "Emploi",
     "scheduling": "Programmation"
   },
   "labels": {
@@ -22,10 +20,6 @@
       "UpdateCurrencyExchangeViaECB": "Mise à jour du taux de change via la BCE",
       "CheckUpdates": "Vérifier les mises à jour du système",
       "ScanStorage": "Stockage par balayage"
-    },
-    "status": {
-      "Active": "Actif",
-      "Inactive": "Inactif"
     }
   },
   "tooltips": {

@@ -53,6 +53,16 @@ class V1Dot12Dot0 extends Base
 //            ->setParameter('false', false, ParameterType::BOOLEAN)
 //            ->executeQuery();
 
+//        $this->getConnection()->createQueryBuilder()
+//            ->update('scheduled_job')
+//            ->set('is_active', ':true')
+//            ->where('deleted=:false')
+//            ->andWhere('status=:active')
+//            ->setParameter('true', true, ParameterType::BOOLEAN)
+//            ->setParameter('false', false, ParameterType::BOOLEAN)
+//            ->setParameter('active', 'Active')
+//            ->executeQuery();
+
 //        $this->updateComposer('atrocore/core', '^1.12.0');
     }
 

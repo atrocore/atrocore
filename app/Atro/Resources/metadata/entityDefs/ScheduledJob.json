@@ -12,18 +12,9 @@
     "job": {
       "type": "varchar"
     },
-    "status": {
-      "type": "enum",
-      "required": true,
-      "prohibitedEmptyValue": true,
-      "optionsIds": [
-        "Active",
-        "Inactive"
-      ],
-      "options": [
-        "Active",
-        "Inactive"
-      ]
+    "isActive": {
+      "type": "bool",
+      "default": false
     },
     "scheduling": {
       "type": "varchar",

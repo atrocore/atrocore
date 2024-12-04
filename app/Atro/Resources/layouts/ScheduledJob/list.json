@@ -7,7 +7,7 @@
     "name": "type"
   },
   {
-    "name": "status"
+    "name": "isActive"
   },
   {
     "name": "scheduling"
