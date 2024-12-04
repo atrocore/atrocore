@@ -221,6 +221,27 @@
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
+    },
+    "width": {
+      "type": "float",
+      "measureId": "dimension",
+      "readOnly": true
+    },
+    "height": {
+      "type": "float",
+      "measureId": "dimension",
+      "readOnly": true
+    },
+    "size": {
+      "type": "varchar",
+      "measureId": "dimension",
+      "notStorable": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "colorSpace": {
+      "type": "varchar"
     }
   },
   "links": {

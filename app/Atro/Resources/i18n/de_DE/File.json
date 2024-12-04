@@ -9,7 +9,11 @@
     "preview": "Vorschau",
     "hash": "Hash",
     "fileSize": "Dateigröße (Bytes)",
-    "fileMtime": "Datei-Änderungsdatum"
+    "fileMtime": "Datei-Änderungsdatum",
+    "width": "Breite",
+    "height": "Höhe",
+    "size": "Größe",
+    "colorSpace": "Farbraum"
   },
   "links": {
     "folder": "Ordner",

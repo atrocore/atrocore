@@ -11,7 +11,11 @@
     "fileSize": "File Size (bytes)",
     "fileMtime": "File Modification Date",
     "url": "URL",
-    "uploadUrl": "URL"
+    "uploadUrl": "URL",
+    "width": "Width",
+    "height": "Height",
+    "size": "Size",
+    "colorSpace": "Color Space"
   },
   "links": {
     "folder": "Folder",

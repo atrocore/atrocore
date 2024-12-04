@@ -31,5 +31,70 @@
     "measureId": "currency",
     "symbol": "£",
     "isActive": false
+  },
+  {
+    "id": "pixel",
+    "name": "Pixel",
+    "code": "Pixel",
+    "measureId": "dimension",
+    "symbol": "px",
+    "isMain": true,
+    "isActive": true
+  },
+  {
+    "id": "inch",
+    "name": "Inch",
+    "code": "Inch",
+    "measureId": "dimension",
+    "symbol": "in",
+    "isActive": true
+  },
+  {
+    "id": "centimeter",
+    "name": "Centimeter",
+    "code": "Centimeter",
+    "measureId": "dimension",
+    "symbol": "cm",
+    "isActive": true
+  },
+  {
+    "id": "millimeter",
+    "name": "Millimeter",
+    "code": "Millimeter",
+    "measureId": "dimension",
+    "symbol": "mm",
+    "isActive": true
+  },
+  {
+    "id": "point",
+    "name": "Point",
+    "code": "Point",
+    "measureId": "dimension",
+    "symbol": "pt",
+    "isActive": true
+  },
+  {
+    "id": "parsec",
+    "name": "Parsec",
+    "code": "Parsec",
+    "measureId": "dimension",
+    "symbol": "pc",
+    "isActive": true
+  },
+  {
+    "id": "em",
+    "name": "Em",
+    "code": "Em",
+    "measureId": "dimension",
+    "symbol": "em",
+    "isActive": true
+  },
+  {
+    "id": "percentage",
+    "name": "Percentage",
+    "code": "Percentage",
+    "measureId": "dimension",
+    "symbol": "%",
+    "isActive": true
   }
 ]
