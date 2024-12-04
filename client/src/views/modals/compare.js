@@ -38,7 +38,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         setupRecord() {
             this.notify('Loading...');
-            this.ajaxGetRequest(`Synchronization/action/distantInstanceRequest`, {
+            this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
                 uri: this.scope + '/' + this.model.id}).success(attr => {
                 var o = {
                     el: this.options.el +' .modal-record',

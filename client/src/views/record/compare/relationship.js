@@ -70,7 +70,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                                 itemModel.set(item)
                                 return itemModel
                             });
-                            this.ajaxGetRequest('Synchronization/action/distantInstanceRequest',{
+                            this.ajaxPostRequest('Synchronization/action/distantInstanceRequest',{
                                 'uri':this.scope+'/' + this.model.get('id')+'/' + this.relationship.name + '?select=' + selectField.join(','),
                                 'type':'list'
                             }).success(res => {
