@@ -14,6 +14,7 @@ namespace Atro\Migrations;
 use Atro\Console\Cron;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\ParameterType;
 
 class V1Dot12Dot0 extends Base
 {
@@ -24,10 +25,10 @@ class V1Dot12Dot0 extends Base
 
     public function up(): void
     {
-        file_put_contents(Cron::DAEMON_KILLER, '1');
-
-        $this->getConfig()->set('workersCount', $this->getConfig()->get('queueManagerWorkersCount', 4));
-        $this->getConfig()->save();
+//        file_put_contents(Cron::DAEMON_KILLER, '1');
+//
+//        $this->getConfig()->set('workersCount', $this->getConfig()->get('queueManagerWorkersCount', 4));
+//        $this->getConfig()->save();
 
         if ($this->isPgSQL()) {
             // ALTER TABLE job ADD priority DOUBLE PRECISION DEFAULT '100';
@@ -45,7 +46,14 @@ class V1Dot12Dot0 extends Base
 
         }
 
-        $this->updateComposer('atrocore/core', '^1.12.0');
+//        $this->getConnection()->createQueryBuilder()
+//            ->update('scheduled_job')
+//            ->set('type', 'job')
+//            ->where('deleted=:false')
+//            ->setParameter('false', false, ParameterType::BOOLEAN)
+//            ->executeQuery();
+
+//        $this->updateComposer('atrocore/core', '^1.12.0');
     }
 
     public function down(): void
