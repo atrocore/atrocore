@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -25,7 +24,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
 
-class Hierarchy extends RDB
+class Hierarchy extends Base
 {
     protected string $tableName;
     protected string $hierarchyTableName;
@@ -36,15 +35,6 @@ class Hierarchy extends RDB
 
         $this->tableName = $entityManager->getMapper()->toDb($this->entityType);
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
-    }
-
-    public function hasDeletedRecordsToCleanup(): bool
-    {
-        return false;
-    }
-
-    public function cleanupDeletedRecords(): void
-    {
     }
 
     public function findRelated(Entity $entity, $relationName, array $params = [])

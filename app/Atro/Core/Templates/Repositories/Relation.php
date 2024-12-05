@@ -17,14 +17,13 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
-use Atro\Core\ORM\Repositories\RDB;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-class Relation extends RDB
+class Relation extends Base
 {
     public static function buildVirtualFieldName(string $relationName, string $fieldName): string
     {
@@ -40,15 +39,6 @@ class Relation extends RDB
             ];
         }
         return [];
-    }
-
-    public function hasDeletedRecordsToCleanup(): bool
-    {
-        return false;
-    }
-
-    public function cleanupDeletedRecords(): void
-    {
     }
 
     public function deleteAlreadyDeleted(Entity $entity): void
