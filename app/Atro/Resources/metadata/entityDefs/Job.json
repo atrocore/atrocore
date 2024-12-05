@@ -59,7 +59,7 @@
       "readOnly": true,
       "required": true
     },
-    "handler": {
+    "type": {
       "type": "varchar",
       "readOnly": true,
       "required": true

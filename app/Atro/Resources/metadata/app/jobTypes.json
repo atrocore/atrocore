@@ -1,18 +1,22 @@
 {
+  "Cleanup": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\Cleanup"
+  },
   "CheckUpdates": {
     "scheduledJob": true,
     "className": "\\Atro\\Jobs\\CheckUpdates"
   },
   "ComposerAutoUpdate": {
     "scheduledJob": true,
-    "className": "\\Atro\\Jobs\\ComposerAutoUpdate"
+    "handler": "\\Atro\\Jobs\\ComposerAutoUpdate"
   },
   "ScanStorage": {
     "scheduledJob": true,
-    "className": "\\Atro\\Jobs\\ScanStorage"
+    "handler": "\\Atro\\Jobs\\ScanStorage"
   },
   "UpdateCurrencyExchangeViaECB": {
     "scheduledJob": true,
-    "className": "\\Atro\\Jobs\\UpdateCurrencyExchangeViaECB"
+    "handler": "\\Atro\\Jobs\\UpdateCurrencyExchangeViaECB"
   }
 }

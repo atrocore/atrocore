@@ -19,7 +19,8 @@
   },
   "options": {
     "type": {
-      "ComposerAutoUpdate": "Automatic system update",
+      "Cleanup": "Cleanup deleted data",
+      "ComposerAutoUpdate": "Update system automatically",
       "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
       "CheckUpdates": "Check system updates",
       "ScanStorage": "Scan Storage"

@@ -32,7 +32,7 @@ class V1Dot12Dot0 extends Base
 
         if ($this->isPgSQL()) {
             // ALTER TABLE job ADD priority DOUBLE PRECISION DEFAULT '100';
-            // ALTER TABLE job ADD handler VARCHAR(255) DEFAULT NULL;
+            // ALTER TABLE job ADD type VARCHAR(255) DEFAULT NULL;
             // ALTER TABLE job ADD payload TEXT DEFAULT NULL;
             // COMMENT ON COLUMN job.payload IS '(DC2Type:jsonObject)'
 

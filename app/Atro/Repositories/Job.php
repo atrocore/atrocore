@@ -21,7 +21,7 @@ class Job extends Base
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->get('status') === 'Pending' && !empty($entity->get('handler'))) {
+        if ($entity->get('status') === 'Pending' && !empty($entity->get('type'))) {
             file_put_contents(JobManager::QUEUE_FILE, '1');
         }
     }
