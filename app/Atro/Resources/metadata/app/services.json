@@ -9,7 +9,6 @@
   "MassActionCreator": "\\Atro\\Services\\MassActionCreator",
   "MassUpdate": "\\Atro\\Services\\MassUpdate",
   "MassDelete": "\\Atro\\Services\\MassDelete",
-  "ScheduledJob": "\\Espo\\Services\\ScheduledJob",
   "Composer": "\\Atro\\Services\\Composer",
   "MassDownload": "\\Atro\\Services\\MassDownload",
   "QueueManagerActionHandler": "\\Atro\\Services\\QueueManagerActionHandler"

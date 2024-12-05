@@ -89,7 +89,7 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
+    "sortBy": "executeTime",
     "asc": false,
     "textFilterFields": [
       "name"
