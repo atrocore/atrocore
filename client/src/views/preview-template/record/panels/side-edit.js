@@ -16,9 +16,15 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
 
         name: 'sideEdit',
 
+        autosave: true,
+
+        autosaveTimeout: 2000,
+
         scope: null,
 
         id: null,
+
+        timerHandle: null,
 
         buttonList: [
             {
@@ -33,23 +39,56 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
         ],
 
         events: {
-            'click [data-action=save]': function(e) {
+            'click [data-action=save]': function (e) {
                 this.actionSave();
             },
-            'click [data-action=cancel]': function(e) {
+            'click [data-action=cancel]': function (e) {
                 this.actionCancel();
+            },
+            'change [data-name=autosave]': function (e) {
+                this.autosave = e.currentTarget?.checked;
+
+                if (!this.autosave) {
+                    clearTimeout(this.timerHandle);
+                }
+
+                this.trigger('autosaveChanged', this.autosave);
+            },
+            'keyup .field[data-name] > textarea[name]': function(e) {
+                this.fieldKeyupCallback(e);
+            },
+            'keyup .field[data-name] > input[name]': function(e) {
+                this.fieldKeyupCallback(e)
+            }
+        },
+
+        fieldKeyupCallback: function (e) {
+            const editView = this.getView('edit');
+            if (editView) {
+                const fieldView = editView.getField(e.target.name)
+                fieldView?.fetchToModel();
+                this.trigger('text-interact', e.target);
             }
         },
 
         data() {
             return {
-                buttonList: this.buttonList
+                buttonList: this.buttonList,
+                autosave: this.autosave
             }
         },
 
         setup() {
             this.scope = this.options.scope || null;
             this.id = this.options.id || null;
+
+            if ('autosaveDisabled' in this.options) {
+                this.autosave = !this.options.autosaveDisabled;
+            }
+
+            if (Number.isInteger(this.options.autosaveTimeout ?? null)) {
+                this.autosaveTimeout = this.options.autosaveTimeout;
+            }
 
             Dep.prototype.setup.call(this);
         },
@@ -70,31 +109,67 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
             this.trigger('cancel');
         },
 
+        setButtonDisabledState(name, value) {
+            const panel = this.$el.get(0);
+            const button = panel?.querySelector(`[data-action=${name}]`);
+            if (button) {
+                button.disabled = !!value;
+            }
+        },
+
+        isAutosaveEnabled() {
+            return this.autosave;
+        },
+
         afterRender() {
             if (!this.scope || !this.id) {
                 return;
             }
 
-            const buttons = document.querySelectorAll('.html-preview .side-container .btn-group > button');
-
             this.getModelFactory().create(this.scope, model => {
                 model.id = this.id;
-                buttons.forEach(btn => btn.disabled = true);
                 Espo.ui.notify('Loading...');
+
+                this.setButtonDisabledState('save', true);
 
                 model.fetch().success(() => {
                     Espo.ui.notify(false);
+
                     this.createRecordView(model, view => {
                         view.render();
 
-                        buttons.forEach(btn => btn.disabled = false);
-
                         this.listenToOnce(view, 'remove', () => {
                             this.clearView('edit');
+                            clearTimeout(this.timerHandle);
                         }, this);
 
-                        this.listenToOnce(view, 'after:save', () => {
+                        this.listenTo(view, 'after:save', () => {
+                            clearTimeout(this.timerHandle);
+                            this.setButtonDisabledState('cancel', false);
                             this.trigger('record:after:save');
+                        }, this);
+
+                        this.listenTo(model, 'change', () => {
+                            clearTimeout(this.timerHandle);
+                            if (!view.hasChangedAttributes()) {
+                                this.setButtonDisabledState('save', true);
+                                return;
+                            }
+
+                            this.setButtonDisabledState('save', this.isAutosaveEnabled());
+
+                            this.timerHandle = this.getAutosaveTimeoutHandle(view);
+                        });
+
+                        this.listenTo(this, 'text-interact', (element) => {
+                            clearTimeout(this.timerHandle);
+                            if (!view.hasChangedAttributes()) {
+                                this.setButtonDisabledState('save', true);
+                                return;
+                            }
+
+                            this.setButtonDisabledState('save', this.isAutosaveEnabled());
+                            this.timerHandle = this.getAutosaveTimeoutHandle(view);
                         }, this);
                     });
                 }).error(() => {
@@ -102,6 +177,20 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                     this.trigger('cancel');
                 });
             });
+        },
+
+        getAutosaveTimeoutHandle(view) {
+            if (this.isAutosaveEnabled()) {
+                return setTimeout(() => {
+                    if (view.hasChangedAttributes()) {
+                        view.save();
+                        this.setButtonDisabledState('save', true);
+                        this.setButtonDisabledState('cancel', true);
+                    }
+                }, this.autosaveTimeout);
+            }
+
+            return null;
         },
 
         createRecordView(model, callback) {
