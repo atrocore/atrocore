@@ -19,6 +19,18 @@ class Cleanup extends AbstractJob implements JobInterface
 {
     public function run(Entity $job): void
     {
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'           => 'Cleanup Product',
+            'type'           => 'CleanupEntity',
+            'scheduledJobId' => $job->get('scheduledJobId'),
+            'executeTime'    => (new \DateTime())->modify('-1 minute')->format('Y-m-d H:i:s'),
+            'payload'        => [
+                'entityName' => 'Product'
+            ]
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
+
         // for all entities we have to check if we should delete something and if we should we create a job for it
 
         // if ($this->getConfig()->get('notificationsMaxDays') !== 0) {

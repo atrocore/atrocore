@@ -3,6 +3,10 @@
     "scheduledJob": true,
     "handler": "\\Atro\\Jobs\\Cleanup"
   },
+  "CleanupEntity": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\CleanupEntity"
+  },
   "CheckUpdates": {
     "scheduledJob": true,
     "className": "\\Atro\\Jobs\\CheckUpdates"
