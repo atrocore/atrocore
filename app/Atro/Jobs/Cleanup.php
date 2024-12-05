@@ -19,22 +19,29 @@ class Cleanup extends AbstractJob implements JobInterface
 {
     public function run(Entity $job): void
     {
+        $entities = [];
         foreach ($this->getMetadata()->get('scopes') as $scopeName => $scopeDefs) {
-            /** @var \Espo\ORM\Repository $repository */
-            $repository = $this->getEntityManager()->getRepository($scopeName);
-            if ($repository->hasDeletedRecordsToCleanup()) {
-                $jobEntity = $this->getEntityManager()->getEntity('Job');
-                $jobEntity->set([
-                    'name'           => "Cleanup $scopeName",
-                    'type'           => 'CleanupEntity',
-                    'scheduledJobId' => $job->get('scheduledJobId'),
-                    'executeTime'    => (new \DateTime())->modify('-1 minute')->format('Y-m-d H:i:s'),
-                    'payload'        => [
-                        'entityName' => $scopeName
-                    ]
-                ]);
-                $this->getEntityManager()->saveEntity($jobEntity);
+            try {
+                if ($this->getEntityManager()->getRepository($scopeName)->hasDeletedRecordsToCleanup()) {
+                    $entities[] = $scopeName;
+                }
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("Cleanup failed for $scopeName: {$e->getMessage()}");
             }
+        }
+
+        foreach ($entities as $entityName) {
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'           => "Cleanup $entityName",
+                'type'           => 'CleanupEntity',
+                'scheduledJobId' => $job->get('scheduledJobId'),
+                'executeTime'    => (new \DateTime())->modify('-1 minute')->format('Y-m-d H:i:s'),
+                'payload'        => [
+                    'entityName' => $entityName
+                ]
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
         }
     }
 }

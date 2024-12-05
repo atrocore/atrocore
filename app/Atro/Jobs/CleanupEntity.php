@@ -19,13 +19,16 @@ class CleanupEntity extends AbstractJob implements JobInterface
 {
     public function run(Entity $job): void
     {
-        $i = 0;
-        while ($i < 10) {
-            $i++;
-            sleep(1);
+        $entityName = $job->get('payload')->entityName ?? null;
+        if (empty($entityName)) {
+            return;
         }
 
-
+        try {
+            $this->getEntityManager()->getRepository($entityName)->cleanupDeletedRecords();
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("Cleanup Entity failed for $entityName: {$e->getMessage()}");
+        }
 
         // for all entities we have to check if we should delete something and if we should we create a job for it
 
