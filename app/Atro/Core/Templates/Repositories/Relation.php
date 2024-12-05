@@ -26,6 +26,7 @@ use Espo\ORM\EntityCollection;
 
 class Relation extends RDB
 {
+
     public static function buildVirtualFieldName(string $relationName, string $fieldName): string
     {
         return "{$relationName}__{$fieldName}";
@@ -161,6 +162,12 @@ class Relation extends RDB
         }
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        $this->validateAllowTypesIfRelationWithFile($entity);
+        parent::beforeSave($entity, $options);
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
@@ -190,6 +197,8 @@ class Relation extends RDB
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
+
+
 
         $this->deleteAlreadyDeleted($entity);
     }
@@ -388,5 +397,31 @@ class Relation extends RDB
                 }
             }
         }
+    }
+
+    protected  function validateAllowTypesIfRelationWithFile(Entity $entity): void
+    {
+        $relationFields = $this->getRelationFields();
+        $linkDefs1  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[0]]);
+        $linkDefs2  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[1]]);
+
+        if(!empty($linkDefs1['entity']) && !empty($linkDefs2['entity']) && $linkDefs1['entity'] !== 'File' && $linkDefs2['entity'] !== 'File') {
+            return;
+        }
+
+        $linkDefs = $linkDefs1['entity'] === 'File' ? $linkDefs2 : $linkDefs1;
+        $fileField =  $linkDefs1['entity'] === 'File' ? $relationFields[0] : $relationFields[0];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'links']) as $link => $defs) {
+            if(!empty($defs['relationName']) && $defs['entity'] === 'File' && ucfirst($defs['relationName']) === $this->entityType ) {
+                $allowTypeIds = $this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $link, 'allowFileTypesIds'], []);
+                if(!empty($allowTypeIds) && !empty($file = $entity->get($fileField)) && !in_array($file->get('typeId'), $allowTypeIds)) {
+                    $allowTypeNames = $this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $link, 'allowFileTypesNames'], []);
+                    throw  new BadRequest(sprintf($this->getLanguage()->translate('notAllowToFileWithEntity', 'exceptions', 'File'), $file->get('typeName'), $linkDefs['entity'], join(', ', $allowTypeNames)));
+                }
+            }
+        }
+
+
     }
 }
