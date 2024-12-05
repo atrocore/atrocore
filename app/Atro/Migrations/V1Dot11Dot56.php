@@ -26,17 +26,17 @@ class V1Dot11Dot56 extends Base
     public function up(): void
     {
         if($this->isPgSQL()) {
-            $this->exec("ALTER TABLE file ADD width DOUBLE PRECISION DEFAULT NULL;");
-            $this->exec("ALTER TABLE file ADD height DOUBLE PRECISION DEFAULT NULL;");
-            $this->exec("ALTER TABLE file ADD color_space VARCHAR(255) DEFAULT NULL;");
-            $this->exec("ALTER TABLE file ADD width_unit_id VARCHAR(36) DEFAULT NULL;");
-            $this->exec("ALTER TABLE file ADD height_unit_id VARCHAR(36) DEFAULT NULL;");
+            $this->exec("ALTER TABLE file ADD width DOUBLE PRECISION DEFAULT NULL");
+            $this->exec("ALTER TABLE file ADD height DOUBLE PRECISION DEFAULT NULL");
+            $this->exec("ALTER TABLE file ADD color_space VARCHAR(255) DEFAULT NULL");
+            $this->exec("ALTER TABLE file ADD width_unit_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("ALTER TABLE file ADD height_unit_id VARCHAR(36) DEFAULT NULL");
             $this->exec("CREATE INDEX IDX_FILE_WIDTH_UNIT_ID ON file (width_unit_id, deleted);");
             $this->exec("CREATE INDEX IDX_FILE_HEIGHT_UNIT_ID ON file (height_unit_id, deleted)");
         }else{
-            $this->exec("LTER TABLE file ADD width DOUBLE PRECISION DEFAULT NULL, ADD height DOUBLE PRECISION DEFAULT NULL, ADD color_space VARCHAR(255) DEFAULT NULL, ADD width_unit_id VARCHAR(36) DEFAULT NULL, ADD height_unit_id VARCHAR(36) DEFAULT NULL;");
-            $this->exec("CREATE INDEX IDX_FILE_WIDTH_UNIT_ID ON file (width_unit_id, deleted);");
-            $this->exec("CREATE INDEX IDX_FILE_HEIGHT_UNIT_ID ON file (height_unit_id, deleted);");
+            $this->exec("ALTER TABLE file ADD width DOUBLE PRECISION DEFAULT NULL, ADD height DOUBLE PRECISION DEFAULT NULL, ADD color_space VARCHAR(255) DEFAULT NULL, ADD width_unit_id VARCHAR(36) DEFAULT NULL, ADD height_unit_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("CREATE INDEX IDX_FILE_WIDTH_UNIT_ID ON file (width_unit_id, deleted)");
+            $this->exec("CREATE INDEX IDX_FILE_HEIGHT_UNIT_ID ON file (height_unit_id, deleted)");
         }
     }
 
