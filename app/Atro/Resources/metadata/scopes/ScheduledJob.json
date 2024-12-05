@@ -1,9 +1,10 @@
 {
-    "entity": true,
-    "layouts": false,
-    "tab": false,
-    "acl": false,
-    "customizable":false,
-    "streamDisabled": true,
-    "notificationDisabled": true
+  "entity": true,
+  "layouts": false,
+  "type": "Base",
+  "tab": false,
+  "acl": false,
+  "customizable": false,
+  "streamDisabled": true,
+  "notificationDisabled": true
 }
