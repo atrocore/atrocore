@@ -9,23 +9,15 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
-
 namespace Atro\Jobs;
 
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-class UpdateCurrencyExchangeViaECB extends AbstractJob
+class UpdateCurrencyExchangeViaECB extends AbstractJob implements JobInterface
 {
-    public function run($scheduledJobId): bool
+    public function run(Entity $job): bool
     {
-        $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $scheduledJobId);
-
-        if (empty($scheduledJob)) {
-            return true;
-        }
-
         $this->updateCurrencyRates();
 
         return true;

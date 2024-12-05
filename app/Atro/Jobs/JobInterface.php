@@ -11,7 +11,9 @@
 
 namespace Atro\Jobs;
 
+use Espo\ORM\Entity;
+
 interface JobInterface
 {
-    public function run(): bool;
+    public function run(Entity $job): bool;
 }
