@@ -1,11 +1,11 @@
 {
   "fields": {
     "entityType": {
-      "type": "string",
+      "type": "varchar",
       "required": true
     },
     "entityId": {
-      "type": "string",
+      "type": "varchar",
       "required": true
     }
   },

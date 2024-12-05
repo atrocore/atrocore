@@ -2640,7 +2640,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
             if(model.get('bookmarkId')) {
-                this.notify(this.translate('Bookmarking'));
+                this.notify(this.translate('Unbookmarking') + '...');
                 $.ajax({
                     url: `Bookmark/${model.get('bookmarkId')}`,
                     type: 'DELETE',
@@ -2650,9 +2650,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }).done(function (result) {
                     this.notify(this.translate('Done'), 'success')
                     this.reRender()
+                    this.collection.fetch()
                 }.bind(this));
             }else{
-                this.notify(this.translate('Unbookmarking'));
+                this.notify(this.translate('Bookmarking') + '...');
                 $.ajax({
                     url: 'Bookmark',
                     type: 'POST',
@@ -2664,6 +2665,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     model.set('bookmarkId', result.id)
                     this.notify(this.translate('Done'), 'success')
                     this.reRender()
+                    this.collection.fetch()
                 }.bind(this));
             }
         },

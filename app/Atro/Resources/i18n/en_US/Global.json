@@ -459,7 +459,8 @@
     "withArchived": "With archived",
     "onlyDeleted": "Deleted",
     "onlyFollowed": "Followed",
-    "onlyMyTeams": "My Teams"
+    "onlyMyTeams": "My Teams",
+    "onlyBookmarked": "Bookmarked"
   },
   "presetFilters": {
     "all": "All"
@@ -1002,7 +1003,8 @@
     "massRestoreNoRecordProceed": "No record was restored.",
     "massUpdateSomeRecordNotProceed": "Some record(s) could not be successfully updated.",
     "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
-    "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored."
+    "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
+    "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

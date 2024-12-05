@@ -450,7 +450,8 @@
     "onlyArchived": "Без неархівних",
     "withArchived": "З архівом",
     "onlyFollowed": "Ви підписані",
-    "onlyMyTeams": "Мої команди"
+    "onlyMyTeams": "Мої команди",
+    "onlyBookmarked": "Додати в закладки"
   },
   "presetFilters": {
     "all": "Усі"
@@ -974,7 +975,8 @@
     "massRestoreNoRecordProceed": "Жоден запис не був відновлений.",
     "massUpdateSomeRecordNotProceed": "Деякі записи не були оновлені.",
     "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
-    "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити."
+    "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити.",
+    "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

@@ -16,6 +16,9 @@ namespace Atro\Services;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\QueueManager;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
+use Espo\ORM\EntityCollection;
 use Espo\Services\RecordService;
 
 class Record extends RecordService
@@ -171,6 +174,33 @@ class Record extends RecordService
         }
 
         return [$total, $errors, $sync];
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+        if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled'])) {
+            $entityByIds = [];
+            foreach ($collection as $entity) {
+                $entityByIds[$entity->get('id')] = $entity;
+            }
+
+            $ids = array_keys($entityByIds);
+            $bookmarks = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id, entity_id')
+                ->from('bookmark')
+                ->where('entity_id IN (:ids) AND deleted = :false')
+                ->andWhere('owner_user_id = :ownerUserId')
+                ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('ownerUserId', $this->getUser()->id)
+                ->fetchAllAssociative();
+
+            foreach ($bookmarks as $bookmark) {
+                $entityByIds[$bookmark['entity_id']]->set('bookmarkId', $bookmark['id']);
+            }
+
+        }
     }
 
     protected function getQueueManager(): QueueManager

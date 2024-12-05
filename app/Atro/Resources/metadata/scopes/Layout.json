@@ -10,5 +10,6 @@
   "type": "Base",
   "object": true,
   "notificationDisabled": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "bookmarkDisabled": true
 }

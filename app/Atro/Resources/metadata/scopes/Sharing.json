@@ -9,5 +9,6 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "streamDisabled": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "bookmarkDisabled": true
 }

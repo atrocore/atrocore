@@ -166,10 +166,10 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 });
             }
 
-            if(!this.getMetadata().get(['scopes', scope, 'disableBookmark'])) {
+            if(!this.getMetadata().get(['scopes', scope, 'bookmarkDisabled'])) {
                 list.push({
                     action: 'bookmark',
-                    label: this.model.get('bookmarkId') ? 'UnBookmark' : 'Bookmark',
+                    label: this.model.get('bookmarkId') ? 'Unbookmark' : 'Bookmark',
                     data: {
                         id: this.model.id
                     }

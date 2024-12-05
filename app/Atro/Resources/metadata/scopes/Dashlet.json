@@ -4,5 +4,6 @@
     "tab": false,
     "acl": false,
     "customizable":false,
-    "module": "TreoCore"
+    "module": "TreoCore",
+    "bookmarkDisabled": true
 }

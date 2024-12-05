@@ -11,5 +11,6 @@
   "streamDisabled": true,
   "type": "Base",
   "object": true,
-  "isActiveUnavailable": true
+  "isActiveUnavailable": true,
+  "bookmarkDisabled": true
 }

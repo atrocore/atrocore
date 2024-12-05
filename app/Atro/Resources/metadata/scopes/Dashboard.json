@@ -4,5 +4,6 @@
     "tab":false,
     "acl":false,
     "customizable":false,
-    "streamDisabled": true
+    "streamDisabled": true,
+    "bookmarkDisabled": true
 }
