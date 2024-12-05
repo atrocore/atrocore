@@ -162,7 +162,6 @@ class Cron extends AbstractConsole
                 $jobEntity = $this->getEntityManager()->getEntity('Job');
                 $jobEntity->set([
                     'name'           => $scheduledJob->get('name'),
-                    'status'         => 'Pending',
                     'type'           => $scheduledJob->get('type'),
                     'scheduledJobId' => $scheduledJob->get('id'),
                     'executeTime'    => $nextDate
