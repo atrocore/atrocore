@@ -72,45 +72,6 @@
       "type": "link",
       "readOnly": true
     },
-    "serviceName": {
-      "type": "varchar",
-      "required": true,
-      "maxLength": 100
-    },
-    "method": {
-      "type": "varchar",
-      "required": true,
-      "maxLength": 100
-    },
-    "methodName": {
-      "type": "varchar",
-      "maxLength": 100
-    },
-    "data": {
-      "type": "jsonObject"
-    },
-    "scheduledJobJob": {
-      "type": "foreign",
-      "link": "scheduledJob",
-      "field": "job"
-    },
-    "attempts": {
-      "type": "int"
-    },
-    "targetId": {
-      "type": "varchar",
-      "maxLength": 48
-    },
-    "targetType": {
-      "type": "varchar",
-      "maxLength": 64
-    },
-    "failedAttempts": {
-      "type": "int"
-    },
-    "queueItem": {
-      "type": "link"
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -121,10 +82,6 @@
     }
   },
   "links": {
-    "queueItem": {
-      "type": "belongsTo",
-      "entity": "QueueItem"
-    },
     "scheduledJob": {
       "type": "belongsTo",
       "entity": "ScheduledJob",
@@ -135,10 +92,7 @@
     "sortBy": "createdAt",
     "asc": false,
     "textFilterFields": [
-      "name",
-      "methodName",
-      "serviceName",
-      "scheduledJobName"
+      "name"
     ]
   },
   "indexes": {
