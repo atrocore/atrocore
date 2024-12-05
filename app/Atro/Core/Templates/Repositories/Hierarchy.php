@@ -38,6 +38,15 @@ class Hierarchy extends RDB
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
+    public function hasDeletedRecordsToCleanup(): bool
+    {
+        return false;
+    }
+
+    public function cleanupDeletedRecords(): void
+    {
+    }
+
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {

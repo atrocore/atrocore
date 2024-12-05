@@ -46,6 +46,15 @@ class ReferenceData extends Repository implements Injectable
         $this->init();
     }
 
+    public function hasDeletedRecordsToCleanup(): bool
+    {
+        return false;
+    }
+
+    public function cleanupDeletedRecords(): void
+    {
+    }
+
     public function get($id = null)
     {
         if (empty($id)) {

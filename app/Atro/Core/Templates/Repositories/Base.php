@@ -17,4 +17,12 @@ use Atro\Core\ORM\Repositories\RDB;
 
 class Base extends RDB
 {
+    public function hasDeletedRecordsToCleanup(): bool
+    {
+        return false;
+    }
+
+    public function cleanupDeletedRecords(): void
+    {
+    }
 }

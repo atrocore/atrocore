@@ -42,6 +42,15 @@ class Relation extends RDB
         return [];
     }
 
+    public function hasDeletedRecordsToCleanup(): bool
+    {
+        return false;
+    }
+
+    public function cleanupDeletedRecords(): void
+    {
+    }
+
     public function deleteAlreadyDeleted(Entity $entity): void
     {
         $uniqueColumns = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes', 'unique_relation']);
