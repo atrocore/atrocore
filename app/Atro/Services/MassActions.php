@@ -87,7 +87,7 @@ class MassActions extends HasContainer
 
                 $uniqueIndexes = [];
                 if (empty($uniqueFields)) {
-                    foreach ($this->getMetadata()->get(['entityDefs', $node->entity, 'uniqueIndexes']) as $indexes) {
+                    foreach ($this->getMetadata()->get(['entityDefs', $node->entity, 'uniqueIndexes']) ?? [] as $indexes) {
                         $uniqueIndexes[] = array_map(fn($index) => Util::toCamelCase($index), array_diff($indexes, ['deleted']));
                     }
                 }
@@ -157,8 +157,8 @@ class MassActions extends HasContainer
     /**
      * Add relation to entities
      *
-     * @param array $ids
-     * @param array $foreignIds
+     * @param array  $ids
+     * @param array  $foreignIds
      * @param string $entityType
      * @param string $link
      *
@@ -210,11 +210,11 @@ class MassActions extends HasContainer
                     } catch (BadRequest $e) {
                         $related--;
                         $notRelated[] = [
-                            'id' => $entity->get('id'),
-                            'name' => $entity->get('name'),
-                            'foreignId' => $foreignEntity->get('id'),
+                            'id'          => $entity->get('id'),
+                            'name'        => $entity->get('name'),
+                            'foreignId'   => $foreignEntity->get('id'),
                             'foreignName' => $foreignEntity->get('name'),
-                            'message' => utf8_encode($e->getMessage())
+                            'message'     => utf8_encode($e->getMessage())
                         ];
                     }
                 }
@@ -227,8 +227,8 @@ class MassActions extends HasContainer
     /**
      * Remove relation from entities
      *
-     * @param array $ids
-     * @param array $foreignIds
+     * @param array  $ids
+     * @param array  $foreignIds
      * @param string $entityType
      * @param string $link
      *
@@ -276,11 +276,11 @@ class MassActions extends HasContainer
                     } catch (BadRequest $e) {
                         $unRelated--;
                         $notUnRelated[] = [
-                            'id' => $entity->get('id'),
-                            'name' => $entity->get('name'),
-                            'foreignId' => $foreignEntity->get('id'),
+                            'id'          => $entity->get('id'),
+                            'name'        => $entity->get('name'),
+                            'foreignId'   => $foreignEntity->get('id'),
                             'foreignName' => $foreignEntity->get('name'),
-                            'message' => utf8_encode($e->getMessage())
+                            'message'     => utf8_encode($e->getMessage())
                         ];
                     }
                 }
@@ -341,11 +341,11 @@ class MassActions extends HasContainer
 
 
     /**
-     * @param int $success
-     * @param array $errors
+     * @param int    $success
+     * @param array  $errors
      * @param string $entityType
      * @param string $foreignEntityType
-     * @param bool $relate
+     * @param bool   $relate
      *
      * @return string
      */
@@ -415,7 +415,7 @@ class MassActions extends HasContainer
     /**
      * @param string $name
      * @param string $serviceName
-     * @param array $data
+     * @param array  $data
      *
      * @return bool
      */

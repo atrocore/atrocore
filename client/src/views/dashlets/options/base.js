@@ -113,9 +113,7 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
 
             model.dashletName = this.name;
 
-            if(this.optionsData.entityType){
-                this.model.id = "id"
-            }
+            this.model.id = "id"
 
             this.setupBeforeFinal();
 

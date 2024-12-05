@@ -529,20 +529,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             return data;
         },
 
-        save: function (callback, skipExit) {
-            this.beforeBeforeSave();
-
+        getChangedAttributes() {
             var data = this.getDataForSave();
-
-            var self = this;
-            var model = this.model;
-
             var initialAttributes = this.attributes;
 
-            var beforeSaveAttributes = this.model.getClonedAttributes();
-
             var attrs = false;
-            if (model.isNew()) {
+            if (this.model.isNew()) {
                 attrs = data;
             } else {
                 for (var name in data) {
@@ -552,6 +544,24 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                     (attrs || (attrs = {}))[name] = data[name];
                 }
             }
+
+            return attrs;
+        },
+
+        hasChangedAttributes() {
+            return !!this.getChangedAttributes();
+        },
+
+        save: function (callback, skipExit) {
+            this.beforeBeforeSave();
+
+            var self = this;
+            var model = this.model;
+
+            var initialAttributes = this.attributes;
+            var beforeSaveAttributes = this.model.getClonedAttributes();
+
+            var attrs = this.getChangedAttributes();
 
             if (!attrs) {
                 this.trigger('cancel:save');

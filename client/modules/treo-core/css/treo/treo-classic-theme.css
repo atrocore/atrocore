@@ -21904,7 +21904,7 @@ td[data-name="draggableIcon"] {
 .full-page-modal .html-preview .body-container .side-container {
     display: none;
     margin-right: -28px;
-    padding: 8px 14px 0 0;
+    padding: 0 14px 0 0;
     border: 1px solid rgba(0,0,0,0.2);
     border-radius: 3px 0 0 3px;
     width: 350px;
@@ -21922,9 +21922,17 @@ td[data-name="draggableIcon"] {
     display: block;
 }
 
-.full-page-modal .html-preview .body-container .side-container > .record-buttons {
-    margin-left: 10px;
-    margin-bottom: 8px;
+.full-page-modal .html-preview .body-container .side-container .side-header {
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.full-page-modal .html-preview .body-container .side-container .autosave > label {
+    font-weight: 400;
+    user-select: none;
+    vertical-align: middle;
 }
 
 .full-page-modal .html-preview .header-container {
