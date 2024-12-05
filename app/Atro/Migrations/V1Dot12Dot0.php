@@ -63,6 +63,14 @@ class V1Dot12Dot0 extends Base
 //            ->setParameter('active', 'Active')
 //            ->executeQuery();
 
+//        $this->getConnection()->createQueryBuilder()
+//            ->delete($this->getConnection()->quoteIdentifier('job'))
+//            ->where('status=:pending OR status=:running OR deleted=:true')
+//            ->setParameter('pending', 'Pending')
+//            ->setParameter('running', 'Running')
+//            ->setParameter('true', true, ParameterType::BOOLEAN)
+//            ->executeQuery();
+
 //        $this->updateComposer('atrocore/core', '^1.12.0');
     }
 

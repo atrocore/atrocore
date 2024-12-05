@@ -128,6 +128,8 @@ class Cron extends AbstractConsole
 
     protected function cleanupEntities(): void
     {
+        // for all entities we have to check if we should delete something and if we should we create a job for it
+
         // if ($this->getConfig()->get('notificationsMaxDays') !== 0) {
         //            $this->createJob('Delete Notifications', '20 1 * * 0', 'Notification', 'deleteOld');
         //        }
@@ -177,7 +179,6 @@ class Cron extends AbstractConsole
         //            'executeTime' => $nextDate
         //        ]);
         //        $this->getEntityManager()->saveEntity($jobEntity);
-
     }
 
     /**
@@ -355,11 +356,6 @@ class Cron extends AbstractConsole
 
         if (strpos($log, 'Creating restore point') === false) {
             return false;
-        }
-
-        // @todo remove this after 01.06.2021
-        if (strpos($log, 'Sending notification(s)') !== false) {
-            unlink(Application::COMPOSER_LOG_FILE);
         }
 
         return true;
