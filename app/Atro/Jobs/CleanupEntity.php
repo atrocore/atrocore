@@ -42,9 +42,6 @@ class CleanupEntity extends AbstractJob implements JobInterface
         //        if ($this->getConfig()->get('deletedItemsMaxDays') !== 0) {
         //            $this->createJob('Remove Deleted Items', '20 3 * * 0', 'App', 'cleanupDeleted');
         //        }
-        //        if ($this->getConfig()->get('cleanDbSchema') !== false) {
-        //            $this->createJob('Clean DB Schema', '50 3 * * 0', 'App', 'cleanDbSchema');
-        //        }
         //        if ($this->getConfig()->get('cleanEntityTeam') !== false) {
         //            $this->createJob('Clean Entity Team', '0 4 * * 0', 'App', 'cleanupEntityTeam');
         //        }

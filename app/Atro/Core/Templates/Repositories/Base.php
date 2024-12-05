@@ -32,13 +32,18 @@ class Base extends RDB
             ->where('deleted=:true')
             ->setParameter('true', true, ParameterType::BOOLEAN);
 
+        $date = (new \DateTime())->modify("-{$this->cleanupDays} days")->format('Y-m-d H:i:s');
+
         if ($this->seed->hasField('modifiedAt')) {
             if ($this->seed->hasField('createdAt')) {
-                $qb->andWhere('modified_at<:date OR (modified_at IS NULL AND created_at>:date)');
+                $qb->andWhere('modified_at<:date OR (modified_at IS NULL AND created_at<:date)');
             } else {
                 $qb->andWhere('modified_at<:date OR modified_at IS NULL');
             }
-            $qb->setParameter('date', (new \DateTime())->modify("-{$this->cleanupDays} days")->format('Y-m-d H:i:s'));
+            $qb->setParameter('date', $date);
+        } elseif ($this->seed->hasField('createdAt')) {
+            $qb->andWhere('created_at<:date OR created_at IS NULL');
+            $qb->setParameter('date', $date);
         }
 
         return !empty($qb->fetchAssociative());
