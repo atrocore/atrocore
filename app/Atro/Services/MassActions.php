@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -125,6 +126,11 @@ class MassActions extends HasContainer
                         'stored' => true,
                         'entity' => $updated->toArray()
                     ];
+                } catch (NotModified $e) {
+                    $result[$k] = [
+                        'status' => 'NotModified',
+                        'stored' => true
+                    ];
                 } catch (\Throwable $e) {
                     $result[$k] = [
                         'status'  => 'Failed',
@@ -157,8 +163,8 @@ class MassActions extends HasContainer
     /**
      * Add relation to entities
      *
-     * @param array $ids
-     * @param array $foreignIds
+     * @param array  $ids
+     * @param array  $foreignIds
      * @param string $entityType
      * @param string $link
      *
@@ -210,11 +216,11 @@ class MassActions extends HasContainer
                     } catch (BadRequest $e) {
                         $related--;
                         $notRelated[] = [
-                            'id' => $entity->get('id'),
-                            'name' => $entity->get('name'),
-                            'foreignId' => $foreignEntity->get('id'),
+                            'id'          => $entity->get('id'),
+                            'name'        => $entity->get('name'),
+                            'foreignId'   => $foreignEntity->get('id'),
                             'foreignName' => $foreignEntity->get('name'),
-                            'message' => utf8_encode($e->getMessage())
+                            'message'     => utf8_encode($e->getMessage())
                         ];
                     }
                 }
@@ -227,8 +233,8 @@ class MassActions extends HasContainer
     /**
      * Remove relation from entities
      *
-     * @param array $ids
-     * @param array $foreignIds
+     * @param array  $ids
+     * @param array  $foreignIds
      * @param string $entityType
      * @param string $link
      *
@@ -276,11 +282,11 @@ class MassActions extends HasContainer
                     } catch (BadRequest $e) {
                         $unRelated--;
                         $notUnRelated[] = [
-                            'id' => $entity->get('id'),
-                            'name' => $entity->get('name'),
-                            'foreignId' => $foreignEntity->get('id'),
+                            'id'          => $entity->get('id'),
+                            'name'        => $entity->get('name'),
+                            'foreignId'   => $foreignEntity->get('id'),
                             'foreignName' => $foreignEntity->get('name'),
-                            'message' => utf8_encode($e->getMessage())
+                            'message'     => utf8_encode($e->getMessage())
                         ];
                     }
                 }
@@ -341,11 +347,11 @@ class MassActions extends HasContainer
 
 
     /**
-     * @param int $success
-     * @param array $errors
+     * @param int    $success
+     * @param array  $errors
      * @param string $entityType
      * @param string $foreignEntityType
-     * @param bool $relate
+     * @param bool   $relate
      *
      * @return string
      */
@@ -415,7 +421,7 @@ class MassActions extends HasContainer
     /**
      * @param string $name
      * @param string $serviceName
-     * @param array $data
+     * @param array  $data
      *
      * @return bool
      */
