@@ -41,6 +41,9 @@
     "widthPx": {
       "type": "float"
     },
+    "editable": {
+      "type": "bool"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
