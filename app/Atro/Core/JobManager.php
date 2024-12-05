@@ -37,7 +37,7 @@ class JobManager
         $job->set('pid', System::getPid());
         $job->set('startedAt', (new \DateTime())->format('Y-m-d H:i:s'));
 
-        $className = $this->getMetadata()->get(['app', 'jobHandler', $job->get('handler'), 'className']);
+        $className = $this->getMetadata()->get(['app', 'jobHandlers', $job->get('handler'), 'className']);
         if (empty($className) || !is_a($className, JobInterface::class, true)) {
             $job->set('status', 'Failed');
             $job->set('message', "Handler class for '{$job->get('handler')}' does not exist.");

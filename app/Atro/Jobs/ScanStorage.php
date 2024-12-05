@@ -13,20 +13,26 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-class ScanStorage extends AbstractJob
+use Espo\ORM\Entity;
+
+class ScanStorage extends AbstractJob implements JobInterface
 {
-    public function run($data, $targetId, $targetType, $scheduledJobId): bool
+    public function run(Entity $job): void
     {
-        $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $scheduledJobId);
+        if (empty($job->get('scheduledJobId'))) {
+            return;
+        }
+
+        $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $job->get('scheduledJobId'));
         if (empty($scheduledJob)) {
-            return false;
+            return;
         }
 
         $storageId = $scheduledJob->get('storageId');
         if (empty($storageId)) {
-            return false;
+            return;
         }
 
-        return $this->getServiceFactory()->create('Storage')->createScanJob($storageId, false);
+        $this->getServiceFactory()->create('Storage')->createScanJob($storageId, false);
     }
 }
