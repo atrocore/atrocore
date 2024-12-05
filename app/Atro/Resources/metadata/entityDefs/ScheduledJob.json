@@ -19,7 +19,7 @@
     "scheduling": {
       "type": "varchar",
       "required": true,
-      "view": "views/scheduled-job/fields/scheduling",
+      "default": "0 2 * * *",
       "tooltip": true
     },
     "lastRun": {
@@ -71,14 +71,5 @@
   "collection": {
     "sortBy": "name",
     "asc": true
-  },
-  "jobSchedulingMap": {
-    "ComposerAutoUpdate": "0 5 * * SUN"
-  },
-  "jobs": {
-    "CheckUpdates": {
-      "isSystem": true,
-      "scheduling": "0 2 * * *"
-    }
   }
 }

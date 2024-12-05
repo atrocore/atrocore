@@ -15,8 +15,8 @@ Espo.define('views/scheduled-job/fields/type', 'views/fields/enum', Dep => {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.params.options = [];
-            this.translatedOptions = {};
+            this.params.options = [''];
+            this.translatedOptions = {'':''};
 
             const translatedJobs = this.getLanguage().get('ScheduledJob', 'options', 'type');
 
