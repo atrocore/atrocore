@@ -26,7 +26,6 @@ use Espo\ORM\EntityCollection;
 
 class Relation extends RDB
 {
-
     public static function buildVirtualFieldName(string $relationName, string $fieldName): string
     {
         return "{$relationName}__{$fieldName}";
@@ -197,8 +196,6 @@ class Relation extends RDB
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
-
-
 
         $this->deleteAlreadyDeleted($entity);
     }
@@ -405,7 +402,11 @@ class Relation extends RDB
         $linkDefs1  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[0]]);
         $linkDefs2  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[1]]);
 
-        if(!empty($linkDefs1['entity']) && !empty($linkDefs2['entity']) && $linkDefs1['entity'] !== 'File' && $linkDefs2['entity'] !== 'File') {
+        if(empty($linkDefs1['entity']) || empty($linkDefs2['entity'])) {
+            return;
+        }
+
+        if($linkDefs1['entity'] !== 'File' && $linkDefs2['entity'] !== 'File') {
             return;
         }
 
@@ -421,7 +422,5 @@ class Relation extends RDB
                 }
             }
         }
-
-
     }
 }
