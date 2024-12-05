@@ -16,7 +16,7 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 
-class V1Dot11Dot58 extends Base
+class V1Dot11Dot57 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
