@@ -21,12 +21,15 @@ use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\FileValidator;
+use Atro\Core\Utils\FileManager;
+use Atro\Core\Utils\PDFLib;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\FilePathBuilder;
 use Espo\ORM\Entity;
+use Imagick;
 
 class File extends Base
 {
@@ -91,6 +94,8 @@ class File extends Base
             if($this->getConfig()->get('automaticFileExtensionCorrection')){
                 $this->automaticallyCorrectExtension($entity);
             }
+
+            $this->addDimensions($entity);
         }
     }
 
@@ -455,6 +460,49 @@ class File extends Base
         return $url;
     }
 
+    public function addDimensions(FileEntity $file):void
+    {
+        if(!$file->isImage() && !$file->isPdf()) {
+            return;
+        }
+
+       if($this->getStorage($file) instanceof LocalFileStorageInterface) {
+           $filePath = $this->getFilePath($file);
+       }else{
+           $filePath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . $file->get('name');
+           if(!is_dir(LocalStorage::TMP_DIR)){
+               @mkdir(LocalStorage::TMP_DIR, 0777, true);
+           }
+           $this->getFileManager()->putContents($filePath, $file->getContents());
+           $isTempFile = true;
+       }
+
+       if($file->isImage()) {
+           $this->addDimensionFromImage($file, $filePath);
+       }
+
+       if($file->isPdf()) {
+           if(!is_dir(LocalStorage::TMP_DIR)){
+               @mkdir(LocalStorage::TMP_DIR, 0777, true);
+           }
+
+           $firstPagePath = LocalStorage::TMP_DIR . '/page-1.png';
+           $pdflib = new PDFLib($this->getConfig());
+           $pdflib->setPdfPath($filePath);
+           $pdflib->setOutputPath(LocalStorage::TMP_DIR);
+           $pdflib->setImageFormat(PDFLib::$IMAGE_FORMAT_PNG);
+           $pdflib->setPageRange(1, 1);
+           $pdflib->setFilePrefix('page-');
+           $pdflib->convert();
+           $this->addDimensionFromImage($file, $firstPagePath);
+           $this->getFileManager()->removeFile([$firstPagePath]);
+       }
+
+       if(!empty($isTempFile)) {
+           $this->getFileManager()->removeFile([$filePath]);
+       }
+    }
+
     public function getLargeThumbnailUrl(FileEntity $file): ?string
     {
         if (empty($file->get('storageId'))) {
@@ -468,6 +516,45 @@ class File extends Base
         }
 
         return $url;
+    }
+
+    protected function addDimensionFromImage(FileEntity $file, string $imagePath): void
+    {
+        try {
+            $image = new Imagick($imagePath);
+
+            $file->set('width', $image->getImageWidth());
+            $file->set('widthUnitId', 'pixel');
+            $file->set('height', $image->getImageHeight());
+            $file->set('heightUnitId', 'pixel');
+
+            $colorspaceName = match ($image->getImageColorspace()) {
+                Imagick::COLORSPACE_RGB => 'RGB',
+                Imagick::COLORSPACE_GRAY => 'Grayscale',
+                Imagick::COLORSPACE_TRANSPARENT => 'Transparent',
+                Imagick::COLORSPACE_OHTA => 'OHTA',
+                Imagick::COLORSPACE_LAB => 'LAB',
+                Imagick::COLORSPACE_XYZ => 'XYZ',
+                Imagick::COLORSPACE_YCBCR => 'YCbCr',
+                Imagick::COLORSPACE_YCC => 'YCC',
+                Imagick::COLORSPACE_YIQ => 'YIQ',
+                Imagick::COLORSPACE_YPBPR => 'YPbPr',
+                Imagick::COLORSPACE_YUV => 'YUV',
+                Imagick::COLORSPACE_CMYK => 'CMYK',
+                Imagick::COLORSPACE_SRGB => 'sRGB',
+                Imagick::COLORSPACE_HSB => 'HSB',
+                Imagick::COLORSPACE_HSL => 'HSL',
+                Imagick::COLORSPACE_HWB => 'HWB',
+                Imagick::COLORSPACE_REC601LUMA => 'Rec601Luma',
+                Imagick::COLORSPACE_REC709LUMA => 'Rec709Luma',
+                Imagick::COLORSPACE_LOG => 'Log',
+                default => 'Unknown'
+            };
+            $file->set('colorSpace', $colorspaceName);
+            $image->clear();
+        } catch (\ImagickException $e) {
+            $GLOBALS['log']->error('[Unable to get image dimensions] : ' . $e->getMessage());
+        }
     }
 
     protected function validateByTypeUsingAllowFileTypes(FileEntity $file): void
@@ -571,6 +658,11 @@ class File extends Base
         return $this->getInjection('container')->get(FileValidator::class);
     }
 
+    protected function getFileManager(): FileManager
+    {
+        return $this->getInjection('fileManager');
+    }
+
     protected function init()
     {
         parent::init();
@@ -578,5 +670,6 @@ class File extends Base
         $this->addDependency('container');
         $this->addDependency('language');
         $this->addDependency('fileValidator');
+        $this->addDependency('fileManager');
     }
 }

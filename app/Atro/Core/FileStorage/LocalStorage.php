@@ -609,6 +609,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                 } else {
                     $xattr = new Xattr();
                     $xattr->set($filePath, 'atroId', $file->id);
+                    if(empty($file->get('width')) || empty($file->get('height')) || empty($file->get('colorSpace'))) {
+                        $fileRepo->addDimensions($file);
+                        if($file->isAttributeChanged('width') || $file->isAttributeChanged('height')) {
+                            $fileRepo->save($file);
+                        }
+                    }
                 }
             }
         }

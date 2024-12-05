@@ -645,7 +645,7 @@ class V1Dot10Dot0 extends Base
                 'id'                  => 'a_image',
                 'name'                => 'Image',
                 'assignAutomatically' => true,
-                'extensions'          => ['jpg', 'jpeg', 'gif', 'tiff', 'png', 'bmp']
+                'extensions'          => ['jpg', 'jpeg', 'gif', 'tiff', 'png', 'bmp', 'webp']
             ],
             [
                 'id'                  => 'a_favicon',
