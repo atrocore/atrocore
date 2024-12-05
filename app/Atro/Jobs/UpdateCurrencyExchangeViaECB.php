@@ -16,11 +16,9 @@ use Espo\ORM\EntityCollection;
 
 class UpdateCurrencyExchangeViaECB extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): bool
+    public function run(Entity $job): void
     {
         $this->updateCurrencyRates();
-
-        return true;
     }
 
     public function updateCurrencyRates(Entity $toUpdateUnit = null): void

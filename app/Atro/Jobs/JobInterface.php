@@ -15,5 +15,5 @@ use Espo\ORM\Entity;
 
 interface JobInterface
 {
-    public function run(Entity $job): bool;
+    public function run(Entity $job): void;
 }
