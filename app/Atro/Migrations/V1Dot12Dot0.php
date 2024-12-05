@@ -27,7 +27,7 @@ class V1Dot12Dot0 extends Base
     {
 //        file_put_contents(Cron::DAEMON_KILLER, '1');
 //
-//        $this->getConfig()->set('workersCount', $this->getConfig()->get('queueManagerWorkersCount', 4));
+//        $this->getConfig()->set('maxConcurrentWorkers', $this->getConfig()->get('queueManagerWorkersCount', 6));
 //        $this->getConfig()->save();
 
         if ($this->isPgSQL()) {

@@ -200,11 +200,12 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists(JobManager::QUEUE_FILE)) {
-                $workersCount = $this->getConfig()->get('workersCount', 4);
+                $config = include 'data/config.php';
+                $workersCount = $config['maxConcurrentWorkers'] ?? 4;
 
                 exec('ps ax | grep index.php', $processes);
                 $processes = implode(' | ', $processes);
-                $numberOfWorkers = (substr_count($processes, $this->getPhpBin() . " index.php job ") - 2);
+                $numberOfWorkers = substr_count($processes, $this->getPhpBin() . " index.php job ");
 
                 if ($numberOfWorkers < $workersCount) {
                     $jobs = $this->getEntityManager()->getRepository('Job')
