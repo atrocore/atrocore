@@ -45,7 +45,7 @@ class Daemon extends AbstractConsole
     public function run(array $data): void
     {
         if ($data['name'] === 'job-manager') {
-            $this->jobManagerDaemon();
+            $this->jobManagerDaemon($data['id']);
             return;
         }
 
@@ -192,7 +192,7 @@ class Daemon extends AbstractConsole
         }
     }
 
-    protected function jobManagerDaemon(): void
+    protected function jobManagerDaemon(string $id): void
     {
         while (true) {
             if (file_exists(Cron::DAEMON_KILLER)) {
@@ -205,13 +205,13 @@ class Daemon extends AbstractConsole
 
                 exec('ps ax | grep index.php', $processes);
                 $processes = implode(' | ', $processes);
-                $numberOfWorkers = substr_count($processes, $this->getPhpBin() . " index.php job ");
+                $numberOfWorkers = substr_count($processes, $this->getPhpBin() . " index.php job {$id}_");
 
                 if ($numberOfWorkers < $workersCount) {
                     $jobs = $this->getEntityManager()->getRepository('Job')
                         ->where([
                             'status'        => 'Pending',
-                            'handler!='     => null,
+                            'type!='        => null,
                             'executeTime<=' => (new \DateTime())->format('Y-m-d H:i:s')
                         ])
                         ->limit(0, $workersCount - $numberOfWorkers)
@@ -224,7 +224,7 @@ class Daemon extends AbstractConsole
                         }
                     } else {
                         foreach ($jobs as $job) {
-                            exec($this->getPhpBin() . " index.php job {$job->get('id')} --run >/dev/null 2>&1 &");
+                            exec($this->getPhpBin() . " index.php job {$id}_{$job->get('id')} --run >/dev/null 2>&1 &");
                         }
                     }
                 }

@@ -30,10 +30,13 @@ class Job extends AbstractConsole
             exit(1);
         }
 
+        $parts = explode('_', $data['id']);
+        $id = array_pop($parts);
+
         /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('entityManager');
 
-        $job = $entityManager->getEntity('Job', $data['id']);
+        $job = $entityManager->getEntity('Job', $id);
         if (empty($job)) {
             self::show('No such job!', self::ERROR, true);
         }

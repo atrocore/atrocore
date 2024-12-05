@@ -116,69 +116,11 @@ class Cron extends AbstractConsole
         // find and close queue item that doe not running
         $this->closeFailedQueueItems();
 
-        // delete message from publicData if such job doesn't exist
-        $this->clearEntityMessages();
-
         // send reports
         $this->sendReports();
 
         // run cron jobs
         $this->runCronManager();
-    }
-
-    protected function cleanupEntities(): void
-    {
-        // for all entities we have to check if we should delete something and if we should we create a job for it
-
-        // if ($this->getConfig()->get('notificationsMaxDays') !== 0) {
-        //            $this->createJob('Delete Notifications', '20 1 * * 0', 'Notification', 'deleteOld');
-        //        }
-        //        if ($this->getConfig()->get('queueItemsMaxDays') !== 0) {
-        //            $this->createJob('Delete Queue Items', '42 1 * * 0', 'QueueItem', 'deleteOld');
-        //        }
-        //        if ($this->getConfig()->get('jobsMaxDays') !== 0) {
-        //            $this->createJob('Delete Jobs', '0 2 * * 0', 'Job', 'deleteOld');
-        //        }
-        //        if ($this->getConfig()->get('authLogsMaxDays') !== 0) {
-        //            $this->createJob('Delete Auth Logs', '40 2 * * 0', 'AuthLogRecord', 'deleteOld');
-        //        }
-        //        if ($this->getConfig()->get('actionHistoryMaxDays') !== 0) {
-        //            $this->createJob('Delete Action History Records', '50 2 * * 0', 'ActionHistoryRecord', 'deleteOld');
-        //        }
-        //        if ($this->getConfig()->get('deletedItemsMaxDays') !== 0) {
-        //            $this->createJob('Remove Deleted Items', '20 3 * * 0', 'App', 'cleanupDeleted');
-        //        }
-        //        if ($this->getConfig()->get('cleanDbSchema') !== false) {
-        //            $this->createJob('Clean DB Schema', '50 3 * * 0', 'App', 'cleanDbSchema');
-        //        }
-        //        if ($this->getConfig()->get('cleanEntityTeam') !== false) {
-        //            $this->createJob('Clean Entity Team', '0 4 * * 0', 'App', 'cleanupEntityTeam');
-        //        }
-
-        // $cronExpression = \Cron\CronExpression::factory($scheduling);
-        //        $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
-        //
-        //        $existingJob = $this->getEntityManager()->getRepository('Job')
-        //            ->where([
-        //                'serviceName' => $serviceName,
-        //                'methodName'  => $methodName,
-        //                'executeTime' => $nextDate,
-        //            ])
-        //            ->findOne();
-        //
-        //        if (!empty($existingJob)) {
-        //            return;
-        //        }
-        //
-        //        $jobEntity = $this->getEntityManager()->getEntity('Job');
-        //        $jobEntity->set([
-        //            'name'        => $name,
-        //            'status'      => 'Pending',
-        //            'serviceName' => $serviceName,
-        //            'methodName'  => $methodName,
-        //            'executeTime' => $nextDate
-        //        ]);
-        //        $this->getEntityManager()->saveEntity($jobEntity);
     }
 
     /**
@@ -188,10 +130,6 @@ class Cron extends AbstractConsole
     {
         $auth = new \Espo\Core\Utils\Auth($this->getContainer());
         $auth->useNoAuth();
-
-        if ((new \DateTime())->format('H:i') === '22:22') {
-            $this->cleanupEntities();
-        }
 
         $scheduledJobs = $this->getEntityManager()->getRepository('ScheduledJob')
             ->where(['isActive' => true])
@@ -230,37 +168,6 @@ class Cron extends AbstractConsole
                     'executeTime'    => $nextDate
                 ));
                 $this->getEntityManager()->saveEntity($jobEntity);
-            }
-        }
-    }
-
-    public function clearEntityMessages(): void
-    {
-        $items = DataManager::getPublicData('entityMessage');
-        if (!empty($items) && is_array($items)) {
-            foreach ($items as $entityName => $item) {
-                if (!isset($item['message'])) {
-                    continue;
-                }
-
-                if (empty($item['qmId'])) {
-                    QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
-                    continue;
-                }
-
-                $job = $this->getEntityManager()->getEntity('QueueItem', $item['qmId']);
-                if (empty($job)) {
-                    QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
-                    continue;
-                }
-
-                switch ($job->get('status')) {
-                    case 'Success':
-                    case 'Failed':
-                    case 'Canceled':
-                        QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
-                        break;
-                }
             }
         }
     }
