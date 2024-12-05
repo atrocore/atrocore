@@ -30,16 +30,8 @@ class CleanupEntity extends AbstractJob implements JobInterface
             $GLOBALS['log']->error("Cleanup Entity failed for $entityName: {$e->getMessage()}");
         }
 
-        // for all entities we have to check if we should delete something and if we should we create a job for it
-
-        // if ($this->getConfig()->get('notificationsMaxDays') !== 0) {
-        //            $this->createJob('Delete Notifications', '20 1 * * 0', 'Notification', 'deleteOld');
-        //        }
         //        if ($this->getConfig()->get('queueItemsMaxDays') !== 0) {
         //            $this->createJob('Delete Queue Items', '42 1 * * 0', 'QueueItem', 'deleteOld');
-        //        }
-        //        if ($this->getConfig()->get('jobsMaxDays') !== 0) {
-        //            $this->createJob('Delete Jobs', '0 2 * * 0', 'Job', 'deleteOld');
         //        }
         //        if ($this->getConfig()->get('authLogsMaxDays') !== 0) {
         //            $this->createJob('Delete Auth Logs', '40 2 * * 0', 'AuthLogRecord', 'deleteOld');
