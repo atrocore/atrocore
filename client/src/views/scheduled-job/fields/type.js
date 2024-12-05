@@ -20,9 +20,11 @@ Espo.define('views/scheduled-job/fields/type', 'views/fields/enum', Dep => {
 
             const translatedJobs = this.getLanguage().get('ScheduledJob', 'options', 'type');
 
-            $.each((this.getMetadata().get('app.jobHandler') || {}), (type, handler) => {
-                this.params.options.push(type);
-                this.translatedOptions[type] = translatedJobs[type] ?? type;
+            $.each((this.getMetadata().get('app.jobHandler') || {}), (type, data) => {
+                if (data.scheduledJob) {
+                    this.params.options.push(type);
+                    this.translatedOptions[type] = translatedJobs[type] ?? type;
+                }
             });
         }
 

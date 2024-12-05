@@ -1,6 +1,18 @@
 {
-  "CheckUpdates": "\\Atro\\Jobs\\CheckUpdates",
-  "ComposerAutoUpdate": "\\Atro\\Jobs\\ComposerAutoUpdate",
-  "ScanStorage": "\\Atro\\Jobs\\ScanStorage",
-  "UpdateCurrencyExchangeViaECB": "\\Atro\\Jobs\\UpdateCurrencyExchangeViaECB"
+  "CheckUpdates": {
+    "scheduledJob": true,
+    "className": "\\Atro\\Jobs\\CheckUpdates"
+  },
+  "ComposerAutoUpdate": {
+    "scheduledJob": true,
+    "className": "\\Atro\\Jobs\\ComposerAutoUpdate"
+  },
+  "ScanStorage": {
+    "scheduledJob": true,
+    "className": "\\Atro\\Jobs\\ScanStorage"
+  },
+  "UpdateCurrencyExchangeViaECB": {
+    "scheduledJob": true,
+    "className": "\\Atro\\Jobs\\UpdateCurrencyExchangeViaECB"
+  }
 }

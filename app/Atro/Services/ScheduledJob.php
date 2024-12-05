@@ -56,7 +56,7 @@ class ScheduledJob extends Base
         return true;
     }
 
-    public function executeNow(string $id)
+    public function executeNow(string $id): bool
     {
         $entity = $this->getRepository()->get($id);
         if (empty($entity)) {
