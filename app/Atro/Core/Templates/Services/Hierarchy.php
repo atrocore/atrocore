@@ -481,12 +481,7 @@ class Hierarchy extends Record
         $entity = parent::createEntity($attachment);
 
         // run inherit all for child relations
-        if ((!property_exists($attachment, '_duplicatingEntityId') || empty($attachment->_duplicatingEntityId)) && !empty($entity)
-            && !empty(
-            $this->getMetadata()->get(
-                ['scopes', $entity->getEntityType(), 'relationInheritance']
-            )
-            )) {
+        if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links']) as $link => $linkDefs) {
                 $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
                 if (!empty($relationName) && !in_array($link, $this->getRepository()->getUnInheritedRelations())) {
