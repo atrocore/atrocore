@@ -190,10 +190,10 @@ class Record extends RecordService
                 ->select('id, entity_id')
                 ->from('bookmark')
                 ->where('entity_id IN (:ids) AND deleted = :false')
-                ->andWhere('owner_user_id = :ownerUserId')
+                ->andWhere('user_id = :userId')
                 ->setParameter('ids', $ids, Mapper::getParameterType($ids))
                 ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('ownerUserId', $this->getUser()->id)
+                ->setParameter('userId', $this->getUser()->id)
                 ->fetchAllAssociative();
 
             foreach ($bookmarks as $bookmark) {

@@ -16,7 +16,7 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 
-class V1Dot11Dot57 extends Base
+class V1Dot11Dot58 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -28,12 +28,12 @@ class V1Dot11Dot57 extends Base
         if($this->isPgSQL()) {
             $this->exec("CREATE TABLE bookmark (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', entity_type VARCHAR(255) DEFAULT NULL, entity_id VARCHAR(255) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id));");
             $this->exec("CREATE UNIQUE INDEX IDX_BOOKMARK_UNIQUE_BOOKMARK ON bookmark (deleted, entity_type, entity_id, owner_user_id);");
-            $this->exec("CREATE INDEX IDX_BOOKMARK_OWNER_USER_ID ON bookmark (owner_user_id, deleted)");
+            $this->exec("CREATE INDEX IDX_BOOKMARK_USER_ID ON bookmark (user_id, deleted)");
         }else{
             $this->exec("CREATE TABLE bookmark (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', entity_type VARCHAR(25
-5) DEFAULT NULL, entity_id VARCHAR(255) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, UNIQUE I
-NDEX IDX_BOOKMARK_UNIQUE_BOOKMARK (deleted, entity_type, entity_id, owner_user_id), INDEX IDX_BOOKMARK
-_OWNER_USER_ID (owner_user_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
+5) DEFAULT NULL, entity_id VARCHAR(255) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE I
+NDEX IDX_BOOKMARK_UNIQUE_BOOKMARK (deleted, entity_type, entity_id, user_id), INDEX IDX_BOOKMARK
+_USER_ID (user_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
         }
     }
 

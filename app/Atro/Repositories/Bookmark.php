@@ -25,7 +25,7 @@ class Bookmark extends Base
       if($this->getMetadata()->get(['scope', $entity->get('entityType'), 'bookmarkDisabled'])) {
           throw new BadRequest($this->getInjection('language')->translate('entityCannotBeBookmarked', 'exceptions', 'Bookmark'));
       }
-      $entity->set('ownerUserId', $this->getEntityManager()->getUser()->id);
+      $entity->set('userId', $this->getEntityManager()->getUser()->id);
       parent::beforeSave($entity, $options);
   }
 

@@ -2649,6 +2649,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }
                 }).done(function (result) {
                     this.notify(this.translate('Done'), 'success')
+                    this.trigger('unbookmarked-' + model.urlRoot, model.get('bookmarkId'))
+                    model.set('bookmarkId', null)
                     this.reRender()
                     this.collection.fetch()
                 }.bind(this));
@@ -2662,10 +2664,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         entityId: model.id
                     })
                 }).done(function (result) {
+
                     model.set('bookmarkId', result.id)
                     this.notify(this.translate('Done'), 'success')
-                    this.reRender()
-                    this.collection.fetch()
+                    this.trigger('bookmarked-' + model.urlRoot, model.get('bookmarkId'))
+                    let shouldNotReRender  = false;
+
+                    for (const where of (this.collection.where ?? [])) {
+                        if (where.type === 'bool' && (where.value ?? []).includes('onlyBookmarked')) {
+                            this.collection.fetch()
+                            shouldNotReRender = true;
+                            break;
+                        }
+                    }
+
+                    if(!shouldNotReRender) {
+                        this.reRender();
+                    }
+
                 }.bind(this));
             }
         },

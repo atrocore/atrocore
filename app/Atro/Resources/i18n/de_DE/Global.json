@@ -48,7 +48,8 @@
     "NotificationProfile": "Benachrichtigungsprofil",
     "NotificationRule": "Meldevorschrift",
     "Country": "Land",
-    "HtmlSanitizer": "HTML Sanitizer"
+    "HtmlSanitizer": "HTML Sanitizer",
+    "Bookmark": "Lesezeichen"
   },
   "scopeNamesPlural": {
     "Language": "Sprachen",
@@ -92,7 +93,8 @@
     "NotificationProfile": "Benachrichtigungs-Profile",
     "NotificationRule": "Benachrichtigungsregeln",
     "Country": "Länder",
-    "HtmlSanitizer": "HTML Sanitizers"
+    "HtmlSanitizer": "HTML Sanitizers",
+    "Bookmark": "Lesezeichen"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
