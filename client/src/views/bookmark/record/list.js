@@ -7,6 +7,7 @@
  * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
+
 Espo.define('views/bookmark/record/list', 'views/record/list-expanded', function (Dep) {
 
     return Dep.extend({

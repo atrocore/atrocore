@@ -7,6 +7,7 @@
  * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
+
 Espo.define('views/bookmark/panel', 'view', function (Dep) {
     return Dep.extend({
         template: 'bookmark/panel',
@@ -50,7 +51,6 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
         },
 
         canLoadMore() {
-            console.log('length')
             return this.collection.length && (this.collection.length < this.collection.total);
         },
 
@@ -70,7 +70,6 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                                     this.groups[key].collection = [...group.collection, ...el.collection];
                                     this.groups[key].rowList = [...group.rowList, ...el.rowList];
                                 }
-
                             })
                         }
                     })

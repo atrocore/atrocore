@@ -27,6 +27,7 @@ class Bookmark extends Base
             "type" => "equals",
             "value" => $this->getUser()->id
         ];
+
         $params['sortBy'] = "entityType";
 
         $result = parent::findEntities($params);
@@ -87,54 +88,5 @@ class Bookmark extends Base
             "total" => $count,
             "list" => array_values($result)
         ];
-
-//            $groupedCollections = [];
-//
-//            foreach ($result['collection'] as $item) {
-//                $groupedCollections[$item->get('entityType')][$item->get('entityId')] = $item->toArray();
-//            }
-//
-//            foreach ($groupedCollections as $entityType => $items) {
-//                /** @var Connection $connection */
-//                $connection = $this->getEntityManager()->getConnection();
-//                $entityNames = $connection->createQueryBuilder()
-//                    ->select('id, name, deleted')
-//                    ->from($connection->quoteIdentifier(strtolower(Util::toCamelCase($entityType))))
-//                    ->where('id IN (:ids)')
-//                    ->setParameter('ids', array_column(array_values($items), 'entityId'), Connection::PARAM_STR_ARRAY)
-//                    ->fetchAllAssociative();
-//
-//                $entityNameByIds = [];
-//                foreach ($entityNames as $entityName) {
-//                    $entityNameByIds[$entityName['id']] = $entityName;
-//                }
-//
-//                foreach ($items as $entityId => $item) {
-//                    if (!empty($entityNameByIds[$entityId])) {
-//                        $data = $entityNameByIds[$entityId];
-//                        if (!empty($data['deleted'])) {
-//                            $this->getEntityManager()->removeEntity(
-//                                $this->getEntityManager()->getRepository('Bookmark')->get($item['id'])
-//                            );
-//                            unset($groupedCollections[$entityType][$entityId]);
-//                            continue;
-//                        }
-//                        $groupedCollections[$entityType][$entityId]['entityName'] = $data['name'];
-//                    } else {
-//
-//                        $this->getEntityManager()->removeEntity(
-//                            $this->getEntityManager()->getRepository('Bookmark')->get($item['id'])
-//                        );
-//                        unset($groupedCollections[$entityType][$entityId]);
-//                    }
-//                }
-//
-//                $groupedCollections[$entityType] = array_values($groupedCollections[$entityType]);
-//            }
-
-//            return [
-//                "total" => $result['total'],
-//                "list" => $groupedCollections
-//            ];
     }
 }

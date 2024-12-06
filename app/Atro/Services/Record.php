@@ -199,7 +199,6 @@ class Record extends RecordService
             foreach ($bookmarks as $bookmark) {
                 $entityByIds[$bookmark['entity_id']]->set('bookmarkId', $bookmark['id']);
             }
-
         }
     }
 
