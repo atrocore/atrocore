@@ -14,7 +14,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
         loadingGroups: false,
         groups: [],
         events: {
-            'click [data-action="showMore"]': function(e)  {
+            'click [data-action="showMore"]': function (e) {
                 $(e.currentTarget).addClass('disabled');
                 $(e.currentTarget).parent().find('img').css('display', 'block');
 
@@ -55,25 +55,25 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
         },
 
         fetchCollectionGroups(callback, offset = 0) {
-            this.ajaxGetRequest('Bookmark',{
+            this.ajaxGetRequest('Bookmark', {
                 maxSize: 10,
                 offset: offset,
             }).then(data => {
-                if(this.groups.length) {
+                if (this.groups.length) {
                     let keys = this.groups.map(group => group.key);
                     data.list.forEach((el) => {
-                        if(!keys.includes(el.key)) {
+                        if (!keys.includes(el.key)) {
                             this.groups.push(el)
-                        }else{
+                        } else {
                             this.groups.forEach((group, key) => {
-                                if(el.key === group.key) {
+                                if (el.key === group.key) {
                                     this.groups[key].collection = [...group.collection, ...el.collection];
                                     this.groups[key].rowList = [...group.rowList, ...el.rowList];
                                 }
                             })
                         }
                     })
-                }else{
+                } else {
                     this.groups = data.list
                 }
 
@@ -96,7 +96,9 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
             if (!this.groups || this.groups.length < 1) {
                 return;
             }
-           console.log(this.groups.length);
+            if(this.groups.length === 1) {
+                this.$el.find('.group .list-container').css('min-height', '300px')
+            }
             this.groups.forEach((group, key) => {
                 this.getCollectionFactory().create(group.key, groupCollection => {
                     this.initGroupCollection(group, groupCollection, () => {
@@ -107,7 +109,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                                 rows: [
                                     [
                                         {
-                                            name:"name",
+                                            name: "name",
                                             link: true,
                                             notSortable: true
                                         }
@@ -120,13 +122,15 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                         this.clearView('bookmark' + group.key)
                         this.createView('bookmark' + group.key, viewName, options, view => {
                             view.render();
-
                             this.listenTo(view, 'unbookmarked-' + group.key, (bookmarkId) => {
                                 let bookmark = this.collection.get(bookmarkId)
                                 groupCollection.remove(bookmark.get('entityId'));
                                 this.groups[key].collection = this.groups[key].collection.filter(item => item.id !== bookmarkId)
-                                this.groups[key].rowList = this.groups[key].collection.filter(id => id !== bookmarkId)
-                                view.$el.find('[data-id="'+bookmark.get('entityId')+'"]').remove()
+                                this.groups[key].rowList = this.groups[key].rowList.filter(id => id !== bookmarkId)
+                                view.$el.find('[data-id="' + bookmark.get('entityId') + '"]').remove()
+                                if(!this.groups[key].length) {
+                                    $(`${this.options.el} .group[data-name="${group.key}"]`).remove()
+                                }
                             })
                         });
                     });
@@ -136,11 +140,12 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
 
         initGroupCollection(group, groupCollection, callback) {
             groupCollection.url = group.key;
-            groupCollection.maxSize = 9999;
+            groupCollection.maxSize = group.collection.length;
             groupCollection.total = group.collection.length;
+            groupCollection.data.select = 'id,name'
             groupCollection.where = [
                 {
-                    "type":"bool",
+                    "type": "bool",
                     "value": ['onlyBookmarked']
                 }
             ]
@@ -156,14 +161,13 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                 });
 
                 this.getModelFactory().create('Bookmark', model => {
-                  if (this.collection.get(item.id)) {
-                      this.collection.remove(item.id);
-                  }
-                  model.set(item);
-                  this.collection.add(model);
-              })
+                    if (this.collection.get(item.id)) {
+                        this.collection.remove(item.id);
+                    }
+                    model.set(item);
+                    this.collection.add(model);
+                })
             });
-
             callback();
         },
     })

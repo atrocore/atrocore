@@ -22,7 +22,7 @@
             {{/each}}
         </div>
         {{else}}
-        <div class="list-container">{{translate 'No Data'}}</div>
+        <div class="list-container" style="padding: 8px 14px">{{translate 'No Data'}}</div>
         {{/if}}
         {{/if}}
     </div>

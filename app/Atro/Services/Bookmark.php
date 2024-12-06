@@ -77,6 +77,10 @@ class Bookmark extends Base
                 }
             }
             $collectionArr = array_map(fn($item) => $item->toArray(), array_values($items));
+            usort($collectionArr, function ($a, $b) {
+                return strcmp($b['entityName'], $a['entityName']);
+            });
+
             $result[$entityType] = [
                 "collection" => $collectionArr,
                 "key" => $entityType,

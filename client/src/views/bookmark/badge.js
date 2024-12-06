@@ -47,18 +47,18 @@ Espo.define('views/bookmark/badge', 'view', function (Dep) {
                 let container = this.$el.find('.bookmark-panel-container');
                 if (!container.is(e.target) && container.has(e.target).length === 0
                     && !this.$el.is(e.target) && this.$el.has(e.target).length === 0) {
-                    this.closeBookmark();
+                    if(!$('.modal-container').length){
+                        this.closeBookmark();
+                    }
                 }
             }.bind(this));
         },
 
         closeBookmark: function () {
             this.$el.removeClass('open');
-
             if (this.hasView('panel')) {
                 this.clearView('panel');
             }
-
             $(document).off('mouseup.bookmark');
         },
     })
