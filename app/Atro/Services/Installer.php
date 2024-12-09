@@ -651,7 +651,7 @@ class Installer extends HasContainer
             json_encode(\Atro\Migrations\V1Dot11Dot44::getDefaultEmailTemplates())
         );
 
-        $scheduledJobs = [
+        $toInsertRecords = [
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
@@ -711,7 +711,7 @@ class Installer extends HasContainer
         ];
 
         $conn = $this->getEntityManager()->getConnection();
-        foreach ($scheduledJobs as $row) {
+        foreach ($toInsertRecords as $row) {
             $qb = $conn->createQueryBuilder();
             $qb->insert($conn->quoteIdentifier($row['tableName']));
             foreach ($row['data'] as $columnName => $value) {
