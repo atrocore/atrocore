@@ -16358,13 +16358,32 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -13px
 }
 
-.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
+#main > .list-container > .list > .table thead th > .layout-editor-container {
+    padding-right: 5px;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .inherited {
     width: 25px;
     height: 25px;
     border: 0;
+    line-height: 1;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .inherited {
+    padding: 5px;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 50%;
-    line-height: 1;
+    margin-left: 0;
 }
 
 .dashboard-header .dashboard-buttons {
@@ -22126,7 +22145,8 @@ td[data-name="draggableIcon"] {
     margin-left: -4px;
     color: #8e8e8e;
     font-size: 12px;
-    vertical-align: bottom;
+    vertical-align: top;
+    display: inline-block;
     line-height: 0;
     user-select: none;
 }

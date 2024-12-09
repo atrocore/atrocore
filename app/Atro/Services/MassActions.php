@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -124,6 +125,11 @@ class MassActions extends HasContainer
                         'status' => 'Updated',
                         'stored' => true,
                         'entity' => $updated->toArray()
+                    ];
+                } catch (NotModified $e) {
+                    $result[$k] = [
+                        'status' => 'NotModified',
+                        'stored' => true
                     ];
                 } catch (\Throwable $e) {
                     $result[$k] = [

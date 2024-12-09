@@ -1,7 +1,7 @@
 {{#if actionList.length}}
 <div class="list-row-buttons btn-group pull-right">
     {{#if hasInheritedIcon}}
-    <button type="button" class="btn btn-link btn-sm">
+    <button type="button" class="btn btn-link btn-sm inherited">
         {{#if isInherited}}<span class="fas fa-link fa-sm" title="{{translate 'inherited'}}"></span>{{/if}}
     </button>
     {{/if}}

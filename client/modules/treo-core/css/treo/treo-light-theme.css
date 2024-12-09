@@ -16104,13 +16104,32 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
   margin-right: -13px;
 }
 
-.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
+#main > .list-container > .list > .table thead th > .layout-editor-container {
+  padding-right: 5px;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .inherited {
   width: 25px;
   height: 25px;
   border: 0;
+  line-height: 1;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .inherited {
+  padding: 5px;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  line-height: 1;
+  margin-left: 0;
 }
 
 .dashboard-header .dashboard-buttons {
@@ -21098,6 +21117,7 @@ color: #3c763d;
   vertical-align: top;
   line-height: 0;
   user-select: none;
+  display: inline-block;
 }
 
 .panel-heading > .panel-title > .collapser > svg {

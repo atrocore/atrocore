@@ -83,6 +83,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
         if (!$file->getStorage()->get('syncFolders')) {
             $file->set('path', $this->getPathBuilder()->createPath($file->getStorage()->get('path') . DIRECTORY_SEPARATOR));
+            $file->set('thumbnailsPath', $file->get('path'));
         }
 
         $fileName = $this->getLocalPath($file);

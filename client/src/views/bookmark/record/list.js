@@ -24,10 +24,6 @@ Espo.define('views/bookmark/record/list', 'views/record/list-expanded', function
 
         buttonsDisabled: true,
 
-        checkboxes: false,
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+        checkboxes: false
     });
 });

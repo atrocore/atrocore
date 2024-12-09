@@ -235,13 +235,15 @@
     "size": {
       "type": "varchar",
       "measureId": "dimension",
+      "readOnly": true,
       "notStorable": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true
     },
     "colorSpace": {
-      "type": "varchar"
+      "type": "varchar",
+      "readOnly": true
     }
   },
   "links": {
