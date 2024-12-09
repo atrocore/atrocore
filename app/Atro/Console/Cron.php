@@ -108,7 +108,11 @@ class Cron extends AbstractConsole
         // check auth tokens
         $this->authTokenControl();
 
+        // find pending job to create queue file
         $this->createQueueFile();
+
+        // find and close jobs that does not running
+        $this->closeFailedJobs();
 
         // find pending jobs without queue files and create them
         $this->createQueueFiles();
@@ -357,6 +361,21 @@ class Cron extends AbstractConsole
                     rmdir($subFolder);
                 }
                 break;
+            }
+        }
+    }
+
+    private function closeFailedJobs(): void
+    {
+        $repository = $this->getEntityManager()->getRepository('Job');
+        foreach ($repository->where(['status' => 'Running', 'pid!=' => null])->limit(0, 10)->find() as $item) {
+            $pid = $item->get('pid');
+            if (!file_exists("/proc/$pid")) {
+                $item->set('status', 'Failed');
+                $item->set('message', "The Job '{$item->get('id')}' was not completed in the previous run.");
+                $repository->save($item);
+
+                $GLOBALS['log']->error("Job failed: " . $item->get('message'));
             }
         }
     }
