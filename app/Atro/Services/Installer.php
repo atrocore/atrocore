@@ -651,50 +651,75 @@ class Installer extends HasContainer
             json_encode(\Atro\Migrations\V1Dot11Dot44::getDefaultEmailTemplates())
         );
 
-        $connection = $this->getEntityManager()->getConnection();
+        $scheduledJobs = [
+            [
+                'tableName' => 'scheduled_job',
+                'data'      => [
+                    'id'             => 'ComposerAutoUpdate',
+                    'name'           => 'Update system automatically',
+                    'type'           => 'ComposerAutoUpdate',
+                    'is_active'      => true,
+                    'scheduling'     => '0 0 * * SUN',
+                    'created_at'     => date('Y-m-d H:i:s'),
+                    'modified_at'    => date('Y-m-d H:i:s'),
+                    'created_by_id'  => 'system',
+                    'modified_by_id' => 'system',
+                ]
+            ],
+            [
+                'tableName' => 'scheduled_job',
+                'data'      => [
+                    'id'             => 'UpdateCurrencyExchangeViaECB',
+                    'name'           => 'Update currency exchange via ECB',
+                    'type'           => 'UpdateCurrencyExchangeViaECB',
+                    'is_active'      => true,
+                    'scheduling'     => '0 2 * * *',
+                    'created_at'     => date('Y-m-d H:i:s'),
+                    'modified_at'    => date('Y-m-d H:i:s'),
+                    'created_by_id'  => 'system',
+                    'modified_by_id' => 'system',
+                ]
+            ],
+            [
+                'tableName' => 'scheduled_job',
+                'data'      => [
+                    'id'             => 'Cleanup',
+                    'name'           => 'Cleanup deleted data',
+                    'type'           => 'Cleanup',
+                    'is_active'      => true,
+                    'scheduling'     => '0 2 1 * *',
+                    'created_at'     => date('Y-m-d H:i:s'),
+                    'modified_at'    => date('Y-m-d H:i:s'),
+                    'created_by_id'  => 'system',
+                    'modified_by_id' => 'system',
+                ]
+            ],
+            [
+                'tableName' => 'scheduled_job',
+                'data'      => [
+                    'id'             => 'CheckUpdates',
+                    'name'           => 'Check system updates',
+                    'type'           => 'CheckUpdates',
+                    'is_active'      => true,
+                    'scheduling'     => '0 2 * * *',
+                    'created_at'     => date('Y-m-d H:i:s'),
+                    'modified_at'    => date('Y-m-d H:i:s'),
+                    'created_by_id'  => 'system',
+                    'modified_by_id' => 'system',
+                ]
+            ]
+        ];
 
-        $connection->createQueryBuilder()
-            ->insert($connection->quoteIdentifier('scheduled_job'))
-            ->setValue('id', ':id')
-            ->setValue($connection->quoteIdentifier('name'), ':name')
-            ->setValue('job', ':job')
-            ->setValue($connection->quoteIdentifier('status'), ':status')
-            ->setValue('scheduling', ':scheduling')
-            ->setParameters([
-                'id'         => 'ComposerAutoUpdate',
-                'name'       => 'Automatic system update',
-                'job'        => 'ComposerAutoUpdate',
-                'status'     => 'Active',
-                'scheduling' => '0 0 * * SUN'
-            ])
-            ->executeQuery();
-
-        // create scheduled job to update rates
-        $connection->createQueryBuilder()
-            ->insert('scheduled_job')
-            ->values([
-                'id'             => '?',
-                'name'           => '?',
-                'job'            => '?',
-                'scheduling'     => '?',
-                'created_at'     => '?',
-                'modified_at'    => '?',
-                'created_by_id'  => '?',
-                'modified_by_id' => '?',
-                'is_internal'    => '?',
-                'status'         => '?'
-            ])
-            ->setParameter(0, Util::generateId())
-            ->setParameter(1, 'UpdateCurrencyExchangeViaECB')
-            ->setParameter(2, 'UpdateCurrencyExchangeViaECB')
-            ->setParameter(3, '0 2 * * *')
-            ->setParameter(4, date('Y-m-d H:i:s'))
-            ->setParameter(5, date('Y-m-d H:i:s'))
-            ->setParameter(6, 'system')
-            ->setParameter(7, 'system')
-            ->setParameter(8, true, ParameterType::BOOLEAN)
-            ->setParameter(9, 'Active')
-            ->executeStatement();
+        $conn = $this->getEntityManager()->getConnection();
+        foreach ($scheduledJobs as $row) {
+            $qb = $conn->createQueryBuilder();
+            $qb->insert($conn->quoteIdentifier($row['tableName']));
+            foreach ($row['data'] as $columnName => $value) {
+                $qb->setValue($columnName, ":$columnName");
+                $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
+            }
+            $qb->executeQuery();
+        }
 
         foreach ($this->getModuleManager()->getModulesList() as $name) {
             try {
