@@ -149,6 +149,15 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.filter = this.getStoredFilter();
             }
 
+            if(this.model.urlRoot === 'File') {
+                let foreign = this.getMetadata().get(['entityDefs', 'File', 'links', this.link, 'foreign']);
+                let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields', foreign]);
+                if(fieldDefs['type'] === 'linkMultiple' && !(fieldDefs['allowFileTypesIds'] ?? []).includes(this.model.get('typeId'))) {
+                    canSelect = false;
+                    this.defs.create = false;
+                }
+            }
+
             if (this.defs.create) {
                 if (canSelect && this.getAcl().check(this.scope, 'create') && !~['User', 'Team'].indexOf()) {
                     this.buttonList.push({

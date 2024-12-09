@@ -47,6 +47,7 @@
     "fileMoveFailed": "File moving failed.",
     "fileRenameFailed": "File renaming failed.",
     "fileDeleteFailed": "File deleting failed.",
-    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'."
+    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'.",
+    "notAllowToFileWithEntity": "Your are not allow to link a file of type '%s' with  '%s'. The only types allowed are '%s'"
   }
 }
