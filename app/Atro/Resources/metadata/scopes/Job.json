@@ -14,5 +14,7 @@
   "hasOwner": true,
   "quickCreateListDisabled": true,
   "streamDisabled": true,
-  "notificationDisabled": true
+  "notificationDisabled": true,
+  "autoDeleteAfterDays": 21,
+  "cleanupDeletedAfterDays": 35
 }

@@ -1,9 +1,11 @@
 {
-    "entity": true,
-    "layouts": false,
-    "tab": false,
-    "acl": false,
-    "customizable": false,
-    "streamDisabled": true,
-    "notificationDisabled": true
+  "entity": true,
+  "layouts": false,
+  "tab": false,
+  "acl": false,
+  "customizable": false,
+  "streamDisabled": true,
+  "notificationDisabled": true,
+  "autoDeleteAfterDays": 21,
+  "cleanupDeletedAfterDays": 35
 }
