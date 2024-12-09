@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\Application;
+use Atro\Core\JobManager;
 use Atro\Core\Monolog\Handler\ReportingHandler;
 use Atro\Core\QueueManager;
 use Atro\Core\Utils\Util;
@@ -106,6 +107,8 @@ class Cron extends AbstractConsole
 
         // check auth tokens
         $this->authTokenControl();
+
+        $this->createQueueFile();
 
         // find pending jobs without queue files and create them
         $this->createQueueFiles();
@@ -291,6 +294,21 @@ class Cron extends AbstractConsole
                 $token->set('isActive', false);
                 $em->saveEntity($token);
             }
+        }
+    }
+
+    private function createQueueFile(): void
+    {
+        $job = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'status'        => 'Pending',
+                'type!='        => null,
+                'executeTime<=' => (new \DateTime())->format('Y-m-d H:i:s')
+            ])
+            ->findOne();
+
+        if (!empty($job)) {
+            file_put_contents(JobManager::QUEUE_FILE, '1');
         }
     }
 
