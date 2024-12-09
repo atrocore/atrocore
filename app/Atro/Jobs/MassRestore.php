@@ -11,45 +11,30 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Jobs;
 
 use Espo\ORM\Entity;
 
-class MassRestore extends QueueManagerBase
+class MassRestore extends AbstractJob implements JobInterface
 {
-    public function run(array $data = []): bool
+    public function run(Entity $job): void
     {
+        $data = $job->get('payload');
         if (empty($data['entityType']) || empty($data['total']) || empty($data['ids'])) {
-            return false;
+            return;
         }
 
         $entityType = $data['entityType'];
-        $service = $this->getContainer()->get('serviceFactory')->create($entityType);
+        $service = $this->getServiceFactory()->create($entityType);
 
-        foreach ($data['ids'] as $id ) {
+        foreach ($data['ids'] as $id) {
             try {
                 $service->restoreEntity($id);
             } catch (\Throwable $e) {
                 $message = "Restore {$entityType} '$id' failed: {$e->getTraceAsString()}";
                 $GLOBALS['log']->error($message);
-                $this->notify($message);
+                $this->createNotification($job, $message);
             }
         }
-
-        return true;
-    }
-
-    public function getNotificationMessage(Entity $queueItem): string
-    {
-        return '';
-    }
-
-    protected function notify(string $message): void
-    {
-        $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set('type', 'Message');
-        $notification->set('message', $message);
-        $notification->set('userId', $this->getUser()->get('id'));
-        $this->getEntityManager()->saveEntity($notification);
     }
 }
