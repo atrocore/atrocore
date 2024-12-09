@@ -7,5 +7,6 @@
   "importable": true,
   "stream": false,
   "type": "ReferenceData",
-  "object": true
+  "object": true,
+  "bookmarkDisabled": true
 }

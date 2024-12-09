@@ -2628,6 +2628,64 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return 'tr[data-id="' + id + '"]';
         },
 
+        actionBookmark: function(data) {
+            data = data || {}
+            let id = data.id;
+            if (!id) return;
+            let model = null;
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+            if (!model) {
+                return;
+            }
+            if(model.get('bookmarkId')) {
+                this.notify(this.translate('Unbookmarking') + '...');
+                $.ajax({
+                    url: `Bookmark/${model.get('bookmarkId')}`,
+                    type: 'DELETE',
+                    headers: {
+                        'permanently': true
+                    }
+                }).done(function (result) {
+                    this.notify(this.translate('Done'), 'success')
+                    this.trigger('unbookmarked-' + model.urlRoot, model.get('bookmarkId'))
+                    model.set('bookmarkId', null)
+                    this.reRender()
+                    this.collection.fetch()
+                }.bind(this));
+            }else{
+                this.notify(this.translate('Bookmarking') + '...');
+                $.ajax({
+                    url: 'Bookmark',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        entityType: this.entityType,
+                        entityId: model.id
+                    })
+                }).done(function (result) {
+
+                    model.set('bookmarkId', result.id)
+                    this.notify(this.translate('Done'), 'success')
+                    this.trigger('bookmarked-' + model.urlRoot, model.get('bookmarkId'))
+                    let shouldNotReRender  = false;
+
+                    for (const where of (this.collection.where ?? [])) {
+                        if (where.type === 'bool' && (where.value ?? []).includes('onlyBookmarked')) {
+                            this.collection.fetch()
+                            shouldNotReRender = true;
+                            break;
+                        }
+                    }
+
+                    if(!shouldNotReRender) {
+                        this.reRender();
+                    }
+
+                }.bind(this));
+            }
+        },
+
         actionQuickRemove: function (data) {
             data = data || {}
             var id = data.id;

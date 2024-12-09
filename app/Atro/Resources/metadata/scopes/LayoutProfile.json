@@ -14,5 +14,6 @@
   "duplicatableRelations": [
     "layouts"
   ],
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "bookmarkDisabled": true
 }

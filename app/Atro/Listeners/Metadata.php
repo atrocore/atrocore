@@ -35,6 +35,8 @@ class Metadata extends AbstractListener
 
         $this->addOnlyDeletedFilter($data);
 
+        $this->addOnlyBookmarkedFilterAndField($data);
+
         $data = $this->addArchive($data);
 
         $data = $this->addActive($data);
@@ -1255,6 +1257,29 @@ class Metadata extends AbstractListener
             }else{
                 $data['app']['globalNotificationRuleIdByOccurrence'][$notificationRule['occurrence']][] = $notificationRule['id'];
             }
+        }
+    }
+
+    protected function addOnlyBookmarkedFilterAndField(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entity => $scopeDefs) {
+            if(!empty($data['clientDefs'][$entity]['bookmarkDisabled'])) {
+                return;
+            }
+            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
+            $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
+                "type" => "varchar",
+                "notStorable" => true,
+                "layoutListDisabled"        => true,
+                "layoutListSmallDisabled"   => true,
+                "layoutDetailDisabled"      => true,
+                "layoutDetailSmallDisabled" => true,
+                "massUpdateDisabled"        => true,
+                "filterDisabled"            => true,
+                "exportDisabled"            => true,
+                "importDisabled"            => true,
+                "emHidden"                  => true
+            ];
         }
     }
 }

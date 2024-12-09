@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "entityType": {
+      "type": "varchar",
+      "required": true
+    },
+    "userId": {
+      "type": "varchar"
+    },
+    "entityId": {
+      "type": "varchar",
+      "required": true
+    },
+    "entityName": {
+      "type": "varchar",
+      "notStorable": true
+    }
+  },
+  "collection": {
+    "sortBy": "entityType",
+    "asc": true
+  },
+  "uniqueIndexes": {
+    "unique_bookmark": [
+      "deleted",
+      "entity_type",
+      "entity_id",
+      "user_id"
+    ]
+  }
+}

@@ -48,7 +48,8 @@
     "NotificationProfile": "Benachrichtigungsprofil",
     "NotificationRule": "Meldevorschrift",
     "Country": "Land",
-    "HtmlSanitizer": "HTML Sanitizer"
+    "HtmlSanitizer": "HTML Sanitizer",
+    "Bookmark": "Lesezeichen"
   },
   "scopeNamesPlural": {
     "Language": "Sprachen",
@@ -92,7 +93,8 @@
     "NotificationProfile": "Benachrichtigungs-Profile",
     "NotificationRule": "Benachrichtigungsregeln",
     "Country": "Länder",
-    "HtmlSanitizer": "HTML Sanitizers"
+    "HtmlSanitizer": "HTML Sanitizers",
+    "Bookmark": "Lesezeichen"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -327,7 +329,11 @@
     "Select Image": "Vorhandenes Bild auswählen",
     "Upload Image": "Bild von einem lokalen Dateisystem hochladen",
     "copyConfigurations": "Konfigurationen kopieren",
-    "youMustConfigureNotificationConnection": "Sie müssen zunächst die Verbindung für  E-Mail-Benachrichtigung konfigurieren, damit Benachrichtigungen gesendet werden können."
+    "youMustConfigureNotificationConnection": "Sie müssen zunächst die Verbindung für  E-Mail-Benachrichtigung konfigurieren, damit Benachrichtigungen gesendet werden können.",
+    "Bookmarking": "Lesezeichen setzen",
+    "Unbookmark": "Lesezeichen entfernen",
+    "Bookmark": "Lesezeichen",
+    "Unbookmarking": "Lesezeichen entfernen"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -475,7 +481,8 @@
     "onlyArchived": "Ohne nicht archiviert",
     "withArchived": "Mit archiviert",
     "onlyFollowed": "Abonniert",
-    "onlyMyTeams": "Meine Teams"
+    "onlyMyTeams": "Meine Teams",
+    "onlyBookmarked": "Lesezeichen"
   },
   "presetFilters": {
     "all": "Alle"
@@ -951,7 +958,8 @@
     "massRestoreNoRecordProceed": "No wurde der Datensatz wiederhergestellt.",
     "massUpdateSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich aktualisiert werden.",
     "massDeleteSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich entfernt werden.",
-    "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden."
+    "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden.",
+    "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden."
   },
   "queryBuilderFilter": {
     "add_rule": "neue Regel",

@@ -12,5 +12,6 @@
   "notifications": false,
   "hasOwner": false,
   "hasAssignedUser": false,
-  "hasTeam": false
+  "hasTeam": false,
+  "bookmarkDisabled": true
 }

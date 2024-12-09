@@ -1,4 +1,5 @@
 {
   "acl": false,
-  "streamDisabled": true
+  "streamDisabled": true,
+  "bookmarkDisabled": true
 }

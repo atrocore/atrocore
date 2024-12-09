@@ -58,7 +58,8 @@
     "NotificationTemplate": "Шаблон сповіщення",
     "NotificationProfile": "Профіль сповіщень",
     "NotificationRule": "Правило сповіщення",
-    "HtmlSanitizer": "HTML Sanitizer"
+    "HtmlSanitizer": "HTML Sanitizer",
+    "Bookmark": "Додати в закладки"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Шаблони електронної пошти",
@@ -106,7 +107,8 @@
     "NotificationProfile": "Профілі сповіщень",
     "NotificationRule": "Правила повідомлення",
     "Country": "Країни",
-    "HtmlSanitizer": "HTML Sanitizers"
+    "HtmlSanitizer": "HTML Sanitizers",
+    "Bookmark": "Закладки"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -338,7 +340,11 @@
     "Select Image": "Обрати існуюче зображення",
     "Upload Image": "Завантажити зображення з пристрою",
     "copyConfigurations": "Копіювання конфігурацій",
-    "youMustConfigureNotificationConnection": "Щоб сповіщення надсилалися, спочатку потрібно налаштувати підключення до електронної пошти."
+    "youMustConfigureNotificationConnection": "Щоб сповіщення надсилалися, спочатку потрібно налаштувати підключення до електронної пошти.",
+    "Bookmarking": "Встановити закладку",
+    "Unbookmark": "Видалити закладку",
+    "Bookmark": "Додати в закладки",
+    "Unbookmarking": "Видалити закладку"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
@@ -446,7 +452,8 @@
     "onlyArchived": "Без неархівних",
     "withArchived": "З архівом",
     "onlyFollowed": "Ви підписані",
-    "onlyMyTeams": "Мої команди"
+    "onlyMyTeams": "Мої команди",
+    "onlyBookmarked": "Додати в закладки"
   },
   "presetFilters": {
     "all": "Усі"
@@ -970,7 +977,8 @@
     "massRestoreNoRecordProceed": "Жоден запис не був відновлений.",
     "massUpdateSomeRecordNotProceed": "Деякі записи не були оновлені.",
     "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
-    "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити."
+    "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити.",
+    "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",
