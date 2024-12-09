@@ -11,21 +11,21 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Jobs;
 
 use Atro\Core\Exceptions\NotModified;
-use Atro\Services\QueueManagerBase;
+use Espo\ORM\Entity;
 
-class MassUpdate extends QueueManagerBase
+class MassUpdate extends AbstractJob implements JobInterface
 {
-    public function run(array $data = []): bool
+    public function run(Entity $job): void
     {
+        $data = $job->get('payload');
         if (empty($data['entityType']) || empty($data['total']) || empty($data['ids']) || empty($data['input'])) {
-            return false;
+            return;
         }
 
-        $entityType = $data['entityType'];
-        $service = $this->getContainer()->get('serviceFactory')->create($entityType);
+        $service = $this->getServiceFactory()->create($data['entityType']);
 
         foreach ($data['ids'] as $id) {
             $input = json_decode(json_encode($data['input']));
@@ -35,10 +35,8 @@ class MassUpdate extends QueueManagerBase
                 $service->updateEntity($id, $input);
             } catch (NotModified $e) {
             } catch (\Throwable $e) {
-                $GLOBALS['log']->error("Update {$entityType} '$id' failed: {$e->getMessage()}");
+                $GLOBALS['log']->error("Update {$data['entityType']} '$id' failed: {$e->getMessage()}");
             }
         }
-        return true;
     }
-
 }

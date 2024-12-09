@@ -52,7 +52,6 @@
   },
   "notificationMessages": {
     "error": "%  ist fehlgeschlagen",
-    "success": "%  wurde erfolgreich abgeschlossen",
-    "queueItemDone": "Das Warteschlangenelement \"%s\" wurde mit dem Status \"%s\" ausgeführt."
+    "success": "%  wurde erfolgreich abgeschlossen"
   }
 }

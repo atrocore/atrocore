@@ -11,17 +11,17 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Jobs;
 
 use Atro\Core\ORM\Repositories\RDB;
-use Atro\DTO\QueueItemDTO;
-use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
-class MassActionCreator extends QueueManagerBase
+class MassActionCreator extends AbstractJob implements JobInterface
 {
-    public function run(array $data = []): bool
+    public function run(Entity $job): void
     {
+        $data = $job->get('payload');
+
         $entityName = $data['entityName'];
         $action = $data['action'];
         $ids = $data['ids'] ?? [];
@@ -37,7 +37,7 @@ class MassActionCreator extends QueueManagerBase
         $offset = 0;
         $part = 0;
 
-        $jobIds = [];
+        $jobs = [];
 
         $select = ['id'];
         $orderBy = 'id';
@@ -47,7 +47,8 @@ class MassActionCreator extends QueueManagerBase
         }
 
         if (empty($ids)) {
-            $sp = $this->getContainer()->get('selectManagerFactory')->create($entityName)
+            $sp = $this->getServiceFactory()
+                ->create($entityName)
                 ->getSelectParams(['where' => $data['params']['where']], true, true);
             $sp['select'] = $select;
         }
@@ -76,7 +77,7 @@ class MassActionCreator extends QueueManagerBase
             }
 
             $jobData = array_merge($additionJobData, [
-                'creatorId'   => $this->qmItem->get('id'),
+                'creatorId'   => $job->get('id'),
                 'entityType'  => $entityName,
                 'total'       => $total,
                 'chunkSize'   => count($collectionIds),
@@ -93,41 +94,31 @@ class MassActionCreator extends QueueManagerBase
                 $name .= " ($part)";
             }
 
-            $qmDto = new QueueItemDTO($name, 'Mass' . ucfirst($action), $jobData);
-            $qmDto->setPriority('Crucial');
-            $qmDto->setStartFrom(new \DateTime('2299-01-01'));
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'        => $name,
+                'type'        => 'Mass' . ucfirst($action),
+                'executeTime' => (new \DateTime('2299-01-01'))->format('Y-m-d H:i:s'),
+                'priority'    => 150,
+                'payload'     => $jobData
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
 
-            $jobIds[] = $this->getContainer()->get('queueManager')->createQueueItem($qmDto);
+            $jobs[] = $jobEntity;
 
             $part++;
         }
 
-        if (!empty($jobIds)) {
-            $jobs = $this->getEntityManager()->getRepository('QueueItem')
-                ->where(['id' => $jobIds])
-                ->find();
-
+        if (!empty($jobs)) {
             $jobsCount = count($jobs);
 
             $i = 1;
             foreach ($jobs as $job) {
                 $job->set('name', sprintf($this->translate('massActionJobName'), $this->translate($action, 'massActions'), $entityName, $i, $jobsCount));
-                $job->set('startFrom', null);
+                $job->set('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
                 $this->getEntityManager()->saveEntity($job);
                 $i++;
             }
         }
-
-        return true;
-    }
-
-    public function getNotificationMessage(Entity $queueItem): string
-    {
-        return '';
-    }
-
-    protected function getMetadata(): Metadata
-    {
-        return $this->getContainer()->get('metadata');
     }
 }

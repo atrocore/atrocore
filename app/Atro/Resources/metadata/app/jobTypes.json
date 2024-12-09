@@ -26,5 +26,13 @@
   "SendEmail": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\SendEmail"
+  },
+  "MassActionCreator": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassActionCreator"
+  },
+  "MassUpdate": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassUpdate"
   }
 }
