@@ -60,6 +60,7 @@ class Layout extends Base
                             'widthPx'     => $item['widthPx'] ?? null,
                             'isLarge'     => $item['isLarge'] ?? false,
                             'cssStyle'    => $item['cssStyle'] ?? null,
+                            'editable'    => $item['editable'] ?? false,
                             'sortOrder'   => $index,
                         ]);
 
