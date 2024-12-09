@@ -7,5 +7,5 @@
   "streamDisabled": true,
   "notificationDisabled": true,
   "autoDeleteAfterDays": 21,
-  "cleanupDeletedAfterDays": 35
+  "cleanDeletedAfterDays": 35
 }
