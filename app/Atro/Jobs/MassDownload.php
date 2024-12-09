@@ -11,22 +11,24 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Jobs;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Exception;
-use Espo\Core\Utils\EntityManager;
+use Atro\Services\File;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
-class MassDownload extends QueueManagerBase
+class MassDownload extends AbstractJob implements JobInterface
 {
     public const ZIP_TMP_DIR = 'data' . DIRECTORY_SEPARATOR . '.zip-cache';
 
-    public function run(array $data = []): bool
+    public function run(Entity $job): void
     {
+        $data = $job->get('payload');
+
         /* @var $service File */
-        $service = $this->getContainer()->get('serviceFactory')->create('File');
+        $service = $this->getServiceFactory()->create('File');
         $files = $this->getEntityManager()->getRepository('File')->find($data['selectParams']);
 
         if (count($files) === 0) {
@@ -34,7 +36,7 @@ class MassDownload extends QueueManagerBase
         }
 
         $zip = new \ZipArchive();
-        $zipDir = self::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'download' . DIRECTORY_SEPARATOR . $this->qmItem->get('id');
+        $zipDir = self::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'download' . DIRECTORY_SEPARATOR . $job->get('id');
         Util::createDir($zipDir);
         $date = (new \DateTime())->format('Y-m-d H-i-s');
         $name = "download-files-$date.zip";
@@ -60,10 +62,11 @@ class MassDownload extends QueueManagerBase
         $input->folderId = $this->getZipFolderEntity()->get('id');
 
         $fileData = $service->moveLocalFileToFileEntity($input, $fileName);
-        $this->qmItem->_fileId = $fileData['id'];
         Util::removeDir($zipDir);
 
-        return true;
+        $message = sprintf($this->translate('zipDownloadNotification', 'labels', 'File'), $fileData['id']);
+
+        $this->createNotification($job, $message);
     }
 
     public function getZipFolderEntity(): \Atro\Entities\Folder
@@ -82,20 +85,6 @@ class MassDownload extends QueueManagerBase
             $this->getEntityManager()->saveEntity($folder);
         }
         return $folder;
-    }
-
-    public function getEntityManager(): \Espo\ORM\EntityManager
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    public function getNotificationMessage(Entity $queueItem): string
-    {
-        $message = Parent::getNotificationMessage($queueItem);
-        if ($queueItem->get('status') === 'Success') {
-            $message .= ' ' . sprintf($this->translate('zipDownloadNotification', 'labels', 'File'), $queueItem->_fileId);
-        }
-        return $message;
     }
 
     public static function clearCache(): void

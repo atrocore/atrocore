@@ -219,10 +219,17 @@ class File extends Base
     public function massDownload(array $where): bool
     {
         $selectParams = $this->getSelectParams(['where' => $where]);
-        $this
-            ->getInjection('container')
-            ->get('queueManager')
-            ->createQueueItem('Download Files', 'MassDownload', ['selectParams' => $selectParams], 'High');
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'     => 'Download Files',
+            'type'     => 'MassDownload',
+            'priority' => 200,
+            'payload'  => [
+                'selectParams' => $selectParams
+            ]
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
 
         return true;
     }

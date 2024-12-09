@@ -185,7 +185,7 @@ class Sender
 
     public function getAttachmentTmpDirectory(): string
     {
-        return \Atro\Services\MassDownload::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'mailSender' . DIRECTORY_SEPARATOR . Util::generateId();
+        return \Atro\Jobs\MassDownload::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'mailSender' . DIRECTORY_SEPARATOR . Util::generateId();
     }
 
     protected function prepareBodyPlain(string $body): string

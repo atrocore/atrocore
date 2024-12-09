@@ -42,5 +42,9 @@
   "MassRestore": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassRestore"
+  },
+  "MassDownload": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassDownload"
   }
 }
