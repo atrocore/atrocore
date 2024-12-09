@@ -21056,11 +21056,6 @@ button.category:focus {
         flex: 1;
     }
 
-    .bottom .panel .panel-title .collapser {
-        position: relative;
-        top: -4px !important;
-    }
-
     .bottom .panel .panel-title > .action {
         display: inline-block;
         max-width: calc(100% - 40px);
