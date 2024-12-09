@@ -120,6 +120,90 @@
             }
           ]
         }
+      },
+      "unitSize": {
+        "visible": {
+          "conditionGroup" : [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "contains",
+                  "attribute": "mimeType",
+                  "value": "image/"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "mimeType",
+                  "value": "application/pdf"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "unitWidth": {
+        "visible": {
+          "conditionGroup" : [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "contains",
+                  "attribute": "mimeType",
+                  "value": "image/"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "mimeType",
+                  "value": "application/pdf"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "unitHeight": {
+        "visible": {
+          "conditionGroup" : [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "contains",
+                  "attribute": "mimeType",
+                  "value": "image/"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "mimeType",
+                  "value": "application/pdf"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "colorSpace": {
+        "visible": {
+          "conditionGroup" : [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "contains",
+                  "attribute": "mimeType",
+                  "value": "image/"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "mimeType",
+                  "value": "application/pdf"
+                }
+              ]
+            }
+          ]
+        }
       }
     }
   }
