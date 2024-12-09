@@ -80,16 +80,6 @@ class Cron extends AbstractConsole
             return;
         }
 
-        // open daemon queue manager streams
-        $queueManagerWorkersCount = $this->getConfig()->get('queueManagerWorkersCount', 4) + 1;
-        $i = 0;
-        while ($i <= $queueManagerWorkersCount) {
-            if (empty(strpos($processes, "index.php daemon qm $i-$id"))) {
-                exec("$php index.php daemon qm $i-$id >/dev/null 2>&1 &");
-            }
-            $i++;
-        }
-
         // open daemon notification
         if (empty(strpos($processes, "index.php daemon notification $id"))) {
             exec("$php index.php daemon notification $id >/dev/null 2>&1 &");
@@ -111,17 +101,8 @@ class Cron extends AbstractConsole
         // find pending job to create queue file
         $this->createQueueFile();
 
-        // find and close jobs that does not running
+        // find and close jobs that has not finished
         $this->closeFailedJobs();
-
-        // find pending jobs without queue files and create them
-        $this->createQueueFiles();
-
-        // delete empty queue folders
-        $this->deleteEmptyQueueFolders();
-
-        // find and close queue item that doe not running
-        $this->closeFailedQueueItems();
 
         // send reports
         $this->sendReports();
@@ -316,55 +297,6 @@ class Cron extends AbstractConsole
         }
     }
 
-    private function createQueueFiles(): void
-    {
-        $repository = $this->getEntityManager()->getRepository('QueueItem');
-
-        $items = $repository
-            ->select(['id', 'sortOrder', 'priority', 'startFrom'])
-            ->where(['status' => 'Pending'])
-            ->order('sortOrder')
-            ->limit(0, 200)
-            ->find();
-
-        $created = false;
-        foreach ($items as $item) {
-            if (empty($item->get('startFrom')) || $item->get('startFrom') <= (new \DateTime())->format('Y-m-d H:i:s')) {
-                $filePath = $repository->getFilePath($item->get('sortOrder'), $item->get('priority'), $item->get('id'));
-                if (!empty($filePath) && !file_exists($filePath)) {
-                    file_put_contents($filePath, $item->get('id'));
-                    $created = true;
-                }
-            }
-        }
-
-        if ($created) {
-            file_put_contents(QueueManager::FILE_PATH, '1');
-        }
-    }
-
-    private function deleteEmptyQueueFolders(): void
-    {
-        $main = QueueManager::QUEUE_DIR_PATH;
-        if (is_dir($main)) {
-            foreach (scandir($main) as $item) {
-                if (in_array($item, ['0', '000001', '88888888888888', '99999999999999', '.', '..'])) {
-                    continue;
-                }
-
-                $subFolder = $main . '/' . $item;
-                if (!is_dir($subFolder)) {
-                    continue;
-                }
-
-                if (count(scandir($subFolder)) === 2) {
-                    rmdir($subFolder);
-                }
-                break;
-            }
-        }
-    }
-
     private function closeFailedJobs(): void
     {
         $repository = $this->getEntityManager()->getRepository('Job');
@@ -376,28 +308,6 @@ class Cron extends AbstractConsole
                 $repository->save($item);
 
                 $GLOBALS['log']->error("Job failed: " . $item->get('message'));
-            }
-        }
-    }
-
-    private function closeFailedQueueItems(): void
-    {
-        $repository = $this->getEntityManager()->getRepository('QueueItem');
-
-        $items = $repository
-            ->where(['status' => 'Running'])
-            ->order('sortOrder')
-            ->limit(0, 20)
-            ->find();
-
-        foreach ($items as $item) {
-            $pid = $item->get('pid');
-            if (!file_exists("/proc/$pid")) {
-                $item->set('status', 'Failed');
-                $item->set('message', "The item '{$item->get('id')}' was not completed in the previous run.");
-                $repository->save($item);
-
-                $GLOBALS['log']->error("QM failed: " . $item->get('message'));
             }
         }
     }
