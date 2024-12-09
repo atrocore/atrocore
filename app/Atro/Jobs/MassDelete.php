@@ -11,21 +11,22 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Jobs;
 
 use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
-class MassDelete extends QueueManagerBase
+class MassDelete extends AbstractJob implements JobInterface
 {
-    public function run(array $data = []): bool
+    public function run(Entity $job): void
     {
+        $data = $job->get('payload');
         if (empty($data['entityType']) || empty($data['total']) || empty($data['ids'])) {
-            return false;
+            return;
         }
 
         $entityType = $data['entityType'];
-        $service = $this->getContainer()->get('serviceFactory')->create($entityType);
+        $service = $this->getServiceFactory()->create($data['entityType']);
 
         $method = 'deleteEntity';
         if (!empty($data['deletePermanently'])) {
@@ -40,25 +41,8 @@ class MassDelete extends QueueManagerBase
             } catch (\Throwable $e) {
                 $message = "MassDelete {$entityType} '$id', failed: {$e->getMessage()}";
                 $GLOBALS['log']->error($message);
-                $this->notify($message);
+                $this->createNotification($job, $message);
             }
         }
-
-        return true;
-    }
-
-    public function getNotificationMessage(Entity $queueItem): string
-    {
-        return '';
-    }
-
-
-    protected function notify(string $message): void
-    {
-        $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set('type', 'Message');
-        $notification->set('message', $message);
-        $notification->set('userId', $this->getUser()->get('id'));
-        $this->getEntityManager()->saveEntity($notification);
     }
 }

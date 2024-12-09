@@ -34,5 +34,9 @@
   "MassUpdate": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassUpdate"
+  },
+  "MassDelete": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassDelete"
   }
 }

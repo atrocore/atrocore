@@ -35,7 +35,9 @@ class MassUpdate extends AbstractJob implements JobInterface
                 $service->updateEntity($id, $input);
             } catch (NotModified $e) {
             } catch (\Throwable $e) {
-                $GLOBALS['log']->error("Update {$data['entityType']} '$id' failed: {$e->getMessage()}");
+                $message = "Update {$data['entityType']} '$id' failed: {$e->getMessage()}";
+                $GLOBALS['log']->error($message);
+                $this->createNotification($job, $message);
             }
         }
     }

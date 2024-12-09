@@ -6,7 +6,6 @@
   "QueueManagerCreateThumbnails": "\\Atro\\Services\\QueueManagerCreateThumbnails",
   "QueueManagerUpsert": "\\Atro\\Services\\QueueManagerUpsert",
   "MassActions": "\\Atro\\Services\\MassActions",
-  "MassDelete": "\\Atro\\Services\\MassDelete",
   "Composer": "\\Atro\\Services\\Composer",
   "MassDownload": "\\Atro\\Services\\MassDownload",
   "QueueManagerActionHandler": "\\Atro\\Services\\QueueManagerActionHandler"
