@@ -36,9 +36,7 @@ class CleanupEntity extends AbstractJob implements JobInterface
         //        if ($this->getConfig()->get('authLogsMaxDays') !== 0) {
         //            $this->createJob('Delete Auth Logs', '40 2 * * 0', 'AuthLogRecord', 'deleteOld');
         //        }
-        //        if ($this->getConfig()->get('actionHistoryMaxDays') !== 0) {
-        //            $this->createJob('Delete Action History Records', '50 2 * * 0', 'ActionHistoryRecord', 'deleteOld');
-        //        }
+
         //        if ($this->getConfig()->get('deletedItemsMaxDays') !== 0) {
         //            $this->createJob('Remove Deleted Items', '20 3 * * 0', 'App', 'cleanupDeleted');
         //        }
