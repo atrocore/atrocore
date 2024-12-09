@@ -21117,6 +21117,7 @@ color: #3c763d;
   vertical-align: top;
   line-height: 0;
   user-select: none;
+  display: inline-block;
 }
 
 .panel-heading > .panel-title > .collapser > svg {
