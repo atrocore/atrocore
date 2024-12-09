@@ -284,6 +284,10 @@ class Cron extends AbstractConsole
 
     private function createQueueFile(): void
     {
+        if (file_exists(JobManager::QUEUE_FILE)) {
+            return;
+        }
+
         $job = $this->getEntityManager()->getRepository('Job')
             ->where([
                 'status'        => 'Pending',
@@ -299,15 +303,26 @@ class Cron extends AbstractConsole
 
     private function closeFailedJobs(): void
     {
-        $repository = $this->getEntityManager()->getRepository('Job');
-        foreach ($repository->where(['status' => 'Running', 'pid!=' => null])->limit(0, 10)->find() as $item) {
-            $pid = $item->get('pid');
-            if (!file_exists("/proc/$pid")) {
-                $item->set('status', 'Failed');
-                $item->set('message', "The Job '{$item->get('id')}' was not completed in the previous run.");
-                $repository->save($item);
+        if (file_exists(JobManager::QUEUE_FILE)) {
+            return;
+        }
 
-                $GLOBALS['log']->error("Job failed: " . $item->get('message'));
+        $jobs = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'status' => 'Running',
+                'pid!='  => null
+            ])
+            ->limit(0, 10)
+            ->find();
+
+        foreach ($jobs as $job) {
+            $pid = $job->get('pid');
+            if (!file_exists("/proc/$pid")) {
+                $job->set('status', 'Failed');
+                $job->set('message', "The Job '{$job->get('id')}' was not completed in the previous run.");
+                $this->getEntityManager()->saveEntity($job);
+
+                $GLOBALS['log']->error("Job failed: " . $job->get('message'));
             }
         }
     }
