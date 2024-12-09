@@ -7,7 +7,6 @@
     "status": {
       "type": "enum",
       "required": true,
-      "readOnly": true,
       "default": "Pending",
       "optionsIds": [
         "Pending",
