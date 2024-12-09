@@ -9,7 +9,7 @@
   },
   "CheckUpdates": {
     "scheduledJob": true,
-    "className": "\\Atro\\Jobs\\CheckUpdates"
+    "handler": "\\Atro\\Jobs\\CheckUpdates"
   },
   "ComposerAutoUpdate": {
     "scheduledJob": true,
