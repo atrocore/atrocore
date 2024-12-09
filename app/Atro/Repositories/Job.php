@@ -22,6 +22,10 @@ class Job extends Base
     {
         parent::beforeSave($entity, $options);
 
+        if (empty($entity->get('executeTime'))) {
+            $entity->set('executeTime', date('Y-m-d H:i:s'));
+        }
+
         if ($entity->isAttributeChanged('status')) {
             if ($entity->get('status') === 'Pending') {
                 $entity->set('message', null);

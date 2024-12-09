@@ -34,7 +34,6 @@ class Container
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'migration'                => \Atro\Core\Migration\Migration::class,
             'twig'                     => \Atro\Core\Twig\Twig::class,
-            'queueManager'             => \Atro\Core\QueueManager::class,
             'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
             'connectionFactory'        => \Atro\Core\Factories\ConnectionFactory::class,
             'eventManager'             => \Atro\Core\Factories\EventManager::class,

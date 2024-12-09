@@ -11,28 +11,30 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Jobs;
 
 use Atro\NotificationTransport\EmailTransport;
 use Espo\ORM\Entity;
 
-class QueueManagerEmailSender extends QueueManagerBase
+class SendEmail extends AbstractJob implements JobInterface
 {
-    /**
-     * @inheritdoc
-     */
-    public function run(array $data = []): bool
+    public function run(Entity $job): void
     {
-        $emailData = !empty($data['emailData']) ? $data['emailData'] : [];
-        $params = !empty($data['params']) ? $data['params'] : [];
-        $connectionEntity = $this->getEntityManager()->getEntity('Connection', $data['connectionId']);
+        $data = $job->get('payload') ?? null;
 
-        if (empty($connectionEntity) || empty($connectionEntity->id)) {
-            $GLOBALS['log']->error("SMTP Connection entity not found : " . $data['connectionId']);
-            return true;
+        if (empty($data['connectionId'])) {
+            return;
         }
 
-        if(!empty($emailData['shouldBeRendered']) && !empty($emailData['notificationParams']) &&  !empty($emailData['subject']) && !empty($emailData['body']) ) {
+        $emailData = $data['emailData'] ?? [];
+        $params = $data['params'] ?? [];
+
+        $connectionEntity = $this->getEntityManager()->getEntity('Connection', $data['connectionId']);
+        if (empty($connectionEntity) || empty($connectionEntity->id)) {
+            $GLOBALS['log']->error("SMTP Connection entity not found : " . $data['connectionId']);
+        }
+
+        if (!empty($emailData['shouldBeRendered']) && !empty($emailData['notificationParams']) && !empty($emailData['subject']) && !empty($emailData['body'])) {
             $emailTransport = $this->getContainer()->get(EmailTransport::class);
             $emailData['subject'] = $emailTransport->renderTemplate($emailData['subject'], $emailData['notificationParams']);
             $emailData['body'] = $emailTransport->renderTemplate($emailData['body'], $emailData['notificationParams']);
@@ -45,15 +47,5 @@ class QueueManagerEmailSender extends QueueManagerBase
         } catch (\Throwable $e) {
             $GLOBALS['log']->error('MailSender: [' . $e->getCode() . '] ' . $e->getMessage());
         }
-
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getNotificationMessage(Entity $queueItem): string
-    {
-        return '';
     }
 }

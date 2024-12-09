@@ -22,5 +22,9 @@
   "UpdateCurrencyExchangeViaECB": {
     "scheduledJob": true,
     "handler": "\\Atro\\Jobs\\UpdateCurrencyExchangeViaECB"
+  },
+  "SendEmail": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\SendEmail"
   }
 }
