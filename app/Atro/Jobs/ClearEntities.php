@@ -36,7 +36,6 @@ class ClearEntities extends AbstractJob implements JobInterface
                 'name'           => "Clear $entityName",
                 'type'           => 'ClearEntity',
                 'scheduledJobId' => $job->get('scheduledJobId'),
-                'executeTime'    => (new \DateTime())->modify('-1 minute')->format('Y-m-d H:i:s'),
                 'payload'        => [
                     'entityName' => $entityName
                 ]

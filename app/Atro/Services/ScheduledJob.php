@@ -68,7 +68,6 @@ class ScheduledJob extends Base
             'name'           => $entity->get('name'),
             'status'         => 'Pending',
             'scheduledJobId' => $entity->get('id'),
-            'executeTime'    => (new \DateTime())->modify('-1 minute')->format('Y-m-d H:i:s'),
             'type'           => $entity->get('type'),
             'priority'       => 200
         ]);
