@@ -44,7 +44,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         data() {
             return _.extend({
-                hasQM: this.getAcl().check('Job', 'read'),
+                hasJM: this.getAcl().check('Job', 'read'),
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled')
             }, Dep.prototype.data.call(this));
