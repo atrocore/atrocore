@@ -15,7 +15,8 @@
     "scheduledJob": "Scheduled Job"
   },
   "labels": {
-    "Create Job": "Create Job"
+    "Create Job": "Create Job",
+    "cancel": "Cancel"
   },
   "options": {
     "status": {

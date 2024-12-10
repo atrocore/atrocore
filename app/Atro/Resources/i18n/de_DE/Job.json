@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "cancel": "Abbrechen"
+  },
   "tooltips": {
     "priority": "Höhere Zahl bedeutet höhere Priorität"
   }

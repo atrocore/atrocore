@@ -7,5 +7,14 @@
   ],
   "recordViews": {
     "detail": "views/job/record/detail"
+  },
+  "queueActions": {
+    "cancel": {
+      "view": "views/job-manager/actions/cancel",
+      "acl": "edit"
+    },
+    "show-message": {
+      "view": "views/job-manager/actions/show-message"
+    }
   }
 }
