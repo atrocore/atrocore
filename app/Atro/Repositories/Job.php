@@ -12,6 +12,7 @@
 namespace Atro\Repositories;
 
 use Atro\ActionTypes\Set;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\JobManager;
 use Atro\Core\Templates\Repositories\Base;
@@ -90,10 +91,19 @@ class Job extends Base
         }
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($entity->get('status') == 'Running') {
+            throw new BadRequest($this->getLanguage()->translate('jobIsRunning', 'exceptions', 'Job'));
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
     protected function init()
     {
         parent::init();
 
-        $this->addDependency('serviceFactory');
+        $this->addDependency('container');
     }
 }

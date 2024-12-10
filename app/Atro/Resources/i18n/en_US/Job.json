@@ -30,5 +30,8 @@
   },
   "tooltips": {
     "priority": "Higher number means higher priority"
+  },
+  "exceptions": {
+    "jobIsRunning": "A running job cannot be removed."
   }
 }
