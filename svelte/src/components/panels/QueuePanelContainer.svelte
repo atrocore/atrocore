@@ -63,7 +63,7 @@
     <div bind:this={panel} class="queue-panel-container">
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
-                <span class="panel-heading-title">{Language.translate('queueManager')}</span>
+                <span class="panel-heading-title">{Language.translate('jobManager')}</span>
                 <span class="pull-right">
                     <a href="/" class="close" on:click={event=>{event.preventDefault();close();}}><span
                             aria-hidden="true">×</span></a>

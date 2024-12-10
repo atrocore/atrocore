@@ -8,10 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/queue-manager/actions/show-message', 'views/queue-manager/actions/abstract-action',
+Espo.define('views/job-manager/actions/show-message', 'views/job-manager/actions/abstract-action',
     Dep => Dep.extend({
 
-        template: 'queue-manager/actions/show-message',
+        template: 'job-manager/actions/show-message',
 
         buttonLabel: 'showMessage',
 
@@ -20,7 +20,7 @@ Espo.define('views/queue-manager/actions/show-message', 'views/queue-manager/act
         },
 
         actionShowMessageModal() {
-            this.createView('modal', 'views/queue-manager/modals/show-message', {
+            this.createView('modal', 'views/job-manager/modals/show-message', {
                 message: this.actionData.message
             }, view => view.render());
         }

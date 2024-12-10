@@ -331,13 +331,13 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         initProgressBadge() {
             if (this.getAcl().check('Job', 'read')) {
 
-                window.addEventListener('qmPanelClosed', () => {
+                window.addEventListener('jobManagerPanelClosed', () => {
                     if (this.qmInterval) {
                         window.clearInterval(this.qmInterval);
                     }
                 });
 
-                new Svelte.QueueManagerIcon({
+                new Svelte.JobManagerIcon({
                     target: this.$el.find('.navbar-header .queue-badge-container').get(0),
                     props: {
                         renderTable: () => {
@@ -346,7 +346,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 });
 
-                new Svelte.QueueManagerIcon({
+                new Svelte.JobManagerIcon({
                     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
                     props: {
                         renderTable: () => {

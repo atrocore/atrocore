@@ -22,7 +22,7 @@
 
     function closePanel(): void {
         isPanelOpen = false;
-        window.dispatchEvent(new Event('qmPanelClosed'));
+        window.dispatchEvent(new Event('jobManagerPanelClosed'));
     }
 </script>
 

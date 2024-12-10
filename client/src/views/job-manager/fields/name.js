@@ -8,14 +8,14 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/queue-manager/fields/name', 'views/fields/varchar',
+Espo.define('views/job-manager/fields/name', 'views/fields/varchar',
     Dep => Dep.extend({
 
-        listTemplate: 'queue-manager/fields/name/list',
+        listTemplate: 'job-manager/fields/name/list',
 
-        listLinkTemplate: 'queue-manager/fields/name/list-link',
+        listLinkTemplate: 'job-manager/fields/name/list-link',
 
-        detailTemplate: 'queue-manager/fields/name/detail',
+        detailTemplate: 'job-manager/fields/name/detail',
 
         data() {
             return _.extend({mutedText: ['Success', 'Failed'].includes(this.model.get('status'))}, Dep.prototype.data.call(this));

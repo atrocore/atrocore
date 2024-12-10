@@ -6,7 +6,7 @@
     },
     {
         "name": "loader",
-        "view": "views/queue-manager/fields/loader",
+        "view": "views/job-manager/fields/loader",
         "widthPx": "50"
     },
     {
@@ -19,7 +19,7 @@
     },
     {
         "name": "actions",
-        "view": "views/queue-manager/fields/actions",
+        "view": "views/job-manager/fields/actions",
         "width": "40"
     }
 ]

@@ -3,7 +3,7 @@
     "name": {
       "type": "varchar",
       "required": true,
-      "view": "views/queue-manager/fields/name"
+      "view": "views/job-manager/fields/name"
     },
     "status": {
       "type": "enum",
