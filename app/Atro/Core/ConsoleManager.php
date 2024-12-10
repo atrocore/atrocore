@@ -102,7 +102,6 @@ class ConsoleManager
             "sql diff --show"              => Console\SqlDiff::class,
             "sql diff --run"               => Console\SqlDiffRun::class,
             "cron"                         => Console\Cron::class,
-            "sj <id> --run"                => Console\ScheduledJob::class,
             "migrate <module> <from> <to>" => Console\Migrate::class,
             "job <id> --run"               => Console\Job::class,
             "notifications --refresh"      => Console\Notification::class,

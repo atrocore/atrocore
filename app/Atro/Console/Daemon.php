@@ -142,7 +142,7 @@ class Daemon extends AbstractConsole
                 break;
             }
 
-            if (file_exists(JobManager::QUEUE_FILE)) {
+            if (file_exists(JobManager::QUEUE_FILE) && !file_exists(JobManager::PAUSE_FILE)) {
                 $config = include 'data/config.php';
                 $workersCount = $config['maxConcurrentWorkers'] ?? 4;
 

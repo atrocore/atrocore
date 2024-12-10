@@ -23,6 +23,8 @@ class JobManager
 
     public const QUEUE_FILE = 'data/job-queue.log';
 
+    const PAUSE_FILE = 'data/job-manager-pause.txt';
+
     public function __construct(Container $container)
     {
         $this->container = $container;
