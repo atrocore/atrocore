@@ -28,7 +28,7 @@ class Job extends Base
             $entity->set('executeTime', date('Y-m-d H:i:s'));
         }
 
-        if ($entity->isAttributeChanged('status')) {
+        if (!$entity->isNew() && $entity->isAttributeChanged('status')) {
             if ($entity->get('status') === 'Pending') {
                 $entity->set('message', null);
             }
@@ -64,8 +64,6 @@ class Job extends Base
                     throw new Error("It is impossible to change the status from '{$entity->getFetched('status')}' to '{$entity->get('status')}'.");
                 }
             }
-
-
         }
     }
 
@@ -78,10 +76,6 @@ class Job extends Base
         }
 
         if ($entity->isAttributeChanged('status')) {
-            if ($entity->get('status') === 'Canceled' && $entity->get('type') === 'MassActionCreator') {
-                $this->cancelMassActions($entity);
-            }
-
             if ($entity->get('status') === 'Canceled' && !empty($entity->get('pid'))) {
                 exec("kill -9 {$entity->get('pid')}");
             }
@@ -106,29 +100,6 @@ class Job extends Base
         }
 
         parent::beforeRemove($entity, $options);
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        if ($entity->get('type') === 'MassActionCreator') {
-            $this->cancelMassActions($entity);
-        }
-
-        parent::afterRemove($entity, $options);
-    }
-
-    protected function cancelMassActions(Entity $job): void
-    {
-        $actionItems = $this
-            ->where([
-                'data*'  => '%"creatorId":"' . $job->get('id') . '"%',
-                'status' => 'Pending'
-            ])
-            ->find();
-        foreach ($actionItems as $item) {
-            $item->set('status', 'Canceled');
-            $this->getEntityManager()->saveEntity($item);
-        }
     }
 
     protected function init()
