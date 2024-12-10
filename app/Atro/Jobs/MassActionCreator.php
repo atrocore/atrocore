@@ -99,6 +99,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 'name'        => $name,
                 'type'        => 'Mass' . ucfirst($action),
                 'status'      => 'Canceled',
+                'executeTime' => (new \DateTime())->modify('+1 year')->format('Y-m-d H:i:s'),
                 'priority'    => 150,
                 'payload'     => $jobData
             ]);
@@ -116,6 +117,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
             foreach ($jobs as $job) {
                 $job->set('name', sprintf($this->translate('massActionJobName'), $this->translate($action, 'massActions'), $entityName, $i, $jobsCount));
                 $job->set('status', 'Payload');
+                $job->set('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
                 $this->getEntityManager()->saveEntity($job);
                 $i++;
             }
