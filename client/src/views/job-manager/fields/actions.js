@@ -32,7 +32,7 @@ Espo.define('views/job-manager/fields/actions', 'views/fields/base',
                 let actionDefs = this.getMetadata().get(['clientDefs', 'Job', 'queueActions', 'cancel']) || this.defaultActionDefs;
                 if (actionDefs.view && this.getAcl().check(this.model, actionDefs.acl)) {
                     this.createView('cancel', actionDefs.view, {
-                        el: `${this.options.el} .job-manager-action[data-type="cancel"]`,
+                        el: `${this.options.el} .queue-manager-action[data-type="cancel"]`,
                         actionData: {},
                         model: this.model
                     }, view => {

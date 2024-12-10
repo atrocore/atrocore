@@ -304,7 +304,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     },
                     {
                         field: 'executeTime',
-                        type: 'ispast'
+                        type: 'past'
                     }
                 ];
                 this.listenToOnce(collection, 'sync', () => {
@@ -317,7 +317,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         layoutName: 'listInJobManager'
                     }, view => {
                         view.render();
-                        this.jmInterval = window.setInterval(() => {
+                        this.qmInterval = window.setInterval(() => {
                             collection.fetch();
                         }, 2000)
                     });
@@ -329,29 +329,29 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         initProgressBadge() {
             if (this.getAcl().check('Job', 'read')) {
 
-                window.addEventListener('jmPanelClosed', () => {
-                    if (this.jmInterval) {
-                        window.clearInterval(this.jmInterval);
+                window.addEventListener('qmPanelClosed', () => {
+                    if (this.qmInterval) {
+                        window.clearInterval(this.qmInterval);
                     }
                 });
 
-                // new Svelte.QueueManagerIcon({
-                //     target: this.$el.find('.navbar-header .queue-badge-container').get(0),
-                //     props: {
-                //         renderTable: () => {
-                //             this.renderQmPanelList();
-                //         }
-                //     }
-                // });
-                //
-                // new Svelte.QueueManagerIcon({
-                //     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
-                //     props: {
-                //         renderTable: () => {
-                //             this.renderQmPanelList();
-                //         }
-                //     }
-                // });
+                new Svelte.QueueManagerIcon({
+                    target: this.$el.find('.navbar-header .queue-badge-container').get(0),
+                    props: {
+                        renderTable: () => {
+                            this.renderQmPanelList();
+                        }
+                    }
+                });
+
+                new Svelte.QueueManagerIcon({
+                    target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
+                    props: {
+                        renderTable: () => {
+                            this.renderQmPanelList();
+                        }
+                    }
+                });
             }
         },
 
