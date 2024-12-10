@@ -15,7 +15,7 @@ namespace Atro\Jobs;
 
 use Espo\ORM\Entity;
 
-class CleanupEntity extends AbstractJob implements JobInterface
+class ClearEntity extends AbstractJob implements JobInterface
 {
     public function run(Entity $job): void
     {
@@ -25,9 +25,9 @@ class CleanupEntity extends AbstractJob implements JobInterface
         }
 
         try {
-            $this->getEntityManager()->getRepository($entityName)->cleanupDeletedRecords();
+            $this->getEntityManager()->getRepository($entityName)->clearDeletedRecords();
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error("Cleanup Entity failed for $entityName: {$e->getMessage()}");
+            $GLOBALS['log']->error("Clear Entity failed for $entityName: {$e->getMessage()}");
         }
     }
 }

@@ -18,7 +18,7 @@ use Doctrine\DBAL\ParameterType;
 
 class Base extends RDB
 {
-    public function hasDeletedRecordsToCleanup(): bool
+    public function hasDeletedRecordsToClear(): bool
     {
         if (empty($this->seed)) {
             return false;
@@ -59,7 +59,7 @@ class Base extends RDB
         return !empty($qb->fetchAssociative());
     }
 
-    public function cleanupDeletedRecords(): void
+    public function clearDeletedRecords(): void
     {
         if (empty($this->seed)) {
             return;

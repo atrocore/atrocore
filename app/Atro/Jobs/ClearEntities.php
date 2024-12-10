@@ -15,26 +15,26 @@ namespace Atro\Jobs;
 
 use Espo\ORM\Entity;
 
-class Cleanup extends AbstractJob implements JobInterface
+class ClearEntities extends AbstractJob implements JobInterface
 {
     public function run(Entity $job): void
     {
         $entities = [];
         foreach ($this->getMetadata()->get('scopes') as $scopeName => $scopeDefs) {
             try {
-                if ($this->getEntityManager()->getRepository($scopeName)->hasDeletedRecordsToCleanup()) {
+                if ($this->getEntityManager()->getRepository($scopeName)->hasDeletedRecordsToClear()) {
                     $entities[] = $scopeName;
                 }
             } catch (\Throwable $e) {
-                $GLOBALS['log']->error("Cleanup failed for $scopeName: {$e->getMessage()}");
+                $GLOBALS['log']->error("Clear failed for $scopeName: {$e->getMessage()}");
             }
         }
 
         foreach ($entities as $entityName) {
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
-                'name'           => "Cleanup $entityName",
-                'type'           => 'CleanupEntity',
+                'name'           => "Clear $entityName",
+                'type'           => 'ClearEntity',
                 'scheduledJobId' => $job->get('scheduledJobId'),
                 'executeTime'    => (new \DateTime())->modify('-1 minute')->format('Y-m-d H:i:s'),
                 'payload'        => [

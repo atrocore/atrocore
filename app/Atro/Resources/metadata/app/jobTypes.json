@@ -1,11 +1,11 @@
 {
-  "Cleanup": {
+  "ClearEntities": {
     "scheduledJob": true,
-    "handler": "\\Atro\\Jobs\\Cleanup"
+    "handler": "\\Atro\\Jobs\\ClearEntities"
   },
-  "CleanupEntity": {
+  "ClearEntity": {
     "scheduledJob": false,
-    "handler": "\\Atro\\Jobs\\CleanupEntity"
+    "handler": "\\Atro\\Jobs\\ClearEntity"
   },
   "CheckUpdates": {
     "scheduledJob": true,

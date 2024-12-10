@@ -683,9 +683,9 @@ class Installer extends HasContainer
             [
                 'tableName' => 'scheduled_job',
                 'data'      => [
-                    'id'             => 'Cleanup',
-                    'name'           => 'Cleanup deleted data',
-                    'type'           => 'Cleanup',
+                    'id'             => 'ClearEntities',
+                    'name'           => 'Clear deleted data',
+                    'type'           => 'ClearEntities',
                     'is_active'      => true,
                     'scheduling'     => '0 2 1 * *',
                     'created_at'     => date('Y-m-d H:i:s'),

@@ -16,12 +16,12 @@ use Doctrine\DBAL\ParameterType;
 
 class EntityTeam extends Relation
 {
-    public function hasDeletedRecordsToCleanup(): bool
+    public function hasDeletedRecordsToClear(): bool
     {
         return true;
     }
 
-    public function cleanupDeletedRecords(): void
+    public function clearDeletedRecords(): void
     {
         foreach ($this->getMetadata()->get('entityDefs', []) as $scope => $data) {
             $tableName = $this->getEntityManager()->getMapper()->toDb($scope);

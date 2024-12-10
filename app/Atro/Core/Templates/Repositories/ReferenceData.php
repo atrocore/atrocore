@@ -46,12 +46,12 @@ class ReferenceData extends Repository implements Injectable
         $this->init();
     }
 
-    public function hasDeletedRecordsToCleanup(): bool
+    public function hasDeletedRecordsToClear(): bool
     {
         return false;
     }
 
-    public function cleanupDeletedRecords(): void
+    public function clearDeletedRecords(): void
     {
     }
 

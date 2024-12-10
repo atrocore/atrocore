@@ -182,10 +182,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "cleanupDeletedRecords": {
-      "type": "bool",
-      "tooltip": true
-    },
     "customStylesheetPath": {
       "type": "varchar",
       "readOnly": true,
