@@ -3,10 +3,6 @@
   "layouts": false,
   "tab": true,
   "acl": true,
-  "aclActionList": [
-    "read",
-    "delete"
-  ],
   "type": "Base",
   "object": true,
   "hasAssignedUser": true,
