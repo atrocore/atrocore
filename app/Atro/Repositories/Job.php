@@ -51,6 +51,7 @@ class Job extends Base
                         "Pending",
                         "Running"
                     ],
+                    "Awaiting" => [],
                     "Failed"   => [
                         "Pending",
                         "Running"

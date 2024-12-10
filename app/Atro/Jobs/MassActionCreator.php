@@ -98,7 +98,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
             $jobEntity->set([
                 'name'        => $name,
                 'type'        => 'Mass' . ucfirst($action),
-                'status'      => 'Canceled',
+                'status'      => 'Awaiting',
                 'priority'    => 150,
                 'ownerUserId' => $job->get('ownerUserId'),
                 'payload'     => $jobData

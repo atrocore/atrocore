@@ -14,20 +14,23 @@
         "Running",
         "Success",
         "Failed",
-        "Canceled"
+        "Canceled",
+        "Awaiting"
       ],
       "options": [
         "Pending",
         "Running",
         "Success",
         "Failed",
-        "Canceled"
+        "Canceled",
+        "Awaiting"
       ],
       "optionColors": [
         "00AFFF",
         "FFE208",
         "1DFF08",
         "FF0000",
+        "DDDDDD",
         "DDDDDD"
       ]
     },

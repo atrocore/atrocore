@@ -25,6 +25,7 @@
       "Running": "Running",
       "Failed": "Failed",
       "Canceled": "Canceled",
+      "Awaiting": "Awaiting",
       "Closed": "Closed"
     }
   },
