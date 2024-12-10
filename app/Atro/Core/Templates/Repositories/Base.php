@@ -93,11 +93,11 @@ class Base extends RDB
             }
         }
 
-        $cleanDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
+        $clearDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
 
         $date = new \DateTime();
-        if ($cleanDays > 0) {
-            $date->modify("-{$cleanDays} days");
+        if ($clearDays > 0) {
+            $date->modify("-{$clearDays} days");
         }
         $date = $date->format('Y-m-d H:i:s');
 
