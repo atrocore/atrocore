@@ -55,26 +55,9 @@ class Storage extends Base
         return true;
     }
 
-    public function getNotificationMessage(Entity $queueItem): string
-    {
-        if (!$queueItem->get('data')->manual) {
-            return '';
-        }
-
-        return sprintf($this->getInjection('language')->translate('scanDone', 'labels', 'Storage'), $queueItem->get('data')->storageName);
-    }
-
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         return [];
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-        $this->addDependency('container');
     }
 
     protected function getLanguage(): Language
