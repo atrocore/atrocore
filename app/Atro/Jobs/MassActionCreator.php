@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\Core\ORM\Repositories\RDB;
-use Espo\ORM\Entity;
+use Atro\Entities\Job;
 
 class MassActionCreator extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
-        $data = $job->get('payload');
+        $data = $job->getPayload();
 
         $entityName = $data['entityName'];
         $action = $data['action'];

@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\Console\AbstractConsole;
+use Atro\Entities\Job;
 use Espo\Core\DataManager;
-use Espo\ORM\Entity;
 
 class CheckUpdates extends AbstractJob implements JobInterface
 {
     public const CHECK_UPDATES_LOG_FILE = 'data/check-updates.log';
 
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
         $php = AbstractConsole::getPhpBinPath($this->getConfig());
         $log = self::CHECK_UPDATES_LOG_FILE;

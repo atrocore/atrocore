@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Espo\ORM\Entity;
+use Atro\Entities\Job;
 
 class ClearEntity extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
-        $entityName = $job->get('payload')['entityName'] ?? null;
+        $entityName = $job->getPayload()['entityName'] ?? null;
         if (empty($entityName)) {
             return;
         }

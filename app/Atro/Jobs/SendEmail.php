@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
+use Atro\Entities\Job;
 use Atro\NotificationTransport\EmailTransport;
-use Espo\ORM\Entity;
 
 class SendEmail extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
-        $data = $job->get('payload') ?? null;
+        $data = $job->getPayload();
 
         if (empty($data['connectionId'])) {
             return;

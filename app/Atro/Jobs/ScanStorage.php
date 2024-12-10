@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Espo\ORM\Entity;
+use Atro\Entities\Job;
 
 class ScanStorage extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
+        $payload = $job->getPayload();
+
         if (!empty($job->get('scheduledJobId'))) {
             $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $job->get('scheduledJobId'));
             if (empty($scheduledJob)) {
@@ -26,7 +28,7 @@ class ScanStorage extends AbstractJob implements JobInterface
             }
             $storageId = $scheduledJob->get('storageId');
         } else {
-            $storageId = $job->get('payload')['storageId'] ?? null;
+            $storageId = $payload['storageId'] ?? null;
         }
 
         if (empty($storageId)) {
@@ -40,7 +42,7 @@ class ScanStorage extends AbstractJob implements JobInterface
 
         $this->getContainer()->get($storage->get('type') . 'Storage')->scan($storage);
 
-        if (!empty($job->get('payload')['manual'])) {
+        if (!empty($payload['manual'])) {
             $message = sprintf($this->translate('scanDone', 'labels', 'Storage'), $storage->get('name'));
             $this->createNotification($job, $message);
         }

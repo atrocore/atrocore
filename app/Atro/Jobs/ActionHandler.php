@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\ActionTypes\TypeInterface;
-use Espo\ORM\Entity;
+use Atro\Entities\Job;
 use Espo\Services\Record;
 
 class ActionHandler extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
-        $data = $job->get('payload');
+        $data = $job->getPayload();
 
         $action = $this->getEntityManager()->getRepository('Action')->get($data['actionId']);
 

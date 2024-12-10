@@ -11,12 +11,13 @@
 
 namespace Atro\Jobs;
 
+use Atro\Entities\Job;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class UpdateCurrencyExchangeViaECB extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
         $this->updateCurrencyRates();
     }

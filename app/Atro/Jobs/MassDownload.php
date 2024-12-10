@@ -15,17 +15,17 @@ namespace Atro\Jobs;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Exception;
+use Atro\Entities\Job;
 use Atro\Services\File;
 use Atro\Core\Utils\Util;
-use Espo\ORM\Entity;
 
 class MassDownload extends AbstractJob implements JobInterface
 {
     public const ZIP_TMP_DIR = 'data' . DIRECTORY_SEPARATOR . '.zip-cache';
 
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
-        $data = $job->get('payload');
+        $data = $job->getPayload();
 
         /* @var $service File */
         $service = $this->getServiceFactory()->create('File');

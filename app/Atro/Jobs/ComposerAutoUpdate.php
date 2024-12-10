@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
+use Atro\Entities\Job;
 use Atro\Services\Composer;
-use Espo\ORM\Entity;
 
 class ComposerAutoUpdate extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
         // cancel changes
         $this->getComposerService()->cancelChanges();

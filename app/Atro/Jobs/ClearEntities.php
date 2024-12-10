@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Espo\ORM\Entity;
+use Atro\Entities\Job;
 
 class ClearEntities extends AbstractJob implements JobInterface
 {
-    public function run(Entity $job): void
+    public function run(Job $job): void
     {
         $entities = [];
         foreach ($this->getMetadata()->get('scopes') as $scopeName => $scopeDefs) {
