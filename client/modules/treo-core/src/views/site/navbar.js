@@ -298,13 +298,15 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 collection.asc = true;
                 collection.where = [
                     {
-                        field: 'status',
+                        attribute: 'status',
                         type: 'in',
                         value: ['Running', 'Pending']
                     },
                     {
-                        field: 'executeTime',
-                        type: 'past'
+                        attribute: 'executeTime',
+                        type: 'past',
+                        dateTime: true,
+                        timeZone: 'UTC'
                     }
                 ];
                 this.listenToOnce(collection, 'sync', () => {
