@@ -30,13 +30,16 @@ abstract class AbstractAction implements TypeInterface
         $this->container = $container;
     }
 
-    public function createQueueItem(Entity $action, \stdClass $input): bool
+    public function createJob(Entity $action, \stdClass $input): bool
     {
         if (!property_exists($input, 'where')) {
             return false;
         }
 
-        $data = ['actionId' => $action->get('id'), 'sourceEntity' => $action->get('sourceEntity'), 'where' => $input->where];
+        $data = ['actionId'     => $action->get('id'),
+                 'sourceEntity' => $action->get('sourceEntity'),
+                 'where'        => $input->where
+        ];
         if (property_exists($input, 'actionSetLinkerId')) {
             $data['actionSetLinkerId'] = $input->actionSetLinkerId;
         }
@@ -50,6 +53,14 @@ abstract class AbstractAction implements TypeInterface
         $this->getEntityManager()->saveEntity($jobEntity);
 
         return true;
+    }
+
+    /**
+     * @deprecated use createJob instead
+     */
+    public function createQueueItem(Entity $action, \stdClass $input): bool
+    {
+        return $this->createJob($action, $input);
     }
 
     public function getSourceEntity($action, \stdClass $input): ?Entity

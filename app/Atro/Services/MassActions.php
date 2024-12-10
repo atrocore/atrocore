@@ -29,7 +29,7 @@ class MassActions extends HasContainer
         parent::init();
     }
 
-    public function upsertViaQm(array $data): array
+    public function upsertViaJob(array $data): array
     {
         $jobEntity = $this->getEntityManager()->getEntity('Job');
         $jobEntity->set([

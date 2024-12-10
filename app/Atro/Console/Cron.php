@@ -16,10 +16,7 @@ namespace Atro\Console;
 use Atro\Core\Application;
 use Atro\Core\JobManager;
 use Atro\Core\Monolog\Handler\ReportingHandler;
-use Atro\Core\QueueManager;
 use Atro\Core\Utils\Util;
-use Atro\Services\QueueManagerBase;
-use Espo\Core\DataManager;
 use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 

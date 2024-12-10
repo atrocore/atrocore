@@ -25,12 +25,12 @@ class MassActions extends AbstractController
         }
 
         $useQueue = $request->headers('use-queue');
-        $viaQm = $useQueue === '1' || strtolower((string)$useQueue) === 'true';
+        $viaJob = $useQueue === '1' || strtolower((string)$useQueue) === 'true';
 
         $data = (array)$data;
 
-        if ($viaQm) {
-            return $this->getService('MassActions')->upsertViaQm($data);
+        if ($viaJob) {
+            return $this->getService('MassActions')->upsertViaJob($data);
         }
 
         return $this->getService('MassActions')->upsert($data);

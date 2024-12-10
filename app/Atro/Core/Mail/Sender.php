@@ -14,7 +14,6 @@ namespace Atro\Core\Mail;
 use Atro\ConnectionType\ConnectionSmtp;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\QueueManager;
 use Atro\Entities\Connection;
 use Atro\Entities\File;
 use Espo\Core\Utils\Config;
