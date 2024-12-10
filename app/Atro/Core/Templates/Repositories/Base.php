@@ -28,7 +28,7 @@ class Base extends RDB
             return true;
         }
 
-        $cleanDays = $this->getMetadata()->get(['scopes', $this->entityName, 'cleanDeletedAfterDays']) ?? 60;
+        $cleanDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
 
         $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
 
@@ -93,7 +93,7 @@ class Base extends RDB
             }
         }
 
-        $cleanDays = $this->getMetadata()->get(['scopes', $this->entityName, 'cleanDeletedAfterDays']) ?? 60;
+        $cleanDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
 
         $date = new \DateTime();
         if ($cleanDays > 0) {
