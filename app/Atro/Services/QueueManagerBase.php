@@ -15,9 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\Container;
 use Espo\Core\DataManager;
-use Espo\Core\Services\Base;
 use Espo\ORM\Entity;
-use Atro\Entities\QueueItem;
 
 abstract class QueueManagerBase extends AbstractService implements QueueManagerServiceInterface
 {

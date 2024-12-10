@@ -15,10 +15,8 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
-use Atro\Core\Exceptions\Exception;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
-use Atro\Entities\QueueItem as QueueItemAlias;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
