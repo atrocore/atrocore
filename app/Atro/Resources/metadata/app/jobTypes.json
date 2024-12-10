@@ -50,5 +50,9 @@
   "Upsert": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\Upsert"
+  },
+  "ActionHandler": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\ActionHandler"
   }
 }

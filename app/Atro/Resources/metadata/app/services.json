@@ -4,6 +4,5 @@
   "Person": "\\Espo\\Services\\Person",
   "QueueManagerCreateThumbnails": "\\Atro\\Services\\QueueManagerCreateThumbnails",
   "MassActions": "\\Atro\\Services\\MassActions",
-  "Composer": "\\Atro\\Services\\Composer",
-  "QueueManagerActionHandler": "\\Atro\\Services\\QueueManagerActionHandler"
+  "Composer": "\\Atro\\Services\\Composer"
 }

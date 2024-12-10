@@ -11,38 +11,32 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Jobs;
 
 use Atro\ActionTypes\TypeInterface;
-use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Metadata;
-use Atro\Services\QueueManagerBase;
+use Espo\ORM\Entity;
 use Espo\Services\Record;
 
-class QueueManagerActionHandler extends QueueManagerBase
+class ActionHandler extends AbstractJob implements JobInterface
 {
-    public function run(array $data = []): bool
+    public function run(Entity $job): void
     {
+        $data = $job->get('payload');
+
         $action = $this->getEntityManager()->getRepository('Action')->get($data['actionId']);
 
         if (empty($action->get('sourceEntity'))) {
-            return true;
+            return;
         }
         if (!empty($data['sourceEntity'])) {
             $action->set('sourceEntity', $data['sourceEntity']);
         }
 
-        /** @var Metadata $metadata */
-        $metadata = $this->getContainer()->get('metadata');
-
         /** @var TypeInterface $actionType */
-        $actionType = $this->getContainer()->get($metadata->get(['action', 'types', $action->get('type')]));
-
-        /** @var ServiceFactory $sf */
-        $sf = $this->getContainer()->get('serviceFactory');
+        $actionType = $this->getContainer()->get($this->getMetadata()->get(['action', 'types', $action->get('type')]));
 
         /** @var Record $service */
-        $service = $sf->create($action->get('sourceEntity'));
+        $service = $this->getServiceFactory()->create($action->get('sourceEntity'));
 
         $offset = 0;
         $maxSize = $this->getConfig()->get('massUpdateChunkSize', 2000);
@@ -79,7 +73,5 @@ class QueueManagerActionHandler extends QueueManagerBase
 
             $offset = $offset + $maxSize;
         }
-
-        return true;
     }
 }
