@@ -3,7 +3,6 @@
   "Installer": "\\Atro\\Services\\Installer",
   "Person": "\\Espo\\Services\\Person",
   "QueueManagerCreateThumbnails": "\\Atro\\Services\\QueueManagerCreateThumbnails",
-  "QueueManagerUpsert": "\\Atro\\Services\\QueueManagerUpsert",
   "MassActions": "\\Atro\\Services\\MassActions",
   "Composer": "\\Atro\\Services\\Composer",
   "QueueManagerActionHandler": "\\Atro\\Services\\QueueManagerActionHandler"

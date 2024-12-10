@@ -46,5 +46,9 @@
   "MassDownload": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassDownload"
+  },
+  "Upsert": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Upsert"
   }
 }

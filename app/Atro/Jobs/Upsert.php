@@ -11,32 +11,25 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Jobs;
 
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
-class QueueManagerUpsert extends QueueManagerBase
+class Upsert extends AbstractJob implements JobInterface
 {
-    public function run(array $data = []): bool
+    public function run(Entity $job): void
     {
+        $data = $job->get('payload');
+
         try {
-            $result = $this->getContainer()->get('serviceFactory')->create('MassActions')->upsert((array)Json::decode(Json::encode($data)));
+            $result = $this->getServiceFactory()->create('MassActions')->upsert((array)Json::decode(Json::encode($data)));
             $message = Json::encode($result);
-            $result = true;
         } catch (\Throwable $e) {
             $message = $e->getMessage();
-            $result = false;
         }
 
-        $this->qmItem->set('message', $message);
-        $this->getEntityManager()->saveEntity($this->qmItem, ['skipAll' => true]);
-
-        return $result;
-    }
-
-    public function getNotificationMessage(Entity $queueItem): string
-    {
-        return '';
+        $job->set('message', $message);
+        $this->getEntityManager()->saveEntity($job, ['skipAll' => true]);
     }
 }
