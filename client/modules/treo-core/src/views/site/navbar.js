@@ -44,7 +44,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         data() {
             return _.extend({
-                hasQM: this.getAcl().check('QueueItem', 'read'),
+                hasQM: this.getAcl().check('Job', 'read'),
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled')
             }, Dep.prototype.data.call(this));
@@ -294,7 +294,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.getCollectionFactory().create('Job', collection => {
                 collection.maxSize = 20;
                 collection.url = 'Job';
-                collection.sortBy = 'priority';
+                collection.sortBy = 'startedAt';
                 collection.asc = true;
                 collection.where = [
                     {
