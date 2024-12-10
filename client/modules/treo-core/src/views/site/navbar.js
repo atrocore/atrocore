@@ -291,9 +291,9 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         renderQmPanelList() {
-            this.getCollectionFactory().create('QueueItem', collection => {
+            this.getCollectionFactory().create('Job', collection => {
                 collection.maxSize = 20;
-                collection.url = 'QueueItem';
+                collection.url = 'Job';
                 collection.sortBy = 'sortOrder';
                 collection.asc = true;
                 collection.where = [
@@ -303,17 +303,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         value: ['Running', 'Pending']
                     },
                     {
-                        type: 'or',
-                        value: [
-                            {
-                                field: 'startFrom',
-                                type: 'isNull'
-                            },
-                            {
-                                field: 'startFrom',
-                                type: 'ispast'
-                            }
-                        ]
+                        field: 'executeTime',
+                        type: 'ispast'
                     }
                 ];
                 this.listenToOnce(collection, 'sync', () => {
@@ -323,10 +314,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         rowActionsDisabled: true,
                         checkboxes: false,
                         headerDisabled: true,
-                        layoutName: 'listInQueueManager'
+                        layoutName: 'listInJobManager'
                     }, view => {
                         view.render();
-                        this.qmInterval = window.setInterval(() => {
+                        this.jmInterval = window.setInterval(() => {
                             collection.fetch();
                         }, 2000)
                     });
@@ -336,31 +327,31 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         initProgressBadge() {
-            if (this.getAcl().check('QueueItem', 'read')) {
+            if (this.getAcl().check('Job', 'read')) {
 
-                window.addEventListener('qmPanelClosed', () => {
-                    if (this.qmInterval) {
-                        window.clearInterval(this.qmInterval);
+                window.addEventListener('jmPanelClosed', () => {
+                    if (this.jmInterval) {
+                        window.clearInterval(this.jmInterval);
                     }
                 });
 
-                new Svelte.QueueManagerIcon({
-                    target: this.$el.find('.navbar-header .queue-badge-container').get(0),
-                    props: {
-                        renderTable: () => {
-                            this.renderQmPanelList();
-                        }
-                    }
-                });
-
-                new Svelte.QueueManagerIcon({
-                    target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
-                    props: {
-                        renderTable: () => {
-                            this.renderQmPanelList();
-                        }
-                    }
-                });
+                // new Svelte.QueueManagerIcon({
+                //     target: this.$el.find('.navbar-header .queue-badge-container').get(0),
+                //     props: {
+                //         renderTable: () => {
+                //             this.renderQmPanelList();
+                //         }
+                //     }
+                // });
+                //
+                // new Svelte.QueueManagerIcon({
+                //     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
+                //     props: {
+                //         renderTable: () => {
+                //             this.renderQmPanelList();
+                //         }
+                //     }
+                // });
             }
         },
 
