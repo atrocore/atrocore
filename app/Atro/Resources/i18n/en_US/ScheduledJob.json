@@ -19,7 +19,7 @@
   },
   "options": {
     "type": {
-      "Clear": "Clear deleted data",
+      "ClearEntities": "Clear deleted data",
       "ComposerAutoUpdate": "Update system automatically",
       "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
       "CheckUpdates": "Check system updates",
