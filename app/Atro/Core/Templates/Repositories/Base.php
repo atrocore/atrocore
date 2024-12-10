@@ -28,7 +28,7 @@ class Base extends RDB
             return true;
         }
 
-        $cleanDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
+        $clearDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
 
         $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
 
@@ -39,8 +39,8 @@ class Base extends RDB
             ->setParameter('true', true, ParameterType::BOOLEAN);
 
         $date = new \DateTime();
-        if ($cleanDays > 0) {
-            $date->modify("-{$cleanDays} days");
+        if ($clearDays > 0) {
+            $date->modify("-{$clearDays} days");
         }
         $date = $date->format('Y-m-d H:i:s');
 
