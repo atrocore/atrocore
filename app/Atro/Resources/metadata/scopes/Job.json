@@ -5,8 +5,6 @@
   "acl": true,
   "type": "Base",
   "object": true,
-  "hasAssignedUser": true,
-  "hasTeam": true,
   "hasOwner": true,
   "quickCreateListDisabled": true,
   "streamDisabled": true,

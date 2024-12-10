@@ -28,6 +28,10 @@ class Job extends Base
             $entity->set('executeTime', date('Y-m-d H:i:s'));
         }
 
+        if (empty($entity->get('ownerUserId'))) {
+            $entity->set('ownerUserId', $this->getEntityManager()->getUser()->get('id'));
+        }
+
         if (!$entity->isNew() && $entity->isAttributeChanged('status')) {
             if ($entity->get('status') === 'Pending') {
                 $entity->set('startedAt', null);

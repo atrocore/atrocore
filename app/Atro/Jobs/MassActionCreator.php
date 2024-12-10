@@ -100,6 +100,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 'type'        => 'Mass' . ucfirst($action),
                 'status'      => 'Canceled',
                 'priority'    => 150,
+                'ownerUserId' => $job->get('ownerUserId'),
                 'payload'     => $jobData
             ]);
             $this->getEntityManager()->saveEntity($jobEntity);
