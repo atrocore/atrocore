@@ -124,7 +124,6 @@
     "Pricing": "Tarification",
     "Measure": "Mesure",
     "Unit": "Unité",
-    "QueueItem": "Poste de la file d'attente",
     "Store": "Magasin",
     "User": "Utilisateur",
     "AuthLogRecord": "Enregistrement du journal d'authentification",
@@ -132,6 +131,7 @@
     "HtmlSanitizer": "HTML Sanitizer"
   },
   "labels": {
+    "queueManager": "Gestionnaire de files d'attente",
     "Preferences": "Préférences",
     "Access": "Accès",
     "customDownload": "Téléchargement personnalisé",
@@ -485,7 +485,6 @@
     "Folder": "Dossiers",
     "ValidationRules": "Règles de validation",
     "Connection": "Connexions",
-    "QueueItem": "Éléments de la file d'attente",
     "KnowledgeBaseCategory": "Catégories de la base de connaissances",
     "PreviewTemplate": "Aperçu des modèles",
     "NotificationTemplate": "Modèles de notification",

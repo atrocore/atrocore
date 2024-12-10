@@ -27,7 +27,6 @@
     "Pricing": "Pricing",
     "Measure": "Measure",
     "Unit": "Unit",
-    "QueueItem": "Queue Item",
     "Store": "Store",
     "User": "User",
     "Team": "Team",
@@ -79,7 +78,6 @@
     "Measure": "Measures",
     "Unit": "Units",
     "Translation": "Labels",
-    "QueueItem": "Queue Items",
     "Account": "Accounts",
     "DocumentFolder": "Document Folders",
     "KnowledgeBaseCategory": "Knowledge Base Categories",
@@ -113,6 +111,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "queueManager": "Queue Manager",
     "massActionDelegatedToQm": "Your action has been successfully delegated to the Queue Manager.",
     "massActionJobName": "%s on Entity '%s' (%s out of %s)",
     "customizeLayout": "Customize Layout",

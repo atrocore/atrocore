@@ -24,7 +24,6 @@
     "Note": "Notiz",
     "Notification": "Meldung",
     "Pricing": "Preisgestaltung",
-    "QueueItem": "Warteschlangenelement",
     "Measure": "Maß",
     "Unit": "Einheit",
     "User": "Benutzer",
@@ -75,7 +74,6 @@
     "Note": "Notizen",
     "Notification": "Meldungen",
     "Preferences": "Präferenzen",
-    "QueueItem": "Warteschlangenelemente",
     "Store": "Shop",
     "User": "Benutzer",
     "Role": "Rollen",
@@ -98,6 +96,7 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "queueManager": "Warteschlangenmanager",
     "massActionDelegatedToQm": "Ihre Aktion wurde erfolgreich an den Warteschlangenmanager delegiert.",
     "massActionJobName": "%s der Entität \"%s\" (%s von %s)",
     "customizeLayout": "Layout anpassen",

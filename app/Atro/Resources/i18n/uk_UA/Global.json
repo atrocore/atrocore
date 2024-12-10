@@ -52,7 +52,6 @@
     "Pricing": "Ціноутворення",
     "Measure": "Міра",
     "Unit": "Одиниця виміру",
-    "QueueItem": "Елемент черги",
     "Store": "Магазин",
     "PreviewTemplate": "Шаблон перегляду",
     "NotificationTemplate": "Шаблон сповіщення",
@@ -95,7 +94,6 @@
     "Account": "Контрагенти",
     "DocumentFolder": "Папки з документами",
     "KnowledgeBaseCategory": "Категорії бази знань",
-    "QueueItem": "Елементи черги",
     "MeasuringUnit": "Одиниці виміру",
     "Note": "Примітки",
     "Notification": "Повідомлення",
@@ -112,6 +110,7 @@
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "queueManager": "Менеджер завдань",
     "customizeLayout": "Налаштувати макет",
     "Reupload": "Перезавантажити",
     "attachFiles":"Прикріпити файли",
