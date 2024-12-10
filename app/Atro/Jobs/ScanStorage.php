@@ -19,20 +19,30 @@ class ScanStorage extends AbstractJob implements JobInterface
 {
     public function run(Entity $job): void
     {
-        if (empty($job->get('scheduledJobId'))) {
-            return;
+        if (!empty($job->get('scheduledJobId'))) {
+            $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $job->get('scheduledJobId'));
+            if (empty($scheduledJob)) {
+                return;
+            }
+            $storageId = $scheduledJob->get('storageId');
+        } else {
+            $storageId = $job->get('payload')['storageId'] ?? null;
         }
 
-        $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $job->get('scheduledJobId'));
-        if (empty($scheduledJob)) {
-            return;
-        }
-
-        $storageId = $scheduledJob->get('storageId');
         if (empty($storageId)) {
             return;
         }
 
-        $this->getServiceFactory()->create('Storage')->createScanJob($storageId, false);
+        $storage = $this->getEntityManager()->getEntity('Storage', $storageId);
+        if (empty($storage) || empty($storage->get('isActive'))) {
+            return;
+        }
+
+        $this->getContainer()->get($storage->get('type') . 'Storage')->scan($storage);
+
+        if (!empty($job->get('payload')['manual'])) {
+            $message = sprintf($this->translate('scanDone', 'labels', 'Storage'), $storage->get('name'));
+            $this->createNotification($job, $message);
+        }
     }
 }

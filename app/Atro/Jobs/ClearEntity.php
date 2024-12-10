@@ -19,7 +19,7 @@ class ClearEntity extends AbstractJob implements JobInterface
 {
     public function run(Entity $job): void
     {
-        $entityName = $job->get('payload')->entityName ?? null;
+        $entityName = $job->get('payload')['entityName'] ?? null;
         if (empty($entityName)) {
             return;
         }
