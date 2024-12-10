@@ -8,12 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/job-manager/modals/show-message', 'views/modal',
+Espo.define('views/queue-manager/modals/show-message', 'views/modal',
     Dep => Dep.extend({
 
         className: 'dialog queue-modal',
 
-        template: 'job-manager/modals/show-message',
+        template: 'queue-manager/modals/show-message',
 
         buttonList: [
             {

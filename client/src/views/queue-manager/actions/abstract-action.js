@@ -8,10 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/job-manager/actions/abstract-action', 'view',
+Espo.define('views/queue-manager/actions/abstract-action', 'view',
     Dep => Dep.extend({
 
-        template: 'job-manager/actions/abstract-action',
+        template: 'queue-manager/actions/abstract-action',
 
         buttonLabel: '',
 

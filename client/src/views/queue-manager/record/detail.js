@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/job-manager/record/detail', 'views/record/detail', Dep => {
+Espo.define('views/queue-manager/record/detail', 'views/record/detail', Dep => {
 
     return Dep.extend({
 

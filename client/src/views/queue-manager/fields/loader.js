@@ -8,10 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/job-manager/fields/loader', 'views/fields/base',
+Espo.define('views/queue-manager/fields/loader', 'views/fields/base',
     Dep => Dep.extend({
 
-        listTemplate: 'job-manager/fields/loader/list',
+        listTemplate: 'queue-manager/fields/loader/list',
 
         data() {
             return {

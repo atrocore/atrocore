@@ -314,7 +314,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         rowActionsDisabled: true,
                         checkboxes: false,
                         headerDisabled: true,
-                        layoutName: 'listInJobManager'
+                        layoutName: 'listInQueueManager'
                     }, view => {
                         view.render();
                         this.qmInterval = window.setInterval(() => {

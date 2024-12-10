@@ -8,13 +8,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/job-manager/fields/actions', 'views/fields/base',
+Espo.define('views/queue-manager/fields/actions', 'views/fields/base',
     Dep => Dep.extend({
 
-        listTemplate: 'job-manager/fields/actions/list',
+        listTemplate: 'queue-manager/fields/actions/list',
 
         defaultActionDefs: {
-            view: 'views/job-manager/actions/show-message'
+            view: 'views/queue-manager/actions/show-message'
         },
 
         data() {
