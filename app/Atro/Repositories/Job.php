@@ -64,6 +64,8 @@ class Job extends Base
                     throw new Error("It is impossible to change the status from '{$entity->getFetched('status')}' to '{$entity->get('status')}'.");
                 }
             }
+
+
         }
     }
 
@@ -75,19 +77,25 @@ class Job extends Base
             file_put_contents(JobManager::QUEUE_FILE, '1');
         }
 
-        if ($entity->get('status') === 'Canceled' && !empty($entity->get('pid'))) {
-            exec("kill -9 {$entity->get('pid')}");
-        }
-
-        if (in_array($entity->get('status'), ['Success', 'Failed'])) {
-            $className = $this->getMetadata()->get(['action', 'types', 'set']);
-            if (empty($className)) {
-                return;
+        if ($entity->isAttributeChanged('status')) {
+            if ($entity->get('status') === 'Canceled' && $entity->get('type') === 'MassActionCreator') {
+                $this->cancelMassActions($entity);
             }
 
-            /** @var Set $actionTypeService */
-            $actionTypeService = $this->getInjection('container')->get($className);
-            $actionTypeService->checkJob($entity);
+            if ($entity->get('status') === 'Canceled' && !empty($entity->get('pid'))) {
+                exec("kill -9 {$entity->get('pid')}");
+            }
+
+            if (in_array($entity->get('status'), ['Success', 'Failed'])) {
+                $className = $this->getMetadata()->get(['action', 'types', 'set']);
+                if (empty($className)) {
+                    return;
+                }
+
+                /** @var Set $actionTypeService */
+                $actionTypeService = $this->getInjection('container')->get($className);
+                $actionTypeService->checkJob($entity);
+            }
         }
     }
 
@@ -103,19 +111,24 @@ class Job extends Base
     protected function afterRemove(Entity $entity, array $options = [])
     {
         if ($entity->get('type') === 'MassActionCreator') {
-            $actionItems = $this
-                ->where([
-                    'data*'  => '%"creatorId":"' . $entity->get('id') . '"%',
-                    'status' => 'Pending'
-                ])
-                ->find();
-            foreach ($actionItems as $item) {
-                $item->set('status', 'Canceled');
-                $this->getEntityManager()->saveEntity($item);
-            }
+            $this->cancelMassActions($entity);
         }
 
         parent::afterRemove($entity, $options);
+    }
+
+    protected function cancelMassActions(Entity $job): void
+    {
+        $actionItems = $this
+            ->where([
+                'data*'  => '%"creatorId":"' . $job->get('id') . '"%',
+                'status' => 'Pending'
+            ])
+            ->find();
+        foreach ($actionItems as $item) {
+            $item->set('status', 'Canceled');
+            $this->getEntityManager()->saveEntity($item);
+        }
     }
 
     protected function init()
