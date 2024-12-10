@@ -2,7 +2,6 @@
   "AdminNotifications": "\\Espo\\Services\\AdminNotifications",
   "Installer": "\\Atro\\Services\\Installer",
   "Person": "\\Espo\\Services\\Person",
-  "QueueManagerCreateThumbnails": "\\Atro\\Services\\QueueManagerCreateThumbnails",
   "MassActions": "\\Atro\\Services\\MassActions",
   "Composer": "\\Atro\\Services\\Composer"
 }
