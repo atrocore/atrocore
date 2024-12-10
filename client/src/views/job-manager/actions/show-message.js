@@ -8,21 +8,19 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/queue-manager/actions/show-message', 'treo-core:views/queue-manager/actions/abstract-action',
+Espo.define('views/job-manager/actions/show-message', 'views/job-manager/actions/abstract-action',
     Dep => Dep.extend({
 
-        template: 'treo-core:queue-manager/actions/show-message',
+        template: 'job-manager/actions/show-message',
 
         buttonLabel: 'showMessage',
 
         data() {
-            return _.extend({
-                showButton: !!this.actionData.message
-            }, Dep.prototype.data.call(this));
+            return _.extend({showButton: !!this.actionData.message}, Dep.prototype.data.call(this));
         },
 
         actionShowMessageModal() {
-            this.createView('modal', 'treo-core:views/queue-manager/modals/show-message', {
+            this.createView('modal', 'views/job-manager/modals/show-message', {
                 message: this.actionData.message
             }, view => view.render());
         }

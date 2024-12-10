@@ -8,12 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/queue-manager/modals/show-message', 'views/modal',
+Espo.define('views/job-manager/modals/show-message', 'views/modal',
     Dep => Dep.extend({
 
         className: 'dialog queue-modal',
 
-        template: 'treo-core:queue-manager/modals/show-message',
+        template: 'job-manager/modals/show-message',
 
         buttonList: [
             {
@@ -25,7 +25,7 @@ Espo.define('treo-core:views/queue-manager/modals/show-message', 'views/modal',
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.header = this.translate('message', 'labels', 'QueueItem');
+            this.header = this.translate('Message');
         },
 
         data() {

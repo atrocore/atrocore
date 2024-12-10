@@ -8,10 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/queue-manager/fields/loader', 'views/fields/base',
+Espo.define('views/job-manager/fields/loader', 'views/fields/base',
     Dep => Dep.extend({
 
-        listTemplate: 'treo-core:queue-manager/fields/loader/list',
+        listTemplate: 'job-manager/fields/loader/list',
 
         data() {
             return {

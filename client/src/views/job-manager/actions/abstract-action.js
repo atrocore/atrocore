@@ -8,10 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/queue-manager/actions/abstract-action', 'view',
+Espo.define('views/job-manager/actions/abstract-action', 'view',
     Dep => Dep.extend({
 
-        template: 'treo-core:queue-manager/actions/abstract-action',
+        template: 'job-manager/actions/abstract-action',
 
         buttonLabel: '',
 

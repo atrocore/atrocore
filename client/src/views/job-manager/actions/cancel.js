@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/queue-manager/actions/cancel', 'treo-core:views/queue-manager/actions/abstract-action',
+Espo.define('views/job-manager/actions/cancel', 'views/job-manager/actions/abstract-action',
     Dep => Dep.extend({
 
         buttonLabel: 'cancel',

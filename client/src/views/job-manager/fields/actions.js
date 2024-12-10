@@ -8,13 +8,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/queue-manager/fields/actions', 'views/fields/base',
+Espo.define('views/job-manager/fields/actions', 'views/fields/base',
     Dep => Dep.extend({
 
-        listTemplate: 'treo-core:queue-manager/fields/actions/list',
+        listTemplate: 'job-manager/fields/actions/list',
 
         defaultActionDefs: {
-            view: 'treo-core:views/queue-manager/actions/show-message'
+            view: 'views/job-manager/actions/show-message'
         },
 
         data() {
@@ -29,10 +29,10 @@ Espo.define('treo-core:views/queue-manager/fields/actions', 'views/fields/base',
 
         buildActions() {
             if (this.model.get('status') === 'Pending' || this.model.get('status') === 'Running') {
-                let actionDefs = this.getMetadata().get(['clientDefs', 'QueueItem', 'queueActions', 'cancel']) || this.defaultActionDefs;
+                let actionDefs = this.getMetadata().get(['clientDefs', 'Job', 'queueActions', 'cancel']) || this.defaultActionDefs;
                 if (actionDefs.view && this.getAcl().check(this.model, actionDefs.acl)) {
                     this.createView('cancel', actionDefs.view, {
-                        el: `${this.options.el} .queue-manager-action[data-type="cancel"]`,
+                        el: `${this.options.el} .job-manager-action[data-type="cancel"]`,
                         actionData: {},
                         model: this.model
                     }, view => {

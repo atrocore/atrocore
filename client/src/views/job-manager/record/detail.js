@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/queue-manager/record/detail', 'views/record/detail', function (Dep) {
+Espo.define('views/job-manager/record/detail', 'views/record/detail', Dep => {
 
     return Dep.extend({
 
