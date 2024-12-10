@@ -100,6 +100,24 @@ class Job extends Base
         parent::beforeRemove($entity, $options);
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        if ($entity->get('type') === 'MassActionCreator') {
+            $actionItems = $this
+                ->where([
+                    'data*'  => '%"creatorId":"' . $entity->get('id') . '"%',
+                    'status' => 'Pending'
+                ])
+                ->find();
+            foreach ($actionItems as $item) {
+                $item->set('status', 'Canceled');
+                $this->getEntityManager()->saveEntity($item);
+            }
+        }
+
+        parent::afterRemove($entity, $options);
+    }
+
     protected function init()
     {
         parent::init();
