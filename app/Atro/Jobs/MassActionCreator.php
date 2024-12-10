@@ -99,7 +99,6 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 'name'        => $name,
                 'type'        => 'Mass' . ucfirst($action),
                 'status'      => 'Canceled',
-                'executeTime' => (new \DateTime())->modify('+1 year')->format('Y-m-d H:i:s'),
                 'priority'    => 150,
                 'payload'     => $jobData
             ]);
