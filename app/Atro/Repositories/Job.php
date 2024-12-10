@@ -11,6 +11,7 @@
 
 namespace Atro\Repositories;
 
+use Atro\ActionTypes\Set;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\JobManager;
 use Atro\Core\Templates\Repositories\Base;
@@ -76,5 +77,23 @@ class Job extends Base
         if ($entity->get('status') === 'Canceled' && !empty($entity->get('pid'))) {
             exec("kill -9 {$entity->get('pid')}");
         }
+
+        if (in_array($entity->get('status'), ['Success', 'Failed'])) {
+            $className = $this->getMetadata()->get(['action', 'types', 'set']);
+            if (empty($className)) {
+                return;
+            }
+
+            /** @var Set $actionTypeService */
+            $actionTypeService = $this->getInjection('container')->get($className);
+            $actionTypeService->checkJob($entity);
+        }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('serviceFactory');
     }
 }
