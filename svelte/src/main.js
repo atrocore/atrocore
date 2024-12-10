@@ -10,7 +10,7 @@ import {LayoutManager} from "./utils/LayoutManager";
 import {Metadata} from "./utils/Metadata";
 import {ModelFactory} from "./utils/ModelFactory";
 
-import JobManagerIcon from './components/icons/QueueManagerIcon.svelte';
+import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
 import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";

@@ -319,7 +319,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         layoutName: 'listInQueueManager'
                     }, view => {
                         view.render();
-                        this.qmInterval = window.setInterval(() => {
+                        this.jmInterval = window.setInterval(() => {
                             collection.fetch();
                         }, 2000)
                     });
@@ -332,8 +332,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             if (this.getAcl().check('Job', 'read')) {
 
                 window.addEventListener('jobManagerPanelClosed', () => {
-                    if (this.qmInterval) {
-                        window.clearInterval(this.qmInterval);
+                    if (this.jmInterval) {
+                        window.clearInterval(this.jmInterval);
                     }
                 });
 
