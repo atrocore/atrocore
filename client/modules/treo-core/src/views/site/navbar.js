@@ -294,7 +294,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.getCollectionFactory().create('Job', collection => {
                 collection.maxSize = 20;
                 collection.url = 'Job';
-                collection.sortBy = 'sortOrder';
+                collection.sortBy = 'priority';
                 collection.asc = true;
                 collection.where = [
                     {
