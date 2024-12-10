@@ -916,7 +916,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     Espo.Ui.success(this.translate('Done'));
                 }
             } else {
-                Espo.Ui.success(this.translate('massActionDelegatedToQm'));
+                Espo.Ui.success(this.translate('massActionDelegatedToJm'));
             }
         },
 

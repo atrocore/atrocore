@@ -97,7 +97,6 @@
     "HtmlSanitizer": "HTML Sanitizers"
 },
 "labels":{
-    "queueManager": "Menedżer kolejki",
     "customizeLayout": "Dostosuj układ",
     "Reupload": "Prześlij ponownie",
     "attachFiles":"Dołączanie plików",
@@ -321,7 +320,6 @@
 },
 "messages":{
     "actionExecuted":"Akcja \"%s\" została pomyślnie wykonana",
-    "jobAdded":"Zadanie zostało pomyślnie dodane do Menadżera kolejki",
     "confirmInheritAllForChildren":"Czy na pewno chcesz, aby wszystkie elementy podrzędne dziedziczyły wartości pól (i atrybutów) oraz relacje z tego elementu nadrzędnego? Istniejące wartości nie zostaną zastąpione.",
     "confirmInheritAllFromParent": "Czy na pewno chcesz, aby wszystkie elementy dziedziczyły wartości pól (i atrybutów) oraz relacje z elementów rekordu nadrzędnego? Istniejące wartości nie zostaną zastąpione.",
     "optionValueCannotBeEmpty":"Wartość opcji nie może być pusta",

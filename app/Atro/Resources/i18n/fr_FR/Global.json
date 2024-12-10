@@ -131,7 +131,6 @@
     "HtmlSanitizer": "HTML Sanitizer"
   },
   "labels": {
-    "queueManager": "Gestionnaire de files d'attente",
     "Preferences": "Préférences",
     "Access": "Accès",
     "customDownload": "Téléchargement personnalisé",
@@ -430,7 +429,6 @@
     "resetPreferencesDone": "Les préférences ont été réinitialisées aux valeurs par défaut",
     "streamPostInfo": "Tapez <strong>@username</strong> pour mentionner les utilisateurs dans le message.\n\nSyntaxe markdown disponible :\n`<code>code</code>`\n````<code>code multiligne</code>````\n**<strong>texte fort</strong>**\n*<em>texte accentué</em>*\n~~<del>texte supprimé</del>~~\n> citation à l'emporte-pièce\n[texte du lien](url)",
     "confirmMassUnfollow": "Êtes-vous sûr de vouloir supprimer les enregistrements sélectionnés ?",
-    "jobAdded": "L'emploi a été ajouté avec succès au gestionnaire de file d'attente",
     "relationsDidNotAddedPlural": "Les relations %s n'ont PAS été ajoutées en raison des erreurs suivantes :",
     "fieldShouldBeFloat": "{field} doit être un flottant valide",
     "restoreRecordConfirmation": "L'enregistrement sélectionné sera restauré. Êtes-vous sûr de vouloir le restaurer ?",

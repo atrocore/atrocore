@@ -111,8 +111,8 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
-    "queueManager": "Queue Manager",
-    "massActionDelegatedToQm": "Your action has been successfully delegated to the Queue Manager.",
+    "jobManager": "Job Manager",
+    "massActionDelegatedToJm": "Your action has been successfully delegated to the Job Manager.",
     "massActionJobName": "%s on Entity '%s' (%s out of %s)",
     "customizeLayout": "Customize Layout",
     "deletePermanently": "Delete Permanently",
@@ -351,7 +351,7 @@
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
-    "jobAdded": "Job was successfully added to Queue Manager",
+    "jobAdded": "Job was successfully added to Job Manager",
     "confirmInheritAllForChildren": "Are you sure you want all child items to inherit field (and attribute) values as well as relations from this parent item? Existing values will not be replaced.",
     "confirmInheritAllFromParent": "Are you sure you want all items to inherit field (and attribute) values as well as relations from items of parent record? Existing values will not be replaced.",
     "optionValueCannotBeEmpty": "Option value cannot be empty",
