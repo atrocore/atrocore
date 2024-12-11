@@ -152,19 +152,20 @@ class Composer extends HasContainer
             ];
         }
 
-        /**
-         * Is Queue Manager running ?
-         */
-        $queueItem = $this
+        $job = $this
             ->getEntityManager()
-            ->getRepository('QueueItem')
+            ->getRepository('Job')
             ->select(['id'])
-            ->where(['status' => ['Pending', 'Running']])
+            ->where([
+                'status'        => ['Pending', 'Running'],
+                'type!='        => null,
+                'executeTime<=' => (new \DateTime())->modify('+2 minutes')->format('Y-m-d H:i:s')
+            ])
             ->findOne();
-        if (!empty($queueItem)) {
+        if (!empty($job)) {
             return [
                 'status'  => false,
-                'message' => $this->translate('queueManagerRunning', 'labels', 'Composer')
+                'message' => $this->translate('jobManagerRunning', 'labels', 'Composer')
             ];
         }
 

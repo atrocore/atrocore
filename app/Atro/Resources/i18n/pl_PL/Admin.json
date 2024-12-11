@@ -215,7 +215,6 @@
        "measure":"Zarządzaj swoimi miarami i jednostkami miary, ustaw domyślne jednostki miary i mnożniki do automatycznej konwersji jednostek miary.",
        "connection":"Zarządzaj połączeniami z innymi systemami w celu automatycznej wymiany danych.",
        "settings":"Zarządzaj ogólnymi ustawieniami systemu, takimi jak domyślna lokalizacja systemu, preferencje wyszukiwania, aktywne języki interfejsu, użycie pamięci podręcznej i wiele innych...",
-       "scheduledJob":"Zarządzaj zaplanowanymi zadaniami systemowymi, takimi jak zadanie cron, wykonywane w tle i zobacz ich logi.",
        "action":"Konfiguruj akcje, które można wykonać ręcznie, klikając przyciski dodane do interfejsu użytkownika, lub w pełni automatycznie za pomocą zadania Menedżera Harmonogramu.",
        "clearCache":"Wyczyść pamięć podręczną metadanych i inne pamięci systemowe, skorzystaj z tej opcji, jeśli występują błędy podczas pracy z systemem.",
        "rebuildDb":"Dopasuj strukturę bazy danych zgodnie z skonfigurowanymi metadanymi.",

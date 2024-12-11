@@ -23,6 +23,11 @@
         "description": "connection"
       },
       {
+        "url": "#Job",
+        "label": "Jobs",
+        "description": "jobs"
+      },
+      {
         "url": "#ScheduledJob",
         "label": "Scheduled Jobs",
         "description": "scheduledJob"

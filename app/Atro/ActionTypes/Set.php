@@ -108,35 +108,32 @@ class Set implements TypeInterface
             ->findOne();
     }
 
-    public function checkQueueItem(Entity $entity): void
+    public function checkJob(Entity $entity): void
     {
-        if ($entity->getEntityType() != 'QueueItem') {
+        if ($entity->getEntityType() !== 'Job') {
             return;
         }
 
-        if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode($entity->get('data')), $matches)) {
+        if (!preg_match("/\"actionSetLinkerId\":\"([a-z0-9]*)\"/", json_encode($entity->get('payload')), $matches)) {
             return;
         }
 
-        $actionSetLinkerId = $matches[1];
-
-        $current = $this->getEntityManager()->getEntity('ActionSetLinker', $actionSetLinkerId);
-
+        $current = $this->getEntityManager()->getEntity('ActionSetLinker', $matches[1]);
         if (empty($current)) {
             return;
         }
 
         $exist = $this
             ->getEntityManager()
-            ->getRepository('QueueItem')
+            ->getRepository('Job')
             ->where([
-                'status'    => ['Pending', 'Running'],
-                'data*'     => '%"actionSetLinkerId":"' . $current->get('id') . '"%'
+                'status'   => ['Pending', 'Running'],
+                'payload*' => '%"actionSetLinkerId":"' . $current->get('id') . '"%'
             ])
             ->find();
 
         if (count($exist) == 0 && !empty($next = $this->getNextAction($current))) {
-            $data = $entity->get('data');
+            $data = $entity->get('payload');
             $data = empty($data) ? [] : Json::decode(Json::encode($data), true);
 
             $where = $this->searchValueByKey($data, 'where');

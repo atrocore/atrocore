@@ -44,7 +44,6 @@
     "tabColorsDisabled": "Disable tab icons colors",
     "tabIconsDisabled": "Disable tab icons",
     "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
-    "cleanupDeletedRecords": "Clean up deleted records",
     "navigationManuBackgroundColor": "Fondo del menú de navegación",
     "navigationMenuFontColor": "Color de fuente de navegación",
     "linkFontColor": "Color de enlace",
@@ -83,7 +82,6 @@
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
-    "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
     "customStylesheetPath": "Sus estilos CSS personalizados se escribirán en este archivo. También puede realizar cambios en él directamente.",
     "customHeadCode": "Añade el código al final de la etiqueta <head>. Atrocore no valida el código personalizado por ti, así que asegúrate de comprobar tu código antes de publicarlo."
   },

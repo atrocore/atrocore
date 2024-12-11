@@ -1,26 +1,14 @@
 {
   "fields": {
     "name": "Название",
-    "status": "Статус",
-    "job": "Задание",
     "scheduling": "Планирование"
-  },
-  "links": {
-    "log": "Лог"
-  },
-  "labels": {
-    "Create ScheduledJob": "Создать задание"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Неправильная конфигурация crontab"
   },
   "options": {
-    "job": {
+    "type": {
       "ComposerAutoUpdate": "Автообновление модулей"
-    },
-    "status": {
-      "Active": "Активно",
-      "Inactive": "Неактивно"
     }
   },
   "tooltips": {

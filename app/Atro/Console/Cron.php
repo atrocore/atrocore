@@ -14,11 +14,9 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\Application;
+use Atro\Core\JobManager;
 use Atro\Core\Monolog\Handler\ReportingHandler;
-use Atro\Core\QueueManager;
 use Atro\Core\Utils\Util;
-use Atro\Services\QueueManagerBase;
-use Espo\Core\DataManager;
 use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 
@@ -79,40 +77,24 @@ class Cron extends AbstractConsole
             return;
         }
 
-        // open daemon queue manager streams
-        $queueManagerWorkersCount = $this->getConfig()->get('queueManagerWorkersCount', 4) + 1;
-        $i = 0;
-        while ($i <= $queueManagerWorkersCount) {
-            if (empty(strpos($processes, "index.php daemon qm $i-$id"))) {
-                exec("$php index.php daemon qm $i-$id >/dev/null 2>&1 &");
-            }
-            $i++;
-        }
-
-        // open daemon notification
-        if (empty(strpos($processes, "index.php daemon notification $id"))) {
-            exec("$php index.php daemon notification $id >/dev/null 2>&1 &");
-        }
-
         // open daemon for pseudo transaction manager
         if (empty(strpos($processes, "index.php daemon pt $id"))) {
             exec("$php index.php daemon pt $id >/dev/null 2>&1 &");
         }
 
+        // open daemon for job manager
+        if (empty(strpos($processes, "index.php daemon job-manager $id"))) {
+            exec("$php index.php daemon job-manager $id >/dev/null 2>&1 &");
+        }
+
         // check auth tokens
         $this->authTokenControl();
 
-        // find pending jobs without queue files and create them
-        $this->createQueueFiles();
+        // find pending job to create queue file
+        $this->createQueueFile();
 
-        // delete empty queue folders
-        $this->deleteEmptyQueueFolders();
-
-        // find and close queue item that doe not running
-        $this->closeFailedQueueItems();
-
-        // delete message from publicData if such job doesn't exist
-        $this->clearEntityMessages();
+        // find and close jobs that has not finished
+        $this->closeFailedJobs();
 
         // send reports
         $this->sendReports();
@@ -129,36 +111,42 @@ class Cron extends AbstractConsole
         $auth = new \Espo\Core\Utils\Auth($this->getContainer());
         $auth->useNoAuth();
 
-        $this->getContainer()->get('cronManager')->run();
-    }
+        $scheduledJobs = $this->getEntityManager()->getRepository('ScheduledJob')
+            ->where(['isActive' => true])
+            ->find();
 
-    public function clearEntityMessages(): void
-    {
-        $items = DataManager::getPublicData('entityMessage');
-        if (!empty($items) && is_array($items)) {
-            foreach ($items as $entityName => $item) {
-                if (!isset($item['message'])) {
-                    continue;
-                }
+        foreach ($scheduledJobs as $scheduledJob) {
+            try {
+                $cronExpression = \Cron\CronExpression::factory($scheduledJob->get('scheduling'));
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error("ScheduledJob '{$scheduledJob->id}' Failed: {$e->getMessage()}.");
+                continue;
+            }
 
-                if (empty($item['qmId'])) {
-                    QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
-                    continue;
-                }
+            try {
+                $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error("Unsupported CRON expression '{$scheduledJob->get('scheduling')}'");
+                continue;
+            }
 
-                $job = $this->getEntityManager()->getEntity('QueueItem', $item['qmId']);
-                if (empty($job)) {
-                    QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
-                    continue;
-                }
+            $exists = $this->getEntityManager()->getRepository('Job')
+                ->where([
+                    'status'         => 'Pending',
+                    'scheduledJobId' => $scheduledJob->get('id'),
+                    'executeTime'    => $nextDate
+                ])
+                ->findOne();
 
-                switch ($job->get('status')) {
-                    case 'Success':
-                    case 'Failed':
-                    case 'Canceled':
-                        QueueManagerBase::updatePublicData('entityMessage', $entityName, null);
-                        break;
-                }
+            if (empty($exists)) {
+                $jobEntity = $this->getEntityManager()->getEntity('Job');
+                $jobEntity->set([
+                    'name'           => $scheduledJob->get('name'),
+                    'type'           => $scheduledJob->get('type'),
+                    'scheduledJobId' => $scheduledJob->get('id'),
+                    'executeTime'    => $nextDate
+                ]);
+                $this->getEntityManager()->saveEntity($jobEntity);
             }
         }
     }
@@ -208,7 +196,8 @@ class Cron extends AbstractConsole
                                         'modules'        => [
                                             'Core' => Composer::getCoreVersion()
                                         ],
-                                        'composerConfig' => file_exists('composer.json') ? json_decode(file_get_contents('composer.json'), true) : null
+                                        'composerConfig' => file_exists('composer.json') ? json_decode(file_get_contents('composer.json'),
+                                            true) : null
                                     ],
                                 ];
 
@@ -255,11 +244,6 @@ class Cron extends AbstractConsole
             return false;
         }
 
-        // @todo remove this after 01.06.2021
-        if (strpos($log, 'Sending notification(s)') !== false) {
-            unlink(Application::COMPOSER_LOG_FILE);
-        }
-
         return true;
     }
 
@@ -290,73 +274,47 @@ class Cron extends AbstractConsole
         }
     }
 
-    private function createQueueFiles(): void
+    private function createQueueFile(): void
     {
-        $repository = $this->getEntityManager()->getRepository('QueueItem');
-
-        $items = $repository
-            ->select(['id', 'sortOrder', 'priority', 'startFrom'])
-            ->where(['status' => 'Pending'])
-            ->order('sortOrder')
-            ->limit(0, 200)
-            ->find();
-
-        $created = false;
-        foreach ($items as $item) {
-            if (empty($item->get('startFrom')) || $item->get('startFrom') <= (new \DateTime())->format('Y-m-d H:i:s')) {
-                $filePath = $repository->getFilePath($item->get('sortOrder'), $item->get('priority'), $item->get('id'));
-                if (!empty($filePath) && !file_exists($filePath)) {
-                    file_put_contents($filePath, $item->get('id'));
-                    $created = true;
-                }
-            }
+        if (file_exists(JobManager::QUEUE_FILE)) {
+            return;
         }
 
-        if ($created) {
-            file_put_contents(QueueManager::FILE_PATH, '1');
+        $job = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'status'        => 'Pending',
+                'type!='        => null,
+                'executeTime<=' => (new \DateTime())->format('Y-m-d H:i:s')
+            ])
+            ->findOne();
+
+        if (!empty($job)) {
+            file_put_contents(JobManager::QUEUE_FILE, '1');
         }
     }
 
-    private function deleteEmptyQueueFolders(): void
+    private function closeFailedJobs(): void
     {
-        $main = QueueManager::QUEUE_DIR_PATH;
-        if (is_dir($main)) {
-            foreach (scandir($main) as $item) {
-                if (in_array($item, ['0', '000001', '88888888888888', '99999999999999', '.', '..'])) {
-                    continue;
-                }
-
-                $subFolder = $main . '/' . $item;
-                if (!is_dir($subFolder)) {
-                    continue;
-                }
-
-                if (count(scandir($subFolder)) === 2) {
-                    rmdir($subFolder);
-                }
-                break;
-            }
+        if (file_exists(JobManager::QUEUE_FILE)) {
+            return;
         }
-    }
 
-    private function closeFailedQueueItems(): void
-    {
-        $repository = $this->getEntityManager()->getRepository('QueueItem');
-
-        $items = $repository
-            ->where(['status' => 'Running'])
-            ->order('sortOrder')
-            ->limit(0, 20)
+        $jobs = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'status' => 'Running',
+                'pid!='  => null
+            ])
+            ->limit(0, 10)
             ->find();
 
-        foreach ($items as $item) {
-            $pid = $item->get('pid');
+        foreach ($jobs as $job) {
+            $pid = $job->get('pid');
             if (!file_exists("/proc/$pid")) {
-                $item->set('status', 'Failed');
-                $item->set('message', "The item '{$item->get('id')}' was not completed in the previous run.");
-                $repository->save($item);
+                $job->set('status', 'Failed');
+                $job->set('message', "The Job '{$job->get('id')}' was not completed in the previous run.");
+                $this->getEntityManager()->saveEntity($job);
 
-                $GLOBALS['log']->error("QM failed: " . $item->get('message'));
+                $GLOBALS['log']->error("Job failed: " . $job->get('message'));
             }
         }
     }

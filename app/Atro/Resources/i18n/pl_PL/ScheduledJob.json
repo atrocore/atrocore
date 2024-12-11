@@ -1,12 +1,7 @@
 {
   "fields": {
     "name": "Nazwa",
-    "status": "Status",
-    "job": "Zadanie",
     "scheduling": "Harmonogram"
-  },
-  "links": {
-    "log": "Logi"
   },
   "labels": {
     "Create ScheduledJob": "Utwórz Zaplanowane Zadanie",
@@ -20,12 +15,8 @@
     "jobAlreadyExist": "Zadanie zostało utworzone mniej niż minutę temu"
   },
   "options": {
-    "job": {
+    "type": {
       "ComposerAutoUpdate": "Automatyczna aktualizacja systemu"
-    },
-    "status": {
-      "Active": "Aktywny",
-      "Inactive": "Nieaktywny"
     }
   },
   "tooltips": {

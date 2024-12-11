@@ -45,7 +45,6 @@
     "textFilterUseContainsForVarchar": "Verwenden Sie den Operator 'enthält', wenn Sie Varchar-Felder filtern",
     "emailAddressIsOptedOutByDefault": "Neue E-Mail-Adressen als Opt-Out markieren",
     "adminNotificationsNewExtensionVersion": "Benachrichtigung anzeigen, wenn neue Versionen von Erweiterungen verfügbar sind",
-    "cleanupDeletedRecords": "Gelöschte Datensätze aufräumen",
     "navigationManuBackgroundColor": "Hintergrund des Navigationsmenüs",
     "navigationMenuFontColor": "Schriftfarbe des Navigationsmenüs",
     "linkFontColor": "Linkfarbe",

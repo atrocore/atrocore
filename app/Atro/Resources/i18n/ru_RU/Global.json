@@ -47,7 +47,6 @@
     "Pricing": "Ценообразование",
     "Measure": "Мера",
     "Unit": "Единица измерения",
-    "QueueItem": "Элемент очереди",
     "Store": "Магазин"
   },
   "scopeNamesPlural": {
@@ -80,13 +79,13 @@
     "Account": "Контрагенты",
     "DocumentFolder": "Папки с документами",
     "KnowledgeBaseCategory": "Категории базы знаний",
-    "QueueItem": "Элементы очереди",
     "MeasuringUnit": "Единицы измерения",
     "Note": "Примечания",
     "Notification": "Уведомления",
     "Preferences": "Настройки"
   },
   "labels": {
+    "jobManager": "Менеджер задач",
     "Reupload": "Повторная загрузка",
     "attachFiles":"Прикрепить файлы",
     "typeToSearch": "Введ. и нажм. Enter...",

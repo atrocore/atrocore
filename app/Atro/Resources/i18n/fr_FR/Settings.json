@@ -86,7 +86,6 @@
     "textFilterUseContainsForVarchar": "Si cette case n'est pas cochée, l'opérateur \"commence par\" est utilisé. Vous pouvez utiliser le caractère générique \"%\".",
     "authTokenPreventConcurrent": "Les utilisateurs ne pourront pas se connecter simultanément sur plusieurs appareils.",
     "emailAddressIsOptedOutByDefault": "Lors de la création d'un nouvel enregistrement, l'adresse électronique sera marquée comme opt-out.",
-    "cleanupDeletedRecords": "Les enregistrements supprimés seront effacés de la base de données après un certain temps.",
     "customStylesheetPath": "Vos styles CSS personnalisés seront écrits dans ce fichier. Vous pouvez également y apporter des modifications directement.",
     "customHeadCode": "Ajoutez le code à la fin de la balise <head>. Atrocore ne valide pas le code personnalisé pour vous, alors assurez-vous de vérifier votre code avant de le publier.",
     "reportingEnabled": "Les rapports d'erreur anonymes seront envoyés à AtroCore pour une identification et une résolution plus rapides des problèmes.",

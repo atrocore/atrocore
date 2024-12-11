@@ -46,6 +46,15 @@ class ReferenceData extends Repository implements Injectable
         $this->init();
     }
 
+    public function hasDeletedRecordsToClear(): bool
+    {
+        return false;
+    }
+
+    public function clearDeletedRecords(): void
+    {
+    }
+
     public function get($id = null)
     {
         if (empty($id)) {

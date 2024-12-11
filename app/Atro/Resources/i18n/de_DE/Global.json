@@ -24,7 +24,6 @@
     "Note": "Notiz",
     "Notification": "Meldung",
     "Pricing": "Preisgestaltung",
-    "QueueItem": "Warteschlangenelement",
     "Measure": "Maß",
     "Unit": "Einheit",
     "User": "Benutzer",
@@ -76,7 +75,6 @@
     "Note": "Notizen",
     "Notification": "Meldungen",
     "Preferences": "Präferenzen",
-    "QueueItem": "Warteschlangenelemente",
     "Store": "Shop",
     "User": "Benutzer",
     "Role": "Rollen",
@@ -100,7 +98,6 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
-    "massActionDelegatedToQm": "Ihre Aktion wurde erfolgreich an den Warteschlangenmanager delegiert.",
     "massActionJobName": "%s der Entität \"%s\" (%s von %s)",
     "customizeLayout": "Layout anpassen",
     "deletePermanently": "Dauerhaft löschen",
@@ -335,7 +332,6 @@
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
-    "jobAdded": "Auftrag wurde erfolgreich zum Warteschlangenmanager hinzugefügt",
     "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
     "confirmInheritAllFromParent": "Sind Sie sicher, dass Sie wollen, dass alle Elemente Feld- (und Attribut-) Werte sowie Beziehungen von Elementen des übergeordneten Datensatzes erben? Vorhandene Werte werden nicht ersetzt.",
     "optionValueCannotBeEmpty": "Option darf nicht leer sein",

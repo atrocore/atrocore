@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
@@ -25,7 +24,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
 
-class Hierarchy extends RDB
+class Hierarchy extends Base
 {
     protected string $tableName;
     protected string $hierarchyTableName;

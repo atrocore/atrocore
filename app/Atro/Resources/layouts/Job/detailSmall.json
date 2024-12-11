@@ -1,20 +1,57 @@
 [
-    {
-        "label":"",
-        "rows":[
-            [{"name":"name"}, {"name": "status"}],
-            [{"name":"executeTime"}, {"name": "attempts"}],
-            [{"name":"createdAt"}, {"name": "failedAttempts"}],
-            [{"name":"modifiedAt"}, false]
-        ]
-    },
-    {
-        "label":"",
-        "rows":[
-            [{"name":"scheduledJob"}, false],
-            [{"name":"serviceName"}, false],
-            [{"name":"methodName"}, false],
-            [{"name": "data", "fullWidth": true}]
-        ]
-    }
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "status"
+        },
+        {
+          "name": "message"
+        }
+      ],
+      [
+        {
+          "name": "executeTime"
+        },
+        {
+          "name": "priority"
+        }
+      ],
+      [
+        {
+          "name": "startedAt"
+        },
+        {
+          "name": "endedAt"
+        }
+      ],
+      [
+        {
+          "name": "pid"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "payload",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "scheduledJob"
+        },
+        false
+      ]
+    ]
+  }
 ]

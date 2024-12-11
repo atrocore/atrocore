@@ -14,16 +14,11 @@ namespace Atro\ActionTypes;
 use Atro\Core\ActionManager;
 use Atro\Core\Container;
 use Atro\Core\KeyValueStorages\MemoryStorage;
-use Atro\Core\KeyValueStorages\StorageInterface;
-use Atro\Core\QueueManager;
 use Atro\Core\Twig\Twig;
-use Atro\DTO\QueueItemDTO;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\System;
 use Espo\ORM\Entity;
 
 abstract class AbstractAction implements TypeInterface
@@ -35,20 +30,37 @@ abstract class AbstractAction implements TypeInterface
         $this->container = $container;
     }
 
-    public function createQueueItem(Entity $action, \stdClass $input): bool
+    public function createJob(Entity $action, \stdClass $input): bool
     {
         if (!property_exists($input, 'where')) {
             return false;
         }
 
-        $data = ['actionId' => $action->get('id'), 'sourceEntity' => $action->get('sourceEntity'), 'where' => $input->where];
+        $data = ['actionId'     => $action->get('id'),
+                 'sourceEntity' => $action->get('sourceEntity'),
+                 'where'        => $input->where
+        ];
         if (property_exists($input, 'actionSetLinkerId')) {
             $data['actionSetLinkerId'] = $input->actionSetLinkerId;
         }
 
-        return $this->getQueueManager()->push(
-            new QueueItemDTO($action->get('name'), 'QueueManagerActionHandler', $data)
-        );
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => $action->get('name'),
+            'type'    => 'ActionHandler',
+            'payload' => $data
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
+
+        return true;
+    }
+
+    /**
+     * @deprecated use createJob instead
+     */
+    public function createQueueItem(Entity $action, \stdClass $input): bool
+    {
+        return $this->createJob($action, $input);
     }
 
     public function getSourceEntity($action, \stdClass $input): ?Entity
@@ -83,11 +95,6 @@ abstract class AbstractAction implements TypeInterface
     protected function getConfig(): Config
     {
         return $this->container->get('config');
-    }
-
-    protected function getQueueManager(): QueueManager
-    {
-        return $this->container->get('queueManager');
     }
 
     protected function getMemoryStorage(): MemoryStorage

@@ -63,7 +63,7 @@
     <div bind:this={panel} class="queue-panel-container">
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
-                <span class="panel-heading-title">{Language.translate('queueManager', 'labels', 'QueueItem')}</span>
+                <span class="panel-heading-title">{Language.translate('jobManager')}</span>
                 <span class="pull-right">
                     <a href="/" class="close" on:click={event=>{event.preventDefault();close();}}><span
                             aria-hidden="true">×</span></a>
@@ -74,7 +74,7 @@
                     <a href="/" title="{Language.translate('Pause')}" class="qm-button"
                        on:click={event=>{event.preventDefault();startStopQm(true);}}>{Language.translate('Pause')}</a>
                     {/if}
-                    <a href="#QueueItem" title="{Language.translate('View List')}"
+                    <a href="#Job" title="{Language.translate('View List')}"
                        class="qp-view-list">{Language.translate('View List')}</a>
                </span>
             </div>

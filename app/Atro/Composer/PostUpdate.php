@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Composer;
 
-use Atro\Core\Application;
 use Atro\Core\Container;
 use Atro\Core\Application as App;
-use Atro\Services\MassDownload;
+use Atro\Jobs\MassDownload;
 use Espo\Core\Utils\Language;
 use Espo\ORM\EntityManager;
 

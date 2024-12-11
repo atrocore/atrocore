@@ -30,15 +30,18 @@ class MassActions extends HasContainer
         parent::init();
     }
 
-    public function upsertViaQm(array $data): array
+    public function upsertViaJob(array $data): array
     {
-        $jobId = $this
-            ->getContainer()
-            ->get('queueManager')
-            ->createQueueItem('Action Upsert', 'QueueManagerUpsert', $data);
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => 'Action Upsert',
+            'type'    => 'Upsert',
+            'payload' => $data
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
 
         return [
-            "queueItemId" => $jobId
+            "jobId" => $jobEntity->get('id')
         ];
     }
 

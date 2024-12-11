@@ -13,20 +13,38 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-class ScanStorage extends AbstractJob
+use Atro\Entities\Job;
+
+class ScanStorage extends AbstractJob implements JobInterface
 {
-    public function run($data, $targetId, $targetType, $scheduledJobId): bool
+    public function run(Job $job): void
     {
-        $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $scheduledJobId);
-        if (empty($scheduledJob)) {
-            return false;
+        $payload = $job->getPayload();
+
+        if (!empty($job->get('scheduledJobId'))) {
+            $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $job->get('scheduledJobId'));
+            if (empty($scheduledJob)) {
+                return;
+            }
+            $storageId = $scheduledJob->get('storageId');
+        } else {
+            $storageId = $payload['storageId'] ?? null;
         }
 
-        $storageId = $scheduledJob->get('storageId');
         if (empty($storageId)) {
-            return false;
+            return;
         }
 
-        return $this->getServiceFactory()->create('Storage')->createScanJob($storageId, false);
+        $storage = $this->getEntityManager()->getEntity('Storage', $storageId);
+        if (empty($storage) || empty($storage->get('isActive'))) {
+            return;
+        }
+
+        $this->getContainer()->get($storage->get('type') . 'Storage')->scan($storage);
+
+        if (!empty($payload['manual'])) {
+            $message = sprintf($this->translate('scanDone', 'labels', 'Storage'), $storage->get('name'));
+            $this->createNotification($job, $message);
+        }
     }
 }

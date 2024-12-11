@@ -1,9 +1,14 @@
 {
-    "entity": true,
-    "layouts": false,
-    "tab": false,
-    "acl": false,
-    "streamDisabled": true,
-    "customizable":false,
-    "notificationDisabled": true
+  "entity": true,
+  "layouts": false,
+  "tab": true,
+  "acl": true,
+  "type": "Base",
+  "object": true,
+  "hasOwner": true,
+  "quickCreateListDisabled": true,
+  "streamDisabled": true,
+  "notificationDisabled": true,
+  "autoDeleteAfterDays": 21,
+  "clearDeletedAfterDays": 35
 }

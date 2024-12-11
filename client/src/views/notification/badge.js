@@ -105,10 +105,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             const refreshScope = localStorage.getItem('pd_' + key) || null;
 
             let expectedHash = "#" + refreshScope;
-            if (refreshScope === 'Job') {
-                expectedHash = '#Admin/jobs';
-            }
-
             if (refreshScope && expectedHash === window.location.hash) {
                 this.ajaxPostRequest('App/action/UpdatePublicDataKey', {
                     key: key,
