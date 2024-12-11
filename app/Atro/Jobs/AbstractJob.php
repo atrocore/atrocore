@@ -12,7 +12,9 @@
 namespace Atro\Jobs;
 
 use Atro\Core\Container;
+use Atro\Core\EventManager\Manager;
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Core\Twig\Twig;
 use Atro\Core\Utils\Language;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
@@ -73,6 +75,16 @@ abstract class AbstractJob
     public function getMemoryStorage(): StorageInterface
     {
         return $this->getContainer()->get('memoryStorage');
+    }
+
+    protected function getEventManager(): Manager
+    {
+        return $this->getContainer()->get('eventManager');
+    }
+
+    protected function twig(): Twig
+    {
+        return $this->getContainer()->get('twig');
     }
 
     protected function createNotification(Entity $job, string $message): void
