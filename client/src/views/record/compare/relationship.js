@@ -26,12 +26,17 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             this.scope = this.options.scope;
             this.baseModel = this.options.model;
             this.relationship = this.options.relationship;
-            this.instances = this.getMetadata().get(['app', 'comparableInstances']);
+            this.collection = this.options.collection;
+            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
+            this.columns = this.options.columns
             this.checkedList = [];
             this.enabledFixedHeader = false;
             this.dragableListRows = false;
             this.showMore = false
             this.fields = [];
+            this.currentItemModels = [];
+            this.otherItemModels = [];
+            this.instances = this.getMetadata().get(['app', 'comparableInstances']);
 
             this.fetchModelsAndSetup();
         },
@@ -60,24 +65,38 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                         }
                     })
 
-                    debugger
-
-                    this.prepareModels(selectField, () =>  this.setupRelationship(() => this.wait(false)));
+                    this.prepareModels(selectField, () => this.setupRelationship(() => this.wait(false)));
                 }
             });
         },
 
         data() {
+            let totalLength = 0;
+            let columns = [];
+            this.columns.forEach((el, key) => {
+                let i = Espo.Utils.cloneDeep(el);
+                if (key === 0) {
+                    totalLength += i.minWidth = 200;
+                    i.itemColumnCount = 1;
+                } else if (key === 1) {
+                    i.itemColumnCount = Math.max(this.currentItemModels.length, 1)
+                    totalLength += i.minWidth = 200;
+                } else {
+                    i.itemColumnCount = Math.max(this.otherItemModels[key - 2].length, 1);
+                    totalLength += i.minWidth = 200 * i.itemColumnCount;
+                }
+                columns.push(i)
+            });
+
             return {
                 name: this.relationship.name,
-                scope: this.relationship.scope,
-                instances: this.instances.map((i, key) => {
-                    i['columnCount'] = this.otherItemModels[key].length;
-                    return i;
-                }),
+                scope: this.scope,
+                relationScope: this.relationship.scope,
+                columns,
                 relationshipsFields: this.relationshipsFields,
                 columnCountCurrent: Math.max(this.currentItemModels.length, 1),
-                currentItemModels: this.currentItemModels
+                currentItemModels: this.currentItemModels,
+                totalLength
             }
         },
 
@@ -89,6 +108,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     currentViewKeys: [],
                     othersModelsKeyPerInstances: []
                 }
+
                 this.currentItemModels.forEach((model, index) => {
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(model.getFieldType(field));
                     let viewKey = this.relationship.name + field + index + 'Current';
@@ -108,7 +128,6 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 this.otherItemModels.forEach((instanceModels, index1) => {
                     data.othersModelsKeyPerInstances[index1] = [];
                     instanceModels.forEach((model, index2) => {
-                        this.others
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(model.getFieldType(field));
                         let viewKey = this.relationship.name + field + index1 + 'Others' + index2;
                         data.othersModelsKeyPerInstances[index1].push({key: viewKey})
@@ -123,7 +142,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             inlineEditDisabled: true,
                         }, view => {
                             view.render()
-                            this.updateBaseUrl(view, index);
+                            this.updateBaseUrl(view, index1);
                         });
                     });
                 });
@@ -264,28 +283,35 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
         afterRender() {
             Dep.prototype.afterRender.call(this)
             $('.not-approved-field').hide();
-
-            if (this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
-                this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
-            }
+            let self = this;
+            // this.$el.find('th').each(function (index) {
+            //     const colspan = $(this).attr('colspan') ? parseInt($(this).attr('colspan')) : 1;
+            //     let startIndex = $(this).index();
+            //     self.$el.find(`td:nth-child(${startIndex + 1})`).addClass('border-left');
+            //     self.$el.find(`td:nth-child(${startIndex + colspan})`).addClass('border-right');
+            //     $(this).addClass('border-left border-right');
+            // });
         },
 
         prepareModels(selectFields, callback) {
-            this.getModelFactory().create(this.relationship.scope, function (relationModel) {
+            this.getModelFactory().create(this.relationship.scope, (relationModel) => {
                 let models = {};
                 let promises = [];
                 this.collection.models.forEach(model => {
                     promises.push(
                         new Promise((resolve) => {
-                            this.ajaxGetRequest(this.scope + '/' + model.get('id') + '/' + this.relationship.name,{
+                            this.ajaxGetRequest(this.scope + '/' + model.get('id') + '/' + this.relationship.name, {
                                 select: selectFields.join(',')
-                            })
-                                .success(res => {
-                                models[model.get('id')] = res.list.map((el) => {
-                                    let m = relationModel.clone();
-                                    m.set(el)
-                                    return m;
-                                });
+                            }).success(res => {
+                                if (res.list.length) {
+                                    models[model.get('id')] = res.list.map((el) => {
+                                        let m = relationModel.clone();
+                                        m.set(el)
+                                        return m;
+                                    });
+                                } else {
+                                    models[model.get('id')] = [relationModel.clone()]
+                                }
                                 resolve();
                             })
                         })
@@ -295,9 +321,17 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 Promise.all(promises).then(() => {
                     this.currentItemModels = models[this.model.id];
                     delete models[this.model.id];
-                    this.otherItemModels = Object.values(models);
+                    this.collection.models.forEach((model) => {
+                        if (models[model.get('id')]) {
+                            this.otherItemModels.push(models[model.get('id')])
+                        }
+                    })
+                    callback();
                 })
             });
+        },
+
+        updateBaseUrl() {
         }
     })
 })

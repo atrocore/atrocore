@@ -12,11 +12,17 @@ Espo.define('views/record/compare','view', function (Dep) {
 
     return Dep.extend({
         template: 'record/compare',
+
         panelDetailNavigation: null,
+
         fieldsPanelsView: 'views/record/compare/fields-panels',
+
         relationshipsPanelsView: 'views/record/compare/relationships-panels',
+
         buttonList: [],
+
         fieldsArr: [],
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -49,9 +55,11 @@ Espo.define('views/record/compare','view', function (Dep) {
             // this.id = this.model.get('id');
             this.collection = this.options.collection;
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
+
             if('distantModelsAttribute' in this.options && this.instanceComparison) {
                 this.distantModelsAttribute = this.options.distantModelsAttribute;
             }
+
             this.scope = this.name =  this.options.scope;
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
             this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
@@ -227,10 +235,12 @@ Espo.define('views/record/compare','view', function (Dep) {
         },
 
         data (){
+            let column = this.buildComparisonTableColumn()
             return {
                 buttonList: this.buttonList,
                 fieldsArr: this.fieldsArr,
-                columns: this.buildComparisonTableColumn(),
+                columns: column,
+                columnLength: column.length + 1,
                 scope: this.scope,
                 id: this.id
             };
@@ -317,8 +327,8 @@ Espo.define('views/record/compare','view', function (Dep) {
                     })
                 });
             }else{
-                columns.push({'name': 'ID'});
-                this.collection.models.forEach(model => columns.push({'name': model.get('id')}))
+                columns.push({'name': 'ID', label: 'ID'});
+                this.collection.models.forEach(model => columns.push({'name': model.get('id'), label: model.get('name'), 'link': true}));
             }
 
             return columns;

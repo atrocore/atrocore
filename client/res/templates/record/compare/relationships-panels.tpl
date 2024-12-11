@@ -14,7 +14,11 @@
                  <tr>
                      {{#each ../columns}}
                     <th colspan="{{itemColumnCount}}" class="text-center">
-                        {{name}}
+                         {{#if link}}
+                            <a href="#{{../../scope}}/view/{{name}}"> {{label}}</a>
+                         {{else}}
+                            {{name}}
+                         {{/if}}
                     </th>
                     {{/each}}
                      <th width="25"></th>
@@ -30,6 +34,7 @@
                  </tbody>
              </table>
         </div>
+
     </div>
     </div>
  </div>

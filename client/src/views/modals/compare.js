@@ -38,7 +38,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.collection = this.options.collection ?? this.collection;
             this.hideRelationship = this.options.hideRelationship ?? this.hideRelationship;
-            this.header = this.getLanguage().translate('Compare') + ' ' + this.scope;
+            this.header = this.getLanguage().translate('Compare') + ' Bookmarked ' + this.translate(this.scope, 'scopeNamesPlural');
 
             if (this.model) {
                 this.header += ' ' + this.model.get('name')
