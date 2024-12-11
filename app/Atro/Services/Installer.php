@@ -635,11 +635,11 @@ class Installer extends HasContainer
         ]));
         @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Language.json', json_encode([
             'en_US' => [
-                'id'           => 'main',
-                'name'         => 'English',
-                'code'         => 'en_US',
-                'role'         => 'main',
-                'createdAt'    => date('Y-m-d H:i:s')
+                'id'        => 'main',
+                'name'      => 'English',
+                'code'      => 'en_US',
+                'role'      => 'main',
+                'createdAt' => date('Y-m-d H:i:s')
             ]
         ]));
         @file_put_contents(
@@ -750,10 +750,58 @@ class Installer extends HasContainer
         }
         @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json', json_encode($emailTemplates));
 
+        $this->createDefaultLayoutProfile();
+
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate lists >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate measures >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate ui handlers >/dev/null");
+    }
+
+    protected function createDefaultLayoutProfile()
+    {
+        $defaultId = 'default';
+
+        try {
+            // create default profile
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->insert('layout_profile')
+                ->values([
+                    'id'         => ':id',
+                    'name'       => ':name',
+                    'is_active'  => ':true',
+                    'is_default' => ':true',
+                ])->setParameters([
+                    'id'   => $defaultId,
+                    'name' => 'Standard'
+                ])
+                ->setParameter('true', true, ParameterType::BOOLEAN)
+                ->executeStatement();
+
+            // update preferences
+            $preferences = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id', 'data')
+                ->from('preferences')
+                ->fetchAllAssociative();
+
+            foreach ($preferences as $preference) {
+                $data = @json_decode($preference['data'], true);
+                if (empty($data)) {
+                    continue;
+                }
+                $data['layoutProfileId'] = $defaultId;
+
+                $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->update('preferences')
+                    ->set('data', ':data')
+                    ->where('id = :id')
+                    ->setParameter('id', $preference['id'])
+                    ->setParameter('data', json_encode($data))
+                    ->executeStatement();
+            }
+        } catch (\Throwable $e) {
+
+        }
     }
 
     /**

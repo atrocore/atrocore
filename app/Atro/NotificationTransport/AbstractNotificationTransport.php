@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\NotificationTransport;
 
 use Atro\Core\Container;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Twig\Twig;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
@@ -93,6 +94,8 @@ abstract class AbstractNotificationTransport
             $updateData = $this->getUpdateData($notificationParams['entity'], $notificationParams['changedFieldsData']);
             if(!empty($updateData)){
                 $notificationParams['updateData'] = $updateData;
+            }else{
+                throw new BadRequest('No relevant changed data');
             }
         }
 

@@ -6,6 +6,7 @@
   "customizable": false,
   "streamDisabled": true,
   "notificationDisabled": true,
+  "bookmarkDisabled": true,
   "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35
 }

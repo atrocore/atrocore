@@ -137,6 +137,7 @@
     "isMultilang": "Mehrsprachig",
     "fontSize": "Schriftgröße",
     "type": "Typ",
+    "name": "Code",
     "label": "Label",
     "required": "Erforderlich",
     "default": "Standardwert",

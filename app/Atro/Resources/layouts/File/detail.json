@@ -44,6 +44,22 @@
           "name": "description",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "unitSize"
+        },
+        {
+          "name": "colorSpace"
+        }
+      ],
+      [
+        {
+          "name": "unitWidth"
+        },
+        {
+          "name": "unitHeight"
+        }
       ]
     ]
   }

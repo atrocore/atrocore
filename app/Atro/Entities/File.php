@@ -92,4 +92,14 @@ class File extends Base
 
         return $path;
     }
+
+    public function isImage(): bool
+    {
+        return str_starts_with($this->get('mimeType'), 'image/');
+    }
+
+    public function isPdf(): bool
+    {
+        return $this->get('mimeType') == 'application/pdf';
+    }
 }

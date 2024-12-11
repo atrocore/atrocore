@@ -121,6 +121,11 @@
                 {{{lastViewedBadge}}}
             </li>
             {{/if}}
+            {{#if showBookmarked }}
+            <li class="dropdown hidden-xs bookmark-badge-container">
+                {{{bookmarkBadge}}}
+            </li>
+            {{/if}}
             {{#if enableQuickCreate}}
             <li class="dropdown hidden-xs quick-create-container hidden-xs">
 	            <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Create'}}"><i class="fas fa-plus"></i></a>

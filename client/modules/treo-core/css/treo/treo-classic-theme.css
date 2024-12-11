@@ -16291,13 +16291,32 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -13px
 }
 
-.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
+#main > .list-container > .list > .table thead th > .layout-editor-container {
+    padding-right: 5px;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .inherited {
     width: 25px;
     height: 25px;
     border: 0;
+    line-height: 1;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .inherited {
+    padding: 5px;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 50%;
-    line-height: 1;
+    margin-left: 0;
 }
 
 .dashboard-header .dashboard-buttons {
@@ -21012,11 +21031,6 @@ button.category:focus {
         flex: 1;
     }
 
-    .bottom .panel .panel-title .collapser {
-        position: relative;
-        top: -4px !important;
-    }
-
     .bottom .panel .panel-title > .action {
         display: inline-block;
         max-width: calc(100% - 40px);
@@ -21904,7 +21918,7 @@ td[data-name="draggableIcon"] {
 .full-page-modal .html-preview .body-container .side-container {
     display: none;
     margin-right: -28px;
-    padding: 8px 14px 0 0;
+    padding: 0 14px 0 0;
     border: 1px solid rgba(0,0,0,0.2);
     border-radius: 3px 0 0 3px;
     width: 350px;
@@ -21922,9 +21936,17 @@ td[data-name="draggableIcon"] {
     display: block;
 }
 
-.full-page-modal .html-preview .body-container .side-container > .record-buttons {
-    margin-left: 10px;
-    margin-bottom: 8px;
+.full-page-modal .html-preview .body-container .side-container .side-header {
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.full-page-modal .html-preview .body-container .side-container .autosave > label {
+    font-weight: 400;
+    user-select: none;
+    vertical-align: middle;
 }
 
 .full-page-modal .html-preview .header-container {
@@ -22113,9 +22135,10 @@ td[data-name="draggableIcon"] {
     margin-left: -4px;
     color: #8e8e8e;
     font-size: 12px;
-    vertical-align: bottom;
+    vertical-align: top;
     line-height: 0;
     user-select: none;
+    display: inline-block;
 }
 
 .panel-heading > .panel-title > .collapser > svg {

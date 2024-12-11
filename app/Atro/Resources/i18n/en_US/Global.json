@@ -58,7 +58,8 @@
     "NotificationTemplate": "Notification Template",
     "NotificationProfile": "Notification Profile",
     "NotificationRule": "Notification Rule",
-    "HtmlSanitizer": "HTML Sanitizer"
+    "HtmlSanitizer": "HTML Sanitizer",
+    "Bookmark": "Bookmark"
   },
   "scopeNamesPlural": {
     "Language": "Languages",
@@ -105,7 +106,8 @@
     "NotificationProfile": "Notification Profiles",
     "NotificationRule": "Notification Rules",
     "Country": "Countries",
-    "HtmlSanitizer": "HTML Sanitizers"
+    "HtmlSanitizer": "HTML Sanitizers",
+    "Bookmark": "Bookmarks"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
@@ -163,8 +165,6 @@
     "Off": "Off",
     "selectedLink": "Select Entity",
     "applyRelation": "Apply Relation",
-    "collapseAllPanels": "Collapse All",
-    "expandAllPanels": "Expand All",
     "UnitSymbol": "Unit Symbol",
     "Mark all read": "Mark all as read",
     "Ownership Information": "Access Management",
@@ -346,8 +346,11 @@
     "Select Image": "Select existing image",
     "Upload Image": "Upload image from a local filesystem",
     "copyConfigurations": "Copy Configurations",
-    "youMustConfigureNotificationConnection": "You must first configure the email notification connection for notifications to be sent."
-
+    "youMustConfigureNotificationConnection": "You must first configure the email notification connection for notifications to be sent.",
+    "Bookmarking": "Bookmarking",
+    "Unbookmark": "Unbookmark",
+    "Bookmark": "Bookmark",
+    "Unbookmarking": "Unbookmarking"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
@@ -455,7 +458,8 @@
     "withArchived": "With archived",
     "onlyDeleted": "Deleted",
     "onlyFollowed": "Followed",
-    "onlyMyTeams": "My Teams"
+    "onlyMyTeams": "My Teams",
+    "onlyBookmarked": "Bookmarked"
   },
   "presetFilters": {
     "all": "All"
@@ -998,7 +1002,8 @@
     "massRestoreNoRecordProceed": "No record was restored.",
     "massUpdateSomeRecordNotProceed": "Some record(s) could not be successfully updated.",
     "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
-    "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored."
+    "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
+    "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

@@ -41,7 +41,7 @@ class Layout extends Base
                 $data = [];
                 foreach ($listItems as $item) {
                     $newItem = [];
-                    $keys = ['name', 'link', 'align', 'width', 'widthPx', 'notSortable'];
+                    $keys = ['name', 'link', 'align', 'width', 'widthPx', 'notSortable', 'editable'];
                     if ($this->get('viewType') === 'kanban') {
                         $keys = ['name', 'link', 'align', 'width', 'isLarge', 'cssStyle'];
                     }

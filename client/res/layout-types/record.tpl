@@ -12,9 +12,7 @@
                 }
             }
         %>
-        <% if (panelLabelString) { %>
         <div class="panel-heading"><h4 class="panel-title"><%= panelLabelString %></h4></div>
-        <% } %>
         <div class="panel-body panel-body-form">
         <% _.each(panel.rows, function (row, rowNumber) { %>
             <div class="row">

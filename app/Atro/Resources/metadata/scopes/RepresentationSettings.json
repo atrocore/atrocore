@@ -2,5 +2,6 @@
   "entity": false,
   "module": "TreoCore",
   "streamDisabled": true,
-  "notificationDisabled": true
+  "notificationDisabled": true,
+  "bookmarkDisabled": true
 }

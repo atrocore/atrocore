@@ -127,6 +127,9 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.listenTo(Backbone, 'tree-panel-expanded', () => {
                 this.switchMinimizer(true);
             });
+
+            this.setupBookmark()
+
         },
 
         switchMinimizer(afterTrigger) {
@@ -372,6 +375,12 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 }
             });
         },
+
+        setupBookmark: function() {
+            this.createView('bookmarkBadge', 'views/bookmark/badge', {
+                el: this.options.el + ' .bookmark-badge-container'
+            });
+        }
 
     });
 

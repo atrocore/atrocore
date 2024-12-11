@@ -79,6 +79,12 @@ class File extends Base
             }
             $entity->set('folderPath', $folderPath);
         }
+
+        if($entity->get('width') && $entity->get('height')) {
+            $entity->set('size', $entity->get('width') . 'x' . $entity->get('height'));
+            $entity->set('sizeUnitId', $entity->get('widthUnitId'));
+            $entity->set('sizeUnitData', $entity->get('widthUnitData'));
+        }
     }
 
     public function createEntity($attachment)

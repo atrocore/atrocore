@@ -4,7 +4,9 @@
       "jpg",
       "jpeg",
       "gif",
-      "png"
+      "png",
+      "webp",
+      "svg"
     ],
     "hasPreviewExtensions": [
       "jpg",
@@ -12,7 +14,9 @@
       "gif",
       "png",
       "pdf",
-      "jfif"
+      "jfif",
+      "webp",
+      "svg"
     ],
     "thumbnailSize": {
       "small": [

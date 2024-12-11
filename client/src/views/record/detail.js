@@ -160,12 +160,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 });
             },
-            'click a[data-action="collapseAllPanels"]': function (e) {
-                this.collapseAllPanels('hide');
-            },
-            'click a[data-action="expandAllPanels"]': function (e) {
-                this.collapseAllPanels('show');
-            },
             'click a[data-action="layoutEditor"]': function (e) {
                 // open modal view
                 this.createView('dialog', 'views/admin/layouts/modals/edit', {
@@ -202,15 +196,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             })
                         }
                     });
-                });
-            }
-        },
-
-        collapseAllPanels(type) {
-            let bottom = this.getView('bottom');
-            if (bottom) {
-                (bottom.panelList || []).forEach(panel => {
-                    bottom.trigger('collapsePanel', panel.name, type);
                 });
             }
         },
@@ -1766,19 +1751,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         addCollapsingButtonsToMiddleView(view) {
             view.listenTo(view, 'after:render', view => {
-                let bottom = this.getView('bottom');
-                if (bottom && bottom.panelList.length) {
-                    let html = `` +
-                        `<a class="btn btn-link collapsing-button" data-action="collapseAllPanels">` +
-                        `<span class="fas fa-chevron-up"></span>` +
-                        `${this.getLanguage().translate('collapseAllPanels', 'labels', 'Global')}` +
-                        `</a>` +
-                        `<a class="btn btn-link collapsing-button" data-action="expandAllPanels">` +
-                        `<span class="fas fa-chevron-down"></span>` +
-                        `${this.getLanguage().translate('expandAllPanels', 'labels', 'Global')}` +
-                        `</a>`;
-                    view.$el.find('.panel-heading:first').append(html);
-                }
                 // add layout configuration button
                 const additionalLayouts = this.getMetadata().get(['clientDefs', this.model.name, 'additionalLayouts']) || {};
                 const availableLayouts = []
