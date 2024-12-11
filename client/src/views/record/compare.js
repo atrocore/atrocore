@@ -43,43 +43,34 @@ Espo.define('views/record/compare','view', function (Dep) {
                 }
             }
         },
+
         init(){
             Dep.prototype.init.call(this);
-            this.id = this.model.get('id');
-            this.distantModelsAttribute = this.options.distantModelsAttribute;
-            this.scope = this.name =  this.options.scope
+            // this.id = this.model.get('id');
+            this.collection = this.options.collection;
+            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
+            if('distantModelsAttribute' in this.options && this.instanceComparison) {
+                this.distantModelsAttribute = this.options.distantModelsAttribute;
+            }
+            this.scope = this.name =  this.options.scope;
             this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
             this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
             this.hideQuickMenu = this.options.hideQuickMenu;
-
-
         },
+
         setup(){
             this.instances = this.getMetadata().get(['app','comparableInstances'])
             this.notify('Loading...')
             this.getModelFactory().create(this.scope, function (model) {
-                let modelCurrent = this.model;
                 let  modelOthers = [];
-                this.distantModelsAttribute.forEach((modelAttribute, index) => {
+                let modelCurrent = this.model;
+                if(this.instanceComparison) {
+                      modelOthers = this.getDistantComparisonModels();
+                }else{
+                    modelCurrent = this.model = this.collection.models[0];
+                    modelOthers = this.collection.models.filter(model => model.id !== modelCurrent.id)
+                }
 
-                    if('_error' in modelAttribute){
-                        this.instances[index]['_error'] = modelAttribute['_error'];
-                    }
-                    let  m = model.clone();
-                    for(let key in modelAttribute){
-                        let el = modelAttribute[key];
-                        let instanceUrl = this.instances[index].atrocoreUrl;
-                        if(key.includes('PathsData')){
-                            if( el && ('thumbnails' in el)){
-                                for (let size in el['thumbnails']){
-                                    modelAttribute[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
-                                }
-                            }
-                        }
-                    }
-                    m.set(modelAttribute);
-                    modelOthers.push(m);
-                })
 
                 this.fieldsArr = [];
 
@@ -172,6 +163,33 @@ Espo.define('views/record/compare','view', function (Dep) {
             }, this)
 
         },
+
+        getDistantComparisonModels() {
+            let models  = [];
+            this.distantModelsAttribute.forEach((modelAttribute, index) => {
+
+                if('_error' in modelAttribute){
+                    this.instances[index]['_error'] = modelAttribute['_error'];
+                }
+                let  m = model.clone();
+                for(let key in modelAttribute){
+                    let el = modelAttribute[key];
+                    let instanceUrl = this.instances[index].atrocoreUrl;
+                    if(key.includes('PathsData')){
+                        if( el && ('thumbnails' in el)){
+                            for (let size in el['thumbnails']){
+                                modelAttribute[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
+                            }
+                        }
+                    }
+                }
+                m.set(modelAttribute);
+                models.push(m);
+            })
+
+            return models;
+        },
+
         setupFieldsPanels(){
             this.notify('Loading...')
             this.createView('fieldsPanels', this.fieldsPanelsView, {
@@ -179,6 +197,7 @@ Espo.define('views/record/compare','view', function (Dep) {
                 model: this.model,
                 fieldsArr: this.fieldsArr,
                 instances: this.instances,
+                columns: this.buildComparisonTableColumn(),
                 distantModels: this.distantModelsAttribute,
                 el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
             }, view => {
@@ -196,6 +215,9 @@ Espo.define('views/record/compare','view', function (Dep) {
                     model: this.model,
                     relationships: layout,
                     distantModels: this.distantModelsAttribute,
+                    collection: this.collection,
+                    instanceComparison: this.instanceComparison,
+                    columns: this.buildComparisonTableColumn(),
                     el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
                 }, view => {
                     this.notify(false)
@@ -203,15 +225,17 @@ Espo.define('views/record/compare','view', function (Dep) {
                 })
             });
         },
+
         data (){
             return {
                 buttonList: this.buttonList,
                 fieldsArr: this.fieldsArr,
-                instances: this.instances,
+                columns: this.buildComparisonTableColumn(),
                 scope: this.scope,
                 id: this.id
             };
         },
+
         actionReset(){
             this.confirm(this.translate('confirmation', 'messages'), function () {
 
@@ -257,9 +281,11 @@ Espo.define('views/record/compare','view', function (Dep) {
             return result;
 
         },
+
         afterRender(){
            this.notify(false)
         },
+
         afterModelsLoading(modelCurrent, modelOthers){},
 
         actionDetailsComparison(data){
@@ -279,5 +305,23 @@ Espo.define('views/record/compare','view', function (Dep) {
                 model.fetch({main: true});
             });
         },
+
+        buildComparisonTableColumn() {
+            let columns = [];
+            if(this.instanceComparison) {
+                columns.push({name: this.translate('instance', 'labels', 'Synchronization')});
+                this.instances.forEach(instance => {
+                    columns.push({
+                        name: instance.name,
+                        _error: instance._error
+                    })
+                });
+            }else{
+                columns.push({'name': 'ID'});
+                this.collection.models.forEach(model => columns.push({'name': model.get('id')}))
+            }
+
+            return columns;
+        }
     });
 });

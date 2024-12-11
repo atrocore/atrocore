@@ -6,8 +6,8 @@
             <th style="width: 40%;" colspan="{{columnCountCurrent}}" class="text-center">
                 {{translate 'current' scope='Synchronization' category='labels'}}
             </th>
-            {{#each instances}}
-            <th style="width: 40%" colspan="{{columnCount}}" class="text-center">
+            {{#each colummns}}
+            <th style="width: 40%" colspan="{{itemColumnCount}}" class="text-center">
                 {{name}}
                 {{#if _error}}
                 <br>

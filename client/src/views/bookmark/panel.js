@@ -11,8 +11,13 @@
 Espo.define('views/bookmark/panel', 'view', function (Dep) {
     return Dep.extend({
         template: 'bookmark/panel',
+
         loadingGroups: false,
+
         groups: [],
+
+        rowActionsViewEntity: 'views/bookmark/record/row-actions/bookmarked-entity',
+
         events: {
             'click [data-action="showMore"]': function (e) {
                 $(e.currentTarget).addClass('disabled');
@@ -22,12 +27,15 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                     this.reRender()
                 }, this.collection.length)
 
-            }
+            },
+            'click [data-action="compare"]': function (e) {
+                this.compareEntities($(e.currentTarget).data('key'))
+            },
         },
+
         setup() {
             this.groups = [];
             this.collection = null;
-            this.wait(true);
             this.getCollectionFactory().create('Bookmark', collection => {
                 this.collection = collection;
                 this.loadingGroups = true
@@ -37,9 +45,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                         this.reRender()
                     })
                 })
-                this.wait(false);
             });
-
         },
 
         data() {
@@ -83,7 +89,21 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                     length += group.collection.length;
                 })
                 this.collection.length = length;
+
                 callback();
+
+                this.groups.forEach((group, key) => {
+                    let rowActionViewKey = 'rowActionView' + group.key;
+                    this.getModelFactory().create('Bookmark', model => {
+                        model.set(group.collection[0]);
+                        this.createView(rowActionViewKey, this.rowActionsViewEntity, {
+                            el: `${this.options.el} .group[data-name="${group.key}"] .action`,
+                            key: group.key,
+                            model: model,
+                            acl: this.options.acl
+                        }, view => view.render())
+                    })
+                })
             });
         },
 
@@ -96,7 +116,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
             if (!this.groups || this.groups.length < 1) {
                 return;
             }
-            if(this.groups.length === 1) {
+            if (this.groups.length === 1) {
                 this.$el.find('.group .list-container').css('min-height', '300px')
             }
             this.groups.forEach((group, key) => {
@@ -128,7 +148,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                                 this.groups[key].collection = this.groups[key].collection.filter(item => item.id !== bookmarkId)
                                 this.groups[key].rowList = this.groups[key].rowList.filter(id => id !== bookmarkId)
                                 view.$el.find('[data-id="' + bookmark.get('entityId') + '"]').remove()
-                                if(!this.groups[key].length) {
+                                if (!this.groups[key].length) {
                                     $(`${this.options.el} .group[data-name="${group.key}"]`).remove()
                                 }
                             })
@@ -142,6 +162,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
             groupCollection.url = group.key;
             groupCollection.maxSize = group.collection.length;
             groupCollection.total = group.collection.length;
+            groupCollection.sortBy = 'name';
             groupCollection.data.select = 'id,name'
             groupCollection.where = [
                 {
@@ -170,5 +191,33 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
             });
             callback();
         },
+
+        compareEntities(groupKey) {
+            let group = this.groups.find(group => group.key === groupKey);
+            this.getCollectionFactory().create(group.key, collection => {
+                collection.sortBy = 'name';
+                collection.where = [
+                    {
+                        "type": "bool",
+                        "value": ['onlyBookmarked']
+                    }
+                ];
+
+                if (group.collection.length < 2) {
+                    this.notify('Should I have at list 2 records in bookmarks to be able to compare');
+                } else {
+                    this.createView('dialog', 'views/modals/compare', {
+                        collection: collection,
+                        scope: group.key,
+                        mode: "details",
+                        className: 'full-page-modal',
+                        hideRelationship: false
+                    }, function (dialog) {
+                        dialog.render();
+                        this.notify(false)
+                    })
+                }
+            })
+        }
     })
 });

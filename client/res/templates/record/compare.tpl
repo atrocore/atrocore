@@ -12,8 +12,7 @@
             <table class="table full-table table-striped table-fixed table-scrolled table-bordered" >
                 <thead>
                 <tr>
-                    <th>{{ translate 'instance' scope='Synchronization' }}</th>
-                    {{#each instances}}
+                    {{#each columns}}
                     <th class="text-center">
                         {{name}}
                         {{#if _error}}

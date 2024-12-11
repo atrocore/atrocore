@@ -2,12 +2,8 @@
     <table class="table full-table table-striped table-scrolled table-bordered-inside">
         <thead>
         <tr>
-            <th style="width:20%">{{ translate 'instance' scope='Synchronization' }}</th>
-            <th style="width: 40%;">
-                {{translate 'current' scope='Synchronization' category='labels'}}
-            </th>
-            {{#each instances}}
-            <th style="width: 40%;">
+            {{#each columns}}
+            <th class="text-center">
                 {{name}}
                 {{#if _error}}
                 <br>
@@ -22,7 +18,7 @@
         <tbody>
         {{#each fieldList}}
         <tr>
-            <td colspan="4"><h5>{{translate label category='labels' scope='Global'}}</h5></td>
+            <td colspan="{{../columnLength}}"><h5>{{translate label category='labels' scope='Global'}}</h5></td>
         </tr>
         {{#each fields}}
         <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">

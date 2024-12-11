@@ -12,12 +12,8 @@
              <table class="table full-table table-striped table-fixed table-scrolled table-bordered" >
                  <thead>
                  <tr>
-                     <th>{{ translate 'instance' scope='Synchronization' }}</th>
-                     <th>
-                         {{translate 'current' scope='Synchronization' category='labels'}}
-                     </th>
-                     {{#each ../instances}}
-                    <th colspan="{{columnCount}}" class="text-center">
+                     {{#each ../columns}}
+                    <th colspan="{{itemColumnCount}}" class="text-center">
                         {{name}}
                     </th>
                     {{/each}}
@@ -26,10 +22,10 @@
                  </thead>
                  <tbody>
                       <tr class="list-row data-id="{{attributeId}}">
-                        <td class="cell" colspan="4"> {{translate 'Loading...'}}</td>
+                        <td class="cell" colspan="{{../columnsLength}}"> {{translate 'Loading...'}}</td>
                      </tr>
                       <tr class="list-row" >
-                        <td class="cell" colspan="4"> {{translate 'Loading...'}}</td>
+                        <td class="cell" colspan="{{../columnsLength}}"> {{translate 'Loading...'}}</td>
                      </tr>
                  </tbody>
              </table>

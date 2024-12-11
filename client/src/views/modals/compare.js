@@ -20,43 +20,73 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
         size: '',
 
         backdrop: true,
+
         recordView: 'views/record/compare',
-        buttonList:[],
-        buttons:[],
+
+        buttonList: [],
+
+        buttons: [],
+
+        instanceComparison: false,
+
+        hideRelationship: true,
 
         setup: function () {
             this.model = this.options.model;
-            this.scope = this.model.urlRoot;
-            this.header = this.getLanguage().translate('Compare')+' '+this.scope+' '+this.model.get('name')
+            this.scope = this.options.scope ?? this.model.urlRoot;
+            this.className = this.options.className ?? this.className;
+            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
+            this.collection = this.options.collection ?? this.collection;
+            this.hideRelationship = this.options.hideRelationship ?? this.hideRelationship;
+            this.header = this.getLanguage().translate('Compare') + ' ' + this.scope;
+
+            if (this.model) {
+                this.header += ' ' + this.model.get('name')
+            }
+
             Modal.prototype.setup.call(this)
-            this.buttonList.push({
-                name: 'fullView',
-                label: 'Full View'
-            });
+
+            // this.buttonList.push({
+            //     name: 'fullView',
+            //     label: 'Full View'
+            // });
             this.listenTo(this, 'after:render', () => this.setupRecord())
         },
 
         setupRecord() {
             this.notify('Loading...');
-            this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
-                uri: this.scope + '/' + this.model.id}).success(attr => {
-                var o = {
-                    el: this.options.el +' .modal-record',
-                    model: this.model,
-                    distantModelsAttribute: attr,
-                    hideRelationShip: true,
-                    hideQuickMenu: true,
-                    scope: this.scope
-                };
-                this.createView('modalRecord', this.recordView, o, view => {
-                    view.render()
-                    this.notify(false)
-                });
-            })
+            let options = {
+                el: this.options.el + ' .modal-record',
+                model: this.model,
+                hideRelationship: this.hideRelationship,
+                hideQuickMenu: true,
+                instanceComparison: this.instanceComparison,
+                collection: this.options.collection,
+                scope: this.scope
+            };
 
+            if (this.instanceComparison) {
+                this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
+                    uri: this.scope + '/' + this.model.id
+                }).success(attr => {
+                    options.distantModelsAttribute = attr;
+                    this.createModalView(options)
+                })
+            } else {
+                this.collection.fetch().success(() => {
+                    this.createModalView(options);
+                })
+            }
         },
 
-        actionFullView(data){
+        createModalView(options) {
+            this.createView('modalRecord', this.recordView, options, view => {
+                view.render()
+                this.notify(false)
+            });
+        },
+
+        actionFullView(data) {
             if (!this.getAcl().check(this.scope, 'read')) {
                 this.notify('Access denied', 'error');
                 return false;
