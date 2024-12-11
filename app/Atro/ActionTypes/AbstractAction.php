@@ -55,14 +55,6 @@ abstract class AbstractAction implements TypeInterface
         return true;
     }
 
-    /**
-     * @deprecated use createJob instead
-     */
-    public function createQueueItem(Entity $action, \stdClass $input): bool
-    {
-        return $this->createJob($action, $input);
-    }
-
     public function getSourceEntity($action, \stdClass $input): ?Entity
     {
         $sourceEntity = null;
