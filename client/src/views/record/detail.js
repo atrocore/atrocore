@@ -1268,7 +1268,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             };
 
             if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`)
-                && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== false
+                && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) === true
                 && this.getMetadata().get(['scopes', this.model.urlRoot, 'hideFieldTypeFilters']) !== true
             ) {
                 data.overviewFilters = this.getOverviewFiltersList().map(filter => filter.name);
@@ -1662,7 +1662,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         applyOverviewFilters() {
             // skip overview filters
-            if (!this.model || this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) !== true || this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) === false) {
+            if (!this.model || this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) !== true || this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== true) {
                 return;
             }
 
