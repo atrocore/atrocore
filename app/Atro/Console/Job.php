@@ -11,6 +11,7 @@
 
 namespace Atro\Console;
 
+use Atro\Core\Application;
 use Atro\Core\JobManager;
 use Espo\ORM\EntityManager;
 
@@ -26,7 +27,7 @@ class Job extends AbstractConsole
      */
     public function run(array $data): void
     {
-        if (empty($this->getConfig()->get('isInstalled')) || empty($data['id'])) {
+        if (empty($this->getConfig()->get('isInstalled')) || file_exists(Application::COMPOSER_LOG_FILE) || empty($data['id'])) {
             exit(1);
         }
 
