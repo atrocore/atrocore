@@ -138,7 +138,7 @@ class Daemon extends AbstractConsole
     protected function jobManagerDaemon(string $id): void
     {
         while (true) {
-            if (file_exists(Cron::DAEMON_KILLER)) {
+            if (file_exists(Cron::DAEMON_KILLER) || file_exists(Application::COMPOSER_LOG_FILE)) {
                 break;
             }
 
