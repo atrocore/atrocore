@@ -12,6 +12,7 @@
 namespace Atro\Jobs;
 
 use Atro\Core\Container;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Language;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
@@ -67,6 +68,11 @@ abstract class AbstractJob
     protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
     {
         return $this->getLanguage()->translate($label, $category, $scope);
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getContainer()->get('memoryStorage');
     }
 
     protected function createNotification(Entity $job, string $message): void
