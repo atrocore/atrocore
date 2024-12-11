@@ -47,7 +47,8 @@ class V1Dot12Dot0 extends Base
             $this->exec("ALTER TABLE job ADD message LONGTEXT DEFAULT NULL, ADD started_at DATETIME DEFAULT NULL, ADD ended_at DATETIME DEFAULT NULL, ADD priority DOUBLE PRECISION DEFAULT '100', ADD type VARCHAR(255) DEFAULT NULL, ADD assigned_user_id VARCHAR(36) DEFAULT NULL, CHANGE data payload LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', CHANGE queue_item_id owner_user_id VARCHAR(36) DEFAULT NULL");
             $this->exec("CREATE INDEX IDX_JOB_OWNER_USER_ID ON job (owner_user_id, deleted)");
             $this->exec("CREATE INDEX IDX_JOB_ASSIGNED_USER_ID ON job (assigned_user_id, deleted)");
-            $this->exec("ALTER TABLE scheduled_job CHANGE scheduling scheduling VARCHAR(255) DEFAULT '0 2 * * *', CHANGE status type VARCHAR(255) DEFAULT NULL, CHANGE is_internal is_active TINYINT(1) DEFAULT '0' NOT NULL");
+            $this->exec("ALTER TABLE scheduled_job CHANGE scheduling scheduling VARCHAR(255) DEFAULT '0 2 * * *', CHANGE is_internal is_active TINYINT(1) DEFAULT '0' NOT NULL");
+            $this->exec("ALTER TABLE scheduled_job ADD type VARCHAR(255) DEFAULT NULL");
         }
 
         $this->getConnection()->createQueryBuilder()
