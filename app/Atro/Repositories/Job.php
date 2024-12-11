@@ -34,6 +34,7 @@ class Job extends Base
 
         if (!$entity->isNew() && $entity->isAttributeChanged('status')) {
             if ($entity->get('status') === 'Pending') {
+                $entity->set('pid', null);
                 $entity->set('startedAt', null);
                 $entity->set('endedAt', null);
                 $entity->set('message', null);
