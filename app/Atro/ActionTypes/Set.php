@@ -52,9 +52,7 @@ class Set implements TypeInterface
             return false;
         }
 
-        $this->executeAction($linker, $input);
-
-        return true;
+        return $this->executeAction($linker, $input);
     }
 
     public function executeAction(Entity $current, \stdClass $input): bool
