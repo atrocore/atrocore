@@ -52,7 +52,6 @@
       },
       {
          "name": "htmlSanitizer",
-         "required": true,
          "entity": "HtmlSanitizer",
          "type": "link"
       }
