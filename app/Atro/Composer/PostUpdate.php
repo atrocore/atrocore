@@ -873,6 +873,7 @@ class PostUpdate
         // prepare composer.json
         if (file_exists('composer.json')) {
             $composerData = json_decode(file_get_contents('composer.json'), true);
+            $needsToSave = false;
             foreach (['install', 'update'] as $type) {
                 $diffData = $composerDiff[$type] ?? [];
                 foreach ($modules as $id) {
@@ -896,9 +897,12 @@ class PostUpdate
                         }
                     }
                     $composerData['require'][$package] = "{$prefix}{$diffData[$id]['to']}";
+                    $needsToSave = true;
                 }
             }
-            file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            if ($needsToSave) {
+                file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            }
             file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
         }
 
