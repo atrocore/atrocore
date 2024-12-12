@@ -54,9 +54,6 @@ class Daemon extends AbstractConsole
         }
     }
 
-    /**
-     * @param string $id
-     */
     protected function composerDaemon(string $id): void
     {
         while (true) {
@@ -94,6 +91,12 @@ class Daemon extends AbstractConsole
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }
 
+                file_put_contents('data/last-composer.log', file_get_contents($log));
+
+                if ($exitCode === 1) {
+                    exec(self::getPhpBin() . " composer.phar restore --force --auto 2>/dev/null");
+                }
+
                 /**
                  * Create Composer Note
                  */
@@ -101,7 +104,10 @@ class Daemon extends AbstractConsole
                     $note = $em->getEntity('Note');
                     $note->set('type', 'composerUpdate');
                     $note->set('parentType', 'ModuleManager');
-                    $note->set('data', ['status' => ($exitCode == 0) ? 0 : 1, 'output' => file_get_contents($log)]);
+                    $note->set('data', [
+                        'status' => ($exitCode == 0) ? 0 : 1,
+                        'output' => file_get_contents('data/last-composer.log')
+                    ]);
                     $note->set('createdById', $user->get('id'));
                     $em->saveEntity($note);
                 } catch (\Throwable $e) {

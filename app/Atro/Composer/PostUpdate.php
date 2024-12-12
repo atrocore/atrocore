@@ -117,10 +117,6 @@ class PostUpdate
 
             self::renderLine($message);
 
-            self::renderLine('Restoring database');
-            exec(self::getPhpBin() . " composer.phar restore --force --auto 2>/dev/null");
-            self::renderLine('Done!');
-
             exit(1);
         }
     }
