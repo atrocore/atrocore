@@ -398,6 +398,10 @@ class Relation extends Base
     protected  function validateAllowTypesIfRelationWithFile(Entity $entity): void
     {
         $relationFields = $this->getRelationFields();
+        if (empty($relationFields[0]) || empty($relationFields[1])) {
+            return;
+        }
+
         $linkDefs1  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[0]]);
         $linkDefs2  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[1]]);
 
