@@ -165,22 +165,30 @@ class ExtensibleEnumOption extends Base
             foreach ($entityDefs['fields'] as $field => $fieldDef) {
                 foreach ($entity->get('extensibleEnums') as $extensibleEnum) {
                     if (empty($fieldDef['notStorable']) && !empty($fieldDef['extensibleEnumId']) && $fieldDef['extensibleEnumId'] === $extensibleEnum->get('id')) {
-                        $column = Util::toUnderScore($field);
-
-                        $qb = $this->getConnection()->createQueryBuilder();
-                        $qb->select('t.*')
-                            ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))), 't');
-                        if ($fieldDef['type'] === 'extensibleEnum') {
-                            $qb->where("t.$column = :itemId")
-                                ->setParameter('itemId', $entity->get('id'));
+                        if ($entityName == 'Settings') {
+                            $value = $this->getConfig()->get($field);
+                            if ($fieldDef['type'] === 'extensibleEnum' ? $value == $entity->get('id') : in_array($entity->get('id'), $value ?? [])) {
+                                $record = ['name' => 'Admin Settings'];
+                            }
                         } else {
-                            $qb->where("t.$column LIKE :itemId")
-                                ->setParameter('itemId', "%\"{$entity->get('id')}\"%");
-                        }
-                        $qb->andWhere('t.deleted = :false')
-                            ->setParameter('false', false, ParameterType::BOOLEAN);
+                            $column = Util::toUnderScore($field);
 
-                        $record = $qb->fetchAssociative();
+                            $qb = $this->getConnection()->createQueryBuilder();
+                            $qb->select('t.*')
+                                ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))), 't');
+                            if ($fieldDef['type'] === 'extensibleEnum') {
+                                $qb->where("t.$column = :itemId")
+                                    ->setParameter('itemId', $entity->get('id'));
+                            } else {
+                                $qb->where("t.$column LIKE :itemId")
+                                    ->setParameter('itemId', "%\"{$entity->get('id')}\"%");
+                            }
+                            $qb->andWhere('t.deleted = :false')
+                                ->setParameter('false', false, ParameterType::BOOLEAN);
+
+                            $record = $qb->fetchAssociative();
+                        }
+
 
                         if (!empty($record)) {
                             throw new BadRequest(
