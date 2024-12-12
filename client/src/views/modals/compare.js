@@ -38,18 +38,27 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.collection = this.options.collection ?? this.collection;
             this.hideRelationship = this.options.hideRelationship ?? this.hideRelationship;
-            this.header = this.getLanguage().translate('Compare') + ' Bookmarked ' + this.translate(this.scope, 'scopeNamesPlural');
+
+            Modal.prototype.setup.call(this)
+
+            let middle = '';
+
+            if(!this.instanceComparison) {
+                this.recordView = 'views/record/compare-instance'
+                this.buttonList.push({
+                    name: 'fullView',
+                    label: 'Full View'
+                });
+            }else{
+                middle = ' Bookmarked ';
+            }
+
+            this.header = this.getLanguage().translate('Compare') + middle + ' '+this.translate(this.scope, 'scopeNamesPlural');
 
             if (this.model) {
                 this.header += ' ' + this.model.get('name')
             }
 
-            Modal.prototype.setup.call(this)
-
-            // this.buttonList.push({
-            //     name: 'fullView',
-            //     label: 'Full View'
-            // });
             this.listenTo(this, 'after:render', () => this.setupRecord())
         },
 
@@ -74,6 +83,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 })
             } else {
                 this.collection.fetch().success(() => {
+                    options.model = this.collection.models[0];
                     this.createModalView(options);
                 })
             }

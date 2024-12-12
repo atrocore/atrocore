@@ -30,6 +30,11 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
             this.instances = this.getMetadata().get(['app', 'comparableInstances'])
             this.nonComparableFields = this.getMetadata().get(['scopes', this.scope, 'nonComparableFields']) ?? [];
 
+            if(this.instanceComparison) {
+                this.relationshipView = 'views/record/compare/relationship-instance';
+            }
+
+
             if ('distantModelsAttribute' in this.options && this.instanceComparison) {
                 this.distantModelsAttribute = this.options.distantModelsAttribute;
             }
@@ -78,14 +83,22 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                         columns: this.columns,
                         defs: panelData.defs
                     }
+                    let relationshipView = '';
+                    if(this.instanceComparison) {
+                        relationshipView = panelData.defs.compareInstanceRecordsView
+                            ?? this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', panelData.name, 'compareInstanceRecordsView'])
+                            ?? this.relationshipView;
 
-                    let relationshipView = panelData.defs.compareRecordsView
-                        ?? this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', panelData.name, 'compareRecordsView'])
-                        ?? this.relationshipView;
+                    }else {
+
+                        relationshipView = panelData.defs.compareRecordsView
+                            ?? this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', panelData.name, 'compareRecordsView'])
+                            ?? this.relationshipView;
+                    }
 
                     this.createView(panelData.name, relationshipView, o, view => {
                         view.render();
-                    })
+                    }, false)
                 })
             })
         },

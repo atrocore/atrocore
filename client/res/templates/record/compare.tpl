@@ -75,6 +75,10 @@
         border-left: 2px solid red;
     }
 
+    .compare-panel table tbody tr.danger td:first-child{
+        border-left: 2px solid red;
+    }
+
     .compare-panel table tbody tr.danger > td {
         background-color: transparent;
     }
@@ -85,5 +89,10 @@
 
     [data-name="relationshipsPanels"] .panel-body {
         padding: 15px 0 0 0 !important;
+    }
+
+    .compare-panel .attachment-preview a {
+       display: flex;
+        justify-content: center;
     }
 </style>

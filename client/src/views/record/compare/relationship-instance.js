@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/compare-instance/relationship', 'views/record/compare/relationship', function (Dep) {
+Espo.define('views/record/compare/relationship-instance', 'views/record/compare/relationship', function (Dep) {
     return Dep.extend({
 
         prepareModels(selectFields, callback) {
@@ -58,8 +58,10 @@ Espo.define('views/record/compare-instance/relationship', 'views/record/compare/
 
         },
 
-        updateBaseUrl(view, index) {
-            let instanceUrl = this.instances[index].atrocoreUrl;
+        updateBaseUrl(view, instanceUrl) {
+            if(Number.isInteger(instanceUrl)) {
+                 instanceUrl = this.instances[instanceUrl]?.atrocoreUrl;
+            }
             view.listenTo(view, 'after:render', () => {
                 setTimeout(() => {
                     let localUrl = this.getConfig().get('siteUrl');
@@ -70,7 +72,7 @@ Espo.define('views/record/compare-instance/relationship', 'views/record/compare/
                             $(el).attr('href', href.replace(localUrl, instanceUrl))
                         }
 
-                        if ((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?')) {
+                        if ((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?') || href.startsWith('#')) {
                             $(el).attr('href', instanceUrl + href)
                         }
                         $(el).attr('target', '_blank')

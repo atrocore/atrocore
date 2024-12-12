@@ -49,6 +49,5 @@
 </div>
 
 <style>
-    .border-left { border-left: 1px solid black  }
-    .border-right { border-right:1px solid black ;}
+
 </style>

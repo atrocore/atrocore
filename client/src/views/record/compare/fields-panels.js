@@ -105,7 +105,7 @@ Espo.define('views/record/compare/fields-panels','views/record/base', function (
                                             $(el).attr('href', href.replace(localUrl, instanceUrl))
                                         }
 
-                                        if((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?')){
+                                        if((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?') || href.startsWith('#')){
                                             $(el).attr('href', instanceUrl + href)
                                         }
                                         $(el).attr('target','_blank')

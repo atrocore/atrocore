@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/compare','view', function (Dep) {
+Espo.define('views/record/compare', 'view', function (Dep) {
 
     return Dep.extend({
         template: 'record/compare',
@@ -50,54 +50,48 @@ Espo.define('views/record/compare','view', function (Dep) {
             }
         },
 
-        init(){
+        init() {
             Dep.prototype.init.call(this);
             // this.id = this.model.get('id');
             this.collection = this.options.collection;
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
 
-            if('distantModelsAttribute' in this.options && this.instanceComparison) {
+            if ('distantModelsAttribute' in this.options && this.instanceComparison) {
                 this.distantModelsAttribute = this.options.distantModelsAttribute;
             }
 
-            this.scope = this.name =  this.options.scope;
-            this.links = this.getMetadata().get('entityDefs.'+this.scope+'.links');
-            this.nonComparableFields = this.getMetadata().get('scopes.'+this.scope+'.nonComparableFields') ?? [];
+            this.scope = this.name = this.options.scope;
+            this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
+            this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
             this.hideQuickMenu = this.options.hideQuickMenu;
         },
 
-        setup(){
-            this.instances = this.getMetadata().get(['app','comparableInstances'])
+        setup() {
+            this.instances = this.getMetadata().get(['app', 'comparableInstances'])
             this.notify('Loading...')
             this.getModelFactory().create(this.scope, function (model) {
-                let  modelOthers = [];
-                let modelCurrent = this.model;
-                if(this.instanceComparison) {
-                      modelOthers = this.getDistantComparisonModels();
-                }else{
-                    modelCurrent = this.model = this.collection.models[0];
-                    modelOthers = this.collection.models.filter(model => model.id !== modelCurrent.id)
-                }
-
-
                 this.fieldsArr = [];
+                let modelOthers = [];
+                let modelCurrent = this.model;
 
-                let fieldDefs =  this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
+                modelOthers = this.getDistantComparisonModels(model);
+
+                let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
 
                 Object.entries(fieldDefs).forEach(function ([field, fieldDef]) {
 
-                    if(this.nonComparableFields.includes(field)){
-                        return ;
+                    if (this.nonComparableFields.includes(field)) {
+                        return;
                     }
 
-                    if(field.includes('_')){
-                        return ;
+                    if (field.includes('_')) {
+                        return;
                     }
 
-                    const  type = fieldDef['type'];
+                    const type = fieldDef['type'];
                     const isLink = type === 'link' || type === 'linkMultiple';
 
-                    if( isLink && !this.links[field]?.entity){
+                    if (isLink && !this.links[field]?.entity) {
                         return;
                     }
 
@@ -123,15 +117,15 @@ Espo.define('views/record/compare','view', function (Dep) {
                     isLinkMultiple = type === 'linkMultiple';
 
                     const values = (isLinkMultiple && modelCurrent.get(fieldId)) ? modelCurrent.get(fieldId).map(v => {
-                            return {
-                                id:v,
-                                name: modelCurrent.get(field+'Names') ? (modelCurrent.get(field+'Names')[v] ?? v) : v
-                            }
-                        }) : null;
+                        return {
+                            id: v,
+                            name: modelCurrent.get(field + 'Names') ? (modelCurrent.get(field + 'Names')[v] ?? v) : v
+                        }
+                    }) : null;
 
-                    let showDetailsComparison = (modelCurrent.get(fieldId)  && type === "link")
-                        || ((modelCurrent.get(fieldId)?.length ?? 0) > 0  && type === "linkMultiple")
-                    if(showDetailsComparison){
+                    let showDetailsComparison = (modelCurrent.get(fieldId) && type === "link")
+                        || ((modelCurrent.get(fieldId)?.length ?? 0) > 0 && type === "linkMultiple")
+                    if (showDetailsComparison) {
                         for (const other of modelOthers) {
                             showDetailsComparison = showDetailsComparison && modelCurrent.get(fieldId)?.toString() === other.get(fieldId)?.toString();
                         }
@@ -147,15 +141,15 @@ Espo.define('views/record/compare','view', function (Dep) {
                         modelOthers: modelOthers,
                         htmlTag: htmlTag,
                         others: modelOthers.map((element, index) => {
-                            return  {other: field + 'Other'+index, index}
+                            return {other: field + 'Other' + index, index}
                         }),
-                        isLink: isLink ,
+                        isLink: isLink,
                         foreignScope: isLink ? this.links[field].entity : null,
                         foreignId: isLink ? modelCurrent.get(fieldId)?.toString() : null,
                         showDetailsComparison: showDetailsComparison && this.hideQuickMenu !== true,
                         isLinkMultiple: isLinkMultiple,
                         values: values,
-                        different:  !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
+                        different: !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
                         required: !!fieldDef['required']
                     });
 
@@ -164,7 +158,7 @@ Espo.define('views/record/compare','view', function (Dep) {
                 this.afterModelsLoading(modelCurrent, modelOthers);
                 this.listenTo(this, 'after:render', () => {
                     this.setupFieldsPanels();
-                    if(this.options.hideRelationShip !== true){
+                    if (this.options.hideRelationship !== true) {
                         this.setupRelationshipsPanels()
                     }
                 });
@@ -172,33 +166,11 @@ Espo.define('views/record/compare','view', function (Dep) {
 
         },
 
-        getDistantComparisonModels() {
-            let models  = [];
-            this.distantModelsAttribute.forEach((modelAttribute, index) => {
-
-                if('_error' in modelAttribute){
-                    this.instances[index]['_error'] = modelAttribute['_error'];
-                }
-                let  m = model.clone();
-                for(let key in modelAttribute){
-                    let el = modelAttribute[key];
-                    let instanceUrl = this.instances[index].atrocoreUrl;
-                    if(key.includes('PathsData')){
-                        if( el && ('thumbnails' in el)){
-                            for (let size in el['thumbnails']){
-                                modelAttribute[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
-                            }
-                        }
-                    }
-                }
-                m.set(modelAttribute);
-                models.push(m);
-            })
-
-            return models;
+        getDistantComparisonModels(model) {
+            return this.collection.models.filter(model => model.id !== this.model.id);
         },
 
-        setupFieldsPanels(){
+        setupFieldsPanels() {
             this.notify('Loading...')
             this.createView('fieldsPanels', this.fieldsPanelsView, {
                 scope: this.scope,
@@ -214,7 +186,7 @@ Espo.define('views/record/compare','view', function (Dep) {
             })
         },
 
-        setupRelationshipsPanels(){
+        setupRelationshipsPanels() {
             this.notify('Loading...')
 
             this.getHelper().layoutManager.get(this.scope, 'relationships', layout => {
@@ -234,7 +206,7 @@ Espo.define('views/record/compare','view', function (Dep) {
             });
         },
 
-        data (){
+        data() {
             let column = this.buildComparisonTableColumn()
             return {
                 buttonList: this.buttonList,
@@ -246,22 +218,21 @@ Espo.define('views/record/compare','view', function (Dep) {
             };
         },
 
-        actionReset(){
+        actionReset() {
             this.confirm(this.translate('confirmation', 'messages'), function () {
 
             }, this);
         },
 
-        areEquals(current, others, field, fieldDef){
-            if(fieldDef['type'] === 'linkMultiple'){
-                const fieldId = field+'Ids';
-                const fieldName = field+'Names'
+        areEquals(current, others, field, fieldDef) {
+            if (fieldDef['type'] === 'linkMultiple') {
+                const fieldId = field + 'Ids';
+                const fieldName = field + 'Names'
 
-                if(
+                if (
                     (current.get(fieldId) && current.get(fieldId).length === 0)
-                    && others.map(other =>(other.get(fieldId) && other.get(fieldId).length === 0)).reduce((prev, curr) => prev && curr))
-                {
-                    return  true;
+                    && others.map(other => (other.get(fieldId) && other.get(fieldId).length === 0)).reduce((prev, curr) => prev && curr)) {
+                    return true;
                 }
 
                 result = true;
@@ -272,9 +243,9 @@ Espo.define('views/record/compare','view', function (Dep) {
                 return result
             }
 
-            if(fieldDef['type'] === 'link'){
-                const fieldId = field+'Id';
-                const fieldName = field+'Name'
+            if (fieldDef['type'] === 'link') {
+                const fieldId = field + 'Id';
+                const fieldName = field + 'Name'
                 result = true;
 
                 for (const other of others) {
@@ -292,22 +263,23 @@ Espo.define('views/record/compare','view', function (Dep) {
 
         },
 
-        afterRender(){
-           this.notify(false)
+        afterRender() {
+            this.notify(false)
         },
 
-        afterModelsLoading(modelCurrent, modelOthers){},
+        afterModelsLoading(modelCurrent, modelOthers) {
+        },
 
-        actionDetailsComparison(data){
+        actionDetailsComparison(data) {
             this.notify('Loading...');
             this.getModelFactory().create(data.scope, (model) => {
                 model.id = data.id;
                 this.listenToOnce(model, 'sync', function () {
-                    this.createView('dialog','views/modals/compare',{
+                    this.createView('dialog', 'views/modals/compare', {
                         "model": model,
                         "scope": data.scope,
-                        "mode":"details",
-                    }, function(dialog){
+                        "mode": "details",
+                    }, function (dialog) {
                         dialog.render();
                         this.notify(false)
                     })
@@ -318,18 +290,14 @@ Espo.define('views/record/compare','view', function (Dep) {
 
         buildComparisonTableColumn() {
             let columns = [];
-            if(this.instanceComparison) {
-                columns.push({name: this.translate('instance', 'labels', 'Synchronization')});
-                this.instances.forEach(instance => {
-                    columns.push({
-                        name: instance.name,
-                        _error: instance._error
-                    })
-                });
-            }else{
-                columns.push({'name': 'ID', label: 'ID'});
-                this.collection.models.forEach(model => columns.push({'name': model.get('id'), label: model.get('name'), 'link': true}));
-            }
+
+            let hasName = !!this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type'])
+            columns.push({'name': hasName ? this.translate('name') :'ID', label: hasName ? this.translate('name') :'ID'});
+            this.collection.models.forEach(model => columns.push({
+                name: model.get('id'),
+                label: hasName ? (model.get('name') ?? 'None') : model.get('id'),
+                link: true
+            }));
 
             return columns;
         }

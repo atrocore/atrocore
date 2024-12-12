@@ -287,16 +287,16 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             $('.not-approved-field').hide();
             $('.translated-automatically-field').hide();
             let self = this;
-            this.$el.find('th').each(function (index) {
-                const colspan = $(this).attr('colspan') ? parseInt($(this).attr('colspan')) : 1;
-                let startIndex = $(this).index();
-                self.$el.find(`td:nth-child(${startIndex })`).addClass('border-left');
-                self.$el.find(`td:nth-child(${startIndex + colspan})`).addClass('border-right');
-                $(this).addClass('border-left border-right');
-                if(self.relationship.scope === 'Category')  {
-                    console.log(startIndex, colspan, $(this).html())
-                }
-            });
+            // this.$el.find('th').each(function (index) {
+            //     const colspan = $(this).attr('colspan') ? parseInt($(this).attr('colspan')) : 1;
+            //     let startIndex = $(this).index();
+            //     self.$el.find(`td:nth-child(${startIndex })`).addClass('border-left');
+            //     self.$el.find(`td:nth-child(${startIndex + colspan})`).addClass('border-right');
+            //     $(this).addClass('border-left border-right');
+            //     if(self.relationship.scope === 'Category')  {
+            //         console.log(startIndex, colspan, $(this).html())
+            //     }
+            // });
         },
 
         prepareModels(selectFields, callback) {
