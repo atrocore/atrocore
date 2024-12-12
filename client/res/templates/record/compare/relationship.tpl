@@ -23,7 +23,7 @@
             <td class="cell">{{translate field scope=../scope category='fields'}}</td>
             {{#if currentViewKeys }}
             {{#each currentViewKeys}}
-            <td class="cell" data-field="{{key}}" style="min-width: 200px">
+            <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../minWidth}}px">
                 {{{var key ../../this }}}
             </td>
             {{/each}}
@@ -33,7 +33,7 @@
             {{#each othersModelsKeyPerInstances}}
             {{#if this }}
             {{#each this }}
-            <td class="cell" data-field="{{key}}" style="min-width: 200px">
+            <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../../minWidth}}px">
                 {{{var key ../../../this}}}
             </td>
             {{/each}}
@@ -49,6 +49,6 @@
 </div>
 
 <style>
-    .border-left { border-left: 2px solid transparent !important; }
-    .border-right { border-right: 2px solid transparent !important;}
+    .border-left { border-left: 1px solid black  }
+    .border-right { border-right:1px solid black ;}
 </style>

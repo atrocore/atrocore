@@ -72,18 +72,19 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
         data() {
             let totalLength = 0;
+            let minWidth = 150;
             let columns = [];
             this.columns.forEach((el, key) => {
                 let i = Espo.Utils.cloneDeep(el);
                 if (key === 0) {
-                    totalLength += i.minWidth = 200;
+                    totalLength += i.minWidth = minWidth;
                     i.itemColumnCount = 1;
                 } else if (key === 1) {
                     i.itemColumnCount = Math.max(this.currentItemModels.length, 1)
-                    totalLength += i.minWidth = 200;
+                    totalLength += i.minWidth = minWidth;
                 } else {
                     i.itemColumnCount = Math.max(this.otherItemModels[key - 2].length, 1);
-                    totalLength += i.minWidth = 200 * i.itemColumnCount;
+                    totalLength += i.minWidth = minWidth * i.itemColumnCount;
                 }
                 columns.push(i)
             });
@@ -96,7 +97,8 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 relationshipsFields: this.relationshipsFields,
                 columnCountCurrent: Math.max(this.currentItemModels.length, 1),
                 currentItemModels: this.currentItemModels,
-                totalLength
+                totalLength,
+                minWidth
             }
         },
 
@@ -283,14 +285,18 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
         afterRender() {
             Dep.prototype.afterRender.call(this)
             $('.not-approved-field').hide();
+            $('.translated-automatically-field').hide();
             let self = this;
-            // this.$el.find('th').each(function (index) {
-            //     const colspan = $(this).attr('colspan') ? parseInt($(this).attr('colspan')) : 1;
-            //     let startIndex = $(this).index();
-            //     self.$el.find(`td:nth-child(${startIndex + 1})`).addClass('border-left');
-            //     self.$el.find(`td:nth-child(${startIndex + colspan})`).addClass('border-right');
-            //     $(this).addClass('border-left border-right');
-            // });
+            this.$el.find('th').each(function (index) {
+                const colspan = $(this).attr('colspan') ? parseInt($(this).attr('colspan')) : 1;
+                let startIndex = $(this).index();
+                self.$el.find(`td:nth-child(${startIndex })`).addClass('border-left');
+                self.$el.find(`td:nth-child(${startIndex + colspan})`).addClass('border-right');
+                $(this).addClass('border-left border-right');
+                if(self.relationship.scope === 'Category')  {
+                    console.log(startIndex, colspan, $(this).html())
+                }
+            });
         },
 
         prepareModels(selectFields, callback) {

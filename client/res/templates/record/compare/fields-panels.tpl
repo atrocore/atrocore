@@ -27,11 +27,11 @@
         {{#each fields}}
         <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
             <td class="cell">{{translate label scope=../../scope category='fields'}}</td>
-            <td class="cell current">
+            <td class="cell current text-center">
                 {{{var current ../../this}}}
             </td>
             {{#each others}}
-            <td class="cell other{{index}}">
+            <td class="cell other{{index}} text-center">
                 {{{var other ../../../this}}}
             </td>
             {{/each}}
@@ -72,6 +72,9 @@
 <style>
     .hidden-cell{
         display:none !important;
+    }
+    .compare-panel th:first-child{
+       text-align: left !important;
     }
 </style>
 
