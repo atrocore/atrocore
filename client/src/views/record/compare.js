@@ -290,11 +290,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         buildComparisonTableColumn() {
             let columns = [];
-
             let hasName = !!this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type'])
+
             columns.push({
-                'name': hasName ? this.translate('name') : 'ID',
-                label: hasName ? this.translate('name') : 'ID'
+                name: hasName ? this.translate('Name') : 'ID',
+                label: hasName ? this.translate('Name') : 'ID'
             });
             this.collection.models.forEach(model => columns.push({
                 name: model.get('id'),

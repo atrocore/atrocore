@@ -43,7 +43,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             let middle = '';
 
-            if (!this.instanceComparison) {
+            if (this.instanceComparison) {
                 this.recordView = 'views/record/compare-instance'
                 this.buttonList.push({
                     name: 'fullView',
