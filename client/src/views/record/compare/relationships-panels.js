@@ -30,7 +30,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
             this.instances = this.getMetadata().get(['app', 'comparableInstances'])
             this.nonComparableFields = this.getMetadata().get(['scopes', this.scope, 'nonComparableFields']) ?? [];
 
-            if(this.instanceComparison) {
+            if (this.instanceComparison) {
                 this.relationshipView = 'views/record/compare/relationship-instance';
             }
 
@@ -84,12 +84,12 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                         defs: panelData.defs
                     }
                     let relationshipView = '';
-                    if(this.instanceComparison) {
+                    if (this.instanceComparison) {
                         relationshipView = panelData.defs.compareInstanceRecordsView
                             ?? this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', panelData.name, 'compareInstanceRecordsView'])
                             ?? this.relationshipView;
 
-                    }else {
+                    } else {
 
                         relationshipView = panelData.defs.compareRecordsView
                             ?? this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', panelData.name, 'compareRecordsView'])

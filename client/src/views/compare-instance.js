@@ -28,7 +28,7 @@ Espo.define('views/compare-instance', ['views/main'], function (Dep) {
             Dep.prototype.setup.call(this);
             this.model = this.options.model;
             this.scope = this.model.urlRoot;
-            this.recordView = this.getMetadata().get('clientDefs.'+this.scope+'.compare.record') ?? 'views/record/compare-instance'
+            this.recordView = this.getMetadata().get('clientDefs.' + this.scope + '.compare.record') ?? 'views/record/compare-instance'
             this.updatePageTitle();
             this.setupHeader();
             this.setupRecord()
@@ -40,6 +40,7 @@ Espo.define('views/compare-instance', ['views/main'], function (Dep) {
                 el: '#main > .page-header'
             });
         },
+
         getHeader: function () {
 
             var headerIconHtml = this.getHeaderIconHtml();
@@ -72,28 +73,28 @@ Espo.define('views/compare-instance', ['views/main'], function (Dep) {
         setupRecord(name = 'instanceComparison') {
             this.notify('Loading...');
             this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
-                uri: this.scope + '/' + this.model.id, type: 'one'}).success(attr => {
+                uri: this.scope + '/' + this.model.id, type: 'one'
+            }).success(attr => {
                 this.notify(false);
                 var o = {
                     model: this.model,
                     distantModelsAttribute: attr,
                     instanceComparison: true,
-                    el: '#main > .'+name,
+                    el: '#main > .' + name,
                     scope: this.scope
                 };
                 this.createView(name, this.recordView, o, view => view.render());
             })
         },
 
-        getMenu(){
-          return {
-              "buttons": [
-              ]
-          }
+        getMenu() {
+            return {
+                "buttons": []
+            }
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Compare')+' '+this.scope+' '+this.model.get('name'));
+            this.setPageTitle(this.getLanguage().translate('Compare') + ' ' + this.scope + ' ' + this.model.get('name'));
         },
 
     });

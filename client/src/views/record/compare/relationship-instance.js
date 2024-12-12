@@ -59,8 +59,8 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
         },
 
         updateBaseUrl(view, instanceUrl) {
-            if(Number.isInteger(instanceUrl)) {
-                 instanceUrl = this.instances[instanceUrl]?.atrocoreUrl;
+            if (Number.isInteger(instanceUrl)) {
+                instanceUrl = this.instances[instanceUrl]?.atrocoreUrl;
             }
             view.listenTo(view, 'after:render', () => {
                 setTimeout(() => {

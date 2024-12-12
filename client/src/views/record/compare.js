@@ -292,7 +292,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let columns = [];
 
             let hasName = !!this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type'])
-            columns.push({'name': hasName ? this.translate('name') :'ID', label: hasName ? this.translate('name') :'ID'});
+            columns.push({
+                'name': hasName ? this.translate('name') : 'ID',
+                label: hasName ? this.translate('name') : 'ID'
+            });
             this.collection.models.forEach(model => columns.push({
                 name: model.get('id'),
                 label: hasName ? (model.get('name') ?? 'None') : model.get('id'),

@@ -43,17 +43,17 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             let middle = '';
 
-            if(!this.instanceComparison) {
+            if (!this.instanceComparison) {
                 this.recordView = 'views/record/compare-instance'
                 this.buttonList.push({
                     name: 'fullView',
                     label: 'Full View'
                 });
-            }else{
+            } else {
                 middle = ' Bookmarked ';
             }
 
-            this.header = this.getLanguage().translate('Compare') + middle + ' '+this.translate(this.scope, 'scopeNamesPlural');
+            this.header = this.getLanguage().translate('Compare') + middle + ' ' + this.translate(this.scope, 'scopeNamesPlural');
 
             if (this.model) {
                 this.header += ' ' + this.model.get('name')
