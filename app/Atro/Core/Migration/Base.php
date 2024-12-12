@@ -11,6 +11,7 @@
 
 namespace Atro\Core\Migration;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Database\Schema\Schema;
 use Doctrine\DBAL\Connection;
@@ -45,6 +46,7 @@ class Base
 
     public function down(): void
     {
+        throw new Error('Downgrade is prohibited.');
     }
 
     protected function getConnection(): Connection

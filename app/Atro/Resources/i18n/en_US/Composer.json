@@ -14,6 +14,8 @@
     }
   },
   "exceptions": {
+    "invalidVersion": "Module version is invalid.",
+    "downgradeProhibited": "Module version is invalid. Downgrade is prohibited.",
     "hasRequireds": "Module has not satisfied requireds",
     "hasRequiredsDelete": "You cann't delete required module",
     "suchModuleIsAlreadyInstalled": "Such module is already installed",

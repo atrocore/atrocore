@@ -800,7 +800,7 @@ class PostUpdate
                     'id'      => $moduleId,
                     'package' => $package,
                     'from'    => null,
-                    'to'      => null
+                    'to'      => $newData[$package['name']]['version']
                 ];
             }
         }
@@ -867,12 +867,47 @@ class PostUpdate
      */
     private static function onSuccess(): void
     {
-        if (file_exists('composer.lock')) {
-            file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
+        $modules = self::getModules();
+        $composerDiff = self::getComposerDiff();
+
+        // prepare composer.json
+        if (file_exists('composer.json')) {
+            $composerData = json_decode(file_get_contents('composer.json'), true);
+            $needsToSave = false;
+            foreach (['install', 'update'] as $type) {
+                $diffData = $composerDiff[$type] ?? [];
+                foreach ($modules as $id) {
+                    if (!isset($diffData[$id])) {
+                        continue;
+                    }
+
+                    $package = $diffData[$id]['package']['name'];
+                    if (empty($composerData['require'][$package])) {
+                        continue;
+                    }
+
+                    if (preg_match('/^\d+\.\d+\.\d+$/', $composerData['require'][$package]) === 1) {
+                        continue;
+                    }
+
+                    $prefix = '>=';
+                    foreach (['~', '^'] as $symbol) {
+                        if (strpos($composerData['require'][$package], $symbol) !== false) {
+                            $prefix = $symbol;
+                        }
+                    }
+                    $composerData['require'][$package] = "{$prefix}{$diffData[$id]['to']}";
+                    $needsToSave = true;
+                }
+            }
+            if ($needsToSave) {
+                file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            }
+            file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
         }
 
-        if (file_exists('composer.json')) {
-            file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
+        if (file_exists('composer.lock')) {
+            file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
         }
 
         $checkUpdatesLog = 'data/check-updates.log';

@@ -207,6 +207,8 @@ class Composer extends HasContainer
      */
     public function update(string $package, string $version): void
     {
+        $this->validateSettingVersion($package, $version);
+
         // get composer.json data
         $data = self::getComposerJson();
 
@@ -215,6 +217,46 @@ class Composer extends HasContainer
 
         // set composer.json data
         self::setComposerJson($data);
+    }
+
+    protected function validateSettingVersion(string $package, string $version): void
+    {
+        if (
+            preg_match('/^\d+\.\d+\.\d+$/', $version) !== 1
+            && preg_match('/^~\d+\.\d+\.\d+$/', $version) !== 1
+            && preg_match('/^\^\d+\.\d+\.\d+$/', $version) !== 1
+            && preg_match('/^>\d+\.\d+\.\d+$/', $version) !== 1
+            && preg_match('/^>=\d+\.\d+\.\d+$/', $version) !== 1
+        ) {
+            throw new BadRequest($this->translate('invalidVersion', 'exceptions', 'Composer'));
+        }
+
+        preg_match_all('/^(.*)(\d+)\.(\d+)\.(\d+)$/', $version, $matches);
+        $res = ["{$matches[2][0]}.{$matches[3][0]}.{$matches[4][0]}"];
+
+        $currentVersion = null;
+        if ($package === 'atrocore/core') {
+            $currentVersion = Composer::getCoreVersion();
+        } else {
+            foreach ($this->getModuleManager()->getModules() as $module) {
+                if ($module->getComposerName() === $package) {
+                    $currentVersion = $module->getVersion();
+                }
+            }
+        }
+
+        if (!empty($currentVersion)) {
+            preg_match_all('/^(.*)(\d+)\.(\d+)\.(\d+)(.*)$/', $currentVersion, $matches);
+            $res[] = "{$matches[2][0]}.{$matches[3][0]}.{$matches[4][0]}";
+        }
+
+        $copy = $res;
+
+        natsort($res);
+
+        if ($res[0] !== $res[1] && $res === $copy) {
+            throw new BadRequest($this->translate('downgradeProhibited', 'exceptions', 'Composer'));
+        }
     }
 
     /**
