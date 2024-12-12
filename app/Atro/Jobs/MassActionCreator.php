@@ -116,7 +116,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
             $i = 1;
             foreach ($jobs as $job) {
                 $job->set('name', sprintf($this->translate('massActionJobName'), $this->translate($action, 'massActions'), $entityName, $i, $jobsCount));
-                $job->set('status', 'Payload');
+                $job->set('status', 'Pending');
                 $job->set('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
                 $this->getEntityManager()->saveEntity($job);
                 $i++;

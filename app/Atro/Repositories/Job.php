@@ -40,7 +40,7 @@ class Job extends Base
                 $entity->set('message', null);
             }
 
-            if (!$entity->isNew()) {
+            if (!$entity->isNew() && !empty($entity->getFetched('status'))) {
                 $transitions = [
                     "Running"  => [
                         "Pending"
