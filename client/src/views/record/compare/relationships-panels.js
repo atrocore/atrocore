@@ -49,6 +49,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
 
                 let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', relationship.name]) ?? {};
                 let relationScope = relationDefs['entity'];
+                let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
 
                 let bottomPanelOptions = bottomPanels.find(panel => panel.name === relationship.name);
 
@@ -61,7 +62,9 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                     scope: relationScope,
                     name: relationship.name,
                     type: relationDefs['type'],
+                    inverseType: inverseRelationType,
                     foreign: relationDefs['foreign'],
+                    relationName: relationDefs['relationName'],
                     defs: bottomPanelOptions ?? {}
                 };
                 this.relationshipsPanels.push(panelData);
