@@ -233,7 +233,7 @@ class Hierarchy extends Base
             }
             $entity->set('parentId', $parentId);
             $this->getEntityManager()->saveEntity($entity);
-        } else {
+        } elseif(!empty($entity)) {
             $this->getEntityManager()->removeEntity($entity, ['move' => true]);
         }
 
