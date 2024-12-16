@@ -91,9 +91,6 @@ class Daemon extends AbstractConsole
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }
 
-                // wait 3 seconds just in case
-                sleep(3);
-
                 $contents = @file_get_contents($log);
                 if (!is_string($contents)) {
                     $contents = 'Failed! Composer log file does not exist. Try to update via CLI to understand the reason of the error.';
