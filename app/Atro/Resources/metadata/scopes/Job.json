@@ -6,6 +6,7 @@
   "type": "Base",
   "object": true,
   "hasOwner": true,
+  "customizable": true,
   "quickCreateListDisabled": true,
   "streamDisabled": true,
   "notificationDisabled": true,

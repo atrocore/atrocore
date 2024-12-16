@@ -38,6 +38,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
         template: 'admin/entity-manager/modals/edit-entity',
 
+        hasClearConfiguration: false,
+
         data: function () {
             let data = {
                     isNew: this.isNew,
@@ -51,6 +53,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 data.hasModifiedExtendedRelations = scopeData.type !== 'ReferenceData';
                 data.hasDuplicatableRelations = scopeData.type !== 'ReferenceData';
                 data.hasDeleteWithoutConfirmation = scopeData.type !== 'ReferenceData';
+                data.hasClearConfiguration = this.hasClearConfiguration;
             }
 
             return data;
@@ -95,6 +98,11 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('hasDuplicatableRelations', this.getMetadata().get(['scopes', scope, 'type']) !== 'ReferenceData');
 
                 this.model.set('hideFieldTypeFilters', this.getMetadata().get(['scopes', scope, 'hideFieldTypeFilters']) ||  false);
+
+                this.model.set('clearDeletedAfterDays', this.getMetadata().get(['scopes', scope, 'clearDeletedAfterDays']) ||  60);
+                this.model.set('autoDeleteAfterDays', this.getMetadata().get(['scopes', scope, 'autoDeleteAfterDays']) ||  null);
+
+                this.hasClearConfiguration = this.model.get('type') !== 'ReferenceData';
             }
         },
 
@@ -222,6 +230,29 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     defs: {
                         name: 'color'
                     }
+                });
+            }
+
+            if (this.hasClearConfiguration) {
+                this.createView('clearDeletedAfterDays', 'views/fields/int', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="clearDeletedAfterDays"]',
+                    defs: {
+                        name: 'clearDeletedAfterDays'
+                    },
+                    tooltip: true,
+                    tooltipText: this.translate('clearDeletedAfterDays', 'tooltips', 'EntityManager'),
+                });
+                this.createView('autoDeleteAfterDays', 'views/fields/int', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="autoDeleteAfterDays"]',
+                    defs: {
+                        name: 'autoDeleteAfterDays'
+                    },
+                    tooltip: true,
+                    tooltipText: this.translate('autoDeleteAfterDays', 'tooltips', 'EntityManager'),
                 });
             }
 
@@ -555,7 +586,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 'disabled',
                 'streamDisabled',
                 'statusField',
-                'iconClass'
+                'iconClass',
+                'clearDeletedAfterDays',
+                'autoDeleteAfterDays'
             ];
 
             if (this.scope) {
@@ -611,6 +644,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 textFilterFields: this.model.get('textFilterFields'),
                 statusField: this.model.get('statusField'),
                 iconClass: this.model.get('iconClass'),
+                clearDeletedAfterDays: this.model.get('clearDeletedAfterDays'),
+                autoDeleteAfterDays: this.model.get('autoDeleteAfterDays'),
             };
 
             if (this.hasColorField) {
