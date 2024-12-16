@@ -89,12 +89,16 @@ abstract class AbstractJob
 
     protected function createNotification(Entity $job, string $message): void
     {
+        if ($job->get('ownerUserId') === 'system') {
+            return;
+        }
+
         $notification = $this->getEntityManager()->getEntity('Notification');
         $notification->set('type', 'Message');
         $notification->set('relatedType', 'Job');
         $notification->set('relatedId', $job->get('id'));
         $notification->set('message', $message);
-        $notification->set('userId', $job->get('createdById'));
+        $notification->set('userId', $job->get('ownerUserId'));
 
         $this->getEntityManager()->saveEntity($notification);
     }
