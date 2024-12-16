@@ -91,10 +91,12 @@ class Daemon extends AbstractConsole
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }
 
-                file_put_contents('data/last-composer.log', file_get_contents($log));
+                // wait 3 seconds just in case
+                sleep(3);
 
-                if ($exitCode === 1) {
-                    exec(self::getPhpBin() . " composer.phar restore --force --auto 2>/dev/null");
+                $contents = @file_get_contents($log);
+                if (!is_string($contents)) {
+                    $contents = 'Failed! Composer log file does not exist. Try to update via CLI to understand the reason of the error.';
                 }
 
                 /**
@@ -106,7 +108,7 @@ class Daemon extends AbstractConsole
                     $note->set('parentType', 'ModuleManager');
                     $note->set('data', [
                         'status' => ($exitCode == 0) ? 0 : 1,
-                        'output' => file_get_contents('data/last-composer.log')
+                        'output' => $contents
                     ]);
                     $note->set('createdById', $user->get('id'));
                     $em->saveEntity($note);
