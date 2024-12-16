@@ -27,7 +27,7 @@
           "conditionGroup": [
             {
               "type": "equals",
-              "attribute": "job",
+              "attribute": "type",
               "value": "ScanStorage"
             }
           ]
@@ -36,7 +36,7 @@
           "conditionGroup": [
             {
               "type": "equals",
-              "attribute": "job",
+              "attribute": "type",
               "value": "ScanStorage"
             }
           ]
