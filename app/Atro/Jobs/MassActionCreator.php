@@ -99,7 +99,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 'name'        => $name,
                 'type'        => 'Mass' . ucfirst($action),
                 'status'      => 'Awaiting',
-                'priority'    => 150,
+                'priority'    => $job->get('priority'),
                 'ownerUserId' => $job->get('ownerUserId'),
                 'payload'     => $jobData
             ]);
