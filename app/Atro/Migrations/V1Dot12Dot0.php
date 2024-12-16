@@ -42,6 +42,7 @@ class V1Dot12Dot0 extends Base
             $this->exec("ALTER TABLE job ADD message TEXT DEFAULT NULL");
             $this->exec("ALTER TABLE job ADD started_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
             $this->exec("ALTER TABLE job ADD ended_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
+            $this->exec("ALTER TABLE scheduled_job ADD is_active BOOLEAN DEFAULT 'false' NOT NULL");
         } else {
             $this->exec("DROP INDEX IDX_JOB_QUEUE_ITEM_ID ON job");
             $this->exec("ALTER TABLE job ADD message LONGTEXT DEFAULT NULL, ADD started_at DATETIME DEFAULT NULL, ADD ended_at DATETIME DEFAULT NULL, ADD priority DOUBLE PRECISION DEFAULT '100', ADD type VARCHAR(255) DEFAULT NULL, ADD assigned_user_id VARCHAR(36) DEFAULT NULL, CHANGE data payload LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', CHANGE queue_item_id owner_user_id VARCHAR(36) DEFAULT NULL");
