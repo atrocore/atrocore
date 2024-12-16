@@ -190,23 +190,16 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 return;
             }
 
-            this.createView('installModal', 'treo-core:views/composer/modals/install', {
-                currentModel: this.storeCollection.get(data.id)
-            }, view => {
-                view.render();
-                this.listenTo(view, 'save', saveData => {
-                    this.actionsInProgress++;
-                    this.notify(this.translate('settingModuleForInstalling', 'labels', 'Composer'));
-                    this.ajaxRequest('Composer/installModule', 'POST', JSON.stringify(saveData), {timeout: 180000}).then(response => {
-                        if (response) {
-                            this.notify(this.translate('setModuleForInstalling', 'labels', 'Composer'), 'success');
-                            this.installedCollection.fetch();
-                            this.storeCollection.fetch();
-                        }
-                    }).always(() => {
-                        this.actionsInProgress--;
-                    });
-                });
+            this.actionsInProgress++;
+            this.notify(this.translate('settingModuleForInstalling', 'labels', 'Composer'));
+            this.ajaxRequest('Composer/installModule', 'POST', JSON.stringify({id: data.id, version: "*"}), {timeout: 180000}).then(response => {
+                if (response) {
+                    this.notify(this.translate('setModuleForInstalling', 'labels', 'Composer'), 'success');
+                    this.installedCollection.fetch();
+                    this.storeCollection.fetch();
+                }
+            }).always(() => {
+                this.actionsInProgress--;
             });
         },
 

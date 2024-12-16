@@ -207,8 +207,6 @@ class Composer extends HasContainer
      */
     public function update(string $package, string $version): void
     {
-        $this->validateSettingVersion($package, $version);
-
         // get composer.json data
         $data = self::getComposerJson();
 
@@ -375,6 +373,7 @@ class Composer extends HasContainer
             throw new Exceptions\Error($this->translateError('versionIsInvalid'));
         }
 
+        $this->validateSettingVersion($name, $version);
         $this->update($name, $version);
 
         return true;
