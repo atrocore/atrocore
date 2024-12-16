@@ -149,7 +149,12 @@ class Daemon extends AbstractConsole
 
             if (file_exists(JobManager::QUEUE_FILE) && !file_exists(JobManager::PAUSE_FILE)) {
                 $config = include 'data/config.php';
-                $workersCount = $config['maxConcurrentWorkers'] ?? 4;
+                $workersCount = $config['maxConcurrentWorkers'] ?? 6;
+                if ($workersCount < 4) {
+                    $workersCount = 4;
+                } elseif ($workersCount > 50) {
+                    $workersCount = 50;
+                }
 
                 exec('ps ax | grep index.php', $processes);
                 $processes = implode(' | ', $processes);

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "maxConcurrentWorkers": "Maximum number of concurrent workers",
     "reportingEnabled": "Send anonymous error reports",
     "fileNameRegexPattern": "Filename Regex Pattern",
     "variables": "Variables",
@@ -86,6 +87,7 @@
     }
   },
   "tooltips": {
+    "maxConcurrentWorkers": "The maximum number of concurrent workers performing background tasks.",
     "reportingEnabled": "Anonymous error reports will be send to AtroCore for faster problem identification and resolution.",
     "fileNameRegexPattern": "To enable only small letters with max. 24-symbol length use \"/^[a-z]{1,24}$/\".",
     "isStreamSide": "If enabled: Stream panel will be shown in side.",
