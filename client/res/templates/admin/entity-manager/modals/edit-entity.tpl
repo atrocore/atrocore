@@ -155,6 +155,22 @@
             </div>
         </div>
         {{/if}}
+        {{#if hasClearConfiguration}}
+        <div class="row">
+            <div class="cell form-group col-md-6" data-name="clearDeletedAfterDays">
+                <label class="control-label" data-name="clearDeletedAfterDays">{{translate 'clearDeletedAfterDays' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="clearDeletedAfterDays">
+                    {{{clearDeletedAfterDays}}}
+                </div>
+            </div>
+            <div class="cell form-group col-md-6" data-name="autoDeleteAfterDays">
+                <label class="control-label" data-name="autoDeleteAfterDays">{{translate 'autoDeleteAfterDays' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="autoDeleteAfterDays">
+                    {{{autoDeleteAfterDays}}}
+                </div>
+            </div>
+        </div>
+        {{/if}}
         {{#if hasModifiedExtendedRelations}}
         <div class="row">
             <div class="cell form-group col-md-6" data-name="modifiedExtendedRelations">
