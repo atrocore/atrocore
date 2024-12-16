@@ -46,7 +46,9 @@
     "duplicatableRelations": "Duplizierbare Beziehungen",
     "nonComparableFields": "Nicht vergleichbare Felder",
     "deleteWithoutConfirmation": "Ohne Bestätigung löschen",
-    "hideFieldTypeFilters": "hideFieldTypeFilters"
+    "hideFieldTypeFilters": "hideFieldTypeFilters",
+    "autoDeleteAfterDays": "Zeitraum für das automatische Löschen, Tage",
+    "clearDeletedAfterDays": "Entgültige Löschungsfrist, Tage"
   },
   "options": {
     "linkType": {
@@ -71,6 +73,8 @@
     "oneToManyIsBlockedForRelationEntity": "Eine 1:n Beziehung ist für Entitäten vom Typ „Beziehung“ nicht möglich."
   },
   "tooltips": {
+    "clearDeletedAfterDays": "Datensätze für diese Entität werden XX Tage nach dem Löschungsdatum endgültig gelöscht.",
+    "autoDeleteAfterDays": "Datensätze für diese Entität werden automatisch XX Tage nach dem Datum der letzten Änderung gelöscht.",
     "dragAndDrop": "Diese Option aktiviert die Hierarchiesortierung, sodass keine andere Sortierung in der Hierarchienavigation möglich ist.",
     "unInheritedFields": "Werte für diese Felder werden nicht vom übergeordneten Element geerbt.",
     "unInheritedRelations": "Relationen zu diesen Entitäten werden nicht vom übergeordneten Element geerbt.",

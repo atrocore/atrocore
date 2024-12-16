@@ -240,7 +240,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     el: this.options.el + ' .field[data-name="clearDeletedAfterDays"]',
                     defs: {
                         name: 'clearDeletedAfterDays'
-                    }
+                    },
+                    tooltip: true,
+                    tooltipText: this.translate('clearDeletedAfterDays', 'tooltips', 'EntityManager'),
                 });
                 this.createView('autoDeleteAfterDays', 'views/fields/int', {
                     model: model,
@@ -248,7 +250,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     el: this.options.el + ' .field[data-name="autoDeleteAfterDays"]',
                     defs: {
                         name: 'autoDeleteAfterDays'
-                    }
+                    },
+                    tooltip: true,
+                    tooltipText: this.translate('autoDeleteAfterDays', 'tooltips', 'EntityManager'),
                 });
             }
 
