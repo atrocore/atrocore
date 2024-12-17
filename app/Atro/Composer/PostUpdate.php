@@ -871,7 +871,7 @@ class PostUpdate
      */
     private static function onSuccess(): void
     {
-        $modules = self::getModules();
+        $modules = array_merge(['Atro'], self::getModules());
         $composerDiff = self::getComposerDiff();
 
         // prepare composer.json
