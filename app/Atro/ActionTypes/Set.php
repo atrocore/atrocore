@@ -42,8 +42,8 @@ class Set implements TypeInterface
     {
         $linker = $this->getEntityManager()->getRepository('ActionSetLinker')
             ->where([
-                'setId'     => $action->get('id'),
-                'isActive'  => true
+                'setId'    => $action->get('id'),
+                'isActive' => true
             ])
             ->order('sortOrder', 'ASC')
             ->findOne();
@@ -81,7 +81,9 @@ class Set implements TypeInterface
             return false;
         }
 
-        if (empty($action->get('inBackground')) && !property_exists($input, 'where') && !empty($next = $this->getNextAction($current))) {
+        if (empty($action->get('inBackground')) &&
+            (!property_exists($input, 'where') || in_array(['export', 'import', 'synchronization'], $action->get('type'))) &&
+            !empty($next = $this->getNextAction($current))) {
             return $this->executeAction($next, $input);
         }
 
@@ -98,9 +100,9 @@ class Set implements TypeInterface
             ->getEntityManager()
             ->getRepository('ActionSetLinker')
             ->where([
-                'setId'         => $entity->get('setId'),
-                'sortOrder>'    => $entity->get('sortOrder'),
-                'isActive'      => true
+                'setId'      => $entity->get('setId'),
+                'sortOrder>' => $entity->get('sortOrder'),
+                'isActive'   => true
             ])
             ->order('sortOrder', 'ASC')
             ->findOne();
