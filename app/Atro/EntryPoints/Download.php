@@ -55,10 +55,15 @@ class Download extends AbstractEntryPoint
         /** @var StreamInterface $stream */
         $stream = $this->getEntityManager()->getRepository('File')->getStorage($file)->getStream($file);
 
+        $fileSize = $file->get('fileSize');
+        if (is_null($fileSize)) {
+            $fileSize = @filesize($file->getFilePath());
+        }
+
         header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
         header("Cache-Control: public");
         header('Content-Type: application/octet-stream');
-        header("Content-Length: {$file->get('fileSize')}");
+        header("Content-Length: {$fileSize}");
         header("Content-Disposition: attachment; filename=\"{$file->get('name')}\"");
 
         $stream->rewind();
