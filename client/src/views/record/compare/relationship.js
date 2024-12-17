@@ -22,6 +22,8 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
         otherItemModels: [],
 
+        shouldHide: false,
+
         setup() {
             this.scope = this.options.scope;
             this.baseModel = this.options.model;
@@ -66,6 +68,8 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     })
 
                     this.prepareModels(selectField, () => this.setupRelationship(() => this.wait(false)));
+                }else {
+                    this.shouldHide = true;
                 }
             });
         },
@@ -286,6 +290,9 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             Dep.prototype.afterRender.call(this)
             $('.not-approved-field').hide();
             $('.translated-automatically-field').hide();
+            if(this.shouldHide){
+                this.$el.parent().parent().hide();
+            }
         },
 
         prepareModels(selectFields, callback) {
@@ -349,6 +356,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
                 } else if (this.relationship.type === 'hasMany' && this.relationship.inverseType === 'belongsTo') {
                     let columnName = this.relationship.foreign + 'Id';
+                    selectFields.push(columnName);
                     promises.push(new Promise(resolve => this.ajaxGetRequest(this.relationship.scope, {
                         select: selectFields.join(','),
                         maxSize: 20 * this.collection.models.length,
@@ -367,8 +375,8 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             res.list.forEach(item => {
                                 if (item[columnName] === model.id) {
                                     let m = relationModel.clone();
-                                    m.set(el)
-                                    models[model.id].push(relationModel);
+                                    m.set(item)
+                                    models[model.id].push(m);
                                 }
                             });
                             if (!models[model.id].length) {
