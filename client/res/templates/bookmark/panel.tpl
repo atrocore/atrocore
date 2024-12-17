@@ -14,8 +14,11 @@
         <div class="group-container">
             {{#each groups}}
             <div class="group" data-name="{{key}}">
-                <div class="group-name">
-                    <strong>{{key}}</strong>
+                <div class="entity">
+                    <div class="group-name">
+                        <strong>{{key}}</strong>
+                    </div>
+                   <div class="action"></div>
                 </div>
                 <div class="list-container"><div style="padding: 8px 14px">{{translate 'Loading...'}}</div></div>
             </div>
@@ -34,10 +37,20 @@
     </div>
 </div>
 <style>
+    .bookmark-panel-container .group .entity{
+        display: inline-flex;
+        width: 100%;
+        justify-content: space-between;
+        padding-right: 5px;
+    }
+
     .bookmark-panel-container .group .group-name{
         padding: 10px 5px 0 10px ;
     }
     .bookmark-panel-container .panel-body {
         padding: 0;
+    }
+    .bookmark-panel-container li .list-row-buttons span {
+        color: #999;
     }
 </style>

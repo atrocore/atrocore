@@ -9,13 +9,16 @@
 
     <div class="row">
         <div class="compare-panel  list col-md-12" data-name="fieldsPanels">
-            <table class="table full-table table-striped table-fixed table-scrolled table-bordered" >
+            <table class="table full-table table-striped table-fixed table-scrolled table-bordered">
                 <thead>
                 <tr>
-                    <th>{{ translate 'instance' scope='Synchronization' }}</th>
-                    {{#each instances}}
+                    {{#each columns}}
                     <th class="text-center">
+                        {{#if link}}
+                        <a href="#{{../scope}}/view/{{name}}"> {{label}}</a>
+                        {{else}}
                         {{name}}
+                        {{/if}}
                         {{#if _error}}
                         <br>
                         <span class="danger"> ({{_error}})</span>
@@ -27,10 +30,10 @@
                 </thead>
                 <tbody>
                 <tr class="list-row">
-                <td class="cell" colspan="3"> {{translate 'Loading...'}}</td>
+                    <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
                 </tr>
-                <tr class="list-row" >
-                    <td class="cell" colspan="3"> {{translate 'Loading...'}}</td>
+                <tr class="list-row">
+                    <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -42,33 +45,54 @@
     </div>
 </div>
 <style>
-    .hidden-cell{
-        display:none !important;
+    .hidden-cell {
+        display: none !important;
     }
+
     thead tr th[colspan="*"] {
         text-align: center;
     }
-    .compare-panel[data-name='relationshipsPanels'] table {
+
+    .compare-panel[data-name='relationshipsPanels'] .panel.panel-default {
         margin-bottom: 50px;
     }
-    .compare-panel{
+
+    .compare-panel {
         margin-bottom: 50px;
         background-color: white;
         width: 100%;
     }
-    .compare-panel table td, .compare-panel table th{
+
+    .compare-panel table td, .compare-panel table th {
         max-width: 100px;
     }
+
     .file-link {
         white-space: normal;
     }
+
     .compare-panel table tbody tr.danger {
-        border-left:2px solid red;
+        border-left: 2px solid red;
     }
-    .compare-panel table tbody tr.danger > td  {
+
+    .compare-panel table tbody tr.danger td:first-child{
+        border-left: 2px solid red;
+    }
+
+    .compare-panel table tbody tr.danger > td {
         background-color: transparent;
     }
-    th span.danger{
-        color:red;
+
+    th span.danger {
+        color: red;
+    }
+
+    [data-name="relationshipsPanels"] .panel-body {
+        padding: 15px 0 0 0 !important;
+    }
+
+    .compare-panel .attachment-preview a {
+       display: flex;
+        justify-content: center;
     }
 </style>

@@ -1,14 +1,14 @@
-<div class="list">
-    <table class="table full-table table-striped  table-fixed table-scrolled table-bordered" >
+<div class="list" style="overflow-x: clip">
+    <table class="table full-table table-striped  table-fixed table-scrolled table-bordered" style=" table-layout: auto">
         <thead>
         <tr>
-            <th style="width: 20%">{{ translate 'instance' scope='Synchronization' }}</th>
-            <th style="width: 40%;" colspan="{{columnCountCurrent}}" class="text-center">
-                {{translate 'current' scope='Synchronization' category='labels'}}
-            </th>
-            {{#each instances}}
-            <th style="width: 40%" colspan="{{columnCount}}" class="text-center">
+            {{#each columns}}
+            <th colspan="{{itemColumnCount}}" class="text-center">
+                {{#if link}}
+                <a href="#{{../scope}}/view/{{name}}"> {{label}}</a>
+                {{else}}
                 {{name}}
+                {{/if}}
                 {{#if _error}}
                 <br>
                 <span class="danger"> ({{_error}})</span>
@@ -23,7 +23,7 @@
             <td class="cell">{{translate field scope=../scope category='fields'}}</td>
             {{#if currentViewKeys }}
             {{#each currentViewKeys}}
-            <td class="cell" data-field="{{key}}">
+            <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../minWidth}}px">
                 {{{var key ../../this }}}
             </td>
             {{/each}}
@@ -33,7 +33,7 @@
             {{#each othersModelsKeyPerInstances}}
             {{#if this }}
             {{#each this }}
-            <td class="cell" data-field="{{key}}">
+            <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../../minWidth}}px">
                 {{{var key ../../../this}}}
             </td>
             {{/each}}
@@ -45,5 +45,9 @@
         {{/each}}
         </tbody>
     </table>
+    <div class="panel-scroll hidden" style="display: block;"><div></div></div>
 </div>
 
+<style>
+
+</style>
