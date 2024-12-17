@@ -50,7 +50,9 @@
     "duplicatableRelations": "Duplicatable Relations",
     "nonComparableFields": "Non Comparable Fields",
     "deleteWithoutConfirmation": "Delete without confirmation",
-    "hideFieldTypeFilters": "Hide field type filters"
+    "hideFieldTypeFilters": "Hide field type filters",
+    "autoDeleteAfterDays": "Auto-delete period, in days",
+    "clearDeletedAfterDays": "Permanent deletion period, days"
   },
   "options": {
     "linkType": {
@@ -78,6 +80,8 @@
     "oneToManyIsBlockedForRelationEntity": "One-to-Many relationship is not possible for entity of type Relation"
   },
   "tooltips": {
+    "clearDeletedAfterDays": "Records for this entity are permanently deleted XX days after the deletion date.",
+    "autoDeleteAfterDays": "Updates of this field are logged in stream.",
     "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
     "unInheritedFields": "Values for these fields will not be inherited from parent item.",
     "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",

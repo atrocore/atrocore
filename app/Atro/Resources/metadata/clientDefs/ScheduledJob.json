@@ -1,24 +1,18 @@
 {
   "controller": "controllers/record",
-  "relationshipPanels": {
-    "log": {
-      "readOnly": true,
-      "view": "views/scheduled-job/record/panels/log"
-    }
-  },
   "recordViews": {
-    "list": "views/scheduled-job/record/list",
     "detail": "views/scheduled-job/record/detail"
   },
-  "views": {
-    "list": "views/scheduled-job/list"
+  "relationshipPanels": {
+    "jobs": {
+      "create": false,
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+    }
   },
-  "jobWithTargetList": [
-    "CheckEmailAccounts"
-  ],
   "dynamicLogic": {
     "fields": {
-      "job": {
+      "type": {
         "readOnly": {
           "conditionGroup": [
             {
@@ -33,7 +27,7 @@
           "conditionGroup": [
             {
               "type": "equals",
-              "attribute": "job",
+              "attribute": "type",
               "value": "ScanStorage"
             }
           ]
@@ -42,7 +36,7 @@
           "conditionGroup": [
             {
               "type": "equals",
-              "attribute": "job",
+              "attribute": "type",
               "value": "ScanStorage"
             }
           ]

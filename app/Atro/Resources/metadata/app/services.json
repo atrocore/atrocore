@@ -2,15 +2,6 @@
   "AdminNotifications": "\\Espo\\Services\\AdminNotifications",
   "Installer": "\\Atro\\Services\\Installer",
   "Person": "\\Espo\\Services\\Person",
-  "QueueManagerMassDelete": "\\Atro\\Services\\QueueManagerMassDelete",
-  "QueueManagerCreateThumbnails": "\\Atro\\Services\\QueueManagerCreateThumbnails",
-  "QueueManagerUpsert": "\\Atro\\Services\\QueueManagerUpsert",
   "MassActions": "\\Atro\\Services\\MassActions",
-  "MassActionCreator": "\\Atro\\Services\\MassActionCreator",
-  "MassUpdate": "\\Atro\\Services\\MassUpdate",
-  "MassDelete": "\\Atro\\Services\\MassDelete",
-  "ScheduledJob": "\\Espo\\Services\\ScheduledJob",
-  "Composer": "\\Atro\\Services\\Composer",
-  "MassDownload": "\\Atro\\Services\\MassDownload",
-  "QueueManagerActionHandler": "\\Atro\\Services\\QueueManagerActionHandler"
+  "Composer": "\\Atro\\Services\\Composer"
 }

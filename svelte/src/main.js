@@ -10,7 +10,7 @@ import {LayoutManager} from "./utils/LayoutManager";
 import {Metadata} from "./utils/Metadata";
 import {ModelFactory} from "./utils/ModelFactory";
 
-import QueueManagerIcon from './components/icons/QueueManagerIcon.svelte';
+import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
 import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
@@ -23,4 +23,4 @@ window.SvelteMetadata = Metadata;
 window.SvelteModelFactory = ModelFactory;
 window.driver = driver;
 
-export {UpdatePanel, QueueManagerIcon, LayoutComponent, ApiRequestComponent};
+export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent};

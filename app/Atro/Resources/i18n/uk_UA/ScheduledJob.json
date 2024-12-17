@@ -1,31 +1,17 @@
 {
   "fields": {
     "name": "Назва",
-    "status": "Статус",
-    "job": "Завдання",
     "scheduling": "Планування"
   },
-  "links": {
-    "log": "Лог"
-  },
   "labels": {
-    "Create ScheduledJob": "Створити завдання",
     "executeNow":"Виконати зараз"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Неправильна конфігурація crontab"
   },
-  "messages": {
-    "jobLaunched": "Вакансія створена",
-    "jobAlreadyExist": "Вакансія була створена менше хвилини тому"
-  },
   "options": {
-    "job": {
+    "type": {
       "ComposerAutoUpdate": "Автооновлення модулів"
-    },
-    "status": {
-      "Active": "Активно",
-      "Inactive": "Неактивно"
     }
   },
   "tooltips": {

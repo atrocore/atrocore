@@ -172,7 +172,6 @@
   },
   "descriptions": {
     "settings": "Ajustes generales del sistema.",
-    "scheduledJob": "Trabajos que se ejecutan en segundo plano (CRON).",
     "clearCache": "Limpia toda la memoria caché del sistema.",
     "users": "Gestión de usuarios.",
     "teams": "Gestión de equipos.",

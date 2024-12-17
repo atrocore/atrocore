@@ -15,7 +15,6 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
-use Atro\Core\QueueManager;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\EntityCollection;
@@ -153,10 +152,12 @@ class Record extends RecordService
 
             $sync = false;
 
-            $this->getQueueManager()->createQueueItem(
-                "Create jobs for mass $action",
-                'MassActionCreator',
-                [
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'     => "Create jobs for mass $action",
+                'type'     => 'MassActionCreator',
+                'priority' => $this->entityType === 'Job' ? 300 : 100,
+                'payload'  => [
                     'ids'        => $ids ?? [],
                     'action'     => $action,
                     'entityName' => $this->entityType,
@@ -164,7 +165,8 @@ class Record extends RecordService
                     'total'      => $total,
                     'params'     => $params,
                 ]
-            );
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
         }
 
         if (!empty($errors)) {
@@ -200,10 +202,5 @@ class Record extends RecordService
                 $entityByIds[$bookmark['entity_id']]->set('bookmarkId', $bookmark['id']);
             }
         }
-    }
-
-    protected function getQueueManager(): QueueManager
-    {
-        return $this->getInjection('queueManager');
     }
 }

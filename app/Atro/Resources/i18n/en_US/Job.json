@@ -2,27 +2,37 @@
   "fields": {
     "status": "Status",
     "executeTime": "Execute At",
-    "attempts": "Attempts Left",
-    "failedAttempts": "Failed Attempts",
-    "serviceName": "Service",
-    "method": "Method (deprecated)",
-    "methodName": "Method",
+    "pid": "PID",
+    "priority": "Priority",
+    "handler": "Handler",
+    "payload": "Payload",
     "scheduledJob": "Scheduled Job",
-    "scheduledJobJob": "Scheduled Job Name",
-    "data": "Data"
+    "message": "Message",
+    "startedAt": "Started At",
+    "endedAt": "Ended At"
+  },
+  "links": {
+    "scheduledJob": "Scheduled Job"
   },
   "labels": {
-    "Pending": "Pending",
-    "Success": "Success",
-    "Running": "Running",
-    "Failed": "Failed"
+    "Create Job": "Create Job",
+    "cancel": "Cancel"
   },
   "options": {
     "status": {
       "Pending": "Pending",
       "Success": "Success",
       "Running": "Running",
-      "Failed": "Failed"
+      "Failed": "Failed",
+      "Canceled": "Canceled",
+      "Awaiting": "Awaiting",
+      "Closed": "Closed"
     }
+  },
+  "tooltips": {
+    "priority": "Higher number means higher priority"
+  },
+  "exceptions": {
+    "jobIsRunning": "A running job cannot be removed."
   }
 }

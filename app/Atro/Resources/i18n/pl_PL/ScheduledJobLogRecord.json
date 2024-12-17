@@ -1,7 +1,0 @@
-{
-	"fields": {
-		"status": "Status",
-		"executionTime": "Czas wykonania",
-		"target": "Cel"
-	}
-}

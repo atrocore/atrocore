@@ -3,21 +3,21 @@
     "rows": [
       [
         {
-          "name": "job"
-        },
-        {
-          "name": "status"
-        }
-      ],
-      [
-        {
-          "name": "storage"
+          "name": "name"
         },
         false
       ],
       [
         {
-          "name": "name"
+          "name": "type"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "storage"
         },
         false
       ],

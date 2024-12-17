@@ -1,0 +1,58 @@
+{
+  "ClearEntities": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\ClearEntities"
+  },
+  "ClearEntity": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\ClearEntity"
+  },
+  "CheckUpdates": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\CheckUpdates"
+  },
+  "ComposerAutoUpdate": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\ComposerAutoUpdate"
+  },
+  "ScanStorage": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\ScanStorage"
+  },
+  "UpdateCurrencyExchangeViaECB": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\UpdateCurrencyExchangeViaECB"
+  },
+  "SendEmail": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\SendEmail"
+  },
+  "MassActionCreator": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassActionCreator"
+  },
+  "MassUpdate": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassUpdate"
+  },
+  "MassDelete": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassDelete"
+  },
+  "MassRestore": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassRestore"
+  },
+  "MassDownload": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassDownload"
+  },
+  "Upsert": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Upsert"
+  },
+  "ActionHandler": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\ActionHandler"
+  }
+}

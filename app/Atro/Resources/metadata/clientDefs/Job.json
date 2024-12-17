@@ -1,9 +1,20 @@
 {
-  "modalViews": {
-    "detail": "Admin.Job.Modals.Detail"
-  },
+  "createDisabled": true,
+  "iconClass": "fas fa-tasks",
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyMy"
+  ],
   "recordViews": {
-    "list": "Admin.Job.Record.List",
-    "detailQuick": "Admin.Job.Record.DetailSmall"
+    "detail": "views/job/record/detail"
+  },
+  "queueActions": {
+    "cancel": {
+      "view": "views/job-manager/actions/cancel",
+      "acl": "edit"
+    },
+    "show-message": {
+      "view": "views/job-manager/actions/show-message"
+    }
   }
 }

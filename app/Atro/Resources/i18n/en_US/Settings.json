@@ -1,5 +1,6 @@
 {
   "fields": {
+    "maxConcurrentWorkers": "Maximum number of concurrent workers",
     "reportingEnabled": "Send anonymous error reports",
     "fileNameRegexPattern": "Filename Regex Pattern",
     "variables": "Variables",
@@ -86,6 +87,7 @@
     }
   },
   "tooltips": {
+    "maxConcurrentWorkers": "Upper limit on the number of tasks or processes that can run simultaneously in the background of a server.",
     "reportingEnabled": "Anonymous error reports will be send to AtroCore for faster problem identification and resolution.",
     "fileNameRegexPattern": "To enable only small letters with max. 24-symbol length use \"/^[a-z]{1,24}$/\".",
     "isStreamSide": "If enabled: Stream panel will be shown in side.",
@@ -101,7 +103,6 @@
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
-    "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
     "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too.",
     "customHeadCode": "Add code at the end of the <head> tag. Atrocore doesn't validate custom code for you, so be sure to check your code before publishing.",
     "passwordRegexPattern": "Set password complexity rules using regular expression. \nTip: use groups like (?=.*\\d) to define required symbols. \n\nFollow this <a href=\"{message_link}\" target=\"_blank\">link</a> to update an validation error message.",

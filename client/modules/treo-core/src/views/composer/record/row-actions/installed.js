@@ -25,13 +25,15 @@ Espo.define('treo-core:views/composer/record/row-actions/installed', 'views/reco
         getActionList() {
             let list = [];
             if (!this.disableActions && this.model.get('isComposer')) {
-                list.push({
-                    action: 'updateModule',
-                    label: 'Edit',
-                    data: {
-                        id: this.model.id
-                    }
-                });
+                if (this.model.get('status') === 'update' || !this.model.get('status')) {
+                    list.push({
+                        action: 'updateModule',
+                        label: 'Edit',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
 
                 list.push({
                     action: 'showReleaseNotes',

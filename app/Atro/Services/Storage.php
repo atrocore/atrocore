@@ -16,11 +16,11 @@ namespace Atro\Services;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Xattr;
 use Espo\ORM\Entity;
-use Atro\Services\QueueManagerServiceInterface;
 
-class Storage extends Base implements QueueManagerServiceInterface
+class Storage extends Base
 {
     public function createScanJob(string $storageId, bool $manual): bool
     {
@@ -40,30 +40,19 @@ class Storage extends Base implements QueueManagerServiceInterface
             }
         }
 
-        $name = $this->getInjection('language')->translate('scan', 'labels', 'Storage') . ' ' . $storage->get('name');
-
-        return $this->getInjection('queueManager')->push($name, 'Storage', ['storageId' => $storage->get('id'), 'storageName' => $storage->get('name'), 'manual' => $manual]);
-    }
-
-    public function run(array $data = []): bool
-    {
-        $storage = $this->getEntity($data['storageId']);
-        if (empty($storage->get('isActive'))) {
-            return false;
-        }
-
-        $this->getInjection('container')->get($storage->get('type') . 'Storage')->scan($storage);
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'    => $this->getLanguage()->translate('scan', 'labels', 'Storage') . ' ' . $storage->get('name'),
+            'type'    => 'ScanStorage',
+            'payload' => [
+                'storageId'   => $storage->get('id'),
+                'storageName' => $storage->get('name'),
+                'manual'      => $manual
+            ]
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
 
         return true;
-    }
-
-    public function getNotificationMessage(Entity $queueItem): string
-    {
-        if (!$queueItem->get('data')->manual) {
-            return '';
-        }
-
-        return sprintf($this->getInjection('language')->translate('scanDone', 'labels', 'Storage'), $queueItem->get('data')->storageName);
     }
 
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
@@ -71,11 +60,8 @@ class Storage extends Base implements QueueManagerServiceInterface
         return [];
     }
 
-    protected function init()
+    protected function getLanguage(): Language
     {
-        parent::init();
-
-        $this->addDependency('queueManager');
-        $this->addDependency('container');
+        return $this->getInjection('language');
     }
 }

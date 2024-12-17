@@ -93,7 +93,6 @@
     "textFilterUseContainsForVarchar": "Jeśli nie zaznaczone, używany jest operator 'zaczyna się od'. Możesz użyć symbolu wieloznacznego '%'.",
     "authTokenPreventConcurrent": "Użytkownicy nie będą mogli być zalogowani na kilku urządzeniach jednocześnie.",
     "emailAddressIsOptedOutByDefault": "Tworząc nowy rekord, adres e-mail będzie oznaczony jako zrezygnowany.",
-    "cleanupDeletedRecords": "Usunięte rekordy zostaną usunięte z bazy danych po pewnym czasie.",
     "customStylesheetPath": "Twoje niestandardowe style CSS zostaną zapisane w tym pliku. Możesz w nim również dokonywać zmian bezpośrednio.",
     "customHeadCode": "Dodaj kod na końcu znacznika <head>. Atrocore nie weryfikuje niestandardowego kodu, więc upewnij się, że sprawdziłeś swój kod przed opublikowaniem."
   },

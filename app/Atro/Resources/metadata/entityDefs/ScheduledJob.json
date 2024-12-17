@@ -4,28 +4,22 @@
       "type": "varchar",
       "required": true
     },
-    "job": {
+    "type": {
       "type": "varchar",
       "required": true,
-      "view": "views/scheduled-job/fields/job"
+      "view": "views/scheduled-job/fields/type"
     },
-    "status": {
-      "type": "enum",
-      "required": true,
-      "prohibitedEmptyValue": true,
-      "optionsIds": [
-        "Active",
-        "Inactive"
-      ],
-      "options": [
-        "Active",
-        "Inactive"
-      ]
+    "job": {
+      "type": "varchar"
+    },
+    "isActive": {
+      "type": "bool",
+      "default": false
     },
     "scheduling": {
       "type": "varchar",
       "required": true,
-      "view": "views/scheduled-job/fields/scheduling",
+      "default": "0 2 * * *",
       "tooltip": true
     },
     "lastRun": {
@@ -48,14 +42,11 @@
       "type": "link",
       "readOnly": true
     },
-    "isInternal": {
-      "type": "bool",
-      "readOnly": true,
-      "disabled": true,
-      "default": false
-    },
     "storage": {
       "type": "link"
+    },
+    "jobs": {
+      "type": "linkMultiple"
     }
   },
   "links": {
@@ -67,9 +58,9 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "log": {
+    "jobs": {
       "type": "hasMany",
-      "entity": "ScheduledJobLogRecord",
+      "entity": "Job",
       "foreign": "scheduledJob"
     },
     "storage": {
@@ -80,14 +71,5 @@
   "collection": {
     "sortBy": "name",
     "asc": true
-  },
-  "jobSchedulingMap": {
-    "ComposerAutoUpdate": "0 5 * * SUN"
-  },
-  "jobs": {
-    "CheckUpdates": {
-      "isSystem": true,
-      "scheduling": "0 2 * * *"
-    }
   }
 }

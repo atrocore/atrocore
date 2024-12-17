@@ -1,12 +1,7 @@
 {
   "fields": {
-    "isInternal": "Ist intern",
-    "job": "Aufgabe",
     "lastRun": "Zuletzt ausgeführt",
     "scheduling": "Planung"
-  },
-  "links": {
-    "log": "Protokoll"
   },
   "labels": {
     "Create ScheduledJob": "Geplante Aufgabe erstellen",
@@ -17,12 +12,8 @@
     "jobAlreadyExist": "Ein Job wurde vor weniger als einer Minute erstellt"
   },
   "options": {
-    "job": {
+    "type": {
       "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren"
-    },
-    "status": {
-      "Active": "Aktiv",
-      "Inactive": "Inaktiv"
     }
   },
   "tooltips": {

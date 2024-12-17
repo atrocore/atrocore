@@ -44,7 +44,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         data() {
             return _.extend({
-                hasQM: this.getAcl().check('QueueItem', 'read'),
+                hasJM: this.getAcl().check('Job', 'read'),
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled')
             }, Dep.prototype.data.call(this));
@@ -294,29 +294,22 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         renderQmPanelList() {
-            this.getCollectionFactory().create('QueueItem', collection => {
+            this.getCollectionFactory().create('Job', collection => {
                 collection.maxSize = 20;
-                collection.url = 'QueueItem';
-                collection.sortBy = 'sortOrder';
+                collection.url = 'Job';
+                collection.sortBy = 'startedAt';
                 collection.asc = true;
                 collection.where = [
                     {
-                        field: 'status',
+                        attribute: 'status',
                         type: 'in',
                         value: ['Running', 'Pending']
                     },
                     {
-                        type: 'or',
-                        value: [
-                            {
-                                field: 'startFrom',
-                                type: 'isNull'
-                            },
-                            {
-                                field: 'startFrom',
-                                type: 'ispast'
-                            }
-                        ]
+                        attribute: 'executeTime',
+                        type: 'past',
+                        dateTime: true,
+                        timeZone: 'UTC'
                     }
                 ];
                 this.listenToOnce(collection, 'sync', () => {
@@ -329,7 +322,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         layoutName: 'listInQueueManager'
                     }, view => {
                         view.render();
-                        this.qmInterval = window.setInterval(() => {
+                        this.jmInterval = window.setInterval(() => {
                             collection.fetch();
                         }, 2000)
                     });
@@ -339,15 +332,15 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         initProgressBadge() {
-            if (this.getAcl().check('QueueItem', 'read')) {
+            if (this.getAcl().check('Job', 'read')) {
 
-                window.addEventListener('qmPanelClosed', () => {
-                    if (this.qmInterval) {
-                        window.clearInterval(this.qmInterval);
+                window.addEventListener('jobManagerPanelClosed', () => {
+                    if (this.jmInterval) {
+                        window.clearInterval(this.jmInterval);
                     }
                 });
 
-                new Svelte.QueueManagerIcon({
+                new Svelte.JobManagerIcon({
                     target: this.$el.find('.navbar-header .queue-badge-container').get(0),
                     props: {
                         renderTable: () => {
@@ -356,7 +349,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 });
 
-                new Svelte.QueueManagerIcon({
+                new Svelte.JobManagerIcon({
                     target: this.$el.find('.navbar-right .queue-badge-container.hidden-xs').get(0),
                     props: {
                         renderTable: () => {

@@ -1,12 +1,7 @@
 {
   "fields": {
     "name": "Nom",
-    "status": "Statut",
-    "job": "Emploi",
     "scheduling": "Programmation"
-  },
-  "links": {
-    "log": "Journal"
   },
   "labels": {
     "Create ScheduledJob": "Créer un travail programmé",
@@ -20,15 +15,11 @@
     "jobAlreadyExist": "Un emploi a été créé il y a moins d'une minute"
   },
   "options": {
-    "job": {
+    "type": {
       "ComposerAutoUpdate": "Mise à jour automatique du système",
       "UpdateCurrencyExchangeViaECB": "Mise à jour du taux de change via la BCE",
       "CheckUpdates": "Vérifier les mises à jour du système",
       "ScanStorage": "Stockage par balayage"
-    },
-    "status": {
-      "Active": "Actif",
-      "Inactive": "Inactif"
     }
   },
   "tooltips": {

@@ -152,19 +152,20 @@ class Composer extends HasContainer
             ];
         }
 
-        /**
-         * Is Queue Manager running ?
-         */
-        $queueItem = $this
+        $job = $this
             ->getEntityManager()
-            ->getRepository('QueueItem')
+            ->getRepository('Job')
             ->select(['id'])
-            ->where(['status' => ['Pending', 'Running']])
+            ->where([
+                'status'        => ['Pending', 'Running'],
+                'type!='        => null,
+                'executeTime<=' => (new \DateTime())->modify('+2 minutes')->format('Y-m-d H:i:s')
+            ])
             ->findOne();
-        if (!empty($queueItem)) {
+        if (!empty($job)) {
             return [
                 'status'  => false,
-                'message' => $this->translate('queueManagerRunning', 'labels', 'Composer')
+                'message' => $this->translate('jobManagerRunning', 'labels', 'Composer')
             ];
         }
 
@@ -214,6 +215,46 @@ class Composer extends HasContainer
 
         // set composer.json data
         self::setComposerJson($data);
+    }
+
+    protected function validateSettingVersion(string $package, string $version): void
+    {
+        if (
+            preg_match('/^\d+\.\d+\.\d+$/', $version) !== 1
+            && preg_match('/^~\d+\.\d+\.\d+$/', $version) !== 1
+            && preg_match('/^\^\d+\.\d+\.\d+$/', $version) !== 1
+            && preg_match('/^>\d+\.\d+\.\d+$/', $version) !== 1
+            && preg_match('/^>=\d+\.\d+\.\d+$/', $version) !== 1
+        ) {
+            throw new BadRequest($this->translate('invalidVersion', 'exceptions', 'Composer'));
+        }
+
+        preg_match_all('/^(.*)(\d+)\.(\d+)\.(\d+)$/', $version, $matches);
+        $res = ["{$matches[2][0]}.{$matches[3][0]}.{$matches[4][0]}"];
+
+        $currentVersion = null;
+        if ($package === 'atrocore/core') {
+            $currentVersion = Composer::getCoreVersion();
+        } else {
+            foreach ($this->getModuleManager()->getModules() as $module) {
+                if ($module->getComposerName() === $package) {
+                    $currentVersion = $module->getVersion();
+                }
+            }
+        }
+
+        if (!empty($currentVersion)) {
+            preg_match_all('/^(.*)(\d+)\.(\d+)\.(\d+)(.*)$/', $currentVersion, $matches);
+            $res[] = "{$matches[2][0]}.{$matches[3][0]}.{$matches[4][0]}";
+        }
+
+        $copy = $res;
+
+        natsort($res);
+
+        if ($res[0] !== $res[1] && $res === $copy) {
+            throw new BadRequest($this->translate('downgradeProhibited', 'exceptions', 'Composer'));
+        }
     }
 
     /**
@@ -332,6 +373,7 @@ class Composer extends HasContainer
             throw new Exceptions\Error($this->translateError('versionIsInvalid'));
         }
 
+        $this->validateSettingVersion($name, $version);
         $this->update($name, $version);
 
         return true;

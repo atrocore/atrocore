@@ -1,12 +1,10 @@
 {
   "fields": {
     "name": "Name",
-    "status": "Status",
-    "job": "Job",
     "scheduling": "Scheduling"
   },
   "links": {
-    "log": "Log"
+    "jobs": "Jobs"
   },
   "labels": {
     "Create ScheduledJob": "Create Scheduled Job",
@@ -20,15 +18,12 @@
     "jobAlreadyExist": "A job has been created less than a minute ago"
   },
   "options": {
-    "job": {
-      "ComposerAutoUpdate": "Automatic system update",
+    "type": {
+      "ClearEntities": "Clear deleted data",
+      "ComposerAutoUpdate": "Update system automatically",
       "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
       "CheckUpdates": "Check system updates",
       "ScanStorage": "Scan Storage"
-    },
-    "status": {
-      "Active": "Active",
-      "Inactive": "Inactive"
     }
   },
   "tooltips": {

@@ -9,15 +9,18 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
-
 namespace Atro\Jobs;
 
 use Atro\Core\Container;
+use Atro\Core\EventManager\Manager;
+use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Core\Twig\Twig;
+use Atro\Core\Utils\Language;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 abstract class AbstractJob
@@ -57,5 +60,46 @@ abstract class AbstractJob
     protected function getUser(): User
     {
         return $this->getContainer()->get('user');
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getContainer()->get('language');
+    }
+
+    protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
+    {
+        return $this->getLanguage()->translate($label, $category, $scope);
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getContainer()->get('memoryStorage');
+    }
+
+    protected function getEventManager(): Manager
+    {
+        return $this->getContainer()->get('eventManager');
+    }
+
+    protected function twig(): Twig
+    {
+        return $this->getContainer()->get('twig');
+    }
+
+    protected function createNotification(Entity $job, string $message): void
+    {
+        if ($job->get('ownerUserId') === 'system') {
+            return;
+        }
+
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set('type', 'Message');
+        $notification->set('relatedType', 'Job');
+        $notification->set('relatedId', $job->get('id'));
+        $notification->set('message', $message);
+        $notification->set('userId', $job->get('ownerUserId'));
+
+        $this->getEntityManager()->saveEntity($notification);
     }
 }

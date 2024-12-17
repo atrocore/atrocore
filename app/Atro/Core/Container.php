@@ -34,7 +34,6 @@ class Container
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'migration'                => \Atro\Core\Migration\Migration::class,
             'twig'                     => \Atro\Core\Twig\Twig::class,
-            'queueManager'             => \Atro\Core\QueueManager::class,
             'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
             'connectionFactory'        => \Atro\Core\Factories\ConnectionFactory::class,
             'eventManager'             => \Atro\Core\Factories\EventManager::class,
@@ -50,8 +49,9 @@ class Container
             'slim'                     => \Atro\Core\Slim\Slim::class,
             'language'                 => \Atro\Core\Utils\Language::class,
             'config'                   => \Atro\Core\Utils\Config::class,
+            'htmlSanitizer'            => \Atro\Core\Utils\HTMLSanitizer::class,
+            'actionManager'            => \Atro\Core\ActionManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
-            'cronManager'              => \Espo\Core\CronManager::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
             'fieldManager'             => \Espo\Core\Utils\FieldManager::class,
             'layout'                   => \Espo\Core\Utils\Layout::class,
@@ -69,7 +69,6 @@ class Container
             'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,
             'output'                   => \Espo\Core\Factories\Output::class,
             'preferences'              => \Espo\Core\Factories\Preferences::class,
-            'scheduledJob'             => \Espo\Core\Utils\ScheduledJob::class,
             'schema'                   => \Espo\Core\Factories\Schema::class,
             'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
             'serviceFactory'           => \Espo\Core\ServiceFactory::class,
@@ -82,8 +81,6 @@ class Container
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
-            'htmlSanitizer'            => \Atro\Core\Utils\HTMLSanitizer::class,
-            'actionManager'            => \Atro\Core\ActionManager::class,
         ];
 
     public function __construct()

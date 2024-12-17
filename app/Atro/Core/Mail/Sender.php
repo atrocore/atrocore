@@ -14,7 +14,6 @@ namespace Atro\Core\Mail;
 use Atro\ConnectionType\ConnectionSmtp;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\QueueManager;
 use Atro\Entities\Connection;
 use Atro\Entities\File;
 use Espo\Core\Utils\Config;
@@ -22,16 +21,12 @@ use Atro\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mailer\Transport\Dsn;
-use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransportFactory;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 class Sender
 {
     private Config $config;
-
-    private QueueManager $queueManager;
 
     private EntityManager $entityManager;
 
@@ -48,7 +43,6 @@ class Sender
     public function __construct(Container $container, ConnectionSmtp $connexion)
     {
         $this->config = $container->get('config');
-        $this->queueManager = $container->get('queueManager');
         $this->entityManager = $container->get('entityManager');
         $this->connexion = $connexion;
     }
@@ -63,7 +57,18 @@ class Sender
         if (empty($connectionId)) {
             $connectionId = $this->config->get('notificationSmtpConnectionId');
         }
-        $this->queueManager->push('Send email', 'QueueManagerEmailSender', ['connectionId' => $connectionId, 'emailData' => $emailData, 'params' => $params]);
+
+        $jobEntity = $this->entityManager->getEntity('Job');
+        $jobEntity->set([
+            'name'    => 'Send email',
+            'type'    => 'SendEmail',
+            'payload' => [
+                'connectionId' => $connectionId,
+                'emailData'    => $emailData,
+                'params'       => $params
+            ]
+        ]);
+        $this->entityManager->saveEntity($jobEntity);
     }
 
     /**
@@ -179,7 +184,7 @@ class Sender
 
     public function getAttachmentTmpDirectory(): string
     {
-        return \Atro\Services\MassDownload::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'mailSender' . DIRECTORY_SEPARATOR . Util::generateId();
+        return \Atro\Jobs\MassDownload::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'mailSender' . DIRECTORY_SEPARATOR . Util::generateId();
     }
 
     protected function prepareBodyPlain(string $body): string

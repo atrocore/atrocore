@@ -42,12 +42,16 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         paramWithTooltipList: ['required', 'default', 'min', 'max', 'maxLength', 'after', 'before', 'readOnly'],
 
+        firstLabel: '',
+
         data: function () {
+            let paramList = this.insertNameAfterLabels()
+
             return {
                 scope: this.scope,
                 field: this.field,
                 defs: this.defs,
-                paramList: this.paramList,
+                paramList: paramList,
                 type: this.type,
                 fieldList: this.fieldList,
                 isCustom: this.defs.isCustom,
@@ -65,6 +69,23 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             'click button[data-action="resetToDefault"]': function () {
                 this.resetToDefault();
             }
+        },
+
+        insertNameAfterLabels() {
+            let insertAfterIndex = 0;
+            let paramList = this.paramList;
+            paramList.forEach(function (param, index) {
+                if (param.name.includes('label')) {
+                    insertAfterIndex = index;
+                }
+            });
+
+            paramList.splice(insertAfterIndex + 1, 0, {
+                name: "name",
+                type: "varchar"
+            });
+
+            return paramList;
         },
 
         setupFieldData: function (callback) {
@@ -286,12 +307,18 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             this.wait(true);
             this.setupFieldData(function () {
+                this.listenTo(this.model, 'change:'+this.firstLabel, () => {
+                    this.camelizeName(this.model.get(this.firstLabel));
+                })
                 this.wait(false);
             }.bind(this));
         },
 
         setLocaleLabel: function (locale, field) {
             let name = 'label' + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
+            if(!this.firstLabel) {
+                this.firstLabel = name;
+            }
             this.paramList.push({name: name, type: 'varchar'});
             if (!this.isNew && field) {
                 this.ajaxGetRequest(`I18n?locale=${locale}`).then(responseData => {
@@ -309,16 +336,21 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         afterRender: function () {
             this.getView('name').on('change', function (m) {
                 var name = this.model.get('name');
-                if (name) {
-                    name = name.replace(/-/g, '').replace(/_/g, '').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
-                        return g.toUpperCase();
-                    }).replace(' ', '');
-                    if (name.length) {
-                        name = name.charAt(0).toLowerCase() + name.slice(1);
-                    }
-                }
-                this.model.set('name', name);
+                this.camelizeName(name);
             }, this);
+        },
+
+        camelizeName(name) {
+            if (name) {
+                name = name.trim();
+                name = name.replace(/-/g, '').replace(/_/g, '').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
+                    return g.toUpperCase();
+                }).replace(' ', '');
+                if (name.length) {
+                    name = name.charAt(0).toLowerCase() + name.slice(1);
+                }
+            }
+            this.model.set('name', name);
         },
 
         readOnlyControl: function () {

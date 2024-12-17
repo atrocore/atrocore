@@ -25,6 +25,14 @@
       "default": true,
       "tooltip": true
     },
+    "maxConcurrentWorkers": {
+      "type": "int",
+      "min": 4,
+      "max": 50,
+      "default": 6,
+      "required": true,
+      "tooltip": true
+    },
     "recordsPerPage": {
       "type": "int",
       "min": 50,
@@ -179,10 +187,6 @@
       "type": "bool"
     },
     "emailAddressIsOptedOutByDefault": {
-      "type": "bool",
-      "tooltip": true
-    },
-    "cleanupDeletedRecords": {
       "type": "bool",
       "tooltip": true
     },

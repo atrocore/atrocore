@@ -216,7 +216,7 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         applyOverviewFilters: function () {
             // skip overview filters
-            if (!this.model || this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) !== true || this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) === false) {
+            if (!this.model || this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) !== true || this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== true) {
                 return;
             }
 
