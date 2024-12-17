@@ -292,26 +292,118 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             this.getModelFactory().create(this.relationship.scope, (relationModel) => {
                 let models = {};
                 let promises = [];
-                this.collection.models.forEach(model => {
-                    promises.push(
-                        new Promise((resolve) => {
-                            this.ajaxGetRequest(this.scope + '/' + model.get('id') + '/' + this.relationship.name, {
-                                select: selectFields.join(',')
-                            }).success(res => {
-                                if (res.list.length) {
-                                    models[model.get('id')] = res.list.map((el) => {
-                                        let m = relationModel.clone();
-                                        m.set(el)
-                                        return m;
-                                    });
-                                } else {
-                                    models[model.get('id')] = [relationModel.clone()]
+                if (this.relationship.type === 'hasMany' && this.relationship.inverseType === 'hasMany') {
+                    let relationName = this.relationship.relationName.charAt(0).toUpperCase() + this.relationship.relationName.slice(1);
+                    let modelRelationColumnId = this.scope.toLowerCase() + 'Id';
+                    let relationshipRelationColumnId = this.relationship.scope.toLowerCase() + 'Id';
+                    promises.push(new Promise(resolve => Promise.all([
+                        this.ajaxGetRequest(this.relationship.scope, {
+                            select: selectFields.join(','),
+                            maxSize: 20 * this.collection.models.length,
+                            where: [
+                                {
+                                    type: 'linkedWith',
+                                    attribute: this.relationship.foreign,
+                                    value: this.collection.models.map(m => m.id)
                                 }
-                                resolve();
-                            })
+                            ]
+                        }),
+
+                        this.ajaxGetRequest(relationName, {
+                            maxSize: 20 * this.collection.models.length,
+                            where: [
+                                {
+                                    type: 'in',
+                                    attribute: modelRelationColumnId,
+                                    value: this.collection.models.map(m => m.id)
+                                }
+                            ]
+                        })]
+                    ).then(results => {
+                        let list = results[0].list;
+                        let relationList = results[1].list
+                        this.collection.models.forEach(model => {
+                            if (!models[model.id]) {
+                                models[model.id] = [];
+                            }
+                            list.forEach(item => {
+                                relationList.forEach(relationItem => {
+                                    if (item.id === relationItem[relationshipRelationColumnId] && model.id === relationItem[modelRelationColumnId]) {
+                                        // add intermediate columns
+                                        for (let key in relationItem) {
+                                            item[relationName + '__' + key] = relationItem[key];
+                                        }
+                                        let m = relationModel.clone();
+                                        m.set(item);
+                                        models[model.id].push(m);
+                                    }
+                                });
+                            });
+
+                            if (!models[model.id].length) {
+                                models[model.id] = [relationModel.clone()]
+                            }
+                        });
+                        resolve()
+                    })));
+
+                } else if (this.relationship.type === 'hasMany' && this.relationship.inverseType === 'belongsTo') {
+                    let columnName = this.relationship.foreign + 'Id';
+                    promises.push(new Promise(resolve => this.ajaxGetRequest(this.relationship.scope, {
+                        select: selectFields.join(','),
+                        maxSize: 20 * this.collection.models.length,
+                        where: [
+                            {
+                                type: 'in',
+                                attribute: this.relationship.foreign + 'Id',
+                                value: this.collection.models.map(m => m.id)
+                            }
+                        ]
+                    }).success((res) => {
+                        this.collection.models.forEach((model) => {
+                            if (!models[model.id]) {
+                                models[model.id] = [];
+                            }
+                            res.list.forEach(item => {
+                                if (item[columnName] === model.id) {
+                                    let m = relationModel.clone();
+                                    m.set(el)
+                                    models[model.id].push(relationModel);
+                                }
+                            });
+                            if (!models[model.id].length) {
+                                models[model.id] = [relationModel.clone()]
+                            }
+                        });
+                        resolve();
+                    })));
+                } else {
+                    let columnName = this.relationship.name + 'Id';
+                    promises.push(new Promise(resolve => this.ajaxGetRequest(this.relationship.scope, {
+                        select: selectFields.join(','),
+                        where: [
+                            {
+                                type: 'linkedWith',
+                                attribute: this.relationship.foreign,
+                                value: this.collection.models.map(m => m.id)
+                            }
+                        ]
+                    }).success(res => {
+                        this.collection.models.forEach((model) => {
+                            res.list.forEach(item => {
+                                if (item.id === model.get(columnName)) {
+                                    let m = relationModel.clone();
+                                    m.set(item)
+                                    models[model.id] = [m];
+                                }
+                            });
+                            if (!models[model.id]) {
+                                models[model.id] = [relationModel.clone()]
+                            }
                         })
-                    );
-                });
+                        resolve();
+                    })));
+                }
 
                 Promise.all(promises).then(() => {
                     this.currentItemModels = models[this.model.id];
