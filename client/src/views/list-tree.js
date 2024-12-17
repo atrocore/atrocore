@@ -67,7 +67,15 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         isTreeAllowed() {
             let result = false;
 
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [this.scope];
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
+
+            if(!treeScopes.includes(this.scope) && this.getMetadata().get(`scopes.${this.scope}.type`)) {
+
+            }
+
+            if(!treeScopes.includes('Bookmark')) {
+                treeScopes.push('Bookmark');
+            }
 
             treeScopes.forEach(scope => {
                 if (this.getAcl().check(scope, 'read')) {
@@ -82,6 +90,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         },
 
         setupTreePanel(scope) {
+            debugger
             if (!this.isTreeAllowed() || this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)) {
                 return;
             }

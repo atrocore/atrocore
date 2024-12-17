@@ -52,7 +52,17 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         getViewName: function (type) {
-            return this.viewMap[type] || this.getMetadata().get(['clientDefs', this.name, 'views', type]) || 'views/' + Espo.Utils.camelCaseToHyphen(type);
+            let viewName =  this.viewMap[type] || this.getMetadata().get(['clientDefs', this.name, 'views', type]) ;
+
+            if(viewName) {
+                return viewName;
+            }
+
+            if(['list', 'detail'].includes(type)) {
+                return 'views/' + Espo.Utils.camelCaseToHyphen(type) +'-tree';
+            }
+
+            return 'views/' + Espo.Utils.camelCaseToHyphen(type);
         },
 
         doAction(action, options) {

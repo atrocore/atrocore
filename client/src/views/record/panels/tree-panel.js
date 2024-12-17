@@ -69,6 +69,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.treeScope = this.scope;
 
             let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+            debugger
             if (treeScopes) {
                 const treeScope = this.getStorage().get('treeScope', this.scope);
                 if (!treeScope || !treeScopes.includes(treeScope)) {
