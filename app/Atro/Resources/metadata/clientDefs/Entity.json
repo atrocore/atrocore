@@ -12,6 +12,16 @@
             }
           ]
         }
+      },
+      "code": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
       }
     }
   }

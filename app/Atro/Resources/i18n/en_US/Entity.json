@@ -1,7 +1,8 @@
 {
   "fields": {
     "name": "Label",
-    "namePlural": "Label Plural"
+    "namePlural": "Label Plural",
+    "disabled": "Disabled"
   },
   "options": {
     "type": {
@@ -12,5 +13,8 @@
   },
   "labels": {
     "Create Entity": "Create Entity"
+  },
+  "tooltips": {
+    "disabled": "Check if you don't need this entity in your system."
   }
 }
