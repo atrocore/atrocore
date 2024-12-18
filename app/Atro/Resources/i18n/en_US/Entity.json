@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "label": "Label"
+  },
+  "options": {
+    "type": {
+      "Base": "Base",
+      "Hierarchy": "Hierarchy",
+      "ReferenceData": "Reference Data"
+    }
+  },
+  "labels": {
+    "Create Entity": "Create Entity"
+  }
+}

@@ -21,7 +21,7 @@ class Entity extends ReferenceData
     {
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
-            if (empty($row['type']) || in_array($code, ['Entity'])) {
+            if (empty($row['type']) || !empty($row['emHidden'])) {
                 continue;
             }
             $items[] = array_merge($row, [
