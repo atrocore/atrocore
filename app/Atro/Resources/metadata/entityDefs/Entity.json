@@ -1,11 +1,11 @@
 {
   "fields": {
-    "label": {
+    "name": {
       "type": "varchar",
       "required": true,
       "trim": true
     },
-    "labelPlural": {
+    "namePlural": {
       "type": "varchar",
       "required": true,
       "trim": true

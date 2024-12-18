@@ -27,8 +27,8 @@ class Entity extends ReferenceData
             $items[] = array_merge($row, [
                 'id'          => $code,
                 'code'        => $code,
-                'label'       => $this->getInjection('language')->translate($code, 'scopeNames'),
-                'labelPlural' => $this->getInjection('language')->translate($code, 'scopeNamesPlural')
+                'name'       => $this->getInjection('language')->translate($code, 'scopeNames'),
+                'namePlural' => $this->getInjection('language')->translate($code, 'scopeNamesPlural')
             ]);
         }
 
