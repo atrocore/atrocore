@@ -1,6 +1,7 @@
 {
   "fields": {
-    "label": "Label"
+    "label": "Label",
+    "labelPlural": "Label Plural"
   },
   "options": {
     "type": {

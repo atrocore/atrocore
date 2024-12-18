@@ -1,4 +1,18 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-table"
+  "iconClass": "fas fa-table",
+  "dynamicLogic": {
+    "fields": {
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
 }
