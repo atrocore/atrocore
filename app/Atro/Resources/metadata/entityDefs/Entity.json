@@ -12,8 +12,13 @@
       "unique": true
     },
     "type": {
-      "type": "varchar",
-      "required": true
+      "type": "enum",
+      "required": true,
+      "options": [
+        "Base",
+        "Hierarchy",
+        "ReferenceData"
+      ]
     },
     "description": {
       "type": "text"
@@ -46,5 +51,9 @@
       "type": "belongsTo",
       "entity": "User"
     }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
   }
 }

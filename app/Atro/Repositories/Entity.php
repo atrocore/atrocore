@@ -22,6 +22,10 @@ class Entity extends ReferenceData
     {
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
+            if (in_array($code, ['Entity'])) {
+                continue;
+            }
+
             $items[] = array_merge($row, [
                 'id'   => $code,
                 'code' => $code,
@@ -30,5 +34,10 @@ class Entity extends ReferenceData
         }
 
         return $items;
+    }
+
+    protected function saveDataToFile(array $data): bool
+    {
+        return true;
     }
 }

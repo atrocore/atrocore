@@ -109,10 +109,6 @@ class ReferenceData extends Repository implements Injectable
         $items = $this->getAllItems();
         $items[$entity->get('code')] = $item;
 
-        if (!is_dir(self::DIR_PATH)) {
-            mkdir(self::DIR_PATH);
-        }
-
         return $this->saveDataToFile($items);
     }
 
@@ -362,6 +358,10 @@ class ReferenceData extends Repository implements Injectable
 
     protected function saveDataToFile(array $data): bool
     {
+        if (!is_dir(self::DIR_PATH)) {
+            mkdir(self::DIR_PATH);
+        }
+
         return !is_bool(file_put_contents($this->filePath, json_encode($data)));
     }
 

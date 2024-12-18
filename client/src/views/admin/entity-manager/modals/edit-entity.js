@@ -146,8 +146,6 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             this.setupData();
 
-            let entityTypes = this.getMetadata().get('app.entityTypes') || [];
-
             this.createView('type', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
@@ -156,7 +154,11 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     name: 'type',
                     params: {
                         required: true,
-                        options: entityTypes
+                        options: [
+                            "Base",
+                            "Hierarchy",
+                            "ReferenceData"
+                        ]
                     }
                 },
                 readOnly: !this.isNew
