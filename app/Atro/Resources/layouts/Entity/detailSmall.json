@@ -1,0 +1,27 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]
