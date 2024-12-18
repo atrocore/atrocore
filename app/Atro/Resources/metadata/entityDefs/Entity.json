@@ -1,6 +1,11 @@
 {
   "fields": {
-    "name": {
+    "label": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "labelPlural": {
       "type": "varchar",
       "required": true,
       "trim": true
@@ -53,7 +58,7 @@
     }
   },
   "collection": {
-    "sortBy": "name",
+    "sortBy": "code",
     "asc": true
   }
 }

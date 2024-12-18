@@ -4,17 +4,19 @@
     "rows": [
       [
         {
-          "name": "name"
+          "name": "code"
         },
         {
-          "name": "code"
+          "name": "type"
         }
       ],
       [
         {
-          "name": "type"
+          "name": "label"
         },
-        false
+        {
+          "name": "labelPlural"
+        }
       ],
       [
         {

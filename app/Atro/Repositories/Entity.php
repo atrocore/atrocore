@@ -25,9 +25,10 @@ class Entity extends ReferenceData
                 continue;
             }
             $items[] = array_merge($row, [
-                'id'   => $code,
-                'code' => $code,
-                'name' => $row['name'] ?? $code
+                'id'          => $code,
+                'code'        => $code,
+                'label'       => $this->getInjection('language')->translate($code, 'scopeNames'),
+                'labelPlural' => $this->getInjection('language')->translate($code, 'scopeNamesPlural')
             ]);
         }
 
@@ -37,5 +38,12 @@ class Entity extends ReferenceData
     protected function saveDataToFile(array $data): bool
     {
         return true;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }
