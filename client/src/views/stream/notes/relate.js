@@ -51,6 +51,10 @@ Espo.define('views/stream/notes/relate', 'views/stream/note', function (Dep) {
             Dep.prototype.init.call(this);
         },
 
+        getEntityName(){
+            return  Handlebars.Utils.escapeExpression(this.entityName);
+        },
+
         setup: function () {
             var data = this.model.get('data') || {};
 
@@ -59,7 +63,7 @@ Espo.define('views/stream/notes/relate', 'views/stream/note', function (Dep) {
             this.entityName = this.model.get('relatedName') ||  data.entityName || null;
 
             this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
-            this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + Handlebars.Utils.escapeExpression(this.entityName) +'</a>';
+            this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.getEntityName() +'</a>';
 
             this.createMessage();
         },
