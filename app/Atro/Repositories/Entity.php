@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
-use Espo\ORM\Entity as OrmEntity;
 
 class Entity extends ReferenceData
 {
@@ -22,10 +21,9 @@ class Entity extends ReferenceData
     {
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
-            if (in_array($code, ['Entity'])) {
+            if (empty($row['type']) || in_array($code, ['Entity'])) {
                 continue;
             }
-
             $items[] = array_merge($row, [
                 'id'   => $code,
                 'code' => $code,
