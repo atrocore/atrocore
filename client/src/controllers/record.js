@@ -53,7 +53,6 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
         getViewName: function (type) {
             return this.viewMap[type] || this.getMetadata().get(['clientDefs', this.name, 'views', type]) || 'views/' + Espo.Utils.camelCaseToHyphen(type);
-
         },
 
         doAction(action, options) {

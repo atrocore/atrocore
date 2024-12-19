@@ -41,6 +41,16 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
             this.setupTreePanel();
             this.modifyCollectionForSelectedNode()
+
+            this.listenTo(this, 'record-list-rendered', (recordView) => {
+                this.listenTo(recordView, `bookmarked-${this.scope}`, (_) => {
+                   this.reloadBookmarks();
+                });
+
+                this.listenTo(recordView, `unbookmarked-${this.scope}`, (_) => {
+                    this.reloadBookmarks();
+                });
+            });
         },
 
         afterRender() {
@@ -248,6 +258,13 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
                 listContainer.outerWidth(main.width() - width);
                 listContainer.css('marginLeft', (width - 1) + 'px');
+            }
+        },
+
+        reloadBookmarks() {
+            let treePanelView = this.getView('treePanel');
+            if(treePanelView && treePanelView.treeScope === 'Bookmark') {
+                treePanelView.rebuildTree();
             }
         }
     });
