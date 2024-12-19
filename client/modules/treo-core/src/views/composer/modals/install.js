@@ -53,6 +53,9 @@ Espo.define('treo-core:views/composer/modals/install', 'views/modal',
                 el: `${this.options.el} .field[data-name="settingVersion"]`,
                 model: this.model,
                 mode: 'edit',
+                params: {
+                    required: true
+                },
                 defs: {
                     name: 'settingVersion',
                 }
@@ -74,8 +77,10 @@ Espo.define('treo-core:views/composer/modals/install', 'views/modal',
         },
 
         actionSave() {
-            this.trigger('save', {id: this.model.id, version: this.model.get('settingVersion')});
-            this.close();
+            if(!this.getView('settingVersion').validate()) {
+                this.trigger('save', {id: this.model.id, version: this.model.get('settingVersion')});
+                this.close();
+            }
         }
 
     })
