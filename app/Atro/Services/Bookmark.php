@@ -44,10 +44,12 @@ class Bookmark extends Base
         $result = [];
 
         foreach ($groupedCollections as $entityType => $items) {
+            $hasName = !empty($this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'name', 'type']));
+
             /** @var Connection $connection */
             $connection = $this->getEntityManager()->getConnection();
             $entityNames = $connection->createQueryBuilder()
-                ->select('id, name, deleted')
+                ->select('id, deleted, '. ($hasName ? 'name' : 'id as name'))
                 ->from($connection->quoteIdentifier(strtolower(Util::toUnderScore($entityType))))
                 ->where('id IN (:ids)')
                 ->setParameter('ids', array_keys($items), Connection::PARAM_STR_ARRAY)
@@ -113,7 +115,7 @@ class Bookmark extends Base
         foreach ($collection as $key => $item) {
             $result[] = [
                 'id' => $item->get('id'),
-                'name' => $item->get('name'),
+                'name' => $item->get('name') ?? $item->get('id'),
                 'offset' => $offset + $key,
                 'total' => $total,
                 'disabled' => false,
