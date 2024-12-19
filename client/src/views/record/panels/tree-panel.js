@@ -85,7 +85,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             this.maxSize = this.getConfig().get('recordsPerPageSmall', 20);
 
-
             if (this.options.collection) {
                 this.listenTo(Backbone, 'after:search', collection => {
                     if (this.options.collection.name === collection.name) {
