@@ -90,14 +90,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
-            if (!this.getConfig().get('scopeColorsDisabled')) {
-                var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-                if (iconHtml) {
-                    if (this.defs.label) {
-                        this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
-                    } else {
-                        this.titleHtml = iconHtml + this.title;
-                    }
+            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            if (iconHtml) {
+                if (this.defs.label) {
+                    this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
+                } else {
+                    this.titleHtml = iconHtml + this.title;
                 }
             }
 

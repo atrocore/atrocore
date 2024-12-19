@@ -99,18 +99,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 this.hideField('dashboardLayout');
             }
 
-            this.controlColorsField();
-            this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
-
-            if (this.getConfig().get('scopeColorsDisabled')) {
-                this.hideField('scopeColorsDisabled');
-                this.hideField('tabColorsDisabled');
-            }
-
-            if (this.getConfig().get('tabColorsDisabled')) {
-                this.hideField('tabColorsDisabled');
-            }
-
             if (this.getConfig().get('userThemesDisabled')) {
                 this.hideField('theme');
             }
@@ -132,14 +120,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                     this.setFieldNotRequired('notificationProfileId')
                 }
             })
-        },
-
-        controlColorsField: function () {
-            if (this.model.get('scopeColorsDisabled')) {
-                this.hideField('tabColorsDisabled');
-            } else {
-                this.showField('tabColorsDisabled');
-            }
         },
 
         actionReset: function () {
