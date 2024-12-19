@@ -4,7 +4,9 @@
     "namePlural": "Name Plural",
     "disabled": "Disabled",
     "hasArchive": "Archivable",
-    "hasActive": "Activatable"
+    "hasActive": "Activatable",
+    "hideFieldTypeFilters": "Hide field type filters",
+    "streamDisabled": "Disable Track changes"
   },
   "options": {
     "type": {

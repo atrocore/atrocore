@@ -11,9 +11,11 @@
         }
       ],
       [
-        false,
         {
           "name": "disabled"
+        },
+        {
+          "name": "streamDisabled"
         }
       ],
       [
@@ -37,6 +39,12 @@
         {
           "name": "hasActive"
         }
+      ],
+      [
+        {
+          "name": "hideFieldTypeFilters"
+        },
+        false
       ]
     ]
   }

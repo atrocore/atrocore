@@ -38,65 +38,11 @@
     "hasArchive": {
       "type": "bool"
     },
-    "entity": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "object": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "layouts": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "tab": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "acl": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "customizable": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "importable": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "stream": {
-      "type": "bool",
-      "readOnly": true
+    "hideFieldTypeFilters": {
+      "type": "bool"
     },
     "streamDisabled": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "notifications": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "bookmarkDisabled": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "emHidden": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "notStorable": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "isCustom": {
-      "type": "bool",
-      "readOnly": true
-    },
-    "hasPersonalData": {
-      "type": "bool",
-      "readOnly": true
+      "type": "bool"
     },
     "createdAt": {
       "type": "datetime",

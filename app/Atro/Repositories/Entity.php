@@ -20,11 +20,23 @@ class Entity extends ReferenceData
 {
     protected function getAllItems(array $params = []): array
     {
+        $boolFields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
+            if ($defs['type'] === 'bool') {
+                $boolFields[] = $field;
+            }
+        }
+
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
             if (!empty($row['emHidden'])) {
                 continue;
             }
+
+            foreach ($boolFields as $boolField) {
+                $row[$boolField] = !empty($row[$boolField]);
+            }
+
             $items[] = array_merge($row, [
                 'id'         => $code,
                 'code'       => $code,
@@ -43,49 +55,34 @@ class Entity extends ReferenceData
 
     public function updateEntity(OrmEntity $entity): bool
     {
-        //    [10] => hasAssignedUser
-        //    [12] => hideFieldTypeFilters
-        //    [13] => aclActionLevelListMap
-        //    [15] => enabledCopyConfigurations
-        //    [17] => notificationDisabled
         //    [19] => autoDeleteAfterDays
         //    [20] => clearDeletedAfterDays
-        //    [21] => isActiveUnavailable
+        //    [10] => hasAssignedUser
         //    [22] => hasOwner
         //    [23] => hasTeam
-        //    [24] => module
-        //    [25] => showInAdminPanel
-        //    [26] => stream
+        //    [35] => hasAccount
         //    [28] => statusField
         //    [30] => multiParents
         //    [31] => dragAndDrop
         //    [32] => fieldValueInheritance
         //    [33] => relationInheritance
         //    [34] => disableHierarchy
-        //    [35] => hasAccount
         //    [36] => deleteWithoutConfirmation
         //    [37] => multiParentsDisabled
         //    [38] => quickCreateListDisabled
         //    [39] => duplicatableRelations
-        //    [40] => overviewFilters
         //    [41] => addRelationEnabled
         //    [42] => mandatoryUnInheritedFields
         //    [43] => unInheritedFields
         //    [44] => inheritedRelations
         //    [45] => mandatoryUnInheritedRelations
         //    [46] => unInheritedRelations
-        //    [47] => importTypeSimple
-        //    [48] => completeness
         //    [49] => nonComparableFields
-        //    [50] => hasCompleteness
         //    [52] => aclActionList
         //    [53] => aclLevelList
         //    [55] => kanbanStatusIgnoreList
         //    [56] => disabledFieldsForCopyConfigurations
         //    [57] => aclPortal
-        //    [58] => description
-        //    [61] => hasActivities
-        //    [62] => hasTasks
         //    [63] => isHierarchyEntity
         //    [64] => hideLastViewed
         //    [65] => aclPortalLevelList
