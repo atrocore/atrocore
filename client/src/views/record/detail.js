@@ -277,7 +277,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             callback()
                         }
                     } else {
-                        this.notify(response.message, 'error');
+                        Espo.Ui.notify(response.message, 'error', null, true);
                     }
                 }
                 this.model.fetch();
@@ -287,7 +287,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (!message && error.status === 403) {
                         message = this.translate('Action Forbidden', 'labels')
                     }
-                    this.notify(message, 'error')
+                    Espo.Ui.notify(message, 'error', null, true)
                 })
         },
 
