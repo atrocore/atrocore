@@ -69,13 +69,10 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
             let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
 
-            if(!treeScopes.includes(this.scope) && this.getMetadata().get(`scopes.${this.scope}.type`)) {
-
+            if(!treeScopes.includes(this.scope) && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                treeScopes.includes(this.scope);
             }
 
-            if(!treeScopes.includes('Bookmark')) {
-                treeScopes.push('Bookmark');
-            }
 
             treeScopes.forEach(scope => {
                 if (this.getAcl().check(scope, 'read')) {
@@ -90,7 +87,6 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         },
 
         setupTreePanel(scope) {
-            debugger
             if (!this.isTreeAllowed() || this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)) {
                 return;
             }
@@ -205,7 +201,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         },
 
         selectNode(data) {
-            if (this.getStorage().get('treeScope', this.scope) === this.scope) {
+            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
                 return;
             }

@@ -69,7 +69,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.treeScope = this.scope;
 
             let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
-            debugger
             if (treeScopes) {
                 const treeScope = this.getStorage().get('treeScope', this.scope);
                 if (!treeScope || !treeScopes.includes(treeScope)) {
@@ -286,7 +285,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         },
 
         generateUrl(node) {
-            let url = this.treeScope + '/action/Tree?isTreePanel=1';
+            let url = this.treeScope + `/action/Tree?isTreePanel=1&scope=${this.scope}`;
 
             if (node && node.showMoreDirection) {
                 let offset = node.offset;
@@ -426,7 +425,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.$el.find('.search-in-tree-input').val(searchValue);
                 whereData.push({"type": "textFilter", "value": searchValue})
                 $tree.html(this.translate('Loading...'));
-                this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData}).then(response => {
+                this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData, "scope": this.scope}).then(response => {
                     this.buildTree(response.tree);
                 });
                 return;

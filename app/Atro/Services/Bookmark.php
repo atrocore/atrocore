@@ -20,7 +20,7 @@ use Espo\ORM\EntityCollection;
 
 class Bookmark extends Base
 {
-    function findEntities($params)
+    public function findEntities($params)
     {
         $params['where'][] = [
             "attribute" => "userId",
@@ -91,6 +91,39 @@ class Bookmark extends Base
         return [
             "total" => $count,
             "list" => array_values($result)
+        ];
+    }
+
+    public function getBookmarkTree(string $scope, array $params): array
+    {
+        $params['where'][] = [
+            'type' => 'bool',
+            'value' => ['onlyBookmarked']
+        ];
+
+        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+
+        $selectParams['select'] = ['id', 'name'];
+        $repository = $this->getEntityManager()->getRepository($scope);
+        $collection = $repository->find($selectParams);
+        $total = $repository->count($selectParams);
+        $offset = $params['offset'];
+        $result = [];
+
+        foreach ($collection as $key => $item) {
+            $result[] = [
+                'id' => $item->get('id'),
+                'name' => $item->get('name'),
+                'offset' => $offset + $key,
+                'total' => $total,
+                'disabled' => false,
+                'load_on_demand' => false
+            ];
+        }
+
+        return [
+            'list' => $result,
+            'total' => $total
         ];
     }
 }

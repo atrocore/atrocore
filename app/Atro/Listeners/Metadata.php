@@ -1266,6 +1266,7 @@ class Metadata extends AbstractListener
             if(!empty($data['clientDefs'][$entity]['bookmarkDisabled'])) {
                 return;
             }
+            $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
             $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
             $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
                 "type" => "varchar",

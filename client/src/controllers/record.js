@@ -52,17 +52,8 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         getViewName: function (type) {
-            let viewName =  this.viewMap[type] || this.getMetadata().get(['clientDefs', this.name, 'views', type]) ;
+            return this.viewMap[type] || this.getMetadata().get(['clientDefs', this.name, 'views', type]) || 'views/' + Espo.Utils.camelCaseToHyphen(type);
 
-            if(viewName) {
-                return viewName;
-            }
-
-            if(['list', 'detail'].includes(type)) {
-                return 'views/' + Espo.Utils.camelCaseToHyphen(type) +'-tree';
-            }
-
-            return 'views/' + Espo.Utils.camelCaseToHyphen(type);
         },
 
         doAction(action, options) {
@@ -77,7 +68,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
         kanban: function () {
             this.getCollection(function (collection) {
-                this.main(this.getViewName('list'), {
+                this.main(this.getViewName('list-tree'), {
                     scope: this.name,
                     collection: collection,
                     params: {
@@ -113,7 +104,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     collection.abortLastFetch();
                 }, this);
 
-                this.main(this.getViewName('list'), {
+                this.main(this.getViewName('list-tree'), {
                     scope: this.name,
                     collection: collection,
                     params: options
@@ -126,7 +117,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         createViewView: function (options, model) {
-            this.main(this.getViewName('detail'), {
+            this.main(this.getViewName('detail-tree'), {
                 scope: this.name,
                 model: model,
                 returnUrl: options.returnUrl,
