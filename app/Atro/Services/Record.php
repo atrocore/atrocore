@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\RecordService;
 
@@ -201,6 +202,25 @@ class Record extends RecordService
             foreach ($bookmarks as $bookmark) {
                 $entityByIds[$bookmark['entity_id']]->set('bookmarkId', $bookmark['id']);
             }
+        }
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if(!$entity->has('bookmarkId')) {
+            $bookmarked =  $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('bookmark')
+                ->where('entity_id = :entityId AND deleted = :false')
+                ->andWhere('user_id = :userId')
+                ->setParameter('entityId', $entity->get('id'))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('userId', $this->getUser()->id)
+                ->fetchAssociative();
+
+            $entity->set('bookmarkId', $bookmarked['id'] ?? null);
         }
     }
 }
