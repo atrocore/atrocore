@@ -55,40 +55,6 @@ class Entity extends ReferenceData
 
     public function updateEntity(OrmEntity $entity): bool
     {
-        //    [19] => autoDeleteAfterDays
-        //    [20] => clearDeletedAfterDays
-        //    [10] => hasAssignedUser
-        //    [22] => hasOwner
-        //    [23] => hasTeam
-        //    [35] => hasAccount
-        //    [28] => statusField
-        //    [30] => multiParents
-        //    [31] => dragAndDrop
-        //    [32] => fieldValueInheritance
-        //    [33] => relationInheritance
-        //    [34] => disableHierarchy
-        //    [36] => deleteWithoutConfirmation
-        //    [37] => multiParentsDisabled
-        //    [38] => quickCreateListDisabled
-        //    [39] => duplicatableRelations
-        //    [41] => addRelationEnabled
-        //    [42] => mandatoryUnInheritedFields
-        //    [43] => unInheritedFields
-        //    [44] => inheritedRelations
-        //    [45] => mandatoryUnInheritedRelations
-        //    [46] => unInheritedRelations
-        //    [49] => nonComparableFields
-        //    [52] => aclActionList
-        //    [53] => aclLevelList
-        //    [55] => kanbanStatusIgnoreList
-        //    [56] => disabledFieldsForCopyConfigurations
-        //    [57] => aclPortal
-        //    [63] => isHierarchyEntity
-        //    [64] => hideLastViewed
-        //    [65] => aclPortalLevelList
-        //    [66] => queryBuilderFilter
-        //    [67] => modifiedExtendedRelations
-
         $customScopeData = [];
         $customFile = "data/metadata/scopes/{$entity->get('code')}.json";
         if (file_exists($customFile)) {
