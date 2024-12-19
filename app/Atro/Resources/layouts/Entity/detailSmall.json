@@ -28,6 +28,12 @@
       ],
       [
         {
+          "name": "iconClass"
+        },
+        false
+      ],
+      [
+        {
           "name": "description",
           "fullWidth": true
         }

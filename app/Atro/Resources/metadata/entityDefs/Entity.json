@@ -25,6 +25,10 @@
         "ReferenceData"
       ]
     },
+    "iconClass": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/icon-class"
+    },
     "description": {
       "type": "text"
     },

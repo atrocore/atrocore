@@ -6,7 +6,8 @@
     "hasArchive": "Archivable",
     "hasActive": "Activatable",
     "hideFieldTypeFilters": "Hide field type filters",
-    "streamDisabled": "Disable Track changes"
+    "streamDisabled": "Disable Track changes",
+    "iconClass": "Icon"
   },
   "options": {
     "type": {

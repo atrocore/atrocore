@@ -34,6 +34,8 @@ Espo.define('views/admin/entity-manager/fields/icon-class', 'views/fields/base',
 
     return Dep.extend({
 
+        detailTemplate: 'admin/entity-manager/fields/icon-class/detail',
+
         editTemplate: 'admin/entity-manager/fields/icon-class/edit',
 
         setup: function () {
