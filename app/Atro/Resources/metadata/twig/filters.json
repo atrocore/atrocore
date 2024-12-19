@@ -1,5 +1,6 @@
 {
   "prepareEntity": "\\Atro\\TwigFilter\\PrepareEntity",
+  "prepareHtmlField": "\\Atro\\TwigFilter\\PrepareHtmlField",
   "isImage": "\\Atro\\TwigFilter\\IsImage",
   "escapeDoubleQuote": "\\Atro\\TwigFilter\\EscapeDoubleQuote",
   "escapeStr": "\\Atro\\TwigFilter\\EscapeString",

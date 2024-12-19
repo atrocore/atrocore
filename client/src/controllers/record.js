@@ -314,7 +314,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         compare: function (options) {
             let id = options.id
             let createView = function (model) {
-                this.main('views/compare', {
+                this.main('views/compare-instance', {
                     model: model,
                     scope: this.name,
                 });

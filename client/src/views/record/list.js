@@ -2862,9 +2862,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 model.id = data.id;
                 this.listenToOnce(model, 'sync', function () {
                     this.createView('quickCompareDialog', 'views/modals/compare', {
-                        "model": model,
-                        "scope": data.scope,
-                        "mode": "details",
+                        model: model,
+                        scope: data.scope,
+                        instanceComparison: true,
+                        hideRelationship: true,
+                        mode: "details",
                     }, function (dialog) {
                         dialog.render();
                         this.notify(false)

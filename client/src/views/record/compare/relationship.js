@@ -11,31 +11,42 @@
 Espo.define('views/record/compare/relationship', 'views/record/list', function (Dep) {
     return Dep.extend({
         template: 'record/compare/relationship',
-        relationshipsFields: [],
-        instances: [],
-        currentItemModels: [],
-        otherItemModels: [],
-        init(){
 
-        },
+        relationshipsFields: [],
+
+        instances: [],
+
+        columns: [],
+
+        currentItemModels: [],
+
+        otherItemModels: [],
+
+        shouldHide: false,
+
         setup() {
             this.scope = this.options.scope;
             this.baseModel = this.options.model;
             this.relationship = this.options.relationship;
-            this.instances = this.getMetadata().get(['app','comparableInstances']);
+            this.collection = this.options.collection;
+            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
+            this.columns = this.options.columns
             this.checkedList = [];
             this.enabledFixedHeader = false;
             this.dragableListRows = false;
             this.showMore = false
             this.fields = [];
+            this.currentItemModels = [];
+            this.otherItemModels = [];
+            this.instances = this.getMetadata().get(['app', 'comparableInstances']);
 
-            this.getParentView()
-
-           this.fetchModelsAndSetup();
+            this.fetchModelsAndSetup();
         },
-        fetchModelsAndSetup(){
+
+        fetchModelsAndSetup() {
             this.wait(true)
             let nonComparableFields = this.getMetadata().get('scopes.' + this.relationship.scope + '.nonComparableFields') ?? [];
+
             this.getHelper().layoutManager.get(this.relationship.scope, 'listSmall', layout => {
                 if (layout && layout.length) {
                     let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.relationship.scope, 'read');
@@ -44,79 +55,58 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             this.fields.push(item.name);
                         }
                     });
-                    this.getModelFactory().create(this.relationship.scope, function (model) {
-                        let selectField = [];
-                        this.fields.forEach(field => {
-                            let type = model.getFieldType(field)
-                            if(['file','link'].includes(type)){
-                                selectField.push(field + 'Id');
-                                selectField.push(field + 'Name');
-                                return;
-                            }
 
-                            if( type === 'linkMultiple'){
-                                selectField.push(field+'Ids');
-                                selectField.push(field+'Names');
-                                return;
-                            }
+                    let selectField = [];
 
-                            selectField.push(field);
-                        })
-                        this.ajaxGetRequest(this.scope+'/'+this.model.get('id')+'/'+this.relationship.name, {
-                            select: selectField.join(',')
-                        }).success(res => {
-                            this.currentItemModels = res.list.map( item => {
-                                let itemModel = model.clone()
-                                itemModel.set(item)
-                                return itemModel
+                    this.fields.forEach(field => {
+                        let fieldType = this.getMetadata().get(['entityDefs', 'Product', 'fields', field, 'type']);
+                        if (fieldType) {
+                            this.getFieldManager().getAttributeList(fieldType, field).forEach(attribute => {
+                                selectField.push(attribute);
                             });
-                            this.ajaxPostRequest('Synchronization/action/distantInstanceRequest',{
-                                'uri':this.scope+'/' + this.model.get('id')+'/' + this.relationship.name + '?select=' + selectField.join(','),
-                                'type':'list'
-                            }).success(res => {
-                                this.otherItemModels = [];
-                                res.forEach((data, index) => {
-                                    if('_error' in data){
-                                        this.instances[index]['_error'] = data['_error'];
-                                    }
-                                    this.otherItemModels.push((data.list ?? []).map(item => {
-                                        for(let key in item){
-                                            let el = item[key];
-                                            let instanceUrl = this.instances[index].atrocoreUrl;
-                                            if(key.includes('PathsData')){
-                                                if( el && ('thumbnails' in el)){
-                                                    for (let size in el['thumbnails']){
-                                                        item[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        let itemModel = model.clone()
-                                        itemModel.set(item)
-                                        return itemModel
-                                    }));
-                                });
-                                this.setupRelationship(() => this.wait(false));
-                            })
-                        });
-                    }, this);
+                        }
+                    })
+
+                    this.prepareModels(selectField, () => this.setupRelationship(() => this.wait(false)));
+                }else {
+                    this.shouldHide = true;
                 }
             });
         },
-        data(){
+
+        data() {
+            let totalLength = 0;
+            let minWidth = 150;
+            let columns = [];
+            this.columns.forEach((el, key) => {
+                let i = Espo.Utils.cloneDeep(el);
+                if (key === 0) {
+                    totalLength += i.minWidth = minWidth;
+                    i.itemColumnCount = 1;
+                } else if (key === 1) {
+                    i.itemColumnCount = Math.max(this.currentItemModels.length, 1)
+                    totalLength += i.minWidth = minWidth;
+                } else {
+                    i.itemColumnCount = Math.max(this.otherItemModels[key - 2].length, 1);
+                    totalLength += i.minWidth = minWidth * i.itemColumnCount;
+                }
+                columns.push(i)
+            });
+
             return {
                 name: this.relationship.name,
-                scope: this.relationship.scope,
-                instances: this.instances.map((i, key) => {
-                    i['columnCount'] = this.otherItemModels[key].length;
-                    return i;
-                }),
+                scope: this.scope,
+                relationScope: this.relationship.scope,
+                columns,
                 relationshipsFields: this.relationshipsFields,
-                columnCountCurrent: Math.max(this.currentItemModels.length,1),
-                currentItemModels: this.currentItemModels
+                columnCountCurrent: Math.max(this.currentItemModels.length, 1),
+                currentItemModels: this.currentItemModels,
+                totalLength,
+                minWidth
             }
         },
-        setupRelationship(callback){
+
+        setupRelationship(callback) {
             this.relationshipsFields = [];
             this.fields.forEach((field) => {
                 let data = {
@@ -124,12 +114,13 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     currentViewKeys: [],
                     othersModelsKeyPerInstances: []
                 }
+
                 this.currentItemModels.forEach((model, index) => {
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(model.getFieldType(field));
                     let viewKey = this.relationship.name + field + index + 'Current';
                     data.currentViewKeys.push({key: viewKey})
-                    this.createView(viewKey, viewName,  {
-                        el: this.options.el +` [data-field="${viewKey}"]`,
+                    this.createView(viewKey, viewName, {
+                        el: this.options.el + ` [data-field="${viewKey}"]`,
                         model: model,
                         readOnly: true,
                         defs: {
@@ -141,14 +132,13 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 })
 
                 this.otherItemModels.forEach((instanceModels, index1) => {
-                    data.othersModelsKeyPerInstances[index1]= [];
+                    data.othersModelsKeyPerInstances[index1] = [];
                     instanceModels.forEach((model, index2) => {
-                        this.others
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(model.getFieldType(field));
                         let viewKey = this.relationship.name + field + index1 + 'Others' + index2;
                         data.othersModelsKeyPerInstances[index1].push({key: viewKey})
-                        this.createView(viewKey, viewName,  {
-                            el: this.options.el +` [data-field="${viewKey}"]`,
+                        this.createView(viewKey, viewName, {
+                            el: this.options.el + ` [data-field="${viewKey}"]`,
                             model: model,
                             readOnly: true,
                             defs: {
@@ -158,8 +148,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             inlineEditDisabled: true,
                         }, view => {
                             view.render()
-                            let instanceUrl = this.instances[index1].atrocoreUrl;
-                            this.updateBaseUrl(view, instanceUrl);
+                            this.updateBaseUrl(view, index1);
                         });
                     });
                 });
@@ -167,6 +156,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             });
             callback();
         },
+
         fullTableScroll() {
             let list = this.$el.find('.list');
             if (list.length) {
@@ -231,7 +221,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
                                     if (a) {
                                         let width = list.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                        a.css('left',  width);
+                                        a.css('left', width);
                                     }
                                 });
                             }
@@ -252,7 +242,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
                                 if (a) {
                                     let width = list.scrollLeft() - (fullTable.width() - list.width() - $(this).width()) - a.width() - 5;
-                                    a.css('left',  width);
+                                    a.css('left', width);
                                 }
                             });
 
@@ -295,43 +285,148 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 }
             }
         },
-        afterRender(){
+
+        afterRender() {
             Dep.prototype.afterRender.call(this)
             $('.not-approved-field').hide();
-
-            if (this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
-                this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
+            $('.translated-automatically-field').hide();
+            if(this.shouldHide){
+                this.$el.parent().parent().hide();
             }
         },
-        updateBaseUrl(view, instanceUrl){
-            view.listenTo(view, 'after:render', () => {
-                setTimeout(() => {
-                    let localUrl = this.getConfig().get('siteUrl');
-                    view.$el.find('a').each((i, el) => {
-                        let href = $(el).attr('href')
 
-                        if(href.includes('http') && localUrl){
-                            $(el).attr('href', href.replace(localUrl, instanceUrl))
-                        }
+        prepareModels(selectFields, callback) {
+            this.getModelFactory().create(this.relationship.scope, (relationModel) => {
+                let models = {};
+                let promises = [];
+                if (this.relationship.type === 'hasMany' && this.relationship.inverseType === 'hasMany') {
+                    let relationName = this.relationship.relationName.charAt(0).toUpperCase() + this.relationship.relationName.slice(1);
+                    let modelRelationColumnId = this.scope.toLowerCase() + 'Id';
+                    let relationshipRelationColumnId = this.relationship.scope.toLowerCase() + 'Id';
+                    promises.push(new Promise(resolve => Promise.all([
+                        this.ajaxGetRequest(this.relationship.scope, {
+                            select: selectFields.join(','),
+                            maxSize: 20 * this.collection.models.length,
+                            where: [
+                                {
+                                    type: 'linkedWith',
+                                    attribute: this.relationship.foreign,
+                                    value: this.collection.models.map(m => m.id)
+                                }
+                            ]
+                        }),
 
-                        if((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?')){
-                            $(el).attr('href', instanceUrl + href)
-                        }
-                        $(el).attr('target','_blank')
-                    });
+                        this.ajaxGetRequest(relationName, {
+                            maxSize: 20 * this.collection.models.length,
+                            where: [
+                                {
+                                    type: 'in',
+                                    attribute: modelRelationColumnId,
+                                    value: this.collection.models.map(m => m.id)
+                                }
+                            ]
+                        })]
+                    ).then(results => {
+                        let list = results[0].list;
+                        let relationList = results[1].list
+                        this.collection.models.forEach(model => {
+                            if (!models[model.id]) {
+                                models[model.id] = [];
+                            }
+                            list.forEach(item => {
+                                relationList.forEach(relationItem => {
+                                    if (item.id === relationItem[relationshipRelationColumnId] && model.id === relationItem[modelRelationColumnId]) {
+                                        // add intermediate columns
+                                        for (let key in relationItem) {
+                                            item[relationName + '__' + key] = relationItem[key];
+                                        }
+                                        let m = relationModel.clone();
+                                        m.set(item);
+                                        models[model.id].push(m);
+                                    }
+                                });
+                            });
 
-                    view.$el.find('img').each((i, el) => {
-                        let src = $(el).attr('src')
-                        if(src.includes('http') && localUrl){
-                            $(el).attr('src', src.replace(localUrl, instanceUrl))
-                        }
+                            if (!models[model.id].length) {
+                                models[model.id] = [relationModel.clone()]
+                            }
+                        });
+                        resolve()
+                    })));
 
-                        if(!src.includes('http')){
-                            $(el).attr('src', instanceUrl + '/' + src)
+                } else if (this.relationship.type === 'hasMany' && this.relationship.inverseType === 'belongsTo') {
+                    let columnName = this.relationship.foreign + 'Id';
+                    selectFields.push(columnName);
+                    promises.push(new Promise(resolve => this.ajaxGetRequest(this.relationship.scope, {
+                        select: selectFields.join(','),
+                        maxSize: 20 * this.collection.models.length,
+                        where: [
+                            {
+                                type: 'in',
+                                attribute: this.relationship.foreign + 'Id',
+                                value: this.collection.models.map(m => m.id)
+                            }
+                        ]
+                    }).success((res) => {
+                        this.collection.models.forEach((model) => {
+                            if (!models[model.id]) {
+                                models[model.id] = [];
+                            }
+                            res.list.forEach(item => {
+                                if (item[columnName] === model.id) {
+                                    let m = relationModel.clone();
+                                    m.set(item)
+                                    models[model.id].push(m);
+                                }
+                            });
+                            if (!models[model.id].length) {
+                                models[model.id] = [relationModel.clone()]
+                            }
+                        });
+                        resolve();
+                    })));
+                } else {
+                    let columnName = this.relationship.name + 'Id';
+                    promises.push(new Promise(resolve => this.ajaxGetRequest(this.relationship.scope, {
+                        select: selectFields.join(','),
+                        where: [
+                            {
+                                type: 'linkedWith',
+                                attribute: this.relationship.foreign,
+                                value: this.collection.models.map(m => m.id)
+                            }
+                        ]
+                    }).success(res => {
+                        this.collection.models.forEach((model) => {
+                            res.list.forEach(item => {
+                                if (item.id === model.get(columnName)) {
+                                    let m = relationModel.clone();
+                                    m.set(item)
+                                    models[model.id] = [m];
+                                }
+                            });
+                            if (!models[model.id]) {
+                                models[model.id] = [relationModel.clone()]
+                            }
+                        })
+                        resolve();
+                    })));
+                }
+
+                Promise.all(promises).then(() => {
+                    this.currentItemModels = models[this.model.id];
+                    delete models[this.model.id];
+                    this.collection.models.forEach((model) => {
+                        if (models[model.get('id')]) {
+                            this.otherItemModels.push(models[model.get('id')])
                         }
-                    });
+                    })
+                    callback();
                 })
-            }, 1000)
+            });
+        },
+
+        updateBaseUrl() {
         }
     })
 })

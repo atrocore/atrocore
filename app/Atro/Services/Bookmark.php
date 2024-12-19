@@ -48,7 +48,7 @@ class Bookmark extends Base
             $connection = $this->getEntityManager()->getConnection();
             $entityNames = $connection->createQueryBuilder()
                 ->select('id, name, deleted')
-                ->from($connection->quoteIdentifier(strtolower(Util::toCamelCase($entityType))))
+                ->from($connection->quoteIdentifier(strtolower(Util::toUnderScore($entityType))))
                 ->where('id IN (:ids)')
                 ->setParameter('ids', array_keys($items), Connection::PARAM_STR_ARRAY)
                 ->fetchAllAssociative();

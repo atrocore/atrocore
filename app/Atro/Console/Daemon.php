@@ -16,7 +16,8 @@ namespace Atro\Console;
 use Atro\Core\Application;
 use Atro\Core\JobManager;
 use Atro\Core\PseudoTransactionManager;
-use Espo\Entities\User;
+use Atro\Core\Utils\Util;
+use Doctrine\DBAL\Connection;
 use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 
@@ -65,20 +66,25 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists($log)) {
-                $em = $this->getEntityManager();
+                $conn = $this->getConnection();
 
-                /** @var User $user */
-                $user = $em
-                    ->getRepository('User')
-                    ->select(['id'])
-                    ->where(['id' => file_get_contents($log)])
-                    ->findOne();
+                $userData = null;
+                try {
+                    $userData = $conn->createQueryBuilder()
+                        ->select('id')
+                        ->from($conn->quoteIdentifier('user'))
+                        ->where('id=:id')
+                        ->setParameter('id', file_get_contents($log))
+                        ->fetchAssociative();
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error('Composer update log failed: ' . $e->getMessage());
+                }
 
                 // skip if no such user
-                if (empty($user)) {
+                if (empty($userData['id'])) {
                     // remove log file
                     unlink($log);
-                    continue 1;
+                    continue;
                 }
 
                 // cleanup
@@ -100,17 +106,27 @@ class Daemon extends AbstractConsole
                  * Create Composer Note
                  */
                 try {
-                    $note = $em->getEntity('Note');
-                    $note->set('type', 'composerUpdate');
-                    $note->set('parentType', 'ModuleManager');
-                    $note->set('data', [
-                        'status' => ($exitCode == 0) ? 0 : 1,
-                        'output' => $contents
-                    ]);
-                    $note->set('createdById', $user->get('id'));
-                    $em->saveEntity($note);
+                    $conn->createQueryBuilder()
+                        ->insert($conn->quoteIdentifier('note'))
+                        ->setValue('id', ':id')
+                        ->setValue('type', ':type')
+                        ->setValue('parent_type', ':parentType')
+                        ->setValue('data', ':data')
+                        ->setValue('created_by_id', ':createdById')
+                        ->setValue('created_at', ':date')
+                        ->setValue('modified_at', ':date')
+                        ->setParameter('id', Util::generateId())
+                        ->setParameter('type', 'composerUpdate')
+                        ->setParameter('parentType', 'ModuleManager')
+                        ->setParameter('data', json_encode([
+                            'status' => ($exitCode == 0) ? 0 : 1,
+                            'output' => $contents
+                        ]))
+                        ->setParameter('createdById', $userData['id'])
+                        ->setParameter('date', (new \DateTime())->format('Y-m-d H:i:s'))
+                        ->executeQuery();
                 } catch (\Throwable $e) {
-                    $GLOBALS['log']->error('Creating composer update log failed: ' . $e->getMessage());
+                    $GLOBALS['log']->error('Composer update log failed: ' . $e->getMessage());
                 }
 
                 // remove log file
@@ -190,5 +206,10 @@ class Daemon extends AbstractConsole
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
+    }
+
+    protected function getConnection(): Connection
+    {
+        return $this->getContainer()->get('connection');
     }
 }

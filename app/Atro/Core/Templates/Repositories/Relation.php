@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\PseudoTransactionManager;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Utils\Util;
@@ -381,13 +382,11 @@ class Relation extends Base
                                 }
                             }
 
-                            $relEntity = $entity->get($link);
-                            if ($relEntity) {
-                                try {
-                                    $this->getEntityManager()->saveEntity($relEntity);
-                                } catch (NotUnique $e) {
-                                }
-                            }
+                            $this->getPseudoTransactionManager()->pushUpdateEntityJob($relEntityName, $entity->get($link .'Id'), [
+                                'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
+                                'modifiedById' => $this->getEntityManager()->getUser()->get('id')
+                            ]);
+
                         }
                     }
                 }
@@ -425,5 +424,17 @@ class Relation extends Base
                 }
             }
         }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('pseudoTransactionManager');
+    }
+
+    protected function getPseudoTransactionManager(): PseudoTransactionManager
+    {
+        return $this->getInjection('pseudoTransactionManager');
     }
 }

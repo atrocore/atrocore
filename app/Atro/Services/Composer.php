@@ -135,9 +135,6 @@ class Composer extends HasContainer
         return $output;
     }
 
-    /**
-     * @return array
-     */
     public function checkUpdate(): array
     {
         /**
@@ -152,17 +149,7 @@ class Composer extends HasContainer
             ];
         }
 
-        $job = $this
-            ->getEntityManager()
-            ->getRepository('Job')
-            ->select(['id'])
-            ->where([
-                'status'        => ['Pending', 'Running'],
-                'type!='        => null,
-                'executeTime<=' => (new \DateTime())->modify('+2 minutes')->format('Y-m-d H:i:s')
-            ])
-            ->findOne();
-        if (!empty($job)) {
+        if ($this->jobManagerRunning()) {
             return [
                 'status'  => false,
                 'message' => $this->translate('jobManagerRunning', 'labels', 'Composer')
@@ -175,13 +162,24 @@ class Composer extends HasContainer
         ];
     }
 
-    /**
-     * Run update
-     *
-     * @return bool
-     */
+    public function jobManagerRunning(): bool
+    {
+        $job = $this
+            ->getEntityManager()
+            ->getRepository('Job')
+            ->select(['id'])
+            ->where(['status' => 'Running'])
+            ->findOne();
+
+        return !empty($job);
+    }
+
     public function runUpdate(): bool
     {
+        if ($this->jobManagerRunning()) {
+            throw new BadRequest($this->translate('jobManagerRunning', 'labels', 'Composer'));
+        }
+
         file_put_contents(Application::COMPOSER_LOG_FILE, $this->getUser()->get('id'));
 
         return true;
