@@ -1,6 +1,5 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-table",
   "dynamicLogic": {
     "fields": {
       "type": {

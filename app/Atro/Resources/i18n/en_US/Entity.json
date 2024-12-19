@@ -1,8 +1,10 @@
 {
   "fields": {
-    "name": "Label",
-    "namePlural": "Label Plural",
-    "disabled": "Disabled"
+    "name": "Name Singular",
+    "namePlural": "Name Plural",
+    "disabled": "Disabled",
+    "hasArchive": "Archivable",
+    "hasActive": "Activatable"
   },
   "options": {
     "type": {

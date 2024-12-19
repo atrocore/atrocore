@@ -29,6 +29,14 @@
           "name": "description",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "hasArchive"
+        },
+        {
+          "name": "hasActive"
+        }
       ]
     ]
   }
