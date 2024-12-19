@@ -102,12 +102,11 @@ class Composer extends AbstractController
         // prepare data
         $data = Json::decode(Json::encode($data), true);
 
-        if(empty($data['version'])) {
-            throw new Exceptions\BadRequest();
-        }
-
         if (!empty($data['id'])) {
-            return $this->getComposerService()->updateModule($data['id'], $data['version']);
+            // prepare version
+            $version = (!empty($data['version'])) ? $data['version'] : null;
+
+            return $this->getComposerService()->updateModule($data['id'], $version);
         }
 
         throw new Exceptions\NotFound();
