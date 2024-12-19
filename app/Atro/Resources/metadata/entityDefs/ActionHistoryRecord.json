@@ -5,6 +5,7 @@
             "index": true
         },
         "targetType": {
+            "type": "enum",
             "view": "views/action-history-record/fields/target-type",
             "translation": "Global.scopeNames"
         },
