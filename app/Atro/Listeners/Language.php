@@ -33,6 +33,14 @@ class Language extends AbstractListener
                         continue;
                     }
 
+                    if (!empty($fieldDefs['linkToRelationEntity']) && empty($data[$locale][$entity]['fields'][$field])) {
+                        $fieldLabel = $this->getLabel($data, $locale, 'Global', $fieldDefs['linkToRelationEntity'], 'scopeNamesPlural');
+                        $relationEntity = $this->getMetadata()->get(['entityDefs', $entity, 'links', $field, 'entity']);
+                        $fieldLabel1 = $this->getLabel($data, $locale, 'Global', $relationEntity, 'scopeNames');
+
+                        $data[$locale][$entity]['fields'][$field] = "$fieldLabel ($fieldLabel1)";
+                    }
+
                     // add translate for relation virtual field
                     if (!isset($data[$locale][$entity]['fields'][$field]) && !empty($relData = Relation::isVirtualRelationField($field))) {
                         $data[$locale][$entity]['fields'][$field] = $data[$locale][$relData['relationName']]['fields'][$relData['fieldName']] ?? $relData['fieldName'];
@@ -64,18 +72,6 @@ class Language extends AbstractListener
                                 $data[$locale][$entity]['fields'][$field . 'To'] .= ' ' . $typeLabel;
                             }
                             break;
-                    }
-
-                    if (!empty($fieldDefs['relationshipFilterField']) && empty($data[$locale][$entity]['fields'][$field])) {
-                        if (!empty($data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
-                            $filterEntity = $data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']];
-                        } elseif (!empty($data['en_US']['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
-                            $filterEntity = $data['en_US']['Global']['scopeNamesPlural'][$fieldDefs['entity']];
-                        } else {
-                            $filterEntity = $fieldDefs['entity'];
-                        }
-
-                        $data[$locale][$entity]['fields'][$field] = $filterEntity;
                     }
 
                     if (!empty($fieldDefs['unitField'])) {
