@@ -92,6 +92,28 @@
             }
           ]
         }
+      },
+      "clearDeletedAfterDays": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      },
+      "autoDeleteAfterDays": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
       }
     }
   }

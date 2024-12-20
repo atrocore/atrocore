@@ -64,6 +64,14 @@
       "type": "bool",
       "tooltip": true
     },
+    "clearDeletedAfterDays": {
+      "type": "int",
+      "tooltip": true
+    },
+    "autoDeleteAfterDays": {
+      "type": "int",
+      "tooltip": true
+    },
     "description": {
       "type": "text"
     },

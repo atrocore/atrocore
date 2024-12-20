@@ -15,7 +15,9 @@
     "statusField": "Status Field",
     "kanbanViewMode": "Kanban View",
     "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
-    "deleteWithoutConfirmation": "Delete without confirmation"
+    "deleteWithoutConfirmation": "Delete without confirmation",
+    "autoDeleteAfterDays": "Auto-delete period, in days",
+    "clearDeletedAfterDays": "Permanent deletion period, days"
   },
   "options": {
     "type": {

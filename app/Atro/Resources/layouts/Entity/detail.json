@@ -84,6 +84,14 @@
       ],
       [
         {
+          "name": "clearDeletedAfterDays"
+        },
+        {
+          "name": "autoDeleteAfterDays"
+        }
+      ],
+      [
+        {
           "name": "hideFieldTypeFilters"
         },
         false
