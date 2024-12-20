@@ -166,7 +166,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 });
             }
 
-            if(!this.getMetadata().get(['scopes', scope, 'bookmarkDisabled'])) {
+            if(!this.getMetadata().get(['scopes', scope, 'bookmarkDisabled']) && this.getAcl().check('Bookmark', 'create')) {
                 list.push({
                     action: 'bookmark',
                     label: this.model.get('bookmarkId') ? 'Unbookmark' : 'Bookmark',

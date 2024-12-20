@@ -49,7 +49,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 userId: this.getUser().id,
                 logoSrc: this.getLogoSrc(),
                 hideFeedbackIcon: !!this.getPreferences().get('hideFeedbackIcon'),
-                showBookmarked: true
+                showBookmarked: this.getAcl().check('Bookmark', 'read')
             };
         },
 
