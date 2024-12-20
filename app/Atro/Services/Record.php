@@ -213,7 +213,7 @@ class Record extends RecordService
 
     public function prepareEntityForOutput(Entity $entity)
     {
-        if (!empty($this->getMemoryStorage()->get('exportJobId')) && !empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
+        if (!empty($this->getMemoryStorage()->get('exportJobId')) || !empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
             return;
         }
 
