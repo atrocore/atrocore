@@ -144,6 +144,10 @@
     "streamDisabled": {
       "type": "bool"
     },
+    "isCustom": {
+      "type": "bool",
+      "readOnly": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
