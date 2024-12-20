@@ -9,9 +9,7 @@
     </h3>
 </div>
 
-<div class="button-container">
-    <button class="btn btn-primary" data-action="createEntity">{{translate 'Create Entity' scope='Admin'}}</button>
-</div>
+<div class="button-container"></div>
 
 <table class="table table-hover">
     <thead>
@@ -49,13 +47,7 @@
             <a href="#Admin/linkManager/scope={{name}}">{{translate 'Relationships' scope='EntityManager'}}</a>
             {{/if}}
         </td>
-        <td align="right" width="120">
-            {{#if customizable}}
-            <a href="javascript:" data-action="editEntity" data-scope="{{name}}" title="{{translate 'Edit'}}">
-                {{translate 'Edit'}}
-            </a>
-            {{/if}}
-        </td>
+        <td align="right" width="120"></td>
         <td class="cell" align="right" width="120" data-name="buttons">
             {{#if customizable}}
             {{#if isRemovable}}

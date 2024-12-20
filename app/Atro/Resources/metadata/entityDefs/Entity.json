@@ -82,16 +82,20 @@
       "view": "views/admin/entity-manager/fields/duplicatable-relations"
     },
     "hasOwner": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "hasAssignedUser": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "hasTeam": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "hasAccount": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "multiParents": {
       "type": "bool"

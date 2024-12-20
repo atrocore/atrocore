@@ -57,6 +57,10 @@
     "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time.",
     "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
     "unInheritedFields": "Values for these fields will not be inherited from parent item.",
-    "unInheritedRelations": "Relations with these entities will not be inherited from parent item."
+    "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",
+    "hasAssignedUser": "Show Assigned User in Access Management",
+    "hasTeam": "Show Teams in Access Management",
+    "hasAccount": "Show Accounts in Access Management",
+    "hasOwner": "Show Owner in Access Management"
   }
 }

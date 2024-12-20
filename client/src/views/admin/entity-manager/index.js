@@ -48,13 +48,6 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
         },
 
         events: {
-            'click a[data-action="editEntity"]': function (e) {
-                var scope = $(e.currentTarget).data('scope');
-                this.editEntity(scope);
-            },
-            'click button[data-action="createEntity"]': function (e) {
-                this.createEntity();
-            },
             'click [data-action="removeEntity"]': function (e) {
                 var scope = $(e.currentTarget).data('scope');
                 this.confirm(this.translate('confirmation', 'messages'), function () {
@@ -118,40 +111,6 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
 
             this.setupScopeData();
 
-        },
-
-        createEntity: function () {
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {}, function (view) {
-                view.render();
-
-                this.listenTo(view, 'after:save', function () {
-                    this.clearView('edit');
-                    this.setupScopeData();
-                    this.render();
-                }, this);
-
-                this.listenTo(view, 'close', function () {
-                    this.clearView('edit');
-                }, this);
-            }, this);
-        },
-
-        editEntity: function (scope) {
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {
-                scope: scope
-            }, function (view) {
-                view.render();
-
-                this.listenTo(view, 'after:save', function () {
-                    this.clearView('edit');
-                    this.setupScopeData();
-                    this.render();
-                }, this);
-
-                this.listenTo(view, 'close', function () {
-                    this.clearView('edit');
-                }, this);
-            }, this);
         },
 
         removeEntity: function (scope) {
