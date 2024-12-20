@@ -36,6 +36,13 @@
       "type": "varchar",
       "view": "views/admin/entity-manager/fields/sort-by"
     },
+    "sortDirection": {
+      "type": "enum",
+      "options": [
+        "asc",
+        "desc"
+      ]
+    },
     "description": {
       "type": "text"
     },

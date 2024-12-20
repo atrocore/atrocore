@@ -52,7 +52,9 @@
         {
           "name": "sortBy"
         },
-        false
+        {
+          "name": "sortDirection"
+        }
       ],
       [
         {

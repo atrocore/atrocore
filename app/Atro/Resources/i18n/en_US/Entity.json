@@ -9,13 +9,18 @@
     "streamDisabled": "Disable Track changes",
     "iconClass": "Icon",
     "color": "Color",
-    "sortBy": "Default Order (field)"
+    "sortBy": "Default Order (field)",
+    "sortDirection": "Default Order (direction)"
   },
   "options": {
     "type": {
       "Base": "Base",
       "Hierarchy": "Hierarchy",
       "ReferenceData": "Reference Data"
+    },
+    "sortDirection": {
+      "asc": "Ascending",
+      "desc": "Descending"
     }
   },
   "labels": {
