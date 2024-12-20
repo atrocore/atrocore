@@ -42,7 +42,8 @@ class Entity extends ReferenceData
                 'code'       => $code,
                 'name'       => $this->getInjection('language')->translate($code, 'scopeNames'),
                 'namePlural' => $this->getInjection('language')->translate($code, 'scopeNamesPlural'),
-                'iconClass'  => $this->getMetadata()->get(['clientDefs', $code, 'iconClass'])
+                'iconClass'  => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
+                'color'      => $this->getMetadata()->get(['clientDefs', $code, 'color'])
             ]);
         }
 

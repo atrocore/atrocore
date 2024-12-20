@@ -29,6 +29,9 @@
       "type": "varchar",
       "view": "views/admin/entity-manager/fields/icon-class"
     },
+    "color": {
+      "type": "color"
+    },
     "description": {
       "type": "text"
     },
