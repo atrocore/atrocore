@@ -164,7 +164,7 @@ Espo.define('views/main', 'view', function (Dep) {
             }.bind(this));
         },
 
-        addMenuItem: function (type, item, toBeginnig, doNotReRender) {
+        addMenuItem: function (type, item, toBeginnig, doNotReRender, replace) {
             item.name = item.name || item.action;
             var name = item.name;
 
@@ -175,15 +175,19 @@ Espo.define('views/main', 'view', function (Dep) {
                     return;
                 }
             }, this);
-            if (~index) {
-                this.menu[type].splice(index, 1);
-            }
 
-            var method = 'push';
-            if (toBeginnig) {
-                method  = 'unshift';
+            if (~index && replace) {
+                this.menu[type].splice(index, 1, item);
+            }else{
+                if(~index){
+                    this.menu[type].splice(index, 1);
+                }
+                var method = 'push';
+                if (toBeginnig) {
+                    method  = 'unshift';
+                }
+                this.menu[type][method](item);
             }
-            this.menu[type][method](item);
 
             if (!doNotReRender && this.isRendered()) {
                 this.getView('header').reRender();
