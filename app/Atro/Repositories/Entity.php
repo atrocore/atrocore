@@ -18,6 +18,10 @@ use Espo\ORM\Entity as OrmEntity;
 
 class Entity extends ReferenceData
 {
+    public const SYSTEM_FIELDS = ['id', 'code'];
+    public const CLIENT_DEFS_FIELDS = ['iconClass', 'color'];
+    public const LANGUAGE_FIELDS = ['name', 'namePlural'];
+
     protected function getAllItems(array $params = []): array
     {
         $boolFields = [];
@@ -40,8 +44,8 @@ class Entity extends ReferenceData
             $items[] = array_merge($row, [
                 'id'         => $code,
                 'code'       => $code,
-                'name'       => $this->getInjection('language')->translate($code, 'scopeNames'),
-                'namePlural' => $this->getInjection('language')->translate($code, 'scopeNamesPlural'),
+                'name'       => $this->getLanguage()->translate($code, 'scopeNames'),
+                'namePlural' => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
                 'iconClass'  => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
                 'color'      => $this->getMetadata()->get(['clientDefs', $code, 'color'])
             ]);
@@ -57,31 +61,69 @@ class Entity extends ReferenceData
 
     public function updateEntity(OrmEntity $entity): bool
     {
-        $customScopeData = [];
-        $customFile = "data/metadata/scopes/{$entity->get('code')}.json";
-        if (file_exists($customFile)) {
-            $customScopeData = json_decode(file_get_contents($customFile), true);
-        }
+        $saveMetadata = false;
+        $saveLanguage = false;
+
+        $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
 
         $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
-        $loadedScopeData = $loadedData['scopes'][$entity->get('code')] ?? $customScopeData;
 
-        $diff = [];
         foreach ($entity->toArray() as $field => $value) {
-            if (in_array($field, ['id', 'code', 'name', 'namePlural'])) {
+            if (!$entity->isAttributeChanged($field) || in_array($field, self::SYSTEM_FIELDS)) {
                 continue;
             }
-            if (!array_key_exists($field, $loadedScopeData) || $value !== $loadedScopeData[$field]) {
-                $diff[$field] = $value;
+
+            if (in_array($field, self::CLIENT_DEFS_FIELDS)) {
+                $loadedVal = $loadedData['clientDefs'][$entity->get('code')][$field] ?? null;
+                if ($loadedVal === $entity->get($field)) {
+                    $this->getMetadata()->delete('clientDefs', $entity->get('code'), [$field]);
+                } else {
+                    $this->getMetadata()->set('clientDefs', $entity->get('code'), [$field => $entity->get($field)]);
+                }
+                $saveMetadata = true;
+            } elseif (in_array($field, self::LANGUAGE_FIELDS)) {
+                switch ($field) {
+                    case 'name':
+                        $this->getLanguage()
+                            ->set('Global', 'scopeNames', $entity->get('code'), $entity->get($field));
+                        if ($isCustom) {
+                            $this->getBaseLanguage()
+                                ->set('Global', 'scopeNames', $entity->get('code'), $entity->get($field));
+                        }
+                        break;
+                    case 'namePlural':
+                        $this->getLanguage()
+                            ->set('Global', 'scopeNamesPlural', $entity->get('code'), $entity->get($field));
+                        if ($isCustom) {
+                            $this->getBaseLanguage()
+                                ->set('Global', 'scopeNamesPlural', $entity->get('code'), $entity->get($field));
+                        }
+                        break;
+                }
+                $saveLanguage = true;
+            } else {
+                $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
+                if ($loadedVal === $entity->get($field)) {
+                    $this->getMetadata()->delete('scopes', $entity->get('code'), [$field]);
+                } else {
+                    $this->getMetadata()->set('scopes', $entity->get('code'), [$field => $entity->get($field)]);
+                }
+                $saveMetadata = true;
             }
         }
 
-        if (!empty($loadedScopeData['module']) && $loadedScopeData['module'] === 'Custom') {
-            $diff = array_merge($customScopeData, $diff);
+        if ($saveMetadata) {
+            $this->getMetadata()->save();
         }
 
-        $customDataJson = json_encode($diff, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        file_put_contents($customFile, $customDataJson);
+        if ($saveLanguage) {
+            $this->getLanguage()->save();
+            if ($isCustom) {
+                if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
+                    $this->getBaseLanguage()->save();
+                }
+            }
+        }
 
         return true;
     }
@@ -90,7 +132,6 @@ class Entity extends ReferenceData
     {
         return true;
     }
-
 
     protected function saveDataToFile(array $data): bool
     {
@@ -102,5 +143,16 @@ class Entity extends ReferenceData
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('baseLanguage');
+    }
+
+    protected function getLanguage(): \Atro\Core\Utils\Language
+    {
+        return $this->getInjection('language');
+    }
+
+    protected function getBaseLanguage(): \Atro\Core\Utils\Language
+    {
+        return $this->getInjection('baseLanguage');
     }
 }
