@@ -185,6 +185,7 @@ class Record extends RecordService
         if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled'])) {
             $entityByIds = [];
             foreach ($collection as $entity) {
+                $entity->set('bookmarkId', null);
                 $entityByIds[$entity->get('id')] = $entity;
             }
 
@@ -209,7 +210,7 @@ class Record extends RecordService
     {
         parent::prepareEntityForOutput($entity);
 
-        if(!$entity->has('bookmarkId')) {
+        if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) && !$entity->has('bookmarkId')) {
             $bookmarked =  $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('id')
                 ->from('bookmark')
