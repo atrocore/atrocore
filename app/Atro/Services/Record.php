@@ -181,11 +181,16 @@ class Record extends RecordService
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
+        if (!empty($this->getMemoryStorage()->get('exportJobId')) || $this->isPseudoTransaction() || empty($collection[0])) {
+            return;
+        }
+
         parent::prepareCollectionForOutput($collection, $selectParams);
+
         if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled'])) {
             $entityByIds = [];
             foreach ($collection as $entity) {
-                $entity->set('bookmarkId', null);
+                $entity->bookmarkIdLoaded = true;
                 $entityByIds[$entity->get('id')] = $entity;
             }
 
@@ -208,9 +213,13 @@ class Record extends RecordService
 
     public function prepareEntityForOutput(Entity $entity)
     {
+        if (!empty($this->getMemoryStorage()->get('exportJobId')) && !empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
+            return;
+        }
+
         parent::prepareEntityForOutput($entity);
 
-        if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) && !$entity->has('bookmarkId')) {
+        if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) && empty($entity->bookmarkIdLoaded)) {
             $bookmarked =  $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('id')
                 ->from('bookmark')
@@ -222,6 +231,7 @@ class Record extends RecordService
                 ->fetchAssociative();
 
             $entity->set('bookmarkId', $bookmarked['id'] ?? null);
+            $entity->bookmarkIdLoaded = true;
         }
     }
 }
