@@ -67,7 +67,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
         kanban: function () {
             this.getCollection(function (collection) {
-                this.main(this.getViewName('list-tree'), {
+                this.main(this.getViewName('list'), {
                     scope: this.name,
                     collection: collection,
                     params: {
@@ -103,7 +103,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     collection.abortLastFetch();
                 }, this);
 
-                this.main(this.getViewName('list-tree'), {
+                this.main(this.getViewName('list'), {
                     scope: this.name,
                     collection: collection,
                     params: options
@@ -116,7 +116,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         createViewView: function (options, model) {
-            this.main(this.getViewName('detail-tree'), {
+            this.main(this.getViewName('detail'), {
                 scope: this.name,
                 model: model,
                 returnUrl: options.returnUrl,

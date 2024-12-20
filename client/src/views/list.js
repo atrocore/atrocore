@@ -186,6 +186,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             });
 
             this.getStorage().set('list-view', this.scope, this.viewMode);
+
+            this.setupTreePanel();
         },
 
         actionDynamicEntityAction(data) {
@@ -329,6 +331,14 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             this.collection.sortBy = this.defaultSortBy;
             this.collection.asc = this.defaultAsc;
             this.getStorage().clear('listSorting', this.collection.name);
+
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
+
+            let treeView = this.getView('treePanel');
+            if (treeView) {
+                treeView.rebuildTree();
+            }
         },
 
         getSearchDefaultData: function () {
@@ -372,6 +382,16 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         afterRender: function () {
+            let treePanelView = this.getView('treePanel');
+
+            this.collection.isFetched = false;
+            this.clearView('list');
+
+            if (treePanelView && this.getStorage().get('reSetupSearchManager', treePanelView.treeScope)) {
+                this.getStorage().clear('reSetupSearchManager', treePanelView.treeScope);
+                this.setupSearchManager();
+            }
+
             if (!this.hasView('list')) {
                 this.loadList();
             }
@@ -388,6 +408,13 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 }
                 button.addClass('btn-primary');
             }
+
+            let observer = new ResizeObserver(() => {
+                if (treePanelView) {
+                    this.onTreeResize(treePanelView.$el.outerWidth());
+                }
+            });
+            observer.observe($('#content').get(0));
         },
 
         loadList: function () {
@@ -538,6 +565,199 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             router.navigate(url, {trigger: false});
             router.dispatch(this.scope, 'create', options);
+        },
+
+        isTreeAllowed() {
+            let result = false;
+
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
+
+            if(!treeScopes.includes(this.scope) && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                treeScopes.includes(this.scope);
+            }
+
+            treeScopes.forEach(scope => {
+                if (this.getAcl().check(scope, 'read')) {
+                    result = true;
+                    if (!this.getStorage().get('treeScope', this.scope)) {
+                        this.getStorage().set('treeScope', this.scope, scope);
+                    }
+                }
+            });
+
+            return result;
+        },
+
+        setupTreePanel(scope) {
+            if (!this.isTreeAllowed() || this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)) {
+                return;
+            }
+
+            this.createView('treePanel', 'views/record/panels/tree-panel', {
+                el: `${this.options.el} .catalog-tree-panel`,
+                scope: scope ? scope : this.scope,
+                model: this.model,
+                collection: this.collection
+            }, view => {
+                view.listenTo(view, 'select-node', data => {
+                    this.selectNode(data);
+                });
+                view.listenTo(view, 'tree-load', treeData => {
+                    this.treeLoad(view, treeData);
+                });
+                view.listenTo(view, 'tree-refresh', () => {
+                    view.treeRefresh();
+                });
+                view.listenTo(view, 'tree-reset', () => {
+                    this.treeReset(view);
+                });
+                this.listenTo(view, 'tree-width-changed', function (width) {
+                    this.onTreeResize(width)
+                });
+                this.listenTo(view, 'tree-width-unset', function () {
+                    if ($('.catalog-tree-panel').length) {
+                        $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
+                        $('.advanced-filters').css({'width': 'unset'});
+                        $('#tree-list-table.list-container').css({'width': 'unset', 'marginLeft': 'unset'});
+                    }
+                })
+            });
+
+            this.modifyCollectionForSelectedNode()
+
+            this.listenTo(this, 'record-list-rendered', (recordView) => {
+                this.listenTo(recordView, `bookmarked-${this.scope}`, (_) => {
+                    this.reloadBookmarks();
+                });
+
+                this.listenTo(recordView, `unbookmarked-${this.scope}`, (_) => {
+                    this.reloadBookmarks();
+                });
+            });
+        },
+
+        treeLoad(view, treeData) {
+            view.clearStorage();
+
+            if (view.model && view.model.get('id')) {
+                let route = [];
+                view.prepareTreeRoute(treeData, route);
+            }
+        },
+
+        modifyCollectionForSelectedNode() {
+            const id = this.getStorage().get('selectedNodeId', this.scope);
+            if (!id) {
+                this.collection.whereAdditional = []
+                return
+            }
+            const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
+
+            this.collection.whereAdditional = [
+                {
+                    "type": "bool",
+                    "value": [
+                        filterName
+                    ],
+                    "data": {
+                        [filterName]: id
+                    }
+                }
+            ]
+
+            this.collection.where = this.collection.where.filter(item => !item['value'] || item['value'][0] !== filterName)
+        },
+
+        selectTreeNode() {
+            const id = this.getStorage().get('selectedNodeId', this.scope);
+            const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
+
+            this.getView('treePanel').selectTreeNode(id, route);
+
+            this.notify('Please wait...');
+            this.modifyCollectionForSelectedNode()
+
+            this.collection.fetch().then(() => this.notify(false));
+        },
+
+        unSelectTreeNode(id) {
+            this.getView('treePanel').unSelectTreeNode(id);
+
+            this.notify('Please wait...');
+
+            this.modifyCollectionForSelectedNode()
+
+            this.collection.fetch().then(() => this.notify(false));
+        },
+
+        treeReset(view) {
+            this.notify('Please wait...');
+
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
+
+            this.getStorage().clear('treeSearchValue', view.treeScope);
+            view.toggleVisibilityForResetButton();
+
+            this.getView('search').silentResetFilters();
+        },
+
+        selectNode(data) {
+            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
+                window.location.href = `/#${this.scope}/view/${data.id}`;
+                return;
+            }
+
+            if (data.id === this.getStorage().get('selectedNodeId', this.scope)) {
+                this.getStorage().clear('selectedNodeId', this.scope);
+                this.getStorage().clear('selectedNodeRoute', this.scope);
+                this.unSelectTreeNode(data.id);
+
+                return;
+            }
+
+            this.getStorage().set('selectedNodeId', this.scope, data.id);
+            this.getStorage().set('selectedNodeRoute', this.scope, data.route);
+
+            this.selectTreeNode();
+        },
+
+        parseRoute(routeStr) {
+            let route = [];
+            (routeStr || '').split('|').forEach(item => {
+                if (item) {
+                    route.push(item);
+                }
+            });
+
+            return route;
+        },
+
+        onTreeResize(width) {
+            const content = $('#content');
+            const listContainer = content.find('#main > #tree-list-table.list-container');
+
+            if ($('.catalog-tree-panel').length && listContainer.length) {
+                const main = content.find('#main');
+
+                const header = content.find('.page-header');
+                const filters = content.find('.advanced-filters');
+
+                header.outerWidth(main.width() - width);
+                header.css('marginLeft', width + 'px');
+
+                filters.outerWidth(main.width() - width);
+
+                listContainer.outerWidth(main.width() - width);
+                listContainer.css('marginLeft', (width - 1) + 'px');
+            }
+        },
+
+        reloadBookmarks() {
+            let treePanelView = this.getView('treePanel');
+            if(treePanelView && treePanelView.treeScope === 'Bookmark') {
+                treePanelView.rebuildTree();
+            }
         }
 
     });
