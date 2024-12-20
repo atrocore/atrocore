@@ -61,14 +61,14 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         navigateButtonsDisabled: false,
 
         navigationButtons: {
-            next: {
-                html: '<span class="fas fa-chevron-right"></span>',
-                title: 'Next Entry',
-                disabled: true
-            },
             previous: {
                 html: '<span class="fas fa-chevron-left"></span>',
                 title: 'Previous Entry',
+                disabled: true
+            },
+            next: {
+                html: '<span class="fas fa-chevron-right"></span>',
+                title: 'Next Entry',
                 disabled: true
             }
         },
@@ -94,18 +94,24 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 }, this);
                 callback(attributes);
             });
-
             this.listenTo(this.model, 'updateRelationshipPanel', link => {
                 this.updateRelationshipPanel(link);
             });
 
+
             if (!this.getMetadata().get('scopes.' + this.scope + '.streamDisabled')) {
-                if (this.model.has('isFollowed')) {
-                    this.handleFollowButton();
-                }
+                this.handleFollowButton(!this.model.has('isFollowed'));
 
                 this.listenTo(this.model, 'change:isFollowed', function () {
                     this.handleFollowButton();
+                }, this);
+            }
+
+            if (!this.getMetadata().get('scopes.' + this.scope + '.bookmarkDisabled')) {
+                this.handleBookmarkButton();
+
+                this.listenTo(this.model, 'change:bookmarkId', function () {
+                    this.handleBookmarkButton();
                 }, this);
             }
 
@@ -124,48 +130,44 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }
 
             if (this.navigationButtons) {
-                const header = $('.header-items');
+                let navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
 
-                if (header.length) {
-                    let navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
+                if (navigateButtonsEnabled) {
+                    this.navigationButtons.previous.disabled = true;
+                    this.navigationButtons.next.disabled = true;
 
-                    if (navigateButtonsEnabled) {
-                        this.navigationButtons.previous.disabled = true;
-                        this.navigationButtons.next.disabled = true;
+                    if (this.indexOfRecord > 0) {
+                        this.navigationButtons.previous.disabled = false;
+                    }
 
-                        if (this.indexOfRecord > 0) {
-                            this.navigationButtons.previous.disabled = false;
-                        }
-
-                        if (this.indexOfRecord < this.model.collection.total - 1) {
+                    if (this.indexOfRecord < this.model.collection.total - 1) {
+                        this.navigationButtons.next.disabled = false;
+                    } else {
+                        if (this.model.collection.total === -1) {
                             this.navigationButtons.next.disabled = false;
-                        } else {
-                            if (this.model.collection.total === -1) {
+                        } else if (this.model.collection.total === -2) {
+                            if (this.indexOfRecord < this.model.collection.length - 1) {
                                 this.navigationButtons.next.disabled = false;
-                            } else if (this.model.collection.total === -2) {
-                                if (this.indexOfRecord < this.model.collection.length - 1) {
-                                    this.navigationButtons.next.disabled = false;
-                                }
                             }
                         }
-
-                        if (this.navigationButtons.previous.disabled && this.navigationButtons.next.disabled) {
-                            navigateButtonsEnabled = false;
-                        }
                     }
 
-                    if (navigateButtonsEnabled) {
-                        for (const [key, data] of Object.entries(this.navigationButtons)) {
-                            this.addMenuItem('buttons', {
-                                name: key,
-                                html: data.html,
-                                style: data.disabled ? 'default disabled' : 'default',
-                                action: key,
-                                title: this.translate(data.title)
-                            }, true)
-                        }
+                    if (this.navigationButtons.previous.disabled && this.navigationButtons.next.disabled) {
+                        navigateButtonsEnabled = false;
                     }
                 }
+
+                for (const [key, data] of Object.entries(this.navigationButtons)) {
+                    this.removeMenuItem(key);
+                    this.addMenuItem('buttons', {
+                        name: key,
+                        html: data.html,
+                        style: data.disabled ? 'default disabled' : 'default',
+                        action: key,
+                        title: this.translate(data.title)
+                    })
+                }
+
             }
 
             this.listenTo(this.model, 'after:change-mode', (mode) => this.mode = mode)
@@ -394,25 +396,23 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         addUnfollowButtonToMenu: function () {
-            this.removeMenuItem('follow', true);
-
             this.addMenuItem('buttons', {
-                name: 'unfollow',
-                label: 'Followed',
-                style: 'success',
-                action: 'unfollow'
+                name: 'following',
+                html: '<span class="fas fa-bell"></span>',
+                title: 'Your are following, Click to unfollow',
+                action: 'unfollow',
+                cssStyle: 'margin: 0 10px 0 0px;color:var(--secondary-color);'
             }, true);
         },
 
         addFollowButtonToMenu: function () {
-            this.removeMenuItem('unfollow', true);
-
             this.addMenuItem('buttons', {
-                name: 'follow',
-                label: 'Follow',
+                name: 'following',
+                title: 'Click to follow',
                 style: 'default',
-                html: '<span class="fas fa-arrow-right fa-sm"></span> ' + this.translate('Follow'),
-                action: 'follow'
+                html: '<span class="fas fa-bell"></span>',
+                action: 'follow',
+                cssStyle: 'margin: 0 10px 0 0px;'
             }, true);
         },
 
@@ -438,14 +438,92 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
         },
 
-        handleFollowButton: function () {
-            if (this.model.get('isFollowed')) {
+        handleFollowButton: function (shouldBeHidden = false) {
+            if(shouldBeHidden) {
+                this.addMenuItem('buttons', {
+                    name: 'following',
+                    style: 'hidden',
+                }, true);
+            }else if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
             } else {
                 if (this.getAcl().checkModel(this.model, 'stream')) {
                     this.addFollowButtonToMenu();
                 }
             }
+        },
+
+        handleBookmarkButton: function () {
+            let data = {};
+            if (this.model.get('bookmarkId')) {
+                if (this.getAcl().check('Bookmark', 'delete')) {
+                    data =  {
+                        name: 'bookmarking',
+                        title: 'Bookmarked, Click to unbookmark',
+                        style: 'default',
+                        html: '<span class="fas fa-bookmark"></span>',
+                        action: 'unbookmark',
+                        cssStyle: 'margin: 0 10px 0 0px;color:gold;'
+                    }
+                }
+
+            } else {
+                if (this.getAcl().check('Bookmark', 'create')) {
+                    data =  {
+                        name: 'bookmarking',
+                        title: 'Click to bookmark',
+                        style: 'default',
+                        html: '<span class="fas fa-bookmark"></span>',
+                        action: 'bookmark',
+                        cssStyle: 'margin: 0 10px 0 0px'
+                    }
+                }
+            }
+
+            this.addMenuItem('buttons', data, true);
+        },
+
+        actionBookmark: function() {
+            $el = this.$el.find('[data-action="bookmark"]');
+            $el.addClass('disabled');
+            this.notify(this.translate('Bookmarking') + '...');
+            $.ajax({
+                url: 'Bookmark',
+                type: 'POST',
+                data: JSON.stringify({
+                    entityType: this.scope,
+                    entityId: this.model.id
+                }),
+                success: (result) => {
+                    this.model.set('bookmarkId', result.id)
+                    this.notify(this.translate('Done'), 'success')
+                    $el.removeClass('disabled');
+                },
+                error: () => {
+                    $el.removeClass('disabled');
+                }
+            });
+        },
+
+        actionUnbookmark: function() {
+            $el = this.$el.find('[data-action="unbookmark"]');
+            $el.addClass('disabled');
+            this.notify(this.translate('Unbookmarking') + '...');
+            $.ajax({
+                url: `Bookmark/${this.model.get('bookmarkId')}`,
+                type: 'DELETE',
+                headers: {
+                    'permanently': true
+                },
+                success: () => {
+                    this.notify(this.translate('Done'), 'success')
+                    this.model.set('bookmarkId', null);
+                    $el.removeClass('disabled');
+                },
+                error: function () {
+                    $el.removeClass('disabled');
+                },
+            });
         },
 
         actionFollow: function () {

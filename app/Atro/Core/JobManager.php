@@ -32,9 +32,19 @@ class JobManager
 
     public function executeJob(Entity $job): bool
     {
-        // auth as system
-        $auth = new \Espo\Core\Utils\Auth($this->container);
-        $auth->useNoAuth();
+        $userId = $job->get('ownerUserId');
+        if (empty($userId) || $userId == 'system') {
+            $auth = new \Espo\Core\Utils\Auth($this->container);
+            $auth->useNoAuth();
+        } else {
+            $user = $this->getEntityManager()->getEntity('User', $userId);
+            if (empty($user)) {
+                $GLOBALS['log']->error("User $userId not found. Cannot execute job " . $job->get('id'));
+                return false;
+            }
+            $this->getEntityManager()->setUser($user);
+            $this->container->setUser($user);
+        }
 
         $job->set('pid', System::getPid());
         $job->set('startedAt', (new \DateTime())->format('Y-m-d H:i:s'));
