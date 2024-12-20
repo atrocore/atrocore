@@ -293,6 +293,9 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 ).then(results => {
                     let list = results[0].list;
                     let relationList = results[1].list;
+                    let uniqueList = {};
+                    results[0].list.forEach(v => uniqueList[v.id] = v);
+                    list = Object.values(uniqueList)
                     this.linkedEntities = list;
                     list.forEach(item => {
                         this.relationModels[item.id] = [];
@@ -316,7 +319,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
         },
 
         getRelationAdditionalFields() {
-            if (this.relationFields) {
+            if (this.relationFields.length) {
                 return this.relationFields;
             }
 
@@ -327,6 +330,8 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     this.relationFields.push(field);
                 }
             });
+
+            return this.relationFields;
         },
 
         updateBaseUrl() {
