@@ -51,6 +51,16 @@
             }
           ]
         }
+      },
+      "statusField": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
       }
     }
   }

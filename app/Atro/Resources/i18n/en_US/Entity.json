@@ -11,7 +11,8 @@
     "color": "Color",
     "sortBy": "Default Order (field)",
     "sortDirection": "Default Order (direction)",
-    "textFilterFields": "Text Filter Fields"
+    "textFilterFields": "Text Filter Fields",
+    "statusField": "Status Field"
   },
   "options": {
     "type": {
@@ -29,6 +30,7 @@
   },
   "tooltips": {
     "disabled": "Check if you don't need this entity in your system.",
-    "textFilterFields": "Fields used by text search."
+    "textFilterFields": "Fields used by text search.",
+    "statusField": "Updates of this field are logged in stream."
   }
 }

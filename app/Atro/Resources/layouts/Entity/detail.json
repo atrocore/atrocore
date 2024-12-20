@@ -64,6 +64,12 @@
       ],
       [
         {
+          "name": "statusField"
+        },
+        false
+      ],
+      [
+        {
           "name": "hideFieldTypeFilters"
         },
         false
