@@ -41,6 +41,16 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
             this.setupTreePanel();
             this.modifyCollectionForSelectedNode()
+
+            this.listenTo(this, 'record-list-rendered', (recordView) => {
+                this.listenTo(recordView, `bookmarked-${this.scope}`, (_) => {
+                   this.reloadBookmarks();
+                });
+
+                this.listenTo(recordView, `unbookmarked-${this.scope}`, (_) => {
+                    this.reloadBookmarks();
+                });
+            });
         },
 
         afterRender() {
@@ -67,7 +77,12 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         isTreeAllowed() {
             let result = false;
 
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [this.scope];
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
+
+            if(!treeScopes.includes(this.scope) && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                treeScopes.includes(this.scope);
+            }
+
 
             treeScopes.forEach(scope => {
                 if (this.getAcl().check(scope, 'read')) {
@@ -196,7 +211,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         },
 
         selectNode(data) {
-            if (this.getStorage().get('treeScope', this.scope) === this.scope) {
+            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
                 return;
             }
@@ -243,6 +258,13 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
                 listContainer.outerWidth(main.width() - width);
                 listContainer.css('marginLeft', (width - 1) + 'px');
+            }
+        },
+
+        reloadBookmarks() {
+            let treePanelView = this.getView('treePanel');
+            if(treePanelView && treePanelView.treeScope === 'Bookmark') {
+                treePanelView.rebuildTree();
             }
         }
     });

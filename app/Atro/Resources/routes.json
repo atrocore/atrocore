@@ -168,7 +168,8 @@
             "enum": [
               "Created",
               "Updated",
-              "Failed"
+              "Failed",
+              "NotModified"
             ],
             "example": "Created"
           },

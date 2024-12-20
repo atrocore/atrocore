@@ -68,18 +68,13 @@ class Set implements TypeInterface
         /** @var Action $actionService */
         $actionService = $this->getServiceFactory()->create('Action');
 
-        try {
-            if (property_exists($input, 'actionSetLinkerId')) {
-                unset($input->actionSetLinkerId);
-            }
-
-            $input->actionSetLinkerId = $current->get('id');
-
-            $actionService->executeNow($action->get('id'), $input);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("Set Action failed: " . $e->getMessage());
-            return false;
+        if (property_exists($input, 'actionSetLinkerId')) {
+            unset($input->actionSetLinkerId);
         }
+
+        $input->actionSetLinkerId = $current->get('id');
+
+        $actionService->executeNow($action->get('id'), $input);
 
         if (empty($action->get('inBackground')) &&
             (!property_exists($input, 'where') || in_array(['export', 'import', 'synchronization'], $action->get('type'))) &&

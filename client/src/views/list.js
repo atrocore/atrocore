@@ -434,6 +434,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                         view.undelegateEvents();
                         this.clearView('list');
                     }
+                    this.trigger('record-list-rendered', view)
                 }, this);
 
                 view.notify(false);

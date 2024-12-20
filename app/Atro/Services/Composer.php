@@ -363,7 +363,7 @@ class Composer extends HasContainer
         return true;
     }
 
-    public function updateModule(string $id, string $version): bool
+    public function updateModule(string $id, ?string $version): bool
     {
         $name = $this->getComposerName($id);
 
@@ -585,7 +585,7 @@ class Composer extends HasContainer
      *
      * @return bool
      */
-    protected function isVersionValid(string $version): bool
+    protected function isVersionValid(?string $version): bool
     {
         // prepare result
         $result = true;

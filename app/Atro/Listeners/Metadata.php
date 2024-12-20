@@ -503,6 +503,13 @@ class Metadata extends AbstractListener
             }
         }
 
+        $pluralize = function ($word) {
+            if (substr($word, -1) === 'y' && !in_array(substr($word, -2, 1), ['a', 'e', 'i', 'o', 'u'])) {
+                return substr($word, 0, -1) . 'ies';
+            }
+            return substr($word, -1) === 's' ? $word : $word . 's';
+        };
+
         $res = [];
 
         foreach ($relations as $scope => $entityDefs) {
@@ -517,10 +524,22 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
+                $ignoredEntity = $entityName === 'AssociatedProduct' || strpos($entityName, 'Hierarchy') !== false;
+
+                $additionalFields = [];
+                if (!$ignoredEntity && !empty($data['entityDefs'][$entityName]['fields'])) {
+                    $additionalFields = array_filter($data['entityDefs'][$entityName]['fields'], function ($row) {
+                        return empty($row['relationField']) && empty($row['notStorable']);
+                    });
+                }
+
                 // MIDDLE columns
                 if (!empty($relationParams['midKeys'])) {
                     $leftId = $relationParams['midKeys'][0];
                     $left = substr($leftId, 0, -2);
+
+                    $rightId = $relationParams['midKeys'][1];
+                    $right = substr($rightId, 0, -2);
 
                     if ($entityName === 'EntityTeam') {
                         $res[$entityName]['fields'][$leftId] = [
@@ -538,10 +557,28 @@ class Metadata extends AbstractListener
                             'type'   => 'belongsTo',
                             'entity' => $scope
                         ];
-                    }
 
-                    $rightId = $relationParams['midKeys'][1];
-                    $right = substr($rightId, 0, -2);
+                        if (!empty($additionalFields)) {
+                            $relFieldName = $left . ucfirst($pluralize($right));
+                            if (empty($data['entityDefs'][$scope]['fields'][$relFieldName])
+                                && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
+                                $res[$entityName]['links'][$left]['foreign'] = $relFieldName;
+                                $data['entityDefs'][$scope]['fields'][$relFieldName] = [
+                                    'type'                 => 'linkMultiple',
+                                    'linkToRelationEntity' => $relationParams['entity'],
+                                    'layoutDetailDisabled' => true,
+                                    'massUpdateDisabled'   => true,
+                                    'noLoad'               => true
+                                ];
+                                $data['entityDefs'][$scope]['links'][$relFieldName] = [
+                                    'type'    => 'hasMany',
+                                    'foreign' => $left,
+                                    'entity'  => $entityName
+                                ];
+                            }
+
+                        }
+                    }
 
                     $res[$entityName]['fields'][$right] = [
                         'type'          => 'link',
@@ -552,6 +589,26 @@ class Metadata extends AbstractListener
                         'type'   => 'belongsTo',
                         'entity' => $relationParams['entity']
                     ];
+
+                    if (!empty($additionalFields)) {
+                        $relFieldName = $right . ucfirst($pluralize($left));
+                        if (empty($data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName])
+                            && empty($data['entityDefs'][$relationParams['entity']]['links'][$relFieldName])) {
+                            $res[$entityName]['links'][$right]['foreign'] = $relFieldName;
+                            $data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName] = [
+                                'type'                 => 'linkMultiple',
+                                'linkToRelationEntity' => $scope,
+                                'layoutDetailDisabled' => true,
+                                'massUpdateDisabled'   => true,
+                                'noLoad'               => true
+                            ];
+                            $data['entityDefs'][$relationParams['entity']]['links'][$relFieldName] = [
+                                'type'    => 'hasMany',
+                                'foreign' => $right,
+                                'entity'  => $entityName
+                            ];
+                        }
+                    }
 
                     $res[$entityName]['uniqueIndexes']['unique_relation'] = ['deleted', Util::toUnderScore($leftId), Util::toUnderScore($rightId)];
                 }
@@ -1266,6 +1323,7 @@ class Metadata extends AbstractListener
             if(!empty($data['clientDefs'][$entity]['bookmarkDisabled'])) {
                 return;
             }
+            $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
             $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
             $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
                 "type" => "varchar",
