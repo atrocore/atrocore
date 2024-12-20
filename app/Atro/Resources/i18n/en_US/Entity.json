@@ -17,7 +17,8 @@
     "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
     "deleteWithoutConfirmation": "Delete without confirmation",
     "autoDeleteAfterDays": "Auto-delete period, in days",
-    "clearDeletedAfterDays": "Permanent deletion period, days"
+    "clearDeletedAfterDays": "Permanent deletion period, days",
+    "modifiedExtendedRelations": "Relations effecting modification date/time"
   },
   "options": {
     "type": {
@@ -37,6 +38,7 @@
     "disabled": "Check if you don't need this entity in your system.",
     "textFilterFields": "Fields used by text search.",
     "statusField": "Updates of this field are logged in stream.",
-    "deleteWithoutConfirmation": "If checked, the individual record is deleted without user confirmation. Deletion of multiple records is still  to be confirmed."
+    "deleteWithoutConfirmation": "If checked, the individual record is deleted without user confirmation. Deletion of multiple records is still  to be confirmed.",
+    "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time."
   }
 }

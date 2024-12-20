@@ -114,6 +114,21 @@
             }
           ]
         }
+      },
+      "modifiedExtendedRelations": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
       }
     }
   }
