@@ -72,6 +72,12 @@
       ],
       [
         {
+          "name": "kanbanStatusIgnoreList"
+        },
+        false
+      ],
+      [
+        {
           "name": "hideFieldTypeFilters"
         },
         false

@@ -13,7 +13,8 @@
     "sortDirection": "Default Order (direction)",
     "textFilterFields": "Text Filter Fields",
     "statusField": "Status Field",
-    "kanbanViewMode": "Kanban View"
+    "kanbanViewMode": "Kanban View",
+    "kanbanStatusIgnoreList": "Ignored groups in Kanban view"
   },
   "options": {
     "type": {

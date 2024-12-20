@@ -71,6 +71,16 @@
             }
           ]
         }
+      },
+      "kanbanStatusIgnoreList": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "kanbanViewMode"
+            }
+          ]
+        }
       }
     }
   }
