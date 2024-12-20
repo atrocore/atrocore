@@ -8,6 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+
 Espo.define('views/record/compare/fields-panels', 'views/record/base', function (Dep) {
     return Dep.extend({
         template: 'record/compare/fields-panels',
@@ -24,37 +25,55 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
             this.instanceComparison = this.options.instanceComparison;
             this.columns = this.options.columns;
 
-            this.wait(true);
+            // this.wait(true);
+            let allFields = Object.keys(this.model.defs.fields).filter(field =>
+                this.isValidType(this.model.getFieldParam(field, 'type')) && this.isFieldEnabled(this.model, field) && field !== 'id'
+            ).sort((v1, v2) =>
+                this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope))
+            );
 
-            this.getHelper().layoutManager.get(this.scope, 'detail', layout => {
-                if (layout && layout.length) {
-                    this.fieldListPanels = [];
-                    let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
+            allFields.unshift('id');
 
-                    layout.forEach(panel => {
-                        let panelData = {
-                            label: panel.label || panel.customLabel,
-                            fields: []
-                        };
+            this.fieldListPanels = [{
+                label: 'Fields',
+                fields: []
+            }];
 
-                        (panel.rows || []).forEach(row => (row || []).forEach(item => {
-                            if (item.name && !forbiddenFieldList.includes(item.name)) {
-                                let field = this.fieldsArr.filter(f => f.field === item.name)[0]
-                                if (field) {
-                                    panelData.fields.push(field);
-                                }
-                            }
-                        }));
-
-                        this.fieldListPanels.push(panelData);
-                    });
+            allFields.forEach(field => {
+                let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
+                if (!forbiddenFieldList.includes(field)) {
+                    let fieldData = this.fieldsArr.find(el => el.field === field)
+                    this.fieldListPanels[0].fields.push(fieldData);
                 }
-                Dep.prototype.setup.call(this);
-                this.setupFieldList();
-                this.setupBeforeFinal();
-                this.wait(false);
             });
+
+            Dep.prototype.setup.call(this);
+
+            this.setupFieldList();
+            this.setupBeforeFinal();
+            // this.wait(false);
         },
+
+        isValidType(type) {
+          return type && type !== 'linkMultiple';
+        },
+
+        isFieldEnabled(model, name) {
+            if(model.getFieldParam(name, 'notStorable') && !model.getFieldParam(name, 'virtualField')) {
+                return false;
+            }
+
+            const disabledParameters = ['disabled', 'layoutDetailDisabled'];
+
+            for (let param of disabledParameters) {
+                if (model.getFieldParam(name, param)) {
+                    return false
+                }
+            }
+
+            return true;
+        },
+
         data() {
             return {
                 scope: this.scope,
@@ -63,6 +82,7 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                 columnLength: this.columns.length + 1
             }
         },
+
         setupFieldList() {
             this.fieldListPanels.forEach((panel) => {
                 panel.fields.forEach(fieldData => {
@@ -131,6 +151,7 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
             this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
             this.initUiHandler();
         },
+
         hideField: function (name, locked) {
 
             this.recordHelper.setFieldStateParam(name, 'hidden', true);

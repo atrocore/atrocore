@@ -47,9 +47,14 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                     return;
                 }
 
+
                 let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', relationship.name]) ?? {};
                 let relationScope = relationDefs['entity'];
                 let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
+
+                if(inverseRelationType !== relationDefs['type'] && inverseRelationType !== 'hasMany') {
+                    return;
+                }
 
                 let bottomPanelOptions = bottomPanels.find(panel => panel.name === relationship.name);
 

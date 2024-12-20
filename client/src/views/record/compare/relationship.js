@@ -45,33 +45,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
         fetchModelsAndSetup() {
             this.wait(true)
-            let nonComparableFields = this.getMetadata().get('scopes.' + this.relationship.scope + '.nonComparableFields') ?? [];
-
-            this.getHelper().layoutManager.get(this.relationship.scope, 'listSmall', layout => {
-                if (layout && layout.length) {
-                    let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.relationship.scope, 'read');
-                    layout.forEach(item => {
-                        if (item.name && !forbiddenFieldList.includes(item.name) && !nonComparableFields.includes(item.name)) {
-                            this.fields.push(item.name);
-                        }
-                    });
-
-                    let selectField = [];
-
-                    this.fields.forEach(field => {
-                        let fieldType = this.getMetadata().get(['entityDefs', 'Product', 'fields', field, 'type']);
-                        if (fieldType) {
-                            this.getFieldManager().getAttributeList(fieldType, field).forEach(attribute => {
-                                selectField.push(attribute);
-                            });
-                        }
-                    })
-
-                    this.prepareModels(selectField, () => this.setupRelationship(() => this.wait(false)));
-                }else {
-                    this.shouldHide = true;
-                }
-            });
+            let selectField = ['id'];
+            let fieldType = this.getMetadata().get(['entityDefs', 'Product', 'fields', 'name', 'type']);
+            if (fieldType) {
+                selectField.push('name')
+            }
+            this.prepareModels(selectField, () => this.setupRelationship(() => this.wait(false)));
         },
 
         data() {
@@ -306,7 +285,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     promises.push(new Promise(resolve => Promise.all([
                         this.ajaxGetRequest(this.relationship.scope, {
                             select: selectFields.join(','),
-                            maxSize: 20 * this.collection.models.length,
+                            maxSize: 500 * this.collection.models.length,
                             where: [
                                 {
                                     type: 'linkedWith',
@@ -317,7 +296,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                         }),
 
                         this.ajaxGetRequest(relationName, {
-                            maxSize: 20 * this.collection.models.length,
+                            maxSize: 500 * this.collection.models.length,
                             where: [
                                 {
                                     type: 'in',

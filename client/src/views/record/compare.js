@@ -179,6 +179,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 instances: this.instances,
                 columns: this.buildComparisonTableColumn(),
                 distantModels: this.distantModelsAttribute,
+                instanceComparison: this.instanceComparison,
                 el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
             }, view => {
                 view.render();
