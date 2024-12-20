@@ -32,6 +32,10 @@
     "color": {
       "type": "color"
     },
+    "sortBy": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/sort-by"
+    },
     "description": {
       "type": "text"
     },

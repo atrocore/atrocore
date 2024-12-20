@@ -8,7 +8,8 @@
     "hideFieldTypeFilters": "Hide field type filters",
     "streamDisabled": "Disable Track changes",
     "iconClass": "Icon",
-    "color": "Color"
+    "color": "Color",
+    "sortBy": "Default Order (field)"
   },
   "options": {
     "type": {

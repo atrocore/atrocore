@@ -50,6 +50,12 @@
       ],
       [
         {
+          "name": "sortBy"
+        },
+        false
+      ],
+      [
+        {
           "name": "hideFieldTypeFilters"
         },
         false
