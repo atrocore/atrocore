@@ -23,7 +23,14 @@
     "hasAssignedUser": "Assigned User",
     "hasTeam": "Teams",
     "hasAccount": "Accounts",
-    "hasOwner": "Owner"
+    "hasOwner": "Owner",
+    "multiParents": "Multiple Parents",
+    "dragAndDrop": "Drag & Drop",
+    "fieldValueInheritance": "Field Value Inheritance",
+    "unInheritedFields": "Uninherited Fields",
+    "relationInheritance": "Relation Inheritance",
+    "unInheritedRelations": "Uninherited Relations",
+    "disableHierarchy": "Disable Hierarchy"
   },
   "options": {
     "type": {
@@ -38,13 +45,18 @@
   },
   "labels": {
     "Create Entity": "Create Entity",
-    "accessManagement": "Access management"
+    "accessManagement": "Access management",
+    "hierarchyManagement": "Hierarchy Management",
+    "other": "Other"
   },
   "tooltips": {
     "disabled": "Check if you don't need this entity in your system.",
     "textFilterFields": "Fields used by text search.",
     "statusField": "Updates of this field are logged in stream.",
     "deleteWithoutConfirmation": "If checked, the individual record is deleted without user confirmation. Deletion of multiple records is still  to be confirmed.",
-    "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time."
+    "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time.",
+    "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
+    "unInheritedFields": "Values for these fields will not be inherited from parent item.",
+    "unInheritedRelations": "Relations with these entities will not be inherited from parent item."
   }
 }

@@ -93,6 +93,34 @@
     "hasAccount": {
       "type": "bool"
     },
+    "multiParents": {
+      "type": "bool"
+    },
+    "dragAndDrop": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "fieldValueInheritance": {
+      "type": "bool"
+    },
+    "unInheritedFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/un-inherited-fields",
+      "tooltip": true
+    },
+    "relationInheritance": {
+      "type": "bool",
+      "default": false
+    },
+    "disableHierarchy": {
+      "type": "bool",
+      "default": false
+    },
+    "unInheritedRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/un-inherited-relations",
+      "tooltip": true
+    },
     "description": {
       "type": "text"
     },

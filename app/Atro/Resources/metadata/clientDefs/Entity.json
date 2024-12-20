@@ -144,6 +144,17 @@
             }
           ]
         }
+      },
+      "multiParents": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
       }
     }
   }

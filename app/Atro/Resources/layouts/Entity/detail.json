@@ -111,6 +111,50 @@
     ]
   },
   {
+    "label": "hierarchyManagement",
+    "dynamicLogicVisible": {
+      "conditionGroup": [
+        {
+          "type": "equals",
+          "attribute": "type",
+          "value": "Hierarchy"
+        }
+      ]
+    },
+    "rows": [
+      [
+        {
+          "name": "disableHierarchy"
+        },
+        false
+      ],
+      [
+        {
+          "name": "multiParents"
+        },
+        {
+          "name": "dragAndDrop"
+        }
+      ],
+      [
+        {
+          "name": "fieldValueInheritance"
+        },
+        {
+          "name": "unInheritedFields"
+        }
+      ],
+      [
+        {
+          "name": "relationInheritance"
+        },
+        {
+          "name": "unInheritedRelations"
+        }
+      ]
+    ]
+  },
+  {
     "label": "accessManagement",
     "rows": [
       [
