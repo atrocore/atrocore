@@ -85,12 +85,35 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     data.push({
                         field: this.isLinkedColumns,
                         label:'',
+                        isField: true,
                         key: linkEntity.id,
                         entityValueKeys: []
                     });
-                    this.getModelFactory().create('File', fileModel, () => {
-
-                    })
+                    this.getModelFactory().create('File', fileModel => {
+                        fileModel.set(linkEntity);
+                        let viewName = fileModel.getFieldParam('preview', 'view') || this.getFieldManager().getViewName(fileModel.getFieldType('preview'));
+                        let viewKey = linkEntity.id;
+                        this.createView(viewKey, viewName, {
+                            el:  `${this.options.el} [data-key="${viewKey}"] .attachment-preview`,
+                            model: fileModel,
+                            readOnly: true,
+                            defs: {
+                                name: 'preview',
+                            },
+                            mode: 'list',
+                            inlineEditDisabled: true,
+                        }, view => {
+                            view.previewSize = 'small';
+                            view.once('after:render', () => {
+                                this.$el.find(`[data-key="${viewKey}"]`).append(`<div class="file-link">
+<a href="?entryPoint=download&id=${linkEntity.id}" download="" title="Download">
+ <span class="glyphicon glyphicon-download-alt small"></span>
+ </a> 
+ <a href="/#File/view/${linkEntity.id}" title="${linkEntity.name}" class="link" data-id="${linkEntity.id}">${linkEntity.name}</a>
+ </div>`);
+                            })
+                        });
+                    });
                 }else{
                     data.push({
                         field: this.isLinkedColumns,

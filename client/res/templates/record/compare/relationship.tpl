@@ -24,7 +24,13 @@
         {{#each tableRows}}
         <tr class="list-row" >
             <td class="cell" data-field="name" style="min-width: {{../minWidth}}px">
+                {{#if isField}}
+                <div data-key="{{key}}">
+                    {{{var key ../this}}}
+                </div>
+                {{else}}
                 {{{label }}}
+                {{/if}}
             </td>
             {{#each entityValueKeys}}
             <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../minWidth}}px">

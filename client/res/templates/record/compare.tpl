@@ -72,11 +72,11 @@
     }
 
     .compare-panel table tbody tr.danger {
-        border-left: 2px solid red;
+        border-left: 3px solid red;
     }
 
     .compare-panel table tbody tr.danger td:first-child{
-        border-left: 2px solid red;
+        border-left: 3px solid red;
     }
 
     .compare-panel table tbody tr.danger > td {
@@ -91,8 +91,7 @@
         padding: 15px 0 0 0 !important;
     }
 
-    .compare-panel .attachment-preview a {
+    .compare-panel .attachment-preview  {
        display: flex;
-        justify-content: center;
     }
 </style>
