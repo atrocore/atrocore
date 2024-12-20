@@ -18,10 +18,6 @@ use Espo\ORM\Entity as OrmEntity;
 
 class Entity extends ReferenceData
 {
-    public const SYSTEM_FIELDS = ['id', 'code'];
-    public const CLIENT_DEFS_FIELDS = ['iconClass', 'color'];
-    public const LANGUAGE_FIELDS = ['name', 'namePlural'];
-
     protected function getAllItems(array $params = []): array
     {
         $boolFields = [];
@@ -42,12 +38,15 @@ class Entity extends ReferenceData
             }
 
             $items[] = array_merge($row, [
-                'id'         => $code,
-                'code'       => $code,
-                'name'       => $this->getLanguage()->translate($code, 'scopeNames'),
-                'namePlural' => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
-                'iconClass'  => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
-                'color'      => $this->getMetadata()->get(['clientDefs', $code, 'color'])
+                'id'            => $code,
+                'code'          => $code,
+                'name'          => $this->getLanguage()->translate($code, 'scopeNames'),
+                'namePlural'    => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
+                'iconClass'     => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
+                'color'         => $this->getMetadata()->get(['clientDefs', $code, 'color']),
+                'sortBy'        => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
+                'sortDirection' => $this->getMetadata()
+                    ->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
             ]);
         }
 
@@ -56,6 +55,10 @@ class Entity extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
+        echo '<pre>';
+        print_r('insertEntity');
+        die();
+
         return true;
     }
 
@@ -69,11 +72,11 @@ class Entity extends ReferenceData
         $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
 
         foreach ($entity->toArray() as $field => $value) {
-            if (!$entity->isAttributeChanged($field) || in_array($field, self::SYSTEM_FIELDS)) {
+            if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code'])) {
                 continue;
             }
 
-            if (in_array($field, self::CLIENT_DEFS_FIELDS)) {
+            if (in_array($field, ['iconClass', 'color'])) {
                 $loadedVal = $loadedData['clientDefs'][$entity->get('code')][$field] ?? null;
                 if ($loadedVal === $entity->get($field)) {
                     $this->getMetadata()->delete('clientDefs', $entity->get('code'), [$field]);
@@ -81,13 +84,31 @@ class Entity extends ReferenceData
                     $this->getMetadata()->set('clientDefs', $entity->get('code'), [$field => $entity->get($field)]);
                 }
                 $saveMetadata = true;
-            } elseif (in_array($field, self::LANGUAGE_FIELDS)) {
+            } elseif (in_array($field, ['name', 'namePlural'])) {
                 $category = $field === 'namePlural' ? 'scopeNamesPlural' : 'scopeNames';
                 $this->getLanguage()->set('Global', $category, $entity->get('code'), $entity->get($field));
                 if ($isCustom) {
                     $this->getBaseLanguage()->set('Global', $category, $entity->get('code'), $entity->get($field));
                 }
                 $saveLanguage = true;
+            } elseif ($field === 'sortBy') {
+                $loadedVal = $loadedData['entityDefs'][$entity->get('code')]['collection']['sortBy'] ?? null;
+                if ($loadedVal === $entity->get($field)) {
+                    $this->getMetadata()->delete('entityDefs', $entity->get('code'), ['collection.sortBy']);
+                } else {
+                    $this->getMetadata()
+                        ->set('entityDefs', $entity->get('code'), ['collection' => ['sortBy' => $entity->get($field)]]);
+                }
+                $saveMetadata = true;
+            } elseif ($field === 'sortDirection') {
+                $loadedVal = $loadedData['entityDefs'][$entity->get('code')]['collection']['asc'] ?? null;
+                $asc = $entity->get($field) === 'asc';
+                if ($loadedVal === $asc) {
+                    $this->getMetadata()->delete('entityDefs', $entity->get('code'), ['collection.asc']);
+                } else {
+                    $this->getMetadata()->set('entityDefs', $entity->get('code'), ['collection' => ['asc' => $asc]]);
+                }
+                $saveMetadata = true;
             } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
                 if ($loadedVal === $entity->get($field)) {
@@ -117,11 +138,10 @@ class Entity extends ReferenceData
 
     public function deleteEntity(OrmEntity $entity): bool
     {
-        return true;
-    }
+        echo '<pre>';
+        print_r('deleteEntity');
+        die();
 
-    protected function saveDataToFile(array $data): bool
-    {
         return true;
     }
 
