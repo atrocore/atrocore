@@ -58,6 +58,12 @@
       ],
       [
         {
+          "name": "textFilterFields"
+        },
+        false
+      ],
+      [
+        {
           "name": "hideFieldTypeFilters"
         },
         false

@@ -10,7 +10,8 @@
     "iconClass": "Icon",
     "color": "Color",
     "sortBy": "Default Order (field)",
-    "sortDirection": "Default Order (direction)"
+    "sortDirection": "Default Order (direction)",
+    "textFilterFields": "Text Filter Fields"
   },
   "options": {
     "type": {
@@ -27,6 +28,7 @@
     "Create Entity": "Create Entity"
   },
   "tooltips": {
-    "disabled": "Check if you don't need this entity in your system."
+    "disabled": "Check if you don't need this entity in your system.",
+    "textFilterFields": "Fields used by text search."
   }
 }

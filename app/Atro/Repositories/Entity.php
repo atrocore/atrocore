@@ -38,15 +38,17 @@ class Entity extends ReferenceData
             }
 
             $items[] = array_merge($row, [
-                'id'            => $code,
-                'code'          => $code,
-                'name'          => $this->getLanguage()->translate($code, 'scopeNames'),
-                'namePlural'    => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
-                'iconClass'     => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
-                'color'         => $this->getMetadata()->get(['clientDefs', $code, 'color']),
-                'sortBy'        => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-                'sortDirection' => $this->getMetadata()
+                'id'               => $code,
+                'code'             => $code,
+                'name'             => $this->getLanguage()->translate($code, 'scopeNames'),
+                'namePlural'       => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
+                'iconClass'        => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
+                'color'            => $this->getMetadata()->get(['clientDefs', $code, 'color']),
+                'sortBy'           => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
+                'sortDirection'    => $this->getMetadata()
                     ->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
+                'textFilterFields' => $this->getMetadata()
+                    ->get(['entityDefs', $code, 'collection', 'textFilterFields']),
             ]);
         }
 
@@ -96,8 +98,11 @@ class Entity extends ReferenceData
                 if ($loadedVal === $entity->get($field)) {
                     $this->getMetadata()->delete('entityDefs', $entity->get('code'), ['collection.sortBy']);
                 } else {
-                    $this->getMetadata()
-                        ->set('entityDefs', $entity->get('code'), ['collection' => ['sortBy' => $entity->get($field)]]);
+                    $this->getMetadata()->set('entityDefs', $entity->get('code'), [
+                        'collection' => [
+                            'sortBy' => $entity->get($field)
+                        ]
+                    ]);
                 }
                 $saveMetadata = true;
             } elseif ($field === 'sortDirection') {
@@ -106,7 +111,23 @@ class Entity extends ReferenceData
                 if ($loadedVal === $asc) {
                     $this->getMetadata()->delete('entityDefs', $entity->get('code'), ['collection.asc']);
                 } else {
-                    $this->getMetadata()->set('entityDefs', $entity->get('code'), ['collection' => ['asc' => $asc]]);
+                    $this->getMetadata()->set('entityDefs', $entity->get('code'), [
+                        'collection' => [
+                            'asc' => $asc
+                        ]
+                    ]);
+                }
+                $saveMetadata = true;
+            } elseif ($field === 'textFilterFields') {
+                $loadedVal = $loadedData['entityDefs'][$entity->get('code')]['collection']['textFilterFields'] ?? null;
+                if ($loadedVal === $entity->get($field)) {
+                    $this->getMetadata()->delete('entityDefs', $entity->get('code'), ['collection.textFilterFields']);
+                } else {
+                    $this->getMetadata()->set('entityDefs', $entity->get('code'), [
+                        'collection' => [
+                            'textFilterFields' => $entity->get($field)
+                        ]
+                    ]);
                 }
                 $saveMetadata = true;
             } else {
