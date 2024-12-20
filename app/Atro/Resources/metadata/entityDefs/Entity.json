@@ -81,6 +81,18 @@
       "type": "array",
       "view": "views/admin/entity-manager/fields/duplicatable-relations"
     },
+    "hasOwner": {
+      "type": "bool"
+    },
+    "hasAssignedUser": {
+      "type": "bool"
+    },
+    "hasTeam": {
+      "type": "bool"
+    },
+    "hasAccount": {
+      "type": "bool"
+    },
     "description": {
       "type": "text"
     },

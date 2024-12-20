@@ -109,5 +109,26 @@
         false
       ]
     ]
+  },
+  {
+    "label": "accessManagement",
+    "rows": [
+      [
+        {
+          "name": "hasOwner"
+        },
+        {
+          "name": "hasAssignedUser"
+        }
+      ],
+      [
+        {
+          "name": "hasTeam"
+        },
+        {
+          "name": "hasAccount"
+        }
+      ]
+    ]
   }
 ]

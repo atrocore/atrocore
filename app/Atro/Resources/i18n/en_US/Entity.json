@@ -19,7 +19,11 @@
     "autoDeleteAfterDays": "Auto-delete period, in days",
     "clearDeletedAfterDays": "Permanent deletion period, days",
     "modifiedExtendedRelations": "Relations effecting modification date/time",
-    "duplicatableRelations": "Duplicatable Relations"
+    "duplicatableRelations": "Duplicatable Relations",
+    "hasAssignedUser": "Assigned User",
+    "hasTeam": "Teams",
+    "hasAccount": "Accounts",
+    "hasOwner": "Owner"
   },
   "options": {
     "type": {
@@ -33,7 +37,8 @@
     }
   },
   "labels": {
-    "Create Entity": "Create Entity"
+    "Create Entity": "Create Entity",
+    "accessManagement": "Access management"
   },
   "tooltips": {
     "disabled": "Check if you don't need this entity in your system.",

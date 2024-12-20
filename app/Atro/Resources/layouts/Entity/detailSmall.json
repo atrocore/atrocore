@@ -1,6 +1,6 @@
 [
   {
-    "label": "",
+    "label": "Overview",
     "rows": [
       [
         {
@@ -107,6 +107,27 @@
           "name": "hideFieldTypeFilters"
         },
         false
+      ]
+    ]
+  },
+  {
+    "label": "accessManagement",
+    "rows": [
+      [
+        {
+          "name": "hasOwner"
+        },
+        {
+          "name": "hasAssignedUser"
+        }
+      ],
+      [
+        {
+          "name": "hasTeam"
+        },
+        {
+          "name": "hasAccount"
+        }
       ]
     ]
   }
