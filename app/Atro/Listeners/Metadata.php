@@ -1320,7 +1320,7 @@ class Metadata extends AbstractListener
     protected function addOnlyBookmarkedFilterAndField(array &$data): void
     {
         foreach ($data['entityDefs'] as $entity => $scopeDefs) {
-            if(!empty($data['clientDefs'][$entity]['bookmarkDisabled'])) {
+            if(!empty($data['scopes'][$entity]['bookmarkDisabled'])) {
                 return;
             }
             $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
