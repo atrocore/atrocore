@@ -34,11 +34,9 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                 this.relationshipView = 'views/record/compare/relationship-instance';
             }
 
-
             if ('distantModelsAttribute' in this.options && this.instanceComparison) {
                 this.distantModelsAttribute = this.options.distantModelsAttribute;
             }
-
 
             let bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
 
@@ -47,12 +45,11 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                     return;
                 }
 
-
                 let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', relationship.name]) ?? {};
                 let relationScope = relationDefs['entity'];
                 let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
 
-                if(inverseRelationType !== relationDefs['type'] && inverseRelationType !== 'hasMany') {
+                if(inverseRelationType !== relationDefs['type'] || inverseRelationType !== 'hasMany') {
                     return;
                 }
 

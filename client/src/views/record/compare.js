@@ -84,76 +84,41 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         return;
                     }
 
-                    if (field.includes('_')) {
-                        return;
-                    }
 
                     const type = fieldDef['type'];
-                    const isLink = type === 'link' || type === 'linkMultiple';
 
-                    if (isLink && !this.links[field]?.entity) {
+                    if(!this.isValidType(type) || !this.isFieldEnabled(this.model, field)) {
                         return;
                     }
 
-                    let fieldId = field;
-                    if (type === 'asset' || type === 'link') {
-                        fieldId = field + 'Id';
-                    } else if (type === 'linkMultiple') {
-                        fieldId = field + 'Ids';
-                    }
+                    let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
 
-                    if (model.getFieldParam(field, 'isMultilang')
-                        && !modelCurrent.has(fieldId)
-                        && !modelOthers.map(m => m.has(fieldId)).reduce((previous, current) => previous || current)) {
+                    if (forbiddenFieldList.includes(field)) {
                         return;
                     }
+
 
                     let htmlTag = 'code';
 
-                    if (type === 'color' || type === 'enum') {
-                        htmlTag = 'span';
-                    }
-
-                    isLinkMultiple = type === 'linkMultiple';
-
-                    const values = (isLinkMultiple && modelCurrent.get(fieldId)) ? modelCurrent.get(fieldId).map(v => {
-                        return {
-                            id: v,
-                            name: modelCurrent.get(field + 'Names') ? (modelCurrent.get(field + 'Names')[v] ?? v) : v
-                        }
-                    }) : null;
-
-                    let showDetailsComparison = (modelCurrent.get(fieldId) && type === "link")
-                        || ((modelCurrent.get(fieldId)?.length ?? 0) > 0 && type === "linkMultiple")
-                    if (showDetailsComparison) {
-                        for (const other of modelOthers) {
-                            showDetailsComparison = showDetailsComparison && modelCurrent.get(fieldId)?.toString() === other.get(fieldId)?.toString();
-                        }
-                    }
-
                     this.fieldsArr.push({
-                        isField: true,
                         field: field,
                         type: type,
                         label: fieldDef['label'] ?? field,
                         current: field + 'Current',
                         modelCurrent: modelCurrent,
                         modelOthers: modelOthers,
-                        htmlTag: htmlTag,
                         others: modelOthers.map((element, index) => {
                             return {other: field + 'Other' + index, index}
                         }),
-                        isLink: isLink,
-                        foreignScope: isLink ? this.links[field].entity : null,
-                        foreignId: isLink ? modelCurrent.get(fieldId)?.toString() : null,
-                        showDetailsComparison: showDetailsComparison && this.hideQuickMenu !== true,
-                        isLinkMultiple: isLinkMultiple,
-                        values: values,
                         different: !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
                         required: !!fieldDef['required']
                     });
 
                 }, this);
+
+                this.fieldsArr.sort((v1, v2) =>
+                    this.translate(v1.field, 'fields', this.scope).localeCompare(this.translate(v2.field, 'fields', this.scope))
+                );
 
                 this.afterModelsLoading(modelCurrent, modelOthers);
                 this.listenTo(this, 'after:render', () => {
@@ -177,7 +142,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 model: this.model,
                 fieldsArr: this.fieldsArr,
                 instances: this.instances,
-                columns: this.buildComparisonTableColumn(),
+                columns: this.buildComparisonTableHeaderColumn(),
                 distantModels: this.distantModelsAttribute,
                 instanceComparison: this.instanceComparison,
                 el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
@@ -198,7 +163,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     distantModels: this.distantModelsAttribute,
                     collection: this.collection,
                     instanceComparison: this.instanceComparison,
-                    columns: this.buildComparisonTableColumn(),
+                    columns: this.buildComparisonTableHeaderColumn(),
                     el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
                 }, view => {
                     this.notify(false)
@@ -208,7 +173,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         data() {
-            let column = this.buildComparisonTableColumn()
+            let column = this.buildComparisonTableHeaderColumn()
             return {
                 buttonList: this.buttonList,
                 fieldsArr: this.fieldsArr,
@@ -289,7 +254,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
         },
 
-        buildComparisonTableColumn() {
+        buildComparisonTableHeaderColumn() {
             let columns = [];
             let hasName = !!this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type'])
 
@@ -304,6 +269,26 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }));
 
             return columns;
-        }
+        },
+
+        isValidType(type) {
+            return type && type !== 'linkMultiple';
+        },
+
+        isFieldEnabled(model, name) {
+            if(model.getFieldParam(name, 'notStorable') && !model.getFieldParam(name, 'virtualField')) {
+                return false;
+            }
+
+            const disabledParameters = ['disabled', 'layoutDetailDisabled'];
+
+            for (let param of disabledParameters) {
+                if (model.getFieldParam(name, param)) {
+                    return false
+                }
+            }
+
+            return true;
+        },
     });
 });

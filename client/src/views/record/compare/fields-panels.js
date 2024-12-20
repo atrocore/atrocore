@@ -19,59 +19,22 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
 
         setup() {
             this.scope = this.options.scope;
-            this.fieldsArr = this.options.fieldsArr;
             this.model = this.options.model;
             this.instances = this.options.instances ?? this.getMetadata().get(['app', 'comparableInstances'])
             this.instanceComparison = this.options.instanceComparison;
             this.columns = this.options.columns;
 
-            // this.wait(true);
-            let allFields = Object.keys(this.model.defs.fields).filter(field =>
-                this.isValidType(this.model.getFieldParam(field, 'type')) && this.isFieldEnabled(this.model, field) && field !== 'id'
-            ).sort((v1, v2) =>
-                this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope))
-            );
-
-            allFields.unshift('id');
-
-            this.fieldListPanels = [{
-                label: 'Fields',
-                fields: []
-            }];
-
-            allFields.forEach(field => {
-                let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
-                if (!forbiddenFieldList.includes(field)) {
-                    let fieldData = this.fieldsArr.find(el => el.field === field)
-                    this.fieldListPanels[0].fields.push(fieldData);
-                }
-            });
+           this.fieldListPanels = [
+               {
+                   label: 'Fields',
+                   fields:  this.options.fieldsArr
+               }
+           ]
 
             Dep.prototype.setup.call(this);
 
             this.setupFieldList();
             this.setupBeforeFinal();
-            // this.wait(false);
-        },
-
-        isValidType(type) {
-          return type && type !== 'linkMultiple';
-        },
-
-        isFieldEnabled(model, name) {
-            if(model.getFieldParam(name, 'notStorable') && !model.getFieldParam(name, 'virtualField')) {
-                return false;
-            }
-
-            const disabledParameters = ['disabled', 'layoutDetailDisabled'];
-
-            for (let param of disabledParameters) {
-                if (model.getFieldParam(name, param)) {
-                    return false
-                }
-            }
-
-            return true;
         },
 
         data() {

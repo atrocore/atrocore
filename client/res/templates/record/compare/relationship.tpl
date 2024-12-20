@@ -18,28 +18,18 @@
         </tr>
         </thead>
         <tbody>
-        {{#each relationshipsFields}}
+        {{#unless tableRows }}
+         <tr> <td  colspan="{{itemColumnCount}}"> No Data</td></tr>
+        {{/unless}}
+        {{#each tableRows}}
         <tr class="list-row" >
-            <td class="cell">{{translate field scope=../scope category='fields'}}</td>
-            {{#if currentViewKeys }}
-            {{#each currentViewKeys}}
+            <td class="cell" data-field="name" style="min-width: {{../minWidth}}px">
+                {{{label }}}
+            </td>
+            {{#each entityValueKeys}}
             <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../minWidth}}px">
                 {{{var key ../../this }}}
             </td>
-            {{/each}}
-            {{else}}
-            <td class="cell"></td>
-            {{/if}}
-            {{#each othersModelsKeyPerInstances}}
-            {{#if this }}
-            {{#each this }}
-            <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../../minWidth}}px">
-                {{{var key ../../../this}}}
-            </td>
-            {{/each}}
-            {{else}}
-                <td class="cell"></td>
-            {{/if}}
             {{/each}}
         </tr>
         {{/each}}
