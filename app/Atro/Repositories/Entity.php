@@ -82,23 +82,10 @@ class Entity extends ReferenceData
                 }
                 $saveMetadata = true;
             } elseif (in_array($field, self::LANGUAGE_FIELDS)) {
-                switch ($field) {
-                    case 'name':
-                        $this->getLanguage()
-                            ->set('Global', 'scopeNames', $entity->get('code'), $entity->get($field));
-                        if ($isCustom) {
-                            $this->getBaseLanguage()
-                                ->set('Global', 'scopeNames', $entity->get('code'), $entity->get($field));
-                        }
-                        break;
-                    case 'namePlural':
-                        $this->getLanguage()
-                            ->set('Global', 'scopeNamesPlural', $entity->get('code'), $entity->get($field));
-                        if ($isCustom) {
-                            $this->getBaseLanguage()
-                                ->set('Global', 'scopeNamesPlural', $entity->get('code'), $entity->get($field));
-                        }
-                        break;
+                $category = $field === 'namePlural' ? 'scopeNamesPlural' : 'scopeNames';
+                $this->getLanguage()->set('Global', $category, $entity->get('code'), $entity->get($field));
+                if ($isCustom) {
+                    $this->getBaseLanguage()->set('Global', $category, $entity->get('code'), $entity->get($field));
                 }
                 $saveLanguage = true;
             } else {
