@@ -61,6 +61,16 @@
             }
           ]
         }
+      },
+      "kanbanViewMode": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "statusField"
+            }
+          ]
+        }
       }
     }
   }

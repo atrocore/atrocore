@@ -12,7 +12,8 @@
     "sortBy": "Default Order (field)",
     "sortDirection": "Default Order (direction)",
     "textFilterFields": "Text Filter Fields",
-    "statusField": "Status Field"
+    "statusField": "Status Field",
+    "kanbanViewMode": "Kanban View"
   },
   "options": {
     "type": {

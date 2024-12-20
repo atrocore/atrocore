@@ -43,6 +43,7 @@ class Entity extends ReferenceData
                 'name'             => $this->getLanguage()->translate($code, 'scopeNames'),
                 'namePlural'       => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
                 'iconClass'        => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
+                'kanbanViewMode'   => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
                 'color'            => $this->getMetadata()->get(['clientDefs', $code, 'color']),
                 'sortBy'           => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
                 'sortDirection'    => $this->getMetadata()
@@ -78,7 +79,7 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if (in_array($field, ['iconClass', 'color'])) {
+            if (in_array($field, ['iconClass', 'color', 'kanbanViewMode'])) {
                 $loadedVal = $loadedData['clientDefs'][$entity->get('code')][$field] ?? null;
                 if ($loadedVal === $entity->get($field)) {
                     $this->getMetadata()->delete('clientDefs', $entity->get('code'), [$field]);

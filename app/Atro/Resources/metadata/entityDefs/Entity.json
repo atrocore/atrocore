@@ -53,6 +53,9 @@
       "view": "views/admin/entity-manager/fields/status-field",
       "tooltip": true
     },
+    "kanbanViewMode": {
+      "type": "bool"
+    },
     "description": {
       "type": "text"
     },
