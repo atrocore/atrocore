@@ -80,11 +80,24 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
             this.linkedEntities.forEach((linkEntity) => {
 
-                let data = [{
-                    field: this.isLinkedColumns,
-                    label: `<a href="#/${this.relationship.scope}/view/${linkEntity.id}"> ${linkEntity.name ?? linkEntity.id} </a>`,
-                    entityValueKeys: []
-                }];
+                let data = [];
+                if(this.relationship.scope === 'File') {
+                    data.push({
+                        field: this.isLinkedColumns,
+                        label:'',
+                        key: linkEntity.id,
+                        entityValueKeys: []
+                    });
+                    this.getModelFactory().create('File', fileModel, () => {
+
+                    })
+                }else{
+                    data.push({
+                        field: this.isLinkedColumns,
+                        label: `<a href="#/${this.relationship.scope}/view/${linkEntity.id}"> ${linkEntity.name ?? linkEntity.id} </a>`,
+                        entityValueKeys: []
+                    });
+                }
 
                 this.getRelationAdditionalFields().forEach(field => {
                     data.push({
@@ -291,7 +304,6 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                         ]
                     })]
                 ).then(results => {
-                    let list = results[0].list;
                     let relationList = results[1].list;
                     let uniqueList = {};
                     results[0].list.forEach(v => uniqueList[v.id] = v);
