@@ -18,7 +18,8 @@
     "deleteWithoutConfirmation": "Delete without confirmation",
     "autoDeleteAfterDays": "Auto-delete period, in days",
     "clearDeletedAfterDays": "Permanent deletion period, days",
-    "modifiedExtendedRelations": "Relations effecting modification date/time"
+    "modifiedExtendedRelations": "Relations effecting modification date/time",
+    "duplicatableRelations": "Duplicatable Relations"
   },
   "options": {
     "type": {

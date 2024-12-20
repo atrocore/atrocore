@@ -77,6 +77,10 @@
       "view": "views/admin/entity-manager/fields/modified-extended-relations",
       "tooltip": true
     },
+    "duplicatableRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/duplicatable-relations"
+    },
     "description": {
       "type": "text"
     },

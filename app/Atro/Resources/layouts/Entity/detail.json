@@ -98,6 +98,12 @@
       ],
       [
         {
+          "name": "duplicatableRelations"
+        },
+        false
+      ],
+      [
+        {
           "name": "hideFieldTypeFilters"
         },
         false
