@@ -58,6 +58,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         additionalButtons: [],
 
+        route: [],
+
         buttonList: [
             {
                 name: 'edit',
@@ -1049,6 +1051,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
             }.bind(this));
+
+            const treePanel = this.getView('treePanel');
+
+            let observer = new ResizeObserver(() => {
+                if (treePanel && treePanel.$el) {
+                    this.onTreeResize();
+                }
+
+                observer.unobserve($('#content').get(0));
+            });
+            observer.observe($('#content').get(0));
         },
 
         resetSidebar() {
@@ -1264,7 +1277,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
-                isSmall: this.type == 'editSmall' || this.type == 'detailSmall'
+                isSmall: this.type == 'editSmall' || this.type == 'detailSmall',
+                isTreePanel: this.isTreePanel
             };
 
             if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`)
@@ -1574,6 +1588,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
             });
+
+            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
+                this.isTreePanel = this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+                this.setupTreePanel();
+            }
         },
 
         hotKeyEdit: function (e) {
@@ -2509,5 +2528,131 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             })
         },
+
+        isTreeAllowed() {
+            let result = false;
+
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
+
+            if(!treeScopes.includes(this.scope) && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                treeScopes.includes(this.scope);
+            }
+
+            treeScopes.forEach(scope => {
+                if (this.getAcl().check(scope, 'read')) {
+                    result = true;
+                    if (!this.getStorage().get('treeScope', this.scope)) {
+                        this.getStorage().set('treeScope', this.scope, scope);
+                    }
+                }
+            })
+
+            return result;
+        },
+
+        setupTreePanel() {
+            if (!this.isTreeAllowed()  || this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)) {
+                return;
+            }
+
+            this.createView('treePanel', 'views/record/panels/tree-panel', {
+                el: `${this.options.el} .catalog-tree-panel`,
+                scope: this.scope,
+                model: this.model
+            }, view => {
+                this.listenTo(this.model, 'after:save', () => {
+                    view.rebuildTree();
+                });
+                view.listenTo(view, 'select-node', data => {
+                    this.selectNode(data);
+                });
+                view.listenTo(view, 'tree-load', treeData => {
+                    this.treeLoad(view, treeData);
+                });
+                view.listenTo(view, 'tree-refresh', () => {
+                    view.treeRefresh();
+                });
+                view.listenTo(view, 'tree-reset', () => {
+                    this.treeReset(view);
+                });
+                this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
+                    if (['parents', 'children'].includes(link)) {
+                        view.rebuildTree();
+                    }
+                });
+                this.listenTo(view, 'tree-width-changed', function (width) {
+                    this.onTreeResize(width)
+                });
+                this.listenTo(view, 'tree-width-unset', function () {
+                    if ($('.catalog-tree-panel').length) {
+                        $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
+                        $('.overview-filters-container').css({'width': 'unset', 'marginLeft': 'unset'})
+                        $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
+                        $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
+                    }
+                })
+            });
+        },
+
+        selectNode(data) {
+            if (this.getStorage().get('treeScope', this.scope) === this.scope) {
+                window.location.href = `/#${this.scope}/view/${data.id}`;
+            } else {
+                this.getStorage().set('selectedNodeId', this.scope, data.id);
+                this.getStorage().set('selectedNodeRoute', this.scope, data.route);
+                window.location.href = `/#${this.scope}`;
+            }
+        },
+
+        treeLoad(view, treeData) {
+            view.clearStorage();
+
+            if (view.model && view.model.get('id')) {
+                let route = [];
+                view.prepareTreeRoute(treeData, route);
+            }
+        },
+
+        treeReset(view) {
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
+
+            this.getStorage().clear('treeSearchValue', view.treeScope);
+            this.getStorage().clear('treeWhereData', view.treeScope);
+
+            this.getStorage().clear('listSearch', view.treeScope);
+            this.getStorage().set('reSetupSearchManager', view.treeScope, true);
+
+            view.toggleVisibilityForResetButton();
+            view.rebuildTree();
+        },
+
+        onTreeResize(width) {
+            if ($('.catalog-tree-panel').length) {
+                width = parseInt(width || $('.catalog-tree-panel').outerWidth());
+
+                const content = $('#content');
+                const main = content.find('#main');
+
+                const header = content.find('.page-header');
+                const btnContainer = content.find('.detail-button-container');
+                const filters = content.find('.overview-filters-container');
+                const overview = content.find('.overview');
+                const side = content.find('.side');
+
+                header.outerWidth(Math.floor(main.width() - width));
+                header.css('marginLeft', width + 'px');
+
+                filters.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width));
+                filters.css('marginLeft', width + 'px');
+
+                btnContainer.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width - 1));
+                btnContainer.addClass('detail-tree-button-container');
+                btnContainer.css('marginLeft', width + 1 + 'px');
+
+                overview.outerWidth(Math.floor(content.innerWidth() - side.outerWidth() - width));
+                overview.css('marginLeft', width + 'px');
+            }
+        }
     });
 });
