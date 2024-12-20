@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\RecordService;
 
@@ -180,10 +181,16 @@ class Record extends RecordService
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
+        if (!empty($this->getMemoryStorage()->get('exportJobId')) || $this->isPseudoTransaction() || empty($collection[0])) {
+            return;
+        }
+
         parent::prepareCollectionForOutput($collection, $selectParams);
+
         if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled'])) {
             $entityByIds = [];
             foreach ($collection as $entity) {
+                $entity->bookmarkIdLoaded = true;
                 $entityByIds[$entity->get('id')] = $entity;
             }
 
@@ -201,6 +208,30 @@ class Record extends RecordService
             foreach ($bookmarks as $bookmark) {
                 $entityByIds[$bookmark['entity_id']]->set('bookmarkId', $bookmark['id']);
             }
+        }
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        if (!empty($this->getMemoryStorage()->get('exportJobId')) || !empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
+            return;
+        }
+
+        parent::prepareEntityForOutput($entity);
+
+        if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) && empty($entity->bookmarkIdLoaded)) {
+            $bookmarked =  $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('bookmark')
+                ->where('entity_id = :entityId AND deleted = :false')
+                ->andWhere('user_id = :userId')
+                ->setParameter('entityId', $entity->get('id'))
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('userId', $this->getUser()->id)
+                ->fetchAssociative();
+
+            $entity->set('bookmarkId', $bookmarked['id'] ?? null);
+            $entity->bookmarkIdLoaded = true;
         }
     }
 }
