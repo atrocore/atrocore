@@ -81,6 +81,17 @@
             }
           ]
         }
+      },
+      "deleteWithoutConfirmation": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
       }
     }
   }

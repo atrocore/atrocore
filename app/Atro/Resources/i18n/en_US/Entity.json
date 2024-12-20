@@ -14,7 +14,8 @@
     "textFilterFields": "Text Filter Fields",
     "statusField": "Status Field",
     "kanbanViewMode": "Kanban View",
-    "kanbanStatusIgnoreList": "Ignored groups in Kanban view"
+    "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
+    "deleteWithoutConfirmation": "Delete without confirmation"
   },
   "options": {
     "type": {
@@ -33,6 +34,7 @@
   "tooltips": {
     "disabled": "Check if you don't need this entity in your system.",
     "textFilterFields": "Fields used by text search.",
-    "statusField": "Updates of this field are logged in stream."
+    "statusField": "Updates of this field are logged in stream.",
+    "deleteWithoutConfirmation": "If checked, the individual record is deleted without user confirmation. Deletion of multiple records is still  to be confirmed."
   }
 }

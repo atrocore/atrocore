@@ -60,6 +60,10 @@
       "type": "array",
       "view": "views/admin/entity-manager/fields/kanban-status-ignore-list"
     },
+    "deleteWithoutConfirmation": {
+      "type": "bool",
+      "tooltip": true
+    },
     "description": {
       "type": "text"
     },
