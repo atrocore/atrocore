@@ -45,7 +45,10 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             this.isLinkedColumns = 'isLinked58894';
             this.linkedEntities = []
             this.tableRows = [];
-            this.relationName = this.relationship.relationName.charAt(0).toUpperCase() + this.relationship.relationName.slice(1);
+
+            if(this.relationship.relationName) {
+                this.relationName = this.relationship.relationName.charAt(0).toUpperCase() + this.relationship.relationName.slice(1);
+            }
 
             this.fetchModelsAndSetup();
         },
@@ -70,6 +73,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 columns: this.columns,
                 tableRows: this.tableRows,
                 columnCountCurrent: this.columns,
+                showBorders: this.linkedEntities.length > 1,
                 totalLength,
                 minWidth
             }
@@ -146,9 +150,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             mode: 'detail',
                             inlineEditDisabled: true,
                         });
-                    })
-                })
+                    });
+                });
 
+                if(this.getRelationAdditionalFields().length  && data[0].entityValueKeys.length && this.linkedEntities.length > 1) {
+                    data[0].class = 'strong-border';
+                }
                 this.tableRows.push(...data);
             });
             callback();

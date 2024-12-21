@@ -64,7 +64,7 @@
     }
 
     .compare-panel table td, .compare-panel table th {
-        max-width: 100px;
+        max-width: 300px;
     }
 
     .file-link {
@@ -87,11 +87,39 @@
         color: red;
     }
 
-    [data-name="relationshipsPanels"] .panel-body {
+    .compare-panel .panel-body {
         padding: 15px 0 0 0 !important;
     }
 
-    .compare-panel .attachment-preview  {
-       display: flex;
+    .compare-panel .panel-body div.list {
+        overflow-x: auto;
     }
+
+    .compare-panel  .table{
+        table-layout: auto;
+    }
+
+    .compare-panel tr td:first-child {
+        width: 250px !important;
+        max-width: 350px !important;
+    }
+
+    .compare-panel td {
+        min-width: 150px !important;
+    }
+
+    .compare-panel .attachment-preview a {
+       display: flex;
+        justify-content: center;
+    }
+
+
+    [data-name="relationshipsPanels"] .bottom-border-black tr.strong-border {
+       border-top: 3px solid rgba(0,0,0, 0.3);
+    }
+
+    [data-name="relationshipsPanels"] table {
+       table-layout: auto;
+    }
+
 </style>

@@ -1,5 +1,5 @@
-<div class="list" style="overflow-x: clip">
-    <table class="table full-table table-striped  table-fixed table-scrolled table-bordered" style=" table-layout: auto">
+<div class="list custom-compare-relationship" style="overflow-x: clip">
+    <table class="table full-table table-striped  table-fixed table-scrolled table-bordered {{#if showBorders}} bottom-border-black {{/if}}" style=" table-layout: auto">
         <thead>
         <tr>
             {{#each columns}}
@@ -22,10 +22,10 @@
          <tr> <td  colspan="{{itemColumnCount}}"> No Data</td></tr>
         {{/unless}}
         {{#each tableRows}}
-        <tr class="list-row" >
-            <td class="cell" data-field="name" style="min-width: {{../minWidth}}px">
+        <tr class="list-row  {{class}}" >
+            <td class="cell l-200" data-field="name" >
                 {{#if isField}}
-                <div data-key="{{key}}">
+                <div data-key="{{key}}" style="display:flex; flex-direction: column; align-items: baseline">
                     {{{var key ../this}}}
                 </div>
                 {{else}}
@@ -43,7 +43,3 @@
     </table>
     <div class="panel-scroll hidden" style="display: block;"><div></div></div>
 </div>
-
-<style>
-
-</style>

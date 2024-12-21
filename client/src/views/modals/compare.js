@@ -43,12 +43,12 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
 
             if (this.instanceComparison) {
-                this.recordView = 'views/record/compare-instance'
+                this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
                this.header = this.getLanguage().translate('Instance Comparison');
             } else {
+                this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
                 this.header = this.getLanguage().translate('Record Comparison');
             }
-
 
             this.listenTo(this, 'after:render', () => this.setupRecord())
         },

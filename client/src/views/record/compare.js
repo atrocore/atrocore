@@ -8,6 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+
 Espo.define('views/record/compare', 'view', function (Dep) {
 
     return Dep.extend({
@@ -87,7 +88,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     const type = fieldDef['type'];
 
-                    if(!this.isValidType(type) || !this.isFieldEnabled(this.model, field)) {
+                    if (!this.isValidType(type, field) || !this.isFieldEnabled(this.model, field)) {
                         return;
                     }
 
@@ -154,22 +155,77 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         setupRelationshipsPanels() {
             this.notify('Loading...')
+            let relationshipsPanels = [];
+            const bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
 
-            this.getHelper().layoutManager.get(this.scope, 'relationships', layout => {
-                this.createView('relationshipsPanels', this.relationshipsPanelsView, {
-                    scope: this.scope,
-                    model: this.model,
-                    relationships: layout,
-                    distantModels: this.distantModelsAttribute,
-                    collection: this.collection,
-                    instanceComparison: this.instanceComparison,
-                    columns: this.buildComparisonTableHeaderColumn(),
-                    el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
-                }, view => {
-                    this.notify(false)
-                    view.render();
-                })
+            for (let link in this.model.defs.links) {
+
+                if (!this.isLinkEnabled(this.model, link)) {
+                    continue;
+                }
+
+                if (this.nonComparableFields.includes(link)) {
+                    return;
+                }
+
+                if(!this.isComparableLink(link)){
+                    continue;
+                }
+
+                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
+                let relationScope = relationDefs['entity'];
+
+                let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
+
+                let panelData = {
+                    label: this.translate(link, 'links', this.scope),
+                    scope: relationScope,
+                    name: link,
+                    type: relationDefs['type'],
+                    inverseType: inverseRelationType,
+                    foreign: relationDefs['foreign'],
+                    relationName: relationDefs['relationName'],
+                    defs:  {}
+                };
+
+                relationshipsPanels.push(panelData);
+            }
+
+            bottomPanels.forEach(bottomPanel => {
+                if (bottomPanel.layoutRelationshipsDisabled) {
+                    return;
+                }
+
+                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', bottomPanel.link])
+
+                relationshipsPanels.push({
+                    label: this.translate(bottomPanel.label, 'labels', this.scope),
+                    scope: relationDefs['entity'],
+                    name: bottomPanel.name,
+                    type: relationDefs['type'],
+                    foreign: relationDefs['foreign'],
+                    relationName: relationDefs['relationName'],
+                    defs: bottomPanel
+                });
             });
+
+            relationshipsPanels.sort(function (v1, v2) {
+                return v1.label.localeCompare(v2.label);
+            });
+
+            this.createView('relationshipsPanels', this.relationshipsPanelsView, {
+                scope: this.scope,
+                model: this.model,
+                relationshipsPanels: relationshipsPanels,
+                distantModels: this.distantModelsAttribute,
+                collection: this.collection,
+                instanceComparison: this.instanceComparison,
+                columns: this.buildComparisonTableHeaderColumn(),
+                el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
+            }, view => {
+                this.notify(false)
+                view.render();
+            })
         },
 
         data() {
@@ -191,6 +247,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         areEquals(current, others, field, fieldDef) {
+            let result = false;
             if (fieldDef['type'] === 'linkMultiple') {
                 const fieldId = field + 'Ids';
                 const fieldName = field + 'Names'
@@ -262,6 +319,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 name: hasName ? this.translate('Name') : 'ID',
                 label: hasName ? this.translate('Name') : 'ID'
             });
+
             this.collection.models.forEach(model => columns.push({
                 name: model.get('id'),
                 label: hasName ? (model.get('name') ?? 'None') : model.get('id'),
@@ -271,12 +329,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             return columns;
         },
 
-        isValidType(type) {
+        isValidType(type, field) {
             return type && type !== 'linkMultiple';
         },
 
         isFieldEnabled(model, name) {
-            if(model.getFieldParam(name, 'notStorable') && !model.getFieldParam(name, 'virtualField')) {
+            if (model.getFieldParam(name, 'notStorable') && model.getFieldParam(name, 'readOnly') && !model.getFieldParam(name, 'virtualField')) {
                 return false;
             }
 
@@ -290,5 +348,18 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             return true;
         },
+
+        isLinkEnabled(model, name) {
+            return !model.getLinkParam(name, 'disabled') && !model.getLinkParam(name, 'layoutRelationshipsDisabled');
+        },
+
+        isComparableLink(link) {
+            let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
+            let relationScope = relationDefs['entity'];
+
+            let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
+
+            return inverseRelationType === relationDefs['type'] && relationDefs['type'] === 'hasMany';
+        }
     });
 });
