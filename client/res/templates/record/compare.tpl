@@ -104,6 +104,11 @@
         max-width: 350px !important;
     }
 
+    .compare-panel tr td:first-child {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     .compare-panel td {
         min-width: 150px !important;
     }

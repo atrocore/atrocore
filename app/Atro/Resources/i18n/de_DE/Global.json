@@ -328,7 +328,10 @@
     "Bookmarking": "Lesezeichen setzen",
     "Unbookmark": "Lesezeichen entfernen",
     "Bookmark": "Lesezeichen",
-    "Unbookmarking": "Lesezeichen entfernen"
+    "Unbookmarking": "Lesezeichen entfernen",
+    "youShouldHaveAtLeastOneRecord": "Sie sollten mindestens 2 Datensätze haben, um vergleichen zu können",
+    "weCannotCompareMoreThan": " Die maximale Anzahl der zu vergleichenden Datensätze beträgt %s.",
+    "thereAreTooManyRecord": "Es gibt zu viele Datensätze. Kein Vergleich ist möglich"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

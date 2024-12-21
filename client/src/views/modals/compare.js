@@ -73,10 +73,17 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     this.createModalView(options)
                 })
             } else {
-                this.collection.fetch().success(() => {
+                if (this.collection.models.length < 2) {
+                    this.notify(this.translate('youShouldHaveAtLeastOneRecord'));
+                    this.close();
+                }else if (this.collection.models.length > 10){
+                    let message = this.translate('weCannotCompareMoreThan');
+                    this.notify(message.replace('%s', 10));
+                    this.close()
+                } else {
                     options.model = this.collection.models[0];
                     this.createModalView(options);
-                })
+                }
             }
         },
 

@@ -350,7 +350,11 @@
     "Bookmarking": "Bookmarking",
     "Unbookmark": "Unbookmark",
     "Bookmark": "Bookmark",
-    "Unbookmarking": "Unbookmarking"
+    "Unbookmarking": "Unbookmarking",
+    "youShouldHaveAtLeastOneRecord": "You should have at list 2 records to be able to compare",
+    "weCannotCompareMoreThan": "The maximum number records to be compared is %s.",
+    "thereAreTooManyRecord": "There are too many records. No comparison is possible"
+
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

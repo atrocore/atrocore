@@ -45,8 +45,9 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             this.isLinkedColumns = 'isLinked58894';
             this.linkedEntities = []
             this.tableRows = [];
+            this.hasToManyRecords = false;
 
-            if(this.relationship.relationName) {
+            if (this.relationship.relationName) {
                 this.relationName = this.relationship.relationName.charAt(0).toUpperCase() + this.relationship.relationName.slice(1);
             }
 
@@ -64,7 +65,6 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
         },
 
         data() {
-            let totalLength = 0;
             let minWidth = 150;
             return {
                 name: this.relationship.name,
@@ -73,8 +73,10 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 columns: this.columns,
                 tableRows: this.tableRows,
                 columnCountCurrent: this.columns,
+                columnLength: this.columns.length,
                 showBorders: this.linkedEntities.length > 1,
-                totalLength,
+                hasToManyRecords: this.hasToManyRecords,
+                hasManyRecordsMessage: this.translate('thereAreTooManyRecord'),
                 minWidth
             }
         },
@@ -85,10 +87,10 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             this.linkedEntities.forEach((linkEntity) => {
 
                 let data = [];
-                if(this.relationship.scope === 'File') {
+                if (this.relationship.scope === 'File') {
                     data.push({
                         field: this.isLinkedColumns,
-                        label:'',
+                        label: '',
                         isField: true,
                         key: linkEntity.id,
                         entityValueKeys: []
@@ -98,7 +100,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                         let viewName = fileModel.getFieldParam('preview', 'view') || this.getFieldManager().getViewName(fileModel.getFieldType('preview'));
                         let viewKey = linkEntity.id;
                         this.createView(viewKey, viewName, {
-                            el:  `${this.options.el} [data-key="${viewKey}"] .attachment-preview`,
+                            el: `${this.options.el} [data-key="${viewKey}"] .attachment-preview`,
                             model: fileModel,
                             readOnly: true,
                             defs: {
@@ -118,7 +120,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                             })
                         });
                     });
-                }else{
+                } else {
                     data.push({
                         field: this.isLinkedColumns,
                         label: `<a href="#/${this.relationship.scope}/view/${linkEntity.id}"> ${linkEntity.name ?? linkEntity.id} </a>`,
@@ -153,7 +155,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     });
                 });
 
-                if(this.getRelationAdditionalFields().length  && data[0].entityValueKeys.length && this.linkedEntities.length > 1) {
+                if (this.getRelationAdditionalFields().length && data[0].entityValueKeys.length && this.linkedEntities.length > 1) {
                     data[0].class = 'strong-border';
                 }
                 this.tableRows.push(...data);
@@ -310,52 +312,68 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 }
                 let modelRelationColumnId = this.scope.toLowerCase() + 'Id';
                 let relationshipRelationColumnId = this.relationship.scope.toLowerCase() + 'Id';
-                Promise.all([
-                    this.ajaxGetRequest(this.relationship.scope, {
-                        select: selectFields.join(','),
-                        maxSize: 500 * this.collection.models.length,
-                        where: [
-                            {
-                                type: 'linkedWith',
-                                attribute: this.relationship.foreign,
-                                value: this.collection.models.map(m => m.id)
-                            }
-                        ]
-                    }),
+                let data = {
+                    select: selectFields.join(','),
+                    where: [
+                        {
+                            type: 'linkedWith',
+                            attribute: this.relationship.foreign,
+                            value: this.collection.models.map(m => m.id)
+                        }
+                    ]
+                };
 
-                    this.ajaxGetRequest(relationName, {
-                        maxSize: 500 * this.collection.models.length,
-                        where: [
-                            {
-                                type: 'in',
-                                attribute: modelRelationColumnId,
-                                value: this.collection.models.map(m => m.id)
-                            }
-                        ]
-                    })]
-                ).then(results => {
-                    let relationList = results[1].list;
-                    let uniqueList = {};
-                    results[0].list.forEach(v => uniqueList[v.id] = v);
-                    list = Object.values(uniqueList)
-                    this.linkedEntities = list;
-                    list.forEach(item => {
-                        this.relationModels[item.id] = [];
-                        this.collection.models.forEach((model, key) => {
-                            let m = relationModel.clone()
-                            m.set(this.isLinkedColumns, false);
-                            relationList.forEach(relationItem => {
-                                if (item.id === relationItem[relationshipRelationColumnId] && model.id === relationItem[modelRelationColumnId]) {
-                                    m.set(relationItem);
-                                    m.set(this.isLinkedColumns, true);
+                data.totalOnly = true;
+                this.ajaxGetRequest(this.relationship.scope, data).success((res) => {
+
+                    data.maxSize = 500 * this.collection.models.length;
+
+                    if(res.total > data.maxSize) {
+                        this.hasToManyRecords = true;
+                        callback();
+                        return;
+                    }
+
+                    data.totalOnly = false;
+                    data.collectionOnly = true;
+
+                    Promise.all([
+                        this.ajaxGetRequest(this.relationship.scope, data),
+
+                        this.ajaxGetRequest(relationName, {
+                            maxSize: 500 * this.collection.models.length,
+                            where: [
+                                {
+                                    type: 'in',
+                                    attribute: modelRelationColumnId,
+                                    value: this.collection.models.map(m => m.id)
                                 }
-                            });
+                            ]
+                        })]
+                    ).then(results => {
+                        let relationList = results[1].list;
+                        let uniqueList = {};
+                        results[0].list.forEach(v => uniqueList[v.id] = v);
+                        list = Object.values(uniqueList)
+                        this.linkedEntities = list;
+                        list.forEach(item => {
+                            this.relationModels[item.id] = [];
+                            this.collection.models.forEach((model, key) => {
+                                let m = relationModel.clone()
+                                m.set(this.isLinkedColumns, false);
+                                relationList.forEach(relationItem => {
+                                    if (item.id === relationItem[relationshipRelationColumnId] && model.id === relationItem[modelRelationColumnId]) {
+                                        m.set(relationItem);
+                                        m.set(this.isLinkedColumns, true);
+                                    }
+                                });
 
-                            this.relationModels[item.id].push(m);
-                        })
+                                this.relationModels[item.id].push(m);
+                            })
+                        });
+
+                        callback();
                     });
-
-                    callback();
                 });
             });
         },
@@ -372,6 +390,10 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     this.relationFields.push(field);
                 }
             });
+
+            this.relationFields.sort((v1, v2) =>{
+                return this.translate(v1, 'fields', relationName).localeCompare(this.translate(v2, 'fields', relationName));
+            })
 
             return this.relationFields;
         },

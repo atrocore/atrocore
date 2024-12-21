@@ -18,12 +18,15 @@
         </tr>
         </thead>
         <tbody>
+        {{#if hasToManyRecords }}
+           <tr><td colspan="{{columnLength}}"> {{hasManyRecordsMessage}}</td></tr>
+        {{else}}
         {{#unless tableRows }}
-         <tr> <td  colspan="{{itemColumnCount}}"> No Data</td></tr>
+        <tr> <td  colspan="{{columnLength}}"> No Data</td></tr>
         {{/unless}}
         {{#each tableRows}}
         <tr class="list-row  {{class}}" >
-            <td class="cell l-200" data-field="name" >
+            <td class="cell l-200" data-field="name" title="{{label}}">
                 {{#if isField}}
                 <div data-key="{{key}}" style="display:flex; flex-direction: column; align-items: baseline">
                     {{{var key ../this}}}
@@ -39,6 +42,7 @@
             {{/each}}
         </tr>
         {{/each}}
+        {{/if}}
         </tbody>
     </table>
     <div class="panel-scroll hidden" style="display: block;"><div></div></div>
