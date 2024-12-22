@@ -46,6 +46,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         useAutosave: true,
 
+        languages: [],
+
+        selectedLanguage: null,
+
         events: {
             'click [data-action="changeProfile"]': function (e) {
                 this.changeProfile(e);
@@ -55,6 +59,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             },
             'click [data-action=toggleEditor]': function (e) {
                 this.toggleEditor(e);
+            },
+            'change select.language-selector': function (e) {
+                this.selectedLanguage = this.languages.find(lang => lang.code === e.target.value);
+                this.reloadFrame(this.selectedElement);
             }
         },
 
@@ -104,8 +112,19 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 isTablet: this.profile === 'tablet',
                 isMobile: this.profile === 'mobile',
                 isDesktop: this.profile === 'desktop',
-                editorActive: this.editorActive
+                editorActive: this.editorActive,
+                hasMultipleLanguages: this.languages.length > 1
             };
+        },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.languages = Object.values(this.getConfig().get('referenceData').Language)
+                .map(lang => ({code: lang.code, name: lang.name, main: lang.role === 'main'}))
+                .sort((x, y) => (x.main === y.main) ? 0 : x.main ? -1 : 1); // main lang should be first
+
+            this.selectedLanguage = this.languages[0];
         },
 
         loadPreviewFrame(afterLoad = null) {
@@ -118,10 +137,18 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 return;
             }
 
+            const options = {};
+            if (this.selectedLanguage && !this.selectedLanguage.main) {
+                options.headers = {
+                    language: this.selectedLanguage.code
+                }
+            }
+
+            this.notify(this.translate('Loading...'));
             this.ajaxGetRequest('PreviewTemplate/action/getHtmlPreview', {
                 previewTemplateId: this.options.htmlTemplateId,
                 entityId: this.options.entityId
-            }).success(res => {
+            }, options).success(res => {
                 this.htmlContent = res.htmlPreview ?? '';
 
                 this.notify(false);
@@ -241,22 +268,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 });
 
                 this.listenTo(view, 'record:after:save', () => {
-                    this.htmlContent = null;
-                    let callback = null;
-
-                    // if there was a trigger element, activate it after new render
-                    if (trigger) {
-                        callback = () => {
-                            trigger = this.frame?.contentDocument.querySelector(`[data-editor-type=${scope}][data-editor-id=${id}]`);
-                            this.selectedElement = trigger;
-
-                            if (this.getView('sideEdit')) {
-                                trigger?.classList.add('active');
-                            }
-                        }
-                    }
-
-                    this.loadPreviewFrame(callback);
+                    this.reloadFrame(trigger)
                 });
 
                 this.listenTo(view, 'autosaveChanged', (value) => {
@@ -265,6 +277,31 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
                 view.render();
             });
+        },
+
+        reloadFrame(trigger = null) {
+            this.htmlContent = null;
+            let callback = null;
+
+            // if there was a trigger element, activate it after new render
+            if (trigger) {
+                const scope = trigger.dataset.editorType;
+                const id = trigger.dataset.editorId;
+                const fields = trigger.dataset.editorFields ?? null;
+
+                if (scope && id) {
+                    callback = () => {
+                        trigger = this.frame?.contentDocument?.querySelector(`[data-editor-type="${scope}"][data-editor-id="${id}"]${fields ? `[data-editor-fields="${fields}"]` : ''}`);
+                        this.selectedElement = trigger;
+
+                        if (this.getView('sideEdit')) {
+                            trigger?.classList.add('active');
+                        }
+                    }
+                }
+            }
+
+            this.loadPreviewFrame(callback);
         },
 
         loadBreadcrumbs() {
@@ -304,11 +341,19 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.notify('Loading...');
+            this.$el.find('.language-selector').selectize({
+                setFirstOptionActive: true,
+                persist: false,
+                valueField: "code",
+                labelField: "name",
+                searchField: ["name", "code"],
+                options: this.languages,
+                items: [this.selectedLanguage.code]
+            });
+
             this.frame = document.querySelector('.html-preview iframe');
             this.loadPreviewFrame();
             this.loadBreadcrumbs();
-            Espo.Ui.notify(false);
         }
     })
 );

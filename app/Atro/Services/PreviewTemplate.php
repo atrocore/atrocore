@@ -19,24 +19,25 @@ use Atro\Core\Templates\Services\Base;
 class PreviewTemplate extends Base
 {
 
-    public function getHtmlPreview($previewTemplateId, $entityId) : string
+    public function getHtmlPreview(string $previewTemplateId, string $entityId): string
     {
         $previewTemplate = $this->getRepository()->get($previewTemplateId);
 
-        if(!$previewTemplate){
+        if (!$previewTemplate) {
             throw new NotFound();
         }
 
         $entity = $this->getEntityManager()->getEntity($previewTemplate->get('entityType'), $entityId);
 
-        if(!$entity){
+        if (!$entity) {
             throw new NotFound();
         }
 
         return $this->getInjection('twig')->renderTemplate($previewTemplate->get('template') ?? '', [
-            "entities" => [$entity]
+            'entities'     => [$entity],
+            'language'     => $this->getHeaderLanguage() ?? 'en_US',
+            'mainLanguage' => $this->getConfig()->get('mainLanguage', 'en_US')
         ]);
-
     }
 
     protected function init()

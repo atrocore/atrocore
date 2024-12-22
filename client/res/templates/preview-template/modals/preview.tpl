@@ -1,6 +1,9 @@
 <div class="html-preview">
     <div class="header-container">
         <div class="screen-size-icons" role="group">
+            {{#if hasMultipleLanguages }}
+                <select class="language-selector"></select>
+            {{/if}}
             <button class="btn {{#if editorActive}}btn-primary{{else}}btn-default{{/if}} editor-toggle"
                     data-action="toggleEditor"><span class="fa fa-expand"></span></button>
             <div class="btn-group" role="group">
