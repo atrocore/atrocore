@@ -26,6 +26,8 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
 
         timerHandle: null,
 
+        detailLayout: null,
+
         buttonList: [
             {
                 name: 'save',
@@ -90,6 +92,8 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                 this.autosaveTimeout = this.options.autosaveTimeout;
             }
 
+            this.detailLayout = this.options.detailLayout || null;
+
             Dep.prototype.setup.call(this);
         },
 
@@ -148,6 +152,10 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                             this.setButtonDisabledState('cancel', false);
                             this.trigger('record:after:save');
                         }, this);
+
+                        this.listenTo(view, 'cancel:save', () => {
+                            this.setButtonDisabledState('cancel', false);
+                        })
 
                         this.listenTo(model, 'change', () => {
                             clearTimeout(this.timerHandle);
@@ -210,6 +218,10 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                 exit: function () {
                 }
             };
+
+            if (this.detailLayout !== null) {
+                options.detailLayout = this.detailLayout;
+            }
 
             this.createView('edit', viewName, options, callback);
         },

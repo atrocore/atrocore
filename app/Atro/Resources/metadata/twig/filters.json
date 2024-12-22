@@ -6,6 +6,5 @@
   "escapeStr": "\\Atro\\TwigFilter\\EscapeString",
   "backslashNToBr": "\\Atro\\TwigFilter\\BackslashNToBr",
   "generateBorderColor": "\\Atro\\TwigFilter\\GenerateBorderColor",
-  "generateFontColor": "\\Atro\\TwigFilter\\GenerateFontColor",
-  "editable": "\\Atro\\TwigFilter\\EditableEntity"
+  "generateFontColor": "\\Atro\\TwigFilter\\GenerateFontColor"
 }

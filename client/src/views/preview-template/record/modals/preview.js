@@ -187,11 +187,12 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             const scope = el.dataset.editorType;
             const id = el.dataset.editorId;
+            const fields = el.dataset.editorFields?.split(',');
 
-            this.displaySidePanel(scope, id, el);
+            this.displaySidePanel(scope, id, fields, el);
         },
 
-        displaySidePanel(scope, id, trigger = null) {
+        displaySidePanel(scope, id, fields = [], trigger = null) {
             const container = document.querySelector('.html-preview .side-container');
             if (!container) {
                 return;
@@ -202,6 +203,18 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 sideEdit.remove();
             }
 
+            let detailLayout = null;
+            if (Array.isArray(fields) && fields.length > 0) {
+                detailLayout = [
+                    {
+                        label: '',
+                        rows: []
+                    }
+                ];
+
+                fields.forEach(field => detailLayout[0].rows.push([{name: field}]));
+            }
+
             container.classList.add('active');
             this.prepareFrameDimensions(this.frame);
 
@@ -209,7 +222,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 el: '.full-page-modal .html-preview .side-container',
                 scope: scope,
                 id: id,
-                autosaveDisabled: !this.useAutosave
+                autosaveDisabled: !this.useAutosave,
+                detailLayout: detailLayout
             }, view => {
                 this.listenToOnce(view, 'cancel', () => {
                     container.classList.remove('active');
