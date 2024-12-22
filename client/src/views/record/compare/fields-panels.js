@@ -34,7 +34,6 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
             Dep.prototype.setup.call(this);
 
             this.setupFieldList();
-            this.setupBeforeFinal();
         },
 
         data() {
@@ -42,7 +41,7 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                 scope: this.scope,
                 fieldList: this.fieldListPanels,
                 columns: this.columns,
-                columnLength: this.columns.length + 1
+                columnLength: this.columns.length
             }
         },
 
@@ -58,7 +57,6 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                         readOnly: true,
                         defs: {
                             name: field,
-                            label: field + ' 11'
                         },
                         mode: 'detail',
                         inlineEditDisabled: true,
@@ -75,7 +73,6 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                             mode: 'detail',
                             inlineEditDisabled: true,
                         }, view => {
-                            view.render()
                             if (this.instanceComparison) {
                                 view.listenTo(view, 'after:render', () => {
                                     let localUrl = this.getConfig().get('siteUrl');
@@ -108,46 +105,12 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                         });
                     })
                 })
-            })
-        },
-        setupBeforeFinal() {
-            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
-            this.initUiHandler();
+            });
         },
 
-        hideField: function (name, locked) {
-
-            this.recordHelper.setFieldStateParam(name, 'hidden', true);
-            if (locked) {
-                this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
-            }
-
-            var processHtml = function () {
-                var fieldView = this.getFieldView(name + 'Current');
-                if (fieldView) {
-                    fieldView.$el.parent().addClass('hidden')
-                } else {
-                    let row = this.$el.find('.list-row[data-field="' + name + '"]');
-                    if (row) {
-                        row.addClass('hidden')
-                    }
-                }
-            }.bind(this);
-            if (this.isRendered()) {
-                processHtml();
-            } else {
-                this.once('after:render', function () {
-                    processHtml();
-                }, this);
-            }
-
-            var view = this.getFieldView(name);
-            if (view) {
-                view.setDisabled(locked);
-            }
-        },
         afterRender() {
             Dep.prototype.afterRender.call(this)
+            $('.translated-automatically-field').hide();
             $('.not-approved-field').hide();
         }
     })
