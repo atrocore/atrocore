@@ -26,10 +26,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
         relationFields: [],
 
+        selectFields: ['id'],
+
         setup() {
             this.scope = this.options.scope;
             this.baseModel = this.options.model;
-            this.relationship = this.options.relationship;
+            this.relationship = this.options.relationship ?? {};
             this.collection = this.options.collection;
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.columns = this.options.columns
@@ -43,12 +45,16 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             this.relationFields = [];
             this.relationModels = {};
             this.isLinkedColumns = 'isLinked58894';
+            this.selectFields = this.selectFields ?? ['id'];
             this.linkedEntities = []
             this.tableRows = [];
             this.hasToManyRecords = false;
 
-            if (this.relationship.relationName) {
-                this.relationName = this.relationship.relationName.charAt(0).toUpperCase() + this.relationship.relationName.slice(1);
+            this.relationName = this.relationName ?? this.relationship.relationName;
+
+            let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type']);
+            if (fieldType) {
+                this.selectFields.push('name')
             }
 
             this.fetchModelsAndSetup();
@@ -56,16 +62,13 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
         fetchModelsAndSetup() {
             this.wait(true)
-            let selectField = ['id'];
-            let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type']);
-            if (fieldType) {
-                selectField.push('name')
-            }
-            this.prepareModels(selectField, () => this.setupRelationship(() => this.wait(false)));
+
+            this.prepareModels( () => this.setupRelationship(() => this.wait(false)));
         },
 
         data() {
             let minWidth = 150;
+
             return {
                 name: this.relationship.name,
                 scope: this.scope,
@@ -83,63 +86,26 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
         setupRelationship(callback) {
             this.tableRows = [];
-
             this.linkedEntities.forEach((linkEntity) => {
-
-                let data = [];
-                if (this.relationship.scope === 'File') {
-                    data.push({
-                        field: this.isLinkedColumns,
-                        label: '',
-                        isField: true,
-                        key: linkEntity.id,
-                        entityValueKeys: []
-                    });
-                    this.getModelFactory().create('File', fileModel => {
-                        fileModel.set(linkEntity);
-                        let viewName = fileModel.getFieldParam('preview', 'view') || this.getFieldManager().getViewName(fileModel.getFieldType('preview'));
-                        let viewKey = linkEntity.id;
-                        this.createView(viewKey, viewName, {
-                            el: `${this.options.el} [data-key="${viewKey}"] .attachment-preview`,
-                            model: fileModel,
-                            readOnly: true,
-                            defs: {
-                                name: 'preview',
-                            },
-                            mode: 'list',
-                            inlineEditDisabled: true,
-                        }, view => {
-                            view.previewSize = 'small';
-                            view.once('after:render', () => {
-                                this.$el.find(`[data-key="${viewKey}"]`).append(`<div class="file-link">
-<a href="?entryPoint=download&id=${linkEntity.id}" download="" title="Download">
- <span class="glyphicon glyphicon-download-alt small"></span>
- </a> 
- <a href="/#File/view/${linkEntity.id}" title="${linkEntity.name}" class="link" data-id="${linkEntity.id}">${linkEntity.name}</a>
- </div>`);
-                            })
-                        });
-                    });
-                } else {
-                    data.push({
-                        field: this.isLinkedColumns,
-                        label: `<a href="#/${this.relationship.scope}/view/${linkEntity.id}"> ${linkEntity.name ?? linkEntity.id} </a>`,
-                        entityValueKeys: []
-                    });
-                }
+                let data = this.getFieldColumns(linkEntity);
 
                 this.getRelationAdditionalFields().forEach(field => {
                     data.push({
                         field: field,
                         label: this.translate(field, 'fields', this.relationName),
+                        title: this.translate(field, 'fields', this.relationName),
                         entityValueKeys: []
                     });
                 })
 
                 this.relationModels[linkEntity.id].forEach((model, index) => {
                     data.forEach(el => {
+                        if(!el.field) {
+                            el.entityValueKeys.push({key: null});
+                            return;
+                        }
                         let field = el.field;
-                        let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(model.getFieldType(field));
+                        let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(model.getFieldType(field))
                         let viewKey = linkEntity.id + field + index + 'Current';
                         el.entityValueKeys.push({key: viewKey})
                         this.createView(viewKey, viewName, {
@@ -301,19 +267,15 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             }
         },
 
-        prepareModels(selectFields, callback) {
-
-            let relationName = this.relationship.relationName.charAt(0).toUpperCase() + this.relationship.relationName.slice(1);
-
-            this.getModelFactory().create(relationName, (relationModel) => {
-                let models = {};
+        prepareModels(callback) {
+            this.getModelFactory().create(this.relationName, (relationModel) => {
                 relationModel.defs.fields[this.isLinkedColumns] = {
                     type: 'bool'
                 }
                 let modelRelationColumnId = this.scope.toLowerCase() + 'Id';
                 let relationshipRelationColumnId = this.relationship.scope.toLowerCase() + 'Id';
                 let data = {
-                    select: selectFields.join(','),
+                    select: this.selectFields.join(','),
                     where: [
                         {
                             type: 'linkedWith',
@@ -340,7 +302,7 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                     Promise.all([
                         this.ajaxGetRequest(this.relationship.scope, data),
 
-                        this.ajaxGetRequest(relationName, {
+                        this.ajaxGetRequest(this.relationName, {
                             maxSize: 500 * this.collection.models.length,
                             where: [
                                 {
@@ -383,19 +345,89 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 return this.relationFields;
             }
 
-            let relationName = this.relationName;
+            this.getModelFactory().create(this.relationName, relationModel  => {
+                for (let field in relationModel.defs.fields) {
+                    if(!this.isFieldEnabled(relationModel, field) || relationModel.getFieldParam(field, 'relationField')){
+                        continue;
+                    }
 
-            Object.entries(this.getMetadata().get(['entityDefs', relationName, 'fields'])).forEach(([field, fieldDef]) => {
-                if (fieldDef.additionalField) {
+                    if(['createdAt', 'modifiedAt', 'createdBy', 'modifiedBy', 'id'].includes(field)) {
+                        continue;
+                    }
+
                     this.relationFields.push(field);
                 }
             });
 
             this.relationFields.sort((v1, v2) =>{
-                return this.translate(v1, 'fields', relationName).localeCompare(this.translate(v2, 'fields', relationName));
+                return this.translate(v1, 'fields', this.relationName).localeCompare(this.translate(v2, 'fields', this.relationName));
             })
 
             return this.relationFields;
+        },
+
+        getFieldColumns(linkEntity) {
+            let data = [];
+            if (this.relationship.scope === 'File') {
+                data.push({
+                    field: this.isLinkedColumns,
+                    label: linkEntity.name,
+                    title: linkEntity.name,
+                    isField: true,
+                    key: linkEntity.id,
+                    entityValueKeys: []
+                });
+                this.getModelFactory().create('File', fileModel => {
+                    fileModel.set(linkEntity);
+                    let viewName = fileModel.getFieldParam('preview', 'view') || this.getFieldManager().getViewName(fileModel.getFieldType('preview'));
+                    let viewKey = linkEntity.id;
+                    this.createView(viewKey, viewName, {
+                        el: `${this.options.el} [data-key="${viewKey}"] .attachment-preview`,
+                        model: fileModel,
+                        readOnly: true,
+                        defs: {
+                            name: 'preview',
+                        },
+                        mode: 'list',
+                        inlineEditDisabled: true,
+                    }, view => {
+                        view.previewSize = 'small';
+                        view.once('after:render', () => {
+                            this.$el.find(`[data-key="${viewKey}"]`).append(`<div class="file-link">
+<a href="?entryPoint=download&id=${linkEntity.id}" download="" title="Download">
+ <span class="glyphicon glyphicon-download-alt small"></span>
+ </a> 
+ <a href="/#File/view/${linkEntity.id}" title="${linkEntity.name}" class="link" data-id="${linkEntity.id}">${linkEntity.name}</a>
+ </div>`);
+                        })
+                    });
+                });
+            } else {
+                data.push({
+                    field: this.isLinkedColumns,
+                    title: linkEntity.name,
+                    label: `<a href="#/${this.relationship.scope}/view/${linkEntity.id}"> ${linkEntity.name ?? linkEntity.id} </a>`,
+                    entityValueKeys: []
+                });
+            }
+
+            return data;
+        },
+
+        isFieldEnabled(model, name) {
+            if (model.getFieldParam(name, 'notStorable') && model.getFieldParam(name, 'readOnly') && !model.getFieldParam(name, 'virtualField')) {
+                return false;
+            }
+
+            const disabledParameters = ['disabled', 'layoutDetailDisabled'];
+
+            for (let param of disabledParameters) {
+                if (model.getFieldParam(name, param)) {
+                    return false
+                }
+            }
+
+            return true;
         },
 
         updateBaseUrl() {

@@ -98,11 +98,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         return;
                     }
 
-
-                    let htmlTag = 'code';
-
                     this.fieldsArr.push({
                         field: field,
+                        isTextField: ['text', 'wysiwyg', 'markdown'].includes(type),
                         type: type,
                         label: fieldDef['label'] ?? field,
                         current: field + 'Current',
@@ -146,7 +144,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 columns: this.buildComparisonTableHeaderColumn(),
                 distantModels: this.distantModelsAttribute,
                 instanceComparison: this.instanceComparison,
-                el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
+                el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
             }, view => {
                 view.render();
                 this.notify(false);
@@ -165,7 +163,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
 
                 if (this.nonComparableFields.includes(link)) {
-                    return;
+                    continue;
                 }
 
                 if(!this.isComparableLink(link)){
@@ -196,7 +194,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', bottomPanel.link])
+                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', bottomPanel.link]);
+
+                let relationName = relationDefs['relationName'];
+
+                if(relationName) {
+                    relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                }
 
                 relationshipsPanels.push({
                     label: this.translate(bottomPanel.label, 'labels', this.scope),
@@ -204,7 +208,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     name: bottomPanel.name,
                     type: relationDefs['type'],
                     foreign: relationDefs['foreign'],
-                    relationName: relationDefs['relationName'],
+                    relationName: relationName,
                     defs: bottomPanel
                 });
             });
@@ -234,7 +238,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 buttonList: this.buttonList,
                 fieldsArr: this.fieldsArr,
                 columns: column,
-                columnLength: column.length + 1,
+                columnLength: column.length,
                 scope: this.scope,
                 id: this.id
             };
@@ -316,6 +320,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let hasName = !!this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type'])
 
             columns.push({
+                isFirst: true,
                 name: hasName ? this.translate('Name') : 'ID',
                 label: hasName ? this.translate('Name') : 'ID'
             });

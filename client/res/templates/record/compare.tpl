@@ -8,35 +8,48 @@
     </div>
 
     <div class="row">
-        <div class="compare-panel  list col-md-12" data-name="fieldsPanels">
-            <table class="table full-table table-striped table-fixed table-scrolled table-bordered">
-                <thead>
-                <tr>
-                    {{#each columns}}
-                    <th class="text-center">
-                        {{#if link}}
-                        <a href="#{{../scope}}/view/{{name}}"> {{label}}</a>
-                        {{else}}
-                        {{name}}
-                        {{/if}}
-                        {{#if _error}}
-                        <br>
-                        <span class="danger"> ({{_error}})</span>
-                        {{/if}}
-                    </th>
-                    {{/each}}
-                    <th width="25"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="list-row">
-                    <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
-                </tr>
-                <tr class="list-row">
-                    <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="compare-panel list col-md-12">
+            <div class="panel panel-default panel-overviewPanels" data-panel="fields-overviews">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Overviews
+                    </h4>
+                </div>
+
+                <div class="panel-body">
+                    <div class="list-container" >
+                        <div class="list" >
+                            <table class="table full-table table-striped table-fixed table-scrolled table-bordered">
+                                <thead>
+                                <tr>
+                                    {{#each columns}}
+                                    <th class="text-center">
+                                        {{#if link}}
+                                        <a href="#{{../scope}}/view/{{name}}"> {{label}}</a>
+                                        {{else}}
+                                        {{name}}
+                                        {{/if}}
+                                        {{#if _error}}
+                                        <br>
+                                        <span class="danger"> ({{_error}})</span>
+                                        {{/if}}
+                                    </th>
+                                    {{/each}}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="list-row">
+                                    <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
+                                </tr>
+                                <tr class="list-row">
+                                    <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="compare-panel  list col-md-12" data-name="relationshipsPanels">
@@ -75,6 +88,10 @@
         border-left: 3px solid red;
     }
 
+    .compare-panel table col.col-min-width{
+        min-width: 200px;
+    }
+
     .compare-panel table tbody tr.danger td:first-child{
         border-left: 3px solid red;
     }
@@ -96,12 +113,11 @@
     }
 
     .compare-panel  .table{
-        table-layout: auto;
+        table-layout: fixed;
     }
 
     .compare-panel tr td:first-child {
         width: 250px !important;
-        max-width: 350px !important;
     }
 
     .compare-panel tr td:first-child {

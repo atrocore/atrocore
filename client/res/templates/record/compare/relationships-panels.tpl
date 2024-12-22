@@ -8,7 +8,7 @@
         </div>
         <div class="panel-body">
              <div class="list-container" data-panel="{{name}}">
-             <div class="list">
+                <div class="list">
                  <table class="table full-table table-striped table-fixed table-scrolled table-bordered" >
                      <thead>
                      <tr>
@@ -33,8 +33,7 @@
                      </tbody>
                  </table>
             </div>
-
+             </div>
         </div>
-    </div>
  </div>
 {{/each}}
