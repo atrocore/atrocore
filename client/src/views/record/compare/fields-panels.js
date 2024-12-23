@@ -8,6 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+
 Espo.define('views/record/compare/fields-panels', 'views/record/base', function (Dep) {
     return Dep.extend({
         template: 'record/compare/fields-panels',
@@ -18,51 +19,32 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
 
         setup() {
             this.scope = this.options.scope;
-            this.fieldsArr = this.options.fieldsArr;
             this.model = this.options.model;
             this.instances = this.options.instances ?? this.getMetadata().get(['app', 'comparableInstances'])
             this.instanceComparison = this.options.instanceComparison;
             this.columns = this.options.columns;
 
-            this.wait(true);
+           this.fieldListPanels = [
+               {
+                   label: 'Fields',
+                   fields:  this.options.fieldsArr
+               }
+           ]
 
-            this.getHelper().layoutManager.get(this.scope, 'detail', layout => {
-                if (layout && layout.length) {
-                    this.fieldListPanels = [];
-                    let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
+            Dep.prototype.setup.call(this);
 
-                    layout.forEach(panel => {
-                        let panelData = {
-                            label: panel.label || panel.customLabel,
-                            fields: []
-                        };
-
-                        (panel.rows || []).forEach(row => (row || []).forEach(item => {
-                            if (item.name && !forbiddenFieldList.includes(item.name)) {
-                                let field = this.fieldsArr.filter(f => f.field === item.name)[0]
-                                if (field) {
-                                    panelData.fields.push(field);
-                                }
-                            }
-                        }));
-
-                        this.fieldListPanels.push(panelData);
-                    });
-                }
-                Dep.prototype.setup.call(this);
-                this.setupFieldList();
-                this.setupBeforeFinal();
-                this.wait(false);
-            });
+            this.setupFieldList();
         },
+
         data() {
             return {
                 scope: this.scope,
                 fieldList: this.fieldListPanels,
                 columns: this.columns,
-                columnLength: this.columns.length + 1
+                columnLength: this.columns.length
             }
         },
+
         setupFieldList() {
             this.fieldListPanels.forEach((panel) => {
                 panel.fields.forEach(fieldData => {
@@ -75,7 +57,6 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                         readOnly: true,
                         defs: {
                             name: field,
-                            label: field + ' 11'
                         },
                         mode: 'detail',
                         inlineEditDisabled: true,
@@ -92,7 +73,6 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                             mode: 'detail',
                             inlineEditDisabled: true,
                         }, view => {
-                            view.render()
                             if (this.instanceComparison) {
                                 view.listenTo(view, 'after:render', () => {
                                     let localUrl = this.getConfig().get('siteUrl');
@@ -125,45 +105,12 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                         });
                     })
                 })
-            })
+            });
         },
-        setupBeforeFinal() {
-            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
-            this.initUiHandler();
-        },
-        hideField: function (name, locked) {
 
-            this.recordHelper.setFieldStateParam(name, 'hidden', true);
-            if (locked) {
-                this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
-            }
-
-            var processHtml = function () {
-                var fieldView = this.getFieldView(name + 'Current');
-                if (fieldView) {
-                    fieldView.$el.parent().addClass('hidden')
-                } else {
-                    let row = this.$el.find('.list-row[data-field="' + name + '"]');
-                    if (row) {
-                        row.addClass('hidden')
-                    }
-                }
-            }.bind(this);
-            if (this.isRendered()) {
-                processHtml();
-            } else {
-                this.once('after:render', function () {
-                    processHtml();
-                }, this);
-            }
-
-            var view = this.getFieldView(name);
-            if (view) {
-                view.setDisabled(locked);
-            }
-        },
         afterRender() {
             Dep.prototype.afterRender.call(this)
+            $('.translated-automatically-field').hide();
             $('.not-approved-field').hide();
         }
     })
