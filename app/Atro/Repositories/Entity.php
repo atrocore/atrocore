@@ -13,13 +13,83 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
+use Espo\Core\DataManager;
 use Espo\ORM\Entity as OrmEntity;
 
 class Entity extends ReferenceData
 {
+    public const RESERVED_WORDS = [
+        'abstract',
+        'and',
+        'array',
+        'as',
+        'break',
+        'callable',
+        'case',
+        'catch',
+        'class',
+        'clone',
+        'const',
+        'continue',
+        'declare',
+        'default',
+        'die',
+        'do',
+        'echo',
+        'else',
+        'elseif',
+        'empty',
+        'enddeclare',
+        'endfor',
+        'endforeach',
+        'endif',
+        'endswitch',
+        'endwhile',
+        'eval',
+        'exit',
+        'extends',
+        'final',
+        'for',
+        'foreach',
+        'function',
+        'global',
+        'goto',
+        'if',
+        'implements',
+        'include',
+        'include_once',
+        'instanceof',
+        'insteadof',
+        'interface',
+        'isset',
+        'list',
+        'namespace',
+        'new',
+        'or',
+        'print',
+        'private',
+        'protected',
+        'public',
+        'require',
+        'require_once',
+        'return',
+        'static',
+        'switch',
+        'throw',
+        'trait',
+        'try',
+        'unset',
+        'use',
+        'var',
+        'while',
+        'xor',
+        'common'
+    ];
+
     protected function getAllItems(array $params = []): array
     {
         $boolFields = [];
@@ -49,18 +119,10 @@ class Entity extends ReferenceData
                 'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
                 'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
                 'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-                'sortDirection'         => $this->getMetadata()->get([
-                    'entityDefs',
-                    $code,
-                    'collection',
-                    'asc'
-                ]) ? 'asc' : 'desc',
-                'textFilterFields'      => $this->getMetadata()->get([
-                    'entityDefs',
-                    $code,
-                    'collection',
-                    'textFilterFields'
-                ]),
+                'sortDirection'         => $this->getMetadata()
+                    ->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
+                'textFilterFields'      => $this->getMetadata()
+                    ->get(['entityDefs', $code, 'collection', 'textFilterFields']),
             ]);
         }
 
@@ -69,6 +131,14 @@ class Entity extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
+        if ($this->getMetadata()->get('scopes.' . $entity->get('code'))) {
+            throw new Conflict("Entity '{$entity->get('code')}' already exists.");
+        }
+
+        if (in_array(strtolower($entity->get('code')), self::RESERVED_WORDS)) {
+            throw new Conflict("Entity name '{$entity->get('code')}' is not allowed.");
+        }
+
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             file_put_contents(
@@ -77,30 +147,34 @@ class Entity extends ReferenceData
             );
         }
 
-        // set ID
         $entity->id = $entity->get('code');
+        $entity->set('isCustom', true);
 
-        $this->updateEntity($entity);
+        // update metadata
+        $this->updateScope($entity, [], true);
+
+        // copy default layouts
+        $layoutsPath = CORE_PATH . "/Atro/Core/Templates/Layouts/{$entity->get('type')}";
+        if (is_dir($layoutsPath)) {
+            Util::createDir("data/layouts/{$entity->get('code')}");
+            foreach (scandir($layoutsPath) as $fileName) {
+                if (in_array($fileName, ['.', '..']) || !is_file("$layoutsPath/$fileName")) {
+                    continue;
+                }
+                file_put_contents(
+                    "data/layouts/{$entity->get('code')}/$fileName",
+                    file_get_contents("$layoutsPath/$fileName")
+                );
+            }
+        }
 
         return true;
     }
 
-    public function updateEntity(OrmEntity $entity): bool
+    public function updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
     {
-        $saveMetadata = false;
-        $saveLanguage = false;
-
-        $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
-
-        if ($entity->isNew()) {
-            $isCustom = true;
-            $entity->set('isCustom', true);
-            $loadedData = null;
-            $saveMetadata = true;
-            $saveLanguage = true;
-        } else {
-            $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
-        }
+        $saveMetadata = $isCustom;
+        $saveLanguage = $isCustom;
 
         foreach ($entity->toArray() as $field => $value) {
             if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code'])) {
@@ -172,6 +246,7 @@ class Entity extends ReferenceData
 
         if ($saveMetadata) {
             $this->getMetadata()->save();
+            $this->getDataManager()->rebuild();
         }
 
         if ($saveLanguage) {
@@ -182,6 +257,15 @@ class Entity extends ReferenceData
                 }
             }
         }
+
+    }
+
+    public function updateEntity(OrmEntity $entity): bool
+    {
+        $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
+        $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
+
+        $this->updateScope($entity, $loadedData, $isCustom);
 
         return true;
     }
@@ -228,6 +312,8 @@ class Entity extends ReferenceData
 
         // @todo delete all relations
 
+        $this->getDataManager()->clearCache();
+
         return true;
     }
 
@@ -237,6 +323,7 @@ class Entity extends ReferenceData
 
         $this->addDependency('language');
         $this->addDependency('baseLanguage');
+        $this->addDependency('dataManager');
     }
 
     protected function getLanguage(): \Atro\Core\Utils\Language
@@ -247,5 +334,10 @@ class Entity extends ReferenceData
     protected function getBaseLanguage(): \Atro\Core\Utils\Language
     {
         return $this->getInjection('baseLanguage');
+    }
+
+    protected function getDataManager(): DataManager
+    {
+        return $this->getInjection('dataManager');
     }
 }
