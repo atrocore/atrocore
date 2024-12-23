@@ -590,7 +590,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             dropdownItemList.push({
                                 ...action,
                                 id: action.data['action_id'],
-                                name: "dynamicAction"
                             });
                         }
 
@@ -598,14 +597,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             additionalButtons.push({
                                 ...action,
                                 id: action.data['action_id'],
-                                name: "dynamicAction"
                             });
                         }
                     })
 
                     let template = this._templator.compileTemplate(`
                    {{#each dropdownItemList}}
-                        <li class="dynamic-action"><a href="javascript:" class="action" data-action="{{name}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=scope}}{{/if}}</a></li>
+                        <li class="dynamic-action"><a href="javascript:" class="action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=scope}}{{/if}}</a></li>
                 {{/each}}`)
                     let html = this._renderer.render(template, {dropdownItemList, scope: this.scope})
 
