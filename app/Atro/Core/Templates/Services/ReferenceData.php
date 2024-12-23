@@ -82,7 +82,7 @@ class ReferenceData extends Record
         $foreigns = [];
 
         foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'links'], []) as $link => $defs) {
-            if ($defs['type'] === 'belongsTo' && !empty($defs['entity'])) {
+            if ($defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->getMetadata()->get(['scopes', $defs['entity'], 'type']) !== 'ReferenceData') {
                 $foreigns[$link] = $this->getEntityManager()
                     ->getRepository($defs['entity'])
                     ->where([

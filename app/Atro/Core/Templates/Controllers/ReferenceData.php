@@ -17,11 +17,6 @@ use Atro\Core\Exceptions\Forbidden;
 
 class ReferenceData extends AbstractRecordController
 {
-    public function actionListLinked($params, $data, $request)
-    {
-        throw new BadRequest();
-    }
-
     public function actionMassUpdate($params, $data, $request)
     {
         throw new BadRequest();

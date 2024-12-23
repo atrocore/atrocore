@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "code": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "varchar"
+      ]
+    },
+    "entity": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "entity": {
+      "type": "belongsTo",
+      "foreign": "fields",
+      "entity": "Entity"
+    }
+  },
+  "collection": {
+    "sortBy": "code",
+    "asc": true
+  }
+}

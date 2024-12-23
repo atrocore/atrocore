@@ -166,6 +166,13 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "fields": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -176,6 +183,11 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "fields": {
+      "type": "hasMany",
+      "foreign": "entity",
+      "entity": "EntityField"
     }
   },
   "collection": {
