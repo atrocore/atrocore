@@ -477,7 +477,8 @@
     "massRestore": "Масове відновлення",
     "delete": "Видалити",
     "massDelete": "Масове видалення",
-    "download": "Завантажити"
+    "download": "Завантажити",
+    "compare": "Порівняйте"
   },
   "fields": {
     "folderPath": "Шлях папки",

@@ -503,7 +503,8 @@
     "export": "Exportieren",
     "restore": "Wiederherstellen",
     "massRestore": "Massenwiederherstellung",
-    "download": "Nachladen"
+    "download": "Nachladen",
+    "compare": "Vergleichen Sie"
   },
   "fields": {
     "path": "Ordner Pfad",

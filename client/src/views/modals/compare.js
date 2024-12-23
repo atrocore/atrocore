@@ -29,12 +29,15 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         instanceComparison: false,
 
-        hideRelationship: true,
+        hideRelationship: false,
+
+        className: 'full-page-modal',
 
         setup: function () {
             this.model = this.options.model;
             this.scope = this.options.scope ?? this.model.urlRoot;
-            this.className = this.options.className ?? this.className;
+            this.className = this.options.className ?? this.className ;
+            this.mode = this.options.mode ?? 'detail'
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.collection = this.options.collection ?? this.collection;
             this.hideRelationship = this.options.hideRelationship ?? this.hideRelationship;

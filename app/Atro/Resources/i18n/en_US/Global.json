@@ -487,7 +487,8 @@
     "delete": "Delete",
     "deletePermanently": "Delete Permanently",
     "massDelete": "Mass Delete",
-    "download": "Download"
+    "download": "Download",
+    "compare": "Compare"
   },
   "fields": {
     "folderPath": "Folder Path",
