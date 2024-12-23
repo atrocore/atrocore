@@ -226,12 +226,7 @@ class Entity extends ReferenceData
             }
         }
 
-//        foreach ($this->getMetadata()->get(['entityDefs', $name, 'links'], []) as $link => $item) {
-//            try {
-//                $this->deleteLink(['entity' => $name, 'link' => $link]);
-//            } catch (\Exception $e) {
-//            }
-//        }
+        // @todo delete all relations
 
         return true;
     }
