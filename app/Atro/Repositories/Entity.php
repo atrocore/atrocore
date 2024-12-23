@@ -132,6 +132,9 @@ class Entity extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
+        // http://atropim.local/#Admin/fieldManager/scope=Absence
+        // http://atropim.local/#Admin/linkManager/scope=Absence
+
         if (!preg_match('/^[A-Z][A-Za-z0-9]*$/', $entity->get('code'))) {
             throw new BadRequest("Code is invalid.");
         }

@@ -60,12 +60,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             this.main('views/admin/field-manager/index', {scope: scope, field: field});
         },
 
-        entityManager: function (options) {
-            var scope = options.scope || null;
-
-            this.main('views/admin/entity-manager/index', {scope: scope});
-        },
-
         linkManager: function (options) {
             var scope = options.scope || null;
 
