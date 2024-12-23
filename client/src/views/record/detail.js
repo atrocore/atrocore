@@ -341,15 +341,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
-        actionCompare: function () {
+        actionCompareInstance: function () {
             if (!this.getAcl().check(this.entityType, 'read')) {
                 this.notify('Access denied', 'error');
                 return false;
             }
-
-            var url = '#' + this.entityType + '/compare?id=' + this.model.get('id');
-            const baseUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-            window.open(baseUrl + '/' + url);
+            this.createView('recordCompareInstance', 'views/modals/compare', {
+                model: this.model,
+                scope: this.scope,
+                instanceComparison: true,
+                mode: "details",
+            }, function (dialog) {
+                dialog.render();
+                this.notify(false)
+            });
         },
 
         getSelfAssignAttributes: function () {
@@ -388,11 +393,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         }
                     }
 
-                    if (!exists) {
+                    let instances = this.getMetadata().get(['app', 'comparableInstances']);
+
+                    if (!exists && instances.length) {
                         this.dropdownItemList.push({
-                            'label': this.translate('Instance comparison'),
-                            'name': 'compare',
-                            'action': 'compare'
+                            'label': this.translate('Compare with')+ ' ' + instances[0].name,
+                            'name': 'compareInstance',
+                            'action': 'compareInstance'
                         });
                     }
                 }

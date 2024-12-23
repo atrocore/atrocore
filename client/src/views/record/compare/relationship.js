@@ -18,12 +18,6 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
         columns: [],
 
-        currentItemModels: [],
-
-        otherItemModels: [],
-
-        shouldHide: false,
-
         relationFields: [],
 
         selectFields: ['id'],
@@ -40,8 +34,6 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
             this.dragableListRows = false;
             this.showMore = false
             this.fields = [];
-            this.currentItemModels = [];
-            this.otherItemModels = [];
             this.relationFields = [];
             this.relationModels = {};
             this.isLinkedColumns = 'isLinked58894';
@@ -260,11 +252,8 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
         afterRender() {
             Dep.prototype.afterRender.call(this)
-            $('.not-approved-field').hide();
-            $('.translated-automatically-field').hide();
-            if (this.shouldHide) {
-                this.$el.parent().parent().hide();
-            }
+            $('.not-approved-field').remove();
+            $('.translated-automatically-field').remove();
         },
 
         prepareModels(callback) {
