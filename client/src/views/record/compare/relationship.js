@@ -347,7 +347,6 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
 
             this.getModelFactory().create(this.relationName, relationModel  => {
                 for (let field in relationModel.defs.fields) {
-
                     if(!this.isFieldEnabled(relationModel, field) || relationModel.getFieldParam(field, 'relationField')){
                         continue;
                     }
