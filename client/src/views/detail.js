@@ -402,7 +402,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 title: 'Your are following, Click to unfollow',
                 action: 'unfollow',
                 cssStyle: 'margin: 0 10px 0 0px;color:var(--secondary-color);'
-            }, true);
+            }, true, false, true);
         },
 
         addFollowButtonToMenu: function () {
@@ -413,7 +413,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 html: '<span class="fas fa-bell"></span>',
                 action: 'follow',
                 cssStyle: 'margin: 0 10px 0 0px;'
-            }, true);
+            }, true, false, true);
         },
 
         setupRecord: function () {
@@ -443,7 +443,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 this.addMenuItem('buttons', {
                     name: 'following',
                     style: 'hidden',
-                }, true);
+                }, true, false, true);
             }else if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
             } else {
@@ -480,7 +480,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 }
             }
 
-            this.addMenuItem('buttons', data, true);
+            this.addMenuItem('buttons', data, true, false, true);
         },
 
         actionBookmark: function() {
