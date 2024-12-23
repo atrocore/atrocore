@@ -1321,7 +1321,7 @@ class Metadata extends AbstractListener
     {
         foreach ($data['entityDefs'] as $entity => $scopeDefs) {
             if(!empty($data['scopes'][$entity]['bookmarkDisabled'])) {
-                return;
+                continue;
             }
             $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
             $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';

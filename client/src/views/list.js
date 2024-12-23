@@ -572,7 +572,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
 
-            if(!treeScopes.includes(this.scope) && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+            if(!treeScopes.includes(this.scope)
+                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
+            ) {
                 treeScopes.includes(this.scope);
             }
 
@@ -589,7 +592,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         setupTreePanel(scope) {
-            if (!this.isTreeAllowed() || this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)) {
+            if (!this.isTreeAllowed()) {
                 return;
             }
 
