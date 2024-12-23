@@ -262,7 +262,6 @@ class Entity extends ReferenceData
                 }
             }
         }
-
     }
 
     public function updateEntity(OrmEntity $entity): bool
