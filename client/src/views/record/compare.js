@@ -174,6 +174,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
 
+                let relationName = relationDefs['relationName'];
+
+                if(relationName) {
+                    relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                }
+
                 let panelData = {
                     label: this.translate(link, 'links', this.scope),
                     scope: relationScope,
@@ -181,7 +187,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     type: relationDefs['type'],
                     inverseType: inverseRelationType,
                     foreign: relationDefs['foreign'],
-                    relationName: relationDefs['relationName'],
+                    relationName: relationName,
                     defs:  {}
                 };
 

@@ -345,8 +345,12 @@ Espo.define('views/record/compare/relationship', 'views/record/list', function (
                 return this.relationFields;
             }
 
+            if(this.relationName === 'ProductCategory') {
+                debugger
+            }
             this.getModelFactory().create(this.relationName, relationModel  => {
                 for (let field in relationModel.defs.fields) {
+
                     if(!this.isFieldEnabled(relationModel, field) || relationModel.getFieldParam(field, 'relationField')){
                         continue;
                     }
