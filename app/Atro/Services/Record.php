@@ -229,7 +229,6 @@ class Record extends RecordService
 
         if (!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) &&
             $this->getAcl()->check('Bookmark', 'create')) {
-            // load bookmark id ??
 
             $dynamicActions[] = [
                 'action' => 'bookmark',
