@@ -1,7 +1,16 @@
-<div class="list" style="overflow-x: clip">
-    <table class="table full-table table-striped  table-fixed table-scrolled table-bordered" style=" table-layout: auto">
+<div class="list custom-compare-relationship" style="overflow-x: clip">
+    <table class="table full-table table-striped  table-fixed table-scrolled table-bordered {{#if showBorders}} bottom-border-black {{/if}}">
+        <colgroup>
+            {{#each columns}}
+            {{#if isFirst }}
+            <col style="width: 250px;">
+            {{else}}
+            <col class="col-min-width">
+            {{/if}}
+            {{/each}}
+        </colgroup>
         <thead>
-        <tr>
+            <tr>
             {{#each columns}}
             <th colspan="{{itemColumnCount}}" class="text-center">
                 {{#if link}}
@@ -18,36 +27,34 @@
         </tr>
         </thead>
         <tbody>
-        {{#each relationshipsFields}}
-        <tr class="list-row" >
-            <td class="cell">{{translate field scope=../scope category='fields'}}</td>
-            {{#if currentViewKeys }}
-            {{#each currentViewKeys}}
+        {{#if hasToManyRecords }}
+           <tr><td colspan="{{columnLength}}"> {{hasManyRecordsMessage}}</td></tr>
+        {{else}}
+        {{#unless tableRows }}
+        <tr> <td  colspan="{{columnLength}}"> No Data</td></tr>
+        {{/unless}}
+        {{#each tableRows}}
+        <tr class="list-row  {{class}}" >
+            <td class="cell l-200" data-field="name" title="{{title}}">
+                {{#if isField}}
+                <div data-key="{{key}}" style="display:flex; flex-direction: column; align-items: baseline">
+                    {{{var key ../this}}}
+                </div>
+                {{else}}
+                {{{label }}}
+                {{/if}}
+            </td>
+            {{#each entityValueKeys}}
             <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../minWidth}}px">
-                {{{var key ../../this }}}
+                {{#if key}}
+                    {{{var key ../../this }}}
+                {{/if}}
             </td>
-            {{/each}}
-            {{else}}
-            <td class="cell"></td>
-            {{/if}}
-            {{#each othersModelsKeyPerInstances}}
-            {{#if this }}
-            {{#each this }}
-            <td class="cell text-center" data-field="{{key}}" style="min-width: {{../../../minWidth}}px">
-                {{{var key ../../../this}}}
-            </td>
-            {{/each}}
-            {{else}}
-                <td class="cell"></td>
-            {{/if}}
             {{/each}}
         </tr>
         {{/each}}
+        {{/if}}
         </tbody>
     </table>
     <div class="panel-scroll hidden" style="display: block;"><div></div></div>
 </div>
-
-<style>
-
-</style>

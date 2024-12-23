@@ -10,6 +10,12 @@
 
 Espo.define('views/record/compare/relationship-instance', 'views/record/compare/relationship', function (Dep) {
     return Dep.extend({
+        setup() {
+            this.instances = this.getMetadata().get(['app', 'comparableInstances']);
+            this.instanceComparison = true;
+
+            Dep.prototype.setup.call(this);
+        },
 
         prepareModels(selectFields, callback) {
 

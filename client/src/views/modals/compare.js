@@ -29,34 +29,28 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         instanceComparison: false,
 
-        hideRelationship: true,
+        hideRelationship: false,
+
+        className: 'full-page-modal',
 
         setup: function () {
             this.model = this.options.model;
             this.scope = this.options.scope ?? this.model.urlRoot;
-            this.className = this.options.className ?? this.className;
+            this.className = this.options.className ?? this.className ;
+            this.mode = this.options.mode ?? 'detail'
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.collection = this.options.collection ?? this.collection;
             this.hideRelationship = this.options.hideRelationship ?? this.hideRelationship;
 
             Modal.prototype.setup.call(this)
 
-            let middle = '';
 
             if (this.instanceComparison) {
-                this.recordView = 'views/record/compare-instance'
-                this.buttonList.push({
-                    name: 'fullView',
-                    label: 'Full View'
-                });
+                this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
+               this.header = this.getLanguage().translate('Instance Comparison');
             } else {
-                middle = ' Bookmarked ';
-            }
-
-            this.header = this.getLanguage().translate('Compare') + middle + ' ' + this.translate(this.scope, 'scopeNamesPlural');
-
-            if (this.model) {
-                this.header += ' ' + this.model.get('name')
+                this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
+                this.header = this.getLanguage().translate('Record Comparison');
             }
 
             this.listenTo(this, 'after:render', () => this.setupRecord())
@@ -82,10 +76,17 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     this.createModalView(options)
                 })
             } else {
-                this.collection.fetch().success(() => {
+                if (this.collection.models.length < 2) {
+                    this.notify(this.translate('youShouldHaveAtLeastOneRecord'));
+                    this.close();
+                }else if (this.collection.models.length > 10){
+                    let message = this.translate('weCannotCompareMoreThan');
+                    this.notify(message.replace('%s', 10));
+                    this.close()
+                } else {
                     options.model = this.collection.models[0];
                     this.createModalView(options);
-                })
+                }
             }
         },
 

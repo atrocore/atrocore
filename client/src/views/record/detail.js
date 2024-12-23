@@ -1632,7 +1632,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
 
             if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
-                this.isTreePanel = this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+                this.isTreePanel = this.isTreeAllowed();
                 this.setupTreePanel();
             }
         },
@@ -2576,7 +2576,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
 
-            if (!treeScopes.includes(this.scope) && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+            if(!treeScopes.includes(this.scope)
+                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true
+            ) {
                 treeScopes.includes(this.scope);
             }
 
@@ -2593,7 +2596,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupTreePanel() {
-            if (!this.isTreeAllowed() || this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)) {
+            if (!this.isTreeAllowed()) {
                 return;
             }
 

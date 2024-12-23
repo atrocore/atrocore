@@ -190,13 +190,16 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
         alterPanels: function (layoutData) {
             layoutData = layoutData || {};
 
-            var newList = [];
+            let newList = [];
             this.panelList.forEach(function (item, i) {
                 item.index = i;
                 if (item.name) {
-                    var itemData = layoutData[item.name] || {};
+                    let itemData = layoutData[item.name] || {};
                     if (itemData.disabled) return;
-                    for (var i in itemData) {
+                    if ('sortOrder' in itemData && Number.isInteger(itemData.sortOrder)) {
+                        item.index = itemData.sortOrder;
+                    }
+                    for (let i in itemData) {
                         item[i] = itemData[i];
                     }
                 }

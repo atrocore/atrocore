@@ -123,7 +123,7 @@
             <div class="well">
                 <header>{Language.translate('Enabled', 'labels', 'Admin')}</header>
                 <ul class="enabled connected">
-                    {#each enabledFields as item (item.name)}
+                    {#each enabledFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
                         <li {...getDataAttributeProps(item)}>
                             <div class="left">
                                 <label>{item.label}</label>

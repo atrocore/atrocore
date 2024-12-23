@@ -21,12 +21,11 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
         setup() {
             Dep.prototype.setup.call(this);
             this.scope = this.options.scope;
-            this.relationships = this.options.relationships
             this.collection = this.options.collection;
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.columns = this.options.columns
             this.model = this.options.model;
-            this.relationshipsPanels = [];
+            this.relationshipsPanels = this.options.relationshipsPanels;
             this.instances = this.getMetadata().get(['app', 'comparableInstances'])
             this.nonComparableFields = this.getMetadata().get(['scopes', this.scope, 'nonComparableFields']) ?? [];
 
@@ -34,41 +33,9 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                 this.relationshipView = 'views/record/compare/relationship-instance';
             }
 
-
             if ('distantModelsAttribute' in this.options && this.instanceComparison) {
                 this.distantModelsAttribute = this.options.distantModelsAttribute;
             }
-
-
-            let bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
-
-            this.relationships.forEach(relationship => {
-                if (this.nonComparableFields.includes(relationship.name)) {
-                    return;
-                }
-
-                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', relationship.name]) ?? {};
-                let relationScope = relationDefs['entity'];
-                let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
-
-                let bottomPanelOptions = bottomPanels.find(panel => panel.name === relationship.name);
-
-                if (!relationScope && !bottomPanelOptions) {
-                    return;
-                }
-
-                let panelData = {
-                    label: this.translate(this.translate(relationship.name), 'links', this.scope),
-                    scope: relationScope,
-                    name: relationship.name,
-                    type: relationDefs['type'],
-                    inverseType: inverseRelationType,
-                    foreign: relationDefs['foreign'],
-                    relationName: relationDefs['relationName'],
-                    defs: bottomPanelOptions ?? {}
-                };
-                this.relationshipsPanels.push(panelData);
-            })
 
             this.listenTo(this, 'after:render', () => {
                 this.relationshipsPanels.forEach(panelData => {
@@ -93,7 +60,6 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                             ?? this.relationshipView;
 
                     } else {
-
                         relationshipView = panelData.defs.compareRecordsView
                             ?? this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', panelData.name, 'compareRecordsView'])
                             ?? this.relationshipView;
@@ -113,7 +79,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                 instances: this.instances,
                 columns: this.columns,
                 itemColumnCount: 1,
-                columnsLength: this.columns.length + 1
+                columnsLength: this.columns.length
             }
         },
     })
