@@ -57,6 +57,7 @@ class Daemon extends AbstractConsole
 
     protected function composerDaemon(string $id): void
     {
+        return ;
         while (true) {
             $log = Application::COMPOSER_LOG_FILE;
 
@@ -143,6 +144,7 @@ class Daemon extends AbstractConsole
 
     protected function ptDaemon(string $id): void
     {
+        return;
         while (true) {
             if (file_exists(Cron::DAEMON_KILLER)) {
                 break;

@@ -1031,18 +1031,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
-            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
-                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action) && dynamicAction.massAction) {
-                    let obj = {
-                        action: "dynamicMassAction",
-                        label: dynamicAction.name,
-                        id: dynamicAction.id
-                    };
-                    this.massActionList.push(obj);
-                    this.checkAllResultMassActionList.push(obj);
-                }
-            });
-
             (this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []).forEach(function (item) {
                 if (~this.massActionList.indexOf(item)) {
                     var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
@@ -1074,6 +1062,27 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.setupMassActionItems();
+
+            let dynamicActions = [];
+            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
+                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action) && dynamicAction.massAction) {
+                    let obj = {
+                        action: "dynamicMassAction",
+                        label: dynamicAction.name,
+                        id: dynamicAction.id
+                    };
+                    dynamicActions.push(obj)
+                }
+            });
+            if (dynamicActions.length > 0) {
+                dynamicActions = dynamicActions.sort((v1, v2) => {
+                    return v1.label.localeCompare(v2.label);
+                })
+                dynamicActions.unshift({divider: true})
+                this.massActionList.push(...dynamicActions);
+                this.checkAllResultMassActionList.push(...dynamicActions);
+            }
+
 
 
             if (this.selectable) {
@@ -2628,9 +2637,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return 'tr[data-id="' + id + '"]';
         },
 
-        actionBookmark: function(data) {
+        actionBookmark: function (data) {
             data = data || {}
-            let id = data.id;
+            let id = data.entity_id;
             if (!id) return;
             let model = null;
             if (this.collection) {
@@ -2639,7 +2648,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (!model) {
                 return;
             }
-            if(model.get('bookmarkId')) {
+            if (model.get('bookmarkId')) {
                 this.notify(this.translate('Unbookmarking') + '...');
                 $.ajax({
                     url: `Bookmark/${model.get('bookmarkId')}`,
@@ -2654,7 +2663,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.reRender()
                     this.collection.fetch()
                 }.bind(this));
-            }else{
+            } else {
                 this.notify(this.translate('Bookmarking') + '...');
                 $.ajax({
                     url: 'Bookmark',
@@ -2668,7 +2677,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     model.set('bookmarkId', result.id)
                     this.notify(this.translate('Done'), 'success')
                     this.trigger('bookmarked-' + model.urlRoot, model.get('bookmarkId'))
-                    let shouldNotReRender  = false;
+                    let shouldNotReRender = false;
 
                     for (const where of (this.collection.where ?? [])) {
                         if (where.type === 'bool' && (where.value ?? []).includes('onlyBookmarked')) {
@@ -2678,7 +2687,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }
                     }
 
-                    if(!shouldNotReRender) {
+                    if (!shouldNotReRender) {
                         this.reRender();
                     }
 
