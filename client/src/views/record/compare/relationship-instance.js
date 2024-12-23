@@ -25,10 +25,10 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
 
         prepareModels(callback) {
             this.getModelFactory().create(this.relationName, relationModel => {
-                let modelRelationColumnId = this.scope.toLowerCase() + 'Id';
-                let relationshipRelationColumnId = this.relationship.scope.toLowerCase() + 'Id';
+                let modelRelationColumnId = this.getModelRelationColumnId();
+                let relationshipRelationColumnId = this.getRelationshipRelationColumnId();
                 let relationFilter = {
-                    maxSize: 500,
+                    maxSize: 250,
                     where: [
                         {
                             type: 'equals',
@@ -43,11 +43,12 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                 }
 
                 Promise.all([
-                    this.ajaxGetRequest(this.scope + '/' + this.model.id + '/' + this.relationship.name, {
-                        select: this.selectFields.join(',')
+                    this.ajaxGetRequest(this.scope + '/' + this.model.id + '/' + this.getLinkName(), {
+                        select: this.selectFields.join(','),
+                        maxSize: 250
                     }),
                     this.ajaxPostRequest('Synchronization/action/distantInstanceRequest', {
-                        'uri': this.scope + '/' + this.model.id + '/' + this.relationship.name + '?select=' + this.selectFields.join(','),
+                        'uri': this.scope + '/' + this.model.id + '/' + this.getLinkName() + '?select=' + this.selectFields.join(','),
                         'type': 'list'
                     }),
                     this.ajaxGetRequest(this.relationName, relationFilter),
@@ -56,14 +57,14 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                         'type': 'list'
                     }),
                 ]).then(results => {
-                    if (results[0].total > 500) {
+                    if (results[0].total > 250) {
                         this.hasToManyRecords = true;
                         callback();
                         return;
                     }
 
                     for (const result of results[1]) {
-                        if (results.total > 500) {
+                        if (results.total > 250) {
                             this.hasToManyRecords = true;
                             callback();
                             return;
@@ -115,7 +116,6 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                     callback();
                 });
             });
-
         },
 
         setBaseUrlOnFile(attr, index) {
@@ -178,6 +178,18 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                     });
                 })
             }, 1000)
+        },
+
+        getModelRelationColumnId() {
+            return this.scope.toLowerCase() + 'Id';
+        },
+
+        getRelationshipRelationColumnId() {
+            return this.relationship.scope.toLowerCase() + 'Id';
+        },
+
+        getLinkName() {
+            return this.relationship.name;
         }
     })
 })
