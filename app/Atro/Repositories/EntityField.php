@@ -20,39 +20,26 @@ class EntityField extends ReferenceData
 {
     protected function getAllItems(array $params = []): array
     {
-//        $boolFields = [];
-//        foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
-//            if ($defs['type'] === 'bool') {
-//                $boolFields[] = $field;
-//            }
-//        }
-
         $items = [];
-//        foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
-//            if (!empty($row['emHidden'])) {
-//                continue;
-//            }
-//
-//            foreach ($boolFields as $boolField) {
-//                $row[$boolField] = !empty($row[$boolField]);
-//            }
-//
-//            $items[] = array_merge($row, [
-//                'id'                    => $code,
-//                'code'                  => $code,
-//                'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
-//                'namePlural'            => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
-//                'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
-//                'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
-//                'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
-//                'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
-//                'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-//                'sortDirection'         => $this->getMetadata()
-//                    ->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
-//                'textFilterFields'      => $this->getMetadata()
-//                    ->get(['entityDefs', $code, 'collection', 'textFilterFields']),
-//            ]);
-//        }
+        foreach ($this->getMetadata()->get('entityDefs', []) as $entity => $row) {
+            if (empty($row['fields'])) {
+                continue;
+            }
+
+            foreach ($row['fields'] as $fieldName => $fieldDefs) {
+                if (!empty($fieldDefs['emHidden'])) {
+                    continue;
+                }
+
+                $items[] = array_merge($row, [
+                    'id'         => "{$entity}_{$fieldName}",
+                    'code'       => $fieldName,
+                    'name'       => $this->getLanguage()->translate($fieldName, 'fields', $entity),
+                    'entityId'   => $entity,
+                    'entityName' => $this->getLanguage()->translate($entity, 'scopeNames'),
+                ]);
+            }
+        }
 
         return $items;
     }
@@ -70,5 +57,17 @@ class EntityField extends ReferenceData
     public function deleteEntity(OrmEntity $entity): bool
     {
         return true;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
+    }
+
+    protected function getLanguage(): \Atro\Core\Utils\Language
+    {
+        return $this->getInjection('language');
     }
 }
