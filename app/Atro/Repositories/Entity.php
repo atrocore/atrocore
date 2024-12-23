@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
@@ -131,6 +132,10 @@ class Entity extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
+        if (!preg_match('/^[A-Z][A-Za-z0-9]*$/', $entity->get('code'))) {
+            throw new BadRequest("Code is invalid.");
+        }
+
         if ($this->getMetadata()->get('scopes.' . $entity->get('code'))) {
             throw new Conflict("Entity '{$entity->get('code')}' already exists.");
         }
@@ -262,6 +267,10 @@ class Entity extends ReferenceData
 
     public function updateEntity(OrmEntity $entity): bool
     {
+        if ($entity->isAttributeChanged('code')) {
+            throw new BadRequest("Code cannot be changed.");
+        }
+
         $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
         $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
 
