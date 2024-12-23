@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity as OrmEntity;
 
 class Entity extends ReferenceData
@@ -47,8 +49,18 @@ class Entity extends ReferenceData
                 'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
                 'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
                 'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-                'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
-                'textFilterFields'      => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'textFilterFields']),
+                'sortDirection'         => $this->getMetadata()->get([
+                    'entityDefs',
+                    $code,
+                    'collection',
+                    'asc'
+                ]) ? 'asc' : 'desc',
+                'textFilterFields'      => $this->getMetadata()->get([
+                    'entityDefs',
+                    $code,
+                    'collection',
+                    'textFilterFields'
+                ]),
             ]);
         }
 
@@ -57,9 +69,18 @@ class Entity extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
-        echo '<pre>';
-        print_r('insertEntity');
-        die();
+        // copy default metadata
+        foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
+            file_put_contents(
+                "data/metadata/$type/{$entity->get('code')}.json",
+                file_get_contents(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json")
+            );
+        }
+
+        // set ID
+        $entity->id = $entity->get('code');
+
+        $this->updateEntity($entity);
 
         return true;
     }
@@ -71,7 +92,15 @@ class Entity extends ReferenceData
 
         $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
 
-        $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
+        if ($entity->isNew()) {
+            $isCustom = true;
+            $entity->set('isCustom', true);
+            $loadedData = null;
+            $saveMetadata = true;
+            $saveLanguage = true;
+        } else {
+            $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
+        }
 
         foreach ($entity->toArray() as $field => $value) {
             if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code'])) {
@@ -157,11 +186,52 @@ class Entity extends ReferenceData
         return true;
     }
 
+    protected function beforeRemove(OrmEntity $entity, array $options = [])
+    {
+        if (empty($entity->get('isCustom'))) {
+            throw new Forbidden();
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
     public function deleteEntity(OrmEntity $entity): bool
     {
-        echo '<pre>';
-        print_r('deleteEntity');
-        die();
+        // delete metadata
+        foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
+            $fileName = "data/metadata/$type/{$entity->get('code')}.json";
+            if (file_exists($fileName)) {
+                unlink($fileName);
+            }
+        }
+
+        // delete layouts
+        Util::removeDir("data/layouts/{$entity->get('code')}");
+
+        // delete translations
+        $labels = $this->getEntityManager()->getRepository('Translation')->find();
+        foreach ($labels as $label) {
+            if (
+                str_starts_with($label->get('code'), "{$entity->get('code')}.")
+                && $label->get('module') === 'custom'
+                && $label->get('isCustomized')
+            ) {
+                $this->getEntityManager()->removeEntity($label);
+            }
+            if (
+                $label->get('code') === "Global.scopeNames.{$entity->get('code')}"
+                || $label->get('code') === "Global.scopeNamesPlural.{$entity->get('code')}"
+            ) {
+                $this->getEntityManager()->removeEntity($label);
+            }
+        }
+
+//        foreach ($this->getMetadata()->get(['entityDefs', $name, 'links'], []) as $link => $item) {
+//            try {
+//                $this->deleteLink(['entity' => $name, 'link' => $link]);
+//            } catch (\Exception $e) {
+//            }
+//        }
 
         return true;
     }
