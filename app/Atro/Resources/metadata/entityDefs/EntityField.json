@@ -17,7 +17,8 @@
       "view": "views/admin/field-manager/fields/type"
     },
     "entity": {
-      "type": "link"
+      "type": "link",
+      "required": true
     }
   },
   "links": {

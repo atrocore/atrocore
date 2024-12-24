@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "type": "Type",
+    "entity": "Entity"
+  },
+  "links": {
+    "entity": "Entity"
+  },
+  "labels": {
+    "Create Entity Field": "Create Entity Field"
+  }
+}
