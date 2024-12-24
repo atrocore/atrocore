@@ -449,7 +449,10 @@
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
     "duplicatedAndLinked": "Records were successfully duplicated and linked.",
     "linked": "Records were successfully linked.",
-    "linkJobsCreated": "Records are being linked in background."
+    "linkJobsCreated": "Records are being linked in background.",
+    "recordDontExistInInstance": "This record does not exist in the instance",
+    "badTokenInstance": "Bad authorization token for instance",
+    "dontHaveAccessInInstance": "You don't have access to this record on instance"
   },
   "boolFilters": {
     "onlyActive": "Active",

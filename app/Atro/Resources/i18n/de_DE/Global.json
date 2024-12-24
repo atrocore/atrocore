@@ -425,7 +425,10 @@
     "emptyMultilangOptions": "Die Optionsliste darf nicht leer sein, solange die Mehrsprachigkeit aktiviert ist.",
     "duplicatedAndLinked": "Die Datensätze wurden erfolgreich dupliziert und verknüpft.",
     "linked": "Datensätze wurden erfolgreich verknüpft.",
-    "linkJobsCreated": "Datensätze werden im Hintergrund verknüpft."
+    "linkJobsCreated": "Datensätze werden im Hintergrund verknüpft.",
+    "recordDontExistInInstance": "Dieser Datensatz existiert nicht in der Instanz",
+    "badTokenInstance": "Schlechtes Autorisierungs-Token zum Beispiel",
+    "dontHaveAccessInInstance": "Sie haben keinen Zugriff auf diesen Datensatz auf der Instanz"
   },
   "unit Length": {
     "mm": "mm",
@@ -499,7 +502,9 @@
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
     "update": "Massenänderung",
-    "massUpdate": "Massenänderung",
+    "massUpdate": "Massenänderung", "recordDontExistInInstance": "This record does not exist in the instance",
+    "badTokenInstance": "Bad authorization token for instance",
+    "dontHaveAccessInInstance": "You don't have access to this record on instance",
     "export": "Exportieren",
     "restore": "Wiederherstellen",
     "massRestore": "Massenwiederherstellung",
