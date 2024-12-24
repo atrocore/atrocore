@@ -1,11 +1,6 @@
 {
    "params":[
       {
-         "name": "required",
-         "type": "bool",
-         "default": false
-      },
-      {
          "name":"default",
          "type":"enum",
          "view": "views/admin/field-manager/fields/date/default",

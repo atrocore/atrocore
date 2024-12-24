@@ -25,6 +25,12 @@
         {
           "name": "isMultilang"
         }
+      ],
+      [
+        {
+          "name": "notNull"
+        },
+        false
       ]
     ]
   }

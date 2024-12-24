@@ -202,7 +202,6 @@
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
     "setDefaultOnlyIfRequired": "Apply default value only if required",
     "dropdown": "Dropdown",
-    "notNull": "Disable null value",
     "allowFileTypes": "Allow file types"
   },
   "messages": {

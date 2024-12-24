@@ -158,7 +158,6 @@
     "useDisabledTextareaInViewMode": "Utiliser une zone de texte désactivée en mode affichage",
     "setDefaultOnlyIfRequired": "Appliquer la valeur par défaut uniquement si nécessaire",
     "dropdown": "Liste déroulante",
-    "notNull": "Désactiver la valeur nulle",
     "rowsMax": "Nombre maximal de lignes de la zone de texte",
     "rowsMin": "Nombre minimum de lignes de la zone de texte",
     "label": "Étiquette",

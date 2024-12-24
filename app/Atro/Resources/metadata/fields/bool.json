@@ -1,10 +1,6 @@
 {
    "params":[
       {
-         "name": "notNull",
-         "type": "bool"
-      },
-      {
          "name":"default",
          "type":"bool",
          "view": "views/admin/field-manager/fields/bool/default"

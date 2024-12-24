@@ -1,11 +1,6 @@
 {
   "params": [
     {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
       "name": "measure",
       "type": "link",
       "entity": "Measure"

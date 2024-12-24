@@ -51,6 +51,26 @@
             }
           ]
         }
+      },
+      "notNull": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "bool",
+                "text",
+                "wysiwyg",
+                "float",
+                "url",
+                "int",
+                "varchar",
+                "markdown"
+              ]
+            }
+          ]
+        }
       }
     }
   }

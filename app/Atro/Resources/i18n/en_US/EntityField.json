@@ -3,7 +3,8 @@
     "type": "Type",
     "entity": "Entity",
     "isMultilang": "Multilingual",
-    "required": "Required"
+    "required": "Required",
+    "notNull": "Disable null value"
   },
   "links": {
     "entity": "Entity"
