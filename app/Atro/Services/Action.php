@@ -144,7 +144,7 @@ class Action extends Base
 
         $dynamicActions = [];
 
-        foreach ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicRecordActions']) as $action) {
+        foreach ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicRecordActions']) ?? [] as $action) {
             if (!empty($action['acl']['scope'])) {
                 if (!$this->getAcl()->check($action['acl']['scope'], $action['acl']['action'])) {
                     continue;
@@ -153,8 +153,8 @@ class Action extends Base
             $dynamicActions[] = [
                 'action'  => 'dynamicAction',
                 'label'   => $action['name'],
-                'display' => $action['display'] ?? '',
-                'type'    => $action['type'],
+                'display' => $action['display'] ?? null,
+                'type'    => $action['type'] ?? null,
                 'data'    => [
                     'action_id' => $action['id'],
                     'entity_id' => $id
