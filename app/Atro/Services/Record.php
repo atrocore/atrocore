@@ -202,44 +202,4 @@ class Record extends RecordService
             $entity->bookmarkIdLoaded = true;
         }
     }
-
-    public function getDynamicActions(string $id)
-    {
-        $entity = $this->getEntity($id);
-
-        $dynamicActions = [];
-
-        foreach ($this->getMetadata()->get(['clientDefs', $this->entityType, 'dynamicRecordActions']) as $action) {
-            if (!empty($action['acl']['scope'])) {
-                if (!$this->getAcl()->check($action['acl']['scope'], $action['acl']['action'])) {
-                    continue;
-                }
-            }
-            $dynamicActions[] = [
-                'action'  => 'dynamicAction',
-                'label'   => $action['name'],
-                'display' => $action['display'] ?? null,
-                'type'    => $action['type'],
-                'data'    => [
-                    'action_id' => $action['id'],
-                    'entity_id' => $id
-                ]
-            ];
-        }
-
-        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) &&
-            $this->getAcl()->check('Bookmark', 'create')) {
-
-            $dynamicActions[] = [
-                'action' => 'bookmark',
-                'label'  => empty($entity->get('bookmarkId')) ? 'Bookmark' : 'Unbookmark',
-                'data'   => [
-                    'entity_id'   => $id,
-                    'bookmark_id' => $entity->get('bookmarkId')
-                ]
-            ];
-        }
-
-        return $dynamicActions;
-    }
 }

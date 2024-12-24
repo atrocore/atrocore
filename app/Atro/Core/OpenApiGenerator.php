@@ -695,30 +695,6 @@ class OpenApiGenerator
                     ],
                     "responses"   => self::prepareResponses(['type' => 'boolean'])
                 ];
-
-                $result['paths']["/{$scopeName}/{id}/dynamicActions"]['get'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Get dynamic actions available for a record of $scopeName",
-                    "description" => "Get dynamic actions available for a record of $scopeName",
-                    "operationId" => "getDynamicActions{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ]
-                    ],
-                    "responses"   => self::prepareResponses([
-                        "type"  => "array",
-                        "items" => [
-                            "type" => "object"
-                        ]
-                    ]),
-                ];
             }
         }
 

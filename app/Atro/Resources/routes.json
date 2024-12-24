@@ -161,7 +161,10 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["status", "stored"],
+        "required": [
+          "status",
+          "stored"
+        ],
         "properties": {
           "status": {
             "type": "string",
@@ -510,12 +513,48 @@
     }
   },
   {
-    "route": "/:controller/:id/dynamicActions",
+    "route": "Action/:scope/:id/dynamicActions",
     "method": "get",
     "params": {
-      "controller": ":controller",
+      "controller": "Action",
+      "scope": ":scope",
       "action": "dynamicActions",
       "id": ":id"
+    },
+    "description": "Get dynamic actions available for a record",
+    "response": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "example": "bookmark"
+          },
+          "label": {
+            "type": "string",
+            "example": "Bookmark"
+          },
+          "display": {
+            "type": "string",
+            "nullable": true,
+            "example": "Single"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "example": "Update"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
     }
   },
   {

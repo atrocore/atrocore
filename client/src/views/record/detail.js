@@ -561,18 +561,24 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
 
-            this.dropdownItemList.push({
-                divider: true
-            });
-            this.dropdownItemList.push({
-                preloader: true
-            });
-            this.additionalButtons.push({
-                preloader: true
-            });
+            if (this.model.id && !this.buttonsDisabled) {
+                this.dropdownItemList.push({
+                    divider: true
+                });
+                this.dropdownItemList.push({
+                    preloader: true
+                });
+                this.additionalButtons.push({
+                    preloader: true
+                });
+            }
         },
 
         loadDynamicActions: function () {
+            if (this.dropdownItemList.find(i => i.divider) == null) {
+                return
+            }
+
             const $buttons = $(this.$el).find('.record-buttons')
 
             if (this.model.dynamicActions == null) {
@@ -2576,7 +2582,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
 
-            if(!treeScopes.includes(this.scope)
+            if (!treeScopes.includes(this.scope)
                 && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
                 && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true
             ) {
