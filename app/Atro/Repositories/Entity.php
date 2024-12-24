@@ -20,6 +20,7 @@ use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 use Espo\Core\DataManager;
 use Espo\ORM\Entity as OrmEntity;
+use Espo\ORM\EntityCollection;
 
 class Entity extends ReferenceData
 {
@@ -90,6 +91,27 @@ class Entity extends ReferenceData
         'xor',
         'common'
     ];
+
+    public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
+    {
+        if ($link === 'fields') {
+            $selectParams['whereClause'] = [['entityId=' => $entity->get('id')]];
+            return $this->getEntityManager()->getRepository('EntityField')->find($selectParams);
+        }
+
+        return parent::findRelated($entity, $link, $selectParams);
+    }
+
+    public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
+    {
+        if ($relationName === 'fields') {
+            $params['offset'] = 0;
+            $params['limit'] = \PHP_INT_MAX;
+            return count($this->findRelated($entity, $relationName, $params));
+        }
+
+        return parent::countRelated($entity, $relationName, $params);
+    }
 
     protected function getAllItems(array $params = []): array
     {

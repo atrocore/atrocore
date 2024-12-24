@@ -20,23 +20,31 @@ class EntityField extends ReferenceData
 {
     protected function getAllItems(array $params = []): array
     {
-        $items = [];
-        foreach ($this->getMetadata()->get('entityDefs', []) as $entity => $row) {
-            if (empty($row['fields'])) {
-                continue;
-            }
+        $entities = [];
 
-            foreach ($row['fields'] as $fieldName => $fieldDefs) {
+        $entityName = $params['whereClause'][0]['entityId='] ?? null;
+
+        if (!empty($entityName)) {
+            $entities[] = $entityName;
+        } else {
+            foreach ($this->getEntityManager()->getRepository('Entity')->find() as $entity) {
+                $entities[] = $entity->get('code');
+            }
+        }
+
+        $items = [];
+        foreach ($entities as $entityName) {
+            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
                 if (!empty($fieldDefs['emHidden'])) {
                     continue;
                 }
 
                 $items[] = array_merge($fieldDefs, [
-                    'id'         => "{$entity}_{$fieldName}",
+                    'id'         => "{$entityName}_{$fieldName}",
                     'code'       => $fieldName,
-                    'name'       => $this->getLanguage()->translate($fieldName, 'fields', $entity),
-                    'entityId'   => $entity,
-                    'entityName' => $this->getLanguage()->translate($entity, 'scopeNames'),
+                    'name'       => $this->getLanguage()->translate($fieldName, 'fields', $entityName),
+                    'entityId'   => $entityName,
+                    'entityName' => $this->getLanguage()->translate($entityName, 'scopeNames'),
                 ]);
             }
         }
