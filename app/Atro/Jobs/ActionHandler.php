@@ -25,15 +25,24 @@ class ActionHandler extends AbstractJob implements JobInterface
 
         $action = $this->getEntityManager()->getRepository('Action')->get($data['actionId']);
 
-        if (empty($action->get('sourceEntity'))) {
-            return;
-        }
         if (!empty($data['sourceEntity'])) {
             $action->set('sourceEntity', $data['sourceEntity']);
         }
 
         /** @var TypeInterface $actionType */
         $actionType = $this->getContainer()->get($this->getMetadata()->get(['action', 'types', $action->get('type')]));
+
+        // execute standalone action in job
+        if ($data['where'] == null) {
+            $input = new \stdClass();
+            $input->queueData = $data;
+            $actionType->executeNow($action, $input);
+            return;
+        }
+
+        if (empty($action->get('sourceEntity'))) {
+            return;
+        }
 
         /** @var Record $service */
         $service = $this->getServiceFactory()->create($action->get('sourceEntity'));

@@ -181,11 +181,11 @@ class Record extends RecordService
 
     public function prepareEntityForOutput(Entity $entity)
     {
+        parent::prepareEntityForOutput($entity);
+
         if (!empty($this->getMemoryStorage()->get('exportJobId')) || !empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
             return;
         }
-
-        parent::prepareEntityForOutput($entity);
 
         if (!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) && empty($entity->bookmarkIdLoaded)) {
             $bookmarked = $this->getEntityManager()->getConnection()->createQueryBuilder()
