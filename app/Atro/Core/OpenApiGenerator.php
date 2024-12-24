@@ -365,7 +365,7 @@ class OpenApiGenerator
                 "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
-            if ($scopeData['type'] !== 'ReferenceData') {
+            if (!empty($scopeData['type']) && $scopeData['type'] !== 'ReferenceData') {
                 $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
                     'tags'        => [$scopeName],
                     "summary"     => "Returns linked entities for the $scopeName",

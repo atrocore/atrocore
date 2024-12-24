@@ -35,7 +35,7 @@ Espo.define('cache', [], function () {
     var Cache = function (cacheTimestamp) {
         this.basePrefix = this.prefix;
         if (cacheTimestamp) {
-            this.prefix =  this.basePrefix + '-' + cacheTimestamp;
+            this.prefix = this.basePrefix + '-' + cacheTimestamp;
         }
         if (!this.get('app', 'timestamp')) {
             this.storeTimestamp();
@@ -93,6 +93,10 @@ Espo.define('cache', [], function () {
             }
 
             if (stored) {
+                if(this.useCompression(type,name)){
+                    stored = LZString.decompress(stored)
+                }
+
                 var result = stored;
 
                 if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
@@ -108,11 +112,18 @@ Espo.define('cache', [], function () {
             return null;
         },
 
+        useCompression: function (type, name) {
+            return type === 'app' && (name === 'metadata' || name.startsWith('language-'))
+        },
+
         set: function (type, name, value) {
             this.checkType(type);
             var key = this.composeKey(type, name);
             if (value instanceof Object || Array.isArray(value)) {
                 value = '__JSON__:' + JSON.stringify(value);
+            }
+            if (this.useCompression(type, name)) {
+                value = LZString.compress(value)
             }
             try {
                 localStorage.setItem(key, value);

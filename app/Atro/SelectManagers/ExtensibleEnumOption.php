@@ -49,8 +49,6 @@ class ExtensibleEnumOption extends Base
             "value"     => [$extensibleEnumId]
         ]];
 
-        $this->prepareRelationshipFilterField($where);
-
         $result['whereClause'][] = $this->convertWhere($where, false, $result);
     }
 }
