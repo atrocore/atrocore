@@ -67,39 +67,47 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             };
 
             if (this.instanceComparison) {
-                this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
-                    uri: this.scope + '/' + this.model.id
-                }).success(attrs => {
-                    options.distantModels = [];
-                    for (const index in attrs) {
-                        let attr = attrs[index];
-                        if('_error' in attr){
-                            if(attr._error.includes('Response Code: 404 Body')) {
-                                this.notify(this.translate('This record does not exist in the instance') + ' ' + this.instances[index].name);
-                                setTimeout(() => this.notify(false), 2000);
+                this.getModelFactory().create(this.scope, scopeModel => {
+                    this.ajaxPostRequest(`Synchronization/action/distantInstanceRequest`, {
+                        uri: this.scope + '/' + this.model.id
+                    }).success(attrs => {
+                        options.distantModels = [];
+                        for (const index in attrs) {
+                            let attr = attrs[index];
+                            if('_error' in attr){
+                                if(attr._error.includes('404 Body')) {
+                                    message = this.translate('recordDontExistInInstance', 'messages') + ' ' + this.instances[index].name;
+                                }else if(attr._error.includes('401 Body')) {
+                                    message = this.translate('badTokenInstance', 'messages') + ' ' + this.instances[index].name;
+                                }else if(attr._error.includes('403 Body')) {
+                                    message = this.translate('dontHaveAccessInInstance', 'messages') + ' ' + this.instances[index].name;
+                                }else {
+                                    message = this.translate('En error occur with the instance: ') + attr._error;
+                                }
+                                this.notify(message);
+                                setTimeout(() => this.notify(false), 3000);
                                 return;
                             }
-                            this.instances[key]['_error'] = attr['_error'];
-                        }
 
-                        for (let key in attr) {
-                            let instanceUrl = this.instances[index].atrocoreUrl;
-                            let value = attr[key];
-                            if(key.includes('PathsData')){
-                                if( value && ('thumbnails' in value)){
-                                    for (let size in value['thumbnails']){
-                                        attr[key]['thumbnails'][size] = instanceUrl + '/' + value['thumbnails'][size]
+                            for (let key in attr) {
+                                let instanceUrl = this.instances[index].atrocoreUrl;
+                                let value = attr[key];
+                                if(key.includes('PathsData')){
+                                    if( value && ('thumbnails' in value)){
+                                        for (let size in value['thumbnails']){
+                                            attr[key]['thumbnails'][size] = instanceUrl + '/' + value['thumbnails'][size]
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        let distantModel = this.model.clone();
-                        distantModel.set(attr);
-                        options.distantModels.push(distantModel);
-                    }
-                    this.createModalView(options);
-                    this.wait(false);
+                            let distantModel = scopeModel.clone();
+                            distantModel.set(attr);
+                            options.distantModels.push(distantModel);
+                        }
+                        this.createModalView(options);
+                        this.wait(false);
+                    });
                 });
             } else {
                 if (this.collection.models.length < 2) {
