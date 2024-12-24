@@ -21,6 +21,12 @@
           "name": "entity"
         },
         false
+      ],
+      [
+        {
+          "name": "isMultilang"
+        },
+        false
       ]
     ]
   }
