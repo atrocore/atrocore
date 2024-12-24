@@ -307,6 +307,11 @@ class ReferenceData extends Repository implements Injectable
         return $collection;
     }
 
+    public function findRelated(Entity $entity, string $link, array $selectParams): EntityCollection
+    {
+        throw new BadRequest('The function is not provided for an entity of this type.');
+    }
+
     public function findByIds(array $ids)
     {
         $result = $this->getAllItems();
