@@ -136,4 +136,45 @@ class Action extends Base
         }
         return $this->getInjection('container')->get($className);
     }
+
+    public function getRecordDynamicActions(string $scope, string $id)
+    {
+        $recordService = $this->getServiceFactory()->create($scope);
+        $entity = $recordService->getEntity($id);
+
+        $dynamicActions = [];
+
+        foreach ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicRecordActions']) as $action) {
+            if (!empty($action['acl']['scope'])) {
+                if (!$this->getAcl()->check($action['acl']['scope'], $action['acl']['action'])) {
+                    continue;
+                }
+            }
+            $dynamicActions[] = [
+                'action'  => 'dynamicAction',
+                'label'   => $action['name'],
+                'display' => $action['display'] ?? '',
+                'type'    => $action['type'],
+                'data'    => [
+                    'action_id' => $action['id'],
+                    'entity_id' => $id
+                ]
+            ];
+        }
+
+        if (!$this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled']) &&
+            $this->getAcl()->check('Bookmark', 'create')) {
+
+            $dynamicActions[] = [
+                'action' => 'bookmark',
+                'label'  => empty($entity->get('bookmarkId')) ? 'Bookmark' : 'Unbookmark',
+                'data'   => [
+                    'entity_id'   => $id,
+                    'bookmark_id' => $entity->get('bookmarkId')
+                ]
+            ];
+        }
+
+        return $dynamicActions;
+    }
 }

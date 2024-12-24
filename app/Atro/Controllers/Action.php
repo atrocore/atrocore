@@ -40,4 +40,13 @@ class Action extends Base
             ->getRecordService()
             ->executeRecordAction((string)$data->actionId, (string)$data->entityId, (string)$data->actionType);
     }
+
+    public function actionDynamicActions($params, $data, $request)
+    {
+        if (!$request->isGet() || empty($params['id']) || empty($params['scope'])) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->getRecordDynamicActions((string)$params['scope'], (string)$params['id']);
+    }
 }
