@@ -20,6 +20,8 @@
                         {{#each massActionList}}
                         {{#if action}}
                         <li><a href="javascript:" data-action="{{action}}" data-id="{{id}}" class='mass-action'>{{label}}</a></li>
+                        {{else if divider}}
+                            <li class="divider"></li>
                         {{else}}
                         <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
                         {{/if}}

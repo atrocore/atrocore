@@ -430,28 +430,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
             this.additionalButtons = additionalButtons;
 
-            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
-                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
-                    if (dynamicAction.display === 'dropdown') {
-                        this.dropdownItemList.push({
-                            id: dynamicAction.id,
-                            type: dynamicAction.type,
-                            label: dynamicAction.name,
-                            name: "dynamicAction"
-                        });
-                    }
-
-                    if (dynamicAction.display === 'single') {
-                        this.additionalButtons.push({
-                            id: dynamicAction.id,
-                            type: dynamicAction.type,
-                            label: dynamicAction.name,
-                            action: "dynamicAction"
-                        });
-                    }
-                }
-            });
-
             if (this.selfAssignAction) {
                 if (
                     this.getAcl().check(this.entityType, 'edit')
@@ -582,6 +560,68 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     'name': 'copyConfigurations'
                 });
             }
+
+            this.dropdownItemList.push({
+                divider: true
+            });
+            this.dropdownItemList.push({
+                preloader: true
+            });
+            this.additionalButtons.push({
+                preloader: true
+            });
+        },
+
+        loadDynamicActions: function () {
+            const $buttons = $(this.$el).find('.record-buttons')
+
+            if (this.model.dynamicActions == null) {
+                $buttons.find('li.preloader,li.divider,a.preloader').show()
+                $buttons.find('.dynamic-action').remove()
+            }
+
+            this.model.fetchDynamicActions()
+                .then(actions => {
+                    $buttons.find('.dynamic-action').remove()
+                    const dropdownItemList = [];
+                    const additionalButtons = [];
+                    actions.forEach(action => {
+                        if (action.display === 'dropdown') {
+                            dropdownItemList.push({
+                                ...action,
+                                id: action.data['action_id'],
+                            });
+                        }
+
+                        if (action.display === 'single') {
+                            additionalButtons.push({
+                                ...action,
+                                id: action.data['action_id'],
+                            });
+                        }
+                    })
+
+                    let template = this._templator.compileTemplate(`
+                   {{#each dropdownItemList}}
+                        <li class="dynamic-action"><a href="javascript:" class="action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=scope}}{{/if}}</a></li>
+                {{/each}}`)
+                    let html = this._renderer.render(template, {dropdownItemList, scope: this.scope})
+
+                    $buttons.find('li.preloader').hide()
+                    $(html).insertBefore($buttons.find('ul > li.preloader'))
+                    if (dropdownItemList.length === 0) {
+                        $buttons.find('li.divider').hide()
+                    }
+
+                    template = this._templator.compileTemplate(`
+                   {{#each additionalButtons}}
+                            <button type="button" class="btn btn-default additional-button action dynamic-action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>
+                {{/each}}`)
+                    html = this._renderer.render(template, {additionalButtons})
+
+                    $buttons.find('a.preloader').hide()
+                    $(html).insertBefore($buttons.find('a.preloader'))
+                })
         },
 
         isHierarchical() {
@@ -690,6 +730,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         afterRender: function () {
+            this.loadDynamicActions()
+
             var $container = this.$el.find('.detail-button-container');
 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;

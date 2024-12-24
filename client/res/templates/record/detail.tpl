@@ -10,11 +10,25 @@
             </button>
             <ul class="dropdown-menu pull-left">
                 {{#each dropdownItemList}}
-                <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../entityType}}{{/if}}</a></li>
+                    {{#if divider}}
+                        <li class="divider"></li>
+                    {{ else if preloader }}
+                        <li class="preloader"><a href="javascript:"><img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg"></a> </li>
+                    {{else}}
+                        <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../entityType}}{{/if}}</a></li>
+                    {{/if}}
                 {{/each}}
             </ul>
             {{/if}}
-            {{#if additionalButtons}}{{#each additionalButtons}}<button type="button" class="btn btn-default additional-button action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>{{/each}}{{/if}}
+            {{#if additionalButtons}}
+                {{#each additionalButtons}}
+                    {{# if preloader }}
+                            <a class="preloader" style="margin-left: 20px" href="javascript:"><img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg"></a>
+                    {{else}}
+                            <button type="button" class="btn btn-default additional-button action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>
+                    {{/if}}
+                {{/each}}
+            {{/if}}
         </div>
         {{/if}}
         <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>

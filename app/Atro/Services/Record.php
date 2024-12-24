@@ -179,38 +179,6 @@ class Record extends RecordService
         return [$total, $errors, $sync];
     }
 
-    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
-    {
-        if (!empty($this->getMemoryStorage()->get('exportJobId')) || $this->isPseudoTransaction() || empty($collection[0])) {
-            return;
-        }
-
-        parent::prepareCollectionForOutput($collection, $selectParams);
-
-        if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled'])) {
-            $entityByIds = [];
-            foreach ($collection as $entity) {
-                $entity->bookmarkIdLoaded = true;
-                $entityByIds[$entity->get('id')] = $entity;
-            }
-
-            $ids = array_keys($entityByIds);
-            $bookmarks = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('id, entity_id')
-                ->from('bookmark')
-                ->where('entity_id IN (:ids) AND deleted = :false')
-                ->andWhere('user_id = :userId')
-                ->setParameter('ids', $ids, Mapper::getParameterType($ids))
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('userId', $this->getUser()->id)
-                ->fetchAllAssociative();
-
-            foreach ($bookmarks as $bookmark) {
-                $entityByIds[$bookmark['entity_id']]->set('bookmarkId', $bookmark['id']);
-            }
-        }
-    }
-
     public function prepareEntityForOutput(Entity $entity)
     {
         if (!empty($this->getMemoryStorage()->get('exportJobId')) || !empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
@@ -219,8 +187,8 @@ class Record extends RecordService
 
         parent::prepareEntityForOutput($entity);
 
-        if(!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) && empty($entity->bookmarkIdLoaded)) {
-            $bookmarked =  $this->getEntityManager()->getConnection()->createQueryBuilder()
+        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) && empty($entity->bookmarkIdLoaded)) {
+            $bookmarked = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('id')
                 ->from('bookmark')
                 ->where('entity_id = :entityId AND deleted = :false')
@@ -233,5 +201,45 @@ class Record extends RecordService
             $entity->set('bookmarkId', $bookmarked['id'] ?? null);
             $entity->bookmarkIdLoaded = true;
         }
+    }
+
+    public function getDynamicActions(string $id)
+    {
+        $entity = $this->getEntity($id);
+
+        $dynamicActions = [];
+
+        foreach ($this->getMetadata()->get(['clientDefs', $this->entityType, 'dynamicRecordActions']) as $action) {
+            if (!empty($action['acl']['scope'])) {
+                if (!$this->getAcl()->check($action['acl']['scope'], $action['acl']['action'])) {
+                    continue;
+                }
+            }
+            $dynamicActions[] = [
+                'action'  => 'dynamicAction',
+                'label'   => $action['name'],
+                'display' => $action['display'] ?? null,
+                'type'    => $action['type'],
+                'data'    => [
+                    'action_id' => $action['id'],
+                    'entity_id' => $id
+                ]
+            ];
+        }
+
+        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) &&
+            $this->getAcl()->check('Bookmark', 'create')) {
+
+            $dynamicActions[] = [
+                'action' => 'bookmark',
+                'label'  => empty($entity->get('bookmarkId')) ? 'Bookmark' : 'Unbookmark',
+                'data'   => [
+                    'entity_id'   => $id,
+                    'bookmark_id' => $entity->get('bookmarkId')
+                ]
+            ];
+        }
+
+        return $dynamicActions;
     }
 }
