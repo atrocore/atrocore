@@ -121,12 +121,6 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
             callback();
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this)
-            $('.not-approved-field').remove();
-            $('.translated-automatically-field').remove();
-        },
-
         prepareModels(callback) {
             this.getModelFactory().create(this.relationName, (relationModel) => {
                 relationModel.defs.fields[this.isLinkedColumns] = {

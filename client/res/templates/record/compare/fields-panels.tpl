@@ -32,13 +32,13 @@
         {{#each fieldList}}
         {{#each fields}}
         <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
-            <td class="cell l-200" >{{translate label scope=../../scope category='fields'}}</td>
-            <td class="cell current {{#unless isTextField}} text-center {{/unless}}">
-                {{{var current ../../this}}}
+            <td class="cell " >{{translate label scope=../../scope category='fields'}}</td>
+            <td class="cell  {{#unless isTextField}} text-center {{/unless}}">
+                <div class="current">Loading...</div>
             </td>
             {{#each others}}
-            <td class="cell other{{index}} {{#unless ../isTextField}} text-center {{/unless}}">
-                {{{var other ../../../this}}}
+            <td class="cell  {{#unless ../isTextField}} text-center {{/unless}}">
+                <div class="other{{index}}">Loading...</div>
             </td>
             {{/each}}
         </tr>

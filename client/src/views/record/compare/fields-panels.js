@@ -32,8 +32,6 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
            ]
 
             Dep.prototype.setup.call(this);
-
-            this.setupFieldList();
         },
 
         data() {
@@ -60,7 +58,7 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                         },
                         mode: 'detail',
                         inlineEditDisabled: true,
-                    });
+                    }, view => view.render());
 
                     fieldData.modelOthers.forEach((model, index) => {
                         this.createView(field + 'Other' + index, viewName, {
@@ -73,6 +71,7 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
                             mode: 'detail',
                             inlineEditDisabled: true,
                         }, view => {
+                            view.render();
                             if (this.instanceComparison) {
                                 view.listenTo(view, 'after:render', () => {
                                     let localUrl = this.getConfig().get('siteUrl');
@@ -110,8 +109,7 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
 
         afterRender() {
             Dep.prototype.afterRender.call(this)
-            $('.translated-automatically-field').hide();
-            $('.not-approved-field').hide();
+            this.setupFieldList();
         }
     })
 })
