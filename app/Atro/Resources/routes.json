@@ -522,6 +522,26 @@
       "id": ":id"
     },
     "description": "Get dynamic actions available for a record",
+    "requestParameters": [
+      {
+        "name": "scope",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "Product"
+        }
+      },
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "1"
+        }
+      }
+    ],
     "response": {
       "type": "array",
       "items": {
