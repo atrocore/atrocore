@@ -138,7 +138,6 @@
     "type": "Typ",
     "name": "Code",
     "label": "Label",
-    "required": "Erforderlich",
     "default": "Standardwert",
     "defaultDate": "Standardwert",
     "maxLength": "Maximallänge",

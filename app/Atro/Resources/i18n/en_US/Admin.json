@@ -150,7 +150,6 @@
     "maxTo": "Max To",
     "tooltipText": "Tooltip text",
     "tooltipLink": "Tooltip link",
-    "required": "Required",
     "default": "Default",
     "defaultDate": "Default",
     "maxLength": "Max length",

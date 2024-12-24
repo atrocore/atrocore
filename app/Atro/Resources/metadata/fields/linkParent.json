@@ -1,11 +1,6 @@
 {
    "params":[
       {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
          "name":"entityList",
          "type":"multiEnum",
          "view": "Admin.FieldManager.Fields.EntityList"

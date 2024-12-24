@@ -114,7 +114,6 @@
     "type": "Tipo",
     "name": "Nombre",
     "label": "Etiqueta",
-    "required": "Requerido",
     "default": "Por defecto",
     "maxLength": "Longitud máxima",
     "options": "Ajustes",

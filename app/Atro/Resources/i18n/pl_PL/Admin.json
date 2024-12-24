@@ -141,7 +141,6 @@
        "maxTo":"Maks do",
        "tooltipText":"Tekst podpowiedzi",
        "tooltipLink":"Link podpowiedzi",
-       "required":"Wymagane",
        "default":"Domyślny",
        "defaultDate":"Domyślny",
        "maxLength":"Maksymalna długość",

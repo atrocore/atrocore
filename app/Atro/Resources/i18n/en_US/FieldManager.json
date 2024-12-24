@@ -65,7 +65,6 @@
   "tooltips": {
     "fontSize": "Font size in em (relative to current font size).",
     "isSorted": "Options will be sorted after saving.",
-    "required": "Field will be mandatory. Can't be left empty.",
     "default": "Value will be set by default upon creating.",
     "min": "Min acceptable value.",
     "max": "Max acceptable value.",

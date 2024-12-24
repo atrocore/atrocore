@@ -63,7 +63,6 @@
     }
   },
   "tooltips": {
-    "required": "El campo será obligatorio. No se puede dejar vacío.",
     "default": "El valor se establecerá de forma predeterminada al guardar.",
     "min": "Valor mínimo aceptado.",
     "max": "Valor máximo aceptado.",

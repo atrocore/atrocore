@@ -173,7 +173,6 @@
     "maxTo": "Max To",
     "tooltipText": "Texte de l'infobulle",
     "tooltipLink": "Lien de l'infobulle",
-    "required": "Exigée",
     "default": "Défaut",
     "defaultDate": "Défaut",
     "maxLength": "Longueur maximale",

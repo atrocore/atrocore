@@ -2,13 +2,15 @@
   "fields": {
     "type": "Type",
     "entity": "Entity",
-    "isMultilang": "Multilingual"
+    "isMultilang": "Multilingual",
+    "required": "Required"
   },
   "links": {
     "entity": "Entity"
   },
   "tooltips": {
-    "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings."
+    "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
+    "required": "Field will be mandatory. Can't be left empty."
   },
   "labels": {
     "Create Entity Field": "Create Entity Field"

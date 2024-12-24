@@ -23,6 +23,10 @@
     "isMultilang": {
       "type": "bool",
       "tooltip": true
+    },
+    "required": {
+      "type": "bool",
+      "tooltip": true
     }
   },
   "links": {

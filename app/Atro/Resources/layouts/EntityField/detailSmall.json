@@ -14,19 +14,17 @@
         {
           "name": "name"
         },
-        false
-      ],
-      [
         {
           "name": "entity"
-        },
-        false
+        }
       ],
       [
         {
-          "name": "isMultilang"
+          "name": "required"
         },
-        false
+        {
+          "name": "isMultilang"
+        }
       ]
     ]
   }

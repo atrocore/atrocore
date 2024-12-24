@@ -63,7 +63,6 @@
     }
   },
   "tooltips": {
-    "required": "Le champ sera obligatoire. Il ne peut être laissé vide.",
     "fontSize": "Taille de la police en em (par rapport à la taille de la police actuelle).",
     "isSorted": "Les options seront triées après l'enregistrement.",
     "default": "La valeur sera définie par défaut lors de la création.",
