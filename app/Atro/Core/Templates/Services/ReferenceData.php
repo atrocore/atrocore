@@ -20,11 +20,6 @@ use Espo\ORM\EntityCollection;
 
 class ReferenceData extends Record
 {
-    public function findLinkedEntities($id, $link, $params)
-    {
-        throw new BadRequest();
-    }
-
     public function linkEntity($id, $link, $foreignId)
     {
         throw new BadRequest();
