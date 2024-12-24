@@ -33,11 +33,22 @@ class EntityField extends ReferenceData
             }
         }
 
+        $boolFields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields']) as $field => $defs) {
+            if ($defs['type'] === 'bool') {
+                $boolFields[] = $field;
+            }
+        }
+
         $items = [];
         foreach ($entities as $entityName) {
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
                 if (!empty($fieldDefs['emHidden'])) {
                     continue;
+                }
+
+                foreach ($boolFields as $boolField) {
+                    $fieldDefs[$boolField] = !empty($fieldDefs[$boolField]);
                 }
 
                 $items[] = array_merge($fieldDefs, [
