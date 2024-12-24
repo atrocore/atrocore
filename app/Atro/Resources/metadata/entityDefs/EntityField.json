@@ -12,11 +12,9 @@
       "unique": true
     },
     "type": {
-      "type": "enum",
+      "type": "varchar",
       "required": true,
-      "options": [
-        "varchar"
-      ]
+      "view": "views/admin/field-manager/fields/type"
     },
     "entity": {
       "type": "link"

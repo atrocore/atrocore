@@ -31,7 +31,7 @@ class EntityField extends ReferenceData
                     continue;
                 }
 
-                $items[] = array_merge($row, [
+                $items[] = array_merge($fieldDefs, [
                     'id'         => "{$entity}_{$fieldName}",
                     'code'       => $fieldName,
                     'name'       => $this->getLanguage()->translate($fieldName, 'fields', $entity),
