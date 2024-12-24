@@ -295,6 +295,10 @@ class Entity extends ReferenceData
             throw new BadRequest("Code cannot be changed.");
         }
 
+        if ($entity->isAttributeChanged('type')) {
+            throw new BadRequest("Type cannot be changed.");
+        }
+
         $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
         $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
 

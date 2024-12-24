@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity as OrmEntity;
 
@@ -59,6 +60,18 @@ class EntityField extends ReferenceData
 
     public function updateEntity(OrmEntity $entity): bool
     {
+        if ($entity->isAttributeChanged('code')) {
+            throw new BadRequest("Code cannot be changed.");
+        }
+
+        if ($entity->isAttributeChanged('type')) {
+            throw new BadRequest("Type cannot be changed.");
+        }
+
+        if ($entity->isAttributeChanged('entityId')) {
+            throw new BadRequest("Entity cannot be changed.");
+        }
+
         return true;
     }
 
