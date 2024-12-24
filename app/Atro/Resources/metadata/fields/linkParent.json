@@ -4,10 +4,6 @@
          "name":"entityList",
          "type":"multiEnum",
          "view": "Admin.FieldManager.Fields.EntityList"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
       }
    ],
    "actualFields":[

@@ -4,10 +4,6 @@
          "name":"default",
          "type":"bool",
          "view": "views/admin/field-manager/fields/bool/default"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
       }
    ],
    "filter": true,

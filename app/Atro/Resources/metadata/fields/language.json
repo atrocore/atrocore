@@ -9,10 +9,6 @@
       "name":"isSorted",
       "type":"bool",
       "tooltip": true
-    },
-    {
-      "name":"readOnly",
-      "type":"bool"
     }
   ],
   "filter": true,

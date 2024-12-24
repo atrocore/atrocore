@@ -13,10 +13,6 @@
       "view": "views/admin/field-manager/fields/dropdown"
     },
     {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
       "name": "currentUserAsDefault",
       "type": "bool",
       "view": "views/admin/field-manager/fields/bool/current-user-as-default"

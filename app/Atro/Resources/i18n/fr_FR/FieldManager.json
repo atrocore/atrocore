@@ -73,7 +73,6 @@
     "seeMoreDisabled": "Si cette case n'est pas cochée, les textes longs à afficher seront raccourcis.",
     "lengthOfCut": "Les caractères en trop seront masqués dans le mode d'affichage.",
     "before": "La valeur de la date doit être antérieure à la valeur de la date du champ spécifié.",
-    "readOnly": "La valeur du champ ne peut pas être spécifiée par l'utilisateur.",
     "maxFileSize": "Si vide ou 0, il n'y a pas de limite.",
     "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
     "foreignName": "Champ à indiquer dans la relation."

@@ -30,6 +30,10 @@
     },
     "notNull": {
       "type": "bool"
+    },
+    "readOnly": {
+      "type": "bool",
+      "tooltip": true
     }
   },
   "links": {

@@ -1,10 +1,6 @@
 {
   "params": [
     {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
       "name": "dropdown",
       "type": "bool",
       "default": false,

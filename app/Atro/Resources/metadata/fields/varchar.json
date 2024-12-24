@@ -34,10 +34,6 @@
       "default": true
     },
     {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
       "name": "pattern",
       "type": "varchar",
       "tooltip": true

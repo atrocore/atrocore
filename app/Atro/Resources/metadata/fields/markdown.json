@@ -31,10 +31,6 @@
       "default": 400,
       "min": 1,
       "tooltip": true
-    },
-    {
-      "name": "readOnly",
-      "type": "bool"
     }
   ],
   "filter": true,

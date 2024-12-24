@@ -188,7 +188,6 @@
     "dynamicLogicOptions": "Conditional options",
     "probabilityMap": "Stage probabilities (%)",
     "currentUserAsDefault": "Set current user as default value",
-    "readOnly": "Read-only",
     "maxFileSize": "Max file size (Mb)",
     "isPersonalData": "Is personal data",
     "useIframe": "Use iframe in view mode",

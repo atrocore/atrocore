@@ -17,10 +17,6 @@
          "type": "bool"
       },
       {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
          "name": "unique",
          "type": "bool"
       },

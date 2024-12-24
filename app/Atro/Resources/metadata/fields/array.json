@@ -14,10 +14,6 @@
          "name": "noEmptyString",
          "type": "bool",
          "default": false
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
       }
    ],
    "filter": true,

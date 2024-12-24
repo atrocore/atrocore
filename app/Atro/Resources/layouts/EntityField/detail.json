@@ -28,9 +28,11 @@
       ],
       [
         {
-          "name": "notNull"
+          "name": "readOnly"
         },
-        false
+        {
+          "name": "notNull"
+        }
       ]
     ]
   }

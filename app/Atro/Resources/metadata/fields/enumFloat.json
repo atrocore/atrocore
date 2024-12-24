@@ -7,10 +7,6 @@
       {
          "name":"default",
          "type":"float"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
       }
    ],
    "filter": true,

@@ -4,14 +4,16 @@
     "entity": "Entity",
     "isMultilang": "Multilingual",
     "required": "Required",
-    "notNull": "Disable null value"
+    "notNull": "Disable null value",
+    "readOnly": "Read-only"
   },
   "links": {
     "entity": "Entity"
   },
   "tooltips": {
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
-    "required": "Field will be mandatory. Can't be left empty."
+    "required": "Field will be mandatory. Can't be left empty.",
+    "readOnly": "Field value can't be specified by user."
   },
   "labels": {
     "Create Entity Field": "Create Entity Field"

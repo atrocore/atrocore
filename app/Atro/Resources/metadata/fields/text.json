@@ -37,10 +37,6 @@
          "tooltip": true
       },
       {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
          "name":"useDisabledTextareaInViewMode",
          "type": "bool",
          "default":false

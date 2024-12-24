@@ -3,10 +3,6 @@
       {
          "name":"default",
          "type":"colorpicker"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
       }
    ],
    "filter": false,

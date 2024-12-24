@@ -72,7 +72,6 @@
     "maxLength": "Maximal zulässige Textlänge.",
     "before": "Der Datumswert sollte vor dem Datumswert des angegebenen Feldes liegen.",
     "after": "Der Datumswert sollte nach dem Datumswert des angegebenen Feldes liegen.",
-    "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden.",
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
     "foreignName": "In der Relation anzuzeigendes Feld.",

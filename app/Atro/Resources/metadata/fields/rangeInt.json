@@ -31,10 +31,6 @@
       "type": "int"
     },
     {
-      "name": "readOnly",
-      "type": "bool"
-    },
-    {
       "name": "index",
       "type": "bool"
     }

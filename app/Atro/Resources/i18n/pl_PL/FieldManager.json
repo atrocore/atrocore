@@ -73,7 +73,6 @@
     "maxLength": "Maksymalna dopuszczalna długość tekstu.",
     "before": "Wartość daty powinna być przed wartością daty określonego pola.",
     "after": "Wartość daty powinna być po wartości daty określonego pola.",
-    "readOnly": "Wartość pola nie może być określana przez użytkownika.",
     "maxFileSize": "Jeśli puste lub 0, to brak limitu.",
     "pattern": "Aby umożliwić tylko duże litery o długości 10 znaków, użyj \"/^[A-Z]{1,10}$/\"",
     "foreignName": "Pole do pokazania w relacji."

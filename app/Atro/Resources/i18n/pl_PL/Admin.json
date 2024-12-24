@@ -179,7 +179,6 @@
        "dynamicLogicOptions":"Opcje warunkowe",
        "probabilityMap":"Prawdopodobieństwo etapów (%)",
        "currentUserAsDefault":"Ustaw bieżącego użytkownika jako wartość domyślną",
-       "readOnly":"Tylko do odczytu",
        "maxFileSize":"Maksymalny rozmiar pliku (Mb)",
        "isPersonalData":"Dane osobowe",
        "useIframe":"Użyj ramki w trybie wyświetlania",

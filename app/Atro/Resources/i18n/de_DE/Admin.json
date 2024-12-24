@@ -169,7 +169,6 @@
     "dynamicLogicOptions": "Bedingungsoptionen",
     "probabilityMap": "Stufenwahrscheinlichkeiten (%)",
     "currentUserAsDefault": "Aktuellen Benutzer als Standardwert setzen",
-    "readOnly": "Nur lesen",
     "noEmptyString": "Keine leere Zeichenkette",
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Gehört zu persönlichen Daten",

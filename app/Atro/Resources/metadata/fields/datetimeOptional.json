@@ -43,10 +43,6 @@
       {
          "type": "bool",
          "name":"useNumericFormat"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
       }
    ],
    "actualFields":[

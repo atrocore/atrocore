@@ -29,10 +29,6 @@
          "min": 0
       },
       {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
          "name": "unique",
          "type": "bool"
       },

@@ -145,7 +145,6 @@
     "dynamicLogicRequired": "Condiciones para hacer el campo obligatorio",
     "dynamicLogicOptions": "Opciones condicionales",
     "probabilityMap": "Probabilidades de la etapa (%)",
-    "readOnly": "Solo lectura",
     "noEmptyString": "No están permitidos los valores de cadenas vacías",
     "maxFileSize": "Tamaño máximo de archivo (MB)",
     "fontSize": "Font-Size",

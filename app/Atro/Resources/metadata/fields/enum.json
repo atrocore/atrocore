@@ -24,10 +24,6 @@
          "name":"translation",
          "type":"varchar",
          "hidden": true
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
       }
    ],
    "filter": true,

@@ -155,7 +155,6 @@
     "dynamicLogicRequired": "Умови, які роблять поле обов'язковим",
     "dynamicLogicOptions": "Умовні варіанти",
     "probabilityMap": "Стадія ймовірності (%)",
-    "readOnly": "Тільки читання",
     "noEmptyString": "Порожнє значення рядка неприпустимо",
     "maxFileSize": "Максимальний розмір файлу (Mb)",
     "isPersonalData": "Особисті дані",
