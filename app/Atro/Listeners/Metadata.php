@@ -882,18 +882,6 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-
-        foreach ($data['fields'] as $field => $v) {
-            $params = [];
-            if (!empty($v['multilingual'])) {
-                $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
-            }
-
-            if (!empty($data['fields'][$field]['params']) && is_array($data['fields'][$field]['params'])) {
-                $data['fields'][$field]['params'] = array_merge($params, $data['fields'][$field]['params']);
-            }
-        }
-
         /**
          * Set multi-lang fields to entity defs
          */

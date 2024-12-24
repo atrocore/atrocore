@@ -149,7 +149,6 @@
     "readOnly": "Solo lectura",
     "noEmptyString": "No están permitidos los valores de cadenas vacías",
     "maxFileSize": "Tamaño máximo de archivo (MB)",
-    "isMultilang": "Multilingual",
     "fontSize": "Font-Size",
     "currentUserAsDefault": "Set current user as default value",
     "isPersonalData": "Is Personal Data",

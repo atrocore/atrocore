@@ -38,7 +38,6 @@
    "filter": true,
    "auditable": true,
    "notCreatable": true,
-   "multilingual": true,
    "fieldDefs":{
       "type":"varchar"
    },

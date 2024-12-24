@@ -50,7 +50,6 @@
   "filter": true,
   "auditable": true,
   "qbFilterType": "string",
-  "multilingual": true,
   "personalData": true,
   "textFilter": true,
   "fieldDefs": {

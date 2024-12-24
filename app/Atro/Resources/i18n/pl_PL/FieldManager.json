@@ -63,7 +63,6 @@
     }
   },
   "tooltips": {
-    "isMultilang": "Automatyczne tworzenie pól poprzez klonowanie bieżącego pola tyle razy, ile jest aktywowanych języków w ustawieniach wielojęzycznych.",
     "fontSize": "Rozmiar czcionki w em (względem bieżącego rozmiaru czcionki).",
     "isSorted": "Opcje zostaną posortowane po zapisaniu.",
     "required": "Pole będzie obowiązkowe. Nie może pozostać puste.",

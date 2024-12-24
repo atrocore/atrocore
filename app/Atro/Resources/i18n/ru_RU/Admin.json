@@ -97,7 +97,6 @@
   "fieldTypes": {
   },
   "fields": {
-    "isMultilang": "Многоязычный",
     "fontSize": "Размер шрифта",
     "currentUserAsDefault": "Установить текущего пользователя как cтандартное значение",
     "type": "Тип",

@@ -22,7 +22,6 @@
     },
     "isMultilang": {
       "type": "bool",
-      "view": "views/admin/field-manager/fields/is-multilang",
       "tooltip": true
     }
   },

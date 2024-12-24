@@ -21,6 +21,5 @@
    ],
    "filter": true,
    "auditable": true,
-   "qbFilterType": "boolean",
-   "multilingual": true
+   "qbFilterType": "boolean"
 }

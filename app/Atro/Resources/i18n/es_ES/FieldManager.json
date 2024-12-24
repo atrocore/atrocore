@@ -72,7 +72,6 @@
     "after": "El valor de fecha debe ser posterior al valor de fecha del campo especificado.",
     "readOnly": "El usuario no puede especificar el valor del campo. Pero se puede calcular por fórmula.",
     "maxFileSize": "Si está vacío o es 0, entonces no limitar",
-    "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "fontSize": "Font size in em (relative to current font size).",
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\""
   },

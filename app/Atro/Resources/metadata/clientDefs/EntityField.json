@@ -31,6 +31,26 @@
             }
           ]
         }
+      },
+      "isMultilang": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "bool",
+                "array",
+                "text",
+                "wysiwyg",
+                "multiEnum",
+                "varchar",
+                "markdown",
+                "script"
+              ]
+            }
+          ]
+        }
       }
     }
   }
