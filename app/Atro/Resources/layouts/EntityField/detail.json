@@ -1,0 +1,27 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "entity"
+        },
+        false
+      ]
+    ]
+  }
+]
