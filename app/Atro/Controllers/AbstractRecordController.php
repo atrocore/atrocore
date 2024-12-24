@@ -39,6 +39,15 @@ abstract class AbstractRecordController extends AbstractController
         return $entity->getValueMap();
     }
 
+    public function actionDynamicActions($params, $data, $request)
+    {
+        if (!$request->isGet() || empty($params['id'])) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->getDynamicActions((string)$params['id']);
+    }
+
     public function actionPatch($params, $data, $request)
     {
         return $this->actionUpdate($params, $data, $request);

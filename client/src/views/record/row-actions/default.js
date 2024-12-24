@@ -45,6 +45,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
             var isChecked = false;
             $dd.on('show.bs.dropdown', function () {
+                this.loadDynamicActions()
+
                 var $el = this.$el.closest('.list-row');
                 isChecked = false;
                 if ($el.hasClass('active')) {
@@ -85,6 +87,34 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             }
 
             return false;
+        },
+
+        loadDynamicActions: function () {
+            if (!$(this.$el).find('li.divider').get(0)) {
+                return
+            }
+
+            if (this.model.dynamicActions == null) {
+                $(this.$el).find('li.preloader,li.divider').show()
+                $(this.$el).find('li.dynamic-action').remove()
+            }
+
+            this.model.fetchDynamicActions()
+                .then(dynamicActions => {
+                    $(this.$el).find('li.dynamic-action').remove()
+
+                    const template = this._templator.compileTemplate(`
+                    {{#each dynamicActions}}
+                        <li class="dynamic-action"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
+                    {{/each}}`)
+                    const html = this._renderer.render(template, {dynamicActions})
+
+                    $(this.$el).find('li.preloader').hide()
+                    $(html).insertBefore($(this.$el).find('li.preloader'))
+                    if (dynamicActions.length === 0) {
+                        $(this.$el).find('li.divider').hide()
+                    }
+                })
         },
 
         getActionList: function () {
@@ -145,19 +175,6 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 }
             }
 
-            (this.getMetadata().get(['clientDefs', scope, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
-                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
-                    list.push({
-                        action: "dynamicAction",
-                        label: dynamicAction.name,
-                        data: {
-                            action_id: dynamicAction.id,
-                            entity_id: this.model.id
-                        },
-                    });
-                }
-            });
-
             if (this.options.acl.delete) {
                 list.push({
                     action: 'quickRemove',
@@ -168,15 +185,13 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 });
             }
 
-            if(!this.getMetadata().get(['scopes', scope, 'bookmarkDisabled']) && this.getAcl().check('Bookmark', 'create')) {
-                list.push({
-                    action: 'bookmark',
-                    label: this.model.get('bookmarkId') ? 'Unbookmark' : 'Bookmark',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
+            list.push({
+                divider: true
+            });
+
+            list.push({
+                preloader: true
+            });
 
             return list;
         },
@@ -194,5 +209,4 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             };
         }
     });
-
 });

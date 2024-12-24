@@ -510,6 +510,15 @@
     }
   },
   {
+    "route": "/:controller/:id/dynamicActions",
+    "method": "get",
+    "params": {
+      "controller": ":controller",
+      "action": "dynamicActions",
+      "id": ":id"
+    }
+  },
+  {
     "route": "/:controller",
     "method": "get",
     "params": {
