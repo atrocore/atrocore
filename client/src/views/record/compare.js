@@ -53,29 +53,25 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         init() {
             Dep.prototype.init.call(this);
-            // this.id = this.model.get('id');
-            this.collection = this.options.collection;
-            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
-
-            if ('distantModelsAttribute' in this.options && this.instanceComparison) {
-                this.distantModelsAttribute = this.options.distantModelsAttribute;
-            }
 
             this.scope = this.name = this.options.scope;
+            this.collection = this.options.collection;
+
+            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
             this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
             this.hideQuickMenu = this.options.hideQuickMenu;
         },
 
         setup() {
-            this.instances = this.getMetadata().get(['app', 'comparableInstances'])
+
             this.notify('Loading...')
             this.getModelFactory().create(this.scope, function (model) {
                 this.fieldsArr = [];
                 let modelOthers = [];
                 let modelCurrent = this.model;
 
-                modelOthers = this.getDistantComparisonModels(model);
+                modelOthers = this.getOtherModelsForComparison(model);
 
                 let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
 
@@ -129,7 +125,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         },
 
-        getDistantComparisonModels(model) {
+        getOtherModelsForComparison(model) {
             return this.collection.models.filter(model => model.id !== this.model.id);
         },
 
@@ -151,7 +147,22 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         setupRelationshipsPanels() {
-            this.notify('Loading...')
+            this.notify('Loading...');
+            this.createView('relationshipsPanels', this.relationshipsPanelsView, {
+                scope: this.scope,
+                model: this.model,
+                relationshipsPanels: this.getRelationshipPanels(),
+                collection: this.collection,
+                instanceComparison: this.instanceComparison,
+                columns: this.buildComparisonTableHeaderColumn(),
+                el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
+            }, view => {
+                this.notify(false)
+                view.render();
+            })
+        },
+
+        getRelationshipPanels() {
             let relationshipsPanels = [];
             const bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
 
@@ -222,19 +233,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return v1.label.localeCompare(v2.label);
             });
 
-            this.createView('relationshipsPanels', this.relationshipsPanelsView, {
-                scope: this.scope,
-                model: this.model,
-                relationshipsPanels: relationshipsPanels,
-                distantModels: this.distantModelsAttribute,
-                collection: this.collection,
-                instanceComparison: this.instanceComparison,
-                columns: this.buildComparisonTableHeaderColumn(),
-                el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
-            }, view => {
-                this.notify(false)
-                view.render();
-            })
+            return relationshipsPanels;
         },
 
         data() {

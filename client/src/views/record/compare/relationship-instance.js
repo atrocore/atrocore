@@ -13,55 +13,137 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
         setup() {
             this.instances = this.getMetadata().get(['app', 'comparableInstances']);
             this.instanceComparison = true;
-
+            this.distantModels = this.options.distantModels;
             Dep.prototype.setup.call(this);
         },
 
-        prepareModels(selectFields, callback) {
+        data() {
+          return _.extend(Dep.prototype.data.call(this), {
+              columns: this.buildComparisonTableHeaderColumn()
+          })
+        },
 
-            this.getModelFactory().create(this.relationship.scope, function (model) {
-                this.ajaxGetRequest(this.scope + '/' + this.model.get('id') + '/' + this.relationship.name, {
-                    select: selectFields.join(',')
-                }).success(res => {
-                    this.currentItemModels = res.list.map(item => {
-                        let itemModel = model.clone()
-                        itemModel.set(item)
-                        return itemModel
+        prepareModels(callback) {
+            this.getModelFactory().create(this.relationName, relationModel => {
+                let modelRelationColumnId = this.getModelRelationColumnId();
+                let relationshipRelationColumnId = this.getRelationshipRelationColumnId();
+                let relationFilter = {
+                    maxSize: 250,
+                    where: [
+                        {
+                            type: 'equals',
+                            attribute: modelRelationColumnId,
+                            value: this.model.id
+                        }
+                    ],
+                };
+
+                relationModel.defs.fields[this.isLinkedColumns] = {
+                    type: 'bool'
+                }
+
+                Promise.all([
+                    this.ajaxGetRequest(this.scope + '/' + this.model.id + '/' + this.getLinkName(), {
+                        select: this.selectFields.join(','),
+                        maxSize: 250
+                    }),
+                    this.ajaxPostRequest('Synchronization/action/distantInstanceRequest', {
+                        'uri': this.scope + '/' + this.model.id + '/' + this.getLinkName() + '?select=' + this.selectFields.join(','),
+                        'type': 'list'
+                    }),
+                    this.ajaxGetRequest(this.relationName, relationFilter),
+                    this.ajaxPostRequest('Synchronization/action/distantInstanceRequest', {
+                        'uri': this.relationName + '?' + $.param(relationFilter),
+                        'type': 'list'
+                    }),
+                ]).then(results => {
+                    if (results[0].total > 250) {
+                        this.hasToManyRecords = true;
+                        callback();
+                        return;
+                    }
+
+                    for (const result of results[1]) {
+                        if (results.total > 250) {
+                            this.hasToManyRecords = true;
+                            callback();
+                            return;
+                        }
+                    }
+
+                    let entities = {};
+                    results[0].list.forEach(item => {
+                        item['isLocal'] = true;
+                        entities[item.id] = item;
                     });
 
-                    return this.ajaxPostRequest('Synchronization/action/distantInstanceRequest', {
-                        'uri': this.scope + '/' + this.model.get('id') + '/' + this.relationship.name + '?select=' + selectFields.join(','),
-                        'type': 'list'
-                    }).success(res => {
-                        this.otherItemModels = [];
-                        res.forEach((data, index) => {
-                            if ('_error' in data) {
-                                this.instances[index]['_error'] = data['_error'];
+                    results[1].forEach((resultPerInstance,index) => {
+                        return resultPerInstance.list.forEach(item => {
+                            if (!entities[item.id]) {
+                                item['isDistant'] = true;
+                                entities[item.id] = this.setBaseUrlOnFile(item, index);
+                            } else {
+                                entities[item.id]['isDistant'] = true;
                             }
-                            this.otherItemModels.push((data.list ?? []).map(item => {
-                                for (let key in item) {
-                                    let el = item[key];
-                                    let instanceUrl = this.instances[index].atrocoreUrl;
-                                    if (key.includes('PathsData')) {
-                                        if (el && ('thumbnails' in el)) {
-                                            for (let size in el['thumbnails']) {
-                                                item[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
-                                            }
-                                        }
-                                    }
-                                }
-                                let itemModel = model.clone()
-                                itemModel.set(item)
-                                return itemModel
-                            }));
                         });
+                    });
 
-                        callback();
+                    this.linkedEntities = Object.values(entities);
+
+                    let relationEntities = [...results[2].list];
+                    results[3].forEach((resultPerInstance, index) => {
+                        if ('_error' in resultPerInstance) {
+                            this.instances[index]['_error'] = resultPerInstance['_error'];
+                        }
+                        relationEntities.push(...resultPerInstance.list)
                     })
+                    let models = [this.model, ...this.distantModels]
+
+                    this.linkedEntities.forEach(item => {
+                        this.relationModels[item.id] = [];
+                        models.forEach((model, key) => {
+                            let m = relationModel.clone()
+                            m.set(this.isLinkedColumns, false);
+                            relationEntities.forEach(relationItem => {
+                                if (item.id === relationItem[relationshipRelationColumnId] && model.id === relationItem[modelRelationColumnId]) {
+                                    m.set(relationItem);
+                                    m.set(this.isLinkedColumns, true);
+                                }
+                            });
+                            this.relationModels[item.id].push(m);
+                        })
+                    });
+                    callback();
                 });
+            });
+        },
 
-            }, this);
+        setBaseUrlOnFile(attr, index) {
+            for (let key in attr) {
+                let el = attr[key];
+                let instanceUrl = this.instances[index].atrocoreUrl;
+                if (key.includes('PathsData')) {
+                    if (el && ('thumbnails' in el)) {
+                        for (let size in el['thumbnails']) {
+                            attr[key]['thumbnails'][size] = instanceUrl + '/' + attr['thumbnails'][size]
+                        }
+                    }
+                }
+            }
+            return attr;
+        },
 
+        buildComparisonTableHeaderColumn() {
+            let columns = [];
+            columns.push({name: this.translate('instance', 'labels', 'Synchronization'), isFirst:true});
+            columns.push({name: this.translate('current', 'labels', 'Synchronization')});
+            this.instances.forEach(instance => {
+                columns.push({
+                    name: instance.name,
+                    _error: instance._error
+                })
+            });
+            return columns;
         },
 
         updateBaseUrl(view, instanceUrl) {
@@ -96,6 +178,18 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                     });
                 })
             }, 1000)
+        },
+
+        getModelRelationColumnId() {
+            return this.scope.toLowerCase() + 'Id';
+        },
+
+        getRelationshipRelationColumnId() {
+            return this.relationship.scope.toLowerCase() + 'Id';
+        },
+
+        getLinkName() {
+            return this.relationship.name;
         }
     })
 })

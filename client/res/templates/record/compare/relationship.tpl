@@ -1,4 +1,4 @@
-<div class="list custom-compare-relationship" style="overflow-x: clip">
+<div class="list custom-compare-relationship">
     <table class="table full-table table-striped  table-fixed table-scrolled table-bordered {{#if showBorders}} bottom-border-black {{/if}}">
         <colgroup>
             {{#each columns}}

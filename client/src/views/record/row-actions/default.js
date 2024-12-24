@@ -161,16 +161,18 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             }
 
             if (this.getMetadata().get(['clientDefs', this.model.name, 'showCompareAction'])) {
-                list.push({
-                    action: 'quickCompare',
-                    label: this.translate('Instance comparison'),
-                    name: 'compare',
-                    data: {
-                        id: this.model.id,
-                        scope: this.model.name
-                    },
-                    link: '#' + this.model.name + '/compare?id=' + this.model.id
-                });
+                let instances = this.getMetadata().get(['app', 'comparableInstances']);
+                if(instances.length) {
+                    list.push({
+                        action: 'quickCompare',
+                        label: this.translate('Compare with ' + instances[0].name),
+                        name: 'compare',
+                        data: {
+                            id: this.model.id,
+                            scope: this.model.name
+                        },
+                    });
+                }
             }
 
             if (this.options.acl.delete) {
@@ -207,5 +209,4 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             };
         }
     });
-
 });

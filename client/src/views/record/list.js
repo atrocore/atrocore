@@ -2907,16 +2907,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.getModelFactory().create(data.scope, function (model) {
                 model.id = data.id;
                 this.listenToOnce(model, 'sync', function () {
-                    this.createView('quickCompareDialog', 'views/modals/compare', {
+                    this.createView('recordCompareInstance', 'views/modals/compare', {
                         model: model,
                         scope: data.scope,
                         instanceComparison: true,
-                        hideRelationship: true,
                         mode: "details",
                     }, function (dialog) {
                         dialog.render();
                         this.notify(false)
-                    })
+                    });
                 }, this);
                 model.fetch({main: true});
             }, this);

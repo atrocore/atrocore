@@ -28,13 +28,10 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
             this.relationshipsPanels = this.options.relationshipsPanels;
             this.instances = this.getMetadata().get(['app', 'comparableInstances'])
             this.nonComparableFields = this.getMetadata().get(['scopes', this.scope, 'nonComparableFields']) ?? [];
+            this.distantModels = this.options.distantModels ?? [];
 
             if (this.instanceComparison) {
                 this.relationshipView = 'views/record/compare/relationship-instance';
-            }
-
-            if ('distantModelsAttribute' in this.options && this.instanceComparison) {
-                this.distantModelsAttribute = this.options.distantModelsAttribute;
             }
 
             this.listenTo(this, 'after:render', () => {
@@ -49,6 +46,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                         model: this.model,
                         scope: this.scope,
                         instanceComparison: this.instanceComparison,
+                        distantModels: this.distantModels,
                         collection: this.collection,
                         columns: this.columns,
                         defs: panelData.defs
@@ -76,7 +74,6 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
             return {
                 scope: this.scope,
                 relationshipsPanels: this.relationshipsPanels,
-                instances: this.instances,
                 columns: this.columns,
                 itemColumnCount: 1,
                 columnsLength: this.columns.length
