@@ -26,9 +26,8 @@
         </thead>
         <tbody>
         {{#each fieldList}}
-        {{#each fields}}
         <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
-            <td class="cell " >{{translate label scope=../../scope category='fields'}}</td>
+            <td class="cell " >{{translate label scope=../scope category='fields'}}</td>
             <td class="cell  {{#unless shouldNotCenter}} text-center {{/unless}}">
                 <div class="current">Loading...</div>
             </td>
@@ -38,7 +37,6 @@
             </td>
             {{/each}}
         </tr>
-        {{/each}}
         {{/each}}
         </tbody>
     </table>

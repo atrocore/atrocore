@@ -60,7 +60,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
 
         data() {
             let minWidth = 150;
-
+            console.log('Reload relationship')
             return {
                 name: this.relationship.name,
                 scope: this.scope,

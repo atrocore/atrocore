@@ -115,11 +115,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 );
 
                 this.afterModelsLoading(modelCurrent, modelOthers);
-                this.listenTo(this, 'after:render', () => {
+                this.listenToOnce(this, 'after:render', () => {
                     this.setupFieldsPanels();
-                    if (this.options.hideRelationship !== true) {
-                        this.setupRelationshipsPanels()
-                    }
+                    this.setupRelationshipsPanels();
                 });
             }, this)
 
