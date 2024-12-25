@@ -14,13 +14,8 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
             this.instances = this.getMetadata().get(['app', 'comparableInstances']);
             this.instanceComparison = true;
             this.distantModels = this.options.distantModels;
+            this.maxTobeshown = 250;
             Dep.prototype.setup.call(this);
-        },
-
-        data() {
-          return _.extend(Dep.prototype.data.call(this), {
-              columns: this.buildComparisonTableHeaderColumn()
-          })
         },
 
         prepareModels(callback) {
@@ -28,7 +23,7 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                 let modelRelationColumnId = this.getModelRelationColumnId();
                 let relationshipRelationColumnId = this.getRelationshipRelationColumnId();
                 let relationFilter = {
-                    maxSize: 250,
+                    maxSize: this.maxTobeshown,
                     where: [
                         {
                             type: 'equals',
@@ -45,7 +40,7 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                 Promise.all([
                     this.ajaxGetRequest(this.scope + '/' + this.model.id + '/' + this.getLinkName(), {
                         select: this.selectFields.join(','),
-                        maxSize: 250
+                        maxSize: this.maxTobeshown
                     }),
                     this.ajaxPostRequest('Synchronization/action/distantInstanceRequest', {
                         'uri': this.scope + '/' + this.model.id + '/' + this.getLinkName() + '?select=' + this.selectFields.join(','),
@@ -57,14 +52,14 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                         'type': 'list'
                     }),
                 ]).then(results => {
-                    if (results[0].total > 250) {
+                    if (results[0].total > this.maxTobeshown) {
                         this.hasToManyRecords = true;
                         callback();
                         return;
                     }
 
                     for (const result of results[1]) {
-                        if (results.total > 250) {
+                        if (results.total > this.maxTobeshown) {
                             this.hasToManyRecords = true;
                             callback();
                             return;
@@ -77,10 +72,11 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                         entities[item.id] = item;
                     });
 
-                    results[1].forEach((resultPerInstance,index) => {
+                    results[1].forEach((resultPerInstance, index) => {
                         return resultPerInstance.list.forEach(item => {
                             if (!entities[item.id]) {
                                 item['isDistant'] = true;
+                                item['instance'] = this.instances[index];
                                 entities[item.id] = this.setBaseUrlOnFile(item, index);
                             } else {
                                 entities[item.id]['isDistant'] = true;
@@ -90,29 +86,24 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
 
                     this.linkedEntities = Object.values(entities);
 
-                    let relationEntities = [...results[2].list];
-                    results[3].forEach((resultPerInstance, index) => {
-                        if ('_error' in resultPerInstance) {
-                            this.instances[index]['_error'] = resultPerInstance['_error'];
-                        }
-                        relationEntities.push(...resultPerInstance.list)
-                    })
-                    let models = [this.model, ...this.distantModels]
+                    let allRelationEntities = results[3].map(item => item.list);
 
-                    this.linkedEntities.forEach(item => {
-                        this.relationModels[item.id] = [];
-                        models.forEach((model, key) => {
-                            let m = relationModel.clone()
+                    allRelationEntities.unshift(results[2].list);
+
+                    this.linkedEntities.forEach(entity => {
+                        this.relationModels[entity.id] = [];
+                        allRelationEntities.forEach(relationList => {
+                            let m = relationModel.clone();
                             m.set(this.isLinkedColumns, false);
-                            relationEntities.forEach(relationItem => {
-                                if (item.id === relationItem[relationshipRelationColumnId] && model.id === relationItem[modelRelationColumnId]) {
-                                    m.set(relationItem);
-                                    m.set(this.isLinkedColumns, true);
-                                }
-                            });
-                            this.relationModels[item.id].push(m);
-                        })
+                            let relData = relationList.find(relationItem => entity.id === relationItem[relationshipRelationColumnId] && this.model.id === relationItem[modelRelationColumnId]);
+                            if (relData) {
+                                m.set(relData);
+                                m.set(this.isLinkedColumns, true);
+                            }
+                            this.relationModels[entity.id].push(m);
+                        });
                     });
+
                     callback();
                 });
             });
@@ -131,19 +122,6 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                 }
             }
             return attr;
-        },
-
-        buildComparisonTableHeaderColumn() {
-            let columns = [];
-            columns.push({name: this.translate('instance', 'labels', 'Synchronization'), isFirst:true});
-            columns.push({name: `<a href="#/${this.scope}/view/${this.model.id}"> ${this.translate('current', 'labels', 'Synchronization')}</a>`});
-            this.instances.forEach(instance => {
-                columns.push({
-                    name: `<a href="${instance.url}#/${this.scope}/view/${this.model.id}"> ${instance.name}</a>`,
-                    _error: instance._error
-                })
-            });
-            return columns;
         },
 
         updateBaseUrl(view, instanceUrl) {
@@ -180,16 +158,54 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
             }, 1000)
         },
 
-        getModelRelationColumnId() {
-            return this.scope.toLowerCase() + 'Id';
-        },
+        getFieldColumns(linkEntity) {
+            let data = [];
+            let baseUrl = !linkEntity.isLocal ? linkEntity.instance.atrocoreUrl : '';
+            if (this.relationship.scope === 'File') {
+                data.push({
+                    field: this.isLinkedColumns,
+                    label: linkEntity.name,
+                    title: linkEntity.name,
+                    isField: true,
+                    key: linkEntity.id,
+                    entityValueKeys: []
+                });
+                this.getModelFactory().create('File', fileModel => {
+                    fileModel.set(linkEntity);
+                    let viewName = fileModel.getFieldParam('preview', 'view') || this.getFieldManager().getViewName(fileModel.getFieldType('preview'));
+                    let viewKey = linkEntity.id;
+                    this.createView(viewKey, viewName, {
+                        el: `${this.options.el} [data-key="${viewKey}"] .attachment-preview`,
+                        model: fileModel,
+                        readOnly: true,
+                        defs: {
+                            name: 'preview',
+                        },
+                        mode: 'list',
+                        inlineEditDisabled: true,
+                    }, view => {
+                        view.previewSize = 'small';
+                        view.once('after:render', () => {
 
-        getRelationshipRelationColumnId() {
-            return this.relationship.scope.toLowerCase() + 'Id';
-        },
+                            this.$el.find(`[data-key="${viewKey}"]`).append(`<div class="file-link">
+<a href="${baseUrl}?entryPoint=download&id=${linkEntity.id}" download="" title="Download">
+ <span class="glyphicon glyphicon-download-alt small"></span>
+ </a> 
+ <a href="${baseUrl}/#File/view/${linkEntity.id}" title="${linkEntity.name}" target="_blank" class="link" data-id="${linkEntity.id}">${linkEntity.name}</a>
+ </div>`);
+                        })
+                    });
+                });
+            } else {
+                data.push({
+                    field: this.isLinkedColumns,
+                    title: linkEntity.name,
+                    label: `<a href="${baseUrl}#/${this.relationship.scope}/view/${linkEntity.id}"> ${linkEntity.name ?? linkEntity.id} </a>`,
+                    entityValueKeys: []
+                });
+            }
 
-        getLinkName() {
-            return this.relationship.name;
+            return data;
         }
     })
 })

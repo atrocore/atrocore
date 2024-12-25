@@ -126,8 +126,8 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 relationModel.defs.fields[this.isLinkedColumns] = {
                     type: 'bool'
                 }
-                let modelRelationColumnId = this.scope.toLowerCase() + 'Id';
-                let relationshipRelationColumnId = this.relationship.scope.toLowerCase() + 'Id';
+                let modelRelationColumnId = this.getModelRelationColumnId();
+                let relationshipRelationColumnId = this.getRelationshipRelationColumnId();
                 let data = {
                     select: this.selectFields.join(','),
                     where: [
@@ -170,9 +170,8 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                         let relationList = results[1].list;
                         let uniqueList = {};
                         results[0].list.forEach(v => uniqueList[v.id] = v);
-                        list = Object.values(uniqueList)
-                        this.linkedEntities = list;
-                        list.forEach(item => {
+                        this.linkedEntities = Object.values(uniqueList)
+                        this.linkedEntities.forEach(item => {
                             this.relationModels[item.id] = [];
                             this.collection.models.forEach((model, key) => {
                                 let m = relationModel.clone()
@@ -285,6 +284,20 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
         },
 
         updateBaseUrl() {
+        },
+
+        getModelRelationColumnId() {
+            let midKeys = this.model.defs.links[this.relationship.name].midKeys;
+            return (midKeys && midKeys.length === 2) ? midKeys[1] : this.scope.toLowerCase() + 'Id';
+        },
+
+        getRelationshipRelationColumnId() {
+            let midKeys = this.model.defs.links[this.relationship.name].midKeys;
+            return (midKeys && midKeys.length === 2) ? midKeys[0] : this.relationship.scope.toLowerCase() + 'Id';
+        },
+
+        getLinkName() {
+            return this.relationship.name;
         }
     })
 })

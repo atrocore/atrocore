@@ -95,14 +95,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     this.fieldsArr.push({
                         field: field,
-                        isTextField: ['text', 'wysiwyg', 'markdown'].includes(type),
+                        shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && modelCurrent.get(field),
                         type: type,
                         label: fieldDef['label'] ?? field,
                         current: field + 'Current',
                         modelCurrent: modelCurrent,
                         modelOthers: modelOthers,
                         others: modelOthers.map((element, index) => {
-                            return {other: field + 'Other' + index, index}
+                            return {other: field + 'Other' + index, index, shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && element.get(field)}
                         }),
                         different: !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
                         required: !!fieldDef['required']
@@ -324,14 +324,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let hasName = !!this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type'])
 
             columns.push({
-                isFirst: true,
                 name: hasName ? this.translate('Name') : 'ID',
-                label: hasName ? this.translate('Name') : 'ID'
             });
 
             this.collection.models.forEach(model => columns.push({
-                name: model.get('id'),
-                label: hasName ? (model.get('name') ?? 'None') : model.get('id'),
+                name: `<a href="#/${this.scope}/view/${model.id}"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
                 link: true
             }));
 

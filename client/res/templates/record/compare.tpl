@@ -24,11 +24,7 @@
                                 <tr>
                                     {{#each columns}}
                                     <th class="text-center">
-                                        {{#if link}}
-                                        <a href="#{{../scope}}/view/{{name}}"> {{label}}</a>
-                                        {{else}}
-                                        {{name}}
-                                        {{/if}}
+                                        {{{name}}}
                                         {{#if _error}}
                                         <br>
                                         <span class="danger"> ({{_error}})</span>

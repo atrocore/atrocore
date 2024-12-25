@@ -14,11 +14,7 @@
         <tr>
             {{#each columns}}
             <th class="text-center">
-                {{#if link}}
-                <a href="#{{../scope}}/view/{{name}}"> {{label}}</a>
-                {{else}}
-                {{name}}
-                {{/if}}
+                {{{name}}}
                 {{#if _error}}
                 <br>
                 <span class="danger"> ({{_error}})</span>
@@ -33,11 +29,11 @@
         {{#each fields}}
         <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
             <td class="cell " >{{translate label scope=../../scope category='fields'}}</td>
-            <td class="cell  {{#unless isTextField}} text-center {{/unless}}">
+            <td class="cell  {{#unless shouldNotCenter}} text-center {{/unless}}">
                 <div class="current">Loading...</div>
             </td>
             {{#each others}}
-            <td class="cell  {{#unless ../isTextField}} text-center {{/unless}}">
+            <td class="cell  {{#unless shouldNotCenter}} text-center {{/unless}}">
                 <div class="other{{index}}">Loading...</div>
             </td>
             {{/each}}
