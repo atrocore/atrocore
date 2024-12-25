@@ -125,7 +125,7 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
                 if (key.includes('PathsData')) {
                     if (el && ('thumbnails' in el)) {
                         for (let size in el['thumbnails']) {
-                            attr[key]['thumbnails'][size] = instanceUrl + '/' + attr['thumbnails'][size]
+                            attr[key]['thumbnails'][size] = instanceUrl + '/' + attr[key]['thumbnails'][size]
                         }
                     }
                 }
@@ -136,10 +136,10 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
         buildComparisonTableHeaderColumn() {
             let columns = [];
             columns.push({name: this.translate('instance', 'labels', 'Synchronization'), isFirst:true});
-            columns.push({name: this.translate('current', 'labels', 'Synchronization')});
+            columns.push({name: `<a href="#/${this.scope}/view/${this.model.id}"> ${this.translate('current', 'labels', 'Synchronization')}</a>`});
             this.instances.forEach(instance => {
                 columns.push({
-                    name: instance.name,
+                    name: `<a href="${instance.url}#/${this.scope}/view/${this.model.id}"> ${instance.name}</a>`,
                     _error: instance._error
                 })
             });
