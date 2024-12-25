@@ -59,8 +59,6 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
         },
 
         data() {
-            let minWidth = 150;
-            console.log('Reload relationship')
             return {
                 name: this.relationship.name,
                 scope: this.scope,
@@ -72,7 +70,6 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 showBorders: this.linkedEntities.length > 1,
                 hasToManyRecords: this.hasToManyRecords,
                 hasManyRecordsMessage: this.translate('thereAreTooManyRecord'),
-                minWidth
             }
         },
 
