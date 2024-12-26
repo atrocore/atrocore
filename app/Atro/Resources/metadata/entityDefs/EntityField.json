@@ -40,6 +40,9 @@
     },
     "index": {
       "type": "bool"
+    },
+    "measure": {
+      "type": "link"
     }
   },
   "links": {
@@ -47,6 +50,10 @@
       "type": "belongsTo",
       "foreign": "fields",
       "entity": "Entity"
+    },
+    "measure": {
+      "type": "belongsTo",
+      "entity": "Measure"
     }
   },
   "collection": {

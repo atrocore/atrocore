@@ -1,12 +1,6 @@
 {
   "params": [
     {
-      "name": "measure",
-      "type": "link",
-      "entity": "Measure",
-      "view": "views/admin/field-manager/fields/link/measure"
-    },
-    {
       "name": "default",
       "type": "int"
     },

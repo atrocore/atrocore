@@ -1,11 +1,6 @@
 {
   "params": [
     {
-      "name": "measure",
-      "type": "link",
-      "entity": "Measure"
-    },
-    {
       "name": "default",
       "type": "rangeInt"
     },

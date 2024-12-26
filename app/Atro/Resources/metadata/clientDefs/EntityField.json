@@ -111,6 +111,24 @@
             }
           ]
         }
+      },
+      "measure": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar",
+                "rangeInt",
+                "rangeFloat",
+                "measure",
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
       }
     }
   }

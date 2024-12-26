@@ -7,10 +7,12 @@
     "notNull": "Disable null value",
     "readOnly": "Read-only",
     "unique": "Unique",
-    "index": "Database Index"
+    "index": "Database Index",
+    "measure": "Measure"
   },
   "links": {
-    "entity": "Entity"
+    "entity": "Entity",
+    "measure": "Measure"
   },
   "tooltips": {
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
