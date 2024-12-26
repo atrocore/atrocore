@@ -8,29 +8,47 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/default-unit', 'views/fields/link', Dep => {
+Espo.define('views/admin/field-manager/fields/default-unit', 'views/fields/enum', Dep => {
 
     return Dep.extend({
-
-        selectBoolFilterList: ['fieldsFilter'],
-
-        boolFilterData: {
-            fieldsFilter() {
-                return {
-                    measureId: this.model.get('measureId')
-                }
-            }
-        },
 
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.prepareOptionsList();
             this.listenTo(this.model, 'change:measureId', () => {
-                this.model.set('defaultUnitId', null);
-                this.model.set('defaultUnitName', null);
+                this.model.set('defaultUnit', null);
+                this.prepareOptionsList();
+                this.reRender();
             });
+        },
+
+        prepareOptionsList() {
+            this.params.options = [''];
+            this.translatedOptions = {'': ''};
+
+            if (this.model.get('measureId')) {
+                this.getMeasureUnits(this.model.get('measureId')).forEach(option => {
+                    this.params.options.push(option.id);
+                    this.translatedOptions[option.id] = option.name ? option.name : ' ';
+                });
+            }
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if(this.mode === 'list'){
+                return;
+            }
+
+            this.$el.parent().hide();
+            if (this.model.get('measureId')) {
+                this.$el.parent().show();
+            }
         },
 
     });
 
 });
+
