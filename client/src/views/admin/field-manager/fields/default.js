@@ -43,15 +43,10 @@ Espo.define('views/admin/field-manager/fields/default', 'views/fields/base', Dep
                     file: "views/admin/field-manager/fields/file-default",
                     extensibleEnum: "views/admin/field-manager/fields/extensible-enum-default",
                     linkMultiple: "views/admin/field-manager/fields/link-multiple-default",
+                    extensibleMultiEnum: "views/admin/field-manager/fields/extensible-multi-enum-default",
                 }
 
                 const fieldView = types[type] ?? this.getFieldManager().getViewName(type);
-
-                // extensibleMultiEnum {
-                //     "name": "default",
-                //     "type": "linkMultiple",
-                //     "view": "views/admin/field-manager/fields/linkMultiple/extensible-multi-enum-default"
-                // },
 
                 let params = {
                     required: false,
