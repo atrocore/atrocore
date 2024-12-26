@@ -115,12 +115,11 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.actionCollapsePanel('open');
             if ($(window).width() <= 767 || !!this.getStorage().get('catalog-tree-panel', this.scope)) {
                 this.actionCollapsePanel();
+            } else {
+                this.actionCollapsePanel('open');
             }
-
-            this.treePanelResize();
 
             $(window).on('resize load', () => {
                 this.treePanelResize()
