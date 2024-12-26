@@ -442,7 +442,8 @@
     "linkJobsCreated": "Записи пов’язуються у фоновому режимі.",
     "recordDontExistInInstance": "Цей запис не існує в екземплярі",
     "badTokenInstance": "Наприклад, поганий токен авторизації",
-    "dontHaveAccessInInstance": "У вас немає доступу до цього запису на екземплярі"
+    "dontHaveAccessInInstance": "У вас немає доступу до цього запису на екземплярі",
+    "selectNoMoreThan": "Вибрати не більше {count} записів"
   },
   "boolFilters": {
     "onlyActive": "Активні",

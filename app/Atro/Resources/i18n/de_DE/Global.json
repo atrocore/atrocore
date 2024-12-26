@@ -428,7 +428,8 @@
     "linkJobsCreated": "Datensätze werden im Hintergrund verknüpft.",
     "recordDontExistInInstance": "Dieser Datensatz existiert nicht in der Instanz",
     "badTokenInstance": "Schlechtes Autorisierungs-Token zum Beispiel",
-    "dontHaveAccessInInstance": "Sie haben keinen Zugriff auf diesen Datensatz auf der Instanz"
+    "dontHaveAccessInInstance": "Sie haben keinen Zugriff auf diesen Datensatz auf der Instanz",
+    "selectNoMoreThan": "Nicht mehr als {count} Datensätze auswählen"
   },
   "unit Length": {
     "mm": "mm",
