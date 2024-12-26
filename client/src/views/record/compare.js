@@ -115,7 +115,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 );
 
                 this.afterModelsLoading(modelCurrent, modelOthers);
-                this.listenToOnce(this, 'after:render', () => {
+                this.listenTo(this, 'after:render', () => {
+                    this.notify('Loading...');
                     this.setupFieldsPanels();
                     this.setupRelationshipsPanels();
                 });
@@ -128,7 +129,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         setupFieldsPanels() {
-            this.notify('Loading...')
             this.createView('fieldsPanels', this.fieldsPanelsView, {
                 scope: this.scope,
                 model: this.model,
@@ -140,7 +140,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
             }, view => {
                 view.render();
-                this.notify(false);
             })
         },
 
@@ -155,8 +154,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 columns: this.buildComparisonTableHeaderColumn(),
                 el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
             }, view => {
-                this.notify(false)
                 view.render();
+                this.listenTo(view, 'after:render', () => this.notify(false))
             })
         },
 
@@ -290,10 +289,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
             return result;
 
-        },
-
-        afterRender() {
-            this.notify(false)
         },
 
         afterModelsLoading(modelCurrent, modelOthers) {

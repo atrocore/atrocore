@@ -24,6 +24,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.instanceComparison = this.options.instanceComparison;
             this.columns = this.options.columns;
             Dep.prototype.setup.call(this);
+
         },
 
         data() {
