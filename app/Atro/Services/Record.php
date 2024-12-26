@@ -86,9 +86,9 @@ class Record extends RecordService
             ->getArgument('res');
     }
 
-    protected function executeMassAction(array $params, \Closure $actionOperation): array
+    public function executeMassAction(array $params, \Closure $actionOperation): array
     {
-        if (empty($params['action']) || empty($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
+        if (empty($params['action']) || !is_int($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
             return [];
         }
 
@@ -98,8 +98,16 @@ class Record extends RecordService
         $minChunkSize = $params['minChunkSize'];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        if (!in_array($action, ['restore', 'delete', 'update'])) {
+        if (!in_array($action, ['restore', 'delete', 'update', 'action'])) {
             return [];
+        }
+
+        $actionEntity = null;
+        if ($action === 'action' && !empty($params['additionalJobData']['actionId'])) {
+            $actionEntity = $this->getEntityManager()->getEntity('Action', $params['additionalJobData']['actionId']);
+            if (empty($actionEntity)) {
+                return [];
+            }
         }
 
         $repository = $this->getEntityManager()->getRepository($this->entityType);
@@ -155,7 +163,7 @@ class Record extends RecordService
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
-                'name'     => "Create jobs for mass $action",
+                'name'     => "Create jobs for mass " . (empty($actionEntity) ? $action : $actionEntity->get('name')),
                 'type'     => 'MassActionCreator',
                 'priority' => $this->entityType === 'Job' ? 300 : 100,
                 'payload'  => [

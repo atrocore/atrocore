@@ -67,30 +67,7 @@ abstract class AbstractAction implements TypeInterface
         return true;
     }
 
-    public function createJob(Entity $action, \stdClass $input): bool
-    {
-        if (!property_exists($input, 'where')) {
-            return false;
-        }
 
-        $data = ['actionId'     => $action->get('id'),
-                 'sourceEntity' => $action->get('sourceEntity'),
-                 'where'        => $input->where
-        ];
-        if (property_exists($input, 'actionSetLinkerId')) {
-            $data['actionSetLinkerId'] = $input->actionSetLinkerId;
-        }
-
-        $jobEntity = $this->getEntityManager()->getEntity('Job');
-        $jobEntity->set([
-            'name'    => $action->get('name'),
-            'type'    => 'ActionHandler',
-            'payload' => $data
-        ]);
-        $this->getEntityManager()->saveEntity($jobEntity);
-
-        return true;
-    }
 
     public function getSourceEntity($action, \stdClass $input): ?Entity
     {

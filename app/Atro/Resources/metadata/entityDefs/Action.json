@@ -33,7 +33,6 @@
     "conditionsType": {
       "type": "extensibleEnum",
       "extensibleEnumId": "conditions_type",
-      "required": true,
       "dropdown": true
     },
     "conditions": {

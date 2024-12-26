@@ -28,8 +28,15 @@ class MassActionCreator extends AbstractJob implements JobInterface
         $total = (int)$data['total'];
         $chunkSize = $data['chunkSize'];
         $totalChunks = (int)ceil($total / $chunkSize);
+        $actionEntity = null;
 
         $additionJobData = $data['params']['additionalJobData'] ?? [];
+        if ($action === 'action' && !empty($additionJobData['actionId'])) {
+            $actionEntity = $this->getEntityManager()->getEntity('Action', $additionJobData['actionId']);
+            if (empty($actionEntity)) {
+                return;
+            }
+        }
 
         /** @var RDB $repository */
         $repository = $this->getEntityManager()->getRepository($entityName);
@@ -89,7 +96,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 $jobData['deletePermanently'] = true;
             }
 
-            $name = $this->translate($action, 'massActions') . ': ' . $entityName;
+            $name = (empty($actionEntity) ? ($this->translate($action, 'massActions')) : $actionEntity->get('name')) . ': ' . $entityName;
             if ($part > 0) {
                 $name .= " ($part)";
             }
@@ -97,7 +104,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
                 'name'        => $name,
-                'type'        => 'Mass' . ucfirst($action),
+                'type'        => $action === 'action' ? 'ActionHandler' : 'Mass' . ucfirst($action),
                 'status'      => 'Awaiting',
                 'priority'    => $job->get('priority'),
                 'ownerUserId' => $job->get('ownerUserId'),
@@ -115,7 +122,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
 
             $i = 1;
             foreach ($jobs as $job) {
-                $job->set('name', sprintf($this->translate('massActionJobName'), $this->translate($action, 'massActions'), $entityName, $i, $jobsCount));
+                $job->set('name', sprintf($this->translate('massActionJobName'), (empty($actionEntity) ? ($this->translate($action, 'massActions')) : $actionEntity->get('name')), $entityName, $i, $jobsCount));
                 $job->set('status', 'Pending');
                 $job->set('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
                 $this->getEntityManager()->saveEntity($job);

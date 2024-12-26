@@ -17,6 +17,8 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
 use Espo\ORM\Entity;
 
 class ActionManager
@@ -45,8 +47,39 @@ class ActionManager
         return $this->getActionType($action->get('type'))->canExecute($action, $input);
     }
 
+    public function hasMassActions(Entity $action)
+    {
+        return !in_array($action->get('type'), ['export', 'import', 'synchronization']);
+    }
+
     public function executeNow(Entity $action, \stdClass $input): bool
     {
+        if ($this->hasMassActions($action) && property_exists($input, 'where') && $input->where !== null) {
+            $data = ['actionId'     => $action->get('id'),
+                     'sourceEntity' => $action->get('sourceEntity'),
+                     'where'        => $input->where
+            ];
+            if (property_exists($input, 'actionSetLinkerId')) {
+                $data['actionSetLinkerId'] = $input->actionSetLinkerId;
+            }
+
+            $params = [
+                'action'             => 'action',
+                'maxCountWithoutJob' => property_exists($input, 'actionSetLinkerId') ? 0 : $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200),
+                'maxChunkSize'       => $this->getConfig()->get('massUpdateMaxChunkSize', 3000),
+                'minChunkSize'       => $this->getConfig()->get('massUpdateMinChunkSize', 400),
+                'where'              => json_decode(json_encode($input->where), true),
+                'additionalJobData'  => $data
+            ];
+
+            $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params, function ($id) use ($action) {
+                $input = new \stdClass();
+                $input->entityId = $id;
+                $this->executeNow($action, $input);
+            });
+            return true;
+        }
+
         if (!$this->canExecute($action, $input)) {
             return false;
         }
@@ -99,6 +132,17 @@ class ActionManager
     {
         return $this->container->get('metadata');
     }
+
+    public function getServiceFactory(): ServiceFactory
+    {
+        return $this->container->get('serviceFactory');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
+    }
+
 
     public function getActionById(string $id): Entity
     {
