@@ -25,20 +25,10 @@ Espo.define('views/admin/field-manager/fields/default', 'views/fields/base', Dep
 
             this.listenTo(this.model, 'change:type', () => {
                 if (this.mode === 'edit') {
-                    let value = '';
-                    if (this.model.get('type') === 'array') {
-                        value = [];
-                    } else if (this.model.get('type') === 'bool') {
-                        value = false;
-                    } else if (this.model.get('type') === 'float') {
-                        value = 0;
-                    }
-
-                    this.model.set('value', value);
+                    this.model.set('value', null);
                     this.reRender();
                 }
             });
-
         },
 
         afterRender() {
@@ -51,7 +41,8 @@ Espo.define('views/admin/field-manager/fields/default', 'views/fields/base', Dep
                     link: "views/admin/field-manager/fields/link-default",
                     measure: "views/admin/field-manager/fields/measure-default",
                     file: "views/admin/field-manager/fields/file-default",
-                    extensibleEnum: "views/admin/field-manager/fields/extensible-enum-default"
+                    extensibleEnum: "views/admin/field-manager/fields/extensible-enum-default",
+                    linkMultiple: "views/admin/field-manager/fields/link-multiple-default",
                 }
 
                 const fieldView = types[type] ?? this.getFieldManager().getViewName(type);

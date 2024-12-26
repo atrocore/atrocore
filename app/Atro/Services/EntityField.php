@@ -36,6 +36,7 @@ class EntityField extends ReferenceData
             $foreignEntity = null;
             switch ($entity->get('type')) {
                 case 'link':
+                case 'linkMultiple':
                     $foreignEntity = $this
                         ->getMetadata()
                         ->get(['entityDefs', $entity->get('entityId'), 'links', $entity->get('code'), 'entity']);
@@ -52,9 +53,20 @@ class EntityField extends ReferenceData
             }
 
             if (!empty($foreignEntity)) {
-                $foreign = $this->getEntityManager()->getRepository($foreignEntity)->get($entity->get('default'));
-                if (!empty($foreign)) {
-                    $entity->set('defaultName', $foreign->get('name'));
+                if (in_array($entity->get('type'), ['linkMultiple'])) {
+                    $foreigns = $this->getEntityManager()->getRepository($foreignEntity)
+                        ->where(['id' => $entity->get('default')])
+                        ->find();
+                    $defaultNames = [];
+                    foreach ($foreigns as $foreign) {
+                        $defaultNames[$foreign->get('id')] = $foreign->get('name');
+                    }
+                    $entity->set('defaultNames', $defaultNames);
+                } else {
+                    $foreign = $this->getEntityManager()->getRepository($foreignEntity)->get($entity->get('default'));
+                    if (!empty($foreign)) {
+                        $entity->set('defaultName', $foreign->get('name'));
+                    }
                 }
             }
         }

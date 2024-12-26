@@ -65,6 +65,11 @@
       "notStorable": true,
       "readOnly": true
     },
+    "defaultNames": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "readOnly": true
+    },
     "setDefaultOnlyIfRequired": {
       "type": "bool"
     },
