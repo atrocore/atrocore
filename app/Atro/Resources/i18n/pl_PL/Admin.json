@@ -143,7 +143,6 @@
        "tooltipLink":"Link podpowiedzi",
        "default":"Domyślny",
        "defaultDate":"Domyślny",
-       "countBytesInsteadOfCharacters":"Liczenie bajtów zamiast znaków",
        "amountOfDigitsAfterComma":"Ilość cyfr po przecinku",
        "options":"Opcje",
        "after":"Po (polu)",

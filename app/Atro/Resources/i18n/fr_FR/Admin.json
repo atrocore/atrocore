@@ -159,7 +159,6 @@
     "label": "Étiquette",
     "minTo": "Min To",
     "minFrom": "Min De",
-    "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
     "script": "Script",
     "outputType": "Type de sortie",
     "defaultUnit": "Unité par défaut",

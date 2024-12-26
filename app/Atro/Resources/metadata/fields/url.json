@@ -5,10 +5,6 @@
          "type":"varchar"
       },
       {
-         "name":"countBytesInsteadOfCharacters",
-         "type":"bool"
-      },
-      {
          "name": "strip",
          "type": "bool"
       }

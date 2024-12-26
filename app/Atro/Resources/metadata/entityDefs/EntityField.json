@@ -51,6 +51,9 @@
     "maxLength": {
       "type": "int",
       "tooltip": true
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool"
     }
   },
   "links": {

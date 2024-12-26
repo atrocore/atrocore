@@ -152,7 +152,6 @@
     "tooltipLink": "Tooltip link",
     "default": "Default",
     "defaultDate": "Default",
-    "countBytesInsteadOfCharacters": "Count bytes instead of characters",
     "amountOfDigitsAfterComma": "Amount of digits after comma",
     "options": "Options",
     "after": "After (field)",

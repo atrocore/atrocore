@@ -15,10 +15,6 @@
       "view": "views/admin/field-manager/fields/default-unit"
     },
     {
-      "name": "countBytesInsteadOfCharacters",
-      "type": "bool"
-    },
-    {
       "name": "pattern",
       "type": "varchar",
       "tooltip": true
