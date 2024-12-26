@@ -9,7 +9,8 @@
     "unique": "Unique",
     "index": "Database Index",
     "measure": "Measure",
-    "trim": "Remove leading and trailing whitespaces"
+    "trim": "Remove leading and trailing whitespaces",
+    "maxLength": "Max length"
   },
   "links": {
     "entity": "Entity",
@@ -18,7 +19,8 @@
   "tooltips": {
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "required": "Field will be mandatory. Can't be left empty.",
-    "readOnly": "Field value can't be specified by user."
+    "readOnly": "Field value can't be specified by user.",
+    "maxLength": "Max acceptable length of text."
   },
   "labels": {
     "Create Entity Field": "Create Entity Field"

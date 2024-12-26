@@ -66,7 +66,6 @@
     "default": "El valor se establecerá de forma predeterminada al guardar.",
     "min": "Valor mínimo aceptado.",
     "max": "Valor máximo aceptado.",
-    "maxLength": "Longitud máxima aceptable del texto.",
     "before": "El valor de fecha debe ser anterior al valor de fecha del campo especificado.",
     "after": "El valor de fecha debe ser posterior al valor de fecha del campo especificado.",
     "maxFileSize": "Si está vacío o es 0, entonces no limitar",

@@ -70,7 +70,6 @@
     "max": "Max acceptable value.",
     "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
     "lengthOfCut": "Excessive characters will be hidden in the view mode.",
-    "maxLength": "Max acceptable length of text.",
     "before": "The date value should be before the date value of the specified field.",
     "after": "The date value should be after the date value of the specified field.",
     "maxFileSize": "If empty or 0 then no limit.",

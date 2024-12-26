@@ -15,10 +15,6 @@
       "view": "views/admin/field-manager/fields/default-unit"
     },
     {
-      "name": "maxLength",
-      "type": "int"
-    },
-    {
       "name": "countBytesInsteadOfCharacters",
       "type": "bool"
     },

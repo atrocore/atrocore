@@ -53,6 +53,12 @@
           "name": "trim"
         },
         false
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        false
       ]
     ]
   }

@@ -140,7 +140,6 @@
     "label": "Label",
     "default": "Standardwert",
     "defaultDate": "Standardwert",
-    "maxLength": "Maximallänge",
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "options": "Optionen",
     "after": "Nach (Feld)",

@@ -170,7 +170,6 @@
     "tooltipLink": "Lien de l'infobulle",
     "default": "Défaut",
     "defaultDate": "Défaut",
-    "maxLength": "Longueur maximale",
     "amountOfDigitsAfterComma": "Nombre de chiffres après la virgule",
     "options": "Options",
     "after": "Après (champ)",

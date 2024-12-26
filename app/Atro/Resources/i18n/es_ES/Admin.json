@@ -115,7 +115,6 @@
     "name": "Nombre",
     "label": "Etiqueta",
     "default": "Por defecto",
-    "maxLength": "Longitud máxima",
     "options": "Ajustes",
     "after": "Después (campo)",
     "before": "Antes (campo)",

@@ -143,7 +143,6 @@
        "tooltipLink":"Link podpowiedzi",
        "default":"Domyślny",
        "defaultDate":"Domyślny",
-       "maxLength":"Maksymalna długość",
        "countBytesInsteadOfCharacters":"Liczenie bajtów zamiast znaków",
        "amountOfDigitsAfterComma":"Ilość cyfr po przecinku",
        "options":"Opcje",

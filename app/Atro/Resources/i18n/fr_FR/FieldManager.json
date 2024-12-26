@@ -67,7 +67,6 @@
     "isSorted": "Les options seront triées après l'enregistrement.",
     "default": "La valeur sera définie par défaut lors de la création.",
     "after": "La valeur de la date doit être postérieure à la valeur de la date du champ spécifié.",
-    "maxLength": "Longueur maximale acceptable du texte.",
     "min": "Valeur minimale acceptable.",
     "max": "Valeur maximale acceptable.",
     "seeMoreDisabled": "Si cette case n'est pas cochée, les textes longs à afficher seront raccourcis.",

@@ -5,10 +5,6 @@
       "type": "varchar"
     },
     {
-      "name": "maxLength",
-      "type": "int"
-    },
-    {
       "name": "countBytesInsteadOfCharacters",
       "type": "bool"
     },

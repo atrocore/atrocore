@@ -143,6 +143,23 @@
             }
           ]
         }
+      },
+      "maxLength": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar",
+                "email",
+                "wysiwyg",
+                "url",
+                "text"
+              ]
+            }
+          ]
+        }
       }
     }
   }

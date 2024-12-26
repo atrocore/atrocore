@@ -13,10 +13,6 @@
          "type": "int"
       },
       {
-         "name":"maxLength",
-         "type":"int"
-      },
-      {
          "name":"countBytesInsteadOfCharacters",
          "type":"bool"
       },

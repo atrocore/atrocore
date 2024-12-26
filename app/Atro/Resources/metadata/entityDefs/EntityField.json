@@ -47,6 +47,10 @@
     "trim": {
       "type": "bool",
       "default": true
+    },
+    "maxLength": {
+      "type": "int",
+      "tooltip": true
     }
   },
   "links": {

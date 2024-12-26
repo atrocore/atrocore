@@ -70,7 +70,6 @@
     "max": "Maksymalna dopuszczalna wartość.",
     "seeMoreDisabled": "Jeśli nie zaznaczone, długie teksty do wyświetlenia zostaną skrócone.",
     "lengthOfCut": "Zbyt długie znaki będą ukryte w trybie widoku.",
-    "maxLength": "Maksymalna dopuszczalna długość tekstu.",
     "before": "Wartość daty powinna być przed wartością daty określonego pola.",
     "after": "Wartość daty powinna być po wartości daty określonego pola.",
     "maxFileSize": "Jeśli puste lub 0, to brak limitu.",
