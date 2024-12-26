@@ -187,7 +187,6 @@
        "strip":"Usuń",
        "pattern":"Wzorzec Regex",
        "foreignName":"Pole obce",
-       "index":"Indeks bazy danych",
        "useDisabledTextareaInViewMode":"Użyj wyłączonego pola tekstowego w trybie wyświetlania",
        "setDefaultOnlyIfRequired":"Zastosuj wartość domyślną tylko jeśli jest wymagana",
        "dropdown":"Rozwijane menu"

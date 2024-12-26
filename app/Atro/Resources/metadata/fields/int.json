@@ -26,10 +26,6 @@
     {
       "name": "disableFormatting",
       "type": "bool"
-    },
-    {
-      "name": "index",
-      "type": "bool"
     }
   ],
   "filter": true,

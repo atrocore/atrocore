@@ -27,10 +27,6 @@
          "name": "amountOfDigitsAfterComma",
          "type": "int",
          "min": 0
-      },
-      {
-         "name": "index",
-         "type": "bool"
       }
    ],
    "filter": true,

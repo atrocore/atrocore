@@ -152,7 +152,6 @@
     "strip": "Bande",
     "pattern": "Modèle d'expressions rationnelles",
     "foreignName": "Domaine étranger",
-    "index": "Index des bases de données",
     "useDisabledTextareaInViewMode": "Utiliser une zone de texte désactivée en mode affichage",
     "setDefaultOnlyIfRequired": "Appliquer la valeur par défaut uniquement si nécessaire",
     "dropdown": "Liste déroulante",

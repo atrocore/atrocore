@@ -21,10 +21,6 @@
       "name": "pattern",
       "type": "varchar",
       "tooltip": true
-    },
-    {
-      "name": "index",
-      "type": "bool"
     }
   ],
   "fieldDefs": {

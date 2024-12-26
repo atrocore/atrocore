@@ -91,6 +91,26 @@
             }
           ]
         }
+      },
+      "index": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "color",
+                "datetime",
+                "date",
+                "email",
+                "float",
+                "url",
+                "int",
+                "varchar"
+              ]
+            }
+          ]
+        }
       }
     }
   }

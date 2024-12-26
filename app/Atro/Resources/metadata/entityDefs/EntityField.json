@@ -37,6 +37,9 @@
     },
     "unique": {
       "type": "bool"
+    },
+    "index": {
+      "type": "bool"
     }
   },
   "links": {

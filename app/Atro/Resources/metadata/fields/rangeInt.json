@@ -29,10 +29,6 @@
     {
       "name": "maxTo",
       "type": "int"
-    },
-    {
-      "name": "index",
-      "type": "bool"
     }
   ],
   "actualFields": [

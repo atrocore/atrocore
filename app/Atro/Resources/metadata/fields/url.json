@@ -15,10 +15,6 @@
       {
          "name": "strip",
          "type": "bool"
-      },
-      {
-         "name": "index",
-         "type": "bool"
       }
    ],
    "filter": true,

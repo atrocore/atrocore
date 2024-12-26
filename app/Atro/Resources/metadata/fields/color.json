@@ -5,10 +5,6 @@
             "type": "varchar"
         },
         {
-            "name": "index",
-            "type": "bool"
-        },
-        {
             "name": "prohibitedEmptyValue",
             "type": "bool"
         }

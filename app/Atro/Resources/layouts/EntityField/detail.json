@@ -36,9 +36,11 @@
       ],
       [
         {
-          "name": "unique"
+          "name": "index"
         },
-        false
+        {
+          "name": "unique"
+        }
       ]
     ]
   }

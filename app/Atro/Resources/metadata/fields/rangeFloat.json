@@ -33,10 +33,6 @@
     {
       "name": "amountOfDigitsAfterComma",
       "type": "int"
-    },
-    {
-      "name": "index",
-      "type": "bool"
     }
   ],
   "actualFields": [

@@ -6,7 +6,8 @@
     "required": "Required",
     "notNull": "Disable null value",
     "readOnly": "Read-only",
-    "unique": "Unique"
+    "unique": "Unique",
+    "index": "Database Index"
   },
   "links": {
     "entity": "Entity"

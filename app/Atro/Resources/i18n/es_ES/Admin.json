@@ -155,7 +155,6 @@
     "useNumericFormat": "Use Numeric Format",
     "strip": "Strip",
     "pattern": "Regex Pattern",
-    "index": "Índice de base de datos",
     "setDefaultOnlyIfRequired": "Aplicar el valor predeterminado solo si es necesario",
     "dropdown": "Desplegable"
   },

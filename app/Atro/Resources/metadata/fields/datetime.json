@@ -15,10 +15,6 @@
       {
          "type": "bool",
          "name":"useNumericFormat"
-      },
-      {
-         "name": "index",
-         "type": "bool"
       }
    ],
    "filter": true,
