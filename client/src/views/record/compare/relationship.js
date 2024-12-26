@@ -59,8 +59,6 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
         },
 
         data() {
-            let minWidth = 150;
-
             return {
                 name: this.relationship.name,
                 scope: this.scope,
@@ -72,7 +70,6 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 showBorders: this.linkedEntities.length > 1,
                 hasToManyRecords: this.hasToManyRecords,
                 hasManyRecordsMessage: this.translate('thereAreTooManyRecord'),
-                minWidth
             }
         },
 
@@ -121,19 +118,13 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
             callback();
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this)
-            $('.not-approved-field').remove();
-            $('.translated-automatically-field').remove();
-        },
-
         prepareModels(callback) {
             this.getModelFactory().create(this.relationName, (relationModel) => {
                 relationModel.defs.fields[this.isLinkedColumns] = {
                     type: 'bool'
                 }
-                let modelRelationColumnId = this.scope.toLowerCase() + 'Id';
-                let relationshipRelationColumnId = this.relationship.scope.toLowerCase() + 'Id';
+                let modelRelationColumnId = this.getModelRelationColumnId();
+                let relationshipRelationColumnId = this.getRelationshipRelationColumnId();
                 let data = {
                     select: this.selectFields.join(','),
                     where: [
@@ -176,9 +167,8 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                         let relationList = results[1].list;
                         let uniqueList = {};
                         results[0].list.forEach(v => uniqueList[v.id] = v);
-                        list = Object.values(uniqueList)
-                        this.linkedEntities = list;
-                        list.forEach(item => {
+                        this.linkedEntities = Object.values(uniqueList)
+                        this.linkedEntities.forEach(item => {
                             this.relationModels[item.id] = [];
                             this.collection.models.forEach((model, key) => {
                                 let m = relationModel.clone()
@@ -291,6 +281,20 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
         },
 
         updateBaseUrl() {
+        },
+
+        getModelRelationColumnId() {
+            let midKeys = this.model.defs.links[this.relationship.name].midKeys;
+            return (midKeys && midKeys.length === 2) ? midKeys[1] : this.scope.toLowerCase() + 'Id';
+        },
+
+        getRelationshipRelationColumnId() {
+            let midKeys = this.model.defs.links[this.relationship.name].midKeys;
+            return (midKeys && midKeys.length === 2) ? midKeys[0] : this.relationship.scope.toLowerCase() + 'Id';
+        },
+
+        getLinkName() {
+            return this.relationship.name;
         }
     })
 })

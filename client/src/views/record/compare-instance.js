@@ -27,14 +27,14 @@ Espo.define('views/record/compare-instance','views/record/compare', function (De
 
         buildComparisonTableHeaderColumn() {
             let columns = [];
-                columns.push({name: this.translate('instance', 'labels', 'Synchronization'), isFirst: true});
-                columns.push({name: this.translate('current', 'labels', 'Synchronization')});
-                this.instances.forEach(instance => {
-                    columns.push({
-                        name: instance.name,
-                        _error: instance._error
-                    })
-                });
+            columns.push({name: this.translate('instance', 'labels', 'Synchronization'), isFirst: true});
+            columns.push({name: `<a href="#/${this.scope}/view/${this.model.id}" target="_blank"> ${this.translate('current', 'labels', 'Synchronization')}</a>`});
+            this.instances.forEach(instance => {
+                columns.push({
+                    name: `<a href="${instance.atrocoreUrl}#/${this.scope}/view/${this.model.id}" target="_blank"> ${instance.name}</a>`,
+                    _error: instance._error
+                })
+            });
             return columns;
         },
 

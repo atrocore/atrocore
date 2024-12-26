@@ -73,7 +73,12 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
         data() {
             return {
                 scope: this.scope,
-                relationshipsPanels: this.relationshipsPanels,
+                relationshipsPanels: this.relationshipsPanels.map(v => {
+                    return {
+                        label: v.label,
+                        name: v.name
+                    }
+                }),
                 columns: this.columns,
                 itemColumnCount: 1,
                 columnsLength: this.columns.length

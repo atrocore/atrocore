@@ -9,7 +9,7 @@
  */
 
 
-Espo.define('views/record/compare/fields-panels', 'views/record/base', function (Dep) {
+Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
     return Dep.extend({
         template: 'record/compare/fields-panels',
 
@@ -23,95 +23,94 @@ Espo.define('views/record/compare/fields-panels', 'views/record/base', function 
             this.instances = this.options.instances ?? this.getMetadata().get(['app', 'comparableInstances'])
             this.instanceComparison = this.options.instanceComparison;
             this.columns = this.options.columns;
-
-           this.fieldListPanels = [
-               {
-                   label: 'Fields',
-                   fields:  this.options.fieldsArr
-               }
-           ]
-
             Dep.prototype.setup.call(this);
 
-            this.setupFieldList();
         },
 
         data() {
             return {
                 scope: this.scope,
-                fieldList: this.fieldListPanels,
+                fieldList: this.options.fieldsArr.map(fieldData => {
+                    return {
+                        field: fieldData.field,
+                        shouldNotCenter: fieldData.shouldNotCenter,
+                        label: fieldData.label,
+                        current: fieldData.current,
+                        others: fieldData.others,
+                        different: fieldData.different,
+                        required: fieldData.required
+                    }
+                }),
                 columns: this.columns,
                 columnLength: this.columns.length
             }
         },
+        
+        buildFieldViews() {
+            this.options.fieldsArr.forEach(fieldData => {
+                let field = fieldData.field;
+                let model = fieldData.modelCurrent;
+                let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
+                this.createView(field + 'Current', viewName, {
+                    el: this.options.el + ` [data-field="${field}"]  .current`,
+                    model: model,
+                    readOnly: true,
+                    defs: {
+                        name: field,
+                    },
+                    mode: 'detail',
+                    inlineEditDisabled: true,
+                }, view => view.render());
 
-        setupFieldList() {
-            this.fieldListPanels.forEach((panel) => {
-                panel.fields.forEach(fieldData => {
-                    let field = fieldData.field;
-                    let model = fieldData.modelCurrent;
-                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
-                    this.createView(field + 'Current', viewName, {
-                        el: this.options.el + ` [data-field="${field}"]  .current`,
+                fieldData.modelOthers.forEach((model, index) => {
+                    this.createView(field + 'Other' + index, viewName, {
+                        el: this.options.el + ` [data-field="${field}"]  .other${index}`,
                         model: model,
                         readOnly: true,
                         defs: {
-                            name: field,
+                            name: field
                         },
                         mode: 'detail',
                         inlineEditDisabled: true,
-                    });
+                    }, view => {
+                        view.render();
+                        if (this.instanceComparison) {
+                            view.listenTo(view, 'after:render', () => {
+                                let localUrl = this.getConfig().get('siteUrl');
+                                let instanceUrl = this.instances[index].atrocoreUrl;
 
-                    fieldData.modelOthers.forEach((model, index) => {
-                        this.createView(field + 'Other' + index, viewName, {
-                            el: this.options.el + ` [data-field="${field}"]  .other${index}`,
-                            model: model,
-                            readOnly: true,
-                            defs: {
-                                name: field
-                            },
-                            mode: 'detail',
-                            inlineEditDisabled: true,
-                        }, view => {
-                            if (this.instanceComparison) {
-                                view.listenTo(view, 'after:render', () => {
-                                    let localUrl = this.getConfig().get('siteUrl');
-                                    let instanceUrl = this.instances[index].atrocoreUrl;
+                                view.$el.find('a').each((i, el) => {
+                                    let href = $(el).attr('href')
 
-                                    view.$el.find('a').each((i, el) => {
-                                        let href = $(el).attr('href')
+                                    if (href.includes('http') && localUrl) {
+                                        $(el).attr('href', href.replace(localUrl, instanceUrl))
+                                    }
 
-                                        if (href.includes('http') && localUrl) {
-                                            $(el).attr('href', href.replace(localUrl, instanceUrl))
-                                        }
-
-                                        if ((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?') || href.startsWith('#')) {
-                                            $(el).attr('href', instanceUrl + href)
-                                        }
-                                        $(el).attr('target', '_blank')
-                                    })
-                                    view.$el.find('img').each((i, el) => {
-                                        let src = $(el).attr('src')
-                                        if (src.includes('http') && localUrl) {
-                                            $(el).attr('src', src.replace(localUrl, instanceUrl))
-                                        }
-
-                                        if (!src.includes('http')) {
-                                            $(el).attr('src', instanceUrl + '/' + src)
-                                        }
-                                    })
+                                    if ((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?') || href.startsWith('#')) {
+                                        $(el).attr('href', instanceUrl + href)
+                                    }
+                                    $(el).attr('target', '_blank')
                                 })
-                            }
-                        });
-                    })
-                })
+                                view.$el.find('img').each((i, el) => {
+                                    let src = $(el).attr('src')
+                                    if (src.includes('http') && localUrl) {
+                                        $(el).attr('src', src.replace(localUrl, instanceUrl))
+                                    }
+
+                                    if (!src.includes('http')) {
+                                        $(el).attr('src', instanceUrl + '/' + src)
+                                    }
+                                })
+                            })
+                        }
+                    });
+                });
             });
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this)
-            $('.translated-automatically-field').hide();
-            $('.not-approved-field').hide();
+            this.buildFieldViews();
         }
     })
 })
