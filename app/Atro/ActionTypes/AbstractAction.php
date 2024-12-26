@@ -13,8 +13,10 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\ActionManager;
 use Atro\Core\Container;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
+use Atro\Core\Utils\Condition\Condition;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
@@ -28,6 +30,41 @@ abstract class AbstractAction implements TypeInterface
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    public function canExecute(Entity $action, \stdClass $input): bool
+    {
+        $sourceEntity = $this->getSourceEntity($action, $input);
+        if ($action->get('conditionsType') === 'basic') {
+            if (empty($sourceEntity)) {
+                return true;
+            }
+            $conditions = @json_decode($action->get('conditions'), true);
+            if (!empty($conditions)) {
+                if ($sourceEntity->getEntityType() !== $action->get('sourceEntity')) {
+                    return false;
+                }
+                return Condition::isCheck(Condition::prepare($sourceEntity, $conditions));
+            }
+            return true;
+        }
+
+        if ($action->get('conditionsType') === 'script') {
+            $template = empty($action->get('conditions')) ? '' : (string)$action->get('conditions');
+            $templateData = [
+                'entity' => $sourceEntity,
+                'user'   => $this->getEntityManager()->getUser()
+            ];
+
+            $res = $this->getTwig()->renderTemplate($template, $templateData, 'bool');
+            if (is_string($res)) {
+                throw new BadRequest('Action conditions error: ' . $res);
+            }
+
+            return $res;
+        }
+
+        return true;
     }
 
     public function createJob(Entity $action, \stdClass $input): bool
@@ -58,7 +95,9 @@ abstract class AbstractAction implements TypeInterface
     public function getSourceEntity($action, \stdClass $input): ?Entity
     {
         $sourceEntity = null;
-        if (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
+        if (!empty($input->sourceEntity)) {
+            $sourceEntity = $input->sourceEntity;
+        } else if (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
             $sourceEntity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get($input->entityId);
         } elseif (!empty($input->triggeredEntity)) {
             $sourceEntity = $input->triggeredEntity;

@@ -18,14 +18,8 @@ use Atro\Core\EventManager\Event;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
-class Webhook implements TypeInterface
+class Webhook extends AbstractAction
 {
-    private Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
 
     public function executeViaWorkflow(array $workflowData, Event $event): bool
     {
@@ -42,10 +36,5 @@ class Webhook implements TypeInterface
         }
 
         return true;
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->container->get('entityManager');
     }
 }

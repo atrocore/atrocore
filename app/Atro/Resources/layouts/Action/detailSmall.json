@@ -37,9 +37,18 @@
       ],
       [
         {
-          "name": "executeAs"
+          "name": "conditionsType",
+          "inlineEditDisabled": true
         },
-        false
+        {
+          "name": "executeAs"
+        }
+      ],
+      [
+        {
+          "name": "conditions",
+          "fullWidth": true
+        }
       ]
     ]
   },

@@ -16,11 +16,12 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
         editTemplate: 'fields/field-value-container',
 
         inlineEditDisabled: true,
+        entityTypeField: 'entityType',
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:entityType change:conditionsType', () => {
+            this.listenTo(this.model, `change:${this.entityTypeField} change:conditionsType`, () => {
                 this.clearValue();
                 this.reRender();
             });
@@ -40,14 +41,19 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
         },
 
         getEntityType() {
-            return this.model.get('entityType');
+            return this.model.get(this.entityTypeField);
         },
+
+        canShowValueField(){
+          return  this.model.get('conditionsType') && this.getEntityType()
+        },
+
 
         afterRender() {
             Dep.prototype.setup.call(this);
 
             this.hide();
-            if (this.model.get('conditionsType') && this.getEntityType()) {
+            if (this.canShowValueField()) {
                 let options = {
                     el: `${this.options.el} > .field[data-name="valueField"]`,
                     name: this.name,

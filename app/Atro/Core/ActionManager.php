@@ -40,8 +40,17 @@ class ActionManager
         return null;
     }
 
+    public function canExecute(Entity $action, \stdClass $input): bool
+    {
+        return $this->getActionType($action->get('type'))->canExecute($action, $input);
+    }
+
     public function executeNow(Entity $action, \stdClass $input): bool
     {
+        if (!$this->canExecute($action, $input)) {
+            return false;
+        }
+
         // prepare current user ID
         $currentUserId = $this->container->get('user')->get('id');
         $userChanged = false;
