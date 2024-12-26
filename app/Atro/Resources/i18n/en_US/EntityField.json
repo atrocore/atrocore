@@ -8,7 +8,8 @@
     "readOnly": "Read-only",
     "unique": "Unique",
     "index": "Database Index",
-    "measure": "Measure"
+    "measure": "Measure",
+    "trim": "Remove leading and trailing whitespaces"
   },
   "links": {
     "entity": "Entity",

@@ -128,7 +128,6 @@
     "defaultType": "Tipo por defecto",
     "entityList": "Lista de entidades",
     "isSorted": "¿Se debe ordenar?",
-    "trim": "Eliminar los espacios en blanco iniciales y finales",
     "height": "Altura (px)",
     "minHeight": "Altura mínima (px)",
     "provider": "Proveedor",

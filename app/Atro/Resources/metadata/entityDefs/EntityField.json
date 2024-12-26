@@ -43,6 +43,10 @@
     },
     "measure": {
       "type": "link"
+    },
+    "trim": {
+      "type": "bool",
+      "default": true
     }
   },
   "links": {

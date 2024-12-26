@@ -169,7 +169,6 @@
     "seeMoreDisabled": "Disable Displayed Text Shortening",
     "entityList": "Entity list",
     "isSorted": "Is sorted (alphabetically)",
-    "trim": "Remove leading and trailing whitespaces",
     "height": "Height (px)",
     "minHeight": "Min height (px)",
     "maxHeight": "Max height (px)",
