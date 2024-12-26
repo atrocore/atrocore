@@ -344,6 +344,9 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         },
 
         camelizeName(name) {
+            if(!this.isNew){
+                return
+            }
             if (name) {
                 name = name.trim();
                 name = name.replace(/-/g, '').replace(/_/g, '').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
