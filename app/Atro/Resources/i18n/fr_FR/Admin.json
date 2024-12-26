@@ -149,7 +149,6 @@
     "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Utiliser le format numérique",
     "strip": "Bande",
-    "pattern": "Modèle d'expressions rationnelles",
     "foreignName": "Domaine étranger",
     "useDisabledTextareaInViewMode": "Utiliser une zone de texte désactivée en mode affichage",
     "setDefaultOnlyIfRequired": "Appliquer la valeur par défaut uniquement si nécessaire",

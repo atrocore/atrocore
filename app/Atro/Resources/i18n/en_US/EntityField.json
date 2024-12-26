@@ -11,7 +11,8 @@
     "measure": "Measure",
     "trim": "Remove leading and trailing whitespaces",
     "maxLength": "Max length",
-    "countBytesInsteadOfCharacters": "Count bytes instead of characters"
+    "countBytesInsteadOfCharacters": "Count bytes instead of characters",
+    "pattern": "Regex pattern"
   },
   "links": {
     "entity": "Entity",
@@ -21,7 +22,8 @@
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "required": "Field will be mandatory. Can't be left empty.",
     "readOnly": "Field value can't be specified by user.",
-    "maxLength": "Max acceptable length of text."
+    "maxLength": "Max acceptable length of text.",
+    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\""
   },
   "labels": {
     "Create Entity Field": "Create Entity Field"

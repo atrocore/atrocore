@@ -73,7 +73,6 @@
     "before": "The date value should be before the date value of the specified field.",
     "after": "The date value should be after the date value of the specified field.",
     "maxFileSize": "If empty or 0 then no limit.",
-    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
     "foreignName": "Field to be shown in the relation.",
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
   },

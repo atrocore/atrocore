@@ -69,8 +69,7 @@
     "before": "El valor de fecha debe ser anterior al valor de fecha del campo especificado.",
     "after": "El valor de fecha debe ser posterior al valor de fecha del campo especificado.",
     "maxFileSize": "Si está vacío o es 0, entonces no limitar",
-    "fontSize": "Font size in em (relative to current font size).",
-    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\""
+    "fontSize": "Font size in em (relative to current font size)."
   },
   "fieldParts": {
     "unit": {

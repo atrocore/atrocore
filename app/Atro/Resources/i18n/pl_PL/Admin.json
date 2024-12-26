@@ -182,7 +182,6 @@
        "htmlSanitizer": "HTML Sanitizer",
        "useNumericFormat":"Użyj formatu liczbowego",
        "strip":"Usuń",
-       "pattern":"Wzorzec Regex",
        "foreignName":"Pole obce",
        "useDisabledTextareaInViewMode":"Użyj wyłączonego pola tekstowego w trybie wyświetlania",
        "setDefaultOnlyIfRequired":"Zastosuj wartość domyślną tylko jeśli jest wymagana",

@@ -191,7 +191,6 @@
     "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Use numeric format",
     "strip": "Strip",
-    "pattern": "Regex pattern",
     "foreignName": "Foreign field",
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
     "setDefaultOnlyIfRequired": "Apply default value only if required",

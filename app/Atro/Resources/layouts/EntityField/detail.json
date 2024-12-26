@@ -65,6 +65,12 @@
           "name": "countBytesInsteadOfCharacters"
         },
         false
+      ],
+      [
+        {
+          "name": "pattern"
+        },
+        false
       ]
     ]
   }

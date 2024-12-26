@@ -54,6 +54,10 @@
     },
     "countBytesInsteadOfCharacters": {
       "type": "bool"
+    },
+    "pattern": {
+      "type": "varchar",
+      "tooltip": true
     }
   },
   "links": {

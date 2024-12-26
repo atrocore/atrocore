@@ -174,7 +174,6 @@
     "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Verwenden Sie das numerische Format",
     "dataUrl": "Daten-URL",
-    "pattern": "Regex-Muster",
     "foreignName": "Fremdfeld",
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
     "setDefaultOnlyIfRequired": "Wenden Sie den Standardwert nur bei Bedarf an",

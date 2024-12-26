@@ -13,11 +13,6 @@
       "name": "defaultUnit",
       "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit"
-    },
-    {
-      "name": "pattern",
-      "type": "varchar",
-      "tooltip": true
     }
   ],
   "filter": true,
