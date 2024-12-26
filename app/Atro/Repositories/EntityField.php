@@ -52,11 +52,12 @@ class EntityField extends ReferenceData
                 }
 
                 $items[] = array_merge($fieldDefs, [
-                    'id'         => "{$entityName}_{$fieldName}",
-                    'code'       => $fieldName,
-                    'name'       => $this->getLanguage()->translate($fieldName, 'fields', $entityName),
-                    'entityId'   => $entityName,
-                    'entityName' => $this->getLanguage()->translate($entityName, 'scopeNames'),
+                    'id'          => "{$entityName}_{$fieldName}",
+                    'code'        => $fieldName,
+                    'name'        => $this->getLanguage()->translate($fieldName, 'fields', $entityName),
+                    'entityId'    => $entityName,
+                    'entityName'  => $this->getLanguage()->translate($entityName, 'scopeNames'),
+                    'tooltipText' => $this->getLanguage()->translate($fieldName, 'tooltips', $entityName),
                 ]);
             }
         }
