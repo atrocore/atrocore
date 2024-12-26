@@ -60,6 +60,16 @@
       "view": "views/admin/field-manager/fields/default",
       "tooltip": true
     },
+    "defaultId": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "defaultName": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
     "setDefaultOnlyIfRequired": {
       "type": "bool"
     },

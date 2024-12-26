@@ -51,6 +51,10 @@ class EntityField extends ReferenceData
                     $fieldDefs[$boolField] = !empty($fieldDefs[$boolField]);
                 }
 
+                if (in_array($fieldDefs['type'], ['link'])) {
+                    $fieldDefs['defaultId'] = $fieldDefs['default'] ?? null;
+                }
+
                 $items[] = array_merge($fieldDefs, [
                     'id'          => "{$entityName}_{$fieldName}",
                     'code'        => $fieldName,
