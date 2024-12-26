@@ -140,9 +140,6 @@ class Action extends Base
 
     public function getRecordDynamicActions(string $scope, string $id)
     {
-        $recordService = $this->getServiceFactory()->create($scope);
-        $entity = $recordService->getEntity($id);
-
         $dynamicActions = [];
 
         foreach ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicRecordActions']) ?? [] as $action) {
@@ -168,8 +165,10 @@ class Action extends Base
                 ->select('id')
                 ->from('bookmark')
                 ->where('entity_id = :entityId AND deleted = :false')
+                ->andWhere('entity_type = :entityType')
                 ->andWhere('user_id = :userId')
-                ->setParameter('entityId', $entity->get('id'))
+                ->setParameter('entityId', $id)
+                ->setParameter('entityType', $scope)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('userId', $this->getUser()->id)
                 ->fetchAssociative();
