@@ -213,6 +213,38 @@
             }
           ]
         }
+      },
+      "default": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "array",
+                "bool",
+                "color",
+                "date",
+                "datetime",
+                "email",
+                "extensibleEnum",
+                "extensibleMultiEnum",
+                "file",
+                "float",
+                "int",
+                "link",
+                "linkMultiple",
+                "markdown",
+                "measure",
+                "script",
+                "text",
+                "url",
+                "wysiwyg",
+                "varchar"
+              ]
+            }
+          ]
+        }
       }
     }
   }
