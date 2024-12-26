@@ -179,27 +179,4 @@ class Record extends RecordService
         return [$total, $errors, $sync];
     }
 
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        if (!empty($this->getMemoryStorage()->get('exportJobId')) || !empty($this->getMemoryStorage()->get('importJobId')) || $this->isPseudoTransaction()) {
-            return;
-        }
-
-        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'bookmarkDisabled']) && empty($entity->bookmarkIdLoaded)) {
-            $bookmarked = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('id')
-                ->from('bookmark')
-                ->where('entity_id = :entityId AND deleted = :false')
-                ->andWhere('user_id = :userId')
-                ->setParameter('entityId', $entity->get('id'))
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('userId', $this->getUser()->id)
-                ->fetchAssociative();
-
-            $entity->set('bookmarkId', $bookmarked['id'] ?? null);
-            $entity->bookmarkIdLoaded = true;
-        }
-    }
 }

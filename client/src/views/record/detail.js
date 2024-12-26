@@ -612,6 +612,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 id: action.data['action_id'],
                             });
                         }
+
+                        if(action.action === 'bookmark') {
+                            this.model.set('bookmarkId', action.data['bookmark_id'])
+                        }
                     })
 
                     let template = this._templator.compileTemplate(`
