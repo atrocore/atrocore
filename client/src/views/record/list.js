@@ -972,7 +972,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
             if (this.checkedList.length > 10) {
-                this.notify('Select not more than 4 records', 'error');
+                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', 10), 'error');
                 return;
             }
 

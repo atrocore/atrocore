@@ -452,7 +452,8 @@
     "linkJobsCreated": "Records are being linked in background.",
     "recordDontExistInInstance": "This record does not exist in the instance",
     "badTokenInstance": "Bad authorization token for instance",
-    "dontHaveAccessInInstance": "You don't have access to this record on instance"
+    "dontHaveAccessInInstance": "You don't have access to this record on instance",
+    "selectNoMoreThan": "Select not more than {count} records"
   },
   "boolFilters": {
     "onlyActive": "Active",
