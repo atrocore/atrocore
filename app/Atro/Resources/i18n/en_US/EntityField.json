@@ -14,7 +14,9 @@
     "countBytesInsteadOfCharacters": "Count bytes instead of characters",
     "pattern": "Regex pattern",
     "defaultUnit": "Default Unit",
-    "setDefaultOnlyIfRequired": "Apply default value only if required"
+    "setDefaultOnlyIfRequired": "Apply default value only if required",
+    "tooltipText": "Tooltip text",
+    "tooltipLink": "Tooltip link"
   },
   "links": {
     "entity": "Entity",

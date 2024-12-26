@@ -81,6 +81,14 @@
         {
           "name": "setDefaultOnlyIfRequired"
         }
+      ],
+      [
+        {
+          "name": "tooltipText"
+        },
+        {
+          "name": "tooltipLink"
+        }
       ]
     ]
   }

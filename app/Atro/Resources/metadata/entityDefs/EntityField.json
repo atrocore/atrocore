@@ -66,6 +66,12 @@
     "defaultUnit": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit"
+    },
+    "tooltipText": {
+      "type": "text"
+    },
+    "tooltipLink": {
+      "type": "url"
     }
   },
   "links": {

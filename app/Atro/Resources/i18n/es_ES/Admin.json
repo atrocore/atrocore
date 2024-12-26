@@ -133,8 +133,6 @@
     "typeList": "Tipo de lista",
     "rowsMax": "Número máximo de filas de área de texto",
     "rowsMin": "Número mínimo de filas de área de texto",
-    "tooltipText": "Texto de la ayuda",
-    "tooltipLink": "Url de ayuda",
     "prefix": "Prefijo",
     "padLength": "Longitud del relleno",
     "disableFormatting": "Desactivar formateo",

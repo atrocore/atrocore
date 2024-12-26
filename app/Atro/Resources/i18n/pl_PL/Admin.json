@@ -138,8 +138,6 @@
        "maxFrom":"Maks od",
        "minTo":"Min do",
        "maxTo":"Maks do",
-       "tooltipText":"Tekst podpowiedzi",
-       "tooltipLink":"Link podpowiedzi",
        "default":"Domyślny",
        "defaultDate":"Domyślny",
        "amountOfDigitsAfterComma":"Ilość cyfr po przecinku",
