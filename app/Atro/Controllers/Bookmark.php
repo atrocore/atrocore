@@ -14,23 +14,46 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
 
 class Bookmark extends Base
 {
+    public function actionList($params, $data, $request)
+    {
+
+        $result = $this->getRecordService()->findEntities([]);
+
+        return [
+            'total' => $result['total'],
+            'list'  => $result['list']
+        ];
+    }
+
+    public function actionCreate($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if(empty($data->entityId) || empty($data->entityType)) {
+            throw new BadRequest();
+        }
+
+        $service = $this->getRecordService();
+
+        if ($entity = $service->createEntity($data)) {
+            return $entity->getValueMap();
+        }
+
+        throw new Error();
+    }
+
     public function actionTree($params, $data, $request)
     {
         if (!$request->isGet() || empty($request->get('scope'))) {
             throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        if (!$this->getAcl()->check($request->get('scope'), 'read')) {
-            throw new Forbidden();
         }
 
         $params = [
@@ -62,4 +85,5 @@ class Bookmark extends Base
     {
         throw  new Forbidden();
     }
+
 }
