@@ -3,11 +3,6 @@
     {
       "name": "default",
       "type": "varchar"
-    },
-    {
-      "name": "setDefaultOnlyIfRequired",
-      "type": "bool",
-      "view": "views/admin/field-manager/fields/set-default-only-if-required"
     }
   ],
   "filter": true,

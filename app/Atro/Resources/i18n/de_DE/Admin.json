@@ -175,7 +175,6 @@
     "dataUrl": "Daten-URL",
     "foreignName": "Fremdfeld",
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
-    "setDefaultOnlyIfRequired": "Wenden Sie den Standardwert nur bei Bedarf an",
     "dropdown": "Runterfallen",
     "allowFileTypes": "Dateitypen zulassen"
   },

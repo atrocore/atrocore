@@ -152,7 +152,6 @@
     "htmlSanitizer": "HTML Sanitizer",
     "useNumericFormat": "Use Numeric Format",
     "strip": "Strip",
-    "setDefaultOnlyIfRequired": "Aplicar el valor predeterminado solo si es necesario",
     "dropdown": "Desplegable"
   },
   "messages": {

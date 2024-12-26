@@ -130,16 +130,6 @@
           ]
         }
       },
-      "defaultUnit": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "measureId"
-            }
-          ]
-        }
-      },
       "trim": {
         "visible": {
           "conditionGroup": [
@@ -198,6 +188,19 @@
               "value": [
                 "varchar",
                 "email"
+              ]
+            }
+          ]
+        }
+      },
+      "setDefaultOnlyIfRequired": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar"
               ]
             }
           ]

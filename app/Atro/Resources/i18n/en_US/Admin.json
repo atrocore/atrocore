@@ -192,7 +192,6 @@
     "strip": "Strip",
     "foreignName": "Foreign field",
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
-    "setDefaultOnlyIfRequired": "Apply default value only if required",
     "dropdown": "Dropdown",
     "allowFileTypes": "Allow file types"
   },

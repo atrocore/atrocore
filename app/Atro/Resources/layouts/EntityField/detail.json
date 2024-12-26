@@ -73,6 +73,14 @@
           "name": "pattern"
         },
         false
+      ],
+      [
+        {
+          "name": "default"
+        },
+        {
+          "name": "setDefaultOnlyIfRequired"
+        }
       ]
     ]
   }

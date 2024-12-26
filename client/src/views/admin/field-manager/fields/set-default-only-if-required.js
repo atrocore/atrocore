@@ -26,9 +26,9 @@ Espo.define('views/admin/field-manager/fields/set-default-only-if-required', 'vi
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.parent().hide();
+            this.hide();
             if (this.model.get('default') && !this.model.get('required')) {
-                this.$el.parent().show();
+                this.show();
             }
         },
 

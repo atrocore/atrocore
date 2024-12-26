@@ -55,12 +55,16 @@
     "countBytesInsteadOfCharacters": {
       "type": "bool"
     },
+    "setDefaultOnlyIfRequired": {
+      "type": "bool",
+      "view": "views/admin/field-manager/fields/set-default-only-if-required"
+    },
     "pattern": {
       "type": "varchar",
       "tooltip": true
     },
     "defaultUnit": {
-      "type": "link",
+      "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit"
     }
   },
@@ -73,10 +77,6 @@
     "measure": {
       "type": "belongsTo",
       "entity": "Measure"
-    },
-    "defaultUnit": {
-      "type": "belongsTo",
-      "entity": "Unit"
     }
   },
   "collection": {

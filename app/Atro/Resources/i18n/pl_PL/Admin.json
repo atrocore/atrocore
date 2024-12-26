@@ -183,7 +183,6 @@
        "strip":"Usuń",
        "foreignName":"Pole obce",
        "useDisabledTextareaInViewMode":"Użyj wyłączonego pola tekstowego w trybie wyświetlania",
-       "setDefaultOnlyIfRequired":"Zastosuj wartość domyślną tylko jeśli jest wymagana",
        "dropdown":"Rozwijane menu"
     },
     "messages":{
