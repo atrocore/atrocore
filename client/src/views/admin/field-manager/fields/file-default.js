@@ -8,31 +8,22 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/file/default', ['views/fields/file', 'views/admin/field-manager/fields/link/default'], (Dep, Link) => {
+Espo.define('views/admin/field-manager/fields/file-default', 'views/admin/field-manager/fields/link-default', Dep => {
 
     return Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.foreignScope = 'File';
-
-            this.fileTypeId = this.model.get('fileTypeId') || null;
             this.listenTo(this.model, 'change:fileTypeId', () => {
                 this.model.set(this.idName, null);
                 this.model.set(this.nameName, null);
-                this.fileTypeId = this.model.get('fileTypeId') || null;
             });
         },
 
-        data() {
-            return Link.prototype.data.call(this);
-        },
-
-        fetch() {
-            return Link.prototype.fetch.call(this);
+        getForeignScope() {
+            return 'File';
         },
 
     });
-
 });

@@ -43,6 +43,9 @@ class EntityField extends ReferenceData
                 case 'measure':
                     $foreignEntity = 'Unit';
                     break;
+                case 'file':
+                    $foreignEntity = 'File';
+                    break;
             }
 
             if (!empty($foreignEntity)) {
