@@ -47,18 +47,19 @@ Espo.define('views/admin/field-manager/fields/default', 'views/fields/base', Dep
             let type = this.model.get('type');
 
             if (type) {
-                let fieldView = this.getFieldManager().getViewName(type);
-                // measure ,
-                //     {
-                //       "name": "default",
-                //       "type": "varchar",
-                //       "view": "views/admin/field-manager/fields/link/measure-default"
-                //     }
+                const types = {
+                    link: "views/admin/field-manager/fields/link-default",
+                    measure: "views/admin/field-manager/fields/measure-default"
+                }
+
+                const fieldView = types[type] ?? this.getFieldManager().getViewName(type);
+
                 // extensibleEnum {
                 //     "name": "default",
                 //     "type": "link",
                 //     "view": "views/admin/field-manager/fields/link/extensible-enum-default"
                 // },
+
                 // file
                 //     {
                 //         "name": "default",
@@ -86,10 +87,6 @@ Espo.define('views/admin/field-manager/fields/default', 'views/fields/base', Dep
                     mode: this.mode,
                     inlineEditDisabled: true
                 };
-
-                if (type === 'link') {
-                    options.foreignScope = this.getMetadata().get(`entityDefs.${this.model.get('entityId')}.links.${this.model.get('code')}.entity`);
-                }
 
                 this.createView('valueField', fieldView, options, view => {
                     view.render();

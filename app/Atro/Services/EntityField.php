@@ -32,16 +32,23 @@ class EntityField extends ReferenceData
     {
         parent::prepareEntityForOutput($entity);
 
-        if (empty($entity->_defaultNamePrepared) && !empty($entity->get('defaultId'))) {
-            if ($entity->get('type') === 'link') {
-                $foreignEntity = $this
-                    ->getMetadata()
-                    ->get(['entityDefs', $entity->get('entityId'), 'links', $entity->get('code'), 'entity']);
-                if (!empty($foreignEntity)) {
-                    $foreign = $this->getEntityManager()->getRepository($foreignEntity)->get($entity->get('defaultId'));
-                    if (!empty($foreign)) {
-                        $entity->set('defaultName', $foreign->get('name'));
-                    }
+        if (empty($entity->_defaultNamePrepared) && !empty($entity->get('default'))) {
+            $foreignEntity = null;
+            switch ($entity->get('type')) {
+                case 'link':
+                    $foreignEntity = $this
+                        ->getMetadata()
+                        ->get(['entityDefs', $entity->get('entityId'), 'links', $entity->get('code'), 'entity']);
+                    break;
+                case 'measure':
+                    $foreignEntity = 'Unit';
+                    break;
+            }
+
+            if (!empty($foreignEntity)) {
+                $foreign = $this->getEntityManager()->getRepository($foreignEntity)->get($entity->get('default'));
+                if (!empty($foreign)) {
+                    $entity->set('defaultName', $foreign->get('name'));
                 }
             }
         }
