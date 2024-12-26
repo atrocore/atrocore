@@ -5,11 +5,6 @@
       "type": "rangeFloat"
     },
     {
-      "name": "defaultUnit",
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
-    },
-    {
       "name": "minFrom",
       "type": "float"
     },

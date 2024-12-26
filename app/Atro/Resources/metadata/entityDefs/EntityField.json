@@ -58,6 +58,10 @@
     "pattern": {
       "type": "varchar",
       "tooltip": true
+    },
+    "defaultUnit": {
+      "type": "link",
+      "view": "views/admin/field-manager/fields/default-unit"
     }
   },
   "links": {
@@ -69,6 +73,10 @@
     "measure": {
       "type": "belongsTo",
       "entity": "Measure"
+    },
+    "defaultUnit": {
+      "type": "belongsTo",
+      "entity": "Unit"
     }
   },
   "collection": {

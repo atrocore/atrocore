@@ -133,7 +133,6 @@
     "script": "Skript",
     "preview": "Vorschau",
     "outputType": "Ausgabetyp",
-    "defaultUnit": "Standard Maßeinheit",
     "fontSize": "Schriftgröße",
     "type": "Typ",
     "name": "Code",

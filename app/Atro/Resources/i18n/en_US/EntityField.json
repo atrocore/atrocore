@@ -12,7 +12,8 @@
     "trim": "Remove leading and trailing whitespaces",
     "maxLength": "Max length",
     "countBytesInsteadOfCharacters": "Count bytes instead of characters",
-    "pattern": "Regex pattern"
+    "pattern": "Regex pattern",
+    "defaultUnit": "Default Unit"
   },
   "links": {
     "entity": "Entity",

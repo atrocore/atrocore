@@ -46,7 +46,9 @@
         {
           "name": "measure"
         },
-        false
+        {
+          "name": "defaultUnit"
+        }
       ],
       [
         {

@@ -160,7 +160,6 @@
     "minFrom": "Min De",
     "script": "Script",
     "outputType": "Type de sortie",
-    "defaultUnit": "Unité par défaut",
     "fontSize": "Taille de la police",
     "maxFrom": "Max à partir de",
     "maxTo": "Max To",

@@ -5,11 +5,6 @@
       "type": "int"
     },
     {
-      "name": "defaultUnit",
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
-    },
-    {
       "name": "min",
       "type": "int"
     },

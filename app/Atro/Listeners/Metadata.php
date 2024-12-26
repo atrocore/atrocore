@@ -31,11 +31,7 @@ class Metadata extends AbstractListener
 
         $data = $this->addOwner($data);
 
-        $data = $this->addOnlyActiveFilter($data);
-
-        $this->addOnlyDeletedFilter($data);
-
-        $this->addOnlyBookmarkedFilterAndField($data);
+        $this->addBoolFilters($data);
 
         $data = $this->addArchive($data);
 
@@ -1140,27 +1136,41 @@ class Metadata extends AbstractListener
         return $indexes;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function addOnlyActiveFilter(array $data): array
+    protected function addBoolFilters(array &$data): void
     {
-        foreach ($data['entityDefs'] as $entity => $row) {
-            if (isset($row['fields']['isActive']['type']) && $row['fields']['isActive']['type'] == 'bool') {
-                // push
+        foreach ($data['scopes'] as $entity => $defs) {
+            if (empty($defs['type']) || $defs['type'] === 'ReferenceData') {
+                continue;
+            }
+
+            $entityDefs = $data['entityDefs'][$entity] ?? null;
+
+            $data['clientDefs'][$entity]['boolFilterList'][] = 'fieldsFilter';
+            $data['clientDefs'][$entity]['hiddenBoolFilterList'][] = 'fieldsFilter';
+
+            if (isset($entityDefs['fields']['isActive']['type']) && $entityDefs['fields']['isActive']['type'] == 'bool') {
                 $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyActive';
             }
-        }
 
-        return $data;
-    }
-
-    protected function addOnlyDeletedFilter(array &$data): void
-    {
-        foreach ($data['entityDefs'] as $entity => $row) {
             $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
+
+            if (empty($defs['bookmarkDisabled'])) {
+                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
+                $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
+                $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "massUpdateDisabled"        => true,
+                    "filterDisabled"            => true,
+                    "exportDisabled"            => true,
+                    "importDisabled"            => true,
+                    "emHidden"                  => true
+                ];
+            }
         }
     }
 
@@ -1304,30 +1314,6 @@ class Metadata extends AbstractListener
             }else{
                 $data['app']['globalNotificationRuleIdByOccurrence'][$notificationRule['occurrence']][] = $notificationRule['id'];
             }
-        }
-    }
-
-    protected function addOnlyBookmarkedFilterAndField(array &$data): void
-    {
-        foreach ($data['entityDefs'] as $entity => $scopeDefs) {
-            if(!empty($data['scopes'][$entity]['bookmarkDisabled'])) {
-                continue;
-            }
-            $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
-            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
-            $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
-                "type" => "varchar",
-                "notStorable" => true,
-                "layoutListDisabled"        => true,
-                "layoutListSmallDisabled"   => true,
-                "layoutDetailDisabled"      => true,
-                "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled"        => true,
-                "filterDisabled"            => true,
-                "exportDisabled"            => true,
-                "importDisabled"            => true,
-                "emHidden"                  => true
-            ];
         }
     }
 }

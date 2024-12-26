@@ -139,7 +139,6 @@
     "script": "Script",
     "preview": "Preview",
     "outputType": "Output Type",
-    "defaultUnit": "Default Unit",
     "fontSize": "Font size",
     "type": "Type",
     "name": "Code",
