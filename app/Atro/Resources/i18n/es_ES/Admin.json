@@ -114,7 +114,6 @@
     "type": "Tipo",
     "name": "Nombre",
     "label": "Etiqueta",
-    "default": "Por defecto",
     "options": "Ajustes",
     "after": "Después (campo)",
     "before": "Antes (campo)",

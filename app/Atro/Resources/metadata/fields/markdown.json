@@ -1,10 +1,6 @@
 {
   "params": [
     {
-      "name": "default",
-      "type": "markdown"
-    },
-    {
       "name": "seeMoreDisabled",
       "type": "bool",
       "tooltip": true

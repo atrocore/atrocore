@@ -9,11 +9,6 @@
       "name": "dropdown",
       "type": "bool",
       "default": false
-    },
-    {
-      "name": "default",
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/link/measure-default"
     }
   ],
   "filter": true,

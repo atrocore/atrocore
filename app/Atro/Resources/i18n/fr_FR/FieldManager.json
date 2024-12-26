@@ -65,7 +65,6 @@
   "tooltips": {
     "fontSize": "Taille de la police en em (par rapport à la taille de la police actuelle).",
     "isSorted": "Les options seront triées après l'enregistrement.",
-    "default": "La valeur sera définie par défaut lors de la création.",
     "after": "La valeur de la date doit être postérieure à la valeur de la date du champ spécifié.",
     "min": "Valeur minimale acceptable.",
     "max": "Valeur maximale acceptable.",

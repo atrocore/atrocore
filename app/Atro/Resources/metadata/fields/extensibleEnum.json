@@ -20,11 +20,6 @@
       "view": "views/admin/field-manager/fields/link/extensible-enum"
     },
     {
-      "name": "default",
-      "type": "link",
-      "view": "views/admin/field-manager/fields/link/extensible-enum-default"
-    },
-    {
       "name": "extensibleEnumOptions",
       "view": "views/admin/field-manager/fields/linkMultiple/extensible-enum-options"
     }

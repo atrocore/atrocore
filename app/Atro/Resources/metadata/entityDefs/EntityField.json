@@ -55,6 +55,11 @@
     "countBytesInsteadOfCharacters": {
       "type": "bool"
     },
+    "default": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default",
+      "tooltip": true
+    },
     "setDefaultOnlyIfRequired": {
       "type": "bool"
     },

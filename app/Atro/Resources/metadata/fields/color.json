@@ -1,10 +1,6 @@
 {
     "params": [
         {
-            "name": "default",
-            "type": "varchar"
-        },
-        {
             "name": "prohibitedEmptyValue",
             "type": "bool"
         }

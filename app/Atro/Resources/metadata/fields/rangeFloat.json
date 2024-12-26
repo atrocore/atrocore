@@ -1,10 +1,6 @@
 {
   "params": [
     {
-      "name": "default",
-      "type": "rangeFloat"
-    },
-    {
       "name": "minFrom",
       "type": "float"
     },

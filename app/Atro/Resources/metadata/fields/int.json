@@ -1,10 +1,6 @@
 {
   "params": [
     {
-      "name": "default",
-      "type": "int"
-    },
-    {
       "name": "min",
       "type": "int"
     },

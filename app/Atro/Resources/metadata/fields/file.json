@@ -19,11 +19,6 @@
         "medium",
         "large"
       ]
-    },
-    {
-      "name": "default",
-      "type": "link",
-      "view": "views/admin/field-manager/fields/file/default"
     }
   ],
   "actualFields": [

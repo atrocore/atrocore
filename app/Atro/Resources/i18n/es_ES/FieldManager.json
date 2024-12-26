@@ -63,7 +63,6 @@
     }
   },
   "tooltips": {
-    "default": "El valor se establecerá de forma predeterminada al guardar.",
     "min": "Valor mínimo aceptado.",
     "max": "Valor máximo aceptado.",
     "before": "El valor de fecha debe ser anterior al valor de fecha del campo especificado.",

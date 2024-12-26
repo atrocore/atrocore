@@ -65,7 +65,6 @@
   "tooltips": {
     "fontSize": "Rozmiar czcionki w em (względem bieżącego rozmiaru czcionki).",
     "isSorted": "Opcje zostaną posortowane po zapisaniu.",
-    "default": "Wartość zostanie ustawiona domyślnie podczas tworzenia.",
     "min": "Minimalna dopuszczalna wartość.",
     "max": "Maksymalna dopuszczalna wartość.",
     "seeMoreDisabled": "Jeśli nie zaznaczone, długie teksty do wyświetlenia zostaną skrócone.",

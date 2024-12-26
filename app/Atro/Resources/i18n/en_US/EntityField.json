@@ -14,6 +14,7 @@
     "countBytesInsteadOfCharacters": "Count bytes instead of characters",
     "pattern": "Regex pattern",
     "defaultUnit": "Default Unit",
+    "default": "Default",
     "setDefaultOnlyIfRequired": "Apply default value only if required",
     "tooltipText": "Tooltip text",
     "tooltipLink": "Tooltip link"
@@ -27,7 +28,8 @@
     "required": "Field will be mandatory. Can't be left empty.",
     "readOnly": "Field value can't be specified by user.",
     "maxLength": "Max acceptable length of text.",
-    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\""
+    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
+    "default": "Value will be set by default upon creating."
   },
   "labels": {
     "Create Entity Field": "Create Entity Field"

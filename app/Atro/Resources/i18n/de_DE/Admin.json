@@ -137,7 +137,6 @@
     "type": "Typ",
     "name": "Code",
     "label": "Label",
-    "default": "Standardwert",
     "defaultDate": "Standardwert",
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "options": "Optionen",

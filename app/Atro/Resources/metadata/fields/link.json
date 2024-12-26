@@ -16,11 +16,6 @@
       "name": "currentUserAsDefault",
       "type": "bool",
       "view": "views/admin/field-manager/fields/bool/current-user-as-default"
-    },
-    {
-      "name": "default",
-      "type": "link",
-      "view": "views/admin/field-manager/fields/link/default"
     }
   ],
   "actualFields": [

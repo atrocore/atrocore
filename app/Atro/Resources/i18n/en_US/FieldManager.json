@@ -65,7 +65,6 @@
   "tooltips": {
     "fontSize": "Font size in em (relative to current font size).",
     "isSorted": "Options will be sorted after saving.",
-    "default": "Value will be set by default upon creating.",
     "min": "Min acceptable value.",
     "max": "Max acceptable value.",
     "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
