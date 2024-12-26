@@ -33,6 +33,12 @@
         {
           "name": "notNull"
         }
+      ],
+      [
+        {
+          "name": "unique"
+        },
+        false
       ]
     ]
   }

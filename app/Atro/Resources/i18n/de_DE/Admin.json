@@ -177,7 +177,6 @@
     "useNumericFormat": "Verwenden Sie das numerische Format",
     "dataUrl": "Daten-URL",
     "pattern": "Regex-Muster",
-    "unique": "Einheitlich",
     "index": "Datenbankindex",
     "foreignName": "Fremdfeld",
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",

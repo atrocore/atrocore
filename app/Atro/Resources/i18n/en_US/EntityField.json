@@ -5,7 +5,8 @@
     "isMultilang": "Multilingual",
     "required": "Required",
     "notNull": "Disable null value",
-    "readOnly": "Read-only"
+    "readOnly": "Read-only",
+    "unique": "Unique"
   },
   "links": {
     "entity": "Entity"

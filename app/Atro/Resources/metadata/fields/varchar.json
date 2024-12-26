@@ -39,10 +39,6 @@
       "tooltip": true
     },
     {
-      "name": "unique",
-      "type": "bool"
-    },
-    {
       "name": "index",
       "type": "bool"
     }

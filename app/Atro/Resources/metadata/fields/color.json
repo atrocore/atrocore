@@ -5,10 +5,6 @@
             "type": "varchar"
         },
         {
-            "name": "unique",
-            "type": "bool"
-        },
-        {
             "name": "index",
             "type": "bool"
         },

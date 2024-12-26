@@ -34,6 +34,9 @@
     "readOnly": {
       "type": "bool",
       "tooltip": true
+    },
+    "unique": {
+      "type": "bool"
     }
   },
   "links": {
