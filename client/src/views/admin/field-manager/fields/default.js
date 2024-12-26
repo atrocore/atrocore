@@ -50,16 +50,11 @@ Espo.define('views/admin/field-manager/fields/default', 'views/fields/base', Dep
                 const types = {
                     link: "views/admin/field-manager/fields/link-default",
                     measure: "views/admin/field-manager/fields/measure-default",
-                    file: "views/admin/field-manager/fields/file-default"
+                    file: "views/admin/field-manager/fields/file-default",
+                    extensibleEnum: "views/admin/field-manager/fields/extensible-enum-default"
                 }
 
                 const fieldView = types[type] ?? this.getFieldManager().getViewName(type);
-
-                // extensibleEnum {
-                //     "name": "default",
-                //     "type": "link",
-                //     "view": "views/admin/field-manager/fields/link/extensible-enum-default"
-                // },
 
                 // extensibleMultiEnum {
                 //     "name": "default",

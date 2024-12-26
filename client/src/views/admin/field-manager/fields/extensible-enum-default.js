@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/measure-default', 'views/admin/field-manager/fields/link-default', Dep => {
+Espo.define('views/admin/field-manager/fields/extensible-enum-default', 'views/admin/field-manager/fields/link-default', Dep => {
 
     return Dep.extend({
 
@@ -17,7 +17,7 @@ Espo.define('views/admin/field-manager/fields/measure-default', 'views/admin/fie
         boolFilterData: {
             fieldsFilter() {
                 return {
-                    measureId: this.model.get('measureId')
+                    extensibleEnumId: this.model.get('extensibleEnumId')
                 };
             }
         },
@@ -25,14 +25,14 @@ Espo.define('views/admin/field-manager/fields/measure-default', 'views/admin/fie
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:measureId', () => {
+            this.listenTo(this.model, 'change:extensibleEnumId', () => {
                 this.model.set(this.idName, null);
                 this.model.set(this.nameName, null);
             });
         },
 
         getForeignScope() {
-            return 'Unit';
+            return 'ExtensibleEnumOption';
         },
 
     });

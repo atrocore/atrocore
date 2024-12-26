@@ -46,6 +46,9 @@ class EntityField extends ReferenceData
                 case 'file':
                     $foreignEntity = 'File';
                     break;
+                case 'extensibleEnum':
+                    $foreignEntity = 'ExtensibleEnumOption';
+                    break;
             }
 
             if (!empty($foreignEntity)) {
