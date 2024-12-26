@@ -972,7 +972,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
             if (this.checkedList.length > 10) {
-                this.notify('Select not more than 4 records', 'error');
+                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', 10), 'error');
                 return;
             }
 
@@ -2677,6 +2677,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         actionBookmark: function (data) {
             data = data || {}
             let id = data.entity_id;
+            let bookmarkId = data.bookmark_id;
             if (!id) return;
             let model = null;
             if (this.collection) {
@@ -2685,10 +2686,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (!model) {
                 return;
             }
-            if (model.get('bookmarkId')) {
+            model.set('bookmarkId', bookmarkId);
+            if (bookmarkId) {
                 this.notify(this.translate('Unbookmarking') + '...');
                 $.ajax({
-                    url: `Bookmark/${model.get('bookmarkId')}`,
+                    url: `Bookmark/${bookmarkId}`,
                     type: 'DELETE',
                     headers: {
                         'permanently': true

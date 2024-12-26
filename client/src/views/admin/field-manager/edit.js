@@ -307,7 +307,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             this.wait(true);
             this.setupFieldData(function () {
-                this.listenTo(this.model, 'change:'+this.firstLabel, () => {
+                this.listenTo(this.model, 'change:' + this.firstLabel, () => {
                     this.camelizeName(this.model.get(this.firstLabel));
                 })
                 this.wait(false);
@@ -316,7 +316,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         setLocaleLabel: function (locale, field) {
             let name = 'label' + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
-            if(!this.firstLabel) {
+            if (!this.firstLabel) {
                 this.firstLabel = name;
             }
             this.paramList.push({name: name, type: 'varchar'});
@@ -327,7 +327,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             if (responseData[scope] && responseData[scope]['fields'] && responseData[scope]['fields'][field]) {
                                 this.model.set(name, responseData[scope]['fields'][field]);
                             }
-                        })
+                        });
+                        if (locale === this.getConfig().get('mainLanguage')) {
+                            this.model.set('tooltipText', responseData[this.scope]['tooltips']?.[field])
+                        }
                     }
                 });
             }

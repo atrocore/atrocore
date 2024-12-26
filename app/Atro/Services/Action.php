@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\ActionManager;
 use Atro\Core\Exceptions\Forbidden;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
@@ -210,15 +211,25 @@ class Action extends Base
         }
 
 
-        if (!$this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled']) &&
-            $this->getAcl()->check('Bookmark', 'create')) {
+        if (!$this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled'])) {
+            $result = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('bookmark')
+                ->where('entity_id = :entityId AND deleted = :false')
+                ->andWhere('entity_type = :entityType')
+                ->andWhere('user_id = :userId')
+                ->setParameter('entityId', $id)
+                ->setParameter('entityType', $scope)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('userId', $this->getUser()->id)
+                ->fetchAssociative();
 
             $res[] = [
                 'action' => 'bookmark',
-                'label'  => empty($entity->get('bookmarkId')) ? 'Bookmark' : 'Unbookmark',
+                'label'  => empty($result['id']) ? 'Bookmark' : 'Unbookmark',
                 'data'   => [
                     'entity_id'   => $id,
-                    'bookmark_id' => $entity->get('bookmarkId')
+                    'bookmark_id' => $result['id'] ?? null
                 ]
             ];
         }
