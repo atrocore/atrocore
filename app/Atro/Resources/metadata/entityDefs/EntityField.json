@@ -122,8 +122,15 @@
     },
     "previewSize": {
       "type": "enum",
+      "required": false,
+      "prohibitedEmptyValue": false,
       "default": "small",
       "options": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "optionsIds": [
         "small",
         "medium",
         "large"
