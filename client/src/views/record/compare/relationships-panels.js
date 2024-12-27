@@ -46,10 +46,12 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                         model: this.model,
                         scope: this.scope,
                         instanceComparison: this.instanceComparison,
+                        models: this.options.models,
                         distantModels: this.distantModels,
                         collection: this.collection,
                         columns: this.columns,
-                        defs: panelData.defs
+                        defs: panelData.defs,
+                        merging: this.options.merging
                     }
                     let relationshipView = '';
                     if (this.instanceComparison) {

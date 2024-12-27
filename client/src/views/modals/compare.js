@@ -63,7 +63,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 model: this.model,
                 instanceComparison: this.instanceComparison,
                 collection: this.options.collection,
-                scope: this.scope
+                scope: this.scope,
+                merging: this.options.merging
             };
 
             if (this.instanceComparison) {
@@ -103,6 +104,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
                             let distantModel = scopeModel.clone();
                             distantModel.set(attr);
+                            distantModel.set('_instance', this.instances[index]);
                             options.distantModels.push(distantModel);
                         }
                         this.createModalView(options);

@@ -1,11 +1,13 @@
-<div class="detail" id="{{id}}">
+<div class="detail">
+
     <div class="detail-button-container button-container record-buttons clearfix">
-        <div class="btn-group pull-left" role="group">
-            {{#each buttonList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
-        </div>
-        <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
+        {{#if merging }}
+        <button class="btn btn-primary" data-action="merge">{{translate 'Merge'}}</button>
+        <button class="btn btn-default" data-action="cancel">{{translate 'Cancel'}}</button>
+        {{/if}}
         <div class="clearfix"></div>
     </div>
+
 
     <div class="row">
         <div class="compare-panel list col-md-12">
@@ -17,8 +19,8 @@
                 </div>
 
                 <div class="panel-body">
-                    <div class="list-container" >
-                        <div class="list" >
+                    <div class="list-container">
+                        <div class="list">
                             <table class="table full-table table-striped table-fixed table-scrolled table-bordered">
                                 <thead>
                                 <tr>
@@ -84,11 +86,11 @@
         border-left: 3px solid red;
     }
 
-    .compare-panel table col.col-min-width{
+    .compare-panel table col.col-min-width {
         min-width: 200px;
     }
 
-    .compare-panel table tbody tr.danger td:first-child{
+    .compare-panel table tbody tr.danger td:first-child {
         border-left: 3px solid red;
     }
 
@@ -108,7 +110,7 @@
         overflow-x: auto;
     }
 
-    .compare-panel  .table{
+    .compare-panel .table {
         table-layout: fixed;
     }
 
@@ -126,17 +128,29 @@
     }
 
     .compare-panel .attachment-preview a {
-       display: flex;
+        display: flex;
         justify-content: center;
     }
 
 
     [data-name="relationshipsPanels"] .bottom-border-black tr.strong-border {
-       border-top: 3px solid rgba(0,0,0, 0.3);
+        border-top: 3px solid rgba(0, 0, 0, 0.3);
     }
 
     [data-name="relationshipsPanels"] table {
-       table-layout: auto;
+        table-layout: auto;
+    }
+
+    .detail .button-container {
+        padding: 20px 0 20px 10px !important;
+    }
+
+    .compare-panel .center-child {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-width: 0!important;
     }
 
 </style>

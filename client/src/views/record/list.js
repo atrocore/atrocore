@@ -881,7 +881,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
         },
 
-        massActionMerge: function () {
+        massActionMerge: function (data, e) {
+            return this.massActionCompare(data, e, true);
             if (!this.getAcl().check(this.entityType, 'edit')) {
                 this.notify('Access denied', 'error');
                 return false;
@@ -961,7 +962,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }.bind(this));
         },
 
-        massActionCompare: function () {
+        massActionCompare: function (data, e, merging = false) {
             if (!this.getAcl().check(this.entityType, 'read')) {
                 this.notify('Access denied', 'error');
                 return false;
@@ -991,6 +992,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.createView('dialog', 'views/modals/compare', {
                     collection: collection,
                     scope: this.entityType,
+                    merging: merging
                 }, function (dialog) {
                     dialog.render();
                     this.notify(false)
