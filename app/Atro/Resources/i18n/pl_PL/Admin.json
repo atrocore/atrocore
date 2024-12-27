@@ -173,8 +173,7 @@
        "htmlSanitizer": "HTML Sanitizer",
        "strip":"Usuń",
        "foreignName":"Pole obce",
-       "useDisabledTextareaInViewMode":"Użyj wyłączonego pola tekstowego w trybie wyświetlania",
-       "dropdown":"Rozwijane menu"
+       "useDisabledTextareaInViewMode":"Użyj wyłączonego pola tekstowego w trybie wyświetlania"
     },
     "messages":{
        "thousandSeparatorEqualsDecimalMark":"Separator tysięcy nie może być taki sam jak znak dziesiętny.",

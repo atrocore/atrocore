@@ -142,8 +142,7 @@
     "isPersonalData": "Is Personal Data",
     "useIframe": "Use Iframe",
     "htmlSanitizer": "HTML Sanitizer",
-    "strip": "Strip",
-    "dropdown": "Desplegable"
+    "strip": "Strip"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",

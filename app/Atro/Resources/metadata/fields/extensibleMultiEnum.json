@@ -1,13 +1,6 @@
 {
   "params": [
     {
-      "name": "dropdown",
-      "type": "bool",
-      "default": false,
-      "view": "views/admin/field-manager/fields/dropdown",
-      "tooltip": true
-    },
-    {
       "name": "extensibleEnum",
       "required": true,
       "entity": "ExtensibleEnum",

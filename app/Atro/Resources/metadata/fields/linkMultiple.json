@@ -7,12 +7,6 @@
       "view": "views/admin/field-manager/fields/foreign-name"
     },
     {
-      "name": "dropdown",
-      "type": "bool",
-      "default": false,
-      "view": "views/admin/field-manager/fields/dropdown"
-    },
-    {
       "name": "sortable",
       "type": "bool",
       "default": false,

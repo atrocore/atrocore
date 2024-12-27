@@ -69,8 +69,7 @@
     "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
     "lengthOfCut": "Excessive characters will be hidden in the view mode.",
     "maxFileSize": "If empty or 0 then no limit.",
-    "foreignName": "Field to be shown in the relation.",
-    "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
+    "foreignName": "Field to be shown in the relation."
   },
   "fieldParts": {
     "unit": {

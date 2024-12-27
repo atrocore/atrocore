@@ -148,7 +148,6 @@
     "strip": "Bande",
     "foreignName": "Domaine étranger",
     "useDisabledTextareaInViewMode": "Utiliser une zone de texte désactivée en mode affichage",
-    "dropdown": "Liste déroulante",
     "rowsMax": "Nombre maximal de lignes de la zone de texte",
     "rowsMin": "Nombre minimum de lignes de la zone de texte",
     "label": "Étiquette",

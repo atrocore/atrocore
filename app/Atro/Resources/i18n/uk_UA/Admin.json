@@ -152,7 +152,6 @@
     "strip": "Стрип",
     "foreignName": "Поле пов'язаної сутності",
     "useDisabledTextareaInViewMode": "Використовувати нередаговану текстову область у режимі перегляду",
-    "dropdown": "спадний список",
     "allowFileTypes": "Дозволити типи файлів"
   },
   "messages": {

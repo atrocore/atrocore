@@ -100,6 +100,10 @@
       "type": "bool",
       "tooltip": true
     },
+    "dropdown": {
+      "type": "bool",
+      "tooltip": true
+    },
     "options": {
       "type": "array",
       "view": "views/admin/field-manager/fields/options-extended"

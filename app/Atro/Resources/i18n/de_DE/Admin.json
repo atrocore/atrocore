@@ -168,7 +168,6 @@
     "dataUrl": "Daten-URL",
     "foreignName": "Fremdfeld",
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
-    "dropdown": "Runterfallen",
     "allowFileTypes": "Dateitypen zulassen"
   },
   "messages": {

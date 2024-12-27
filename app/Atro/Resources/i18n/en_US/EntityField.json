@@ -21,7 +21,8 @@
     "noEmptyString": "Empty string value is not allowed",
     "options": "Options",
     "useNumericFormat": "Use numeric format",
-    "isSorted": "Is sorted (alphabetically)"
+    "isSorted": "Is sorted (alphabetically)",
+    "dropdown": "Dropdown"
   },
   "links": {
     "entity": "Entity",
@@ -34,7 +35,8 @@
     "maxLength": "Max acceptable length of text.",
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
     "default": "Value will be set by default upon creating.",
-    "isSorted": "Options will be sorted after saving."
+    "isSorted": "Options will be sorted after saving.",
+    "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
   },
   "labels": {
     "Create Entity Field": "Create Entity Field"

@@ -320,6 +320,23 @@
             }
           ]
         }
+      },
+      "dropdown": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "extensibleEnum",
+                "extensibleMultiEnum",
+                "measure",
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
       }
     }
   }
