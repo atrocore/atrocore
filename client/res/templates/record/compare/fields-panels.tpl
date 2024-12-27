@@ -43,12 +43,12 @@
             {{#if ../../merging}}
             <td>
                <div class="center-child" >
-                   <input type="radio" name="{{../field}}" value="{{id}}" data-id="{{id}}" class="field-radio">
+                   <input type="radio" name="{{../field}}" value="{{id}}" data-id="{{id}}" data-key="{{key}}" class="field-radio">
                </div>
             </td>
             {{/if}}
             <td class="cell  {{#unless shouldNotCenter}} text-center {{/unless}}">
-                <div class="{{class}}">Loading...</div>
+                <div class="{{class}}  field">Loading...</div>
             </td>
             {{/each}}
         </tr>

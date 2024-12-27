@@ -86,5 +86,26 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                 columnsLength: this.columns.length
             }
         },
+
+        fetch() {
+            let attributes = {}
+            this.relationshipsPanels.forEach(panelData => {
+                let view = this.getView(panelData.name);
+                if(!view){
+                    return;
+                }
+                if (!attributes[panelData.link]) {
+                    attributes[panelData.link] = view.fetch();
+                    return;
+                }
+
+                let data = view.fetch();
+                attributes[panelData.link].toUpsert = [...attributes[panelData.link].toUpsert, ...data.toUpsert];
+                attributes[panelData.link].toDelete = [...attributes[panelData.link].toDelete, ...data.toDelete];
+
+            });
+
+            return attributes;
+        }
     })
 })

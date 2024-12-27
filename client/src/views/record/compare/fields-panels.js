@@ -139,6 +139,25 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                     view.reRender();
                 }
             });
+        },
+
+        fetch() {
+            let attributes = {};
+            let self = this;
+            this.$el.find('input.field-radio:checked').each(function (i, el) {
+                let field = el.name;
+                let viewKey = $(el).data('key');
+                let view = self.getView(viewKey);
+                if(!view){
+                    return;
+                }
+                if(!view.model) {
+                    return;
+                }
+
+                attributes = _.extend({}, attributes, view.fetch());
+            });
+            return attributes;
         }
     })
 })

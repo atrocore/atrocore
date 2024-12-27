@@ -37,6 +37,40 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             'click button[data-action="cancel"]': function () {
                 this.getParentView().close();
             },
+
+            'click button[data-action="merge"]': function () {
+                this.notify('Loading...')
+                let buttons = $('.button-container button');
+                let radios = $('input[type="radio"]');
+                let attributes = this.getView('fieldsPanels').fetch();
+                let relationshipData = this.getView('relationshipsPanels').fetch();
+                let id = $('input[type="radio"][name="check-all"]:checked').val();
+                buttons.addClass('disabled');
+                radios.prop('disabled', true)
+                $.ajax({
+                    url: this.scope + '/action/merge',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        attributes: {
+                            input: attributes,
+                            relationshipData: relationshipData
+                        },
+                        targetId: id,
+                        sourceIds: this.collection.models.filter(m => m.id !== id).map(m => m.id),
+                    }),
+                    error: (xhr, status, error) => {
+                        this.notify(false);
+                        buttons.removeClass('disabled');
+                        radios.prop('disabled', false)
+                    }
+                }).done(() => {
+                    this.notify('Merged', 'success');
+                    buttons.removeClass('disabled');
+                    radios.prop('disabled', false)
+                    this.getParentView().close();
+                });
+
+            },
         },
 
         init() {
@@ -132,7 +166,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
             }, view => {
                 view.render();
-            })
+            });
         },
 
         setupRelationshipsPanels() {
@@ -189,7 +223,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     inverseType: inverseRelationType,
                     foreign: relationDefs['foreign'],
                     relationName: relationName,
-                    defs: {}
+                    defs: {},
+                    link: link
                 };
 
                 relationshipsPanels.push(panelData);
@@ -215,7 +250,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     type: relationDefs['type'],
                     foreign: relationDefs['foreign'],
                     relationName: relationName,
-                    defs: bottomPanel
+                    defs: bottomPanel,
+                    link: bottomPanel.link
                 });
             });
 
@@ -327,7 +363,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         isFieldEnabled(model, name) {
-            if (this.merging && model.getFieldParam(name, 'readOnly')) {
+            if (this.merging && (model.getFieldParam(name, 'readOnly') || name === 'id')) {
                 return false;
             }
 

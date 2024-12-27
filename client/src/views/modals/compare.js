@@ -49,7 +49,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                this.header = this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name;
             } else {
                 this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
-                this.header = this.getLanguage().translate('Record Comparison');
+                this.header = this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison');
             }
 
             this.setupRecord()

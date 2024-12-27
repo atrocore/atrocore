@@ -13,9 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -177,6 +181,143 @@ class Record extends RecordService
         }
 
         return [$total, $errors, $sync];
+    }
+
+    public function merge($id, array $sourceIdList, \stdClass $attributes)
+    {
+        if (empty($id)) {
+            throw new Error();
+        }
+
+        $repository = $this->getRepository();
+
+        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $input = $attributes->input;
+        $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
+
+        $this->filterInput($input);
+
+        $entity->set($input);
+        if (!$this->checkAssignment($entity)) {
+            throw new Forbidden();
+        }
+
+        $sourceList = array();
+        foreach ($sourceIdList as $sourceId) {
+            $source = $this->getEntity($sourceId);
+            $sourceList[] = $source;
+            if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
+                throw new Forbidden();
+            }
+        }
+
+        $this->beforeMerge($entity, $sourceList, $attributes);
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $types = ['Post', 'EmailSent', 'EmailReceived'];
+
+        foreach ($sourceList as $source) {
+            $connection->createQueryBuilder()
+                ->update($connection->quoteIdentifier('note'), 'n')
+                ->set('parent_id', ':entityId')
+                ->set('parent_type', ':entityType')
+                ->where('n.type IN (:types)')
+                ->andWhere('n.parent_id = :sourceId')
+                ->andWhere('n.parent_type = :sourceType')
+                ->andWhere('n.deleted = :false')
+                ->setParameter('entityId', $entity->id)
+                ->setParameter('entityType', $entity->getEntityType())
+                ->setParameter('types', $types, Mapper::getParameterType($types))
+                ->setParameter('sourceId', $source->id)
+                ->setParameter('sourceType', $source->getEntityType())
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->executeQuery();
+        }
+
+        $mergeLinkList = [];
+        $linksDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
+        $customMergeLinkList = array_keys($relationshipData);
+        $customEntityToMerge = array_column( array_values($relationshipData), 'scope');
+        foreach ($linksDefs as $link => $d) {
+            if (!empty($d['notMergeable'])) {
+                continue;
+            }
+
+            if(in_array($link, $customMergeLinkList)) {
+                continue;
+            }
+
+
+            if (!empty($d['type']) && in_array($d['type'], ['hasMany', 'hasChildren'])) {
+                if(empty($d['entity']) || empty($d['foreign'])) {
+                    continue;
+                }
+
+                if(in_array($d['entity'], $customEntityToMerge)){
+                    continue;
+                }
+
+                $mergeLinkList[] = $link;
+            }
+        }
+
+
+        foreach ($sourceList as $source) {
+            foreach ($mergeLinkList as $link) {
+                $linkedList = $repository->findRelated($source, $link);
+                foreach ($linkedList as $linked) {
+                    try {
+                        $repository->relate($entity, $link, $linked);
+                    }catch (NotUnique $e) {
+                        $test = $e;
+                    }
+                }
+            }
+        }
+
+        $upsertData = [];
+        foreach ($relationshipData as $key => $data) {
+            if(empty($data['scope'])) {
+                continue;
+            }
+            if(!empty($data['toUpsert'])) {
+                foreach ($data['toUpsert'] as $payload) {
+                    $input = new \stdClass();
+                    $input->entity = $data['scope'];
+                    $input->payload = (object)$payload;
+                    $upsertData[] = $input;
+                }
+            }
+
+            if(!empty($data['toDelete'])) {
+                $this->getRecordService($data['scope'])->massRemove([
+                    'ids' => $data['toDelete']
+                ]);
+            }
+        }
+
+        $this->getRecordService('MassActions')->upsert($upsertData);
+
+
+        foreach ($sourceList as $source) {
+            $this->getEntityManager()->removeEntity($source);
+        }
+
+        $entity->set($attributes);
+        $repository->save($entity);
+
+        $this->afterMerge($entity, $sourceList, $attributes);
+
+        return true;
     }
 
 }
