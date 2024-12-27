@@ -115,7 +115,7 @@
       "type": "jsonObject",
       "notStorable": true,
       "readOnly": true,
-      "view": "views/admin/field-manager/fields/linkMultiple/extensible-enum-options"
+      "view": "views/admin/field-manager/fields/extensible-enum-options"
     }
   },
   "links": {

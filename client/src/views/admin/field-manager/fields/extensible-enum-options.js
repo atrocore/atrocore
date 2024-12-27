@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/linkMultiple/extensible-enum-options', ['views/fields/base', 'view-record-helper'], (Dep, ViewRecordHelper) => {
+Espo.define('views/admin/field-manager/fields/extensible-enum-options', ['views/fields/base', 'view-record-helper'], (Dep, ViewRecordHelper) => {
 
     return Dep.extend({
 
