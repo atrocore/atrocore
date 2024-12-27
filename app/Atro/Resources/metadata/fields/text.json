@@ -5,11 +5,6 @@
          "type":"text"
       },
       {
-         "name":"seeMoreDisabled",
-         "type":"bool",
-         "tooltip": true
-      },
-      {
          "name": "rowsMin",
          "type": "int",
          "default": 2,

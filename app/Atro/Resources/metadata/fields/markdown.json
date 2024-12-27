@@ -1,11 +1,6 @@
 {
   "params": [
     {
-      "name": "seeMoreDisabled",
-      "type": "bool",
-      "tooltip": true
-    },
-    {
       "name": "minHeight",
       "type": "int",
       "default": 250,

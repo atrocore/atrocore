@@ -161,6 +161,10 @@
       "type": "jsonObject",
       "notStorable": true,
       "readOnly": true
+    },
+    "seeMoreDisabled": {
+      "type": "bool",
+      "tooltip": true
     }
   },
   "links": {

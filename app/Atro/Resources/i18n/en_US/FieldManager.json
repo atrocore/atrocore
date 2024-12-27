@@ -64,7 +64,6 @@
   },
   "tooltips": {
     "fontSize": "Font size in em (relative to current font size).",
-    "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
     "lengthOfCut": "Excessive characters will be hidden in the view mode.",
     "maxFileSize": "If empty or 0 then no limit."
   },

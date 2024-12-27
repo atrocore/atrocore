@@ -126,6 +126,12 @@
       ],
       [
         {
+          "name": "seeMoreDisabled"
+        },
+        false
+      ],
+      [
+        {
           "name": "extensibleEnumOptions"
         },
         false

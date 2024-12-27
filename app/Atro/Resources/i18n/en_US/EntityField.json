@@ -29,7 +29,8 @@
     "amountOfDigitsAfterComma": "Amount of digits after comma",
     "disableFormatting": "Disable formatting",
     "foreignName": "Foreign field",
-    "fileTypes": "File Types"
+    "fileTypes": "File Types",
+    "seeMoreDisabled": "Disable Displayed Text Shortening"
   },
   "links": {
     "entity": "Entity",
@@ -46,7 +47,8 @@
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list.",
     "min": "Min acceptable value.",
     "max": "Max acceptable value.",
-    "foreignName": "Field to be shown in the relation."
+    "foreignName": "Field to be shown in the relation.",
+    "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened."
   },
   "options": {
     "previewSize": {

@@ -486,6 +486,21 @@
             }
           ]
         }
+      },
+      "seeMoreDisabled": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "markdown",
+                "wysiwyg",
+                "text"
+              ]
+            }
+          ]
+        }
       }
     }
   }
