@@ -142,13 +142,9 @@
     "rowsMax": "Nombre maximal de lignes de la zone de texte",
     "rowsMin": "Nombre minimum de lignes de la zone de texte",
     "label": "Étiquette",
-    "minTo": "Min To",
-    "minFrom": "Min De",
     "script": "Script",
     "outputType": "Type de sortie",
     "fontSize": "Taille de la police",
-    "maxFrom": "Max à partir de",
-    "maxTo": "Max To",
     "defaultDate": "Défaut",
     "field": "Champ"
   },

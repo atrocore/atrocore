@@ -1,22 +1,4 @@
 {
-  "params": [
-    {
-      "name": "minFrom",
-      "type": "int"
-    },
-    {
-      "name": "maxFrom",
-      "type": "int"
-    },
-    {
-      "name": "minTo",
-      "type": "int"
-    },
-    {
-      "name": "maxTo",
-      "type": "int"
-    }
-  ],
   "actualFields": [
     "from",
     "to"
