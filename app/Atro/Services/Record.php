@@ -19,10 +19,6 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\ParameterType;
-use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 use Espo\Services\RecordService;
 
 class Record extends RecordService

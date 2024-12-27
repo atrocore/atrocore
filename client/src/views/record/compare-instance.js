@@ -42,7 +42,7 @@ Espo.define('views/record/compare-instance','views/record/compare', function (De
             this.createView('fieldsPanels', this.fieldsPanelsView, {
                 scope: this.scope,
                 model: this.model,
-                fieldsArr: this.fieldsArr,
+                fieldList: this.fieldsArr,
                 instances: this.instances,
                 columns: this.buildComparisonTableHeaderColumn(),
                 instanceComparison: this.instanceComparison,
