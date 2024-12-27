@@ -107,6 +107,15 @@
     "options": {
       "type": "array",
       "view": "views/admin/field-manager/fields/options-extended"
+    },
+    "extensibleEnum": {
+      "type": "link"
+    },
+    "extensibleEnumOptions": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "readOnly": true,
+      "view": "views/admin/field-manager/fields/linkMultiple/extensible-enum-options"
     }
   },
   "links": {
@@ -118,6 +127,10 @@
     "measure": {
       "type": "belongsTo",
       "entity": "Measure"
+    },
+    "extensibleEnum": {
+      "type": "belongsTo",
+      "entity": "ExtensibleEnum"
     }
   },
   "collection": {

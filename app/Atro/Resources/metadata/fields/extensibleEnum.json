@@ -1,17 +1,4 @@
 {
-  "params": [
-    {
-      "name": "extensibleEnum",
-      "required": true,
-      "entity": "ExtensibleEnum",
-      "type": "link",
-      "view": "views/admin/field-manager/fields/link/extensible-enum"
-    },
-    {
-      "name": "extensibleEnumOptions",
-      "view": "views/admin/field-manager/fields/linkMultiple/extensible-enum-options"
-    }
-  ],
   "notSortable": true,
   "filter": true,
   "auditable": true,

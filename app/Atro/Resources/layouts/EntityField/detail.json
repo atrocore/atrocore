@@ -84,6 +84,18 @@
       ],
       [
         {
+          "name": "extensibleEnum"
+        },
+        false
+      ],
+      [
+        {
+          "name": "extensibleEnumOptions"
+        },
+        false
+      ],
+      [
+        {
           "name": "dropdown"
         },
         false
