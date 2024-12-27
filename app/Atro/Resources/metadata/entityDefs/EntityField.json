@@ -89,6 +89,10 @@
     },
     "noEmptyString": {
       "type": "bool"
+    },
+    "options": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/options"
     }
   },
   "links": {

@@ -1,15 +1,5 @@
 {
-   "params":[
-      {
-         "name":"options",
-         "type":"array"
-      },
-      {
-         "name":"default",
-         "type":"float"
-      }
-   ],
-   "filter": true,
+  "filter": true,
    "notCreatable": true,
    "fieldDefs":{
       "type":"float"

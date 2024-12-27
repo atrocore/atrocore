@@ -76,9 +76,11 @@
       ],
       [
         {
-          "name": "noEmptyString"
+          "name": "options"
         },
-        false
+        {
+          "name": "noEmptyString"
+        }
       ],
       [
         {
