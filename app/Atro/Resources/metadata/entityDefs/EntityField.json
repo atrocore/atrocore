@@ -203,6 +203,20 @@
       "type": "text",
       "view": "views/admin/field-manager/fields/script-preview",
       "readOnly": true
+    },
+    "rowsMin": {
+      "type": "int",
+      "default": 2,
+      "min": 1
+    },
+    "rowsMax":{
+      "type": "int",
+      "default": 10,
+      "min": 1
+    },
+    "useDisabledTextareaInViewMode": {
+      "type": "bool",
+      "default":false
     }
   },
   "links": {

@@ -160,6 +160,20 @@
       ],
       [
         {
+          "name": "rowsMin"
+        },
+        {
+          "name": "rowsMax"
+        }
+      ],
+      [
+        {
+          "name": "useDisabledTextareaInViewMode"
+        },
+        false
+      ],
+      [
+        {
           "name": "extensibleEnumOptions"
         },
         false

@@ -1,34 +1,4 @@
 {
-   "params":[
-      {
-         "name":"default",
-         "type":"text"
-      },
-      {
-         "name": "rowsMin",
-         "type": "int",
-         "default": 2,
-         "min": 1
-      },
-      {
-         "name": "rowsMax",
-         "type": "int",
-         "default": 10,
-         "min": 1
-      },
-      {
-         "name": "lengthOfCut",
-         "type": "int",
-         "default": 400,
-         "min": 1,
-         "tooltip": true
-      },
-      {
-         "name":"useDisabledTextareaInViewMode",
-         "type": "bool",
-         "default":false
-      }
-   ],
    "filter": true,
    "auditable": true,
    "qbFilterType": "string",

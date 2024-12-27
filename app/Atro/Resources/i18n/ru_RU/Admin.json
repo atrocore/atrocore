@@ -121,8 +121,7 @@
     "maxFileSize": "Максимальный размер файла (Mb)",
     "isPersonalData": "Личные данные",
     "useIframe": "Использовать Iframe",
-    "strip": "Стрип",
-    "useDisabledTextareaInViewMode": "Использовать нередактируемую текстовую область в режиме просмотра"
+    "strip": "Стрип"
   },
   "messages": {
     "selectEntityType": "Выберите тип сущности в левом меню.",

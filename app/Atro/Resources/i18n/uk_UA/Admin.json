@@ -125,8 +125,6 @@
     "height": "Висота (у пікс.)",
     "provider": "Постачальник",
     "typeList": "Список типів",
-    "rowsMax": "Максимальна кількість рядків текстового поля",
-    "rowsMin": "Мінімальна кількість рядків текстового поля",
     "sourceList": "Список джерел",
     "prefix": "Префікс",
     "padLength": "Визначена довжина",
@@ -140,7 +138,6 @@
     "useIframe": "Використовувати Iframe",
     "htmlSanitizer": "HTML Sanitizer",
     "strip": "Стрип",
-    "useDisabledTextareaInViewMode": "Використовувати нередаговану текстову область у режимі перегляду",
     "allowFileTypes": "Дозволити типи файлів"
   },
   "messages": {

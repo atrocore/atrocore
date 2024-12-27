@@ -140,8 +140,6 @@
        "height":"Wysokość (px)",
        "provider":"Dostawca",
        "typeList":"Lista typów",
-       "rowsMax": "Maksymalna liczba wierszy obszaru tekstowego",
-       "rowsMin": "Minimalna liczba wierszy obszaru tekstowego",
        "sourceList":"Lista źródeł",
        "prefix":"Prefiks",
        "padLength":"Długość wypełnienia",
@@ -154,8 +152,7 @@
        "isPersonalData":"Dane osobowe",
        "useIframe":"Użyj ramki w trybie wyświetlania",
        "htmlSanitizer": "HTML Sanitizer",
-       "strip":"Usuń",
-       "useDisabledTextareaInViewMode":"Użyj wyłączonego pola tekstowego w trybie wyświetlania"
+       "strip":"Usuń"
     },
     "messages":{
        "thousandSeparatorEqualsDecimalMark":"Separator tysięcy nie może być taki sam jak znak dziesiętny.",

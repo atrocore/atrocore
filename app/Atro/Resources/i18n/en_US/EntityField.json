@@ -36,7 +36,10 @@
     "lengthOfCut": "Symbol amount to be displayed",
     "script": "Script",
     "outputType": "Output Type",
-    "preview": "Preview"
+    "preview": "Preview",
+    "rowsMax": "Maximum number of rows of textarea",
+    "rowsMin": "Minimum number of rows of textarea",
+    "useDisabledTextareaInViewMode": "Use disabled textarea in view mode"
   },
   "links": {
     "entity": "Entity",

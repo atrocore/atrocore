@@ -535,7 +535,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "markdown"
+                "markdown",
+                "text"
               ]
             }
           ]
@@ -575,6 +576,45 @@
               "attribute": "type",
               "value": [
                 "script"
+              ]
+            }
+          ]
+        }
+      },
+      "rowsMin": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "text"
+              ]
+            }
+          ]
+        }
+      },
+      "rowsMax": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "text"
+              ]
+            }
+          ]
+        }
+      },
+      "useDisabledTextareaInViewMode": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "text"
               ]
             }
           ]

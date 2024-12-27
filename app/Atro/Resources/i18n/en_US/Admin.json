@@ -149,8 +149,6 @@
     "height": "Height (px)",
     "provider": "Provider",
     "typeList": "Type list",
-    "rowsMax": "Maximum number of rows of textarea",
-    "rowsMin": "Minimum number of rows of textarea",
     "sourceList": "Source list",
     "prefix": "Prefix",
     "padLength": "Pad length",
@@ -164,7 +162,6 @@
     "useIframe": "Use iframe in view mode",
     "htmlSanitizer": "HTML Sanitizer",
     "strip": "Strip",
-    "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
     "allowFileTypes": "Allow file types"
   },
   "messages": {

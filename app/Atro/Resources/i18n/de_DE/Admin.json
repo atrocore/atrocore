@@ -141,8 +141,6 @@
     "entityList": "Entitätsliste",
     "height": "Höhe (px)",
     "typeList": "Typenliste",
-    "rowsMax": "Maximale Anzahl von Zeilen im Textbereich",
-    "rowsMin": "Mindestanzahl von Textzeilen",
     "sourceList": "Quellenliste",
     "padLength": "Länge auffüllen",
     "dynamicLogicVisible": "Bedingungen, die ein Feld sichtbar machen",
@@ -155,7 +153,6 @@
     "useIframe": "Iframe im Ansichtsmodus verwenden",
     "htmlSanitizer": "HTML Sanitizer",
     "dataUrl": "Daten-URL",
-    "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
     "allowFileTypes": "Dateitypen zulassen"
   },
   "messages": {

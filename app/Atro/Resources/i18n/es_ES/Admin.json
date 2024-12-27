@@ -123,8 +123,6 @@
     "minHeight": "Altura mínima (px)",
     "provider": "Proveedor",
     "typeList": "Tipo de lista",
-    "rowsMax": "Número máximo de filas de área de texto",
-    "rowsMin": "Número mínimo de filas de área de texto",
     "prefix": "Prefijo",
     "padLength": "Longitud del relleno",
     "dynamicLogicVisible": "Condiciones para hacer el campo visible",
