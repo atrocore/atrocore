@@ -1,24 +1,9 @@
 {
    "params":[
       {
-         "name":"options",
-         "type":"array",
-         "view": "views/admin/field-manager/fields/options-extended"
-      },
-      {
-         "name":"default",
-         "type":"enum",
-         "view": "views/admin/field-manager/fields/options/default"
-      },
-      {
          "name":"isSorted",
          "type":"bool",
          "tooltip": true
-      },
-      {
-         "name":"translation",
-         "type":"varchar",
-         "hidden": true
       }
    ],
    "filter": true,

@@ -227,6 +227,7 @@
                 "date",
                 "datetime",
                 "email",
+                "enum",
                 "extensibleEnum",
                 "extensibleMultiEnum",
                 "file",
@@ -266,7 +267,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "array"
+                "enum"
               ]
             }
           ]

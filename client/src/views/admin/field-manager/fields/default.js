@@ -44,6 +44,7 @@ Espo.define('views/admin/field-manager/fields/default', 'views/fields/base', Dep
                     extensibleEnum: "views/admin/field-manager/fields/extensible-enum-default",
                     linkMultiple: "views/admin/field-manager/fields/link-multiple-default",
                     extensibleMultiEnum: "views/admin/field-manager/fields/extensible-multi-enum-default",
+                    enum: "views/admin/field-manager/fields/enum-default",
                 }
 
                 const fieldView = types[type] ?? this.getFieldManager().getViewName(type);

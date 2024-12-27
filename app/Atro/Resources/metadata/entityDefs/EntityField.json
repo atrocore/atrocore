@@ -98,7 +98,7 @@
     },
     "options": {
       "type": "array",
-      "view": "views/admin/field-manager/fields/options"
+      "view": "views/admin/field-manager/fields/options-extended"
     }
   },
   "links": {
