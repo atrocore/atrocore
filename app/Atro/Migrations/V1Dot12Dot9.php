@@ -17,11 +17,11 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 
-class V1Dot12Dot8 extends Base
+class V1Dot12Dot9 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2024-12-26 14:00:00');
+        return new \DateTime('2024-12-27 10:00:00');
     }
 
     public function up(): void
