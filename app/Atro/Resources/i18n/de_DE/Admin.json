@@ -152,7 +152,6 @@
     "lengthOfCut": "Anzuzeigende Symbolmenge",
     "sourceList": "Quellenliste",
     "padLength": "Länge auffüllen",
-    "disableFormatting": "Formatierung deaktivieren",
     "dynamicLogicVisible": "Bedingungen, die ein Feld sichtbar machen",
     "dynamicLogicReadOnly": "Bedingungen, die ein Feld schreibgeschützt machen",
     "dynamicLogicRequired": "Bedingungen, die ein Feld erforderlich machen",

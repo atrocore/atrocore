@@ -141,6 +141,9 @@
       "view": "views/admin/field-manager/fields/value-container",
       "tooltip": true
     },
+    "disableFormatting": {
+      "type": "bool"
+    },
     "amountOfDigitsAfterComma": {
       "type": "int",
       "min": 0

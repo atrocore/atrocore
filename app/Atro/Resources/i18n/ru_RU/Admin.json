@@ -118,7 +118,6 @@
     "sourceList": "Список источников",
     "prefix": "Префикс",
     "padLength": "Определенная длина",
-    "disableFormatting": "Отключить форматирование",
     "dynamicLogicVisible": "Условия, которые делают поле видимым",
     "dynamicLogicReadOnly": "Условия, которые делают поле только для чтения",
     "dynamicLogicRequired": "Условия, которые делают поле обязательным",

@@ -84,9 +84,11 @@
       ],
       [
         {
-          "name": "amountOfDigitsAfterComma"
+          "name": "disableFormatting"
         },
-        false
+        {
+          "name": "amountOfDigitsAfterComma"
+        }
       ],
       [
         {

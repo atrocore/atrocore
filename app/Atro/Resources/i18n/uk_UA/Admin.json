@@ -135,7 +135,6 @@
     "sourceList": "Список джерел",
     "prefix": "Префікс",
     "padLength": "Визначена довжина",
-    "disableFormatting": "Відключити форматування",
     "dynamicLogicVisible": "Умови, які роблять поле видимим",
     "dynamicLogicReadOnly": "Умови, які роблять поле тільки для читання",
     "dynamicLogicRequired": "Умови, які роблять поле обов'язковим",

@@ -26,7 +26,8 @@
     "previewSize": "Preview size",
     "min": "Min",
     "max": "Max",
-    "amountOfDigitsAfterComma": "Amount of digits after comma"
+    "amountOfDigitsAfterComma": "Amount of digits after comma",
+    "disableFormatting": "Disable formatting"
   },
   "links": {
     "entity": "Entity",

@@ -127,7 +127,6 @@
     "rowsMin": "Número mínimo de filas de área de texto",
     "prefix": "Prefijo",
     "padLength": "Longitud del relleno",
-    "disableFormatting": "Desactivar formateo",
     "dynamicLogicVisible": "Condiciones para hacer el campo visible",
     "dynamicLogicReadOnly": "Condiciones para hacer el campo solo lectura",
     "dynamicLogicRequired": "Condiciones para hacer el campo obligatorio",

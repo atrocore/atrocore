@@ -156,7 +156,6 @@
        "sourceList":"Lista źródeł",
        "prefix":"Prefiks",
        "padLength":"Długość wypełnienia",
-       "disableFormatting":"Wyłącz formatowanie",
        "dynamicLogicVisible":"Warunki sprawiające, że pole jest widoczne",
        "dynamicLogicReadOnly":"Warunki sprawiające, że pole jest tylko do odczytu",
        "dynamicLogicRequired":"Warunki sprawiające, że pole jest wymagane",

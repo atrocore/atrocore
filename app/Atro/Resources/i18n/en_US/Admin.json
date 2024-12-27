@@ -165,7 +165,6 @@
     "sourceList": "Source list",
     "prefix": "Prefix",
     "padLength": "Pad length",
-    "disableFormatting": "Disable formatting",
     "dynamicLogicVisible": "Conditions making field visible",
     "dynamicLogicReadOnly": "Conditions making field read-only",
     "dynamicLogicRequired": "Conditions making field required",

@@ -445,6 +445,20 @@
             }
           ]
         }
+      },
+      "disableFormatting": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
       }
     }
   }

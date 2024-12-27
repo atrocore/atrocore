@@ -131,7 +131,6 @@
     "sourceList": "Liste des sources",
     "prefix": "Préfixe",
     "padLength": "Longueur du tampon",
-    "disableFormatting": "Désactiver le formatage",
     "dynamicLogicVisible": "Conditions rendant le champ visible",
     "dynamicLogicReadOnly": "Conditions rendant le champ en lecture seule",
     "dynamicLogicRequired": "Conditions rendant le champ obligatoire",

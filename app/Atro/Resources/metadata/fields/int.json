@@ -1,10 +1,4 @@
 {
-  "params": [
-    {
-      "name": "disableFormatting",
-      "type": "bool"
-    }
-  ],
   "filter": true,
   "auditable": true,
   "qbFilterType": "integer",
