@@ -84,6 +84,14 @@
       ],
       [
         {
+          "name": "fileType"
+        },
+        {
+          "name": "previewSize"
+        }
+      ],
+      [
+        {
           "name": "extensibleEnum"
         },
         false

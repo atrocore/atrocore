@@ -145,7 +145,6 @@
        "min":"Min",
        "max":"Maks",
        "translation":"Tłumaczenie",
-       "previewSize":"Rozmiar podglądu",
        "defaultType":"Domyślny typ",
        "seeMoreDisabled":"Wyłącz skracanie wyświetlanego tekstu",
        "entityList":"Lista jednostek",
@@ -219,11 +218,6 @@
        "emailTemplates": "Zarządzaj szablonami wiadomości e-mail w celu ręcznego lub automatycznego dostarczania wiadomości e-mail (nie dla standardowych powiadomień)."
     },
     "options":{
-       "previewSize":{
-          "small":"Mały",
-          "medium":"Średni",
-          "large":"Duży"
-       },
        "outputType":{
           "text":"Tekst",
           "int":"Liczba całkowita",

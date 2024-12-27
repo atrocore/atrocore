@@ -116,6 +116,18 @@
       "notStorable": true,
       "readOnly": true,
       "view": "views/admin/field-manager/fields/extensible-enum-options"
+    },
+    "fileType": {
+      "type": "link"
+    },
+    "previewSize": {
+      "type": "enum",
+      "default": "small",
+      "options": [
+        "small",
+        "medium",
+        "large"
+      ]
     }
   },
   "links": {
@@ -131,6 +143,10 @@
     "extensibleEnum": {
       "type": "belongsTo",
       "entity": "ExtensibleEnum"
+    },
+    "fileType": {
+      "type": "belongsTo",
+      "entity": "FileType"
     }
   },
   "collection": {

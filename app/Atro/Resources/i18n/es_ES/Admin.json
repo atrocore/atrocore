@@ -119,7 +119,6 @@
     "min": "Mínimo",
     "max": "Máximo",
     "translation": "Traducción",
-    "previewSize": "Tamaño de vista previa",
     "defaultType": "Tipo por defecto",
     "entityList": "Lista de entidades",
     "height": "Altura (px)",
@@ -176,13 +175,6 @@
     "addresses": "Administrar direcciones",
     "lists": "Gestione sus listas y sus opciones para listas simples o multivalor.",
     "emailTemplates": "Administre plantillas de correo electrónico para entrega de correo electrónico manual o automatizada (no para notificaciones estándar)."
-  },
-  "options": {
-    "previewSize": {
-      "small": "Pequeño",
-      "medium": "Mediano",
-      "large": "Grande"
-    }
   },
   "logicalOperators": {
     "and": "Y",

@@ -122,7 +122,6 @@
     "min": "Min",
     "max": "Max",
     "translation": "Traduction",
-    "previewSize": "Taille de l'aperçu",
     "defaultType": "Type par défaut",
     "seeMoreDisabled": "Désactiver le raccourcissement du texte affiché",
     "entityList": "Liste des entités",
@@ -209,11 +208,6 @@
     "layoutProfiles": "Gérer et personnaliser les différentes configurations de l'interface utilisateur du système"
   },
   "options": {
-    "previewSize": {
-      "small": "Petit",
-      "medium": "Moyen",
-      "large": "Grandes dimensions"
-    },
     "outputType": {
       "text": "Texte",
       "int": "Entier",

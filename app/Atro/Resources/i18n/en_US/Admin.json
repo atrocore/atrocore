@@ -154,7 +154,6 @@
     "min": "Min",
     "max": "Max",
     "translation": "Translation",
-    "previewSize": "Preview size",
     "defaultType": "Default type",
     "seeMoreDisabled": "Disable Displayed Text Shortening",
     "entityList": "Entity list",
@@ -234,11 +233,6 @@
     "apiRequest": "Use this feature to quickly create complex data structures such as configured import or export feeds."
   },
   "options": {
-    "previewSize": {
-      "small": "Small",
-      "medium": "Medium",
-      "large": "Large"
-    },
     "outputType": {
       "text": "Text",
       "int": "Integer",

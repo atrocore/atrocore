@@ -377,6 +377,32 @@
             }
           ]
         }
+      },
+      "fileType": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "file"
+              ]
+            }
+          ]
+        }
+      },
+      "previewSize": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "file"
+              ]
+            }
+          ]
+        }
       }
     }
   }

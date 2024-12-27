@@ -22,7 +22,8 @@
     "options": "Options",
     "useNumericFormat": "Use numeric format",
     "isSorted": "Is sorted (alphabetically)",
-    "dropdown": "Dropdown"
+    "dropdown": "Dropdown",
+    "previewSize": "Preview size"
   },
   "links": {
     "entity": "Entity",
@@ -37,6 +38,13 @@
     "default": "Value will be set by default upon creating.",
     "isSorted": "Options will be sorted after saving.",
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
+  },
+  "options": {
+    "previewSize": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    }
   },
   "labels": {
     "Create Entity Field": "Create Entity Field"

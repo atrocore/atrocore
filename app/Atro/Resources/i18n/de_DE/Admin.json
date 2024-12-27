@@ -141,7 +141,6 @@
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "field": "Feld",
     "translation": "Übersetzung",
-    "previewSize": "Vorschau-Größe",
     "defaultType": "Standardtyp",
     "seeMoreDisabled": "Kürzung des angezeigten Textes deaktivieren",
     "entityList": "Entitätsliste",
@@ -216,12 +215,5 @@
     "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an",
     "apiRequest": "Führen Sie API-Anfragen aus, indem Sie direkt einen JSON-Text liefern. Verwenden Sie diese Funktion, um schnell komplexe Datenstrukturen zu erstellen, wie z. B. konfigurierte Import- oder Export-Feeds."
 
-  },
-  "options": {
-    "previewSize": {
-      "small": "Klein",
-      "medium": "Mittel",
-      "large": "Groß"
-    }
   }
 }

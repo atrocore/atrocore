@@ -1,26 +1,4 @@
 {
-  "params": [
-    {
-      "name": "fileType",
-      "type": "link",
-      "entity": "FileType"
-    },
-    {
-      "name": "previewSize",
-      "type": "enum",
-      "default": "small",
-      "optionsIds": [
-        "small",
-        "medium",
-        "large"
-      ],
-      "options": [
-        "small",
-        "medium",
-        "large"
-      ]
-    }
-  ],
   "actualFields": [
     "id"
   ],
