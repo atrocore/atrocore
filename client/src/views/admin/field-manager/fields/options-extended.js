@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/options-extended', ['views/fields/array-extended', 'lib!jscolor'], function (Dep) {
+Espo.define('views/admin/field-manager/fields/options-extended', ['views/fields/array-extended', 'lib!jscolor'], Dep => {
 
     return Dep.extend({
 
