@@ -271,6 +271,23 @@
             }
           ]
         }
+      },
+      "prohibitedEmptyValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "color",
+                "enum",
+                "extensibleEnum",
+                "measure",
+                "language"
+              ]
+            }
+          ]
+        }
       }
     }
   }

@@ -90,6 +90,9 @@
     "noEmptyString": {
       "type": "bool"
     },
+    "prohibitedEmptyValue": {
+      "type": "bool"
+    },
     "options": {
       "type": "array",
       "view": "views/admin/field-manager/fields/options"

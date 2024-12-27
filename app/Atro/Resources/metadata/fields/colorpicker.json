@@ -1,10 +1,4 @@
 {
-   "params": [
-      {
-         "name":"default",
-         "type":"colorpicker"
-      }
-   ],
    "filter": false,
    "fieldDefs": {
       "type":"varchar",

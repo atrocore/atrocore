@@ -84,6 +84,12 @@
       ],
       [
         {
+          "name": "prohibitedEmptyValue"
+        },
+        false
+      ],
+      [
+        {
           "name": "default"
         },
         {
