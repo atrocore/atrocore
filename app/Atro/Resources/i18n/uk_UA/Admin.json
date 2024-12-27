@@ -137,7 +137,6 @@
     "isPersonalData": "Особисті дані",
     "useIframe": "Використовувати Iframe",
     "htmlSanitizer": "HTML Sanitizer",
-    "strip": "Стрип",
     "allowFileTypes": "Дозволити типи файлів"
   },
   "messages": {

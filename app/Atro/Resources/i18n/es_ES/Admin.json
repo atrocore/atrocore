@@ -134,8 +134,7 @@
     "fontSize": "Font-Size",
     "isPersonalData": "Is Personal Data",
     "useIframe": "Use Iframe",
-    "htmlSanitizer": "HTML Sanitizer",
-    "strip": "Strip"
+    "htmlSanitizer": "HTML Sanitizer"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",

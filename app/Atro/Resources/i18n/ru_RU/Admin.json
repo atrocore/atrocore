@@ -120,8 +120,7 @@
     "probabilityMap": "Стадия вероятности (%)",
     "maxFileSize": "Максимальный размер файла (Mb)",
     "isPersonalData": "Личные данные",
-    "useIframe": "Использовать Iframe",
-    "strip": "Стрип"
+    "useIframe": "Использовать Iframe"
   },
   "messages": {
     "selectEntityType": "Выберите тип сущности в левом меню.",

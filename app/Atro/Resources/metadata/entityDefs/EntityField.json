@@ -217,6 +217,9 @@
     "useDisabledTextareaInViewMode": {
       "type": "bool",
       "default":false
+    },
+    "strip": {
+      "type": "bool"
     }
   },
   "links": {

@@ -151,8 +151,7 @@
        "maxFileSize":"Maksymalny rozmiar pliku (Mb)",
        "isPersonalData":"Dane osobowe",
        "useIframe":"Użyj ramki w trybie wyświetlania",
-       "htmlSanitizer": "HTML Sanitizer",
-       "strip":"Usuń"
+       "htmlSanitizer": "HTML Sanitizer"
     },
     "messages":{
        "thousandSeparatorEqualsDecimalMark":"Separator tysięcy nie może być taki sam jak znak dziesiętny.",

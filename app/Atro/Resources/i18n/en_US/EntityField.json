@@ -39,7 +39,8 @@
     "preview": "Preview",
     "rowsMax": "Maximum number of rows of textarea",
     "rowsMin": "Minimum number of rows of textarea",
-    "useDisabledTextareaInViewMode": "Use disabled textarea in view mode"
+    "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
+    "strip": "Strip"
   },
   "links": {
     "entity": "Entity",

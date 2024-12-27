@@ -161,7 +161,6 @@
     "isPersonalData": "Is personal data",
     "useIframe": "Use iframe in view mode",
     "htmlSanitizer": "HTML Sanitizer",
-    "strip": "Strip",
     "allowFileTypes": "Allow file types"
   },
   "messages": {
