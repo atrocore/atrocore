@@ -165,6 +165,22 @@
     "seeMoreDisabled": {
       "type": "bool",
       "tooltip": true
+    },
+    "minHeight": {
+      "type": "int",
+      "default": 250,
+      "min": 100
+    },
+    "maxHeight": {
+      "type": "int",
+      "default": 400,
+      "min": 100
+    },
+    "lengthOfCut": {
+      "type": "int",
+      "default": 400,
+      "min": 1,
+      "tooltip": true
     }
   },
   "links": {

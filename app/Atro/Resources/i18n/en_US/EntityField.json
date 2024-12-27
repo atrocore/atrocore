@@ -30,7 +30,10 @@
     "disableFormatting": "Disable formatting",
     "foreignName": "Foreign field",
     "fileTypes": "File Types",
-    "seeMoreDisabled": "Disable Displayed Text Shortening"
+    "seeMoreDisabled": "Disable Displayed Text Shortening",
+    "minHeight": "Min height (px)",
+    "maxHeight": "Max height (px)",
+    "lengthOfCut": "Symbol amount to be displayed"
   },
   "links": {
     "entity": "Entity",
@@ -48,7 +51,8 @@
     "min": "Min acceptable value.",
     "max": "Max acceptable value.",
     "foreignName": "Field to be shown in the relation.",
-    "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened."
+    "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
+    "lengthOfCut": "Excessive characters will be hidden in the view mode."
   },
   "options": {
     "previewSize": {

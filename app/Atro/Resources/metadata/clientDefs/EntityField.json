@@ -501,6 +501,45 @@
             }
           ]
         }
+      },
+      "minHeight": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "markdown"
+              ]
+            }
+          ]
+        }
+      },
+      "maxHeight": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "markdown"
+              ]
+            }
+          ]
+        }
+      },
+      "lengthOfCut": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "markdown"
+              ]
+            }
+          ]
+        }
       }
     }
   }

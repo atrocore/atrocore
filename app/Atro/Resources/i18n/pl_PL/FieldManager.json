@@ -64,7 +64,6 @@
   },
   "tooltips": {
     "fontSize": "Rozmiar czcionki w em (względem bieżącego rozmiaru czcionki).",
-    "lengthOfCut": "Zbyt długie znaki będą ukryte w trybie widoku.",
     "maxFileSize": "Jeśli puste lub 0, to brak limitu."
   },
   "fieldParts": {

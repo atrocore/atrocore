@@ -1,25 +1,4 @@
 {
-  "params": [
-    {
-      "name": "minHeight",
-      "type": "int",
-      "default": 250,
-      "min": 100
-    },
-    {
-      "name": "maxHeight",
-      "type": "int",
-      "default": 400,
-      "min": 100
-    },
-    {
-      "name": "lengthOfCut",
-      "type": "int",
-      "default": 400,
-      "min": 1,
-      "tooltip": true
-    }
-  ],
   "filter": true,
   "auditable": true,
   "qbFilterType": "string",

@@ -132,6 +132,20 @@
       ],
       [
         {
+          "name": "minHeight"
+        },
+        {
+          "name": "maxHeight"
+        }
+      ],
+      [
+        {
+          "name": "lengthOfCut"
+        },
+        false
+      ],
+      [
+        {
           "name": "extensibleEnumOptions"
         },
         false

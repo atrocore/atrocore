@@ -123,10 +123,8 @@
     "defaultType": "Type par défaut",
     "entityList": "Liste des entités",
     "height": "Hauteur (px)",
-    "minHeight": "Hauteur minimale (px)",
     "provider": "Fournisseur",
     "typeList": "Liste des types",
-    "lengthOfCut": "Montant du symbole à afficher",
     "sourceList": "Liste des sources",
     "prefix": "Préfixe",
     "padLength": "Longueur du tampon",
@@ -152,8 +150,7 @@
     "maxFrom": "Max à partir de",
     "maxTo": "Max To",
     "defaultDate": "Défaut",
-    "field": "Champ",
-    "maxHeight": "Hauteur maximale (px)"
+    "field": "Champ"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "Le séparateur de milliers ne peut pas être le même que le séparateur de décimales.",
