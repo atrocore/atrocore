@@ -431,6 +431,20 @@
             }
           ]
         }
+      },
+      "amountOfDigitsAfterComma": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "rangeFloat",
+                "float"
+              ]
+            }
+          ]
+        }
       }
     }
   }

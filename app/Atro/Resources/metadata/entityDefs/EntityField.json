@@ -140,6 +140,10 @@
       "type": "float",
       "view": "views/admin/field-manager/fields/value-container",
       "tooltip": true
+    },
+    "amountOfDigitsAfterComma": {
+      "type": "int",
+      "min": 0
     }
   },
   "links": {

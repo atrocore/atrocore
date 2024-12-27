@@ -84,6 +84,12 @@
       ],
       [
         {
+          "name": "amountOfDigitsAfterComma"
+        },
+        false
+      ],
+      [
+        {
           "name": "options"
         },
         {

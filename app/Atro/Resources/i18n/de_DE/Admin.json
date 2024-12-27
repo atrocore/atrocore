@@ -138,7 +138,6 @@
     "name": "Code",
     "label": "Label",
     "defaultDate": "Standardwert",
-    "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "field": "Feld",
     "translation": "Übersetzung",
     "defaultType": "Standardtyp",

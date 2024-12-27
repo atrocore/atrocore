@@ -15,10 +15,6 @@
     {
       "name": "maxTo",
       "type": "float"
-    },
-    {
-      "name": "amountOfDigitsAfterComma",
-      "type": "int"
     }
   ],
   "actualFields": [

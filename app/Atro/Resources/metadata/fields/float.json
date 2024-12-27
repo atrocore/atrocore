@@ -1,11 +1,4 @@
 {
-   "params":[
-      {
-         "name": "amountOfDigitsAfterComma",
-         "type": "int",
-         "min": 0
-      }
-   ],
    "filter": true,
    "auditable": true,
    "qbFilterType": "double",

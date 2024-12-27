@@ -25,7 +25,8 @@
     "dropdown": "Dropdown",
     "previewSize": "Preview size",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "amountOfDigitsAfterComma": "Amount of digits after comma"
   },
   "links": {
     "entity": "Entity",
