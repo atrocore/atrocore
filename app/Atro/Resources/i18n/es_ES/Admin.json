@@ -134,7 +134,6 @@
     "probabilityMap": "Probabilidades de la etapa (%)",
     "maxFileSize": "Tamaño máximo de archivo (MB)",
     "fontSize": "Font-Size",
-    "currentUserAsDefault": "Set current user as default value",
     "isPersonalData": "Is Personal Data",
     "useIframe": "Use Iframe",
     "htmlSanitizer": "HTML Sanitizer",

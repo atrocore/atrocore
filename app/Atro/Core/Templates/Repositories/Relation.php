@@ -417,7 +417,7 @@ class Relation extends Base
 
         foreach ($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'links']) as $link => $defs) {
             if(!empty($defs['relationName']) && $defs['entity'] === 'File' && ucfirst($defs['relationName']) === $this->entityType ) {
-                $allowTypeIds = $this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $link, 'allowFileTypesIds'], []);
+                $allowTypeIds = $this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $link, 'fileTypes'], []);
                 if(!empty($allowTypeIds) && !empty($file = $entity->get($fileField)) && !in_array($file->get('typeId'), $allowTypeIds)) {
                     $allowTypeNames = $this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $link, 'allowFileTypesNames'], []);
                     throw  new BadRequest(sprintf($this->getLanguage()->translate('notAllowToFileWithEntity', 'exceptions', 'File'), $file->get('typeName'), $linkDefs['entity'], join(', ', $allowTypeNames)));

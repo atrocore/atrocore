@@ -16,7 +16,7 @@ Espo.define('views/file/fields/type', 'views/fields/link',
                 if(this.model.attributes['_uploadForEntityData']) {
                     let data = this.model.attributes['_uploadForEntityData'] ?? {}
                     if(data['scope'] && data['link']){
-                        return this.getMetadata().get(['entityDefs', data['scope'], 'fields', data['link'], 'allowFileTypesIds']);
+                        return this.getMetadata().get(['entityDefs', data['scope'], 'fields', data['link'], 'fileTypes']);
                     }
                 }
             }

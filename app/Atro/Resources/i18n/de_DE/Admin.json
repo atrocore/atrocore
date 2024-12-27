@@ -157,7 +157,6 @@
     "dynamicLogicRequired": "Bedingungen, die ein Feld erforderlich machen",
     "dynamicLogicOptions": "Bedingungsoptionen",
     "probabilityMap": "Stufenwahrscheinlichkeiten (%)",
-    "currentUserAsDefault": "Aktuellen Benutzer als Standardwert setzen",
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Gehört zu persönlichen Daten",
     "useIframe": "Iframe im Ansichtsmodus verwenden",

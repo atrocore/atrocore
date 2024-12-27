@@ -24,7 +24,7 @@ class EntityField extends ReferenceData
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         foreach ($collection as $entity) {
-            $entity->_defaultNamePrepared = true;
+            $entity->_collectionPrepared = true;
         }
     }
 
@@ -32,40 +32,69 @@ class EntityField extends ReferenceData
     {
         parent::prepareEntityForOutput($entity);
 
-        if (empty($entity->_defaultNamePrepared) && !empty($entity->get('default'))) {
-            $foreignEntity = null;
-            switch ($entity->get('type')) {
-                case 'link':
-                case 'linkMultiple':
-                    $foreignEntity = $this
-                        ->getMetadata()
-                        ->get(['entityDefs', $entity->get('entityId'), 'links', $entity->get('code'), 'entity']);
-                    break;
-                case 'measure':
-                    $foreignEntity = 'Unit';
-                    break;
-                case 'file':
-                    $foreignEntity = 'File';
-                    break;
-                case 'extensibleEnum':
-                case 'extensibleMultiEnum':
-                    $foreignEntity = 'ExtensibleEnumOption';
-                    break;
-            }
+        if (empty($entity->_collectionPrepared)) {
+            $this->prepareFileTypesField($entity);
+            $this->prepareDefaultField($entity);
+        }
+    }
 
-            if (!empty($foreignEntity)) {
-                $repository = $this->getEntityManager()->getRepository($foreignEntity);
-                if (in_array($entity->get('type'), ['linkMultiple', 'extensibleMultiEnum'])) {
-                    $defaultNames = [];
-                    foreach ($repository->where(['id' => $entity->get('default')])->find() as $foreign) {
-                        $defaultNames[$foreign->get('id')] = $foreign->get('name');
-                    }
-                    $entity->set('defaultNames', $defaultNames);
-                } else {
-                    if (!empty($foreign = $repository->get($entity->get('default')))) {
-                        $entity->set('defaultName', $foreign->get('name'));
-                    }
-                }
+    protected function prepareFileTypesField(Entity $entity): void
+    {
+        if (empty($entity->get('fileTypes'))) {
+            return;
+        }
+
+        $fileTypes = $this->getEntityManager()->getRepository('FileType')
+            ->where(['id' => $entity->get('fileTypes')])
+            ->find();
+
+        $fileTypesNames = [];
+        foreach ($fileTypes as $fileType) {
+            $fileTypesNames[$fileType->get('id')] = $fileType->get('name');
+        }
+        $entity->set('fileTypesNames', $fileTypesNames);
+    }
+
+    protected function prepareDefaultField(Entity $entity): void
+    {
+        if (empty($entity->get('default'))) {
+            return;
+        }
+
+        $foreignEntity = null;
+        switch ($entity->get('type')) {
+            case 'link':
+            case 'linkMultiple':
+                $foreignEntity = $this
+                    ->getMetadata()
+                    ->get(['entityDefs', $entity->get('entityId'), 'links', $entity->get('code'), 'entity']);
+                break;
+            case 'measure':
+                $foreignEntity = 'Unit';
+                break;
+            case 'file':
+                $foreignEntity = 'File';
+                break;
+            case 'extensibleEnum':
+            case 'extensibleMultiEnum':
+                $foreignEntity = 'ExtensibleEnumOption';
+                break;
+        }
+
+        if (empty($foreignEntity)) {
+            return;
+        }
+
+        $repository = $this->getEntityManager()->getRepository($foreignEntity);
+        if (in_array($entity->get('type'), ['linkMultiple', 'extensibleMultiEnum'])) {
+            $defaultNames = [];
+            foreach ($repository->where(['id' => $entity->get('default')])->find() as $foreign) {
+                $defaultNames[$foreign->get('id')] = $foreign->get('name');
+            }
+            $entity->set('defaultNames', $defaultNames);
+        } else {
+            if (!empty($foreign = $repository->get($entity->get('default')))) {
+                $entity->set('defaultName', $foreign->get('name'));
             }
         }
     }

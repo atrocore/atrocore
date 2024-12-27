@@ -161,7 +161,6 @@
        "dynamicLogicRequired":"Warunki sprawiające, że pole jest wymagane",
        "dynamicLogicOptions":"Opcje warunkowe",
        "probabilityMap":"Prawdopodobieństwo etapów (%)",
-       "currentUserAsDefault":"Ustaw bieżącego użytkownika jako wartość domyślną",
        "maxFileSize":"Maksymalny rozmiar pliku (Mb)",
        "isPersonalData":"Dane osobowe",
        "useIframe":"Użyj ramki w trybie wyświetlania",

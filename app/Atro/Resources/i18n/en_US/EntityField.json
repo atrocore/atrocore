@@ -28,7 +28,8 @@
     "max": "Max",
     "amountOfDigitsAfterComma": "Amount of digits after comma",
     "disableFormatting": "Disable formatting",
-    "foreignName": "Foreign field"
+    "foreignName": "Foreign field",
+    "fileTypes": "File Types"
   },
   "links": {
     "entity": "Entity",

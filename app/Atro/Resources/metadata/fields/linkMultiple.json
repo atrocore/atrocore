@@ -1,17 +1,4 @@
 {
-  "params": [
-    {
-      "name": "sortable",
-      "type": "bool",
-      "default": false,
-      "hidden": true
-    },
-    {
-      "name": "allowFileTypes",
-      "type": "linkMultiple",
-      "view": "views/admin/field-manager/fields/linkMultiple/allow-file-types"
-    }
-  ],
   "actualFields": [
     "ids"
   ],

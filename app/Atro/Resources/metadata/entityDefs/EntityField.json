@@ -152,6 +152,15 @@
       "type": "varchar",
       "tooltip": true,
       "view": "views/admin/field-manager/fields/foreign-name"
+    },
+    "fileTypes": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/file-types"
+    },
+    "fileTypesNames": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "readOnly": true
     }
   },
   "links": {
@@ -167,10 +176,6 @@
     "extensibleEnum": {
       "type": "belongsTo",
       "entity": "ExtensibleEnum"
-    },
-    "fileType": {
-      "type": "belongsTo",
-      "entity": "FileType"
     }
   },
   "collection": {

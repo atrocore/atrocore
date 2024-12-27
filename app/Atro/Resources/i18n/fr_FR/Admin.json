@@ -136,7 +136,6 @@
     "dynamicLogicRequired": "Conditions rendant le champ obligatoire",
     "dynamicLogicOptions": "Options conditionnelles",
     "probabilityMap": "Probabilités de stade (%)",
-    "currentUserAsDefault": "Définir l'utilisateur actuel comme valeur par défaut",
     "maxFileSize": "Taille maximale du fichier (Mo)",
     "isPersonalData": "Les données à caractère personnel",
     "useIframe": "Utiliser l'iframe en mode affichage",

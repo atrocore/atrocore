@@ -473,6 +473,19 @@
             }
           ]
         }
+      },
+      "fileTypes": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
       }
     }
   }
