@@ -245,6 +245,19 @@
             }
           ]
         }
+      },
+      "noEmptyString": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "array"
+              ]
+            }
+          ]
+        }
       }
     }
   }

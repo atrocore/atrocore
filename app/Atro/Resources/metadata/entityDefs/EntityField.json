@@ -86,6 +86,9 @@
     },
     "tooltipLink": {
       "type": "url"
+    },
+    "noEmptyString": {
+      "type": "bool"
     }
   },
   "links": {

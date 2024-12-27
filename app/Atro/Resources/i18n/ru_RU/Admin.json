@@ -131,7 +131,6 @@
     "dynamicLogicRequired": "Условия, которые делают поле обязательным",
     "dynamicLogicOptions": "Условные варианты",
     "probabilityMap": "Стадия вероятности (%)",
-    "noEmptyString": "Пустое значение строки недопустимо",
     "maxFileSize": "Максимальный размер файла (Mb)",
     "isPersonalData": "Личные данные",
     "useIframe": "Использовать Iframe",

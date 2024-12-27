@@ -17,7 +17,8 @@
     "default": "Default",
     "setDefaultOnlyIfRequired": "Apply default value only if required",
     "tooltipText": "Tooltip text",
-    "tooltipLink": "Tooltip link"
+    "tooltipLink": "Tooltip link",
+    "noEmptyString": "Empty string value is not allowed"
   },
   "links": {
     "entity": "Entity",

@@ -76,6 +76,12 @@
       ],
       [
         {
+          "name": "noEmptyString"
+        },
+        false
+      ],
+      [
+        {
           "name": "default"
         },
         {

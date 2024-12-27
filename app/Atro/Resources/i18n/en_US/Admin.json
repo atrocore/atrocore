@@ -158,7 +158,6 @@
     "max": "Max",
     "translation": "Translation",
     "previewSize": "Preview size",
-    "noEmptyString": "Empty string value is not allowed",
     "defaultType": "Default type",
     "seeMoreDisabled": "Disable Displayed Text Shortening",
     "entityList": "Entity list",

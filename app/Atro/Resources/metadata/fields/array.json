@@ -4,16 +4,6 @@
          "name":"options",
          "type":"array",
          "view": "views/admin/field-manager/fields/options"
-      },
-      {
-         "name":"translation",
-         "type":"varchar",
-         "hidden": true
-      },
-      {
-         "name": "noEmptyString",
-         "type": "bool",
-         "default": false
       }
    ],
    "filter": true,

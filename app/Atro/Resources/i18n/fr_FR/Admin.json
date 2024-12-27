@@ -123,7 +123,6 @@
     "max": "Max",
     "translation": "Traduction",
     "previewSize": "Taille de l'aperçu",
-    "noEmptyString": "La valeur de la chaîne vide n'est pas autorisée",
     "defaultType": "Type par défaut",
     "seeMoreDisabled": "Désactiver le raccourcissement du texte affiché",
     "entityList": "Liste des entités",
