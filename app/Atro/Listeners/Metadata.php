@@ -878,17 +878,7 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-
-        foreach ($data['fields'] as $field => $v) {
-            $params = [];
-            if (!empty($v['multilingual'])) {
-                $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
-            }
-
-            if (!empty($data['fields'][$field]['params']) && is_array($data['fields'][$field]['params'])) {
-                $data['fields'][$field]['params'] = array_merge($params, $data['fields'][$field]['params']);
-            }
-        }
+        $multilingualTypes = $data['clientDefs']['EntityField']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'][0]['value'] ?? [];
 
         /**
          * Set multi-lang fields to entity defs
@@ -908,7 +898,7 @@ class Metadata extends AbstractListener
                 }
 
                 $newFields[$field] = $params;
-                if (!empty($data['fields'][$params['type']]['multilingual']) && !empty($params['isMultilang'])) {
+                if (in_array($params['type'], $multilingualTypes) && !empty($params['isMultilang'])) {
                     $newFields[$field]['lingualFields'] = [];
                     foreach ($locales as $locale) {
                         // prepare locale
