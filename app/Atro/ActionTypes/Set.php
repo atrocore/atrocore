@@ -15,21 +15,13 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
-use Atro\Services\Action;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
-class Set implements TypeInterface
+class Set extends AbstractAction
 {
-    private Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     public function executeViaWorkflow(array $workflowData, Event $event): bool
     {
         $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
@@ -74,7 +66,7 @@ class Set implements TypeInterface
 
         $input->actionSetLinkerId = $current->get('id');
 
-        $actionService->executeNow($action->get('id'), $input);
+        $res = $actionService->executeNow($action->get('id'), $input);
 
         if (empty($action->get('inBackground')) &&
             (!property_exists($input, 'where') || in_array(['export', 'import', 'synchronization'], $action->get('type'))) &&
@@ -82,7 +74,7 @@ class Set implements TypeInterface
             return $this->executeAction($next, $input);
         }
 
-        return true;
+        return (bool)$res;
     }
 
     public function getNextAction(Entity $entity): ?Entity
@@ -157,15 +149,5 @@ class Set implements TypeInterface
         }
 
         return [];
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->container->get('entityManager');
-    }
-
-    protected function getServiceFactory(): ServiceFactory
-    {
-        return $this->container->get('serviceFactory');
     }
 }

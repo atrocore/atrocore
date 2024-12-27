@@ -8,7 +8,9 @@
     "massAction": "Масова дія",
     "display": "Відображання",
     "actionsSet": "Набори дій",
-    "actions": "Дії"
+    "actions": "Дії",
+    "conditionsType": "Тип умови",
+    "conditions": "Умови"
   },
   "links": {
     "actionsSet": "Набори дій",

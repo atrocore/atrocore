@@ -10,7 +10,9 @@
     "actionsSet": "Actions Set",
     "actions": "Actions",
     "webhookUrl": "URL",
-    "executeAs": "Execute As"
+    "executeAs": "Execute As",
+    "conditionsType": "Conditions Type",
+    "conditions": "Conditions"
   },
   "links": {
     "actionsSet": "Actions Set",
