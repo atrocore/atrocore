@@ -30,6 +30,15 @@
       "type": "varchar",
       "view": "views/fields/entity-type"
     },
+    "conditionsType": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "conditions_type",
+      "dropdown": true
+    },
+    "conditions": {
+      "type": "wysiwyg",
+      "view": "views/action/fields/conditions-container"
+    },
     "data": {
       "type": "jsonObject",
       "layoutListDisabled": true,

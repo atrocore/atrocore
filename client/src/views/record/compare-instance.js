@@ -13,43 +13,45 @@ Espo.define('views/record/compare-instance','views/record/compare', function (De
     return Dep.extend({
         instanceComparison: true,
 
-        getDistantComparisonModels(model) {
-            let models  = [];
-            this.distantModelsAttribute.forEach((modelAttribute, index) => {
+        distantModels: [],
 
-                if('_error' in modelAttribute){
-                    this.instances[index]['_error'] = modelAttribute['_error'];
-                }
-                let  m = model.clone();
-                for(let key in modelAttribute){
-                    let el = modelAttribute[key];
-                    let instanceUrl = this.instances[index].atrocoreUrl;
-                    if(key.includes('PathsData')){
-                        if( el && ('thumbnails' in el)){
-                            for (let size in el['thumbnails']){
-                                modelAttribute[key]['thumbnails'][size] = instanceUrl + '/' + el['thumbnails'][size]
-                            }
-                        }
-                    }
-                }
-                m.set(modelAttribute);
-                models.push(m);
-            })
-
-            return models;
+        init() {
+            Dep.prototype.init.call(this);
+            this.instances = this.options.instances || this.getMetadata().get(['app', 'comparableInstances']);
+            this.distantModels = this.options.distantModels ?? [];
         },
 
-        buildComparisonTableColumn() {
+        getOtherModelsForComparison(currentModel) {
+            return this.distantModels;
+        },
+
+        buildComparisonTableHeaderColumn() {
             let columns = [];
-                columns.push({name: this.translate('instance', 'labels', 'Synchronization')});
-                columns.push({name: this.translate('current', 'labels', 'Synchronization')});
-                this.instances.forEach(instance => {
-                    columns.push({
-                        name: instance.name,
-                        _error: instance._error
-                    })
-                });
+            columns.push({name: this.translate('instance', 'labels', 'Synchronization'), isFirst: true});
+            columns.push({name: `<a href="#/${this.scope}/view/${this.model.id}" target="_blank"> ${this.translate('current', 'labels', 'Synchronization')}</a>`});
+            this.instances.forEach(instance => {
+                columns.push({
+                    name: `<a href="${instance.atrocoreUrl}#/${this.scope}/view/${this.model.id}" target="_blank"> ${instance.name}</a>`,
+                    _error: instance._error
+                })
+            });
             return columns;
-        }
+        },
+
+        setupRelationshipsPanels() {
+            this.notify('Loading...');
+            this.createView('relationshipsPanels', this.relationshipsPanelsView, {
+                scope: this.scope,
+                model: this.model,
+                relationshipsPanels: this.getRelationshipPanels(),
+                distantModels: this.distantModels,
+                instanceComparison: true,
+                columns: this.buildComparisonTableHeaderColumn(),
+                el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
+            }, view => {
+                this.notify(false)
+                view.render();
+            })
+        },
     });
 });

@@ -878,7 +878,17 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        $multilingualTypes = $data['clientDefs']['EntityField']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'][0]['value'] ?? [];
+
+        foreach ($data['fields'] as $field => $v) {
+            $params = [];
+            if (!empty($v['multilingual'])) {
+                $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
+            }
+
+            if (!empty($data['fields'][$field]['params']) && is_array($data['fields'][$field]['params'])) {
+                $data['fields'][$field]['params'] = array_merge($params, $data['fields'][$field]['params']);
+            }
+        }
 
         /**
          * Set multi-lang fields to entity defs
@@ -898,7 +908,7 @@ class Metadata extends AbstractListener
                 }
 
                 $newFields[$field] = $params;
-                if (in_array($params['type'], $multilingualTypes) && !empty($params['isMultilang'])) {
+                if (!empty($data['fields'][$params['type']]['multilingual']) && !empty($params['isMultilang'])) {
                     $newFields[$field]['lingualFields'] = [];
                     foreach ($locales as $locale) {
                         // prepare locale
@@ -1136,44 +1146,6 @@ class Metadata extends AbstractListener
         return $indexes;
     }
 
-    protected function addBoolFilters(array &$data): void
-    {
-        foreach ($data['scopes'] as $entity => $defs) {
-            if (empty($defs['type']) || $defs['type'] === 'ReferenceData') {
-                continue;
-            }
-
-            $entityDefs = $data['entityDefs'][$entity] ?? null;
-
-            $data['clientDefs'][$entity]['boolFilterList'][] = 'fieldsFilter';
-            $data['clientDefs'][$entity]['hiddenBoolFilterList'][] = 'fieldsFilter';
-
-            if (isset($entityDefs['fields']['isActive']['type']) && $entityDefs['fields']['isActive']['type'] == 'bool') {
-                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyActive';
-            }
-
-            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
-
-            if (empty($defs['bookmarkDisabled'])) {
-                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
-                $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
-                $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
-                    "type"                      => "varchar",
-                    "notStorable"               => true,
-                    "layoutListDisabled"        => true,
-                    "layoutListSmallDisabled"   => true,
-                    "layoutDetailDisabled"      => true,
-                    "layoutDetailSmallDisabled" => true,
-                    "massUpdateDisabled"        => true,
-                    "filterDisabled"            => true,
-                    "exportDisabled"            => true,
-                    "importDisabled"            => true,
-                    "emHidden"                  => true
-                ];
-            }
-        }
-    }
-
     protected function addPreviewTemplates(array &$data): void
     {
         if (!$this->getConfig()->get('isInstalled', false)) {
@@ -1217,32 +1189,32 @@ class Metadata extends AbstractListener
     {
         foreach (array_keys(($this->getMetadata()->get(['app', 'notificationTransports'], []))) as $transport) {
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'Active'] = [
-                "type" => "bool",
+                "type"         => "bool",
                 "virtualField" => true,
-                "notStorable" => true
+                "notStorable"  => true
             ];
             // field for the notification template selected for this transport
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateId'] = [
-                "type" => "varchar",
-                "virtualField" => true,
-                "notStorable" => true,
+                "type"           => "varchar",
+                "virtualField"   => true,
+                "notStorable"    => true,
                 "filterDisabled" => true,
-                "view" => "views/notification-rule/fields/notification-template",
-                "name" => $transport . 'Template',
-                "t_type" => $transport
+                "view"           => "views/notification-rule/fields/notification-template",
+                "name"           => $transport . 'Template',
+                "t_type"         => $transport
             ];
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateName'] = [
-                "type" => "varchar",
+                "type"           => "varchar",
                 "filterDisabled" => true,
-                "readOnly" => true,
-                "notStorable" => true
+                "readOnly"       => true,
+                "notStorable"    => true
             ];
 
             $data['clientDefs']['NotificationRule']['dynamicLogic']['fields'][$transport . 'TemplateId'] = [
                 "required" => [
                     "conditionGroup" => [
                         [
-                            "type" => "isTrue",
+                            "type"      => "isTrue",
                             "attribute" => $transport . 'Active'
                         ]
                     ]
@@ -1267,7 +1239,7 @@ class Metadata extends AbstractListener
                 $notificationRules = $connection->createQueryBuilder()
                     ->select('nr.*')
                     ->from($connection->quoteIdentifier('notification_rule'), 'nr')
-                    ->leftJoin('nr','notification_profile','np', 'nr.notification_profile_id = np.id AND np.deleted = :false')
+                    ->leftJoin('nr', 'notification_profile', 'np', 'nr.notification_profile_id = np.id AND np.deleted = :false')
                     ->where('nr.is_active = :true')
                     ->andWhere('nr.deleted = :false')
                     ->andWhere('np.is_active = :true')
@@ -1284,35 +1256,73 @@ class Metadata extends AbstractListener
                 $notificationProfileId = $notificationRule['notification_profile_id'];
 
                 if (!isset($users[$notificationProfileId])) {
-                    try{
+                    try {
                         $users[$notificationProfileId] = $this->getEntityManager()
                             ->getRepository('NotificationRule')
                             ->getNotificationProfileUsers($notificationProfileId);
 
-                       if(!empty($users[$notificationProfileId])){
-                           $notificationProfilesIds[] = $notificationProfileId;
-                       }
+                        if (!empty($users[$notificationProfileId])) {
+                            $notificationProfilesIds[] = $notificationProfileId;
+                        }
 
-                   }catch (\Throwable $e){
-                       $users[$notificationProfileId] = [];
-                   }
+                    } catch (\Throwable $e) {
+                        $users[$notificationProfileId] = [];
+                    }
                 }
             }
 
-            $dataManager->setCacheData(NotificationRule::CACHE_NAME, $cachedData =  [
+            $dataManager->setCacheData(NotificationRule::CACHE_NAME, $cachedData = [
                 "notificationProfilesIds" => $notificationProfilesIds,
-                "notificationRules" => $notificationRules,
-                "users" => $users
+                "notificationRules"       => $notificationRules,
+                "users"                   => $users
             ]);
         }
 
         $data['app']['activeNotificationProfilesIds'] = $cachedData['notificationProfilesIds'];
 
         foreach ($cachedData['notificationRules'] as $notificationRule) {
-            if(!empty($notificationRule['entity'])){
+            if (!empty($notificationRule['entity'])) {
                 $data['scopes'][$notificationRule['entity']]['notificationRuleIdByOccurrence'][$notificationRule['occurrence']][] = $notificationRule['id'];
-            }else{
+            } else {
                 $data['app']['globalNotificationRuleIdByOccurrence'][$notificationRule['occurrence']][] = $notificationRule['id'];
+            }
+        }
+    }
+
+    protected function addBoolFilters(array &$data): void
+    {
+        foreach ($data['scopes'] as $entity => $defs) {
+            if (empty($defs['type']) || $defs['type'] === 'ReferenceData') {
+                continue;
+            }
+
+            $entityDefs = $data['entityDefs'][$entity] ?? null;
+
+            $data['clientDefs'][$entity]['boolFilterList'][] = 'fieldsFilter';
+            $data['clientDefs'][$entity]['hiddenBoolFilterList'][] = 'fieldsFilter';
+
+            if (isset($entityDefs['fields']['isActive']['type']) && $entityDefs['fields']['isActive']['type'] == 'bool') {
+                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyActive';
+            }
+
+            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
+
+            if (empty($defs['bookmarkDisabled'])) {
+                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
+                $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
+                $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "massUpdateDisabled"        => true,
+                    "filterDisabled"            => true,
+                    "exportDisabled"            => true,
+                    "importDisabled"            => true,
+                    "emHidden"                  => true
+                ];
             }
         }
     }

@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
+use Espo\Core\EventManager\Event;
 use Espo\ORM\EntityCollection;
 
 class Bookmark extends Base
@@ -127,5 +129,36 @@ class Bookmark extends Base
             'list' => $result,
             'total' => $total
         ];
+    }
+
+    public function createEntity($attachment)
+    {
+        $data = new \stdClass();
+        $data->entityId = $attachment->entityId;
+        $data->entityType = $attachment->entityType;
+
+        $attachment = $this
+            ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $data, 'service' => $this]))
+            ->getArgument('attachment');
+
+        $entity = $this->getRepository()->get();
+        $entity->set($attachment);
+
+        if($this->storeEntity($entity)) {
+            $this->afterCreateEntity($entity, $attachment);
+        }
+
+        return $entity;
+    }
+
+    public function deleteEntity($id)
+    {
+        $entity = $this->getRepository()->get($id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+       return $this->getRepository()->remove($entity, $this->getDefaultRepositoryOptions());
     }
 }

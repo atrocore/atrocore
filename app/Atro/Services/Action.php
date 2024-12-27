@@ -13,16 +13,37 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\ActionManager;
 use Atro\Core\Exceptions\Forbidden;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Atro\ActionTypes\TypeInterface;
+use Espo\ORM\Entity;
 
 class Action extends Base
 {
     protected $mandatorySelectAttributeList = ['targetEntity', 'data'];
+
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        if (property_exists($data, 'conditions') && !is_string($data->conditions)) {
+            $data->conditions = @json_encode($data->conditions);
+        }
+
+        parent::handleInput($data, $id);
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        if ($entity->get('conditionsType') === 'basic') {
+            $entity->set('conditions', @json_decode($entity->get('conditions')));
+        }
+
+        parent::prepareEntityForOutput($entity);
+    }
 
     public function executeRecordAction(string $id, string $entityId, string $actionName): array
     {
@@ -68,7 +89,7 @@ class Action extends Base
             }
         }
 
-        $success = $this->getInjection('actionManager')->executeNow($action, $input);
+        $success = $this->getActionManager()->executeNow($action, $input);
         if ($success) {
             $message = sprintf($this->getInjection('container')->get('language')->translate('actionExecuted',
                 'messages'), $action->get('name'));
@@ -135,5 +156,89 @@ class Action extends Base
             throw new Error("No such action type '$type'.");
         }
         return $this->getInjection('container')->get($className);
+    }
+
+    public function getRecordDynamicActions(string $scope, string $id)
+    {
+        $recordService = $this->getServiceFactory()->create($scope);
+        $entity = $recordService->getEntity($id);
+
+        $res = [];
+
+        $dynamicActions = [];
+        $actionIds = [];
+
+        foreach ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicRecordActions']) ?? [] as $action) {
+            if (!empty($action['acl']['scope'])) {
+                if (!$this->getAcl()->check($action['acl']['scope'], $action['acl']['action'])) {
+                    continue;
+                }
+            }
+            $dynamicActions[] = [
+                'action'  => 'dynamicAction',
+                'label'   => $action['name'],
+                'display' => $action['display'] ?? null,
+                'type'    => $action['type'] ?? null,
+                'data'    => [
+                    'action_id' => $action['id'],
+                    'entity_id' => $id
+                ]
+            ];
+            $actionIds[] = $action['id'];
+        }
+
+        if (!empty($actionIds)) {
+            $actions = $this->getentityManager()->getRepository('Action')->findByIds($actionIds);
+
+            foreach ($actions as $action) {
+                foreach ($dynamicActions as $dynamicAction) {
+                    if ($action->get('id') === $dynamicAction['data']['action_id']) {
+                        $input = new \stdClass();
+                        $input->sourceEntity = $entity;
+
+                        try {
+                            if ($this->getActionManager()->canExecute($action, $input)) {
+                                $res[] = $dynamicAction;
+                            }
+                        } catch (\Throwable $e) {
+                            $GLOBALS['log']->error("Condition check failed for action {$action->get('id')} and record $id :" . $e->getMessage());
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        if (!$this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled'])) {
+            $result = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('bookmark')
+                ->where('entity_id = :entityId AND deleted = :false')
+                ->andWhere('entity_type = :entityType')
+                ->andWhere('user_id = :userId')
+                ->setParameter('entityId', $id)
+                ->setParameter('entityType', $scope)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('userId', $this->getUser()->id)
+                ->fetchAssociative();
+
+            $res[] = [
+                'action' => 'bookmark',
+                'label'  => empty($result['id']) ? 'Bookmark' : 'Unbookmark',
+                'data'   => [
+                    'entity_id'   => $id,
+                    'bookmark_id' => $result['id'] ?? null
+                ]
+            ];
+        }
+
+        return $res;
+    }
+
+    protected function getActionManager(): ActionManager
+    {
+        return $this->getInjection('actionManager');
     }
 }

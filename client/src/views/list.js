@@ -70,6 +70,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
         defaultViewMode: 'list',
 
+        previousWidth: null,
+
         init: function () {
             Dep.prototype.init.call(this);
 
@@ -410,7 +412,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             }
 
             let observer = new ResizeObserver(() => {
-                if (treePanelView) {
+                if (treePanelView && this.previousWidth !== $('#content').width()) {
+                    this.previousWidth = $('#content').width();
                     this.onTreeResize(treePanelView.$el.outerWidth());
                 }
             });

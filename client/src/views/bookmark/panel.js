@@ -203,20 +203,21 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                     }
                 ];
 
-                if (group.collection.length < 2) {
-                    this.notify('Should I have at list 2 records in bookmarks to be able to compare');
-                } else {
-                    this.createView('dialog', 'views/modals/compare', {
-                        collection: collection,
-                        scope: group.key,
-                        mode: "details",
-                        className: 'full-page-modal',
-                        hideRelationship: false
-                    }, function (dialog) {
-                        dialog.render();
-                        this.notify(false)
-                    })
-                }
+                this.notify(this.translate('Loading'))
+                collection.fetch().success(() => {
+                        this.createView('dialog', 'views/modals/compare', {
+                            collection: collection,
+                            scope: group.key,
+                            mode: "details",
+                            className: 'full-page-modal',
+                            hideRelationship: false
+                        }, function (dialog) {
+                            dialog.render();
+                            this.notify(false)
+                        })
+
+                })
+
             })
         }
     })

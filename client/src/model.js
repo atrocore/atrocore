@@ -46,6 +46,8 @@ Espo.define('model', [], function () {
 
         defaults: {},
 
+        dynamicActions: null,
+
         initialize: function () {
             this.urlRoot = this.urlRoot || this.name;
 
@@ -53,6 +55,7 @@ Espo.define('model', [], function () {
             this.defs.fields = this.defs.fields || {};
             this.defs.links = this.defs.links || {};
             this.defaults = {}
+            this.dynamicActions = null
             Dep.prototype.initialize.call(this);
         },
 
@@ -298,6 +301,25 @@ Espo.define('model', [], function () {
             if (this.lastXhr && this.lastXhr.readyState < 4) {
                 this.lastXhr.abort();
             }
+        },
+
+        resetDynamicActions: function () {
+            this.dynamicActions = null
+        },
+
+        fetchDynamicActions: function () {
+            this.lastDynamicActionXhr = $.ajax({
+                url: 'Action/' + this.url() + '/dynamicActions',
+                type: 'GET'
+            })
+                .then(resp => {
+                    this.dynamicActions = resp.sort((v1, v2) => {
+                        return v1.label.localeCompare(v2.label);
+                    })
+                    return this.dynamicActions
+                })
+
+            return this.lastDynamicActionXhr
         }
 
     });

@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\ActionTypes\TypeInterface;
+use Atro\Core\ActionManager;
 use Atro\Entities\Job;
+use Espo\Core\ServiceFactory;
 use Espo\Services\Record;
 
 class ActionHandler extends AbstractJob implements JobInterface
@@ -25,15 +27,21 @@ class ActionHandler extends AbstractJob implements JobInterface
 
         $action = $this->getEntityManager()->getRepository('Action')->get($data['actionId']);
 
-        if (empty($action->get('sourceEntity'))) {
-            return;
-        }
         if (!empty($data['sourceEntity'])) {
             $action->set('sourceEntity', $data['sourceEntity']);
         }
 
-        /** @var TypeInterface $actionType */
-        $actionType = $this->getContainer()->get($this->getMetadata()->get(['action', 'types', $action->get('type')]));
+        // execute standalone action in job
+        if ($data['where'] == null) {
+            $input = new \stdClass();
+            $input->queueData = $data;
+            $this->getActionManager()->executeNow($action, $input);
+            return;
+        }
+
+        if (empty($action->get('sourceEntity'))) {
+            return;
+        }
 
         /** @var Record $service */
         $service = $this->getServiceFactory()->create($action->get('sourceEntity'));
@@ -64,7 +72,7 @@ class ActionHandler extends AbstractJob implements JobInterface
                 $input->queueData = $data;
 
                 try {
-                    $actionType->executeNow($action, $input);
+                    $this->getActionManager()->executeNow($action, $input);
                 } catch (\Throwable $e) {
                     $typeName = ucfirst($action->get('type'));
                     $GLOBALS['log']->error("Mass $typeName Action failed: " . $e->getMessage());
@@ -73,5 +81,10 @@ class ActionHandler extends AbstractJob implements JobInterface
 
             $offset = $offset + $maxSize;
         }
+    }
+
+    protected function getActionManager(): ActionManager
+    {
+        return $this->getContainer()->get('actionManager');
     }
 }

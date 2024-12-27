@@ -341,7 +341,10 @@
     "Bookmarking": "Встановити закладку",
     "Unbookmark": "Видалити закладку",
     "Bookmark": "Додати в закладки",
-    "Unbookmarking": "Видалити закладку"
+    "Unbookmarking": "Видалити закладку",
+    "youShouldHaveAtLeastOneRecord": "Ви повинні мати принаймні 2 записи в списку, щоб мати можливість порівняти",
+    "weCannotCompareMoreThan": "Максимальна кількість записів для порівняння - %s.",
+    "thereAreTooManyRecord": "Занадто багато записів. Неможливо порівняти"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
@@ -436,7 +439,11 @@
     "emptyMultilangOptions": "Список опцій не може бути порожнім, доки активована багатомовна опція.",
     "duplicatedAndLinked": "Записи були успішно продубльовані та пов'язані між собою.",
     "linked": "Записи успішно пов’язані.",
-    "linkJobsCreated": "Записи пов’язуються у фоновому режимі."
+    "linkJobsCreated": "Записи пов’язуються у фоновому режимі.",
+    "recordDontExistInInstance": "Цей запис не існує в екземплярі",
+    "badTokenInstance": "Наприклад, поганий токен авторизації",
+    "dontHaveAccessInInstance": "У вас немає доступу до цього запису на екземплярі",
+    "selectNoMoreThan": "Вибрати не більше {count} записів"
   },
   "boolFilters": {
     "onlyActive": "Активні",
@@ -474,7 +481,8 @@
     "massRestore": "Масове відновлення",
     "delete": "Видалити",
     "massDelete": "Масове видалення",
-    "download": "Завантажити"
+    "download": "Завантажити",
+    "compare": "Порівняйте"
   },
   "fields": {
     "folderPath": "Шлях папки",

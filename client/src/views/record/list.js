@@ -347,7 +347,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         showMore: true,
 
-        massActionList: ['remove', 'merge', 'massUpdate', 'export'],
+        massActionList: ['remove', 'merge', 'massUpdate', 'export', 'compare'],
 
         checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
 
@@ -961,6 +961,43 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }.bind(this));
         },
 
+        massActionCompare: function () {
+            if (!this.getAcl().check(this.entityType, 'read')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+
+            if (this.checkedList.length < 2) {
+                this.notify('Select 2 or more records', 'error');
+                return;
+            }
+            if (this.checkedList.length > 10) {
+                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', 10), 'error');
+                return;
+            }
+
+            let collection = this.collection.clone();
+            collection.url = this.entityType;
+            collection.where = [
+                {
+                    attribute: 'id',
+                    type: 'in',
+                    value: this.checkedList
+                }
+            ];
+
+            this.notify(this.translate('Loading'))
+            collection.fetch().success(() => {
+                this.createView('dialog', 'views/modals/compare', {
+                    collection: collection,
+                    scope: this.entityType,
+                }, function (dialog) {
+                    dialog.render();
+                    this.notify(false)
+                })
+            });
+        },
+
         removeMassAction: function (item) {
             var index = this.massActionList.indexOf(item);
             if (~index) {
@@ -1031,18 +1068,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
-            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
-                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action) && dynamicAction.massAction) {
-                    let obj = {
-                        action: "dynamicMassAction",
-                        label: dynamicAction.name,
-                        id: dynamicAction.id
-                    };
-                    this.massActionList.push(obj);
-                    this.checkAllResultMassActionList.push(obj);
-                }
-            });
-
             (this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []).forEach(function (item) {
                 if (~this.massActionList.indexOf(item)) {
                     var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
@@ -1074,6 +1099,27 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.setupMassActionItems();
+
+            let dynamicActions = [];
+            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
+                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action) && dynamicAction.massAction) {
+                    let obj = {
+                        action: "dynamicMassAction",
+                        label: dynamicAction.name,
+                        id: dynamicAction.id
+                    };
+                    dynamicActions.push(obj)
+                }
+            });
+            if (dynamicActions.length > 0) {
+                dynamicActions = dynamicActions.sort((v1, v2) => {
+                    return v1.label.localeCompare(v2.label);
+                })
+                dynamicActions.unshift({divider: true})
+                this.massActionList.push(...dynamicActions);
+                this.checkAllResultMassActionList.push(...dynamicActions);
+            }
+
 
 
             if (this.selectable) {
@@ -2628,9 +2674,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return 'tr[data-id="' + id + '"]';
         },
 
-        actionBookmark: function(data) {
+        actionBookmark: function (data) {
             data = data || {}
-            let id = data.id;
+            let id = data.entity_id;
+            let bookmarkId = data.bookmark_id;
             if (!id) return;
             let model = null;
             if (this.collection) {
@@ -2639,10 +2686,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (!model) {
                 return;
             }
-            if(model.get('bookmarkId')) {
+            model.set('bookmarkId', bookmarkId);
+            if (bookmarkId) {
                 this.notify(this.translate('Unbookmarking') + '...');
                 $.ajax({
-                    url: `Bookmark/${model.get('bookmarkId')}`,
+                    url: `Bookmark/${bookmarkId}`,
                     type: 'DELETE',
                     headers: {
                         'permanently': true
@@ -2654,7 +2702,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.reRender()
                     this.collection.fetch()
                 }.bind(this));
-            }else{
+            } else {
                 this.notify(this.translate('Bookmarking') + '...');
                 $.ajax({
                     url: 'Bookmark',
@@ -2668,7 +2716,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     model.set('bookmarkId', result.id)
                     this.notify(this.translate('Done'), 'success')
                     this.trigger('bookmarked-' + model.urlRoot, model.get('bookmarkId'))
-                    let shouldNotReRender  = false;
+                    let shouldNotReRender = false;
 
                     for (const where of (this.collection.where ?? [])) {
                         if (where.type === 'bool' && (where.value ?? []).includes('onlyBookmarked')) {
@@ -2678,7 +2726,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }
                     }
 
-                    if(!shouldNotReRender) {
+                    if (!shouldNotReRender) {
                         this.reRender();
                     }
 
@@ -2861,16 +2909,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.getModelFactory().create(data.scope, function (model) {
                 model.id = data.id;
                 this.listenToOnce(model, 'sync', function () {
-                    this.createView('quickCompareDialog', 'views/modals/compare', {
+                    this.createView('recordCompareInstance', 'views/modals/compare', {
                         model: model,
                         scope: data.scope,
                         instanceComparison: true,
-                        hideRelationship: true,
                         mode: "details",
                     }, function (dialog) {
                         dialog.render();
                         this.notify(false)
-                    })
+                    });
                 }, this);
                 model.fetch({main: true});
             }, this);

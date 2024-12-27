@@ -9,7 +9,9 @@
     "display": "Affichage",
     "actionsSet": "Ensemble d'actions",
     "actions": "Actions",
-    "webhookUrl": "URL"
+    "webhookUrl": "URL",
+    "conditionsType": "Type de conditions",
+    "conditions": "Conditions"
   },
   "links": {
     "actionsSet": "Ensemble d'actions",

@@ -8,6 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+
 Espo.define('views/record/compare', 'view', function (Dep) {
 
     return Dep.extend({
@@ -52,29 +53,25 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         init() {
             Dep.prototype.init.call(this);
-            // this.id = this.model.get('id');
-            this.collection = this.options.collection;
-            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
-
-            if ('distantModelsAttribute' in this.options && this.instanceComparison) {
-                this.distantModelsAttribute = this.options.distantModelsAttribute;
-            }
 
             this.scope = this.name = this.options.scope;
+            this.collection = this.options.collection;
+
+            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
             this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
             this.hideQuickMenu = this.options.hideQuickMenu;
         },
 
         setup() {
-            this.instances = this.getMetadata().get(['app', 'comparableInstances'])
+
             this.notify('Loading...')
             this.getModelFactory().create(this.scope, function (model) {
                 this.fieldsArr = [];
                 let modelOthers = [];
                 let modelCurrent = this.model;
 
-                modelOthers = this.getDistantComparisonModels(model);
+                modelOthers = this.getOtherModelsForComparison(model);
 
                 let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
 
@@ -84,135 +81,165 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         return;
                     }
 
-                    if (field.includes('_')) {
-                        return;
-                    }
-
                     const type = fieldDef['type'];
-                    const isLink = type === 'link' || type === 'linkMultiple';
 
-                    if (isLink && !this.links[field]?.entity) {
+                    if (!this.isValidType(type, field) || !this.isFieldEnabled(this.model, field)) {
                         return;
                     }
 
-                    let fieldId = field;
-                    if (type === 'asset' || type === 'link') {
-                        fieldId = field + 'Id';
-                    } else if (type === 'linkMultiple') {
-                        fieldId = field + 'Ids';
-                    }
+                    let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
 
-                    if (model.getFieldParam(field, 'isMultilang')
-                        && !modelCurrent.has(fieldId)
-                        && !modelOthers.map(m => m.has(fieldId)).reduce((previous, current) => previous || current)) {
+                    if (forbiddenFieldList.includes(field)) {
                         return;
-                    }
-
-                    let htmlTag = 'code';
-
-                    if (type === 'color' || type === 'enum') {
-                        htmlTag = 'span';
-                    }
-
-                    isLinkMultiple = type === 'linkMultiple';
-
-                    const values = (isLinkMultiple && modelCurrent.get(fieldId)) ? modelCurrent.get(fieldId).map(v => {
-                        return {
-                            id: v,
-                            name: modelCurrent.get(field + 'Names') ? (modelCurrent.get(field + 'Names')[v] ?? v) : v
-                        }
-                    }) : null;
-
-                    let showDetailsComparison = (modelCurrent.get(fieldId) && type === "link")
-                        || ((modelCurrent.get(fieldId)?.length ?? 0) > 0 && type === "linkMultiple")
-                    if (showDetailsComparison) {
-                        for (const other of modelOthers) {
-                            showDetailsComparison = showDetailsComparison && modelCurrent.get(fieldId)?.toString() === other.get(fieldId)?.toString();
-                        }
                     }
 
                     this.fieldsArr.push({
-                        isField: true,
                         field: field,
+                        shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && modelCurrent.get(field),
                         type: type,
                         label: fieldDef['label'] ?? field,
                         current: field + 'Current',
                         modelCurrent: modelCurrent,
                         modelOthers: modelOthers,
-                        htmlTag: htmlTag,
                         others: modelOthers.map((element, index) => {
-                            return {other: field + 'Other' + index, index}
+                            return {other: field + 'Other' + index, index, shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && element.get(field)}
                         }),
-                        isLink: isLink,
-                        foreignScope: isLink ? this.links[field].entity : null,
-                        foreignId: isLink ? modelCurrent.get(fieldId)?.toString() : null,
-                        showDetailsComparison: showDetailsComparison && this.hideQuickMenu !== true,
-                        isLinkMultiple: isLinkMultiple,
-                        values: values,
                         different: !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
                         required: !!fieldDef['required']
                     });
 
                 }, this);
 
+                this.fieldsArr.sort((v1, v2) =>
+                    this.translate(v1.field, 'fields', this.scope).localeCompare(this.translate(v2.field, 'fields', this.scope))
+                );
+
                 this.afterModelsLoading(modelCurrent, modelOthers);
                 this.listenTo(this, 'after:render', () => {
+                    this.notify('Loading...');
                     this.setupFieldsPanels();
-                    if (this.options.hideRelationship !== true) {
-                        this.setupRelationshipsPanels()
-                    }
+                    this.setupRelationshipsPanels();
                 });
             }, this)
 
         },
 
-        getDistantComparisonModels(model) {
+        getOtherModelsForComparison(model) {
             return this.collection.models.filter(model => model.id !== this.model.id);
         },
 
         setupFieldsPanels() {
-            this.notify('Loading...')
             this.createView('fieldsPanels', this.fieldsPanelsView, {
                 scope: this.scope,
                 model: this.model,
                 fieldsArr: this.fieldsArr,
                 instances: this.instances,
-                columns: this.buildComparisonTableColumn(),
+                columns: this.buildComparisonTableHeaderColumn(),
                 distantModels: this.distantModelsAttribute,
-                el: `${this.options.el} .compare-panel[data-name="fieldsPanels"]`
+                instanceComparison: this.instanceComparison,
+                el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
             }, view => {
                 view.render();
-                this.notify(false);
             })
         },
 
         setupRelationshipsPanels() {
-            this.notify('Loading...')
+            this.notify('Loading...');
+            this.createView('relationshipsPanels', this.relationshipsPanelsView, {
+                scope: this.scope,
+                model: this.model,
+                relationshipsPanels: this.getRelationshipPanels(),
+                collection: this.collection,
+                instanceComparison: this.instanceComparison,
+                columns: this.buildComparisonTableHeaderColumn(),
+                el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
+            }, view => {
+                view.render();
+                this.listenTo(view, 'after:render', () => this.notify(false))
+            })
+        },
 
-            this.getHelper().layoutManager.get(this.scope, 'relationships', layout => {
-                this.createView('relationshipsPanels', this.relationshipsPanelsView, {
-                    scope: this.scope,
-                    model: this.model,
-                    relationships: layout,
-                    distantModels: this.distantModelsAttribute,
-                    collection: this.collection,
-                    instanceComparison: this.instanceComparison,
-                    columns: this.buildComparisonTableColumn(),
-                    el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
-                }, view => {
-                    this.notify(false)
-                    view.render();
-                })
+        getRelationshipPanels() {
+            let relationshipsPanels = [];
+            const bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
+
+            for (let link in this.model.defs.links) {
+
+                if (!this.isLinkEnabled(this.model, link)) {
+                    continue;
+                }
+
+                if (this.nonComparableFields.includes(link)) {
+                    continue;
+                }
+
+                if(!this.isComparableLink(link)){
+                    continue;
+                }
+
+                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
+                let relationScope = relationDefs['entity'];
+
+                let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
+
+                let relationName = relationDefs['relationName'];
+
+                if(relationName) {
+                    relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                }
+
+                let panelData = {
+                    label: this.translate(link, 'links', this.scope),
+                    scope: relationScope,
+                    name: link,
+                    type: relationDefs['type'],
+                    inverseType: inverseRelationType,
+                    foreign: relationDefs['foreign'],
+                    relationName: relationName,
+                    defs:  {}
+                };
+
+                relationshipsPanels.push(panelData);
+            }
+
+            bottomPanels.forEach(bottomPanel => {
+                if (bottomPanel.layoutRelationshipsDisabled) {
+                    return;
+                }
+
+                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', bottomPanel.link]);
+
+                let relationName = relationDefs['relationName'];
+
+                if(relationName) {
+                    relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                }
+
+                relationshipsPanels.push({
+                    label: this.translate(bottomPanel.label, 'labels', this.scope),
+                    scope: relationDefs['entity'],
+                    name: bottomPanel.name,
+                    type: relationDefs['type'],
+                    foreign: relationDefs['foreign'],
+                    relationName: relationName,
+                    defs: bottomPanel
+                });
             });
+
+            relationshipsPanels.sort(function (v1, v2) {
+                return v1.label.localeCompare(v2.label);
+            });
+
+            return relationshipsPanels;
         },
 
         data() {
-            let column = this.buildComparisonTableColumn()
+            let column = this.buildComparisonTableHeaderColumn()
             return {
                 buttonList: this.buttonList,
                 fieldsArr: this.fieldsArr,
                 columns: column,
-                columnLength: column.length + 1,
+                columnLength: column.length,
                 scope: this.scope,
                 id: this.id
             };
@@ -225,6 +252,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         areEquals(current, others, field, fieldDef) {
+            let result = false;
             if (fieldDef['type'] === 'linkMultiple') {
                 const fieldId = field + 'Ids';
                 const fieldName = field + 'Names'
@@ -263,10 +291,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         },
 
-        afterRender() {
-            this.notify(false)
-        },
-
         afterModelsLoading(modelCurrent, modelOthers) {
         },
 
@@ -288,21 +312,53 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
         },
 
-        buildComparisonTableColumn() {
+        buildComparisonTableHeaderColumn() {
             let columns = [];
             let hasName = !!this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type'])
 
             columns.push({
                 name: hasName ? this.translate('Name') : 'ID',
-                label: hasName ? this.translate('Name') : 'ID'
             });
+
             this.collection.models.forEach(model => columns.push({
-                name: model.get('id'),
-                label: hasName ? (model.get('name') ?? 'None') : model.get('id'),
+                name: `<a href="#/${this.scope}/view/${model.id}"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
                 link: true
             }));
 
             return columns;
+        },
+
+        isValidType(type, field) {
+            return type && type !== 'linkMultiple';
+        },
+
+        isFieldEnabled(model, name) {
+            if (model.getFieldParam(name, 'notStorable') && model.getFieldParam(name, 'readOnly') && !model.getFieldParam(name, 'virtualField')) {
+                return false;
+            }
+
+            const disabledParameters = ['disabled', 'layoutDetailDisabled'];
+
+            for (let param of disabledParameters) {
+                if (model.getFieldParam(name, param)) {
+                    return false
+                }
+            }
+
+            return true;
+        },
+
+        isLinkEnabled(model, name) {
+            return !model.getLinkParam(name, 'disabled') && !model.getLinkParam(name, 'layoutRelationshipsDisabled');
+        },
+
+        isComparableLink(link) {
+            let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
+            let relationScope = relationDefs['entity'];
+
+            let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
+
+            return inverseRelationType === relationDefs['type'] && relationDefs['type'] === 'hasMany';
         }
     });
 });

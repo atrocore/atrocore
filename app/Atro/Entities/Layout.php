@@ -131,8 +131,8 @@ class Layout extends Base
                 $data = [];
                 foreach ($sidePanelItems as $item) {
                     $newItem = [];
-                    foreach ($this->getKeyList(['style', 'hiddenPerDefault', 'disabled'], $withIds) as $key) {
-                        if (!empty($item[$key])) {
+                    foreach ($this->getKeyList(['style', 'hiddenPerDefault', 'disabled', 'sortOrder'], $withIds) as $key) {
+                        if (isset($item[$key])) {
                             $newItem[$key] = $item[$key];
                         }
                     }
@@ -143,6 +143,4 @@ class Layout extends Base
 
         return [];
     }
-
-
 }

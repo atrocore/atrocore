@@ -161,7 +161,10 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["status", "stored"],
+        "required": [
+          "status",
+          "stored"
+        ],
         "properties": {
           "status": {
             "type": "string",
@@ -507,6 +510,71 @@
       "controller": ":controller",
       "action": "read",
       "id": ":id"
+    }
+  },
+  {
+    "route": "Action/:scope/:id/dynamicActions",
+    "method": "get",
+    "params": {
+      "controller": "Action",
+      "scope": ":scope",
+      "action": "dynamicActions",
+      "id": ":id"
+    },
+    "description": "Get dynamic actions available for a record",
+    "requestParameters": [
+      {
+        "name": "scope",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "Product"
+        }
+      },
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "1"
+        }
+      }
+    ],
+    "response": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "example": "bookmark"
+          },
+          "label": {
+            "type": "string",
+            "example": "Bookmark"
+          },
+          "display": {
+            "type": "string",
+            "nullable": true,
+            "example": "Single"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "example": "Update"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
     }
   },
   {

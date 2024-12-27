@@ -16,6 +16,7 @@
   "convertFileToBase64": "\\Atro\\TwigFunction\\ConvertFileToBase64",
   "getConvertedImageUrl": "\\Atro\\TwigFunction\\GetConvertedImageUrl",
   "editable": "\\Atro\\TwigFunction\\EditableEntity",
+  "getAllLanguageFields": "\\Atro\\TwigFunction\\GetAllLanguageFields",
   "parseMarkdown": "\\Atro\\TwigFunction\\ParseMarkdown",
   "formatField": "\\Atro\\TwigFunction\\FormatField"
 }
