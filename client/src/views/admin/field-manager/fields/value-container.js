@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/default', 'views/fields/base', Dep => {
+Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/base', Dep => {
 
     return Dep.extend({
 

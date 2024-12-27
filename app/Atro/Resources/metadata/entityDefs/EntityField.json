@@ -57,7 +57,7 @@
     },
     "default": {
       "type": "varchar",
-      "view": "views/admin/field-manager/fields/default",
+      "view": "views/admin/field-manager/fields/value-container",
       "tooltip": true
     },
     "defaultName": {
@@ -133,12 +133,12 @@
     },
     "min": {
       "type": "float",
-      "view": "views/admin/field-manager/fields/default",
+      "view": "views/admin/field-manager/fields/value-container",
       "tooltip": true
     },
     "max": {
       "type": "float",
-      "view": "views/admin/field-manager/fields/default",
+      "view": "views/admin/field-manager/fields/value-container",
       "tooltip": true
     }
   },
