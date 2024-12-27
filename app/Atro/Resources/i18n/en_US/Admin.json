@@ -176,7 +176,6 @@
     "useIframe": "Use iframe in view mode",
     "htmlSanitizer": "HTML Sanitizer",
     "strip": "Strip",
-    "foreignName": "Foreign field",
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
     "allowFileTypes": "Allow file types"
   },

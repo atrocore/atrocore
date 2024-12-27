@@ -459,6 +459,20 @@
             }
           ]
         }
+      },
+      "foreignName": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
       }
     }
   }

@@ -67,7 +67,6 @@
     "seeMoreDisabled": "Si cette case n'est pas cochée, les textes longs à afficher seront raccourcis.",
     "lengthOfCut": "Les caractères en trop seront masqués dans le mode d'affichage.",
     "maxFileSize": "Si vide ou 0, il n'y a pas de limite.",
-    "foreignName": "Champ à indiquer dans la relation."
   },
   "messages": {
     "defaultValidationFailed": "La valeur par défaut ne peut pas contenir de caractères spéciaux"

@@ -1,15 +1,8 @@
 {
   "params": [
     {
-      "name": "foreignName",
-      "type": "enum",
-      "tooltip": true,
-      "view": "views/admin/field-manager/fields/foreign-name"
-    },
-    {
       "name": "currentUserAsDefault",
-      "type": "bool",
-      "view": "views/admin/field-manager/fields/bool/current-user-as-default"
+      "type": "bool"
     }
   ],
   "actualFields": [

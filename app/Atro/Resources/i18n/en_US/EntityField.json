@@ -27,7 +27,8 @@
     "min": "Min",
     "max": "Max",
     "amountOfDigitsAfterComma": "Amount of digits after comma",
-    "disableFormatting": "Disable formatting"
+    "disableFormatting": "Disable formatting",
+    "foreignName": "Foreign field"
   },
   "links": {
     "entity": "Entity",
@@ -43,7 +44,8 @@
     "isSorted": "Options will be sorted after saving.",
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list.",
     "min": "Min acceptable value.",
-    "max": "Max acceptable value."
+    "max": "Max acceptable value.",
+    "foreignName": "Field to be shown in the relation."
   },
   "options": {
     "previewSize": {

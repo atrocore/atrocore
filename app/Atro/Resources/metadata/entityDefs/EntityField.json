@@ -147,6 +147,11 @@
     "amountOfDigitsAfterComma": {
       "type": "int",
       "min": 0
+    },
+    "foreignName": {
+      "type": "varchar",
+      "tooltip": true,
+      "view": "views/admin/field-manager/fields/foreign-name"
     }
   },
   "links": {

@@ -114,6 +114,12 @@
       ],
       [
         {
+          "name": "foreignName"
+        },
+        false
+      ],
+      [
+        {
           "name": "extensibleEnumOptions"
         },
         false

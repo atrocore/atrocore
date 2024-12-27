@@ -127,7 +127,6 @@
     "isPersonalData": "Личные данные",
     "useIframe": "Использовать Iframe",
     "strip": "Стрип",
-    "foreignName": "Поле связанной сущности",
     "useDisabledTextareaInViewMode": "Использовать нередактируемую текстовую область в режиме просмотра"
   },
   "messages": {

@@ -142,7 +142,6 @@
     "useIframe": "Utiliser l'iframe en mode affichage",
     "htmlSanitizer": "HTML Sanitizer",
     "strip": "Bande",
-    "foreignName": "Domaine étranger",
     "useDisabledTextareaInViewMode": "Utiliser une zone de texte désactivée en mode affichage",
     "rowsMax": "Nombre maximal de lignes de la zone de texte",
     "rowsMin": "Nombre minimum de lignes de la zone de texte",

@@ -163,7 +163,6 @@
     "useIframe": "Iframe im Ansichtsmodus verwenden",
     "htmlSanitizer": "HTML Sanitizer",
     "dataUrl": "Daten-URL",
-    "foreignName": "Fremdfeld",
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
     "allowFileTypes": "Dateitypen zulassen"
   },

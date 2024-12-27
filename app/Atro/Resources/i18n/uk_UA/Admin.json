@@ -145,7 +145,6 @@
     "useIframe": "Використовувати Iframe",
     "htmlSanitizer": "HTML Sanitizer",
     "strip": "Стрип",
-    "foreignName": "Поле пов'язаної сутності",
     "useDisabledTextareaInViewMode": "Використовувати нередаговану текстову область у режимі перегляду",
     "allowFileTypes": "Дозволити типи файлів"
   },

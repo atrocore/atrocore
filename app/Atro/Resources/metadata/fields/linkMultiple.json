@@ -1,12 +1,6 @@
 {
   "params": [
     {
-      "name": "foreignName",
-      "type": "enum",
-      "tooltip": true,
-      "view": "views/admin/field-manager/fields/foreign-name"
-    },
-    {
       "name": "sortable",
       "type": "bool",
       "default": false,

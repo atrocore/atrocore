@@ -167,7 +167,6 @@
        "useIframe":"Użyj ramki w trybie wyświetlania",
        "htmlSanitizer": "HTML Sanitizer",
        "strip":"Usuń",
-       "foreignName":"Pole obce",
        "useDisabledTextareaInViewMode":"Użyj wyłączonego pola tekstowego w trybie wyświetlania"
     },
     "messages":{
