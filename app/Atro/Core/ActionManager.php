@@ -47,14 +47,11 @@ class ActionManager
         return $this->getActionType($action->get('type'))->canExecute($action, $input);
     }
 
-    public function hasMassActions(Entity $action)
-    {
-        return !in_array($action->get('type'), ['export', 'import', 'synchronization']);
-    }
-
     public function executeNow(Entity $action, \stdClass $input): bool
     {
-        if ($this->hasMassActions($action) && property_exists($input, 'where') && $input->where !== null) {
+        $actionType = $this->getActionType($action->get('type'));
+
+        if (property_exists($input, 'where') && $actionType->useMassActions($action, $input)) {
             $data = ['actionId'     => $action->get('id'),
                      'sourceEntity' => $action->get('sourceEntity'),
                      'where'        => $input->where
@@ -93,7 +90,7 @@ class ActionManager
             $userChanged = $this->auth($userId);
         }
 
-        $res = $this->getActionType($action->get('type'))->executeNow($action, $input);
+        $res = $actionType->executeNow($action, $input);
 
         if ($userChanged) {
             // auth as current user again

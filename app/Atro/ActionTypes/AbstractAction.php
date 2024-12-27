@@ -32,6 +32,11 @@ abstract class AbstractAction implements TypeInterface
         $this->container = $container;
     }
 
+    public function useMassActions(Entity $action, \stdClass $input): bool
+    {
+        return true;
+    }
+
     public function canExecute(Entity $action, \stdClass $input): bool
     {
         $sourceEntity = $this->getSourceEntity($action, $input);
@@ -66,7 +71,6 @@ abstract class AbstractAction implements TypeInterface
 
         return true;
     }
-
 
 
     public function getSourceEntity($action, \stdClass $input): ?Entity
