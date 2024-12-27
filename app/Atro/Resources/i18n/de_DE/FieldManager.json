@@ -68,8 +68,6 @@
     "max": "Max. zulässiger Wert",
     "seeMoreDisabled": "Wenn nicht aktiviert, werden lange anzuzeigende Texte gekürzt.",
     "lengthOfCut": "Zu viele Zeichen werden im Ansichtsmodus ausgeblendet.",
-    "before": "Der Datumswert sollte vor dem Datumswert des angegebenen Feldes liegen.",
-    "after": "Der Datumswert sollte nach dem Datumswert des angegebenen Feldes liegen.",
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
     "foreignName": "In der Relation anzuzeigendes Feld.",
     "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."

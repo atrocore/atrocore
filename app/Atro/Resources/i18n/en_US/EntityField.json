@@ -19,7 +19,8 @@
     "tooltipText": "Tooltip text",
     "tooltipLink": "Tooltip link",
     "noEmptyString": "Empty string value is not allowed",
-    "options": "Options"
+    "options": "Options",
+    "useNumericFormat": "Use numeric format"
   },
   "links": {
     "entity": "Entity",

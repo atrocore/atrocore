@@ -90,6 +90,12 @@
       ],
       [
         {
+          "name": "useNumericFormat"
+        },
+        false
+      ],
+      [
+        {
           "name": "default"
         },
         {

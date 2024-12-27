@@ -65,8 +65,6 @@
   "tooltips": {
     "min": "Valor mínimo aceptado.",
     "max": "Valor máximo aceptado.",
-    "before": "El valor de fecha debe ser anterior al valor de fecha del campo especificado.",
-    "after": "El valor de fecha debe ser posterior al valor de fecha del campo especificado.",
     "maxFileSize": "Si está vacío o es 0, entonces no limitar",
     "fontSize": "Font size in em (relative to current font size)."
   },

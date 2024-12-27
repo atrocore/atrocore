@@ -1,22 +1,4 @@
 {
-   "params":[
-      {
-         "name": "defaultDate",
-         "type": "varchar"
-      },
-      {
-         "name":"after",
-         "type":"varchar"
-      },
-      {
-         "name":"before",
-         "type":"varchar"
-      },
-      {
-         "type": "bool",
-         "name":"useNumericFormat"
-      }
-   ],
    "filter": true,
    "auditable": true,
    "qbFilterType": "date",

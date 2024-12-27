@@ -114,8 +114,6 @@
     "type": "Tipo",
     "name": "Nombre",
     "label": "Etiqueta",
-    "after": "Después (campo)",
-    "before": "Antes (campo)",
     "link": "Enlace",
     "field": "Campo",
     "min": "Mínimo",
@@ -145,7 +143,6 @@
     "isPersonalData": "Is Personal Data",
     "useIframe": "Use Iframe",
     "htmlSanitizer": "HTML Sanitizer",
-    "useNumericFormat": "Use Numeric Format",
     "strip": "Strip",
     "dropdown": "Desplegable"
   },

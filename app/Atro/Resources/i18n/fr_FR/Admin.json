@@ -146,7 +146,6 @@
     "isPersonalData": "Les données à caractère personnel",
     "useIframe": "Utiliser l'iframe en mode affichage",
     "htmlSanitizer": "HTML Sanitizer",
-    "useNumericFormat": "Utiliser le format numérique",
     "strip": "Bande",
     "foreignName": "Domaine étranger",
     "useDisabledTextareaInViewMode": "Utiliser une zone de texte désactivée en mode affichage",
@@ -163,8 +162,6 @@
     "maxTo": "Max To",
     "defaultDate": "Défaut",
     "amountOfDigitsAfterComma": "Nombre de chiffres après la virgule",
-    "after": "Après (champ)",
-    "before": "Avant (champ)",
     "field": "Champ",
     "maxHeight": "Hauteur maximale (px)"
   },

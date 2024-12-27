@@ -65,12 +65,10 @@
   "tooltips": {
     "fontSize": "Taille de la police en em (par rapport à la taille de la police actuelle).",
     "isSorted": "Les options seront triées après l'enregistrement.",
-    "after": "La valeur de la date doit être postérieure à la valeur de la date du champ spécifié.",
     "min": "Valeur minimale acceptable.",
     "max": "Valeur maximale acceptable.",
     "seeMoreDisabled": "Si cette case n'est pas cochée, les textes longs à afficher seront raccourcis.",
     "lengthOfCut": "Les caractères en trop seront masqués dans le mode d'affichage.",
-    "before": "La valeur de la date doit être antérieure à la valeur de la date du champ spécifié.",
     "maxFileSize": "Si vide ou 0, il n'y a pas de limite.",
     "foreignName": "Champ à indiquer dans la relation."
   },

@@ -93,6 +93,9 @@
     "prohibitedEmptyValue": {
       "type": "bool"
     },
+    "useNumericFormat": {
+      "type": "bool"
+    },
     "options": {
       "type": "array",
       "view": "views/admin/field-manager/fields/options"
