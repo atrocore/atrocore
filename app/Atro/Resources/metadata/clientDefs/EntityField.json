@@ -540,6 +540,45 @@
             }
           ]
         }
+      },
+      "script": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "script"
+              ]
+            }
+          ]
+        }
+      },
+      "outputType": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "script"
+              ]
+            }
+          ]
+        }
+      },
+      "preview": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "script"
+              ]
+            }
+          ]
+        }
       }
     }
   }

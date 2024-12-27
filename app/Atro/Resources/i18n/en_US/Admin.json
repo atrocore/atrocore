@@ -136,9 +136,6 @@
   "fields": {
     "request": "Request",
     "response": "Response",
-    "script": "Script",
-    "preview": "Preview",
-    "outputType": "Output Type",
     "fontSize": "Font size",
     "type": "Type",
     "name": "Code",
@@ -217,16 +214,6 @@
     "notificationProfiles": "Configure Notification Profiles and Notification Rules to effectively streamline your alert management process so that it is timely and relevant.",
     "layoutProfiles": "Manage and customize different layout configurations for the system's user interface",
     "apiRequest": "Use this feature to quickly create complex data structures such as configured import or export feeds."
-  },
-  "options": {
-    "outputType": {
-      "text": "Text",
-      "int": "Integer",
-      "float": "Float",
-      "bool": "Boolean",
-      "date": "Date",
-      "datetime": "Date-time"
-    }
   },
   "logicalOperators": {
     "and": "AND",

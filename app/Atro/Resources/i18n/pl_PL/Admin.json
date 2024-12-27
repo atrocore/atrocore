@@ -127,9 +127,6 @@
        "markdown": "Markdown"
     },
     "fields":{
-       "script":"Skrypt",
-       "preview":"Podgląd",
-       "outputType":"Typ wyjścia",
        "fontSize":"Rozmiar czcionki",
        "type":"Typ",
        "name":"Nazwa",

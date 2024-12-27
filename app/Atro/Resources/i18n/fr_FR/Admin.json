@@ -115,7 +115,6 @@
     "markdown": "Markdown"
   },
   "fields": {
-    "preview": "Aperçu",
     "type": "Type",
     "name": "Nom",
     "link": "Lien",
@@ -142,8 +141,6 @@
     "rowsMax": "Nombre maximal de lignes de la zone de texte",
     "rowsMin": "Nombre minimum de lignes de la zone de texte",
     "label": "Étiquette",
-    "script": "Script",
-    "outputType": "Type de sortie",
     "fontSize": "Taille de la police",
     "defaultDate": "Défaut",
     "field": "Champ"

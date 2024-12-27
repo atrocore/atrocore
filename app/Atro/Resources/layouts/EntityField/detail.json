@@ -146,6 +146,20 @@
       ],
       [
         {
+          "name": "script"
+        },
+        {
+          "name": "outputType"
+        }
+      ],
+      [
+        {
+          "name": "preview",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
           "name": "extensibleEnumOptions"
         },
         false

@@ -130,9 +130,6 @@
   "fields": {
     "request": "Request",
     "response": "Antwort",
-    "script": "Skript",
-    "preview": "Vorschau",
-    "outputType": "Ausgabetyp",
     "fontSize": "Schriftgröße",
     "type": "Typ",
     "name": "Code",

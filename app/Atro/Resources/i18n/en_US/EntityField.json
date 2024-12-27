@@ -33,7 +33,10 @@
     "seeMoreDisabled": "Disable Displayed Text Shortening",
     "minHeight": "Min height (px)",
     "maxHeight": "Max height (px)",
-    "lengthOfCut": "Symbol amount to be displayed"
+    "lengthOfCut": "Symbol amount to be displayed",
+    "script": "Script",
+    "outputType": "Output Type",
+    "preview": "Preview"
   },
   "links": {
     "entity": "Entity",
@@ -59,6 +62,14 @@
       "small": "Small",
       "medium": "Medium",
       "large": "Large"
+    },
+    "outputType": {
+      "text": "Text",
+      "int": "Integer",
+      "float": "Float",
+      "bool": "Boolean",
+      "date": "Date",
+      "datetime": "Date-time"
     }
   },
   "labels": {
