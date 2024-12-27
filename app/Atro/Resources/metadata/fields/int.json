@@ -1,14 +1,6 @@
 {
   "params": [
     {
-      "name": "min",
-      "type": "int"
-    },
-    {
-      "name": "max",
-      "type": "int"
-    },
-    {
       "name": "disableFormatting",
       "type": "bool"
     }
