@@ -1287,6 +1287,9 @@ class Metadata extends AbstractListener
             }
 
             $entityDefs = $data['entityDefs'][$entity] ?? null;
+            if (empty($entityDefs)) {
+                continue;
+            }
 
             $data['clientDefs'][$entity]['boolFilterList'][] = 'fieldsFilter';
             $data['clientDefs'][$entity]['hiddenBoolFilterList'][] = 'fieldsFilter';
