@@ -57,7 +57,8 @@ class EntityField extends ReferenceData
                     'name'        => $this->getLanguage()->translate($fieldName, 'fields', $entityName),
                     'entityId'    => $entityName,
                     'entityName'  => $this->getLanguage()->translate($entityName, 'scopeNames'),
-                    'tooltipText' => $this->getLanguage()->translate($fieldName, 'tooltips', $entityName),
+                    'tooltipText' => !empty($fieldDefs['tooltip']) ? $this->getLanguage()->translate($fieldName, 'tooltips', $entityName) : null,
+                    'tooltipLink' => !empty($fieldDefs['tooltip']) ? $fieldDefs['tooltipLink'] : null,
                 ]);
             }
         }
