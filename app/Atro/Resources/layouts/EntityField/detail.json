@@ -180,6 +180,24 @@
       ],
       [
         {
+          "name": "height"
+        },
+        false
+      ],
+      [
+        {
+          "name": "useIframe"
+        },
+        false
+      ],
+      [
+        {
+          "name": "htmlSanitizer"
+        },
+        false
+      ],
+      [
+        {
           "name": "extensibleEnumOptions"
         },
         false

@@ -119,7 +119,6 @@
     "translation": "Traducción",
     "defaultType": "Tipo por defecto",
     "entityList": "Lista de entidades",
-    "height": "Altura (px)",
     "minHeight": "Altura mínima (px)",
     "provider": "Proveedor",
     "typeList": "Tipo de lista",
@@ -132,9 +131,7 @@
     "probabilityMap": "Probabilidades de la etapa (%)",
     "maxFileSize": "Tamaño máximo de archivo (MB)",
     "fontSize": "Font-Size",
-    "isPersonalData": "Is Personal Data",
-    "useIframe": "Use Iframe",
-    "htmlSanitizer": "HTML Sanitizer"
+    "isPersonalData": "Is Personal Data"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",

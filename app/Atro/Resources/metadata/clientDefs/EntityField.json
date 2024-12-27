@@ -509,7 +509,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "markdown"
+                "markdown",
+                "wysiwyg"
               ]
             }
           ]
@@ -536,7 +537,8 @@
               "attribute": "type",
               "value": [
                 "markdown",
-                "text"
+                "text",
+                "wysiwyg"
               ]
             }
           ]
@@ -628,6 +630,45 @@
               "attribute": "type",
               "value": [
                 "url"
+              ]
+            }
+          ]
+        }
+      },
+      "height": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      },
+      "useIframe": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      },
+      "htmlSanitizer": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "wysiwyg"
               ]
             }
           ]

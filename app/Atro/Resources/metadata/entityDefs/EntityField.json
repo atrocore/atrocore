@@ -220,6 +220,15 @@
     },
     "strip": {
       "type": "bool"
+    },
+    "height": {
+      "type": "int"
+    },
+    "useIframe": {
+      "type": "bool"
+    },
+    "htmlSanitizer": {
+      "type": "link"
     }
   },
   "links": {
@@ -235,6 +244,10 @@
     "extensibleEnum": {
       "type": "belongsTo",
       "entity": "ExtensibleEnum"
+    },
+    "htmlSanitizer": {
+      "type": "belongsTo",
+      "entity": "HtmlSanitizer"
     }
   },
   "collection": {

@@ -137,7 +137,6 @@
        "translation":"Tłumaczenie",
        "defaultType":"Domyślny typ",
        "entityList":"Lista jednostek",
-       "height":"Wysokość (px)",
        "provider":"Dostawca",
        "typeList":"Lista typów",
        "sourceList":"Lista źródeł",
@@ -149,9 +148,7 @@
        "dynamicLogicOptions":"Opcje warunkowe",
        "probabilityMap":"Prawdopodobieństwo etapów (%)",
        "maxFileSize":"Maksymalny rozmiar pliku (Mb)",
-       "isPersonalData":"Dane osobowe",
-       "useIframe":"Użyj ramki w trybie wyświetlania",
-       "htmlSanitizer": "HTML Sanitizer"
+       "isPersonalData":"Dane osobowe"
     },
     "messages":{
        "thousandSeparatorEqualsDecimalMark":"Separator tysięcy nie może być taki sam jak znak dziesiętny.",

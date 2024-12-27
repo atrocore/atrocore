@@ -106,7 +106,6 @@
     "translation": "Перевод",
     "defaultType": "Тип по умолчанию",
     "entityList": "Список сущностей",
-    "height": "Высота (в пикс.)",
     "provider": "Поставщик",
     "typeList": "Список типов",
     "rows": "Количество строк в текстовом поле",
@@ -119,8 +118,7 @@
     "dynamicLogicOptions": "Условные варианты",
     "probabilityMap": "Стадия вероятности (%)",
     "maxFileSize": "Максимальный размер файла (Mb)",
-    "isPersonalData": "Личные данные",
-    "useIframe": "Использовать Iframe"
+    "isPersonalData": "Личные данные"
   },
   "messages": {
     "selectEntityType": "Выберите тип сущности в левом меню.",

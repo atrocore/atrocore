@@ -139,7 +139,6 @@
     "translation": "Übersetzung",
     "defaultType": "Standardtyp",
     "entityList": "Entitätsliste",
-    "height": "Höhe (px)",
     "typeList": "Typenliste",
     "sourceList": "Quellenliste",
     "padLength": "Länge auffüllen",
@@ -150,8 +149,6 @@
     "probabilityMap": "Stufenwahrscheinlichkeiten (%)",
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Gehört zu persönlichen Daten",
-    "useIframe": "Iframe im Ansichtsmodus verwenden",
-    "htmlSanitizer": "HTML Sanitizer",
     "dataUrl": "Daten-URL",
     "allowFileTypes": "Dateitypen zulassen"
   },

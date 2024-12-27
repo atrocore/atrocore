@@ -122,7 +122,6 @@
     "translation": "Переклад",
     "defaultType": "Тип за замовчуванням",
     "entityList": "Список сутностей",
-    "height": "Висота (у пікс.)",
     "provider": "Постачальник",
     "typeList": "Список типів",
     "sourceList": "Список джерел",
@@ -135,8 +134,6 @@
     "probabilityMap": "Стадія ймовірності (%)",
     "maxFileSize": "Максимальний розмір файлу (Mb)",
     "isPersonalData": "Особисті дані",
-    "useIframe": "Використовувати Iframe",
-    "htmlSanitizer": "HTML Sanitizer",
     "allowFileTypes": "Дозволити типи файлів"
   },
   "messages": {

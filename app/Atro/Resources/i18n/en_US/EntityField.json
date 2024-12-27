@@ -40,7 +40,10 @@
     "rowsMax": "Maximum number of rows of textarea",
     "rowsMin": "Minimum number of rows of textarea",
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
-    "strip": "Strip"
+    "strip": "Strip",
+    "height": "Height (px)",
+    "useIframe": "Use iframe in view mode",
+    "htmlSanitizer": "HTML Sanitizer"
   },
   "links": {
     "entity": "Entity",

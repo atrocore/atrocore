@@ -146,7 +146,6 @@
     "translation": "Translation",
     "defaultType": "Default type",
     "entityList": "Entity list",
-    "height": "Height (px)",
     "provider": "Provider",
     "typeList": "Type list",
     "sourceList": "Source list",
@@ -159,8 +158,6 @@
     "probabilityMap": "Stage probabilities (%)",
     "maxFileSize": "Max file size (Mb)",
     "isPersonalData": "Is personal data",
-    "useIframe": "Use iframe in view mode",
-    "htmlSanitizer": "HTML Sanitizer",
     "allowFileTypes": "Allow file types"
   },
   "messages": {
