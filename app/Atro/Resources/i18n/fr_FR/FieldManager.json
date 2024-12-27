@@ -64,7 +64,6 @@
   },
   "tooltips": {
     "fontSize": "Taille de la police en em (par rapport à la taille de la police actuelle).",
-    "isSorted": "Les options seront triées après l'enregistrement.",
     "min": "Valeur minimale acceptable.",
     "max": "Valeur maximale acceptable.",
     "seeMoreDisabled": "Si cette case n'est pas cochée, les textes longs à afficher seront raccourcis.",

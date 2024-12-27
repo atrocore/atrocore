@@ -1,11 +1,4 @@
 {
-   "params":[
-      {
-         "name":"isSorted",
-         "type":"bool",
-         "tooltip": true
-      }
-   ],
    "filter": true,
    "auditable": true,
    "notCreatable": true,

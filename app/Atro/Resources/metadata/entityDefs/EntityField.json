@@ -96,6 +96,10 @@
     "useNumericFormat": {
       "type": "bool"
     },
+    "isSorted": {
+      "type": "bool",
+      "tooltip": true
+    },
     "options": {
       "type": "array",
       "view": "views/admin/field-manager/fields/options-extended"

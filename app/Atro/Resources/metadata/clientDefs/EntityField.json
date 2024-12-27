@@ -267,7 +267,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "enum"
+                "enum",
+                "multiEnum"
               ]
             }
           ]
@@ -299,6 +300,22 @@
               "value": [
                 "date",
                 "datetime"
+              ]
+            }
+          ]
+        }
+      },
+      "isSorted": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "enum",
+                "multiEnum",
+                "language",
+                "multiLanguage"
               ]
             }
           ]

@@ -96,6 +96,12 @@
       ],
       [
         {
+          "name": "isSorted"
+        },
+        false
+      ],
+      [
+        {
           "name": "default"
         },
         {

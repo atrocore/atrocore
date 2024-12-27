@@ -62,7 +62,6 @@
     }
   },
   "tooltips": {
-    "isSorted": "Optionen werden nach dem Speichern sortiert.",
     "fontSize": "Schriftgröße in em (relativ zur aktuellen Schriftgröße).",
     "min": "Min. zulässiger Wert",
     "max": "Max. zulässiger Wert",
