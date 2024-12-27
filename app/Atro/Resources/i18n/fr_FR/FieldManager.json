@@ -64,8 +64,6 @@
   },
   "tooltips": {
     "fontSize": "Taille de la police en em (par rapport à la taille de la police actuelle).",
-    "min": "Valeur minimale acceptable.",
-    "max": "Valeur maximale acceptable.",
     "seeMoreDisabled": "Si cette case n'est pas cochée, les textes longs à afficher seront raccourcis.",
     "lengthOfCut": "Les caractères en trop seront masqués dans le mode d'affichage.",
     "maxFileSize": "Si vide ou 0, il n'y a pas de limite.",

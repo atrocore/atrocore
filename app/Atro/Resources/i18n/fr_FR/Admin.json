@@ -119,8 +119,6 @@
     "type": "Type",
     "name": "Nom",
     "link": "Lien",
-    "min": "Min",
-    "max": "Max",
     "translation": "Traduction",
     "defaultType": "Type par défaut",
     "seeMoreDisabled": "Désactiver le raccourcissement du texte affiché",

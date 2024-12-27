@@ -151,8 +151,6 @@
     "amountOfDigitsAfterComma": "Amount of digits after comma",
     "link": "Link",
     "field": "Field",
-    "min": "Min",
-    "max": "Max",
     "translation": "Translation",
     "defaultType": "Default type",
     "seeMoreDisabled": "Disable Displayed Text Shortening",

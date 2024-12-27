@@ -142,8 +142,6 @@
        "amountOfDigitsAfterComma":"Ilość cyfr po przecinku",
        "link":"Link",
        "field":"Pole",
-       "min":"Min",
-       "max":"Maks",
        "translation":"Tłumaczenie",
        "defaultType":"Domyślny typ",
        "seeMoreDisabled":"Wyłącz skracanie wyświetlanego tekstu",

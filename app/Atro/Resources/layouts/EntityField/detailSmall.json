@@ -76,6 +76,14 @@
       ],
       [
         {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      [
+        {
           "name": "options"
         },
         {

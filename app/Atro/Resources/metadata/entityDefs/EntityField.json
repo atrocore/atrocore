@@ -130,6 +130,16 @@
         "medium",
         "large"
       ]
+    },
+    "min": {
+      "type": "float",
+      "view": "views/admin/field-manager/fields/default",
+      "tooltip": true
+    },
+    "max": {
+      "type": "float",
+      "view": "views/admin/field-manager/fields/default",
+      "tooltip": true
     }
   },
   "links": {

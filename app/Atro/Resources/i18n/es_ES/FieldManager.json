@@ -63,8 +63,6 @@
     }
   },
   "tooltips": {
-    "min": "Valor mínimo aceptado.",
-    "max": "Valor máximo aceptado.",
     "maxFileSize": "Si está vacío o es 0, entonces no limitar",
     "fontSize": "Font size in em (relative to current font size)."
   },

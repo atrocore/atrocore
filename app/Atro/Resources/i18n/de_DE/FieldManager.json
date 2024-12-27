@@ -63,8 +63,6 @@
   },
   "tooltips": {
     "fontSize": "Schriftgröße in em (relativ zur aktuellen Schriftgröße).",
-    "min": "Min. zulässiger Wert",
-    "max": "Max. zulässiger Wert",
     "seeMoreDisabled": "Wenn nicht aktiviert, werden lange anzuzeigende Texte gekürzt.",
     "lengthOfCut": "Zu viele Zeichen werden im Ansichtsmodus ausgeblendet.",
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",

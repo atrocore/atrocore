@@ -116,8 +116,6 @@
     "label": "Etiqueta",
     "link": "Enlace",
     "field": "Campo",
-    "min": "Mínimo",
-    "max": "Máximo",
     "translation": "Traducción",
     "defaultType": "Tipo por defecto",
     "entityList": "Lista de entidades",

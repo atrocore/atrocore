@@ -1,18 +1,6 @@
 {
    "params":[
       {
-         "name":"default",
-         "type":"float"
-      },
-      {
-         "name":"min",
-         "type":"float"
-      },
-      {
-         "name":"max",
-         "type":"float"
-      },
-      {
          "name": "amountOfDigitsAfterComma",
          "type": "int",
          "min": 0

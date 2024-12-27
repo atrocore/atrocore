@@ -23,7 +23,9 @@
     "useNumericFormat": "Use numeric format",
     "isSorted": "Is sorted (alphabetically)",
     "dropdown": "Dropdown",
-    "previewSize": "Preview size"
+    "previewSize": "Preview size",
+    "min": "Min",
+    "max": "Max"
   },
   "links": {
     "entity": "Entity",
@@ -37,7 +39,9 @@
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
     "default": "Value will be set by default upon creating.",
     "isSorted": "Options will be sorted after saving.",
-    "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
+    "dropdown": "Do not use the dropdown if there are more than 300 options in the list.",
+    "min": "Min acceptable value.",
+    "max": "Max acceptable value."
   },
   "options": {
     "previewSize": {

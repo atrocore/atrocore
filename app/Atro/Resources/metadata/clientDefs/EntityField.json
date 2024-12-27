@@ -403,6 +403,34 @@
             }
           ]
         }
+      },
+      "min": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
+      },
+      "max": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
       }
     }
   }
