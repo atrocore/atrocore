@@ -67,19 +67,22 @@ class Bookmark extends Base
                     $data = $entityNameByIds[$entityId];
                     if (!empty($data['deleted'])) {
                         $this->getEntityManager()->removeEntity($item);
-                        unset($connection[$item->_key]);
+                        unset($collection[$item->_key]);
                         unset($groupedCollections[$item->get('entityType')][$item->get('entityId')]);
+                        unset($items[$entityId]);
                         $count--;
                         continue;
                     }
                     $item->set('entityName', $data['name']);
                 } else {
                     $this->getEntityManager()->removeEntity($item);
-                    unset($connection[$item->_key]);
+                    unset($collection[$item->_key]);
                     unset($groupedCollections[$item->get('entityType')][$item->get('entityId')]);
+                    unset($items[$entityId]);
                     $count--;
                 }
             }
+
             $collectionArr = array_map(fn($item) => $item->toArray(), array_values($items));
             usort($collectionArr, function ($a, $b) {
                 return strcmp($b['entityName'], $a['entityName']);

@@ -72,14 +72,15 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             required: !!model.getFieldParam(field, 'required'),
                         },
                         mode: (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail',
+                        disabled: fieldData.disabled,
                         inlineEditDisabled: true,
                     }, view => {
                         view.render();
                         if(view.isRendered()) {
-                            this.handleAllFieldRender(row.key)
+                            this.handleAllFieldsRendered(row.key)
                         }
                         this.listenTo(view, 'after:render', () => {
-                            this.handleAllFieldRender(row.key);
+                            this.handleAllFieldsRendered(row.key);
                             if (this.instanceComparison && index !== 0) {
                                 let instance = model.get('_instance');
                                 let localUrl = this.getConfig().get('siteUrl');
@@ -123,7 +124,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             }
         },
 
-        handleAllFieldRender(key) {
+        handleAllFieldsRendered(key) {
             if(!this.renderedFields.includes(key)){
                 this.renderedFields.push(key);
 
@@ -170,9 +171,11 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.$el.find('input.field-radio:checked').each(function (i, el) {
                 let viewKey = $(el).data('key');
                 let view = self.getView(viewKey);
-                if (!view || !view.model) {
+
+                if (!view || !view.model || view.options.disabled) {
                     return;
                 }
+
                 attributes = _.extend({}, attributes, view.fetch());
             });
             return attributes;

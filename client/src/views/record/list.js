@@ -347,7 +347,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         showMore: true,
 
-        massActionList: ['remove', 'merge', 'massUpdate', 'export', 'compare'],
+        massActionList: ['remove', 'compare', 'merge', 'massUpdate', 'export'],
 
         checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
 

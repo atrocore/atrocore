@@ -285,13 +285,8 @@ class Record extends RecordService
             foreach ($sourceList as $source) {
                 $linkedList = $repository->findRelated($source, $link);
                 foreach ($linkedList as $linked) {
-                    try {
-                        $repository->relate($entity, $link, $linked);
-                    } catch (NotUnique $e) {
-                        $test = $e;
-                    } catch (\Throwable $e) {
-                        $test = $e;
-                    }
+                    $repository->relate($entity, $link, $linked);
+
                 }
             }
         }
@@ -319,13 +314,12 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
+        $entity->set($attributes);
+        $repository->save($entity);
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
         }
-
-        $entity->set($attributes);
-        $repository->save($entity);
 
         $this->afterMerge($entity, $sourceList, $attributes);
 

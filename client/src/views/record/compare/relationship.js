@@ -8,7 +8,6 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-
 Espo.define('views/record/compare/relationship', 'view', function (Dep) {
     return Dep.extend({
         template: 'record/compare/relationship',
