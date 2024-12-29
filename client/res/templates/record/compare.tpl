@@ -2,7 +2,7 @@
 
     <div class="detail-button-container button-container record-buttons clearfix">
         {{#if merging }}
-        <button class="btn btn-primary" data-action="merge">{{translate 'Merge'}}</button>
+        <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
         <button class="btn btn-default" data-action="cancel">{{translate 'Cancel'}}</button>
         {{/if}}
         <div class="clearfix"></div>

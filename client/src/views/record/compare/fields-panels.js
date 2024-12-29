@@ -40,7 +40,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.models = this.options.models;
             this.merging = this.options.merging;
             this.fieldList = this.options.fieldList;
-
+            this.renderedFields = [];
             this.listenTo(this.model, 'select-model', (modelId) => {
                 this.fieldList.forEach(fieldData => this.updateFieldState(fieldData.field, modelId));
             });
@@ -59,7 +59,6 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
         buildFieldViews() {
             this.fieldList.forEach(fieldData => {
                 let field = fieldData.field;
-
                 fieldData.fieldValueRows.forEach((row, index) => {
                     let model = this.models[index];
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
@@ -69,13 +68,20 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                         defs: {
                             name: field
                         },
-                        mode: (this.merging && index === 0)  ? 'edit' : 'detail',
+                        params: {
+                            required: !!model.getFieldParam(field, 'required'),
+                        },
+                        mode: (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail',
                         inlineEditDisabled: true,
                     }, view => {
                         view.render();
-                        if (this.instanceComparison && index !== 0) {
-                            let instance = model.get('_instance');
-                            view.listenTo(view, 'after:render', () => {
+                        if(view.isRendered()) {
+                            this.handleAllFieldRender(row.key)
+                        }
+                        this.listenTo(view, 'after:render', () => {
+                            this.handleAllFieldRender(row.key);
+                            if (this.instanceComparison && index !== 0) {
+                                let instance = model.get('_instance');
                                 let localUrl = this.getConfig().get('siteUrl');
                                 let instanceUrl = instance.atrocoreUrl;
 
@@ -100,9 +106,9 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                                     if (!src.includes('http')) {
                                         $(el).attr('src', instanceUrl + '/' + src)
                                     }
-                                })
-                            })
-                        }
+                                });
+                            }
+                        });
                     });
                 });
             });
@@ -110,31 +116,48 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
 
         afterRender() {
             Dep.prototype.afterRender.call(this)
+            this.renderedFields = [];
             this.buildFieldViews();
-            if(this.merging) {
+            if (this.merging) {
                 $('input[data-id="' + this.models[0].id + '"]').prop('checked', true);
             }
         },
 
+        handleAllFieldRender(key) {
+            if(!this.renderedFields.includes(key)){
+                this.renderedFields.push(key);
+
+                if (this.renderedFields.length === (this.fieldList.length * this.models.length)) {
+                    this.trigger('all-fields-rendered');
+                }
+            }
+        },
+
         updateFieldState(field, modelId) {
+
             let selectedIndex = this.models.findIndex(model => model.id === modelId);
 
             let fieldData = this.fieldList.find(el => el.field === field);
-            fieldData.fieldValueRows.forEach( (row,index) =>{
+
+            if(fieldData.disabled) {
+                return;
+            }
+
+            fieldData.fieldValueRows.forEach((row, index) => {
                 const view = this.getView(row.key);
-                if(!view) {
+                if (!view) {
                     return;
                 }
 
                 const mode = view.mode;
 
-                if(selectedIndex === index){
+                if (selectedIndex === index) {
                     view.setMode('edit');
-                }else{
+                } else {
                     view.setMode('detail');
                 }
 
-                if(mode !== view.mode) {
+                if (mode !== view.mode) {
                     view.model = this.models[index].clone();
                     view.reRender();
                 }
@@ -145,19 +168,30 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             let attributes = {};
             let self = this;
             this.$el.find('input.field-radio:checked').each(function (i, el) {
-                let field = el.name;
                 let viewKey = $(el).data('key');
                 let view = self.getView(viewKey);
-                if(!view){
+                if (!view || !view.model) {
                     return;
                 }
-                if(!view.model) {
-                    return;
-                }
-
                 attributes = _.extend({}, attributes, view.fetch());
             });
             return attributes;
+        },
+
+        validate() {
+            let validate = false;
+            let self = this;
+            this.$el.find('input.field-radio:checked').each(function (i, el) {
+                let viewKey = $(el).data('key');
+                let view = self.getView(viewKey);
+                if (!view || !view.model) {
+                    return;
+                }
+
+                validate = validate || view.validate();
+            });
+
+            return validate;
         }
     })
 })

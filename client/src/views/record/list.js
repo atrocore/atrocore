@@ -883,26 +883,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         massActionMerge: function (data, e) {
             return this.massActionCompare(data, e, true);
-            if (!this.getAcl().check(this.entityType, 'edit')) {
-                this.notify('Access denied', 'error');
-                return false;
-            }
-
-            if (this.checkedList.length < 2) {
-                this.notify('Select 2 or more records', 'error');
-                return;
-            }
-            if (this.checkedList.length > 4) {
-                this.notify('Select not more than 4 records', 'error');
-                return;
-            }
-            this.checkedList.sort();
-            var url = '#' + this.entityType + '/merge/ids=' + this.checkedList.join(',');
-            this.getRouter().navigate(url, {trigger: false});
-            this.getRouter().dispatch(this.entityType, 'merge', {
-                ids: this.checkedList.join(','),
-                collection: this.collection
-            });
         },
 
         processMassActionResult(result) {
@@ -995,7 +975,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     merging: merging
                 }, function (dialog) {
                     dialog.render();
-                    this.notify(false)
+                    this.notify(false);
+                    this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
                 })
             });
         },

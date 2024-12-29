@@ -40,13 +40,21 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             'click button[data-action="merge"]': function () {
                 this.notify('Loading...')
+                let fieldsPanels = this.getView('fieldsPanels');
+                let relationshipsPanels = this.getView('relationshipsPanels');
+
+                if(fieldsPanels.validate() || relationshipsPanels.validate()) {
+                    this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
+                    return;
+                }
+
                 let buttons = $('.button-container button');
-                let radios = $('input[type="radio"]');
-                let attributes = this.getView('fieldsPanels').fetch();
-                let relationshipData = this.getView('relationshipsPanels').fetch();
+                let attributes = fieldsPanels.fetch();
+                let relationshipData = relationshipsPanels.fetch();
+
                 let id = $('input[type="radio"][name="check-all"]:checked').val();
                 buttons.addClass('disabled');
-                radios.prop('disabled', true)
+                this.handleRadioButtonsDisableState(true);
                 $.ajax({
                     url: this.scope + '/action/merge',
                     type: 'POST',
@@ -61,12 +69,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     error: (xhr, status, error) => {
                         this.notify(false);
                         buttons.removeClass('disabled');
-                        radios.prop('disabled', false)
+                        this.handleRadioButtonsDisableState(false);
                     }
                 }).done(() => {
                     this.notify('Merged', 'success');
-                    buttons.removeClass('disabled');
-                    radios.prop('disabled', false)
+                    this.trigger('merge-success');
                     this.getParentView().close();
                 });
 
@@ -83,6 +90,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
             this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
             this.merging = this.options.merging;
+            this.renderedPanels = [];
         },
 
         setup() {
@@ -102,6 +110,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 const type = fieldDef['type'];
 
                 if (!this.isValidType(type, field) || !this.isFieldEnabled(this.model, field)) {
+                    return;
+                }
+
+                if(this.merging  && fieldDef['unitField']) {
                     return;
                 }
 
@@ -133,7 +145,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     label: fieldDef['label'] ?? this.translate(field, 'fields', this.scope),
                     fieldValueRows: fieldValueRows,
                     different: !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
-                    required: !!fieldDef['required']
+                    required: !!fieldDef['required'],
+                    disabled: this.model.getFieldParam(field, 'readOnly') || field === 'id'
                 });
             }, this);
 
@@ -143,6 +156,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             this.listenTo(this, 'after:render', () => {
                 this.notify('Loading...');
+                this.renderedPanels = [];
                 this.setupFieldsPanels();
                 this.setupRelationshipsPanels();
             });
@@ -166,7 +180,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
             }, view => {
                 view.render();
-            });
+                if(view.isRendered()) {
+                    this.handlePanelRendering('fieldsPanels');
+                }
+                this.listenTo(view, 'all-fields-rendered', () => {
+                    this.handlePanelRendering('fieldsPanels');
+                });
+            }, true);
         },
 
         setupRelationshipsPanels() {
@@ -182,8 +202,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
             }, view => {
                 view.render();
-                this.listenTo(view, 'after:render', () => this.notify(false))
-            })
+                if(view.isRendered()) {
+                    this.handlePanelRendering('relationshipsPanels');
+                }
+                this.listenTo(view, 'all-panels-rendered', () => {
+                    this.handlePanelRendering('relationshipsPanels');
+                });
+            }, true);
         },
 
         getRelationshipPanels() {
@@ -363,10 +388,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         isFieldEnabled(model, name) {
-            if (this.merging && (model.getFieldParam(name, 'readOnly') || name === 'id')) {
-                return false;
-            }
-
             const disabledParameters = ['disabled', 'layoutDetailDisabled'];
 
             for (let param of disabledParameters) {
@@ -389,6 +410,30 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
 
             return inverseRelationType === relationDefs['type'] && relationDefs['type'] === 'hasMany';
+        },
+
+        handlePanelRendering(name) {
+            if(this.renderedPanels.includes(name)) {
+                return;
+            }
+            this.renderedPanels.push(name);
+            if(this.renderedPanels.length === 2) {
+                this.notify(false);
+               this.handleRadioButtonsDisableState(false);
+                $('.button-container button').removeClass('disabled');
+            }
+        },
+
+        handleRadioButtonsDisableState(state) {
+            let self = this;
+            $('input[type="radio"]').each(function(){
+                let fieldData = self.fieldsArr.find(el => el.field === $(this).attr('name'));
+                if(fieldData && fieldData.disabled) {
+                    $(this).prop('disabled', true);
+                }else{
+                    $(this).prop('disabled', state)
+                }
+            });
         }
     });
 });

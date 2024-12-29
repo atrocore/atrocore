@@ -130,7 +130,9 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
         },
 
         createModalView(options) {
-            this.createView('modalRecord', this.recordView, options);
+            this.createView('modalRecord', this.recordView, options, (view) => {
+                this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
+            });
         }
     });
 });

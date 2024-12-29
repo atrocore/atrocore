@@ -105,7 +105,7 @@ class MassActions extends HasContainer
                     }
                 } else if (count($uniqueIndexes) > 0) {
                     foreach ($uniqueIndexes as $indexes) {
-                        if (array_reduce($indexes, fn($carry, $index) => $carry && !empty($node->payload->{$index}), true)) {
+                        if (array_reduce($indexes, fn($carry, $index) => $carry && $node->payload->{$index} !== null, true)) {
                             foreach ($indexes as $index) {
                                 $whereClause[] = [$index => $node->payload->{$index}];
                             }

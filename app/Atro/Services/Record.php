@@ -242,23 +242,31 @@ class Record extends RecordService
         $mergeLinkList = [];
         $linksDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
         $customMergeLinkList = array_keys($relationshipData);
-        $customEntityToMerge = array_column( array_values($relationshipData), 'scope');
+        $customEntityToMerge = array_column(array_values($relationshipData), 'scope');
         foreach ($linksDefs as $link => $d) {
+            if (in_array($link, $this->getForbiddenLinksToMerge())) {
+                continue;
+            }
+
+            if (in_array($link, $this->getMandatoryLinksToMerge())) {
+                $mergeLinkList[] = $link;
+                continue;
+            }
+
             if (!empty($d['notMergeable'])) {
                 continue;
             }
 
-            if(in_array($link, $customMergeLinkList)) {
+            if (in_array($link, $customMergeLinkList)) {
                 continue;
             }
 
-
             if (!empty($d['type']) && in_array($d['type'], ['hasMany', 'hasChildren'])) {
-                if(empty($d['entity']) || empty($d['foreign'])) {
+                if (empty($d['entity']) || empty($d['foreign'])) {
                     continue;
                 }
 
-                if(in_array($d['entity'], $customEntityToMerge)){
+                if (in_array($d['entity'], $customEntityToMerge)) {
                     continue;
                 }
 
@@ -267,13 +275,21 @@ class Record extends RecordService
         }
 
 
-        foreach ($sourceList as $source) {
-            foreach ($mergeLinkList as $link) {
+        foreach ($mergeLinkList as $link) {
+            $method = 'applyMergeFor' . ucfirst($link);
+            if (method_exists($this, $method)) {
+                $this->$method($entity, $sourceList);
+                continue;
+            }
+
+            foreach ($sourceList as $source) {
                 $linkedList = $repository->findRelated($source, $link);
                 foreach ($linkedList as $linked) {
                     try {
                         $repository->relate($entity, $link, $linked);
-                    }catch (NotUnique $e) {
+                    } catch (NotUnique $e) {
+                        $test = $e;
+                    } catch (\Throwable $e) {
                         $test = $e;
                     }
                 }
@@ -281,11 +297,11 @@ class Record extends RecordService
         }
 
         $upsertData = [];
-        foreach ($relationshipData as $key => $data) {
-            if(empty($data['scope'])) {
+        foreach ($relationshipData as $data) {
+            if (empty($data['scope'])) {
                 continue;
             }
-            if(!empty($data['toUpsert'])) {
+            if (!empty($data['toUpsert'])) {
                 foreach ($data['toUpsert'] as $payload) {
                     $input = new \stdClass();
                     $input->entity = $data['scope'];
@@ -294,7 +310,7 @@ class Record extends RecordService
                 }
             }
 
-            if(!empty($data['toDelete'])) {
+            if (!empty($data['toDelete'])) {
                 $this->getRecordService($data['scope'])->massRemove([
                     'ids' => $data['toDelete']
                 ]);
@@ -314,6 +330,20 @@ class Record extends RecordService
         $this->afterMerge($entity, $sourceList, $attributes);
 
         return true;
+    }
+
+    protected function getMandatoryLinksToMerge(): array
+    {
+        return [];
+    }
+
+    protected  function getForbiddenLinksToMerge(): array {
+        $links = [];
+        $scopeDefs = $this->getMetadata()->get(['scopes', $this->entityName]);
+        if(!empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['multiParents'])) {
+          $links[] = 'parents';
+        }
+        return $links;
     }
 
 }

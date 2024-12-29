@@ -996,14 +996,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         filterValueGetter(rule) {
             return this.filterValue;
-        },
-
-        simpleHash(str) {
-            let hash = 5381;
-            for (let i = 0; i < str.length; i++) {
-                hash = (hash * 33) ^ str.charCodeAt(i);
-            }
-            return hash >>> 0; // Ensure it's a 32-bit unsigned integer
         }
     });
 });

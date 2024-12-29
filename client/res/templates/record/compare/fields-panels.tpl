@@ -19,7 +19,7 @@
             {{#if ../merging }}
                 <th>
                    <div class="center-child">
-                       <input type="radio" name="check-all" value="{{id}}" data-id="{{id}}">
+                       <input type="radio" disabled="disabled" name="check-all" value="{{id}}" data-id="{{id}}">
                    </div>
                 </th>
             {{/if}}
@@ -38,12 +38,12 @@
         <tbody>
         {{#each fieldList}}
         <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
-            <td class="cell ">{{translate label scope=../scope category='fields'}}</td>
+            <td class="cell " title="{{translate label scope=../scope category='fields'}}">{{translate label scope=../scope category='fields'}}{{#if required }}*{{/if}}</td>
             {{#each fieldValueRows}}
             {{#if ../../merging}}
             <td>
                <div class="center-child" >
-                   <input type="radio" name="{{../field}}" value="{{id}}" data-id="{{id}}" data-key="{{key}}" class="field-radio">
+                   <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
                </div>
             </td>
             {{/if}}
