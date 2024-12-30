@@ -587,7 +587,14 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             });
 
             const treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+
             if (treeScopes) {
+                if(!treeScopes.includes(this.scope)
+                    && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                    && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
+                ) {
+                    treeScopes.unshift(this.scope);
+                }
                 this.getModelFactory().create(this.scope, model => {
                     model.set('scopesEnum', this.getStorage().get('treeScope', this.scope) || treeScopes[0]);
 
