@@ -363,12 +363,20 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
 
         getModelRelationColumnId() {
             let midKeys = this.model.defs.links[this.relationship.name].midKeys;
-            return (midKeys && midKeys.length === 2) ? midKeys[1] : this.scope.toLowerCase() + 'Id';
+            if(midKeys && midKeys.length === 2) {
+                return midKeys[1];
+            }
+
+            return this.scope.charAt(0).toLowerCase() + this.scope.slice(1) + 'Id';
         },
 
         getRelationshipRelationColumnId() {
             let midKeys = this.model.defs.links[this.relationship.name].midKeys;
-            return (midKeys && midKeys.length === 2) ? midKeys[0] : this.relationship.scope.toLowerCase() + 'Id';
+            if(midKeys && midKeys.length === 2) {
+                return midKeys[0];
+            }
+
+            return this.relationship.scope.charAt(0).toLowerCase() + this.relationship.scope.slice(1) + 'Id';
         },
 
         getLinkName() {
