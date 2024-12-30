@@ -151,7 +151,8 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                                 name: field,
                             },
                             params: {
-                                required: isRequired
+                                required: isRequired,
+                                readOnly: mode === 'detail' || model.getFieldParam(field, 'readOnly'),
                             },
                             mode: mode,
                             inlineEditDisabled: true,

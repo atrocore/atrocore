@@ -207,13 +207,6 @@ class Record extends RecordService
         $input = $attributes->input;
         $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
 
-        $this->filterInput($input);
-
-        $entity->set($input);
-        if (!$this->checkAssignment($entity)) {
-            throw new Forbidden();
-        }
-
         $sourceList = array();
         foreach ($sourceIdList as $sourceId) {
             $source = $this->getEntity($sourceId);
@@ -322,8 +315,10 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
-        $entity->set($attributes);
-        $repository->save($entity);
+        $input->_skipIsEntityUpdated = true;
+        $input->_skipCheckForConflicts = true;
+        $this->updateEntity($id, $input);
+
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
