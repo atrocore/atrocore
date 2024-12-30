@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Services\RecordService;
@@ -315,10 +316,12 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
-        $input->_skipIsEntityUpdated = true;
-        $input->_skipCheckForConflicts = true;
-        $this->updateEntity($id, $input);
+       try{
+           $input->_skipCheckForConflicts = true;
+           $this->updateEntity($id, $input);
+       }catch (NotModified $e) {
 
+       }
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
