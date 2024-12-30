@@ -42,7 +42,8 @@
             </td>
             {{#each entityValueKeys}}
             <td class="cell text-center" style="min-width: {{../../minWidth}}px">
-                <div data-field="{{key}}" >  {{#if key}}
+                <div class="field" data-field="{{key}}" >
+                    {{#if key}}
                     {{{var key ../../this }}}
                     {{/if}}
                 </div>

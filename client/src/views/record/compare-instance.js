@@ -38,12 +38,29 @@ Espo.define('views/record/compare-instance','views/record/compare', function (De
             return columns;
         },
 
+        setupFieldsPanels() {
+            this.createView('fieldsPanels', this.fieldsPanelsView, {
+                scope: this.scope,
+                model: this.model,
+                fieldList: this.fieldsArr,
+                instances: this.instances,
+                columns: this.buildComparisonTableHeaderColumn(),
+                instanceComparison: this.instanceComparison,
+                models: [this.model, ...this.distantModels],
+                merging: this.merging,
+                el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
+            }, view => {
+                view.render();
+            })
+        },
+
         setupRelationshipsPanels() {
             this.notify('Loading...');
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
                 model: this.model,
                 relationshipsPanels: this.getRelationshipPanels(),
+                models: [this.model, ...this.distantModels],
                 distantModels: this.distantModels,
                 instanceComparison: true,
                 columns: this.buildComparisonTableHeaderColumn(),

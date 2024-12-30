@@ -429,7 +429,8 @@
     "recordDontExistInInstance": "Dieser Datensatz existiert nicht in der Instanz",
     "badTokenInstance": "Schlechtes Autorisierungs-Token zum Beispiel",
     "dontHaveAccessInInstance": "Sie haben keinen Zugriff auf diesen Datensatz auf der Instanz",
-    "selectNoMoreThan": "Nicht mehr als {count} Datensätze auswählen"
+    "selectNoMoreThan": "Nicht mehr als {count} Datensätze auswählen",
+    "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus."
   },
   "unit Length": {
     "mm": "mm",
