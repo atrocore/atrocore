@@ -68,7 +68,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.scope = this.options.scope || this.scope;
             this.treeScope = this.scope;
 
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+            let treeScopes = this.getTreeScopes();
             if (treeScopes) {
                 const treeScope = this.getStorage().get('treeScope', this.scope);
                 if (!treeScope || !treeScopes.includes(treeScope)) {
@@ -588,15 +588,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 });
             });
 
-            const treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+            const treeScopes = this.getTreeScopes();
 
             if (treeScopes) {
-                if(!treeScopes.includes(this.scope)
-                    && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                    && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
-                ) {
-                    treeScopes.unshift(this.scope);
-                }
                 this.getModelFactory().create(this.scope, model => {
                     model.set('scopesEnum', this.getStorage().get('treeScope', this.scope) || treeScopes[0]);
                     let options = [];
@@ -725,6 +719,17 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 listContainer.removeClass('col-xs-12 col-lg-9');
             }
         },
+
+        getTreeScopes() {
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
+            if(!treeScopes.includes(this.scope)
+                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
+            ) {
+                treeScopes.unshift(this.scope);
+            }
+            return treeScopes;
+        }
 
     })
 );

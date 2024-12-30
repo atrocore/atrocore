@@ -2595,9 +2595,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             if (!treeScopes.includes(this.scope)
                 && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true
+                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
             ) {
-                treeScopes.includes(this.scope);
+                treeScopes.unshift(this.scope);
             }
 
             treeScopes.forEach(scope => {
