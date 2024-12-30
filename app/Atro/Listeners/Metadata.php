@@ -97,7 +97,7 @@ class Metadata extends AbstractListener
             }
 
             foreach ($defs['params'] as $item) {
-                if (empty($item['name'])) {
+                if (empty($item['name']) || !empty($item['hidden'])) {
                     continue;
                 }
                 $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['visible']['conditionGroup'][0]['type'] = 'in';
