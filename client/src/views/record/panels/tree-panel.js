@@ -600,7 +600,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.getModelFactory().create(this.scope, model => {
                     model.set('scopesEnum', this.getStorage().get('treeScope', this.scope) || treeScopes[0]);
                     let options = [];
-
                     treeScopes.forEach(scope => {
                         if (this.getAcl().check(scope, 'read')) {
                             options.push(scope);
