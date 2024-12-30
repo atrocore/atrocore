@@ -178,8 +178,12 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         }
 
         if ($result) {
+            $mimeType = mime_content_type($fileName);
+            if ($mimeType === 'text/plain' && pathinfo($fileName, PATHINFO_EXTENSION) === 'csv') {
+                $mimeType = 'text/csv';
+            }
             $file->set('fileMtime', gmdate("Y-m-d H:i:s", filemtime($fileName)));
-            $file->set('mimeType', mime_content_type($fileName));
+            $file->set('mimeType', $mimeType);
             $file->set('fileSize', filesize($fileName));
             $file->set('hash', $this->getFileManager()->md5File($fileName));
 
@@ -610,9 +614,9 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
                 } else {
                     $xattr = new Xattr();
                     $xattr->set($filePath, 'atroId', $file->id);
-                    if(empty($file->get('width')) || empty($file->get('height')) || empty($file->get('colorSpace'))) {
+                    if (empty($file->get('width')) || empty($file->get('height')) || empty($file->get('colorSpace'))) {
                         $fileRepo->addDimensions($file);
-                        if($file->isAttributeChanged('width') || $file->isAttributeChanged('height')) {
+                        if ($file->isAttributeChanged('width') || $file->isAttributeChanged('height')) {
                             $fileRepo->save($file);
                         }
                     }
