@@ -16,6 +16,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Utils\Language;
 use Espo\Core\DataManager;
 use Espo\ORM\Entity as OrmEntity;
 
@@ -167,6 +168,17 @@ class EntityField extends ReferenceData
 
     public function deleteEntity(OrmEntity $entity): bool
     {
+        $scope = $entity->get('entityId');
+        $name = $entity->get('code');
+
+        if (empty($this->getMetadata()->get("entityDefs.$scope.fields.$name.isCustom"))) {
+            return false;
+        }
+
+        $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);
+        $this->getMetadata()->save();
+        $this->getDataManager()->rebuild();
+
         return true;
     }
 
@@ -178,7 +190,7 @@ class EntityField extends ReferenceData
         $this->addDependency('dataManager');
     }
 
-    protected function getLanguage(): \Atro\Core\Utils\Language
+    protected function getLanguage(): Language
     {
         return $this->getInjection('language');
     }
