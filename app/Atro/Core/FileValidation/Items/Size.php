@@ -21,7 +21,7 @@ class Size extends Base
 {
     public function validate(File $file): bool
     {
-        $imageSize = (strlen($file->getContents()) / 1024);
+         $imageSize = $file->get('fileSize') / 1024;
         if ($imageSize >= $this->rule->get('min') && $imageSize <= $this->rule->get('max')) {
             return true;
         }
