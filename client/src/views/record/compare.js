@@ -417,7 +417,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return;
             }
             this.renderedPanels.push(name);
-            if(this.renderedPanels.length === 2) {
+            if(this.renderedPanels.length === 2 || name === 'fieldsPanels') {
                 this.notify(false);
                this.handleRadioButtonsDisableState(false);
                 $('.button-container button').removeClass('disabled');

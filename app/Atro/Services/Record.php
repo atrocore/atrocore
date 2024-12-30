@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
 use Espo\Services\RecordService;
@@ -207,13 +208,6 @@ class Record extends RecordService
         $input = $attributes->input;
         $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
 
-        $this->filterInput($input);
-
-        $entity->set($input);
-        if (!$this->checkAssignment($entity)) {
-            throw new Forbidden();
-        }
-
         $sourceList = array();
         foreach ($sourceIdList as $sourceId) {
             $source = $this->getEntity($sourceId);
@@ -322,8 +316,12 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
-        $entity->set($attributes);
-        $repository->save($entity);
+       try{
+           $input->_skipCheckForConflicts = true;
+           $this->updateEntity($id, $input);
+       }catch (NotModified $e) {
+
+       }
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);

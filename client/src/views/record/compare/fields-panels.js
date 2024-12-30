@@ -62,6 +62,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                 fieldData.fieldValueRows.forEach((row, index) => {
                     let model = this.models[index];
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
+                    let mode = (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail';
                     this.createView(row.key, viewName, {
                         el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
                         model: model.clone(),
@@ -70,8 +71,9 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                         },
                         params: {
                             required: !!model.getFieldParam(field, 'required'),
+                            readOnly: mode === 'detail' || model.getFieldParam(field, 'readOnly'),
                         },
-                        mode: (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail',
+                        mode: mode,
                         disabled: fieldData.disabled,
                         inlineEditDisabled: true,
                     }, view => {
