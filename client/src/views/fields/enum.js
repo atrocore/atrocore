@@ -84,14 +84,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             Dep.prototype.setup.call(this);
 
             if (!this.params.options) {
-                this.params.options = this.model.getFieldParam(this.name, 'optionsIds');
-            }
-
-            if (!this.params.options) {
-                this.params.options = this.model.getFieldParam(this.name, 'options');
-            }
-
-            if (!this.params.options) {
                 var methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
                 if (typeof this.model[methodName] == 'function') {
                     this.params.options = this.model[methodName].call(this.model);
