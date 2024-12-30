@@ -154,9 +154,6 @@ class Entity extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
-        // http://atropim.local/#Admin/fieldManager/scope=Absence
-        // http://atropim.local/#Admin/linkManager/scope=Absence
-
         if (!preg_match('/^[A-Z][A-Za-z0-9]*$/', $entity->get('code'))) {
             throw new BadRequest("Code is invalid.");
         }
@@ -201,7 +198,25 @@ class Entity extends ReferenceData
         return true;
     }
 
-    public function updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
+    public function updateEntity(OrmEntity $entity): bool
+    {
+        if ($entity->isAttributeChanged('code')) {
+            throw new BadRequest("Code cannot be changed.");
+        }
+
+        if ($entity->isAttributeChanged('type')) {
+            throw new BadRequest("Type cannot be changed.");
+        }
+
+        $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
+        $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
+
+        $this->updateScope($entity, $loadedData, $isCustom);
+
+        return true;
+    }
+
+    protected function updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
     {
         $saveMetadata = $isCustom;
         $saveLanguage = $isCustom;
@@ -287,24 +302,6 @@ class Entity extends ReferenceData
                 }
             }
         }
-    }
-
-    public function updateEntity(OrmEntity $entity): bool
-    {
-        if ($entity->isAttributeChanged('code')) {
-            throw new BadRequest("Code cannot be changed.");
-        }
-
-        if ($entity->isAttributeChanged('type')) {
-            throw new BadRequest("Type cannot be changed.");
-        }
-
-        $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
-        $isCustom = !empty($this->getMetadata()->get(['scopes', $entity->get('code'), 'isCustom']));
-
-        $this->updateScope($entity, $loadedData, $isCustom);
-
-        return true;
     }
 
     protected function beforeRemove(OrmEntity $entity, array $options = [])

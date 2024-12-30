@@ -35,6 +35,10 @@
       "type": "bool",
       "tooltip": true
     },
+    "tooltip": {
+      "type": "bool",
+      "readOnly": true
+    },
     "unique": {
       "type": "bool"
     },
@@ -209,14 +213,14 @@
       "default": 2,
       "min": 1
     },
-    "rowsMax":{
+    "rowsMax": {
       "type": "int",
       "default": 10,
       "min": 1
     },
     "useDisabledTextareaInViewMode": {
       "type": "bool",
-      "default":false
+      "default": false
     },
     "strip": {
       "type": "bool"
