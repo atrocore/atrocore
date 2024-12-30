@@ -1,4 +1,44 @@
 {
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name": "notNull",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name":"default",
+         "type":"varchar"
+      },
+      {
+         "name":"maxLength",
+         "type":"int"
+      },
+      {
+         "name":"countBytesInsteadOfCharacters",
+         "type":"bool"
+      },
+      {
+         "name": "strip",
+         "type": "bool"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      },
+      {
+         "name": "unique",
+         "type": "bool"
+      },
+      {
+         "name": "index",
+         "type": "bool"
+      }
+   ],
    "filter": true,
    "auditable": true,
    "qbFilterType": "string",

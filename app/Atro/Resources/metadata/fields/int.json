@@ -1,4 +1,55 @@
 {
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "measure",
+      "type": "link",
+      "entity": "Measure",
+      "view": "views/admin/field-manager/fields/link/measure"
+    },
+    {
+      "name": "default",
+      "type": "int"
+    },
+    {
+      "name": "defaultUnit",
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit"
+    },
+    {
+      "name": "min",
+      "type": "int"
+    },
+    {
+      "name": "max",
+      "type": "int"
+    },
+    {
+      "name": "disableFormatting",
+      "type": "bool"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    },
+    {
+      "name": "index",
+      "type": "bool"
+    }
+  ],
   "filter": true,
   "auditable": true,
   "qbFilterType": "integer",

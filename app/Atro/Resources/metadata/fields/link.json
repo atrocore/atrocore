@@ -1,4 +1,37 @@
 {
+  "params": [
+    {
+      "name": "foreignName",
+      "type": "enum",
+      "tooltip": true,
+      "view": "views/admin/field-manager/fields/foreign-name"
+    },
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "dropdown",
+      "type": "bool",
+      "default": false,
+      "view": "views/admin/field-manager/fields/dropdown"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "currentUserAsDefault",
+      "type": "bool",
+      "view": "views/admin/field-manager/fields/bool/current-user-as-default"
+    },
+    {
+      "name": "default",
+      "type": "link",
+      "view": "views/admin/field-manager/fields/link/default"
+    }
+  ],
   "actualFields": [
     "id"
   ],

@@ -1,4 +1,31 @@
 {
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "varchar"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        },
+        {
+            "name": "unique",
+            "type": "bool"
+        },
+        {
+            "name": "index",
+            "type": "bool"
+        },
+        {
+            "name": "prohibitedEmptyValue",
+            "type": "bool"
+        }
+    ],
     "filter": true,
     "auditable": true,
     "fieldDefs": {

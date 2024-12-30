@@ -1,4 +1,20 @@
 {
+  "params":[
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name":"isSorted",
+      "type":"bool",
+      "tooltip": true
+    },
+    {
+      "name":"readOnly",
+      "type":"bool"
+    }
+  ],
   "filter": true,
   "auditable": true,
   "notCreatable": false,

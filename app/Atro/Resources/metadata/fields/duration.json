@@ -1,4 +1,14 @@
 {
+   "params":[
+      {
+         "name":"default",
+         "type":"int"
+      },
+      {
+         "name":"options",
+         "type":"arrayInt"
+      }
+   ],
    "notCreatable": true,
    "fieldDefs": {
       "type":"int"

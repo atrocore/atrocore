@@ -1,4 +1,57 @@
 {
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "markdown"
+    },
+    {
+      "name": "countBytesInsteadOfCharacters",
+      "type": "bool"
+    },
+    {
+      "name": "seeMoreDisabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    {
+      "name": "minHeight",
+      "type": "int",
+      "default": 250,
+      "min": 100
+    },
+    {
+      "name": "maxHeight",
+      "type": "int",
+      "default": 400,
+      "min": 100
+    },
+    {
+      "name": "lengthOfCut",
+      "type": "int",
+      "default": 400,
+      "min": 1,
+      "tooltip": true
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
+    }
+  ],
   "filter": true,
   "auditable": true,
   "qbFilterType": "string",

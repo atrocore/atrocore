@@ -1,5 +1,19 @@
 {
-  "filter": true,
+   "params":[
+      {
+         "name":"options",
+         "type":"array"
+      },
+      {
+         "name":"default",
+         "type":"float"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "filter": true,
    "notCreatable": true,
    "fieldDefs":{
       "type":"float"

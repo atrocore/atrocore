@@ -1,4 +1,56 @@
 {
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name": "notNull",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name": "measure",
+         "type": "link",
+         "entity": "Measure",
+         "view": "views/admin/field-manager/fields/link/measure"
+      },
+      {
+         "name":"default",
+         "type":"float"
+      },
+      {
+         "name": "defaultUnit",
+         "type": "varchar",
+         "view": "views/admin/field-manager/fields/default-unit"
+      },
+      {
+         "name":"min",
+         "type":"float"
+      },
+      {
+         "name":"max",
+         "type":"float"
+      },
+      {
+         "name": "amountOfDigitsAfterComma",
+         "type": "int",
+         "min": 0
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      },
+      {
+         "name": "unique",
+         "type": "bool"
+      },
+      {
+         "name": "index",
+         "type": "bool"
+      }
+   ],
    "filter": true,
    "auditable": true,
    "qbFilterType": "double",

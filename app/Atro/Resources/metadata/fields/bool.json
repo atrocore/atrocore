@@ -1,5 +1,5 @@
 {
-  "params":[
+  "params": [
     {
       "name": "notNull",
       "type": "bool"
@@ -10,17 +10,21 @@
       "view": "views/admin/field-manager/fields/bool/required"
     },
     {
-      "name":"default",
-      "type":"bool",
+      "name": "default",
+      "type": "bool",
       "view": "views/admin/field-manager/fields/bool/default"
     },
     {
-      "name":"readOnly",
-      "type":"bool"
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
     }
   ],
   "filter": true,
   "auditable": true,
-  "qbFilterType": "boolean",
-  "multilingual": true
+  "qbFilterType": "boolean"
 }

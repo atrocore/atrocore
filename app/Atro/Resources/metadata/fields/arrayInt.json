@@ -1,32 +1,32 @@
 {
-  "params":[
-    {
-      "name":"required",
-      "type":"bool",
-      "default":false
-    },
-    {
-      "name":"options",
-      "type":"arrayInt"
-    },
-    {
-      "name":"translation",
-      "type":"varchar",
-      "hidden": true
-    },
-    {
-      "name": "noEmptyString",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "name":"readOnly",
-      "type":"bool"
-    }
-  ],
-  "filter": true,
-  "notCreatable": true,
-  "fieldDefs":{
-    "type":"jsonArray"
-  }
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"options",
+         "type":"arrayInt"
+      },
+      {
+         "name":"translation",
+         "type":"varchar",
+         "hidden": true
+      },
+      {
+         "name": "noEmptyString",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "filter": true,
+   "notCreatable": true,
+   "fieldDefs":{
+      "type":"jsonArray"
+   }
 }

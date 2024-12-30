@@ -1,4 +1,71 @@
 {
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "measure",
+      "type": "link",
+      "entity": "Measure",
+      "view": "views/admin/field-manager/fields/link/measure"
+    },
+    {
+      "name": "default",
+      "type": "varchar"
+    },
+    {
+      "name": "setDefaultOnlyIfRequired",
+      "type": "bool",
+      "view": "views/admin/field-manager/fields/set-default-only-if-required"
+    },
+    {
+      "name": "defaultUnit",
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit"
+    },
+    {
+      "name": "maxLength",
+      "type": "int"
+    },
+    {
+      "name": "countBytesInsteadOfCharacters",
+      "type": "bool"
+    },
+    {
+      "name": "trim",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "pattern",
+      "type": "varchar",
+      "tooltip": true
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    },
+    {
+      "name": "index",
+      "type": "bool"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
+    }
+  ],
   "filter": true,
   "auditable": true,
   "qbFilterType": "string",

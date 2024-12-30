@@ -1,4 +1,49 @@
 {
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "measure",
+      "type": "link",
+      "entity": "Measure"
+    },
+    {
+      "name": "default",
+      "type": "rangeInt"
+    },
+    {
+      "name": "defaultUnit",
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit"
+    },
+    {
+      "name": "minFrom",
+      "type": "int"
+    },
+    {
+      "name": "maxFrom",
+      "type": "int"
+    },
+    {
+      "name": "minTo",
+      "type": "int"
+    },
+    {
+      "name": "maxTo",
+      "type": "int"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "index",
+      "type": "bool"
+    }
+  ],
   "actualFields": [
     "from",
     "to"

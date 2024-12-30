@@ -1,4 +1,43 @@
 {
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "prohibitedEmptyValue",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "dropdown",
+      "type": "bool",
+      "default": false,
+      "view": "views/admin/field-manager/fields/dropdown",
+      "tooltip": true
+    },
+    {
+      "name": "extensibleEnum",
+      "required": true,
+      "entity": "ExtensibleEnum",
+      "type": "link",
+      "view": "views/admin/field-manager/fields/link/extensible-enum"
+    },
+    {
+      "name": "default",
+      "type": "link",
+      "view": "views/admin/field-manager/fields/link/extensible-enum-default"
+    },
+    {
+      "name": "extensibleEnumOptions",
+      "view": "views/admin/field-manager/fields/linkMultiple/extensible-enum-options"
+    }
+  ],
   "notSortable": true,
   "filter": true,
   "auditable": true,

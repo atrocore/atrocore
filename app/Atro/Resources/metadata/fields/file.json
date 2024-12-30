@@ -1,4 +1,40 @@
 {
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "fileType",
+      "type": "link",
+      "entity": "FileType"
+    },
+    {
+      "name": "previewSize",
+      "type": "enum",
+      "default": "small",
+      "optionsIds": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "options": [
+        "small",
+        "medium",
+        "large"
+      ]
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "default",
+      "type": "link",
+      "view": "views/admin/field-manager/fields/file/default"
+    }
+  ],
   "actualFields": [
     "id"
   ],

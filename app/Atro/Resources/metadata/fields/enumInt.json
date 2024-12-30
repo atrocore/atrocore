@@ -1,4 +1,18 @@
 {
+   "params":[
+      {
+         "name":"options",
+         "type":"array"
+      },
+      {
+         "name":"default",
+         "type":"int"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
    "filter": true,
    "notCreatable": true,
    "fieldDefs":{
