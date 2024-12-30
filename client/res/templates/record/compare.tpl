@@ -1,5 +1,4 @@
 <div class="detail">
-
     <div class="detail-button-container button-container record-buttons clearfix">
         {{#if merging }}
         <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
@@ -7,8 +6,6 @@
         {{/if}}
         <div class="clearfix"></div>
     </div>
-
-
     <div class="row">
         <div class="compare-panel list col-md-12">
             <div class="panel panel-default panel-overviewPanels" data-panel="fields-overviews">
@@ -152,5 +149,9 @@
         width: 100%;
         min-width: 0!important;
     }
+    .compare-panel table td.cell {
+        overflow:inherit;
+    }
+
 
 </style>
