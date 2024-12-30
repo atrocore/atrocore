@@ -73,6 +73,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 const treeScope = this.getStorage().get('treeScope', this.scope);
                 if (!treeScope || !treeScopes.includes(treeScope)) {
                     this.getStorage().set('treeScope', this.scope, treeScopes[0]);
+                }else{
+                    this.treeScope = treeScope;
                 }
             }
 
@@ -597,7 +599,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 }
                 this.getModelFactory().create(this.scope, model => {
                     model.set('scopesEnum', this.getStorage().get('treeScope', this.scope) || treeScopes[0]);
-
                     let options = [];
 
                     treeScopes.forEach(scope => {
