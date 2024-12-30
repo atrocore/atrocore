@@ -1,5 +1,26 @@
 {
-   "filter": true,
-   "auditable": true,
-   "qbFilterType": "boolean"
+  "params":[
+    {
+      "name": "notNull",
+      "type": "bool"
+    },
+    {
+      "name": "required",
+      "type": "bool",
+      "view": "views/admin/field-manager/fields/bool/required"
+    },
+    {
+      "name":"default",
+      "type":"bool",
+      "view": "views/admin/field-manager/fields/bool/default"
+    },
+    {
+      "name":"readOnly",
+      "type":"bool"
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "qbFilterType": "boolean",
+  "multilingual": true
 }
