@@ -73,8 +73,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 const treeScope = this.getStorage().get('treeScope', this.scope);
                 if (!treeScope || !treeScopes.includes(treeScope)) {
                     this.getStorage().set('treeScope', this.scope, treeScopes[0]);
+                }else{
+                    this.treeScope = treeScope;
                 }
-                this.treeScope = this.getStorage().get('treeScope', this.scope);
             }
 
             this.wait(true);
@@ -588,12 +589,17 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             });
 
             const treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+
             if (treeScopes) {
+                if(!treeScopes.includes(this.scope)
+                    && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                    && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
+                ) {
+                    treeScopes.unshift(this.scope);
+                }
                 this.getModelFactory().create(this.scope, model => {
                     model.set('scopesEnum', this.getStorage().get('treeScope', this.scope) || treeScopes[0]);
-
                     let options = [];
-
                     treeScopes.forEach(scope => {
                         if (this.getAcl().check(scope, 'read')) {
                             options.push(scope);
