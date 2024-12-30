@@ -329,7 +329,11 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             }
                         });
                         if (locale === this.getConfig().get('mainLanguage')) {
-                            this.model.set('tooltipText', responseData[this.scope]['tooltips']?.[field])
+                            let text = responseData[this.scope]['tooltips']?.[field]
+                            if(!text && this.field !== field){
+                                text = responseData[this.scope]['tooltips']?.[this.field]
+                            }
+                            this.model.set('tooltipText', text)
                         }
                     }
                 });
