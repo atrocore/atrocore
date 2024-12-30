@@ -12,13 +12,11 @@
     },
     {
       "name": "options",
-      "type": "array",
-      "view": "views/admin/field-manager/fields/options-extended"
+      "type": "array"
     },
     {
       "name": "default",
-      "type": "enum",
-      "view": "views/admin/field-manager/fields/options/default"
+      "type": "varchar"
     },
     {
       "name": "isSorted",

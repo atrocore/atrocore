@@ -13,8 +13,7 @@
     {
       "name": "measure",
       "type": "link",
-      "entity": "Measure",
-      "view": "views/admin/field-manager/fields/link/measure"
+      "entity": "Measure"
     },
     {
       "name": "default",
@@ -22,8 +21,7 @@
     },
     {
       "name": "defaultUnit",
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
+      "type": "varchar"
     },
     {
       "name": "min",

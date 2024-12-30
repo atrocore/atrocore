@@ -2,34 +2,14 @@
   "params": [
     {
       "name": "script",
-      "type": "text",
-      "view": "views/fields/script"
+      "type": "text"
     },
     {
       "name": "outputType",
-      "type": "enum",
-      "default": "text",
-      "prohibitedEmptyValue": true,
-      "optionsIds": [
-        "text",
-        "int",
-        "float",
-        "bool",
-        "date",
-        "datetime"
-      ],
-      "options": [
-        "text",
-        "int",
-        "float",
-        "bool",
-        "date",
-        "datetime"
-      ]
+      "type": "varchar"
     },
     {
       "name": "preview",
-      "view": "views/admin/field-manager/fields/script/preview",
       "readOnly": true
     },
     {

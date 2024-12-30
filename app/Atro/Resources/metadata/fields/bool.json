@@ -6,13 +6,11 @@
     },
     {
       "name": "required",
-      "type": "bool",
-      "view": "views/admin/field-manager/fields/bool/required"
+      "type": "bool"
     },
     {
       "name": "default",
-      "type": "bool",
-      "view": "views/admin/field-manager/fields/bool/default"
+      "type": "bool"
     },
     {
       "name": "readOnly",
