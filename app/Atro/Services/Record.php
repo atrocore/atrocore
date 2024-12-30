@@ -205,7 +205,6 @@ class Record extends RecordService
             throw new Forbidden();
         }
 
-        $input = $attributes->input;
         $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
 
         $sourceList = array();
@@ -317,8 +316,8 @@ class Record extends RecordService
         $this->getRecordService('MassActions')->upsert($upsertData);
 
        try{
-           $input->_skipCheckForConflicts = true;
-           $this->updateEntity($id, $input);
+           $attributes->input->_skipCheckForConflicts = true;
+           $this->updateEntity($id, $attributes->input);
        }catch (NotModified $e) {
 
        }
