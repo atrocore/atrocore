@@ -32,7 +32,7 @@ class ActionHandler extends AbstractJob implements JobInterface
         }
 
         // execute standalone action in job
-        if ($data['where'] == null) {
+        if (empty($data['ids'])) {
             $input = new \stdClass();
             $input->queueData = $data;
             $this->getActionManager()->executeNow($action, $input);
@@ -46,40 +46,18 @@ class ActionHandler extends AbstractJob implements JobInterface
         /** @var Record $service */
         $service = $this->getServiceFactory()->create($action->get('sourceEntity'));
 
-        $offset = 0;
-        $maxSize = $this->getConfig()->get('massUpdateChunkSize', 2000);
 
-        while (true) {
-            $params = [
-                'disableCount' => true,
-                'where'        => $data['where'],
-                'select'       => ['id'],
-                'offset'       => $offset,
-                'maxSize'      => $maxSize,
-                'sortBy'       => 'createdAt',
-                'asc'          => true
-            ];
+        foreach ($data['ids'] as $id) {
+            $input = new \stdClass();
+            $input->entityId = $id;
+            $input->queueData = $data;
 
-            $res = $service->findEntities($params);
-
-            if (empty($res['collection'][0])) {
-                break;
+            try {
+                $this->getActionManager()->executeNow($action, $input);
+            } catch (\Throwable $e) {
+                $typeName = ucfirst($action->get('type'));
+                $GLOBALS['log']->error("Mass $typeName Action failed: " . $e->getMessage());
             }
-
-            foreach ($res['collection'] as $entity) {
-                $input = new \stdClass();
-                $input->entityId = $entity->get('id');
-                $input->queueData = $data;
-
-                try {
-                    $this->getActionManager()->executeNow($action, $input);
-                } catch (\Throwable $e) {
-                    $typeName = ucfirst($action->get('type'));
-                    $GLOBALS['log']->error("Mass $typeName Action failed: " . $e->getMessage());
-                }
-            }
-
-            $offset = $offset + $maxSize;
         }
     }
 
