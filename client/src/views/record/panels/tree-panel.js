@@ -74,7 +74,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 if (!treeScope || !treeScopes.includes(treeScope)) {
                     this.getStorage().set('treeScope', this.scope, treeScopes[0]);
                 }
-                this.treeScope = this.getStorage().get('treeScope', this.scope);
             }
 
             this.wait(true);
