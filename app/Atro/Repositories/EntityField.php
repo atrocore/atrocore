@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\Core\DataManager;
 use Espo\ORM\Entity as OrmEntity;
@@ -74,7 +75,19 @@ class EntityField extends ReferenceData
 
     public function insertEntity(OrmEntity $entity): bool
     {
-//        $fieldDefs['isCustom'] = true;
+        if (!preg_match('/^[a-z][A-Za-z0-9]*$/', $entity->get('code'))) {
+            throw new BadRequest("Code is invalid.");
+        }
+
+        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}")) {
+            throw new Conflict("Entity field '{$entity->get('code')}' is already exists.");
+        }
+
+        $entity->id = "{$entity->get('entityId')}_{$entity->get('code')}";
+        $entity->set('isCustom', true);
+
+        // update metadata
+        $this->updateField($entity, []);
 
         return true;
     }
@@ -144,7 +157,7 @@ class EntityField extends ReferenceData
 
         if ($saveMetadata) {
             $this->getMetadata()->save();
-//            $this->getDataManager()->rebuild();
+            $this->getDataManager()->rebuild();
         }
 
         if ($saveLanguage) {

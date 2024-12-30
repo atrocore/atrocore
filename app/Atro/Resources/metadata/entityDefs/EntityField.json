@@ -39,6 +39,10 @@
       "type": "bool",
       "readOnly": true
     },
+    "isCustom": {
+      "type": "bool",
+      "readOnly": true
+    },
     "unique": {
       "type": "bool"
     },

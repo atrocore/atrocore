@@ -159,7 +159,7 @@ class Entity extends ReferenceData
         }
 
         if ($this->getMetadata()->get('scopes.' . $entity->get('code'))) {
-            throw new Conflict("Entity '{$entity->get('code')}' already exists.");
+            throw new Conflict("Entity '{$entity->get('code')}' is already exists.");
         }
 
         if (in_array(strtolower($entity->get('code')), self::RESERVED_WORDS)) {
