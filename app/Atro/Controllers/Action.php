@@ -47,6 +47,6 @@ class Action extends Base
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->getRecordDynamicActions((string)$params['scope'], (string)$params['id']);
+        return $this->getRecordService()->getRecordDynamicActions((string)$params['scope'], (string)$params['id'], (string)$request->get('display'));
     }
 }
