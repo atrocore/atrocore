@@ -174,7 +174,7 @@ class Action extends Base
                     continue;
                 }
             }
-            if (!empty($display) && $display !== $action['display']) {
+            if (!empty($display) && (empty($action['display']) || $display !== $action['display'])) {
                 continue;
             }
 
