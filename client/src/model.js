@@ -307,9 +307,9 @@ Espo.define('model', [], function () {
             this.dynamicActions = null
         },
 
-        fetchDynamicActions: function () {
+        fetchDynamicActions: function (display) {
             this.lastDynamicActionXhr = $.ajax({
-                url: 'Action/' + this.url() + '/dynamicActions',
+                url: 'Action/' + this.url() + '/dynamicActions' + (display ? `?display=${display}` : ''),
                 type: 'GET'
             })
                 .then(resp => {

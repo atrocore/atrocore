@@ -158,7 +158,7 @@ class Action extends Base
         return $this->getInjection('container')->get($className);
     }
 
-    public function getRecordDynamicActions(string $scope, string $id)
+    public function getRecordDynamicActions(string $scope, string $id, ?string $display)
     {
         $recordService = $this->getServiceFactory()->create($scope);
         $entity = $recordService->getEntity($id);
@@ -174,6 +174,10 @@ class Action extends Base
                     continue;
                 }
             }
+            if (!empty($display) && (empty($action['display']) || $display !== $action['display'])) {
+                continue;
+            }
+
             $dynamicActions[] = [
                 'action'  => 'dynamicAction',
                 'label'   => $action['name'],

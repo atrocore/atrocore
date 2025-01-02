@@ -397,7 +397,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     if (!exists && instances.length) {
                         this.dropdownItemList.push({
-                            'label': this.translate('Compare with')+ ' ' + instances[0].name,
+                            'label': this.translate('Compare with') + ' ' + instances[0].name,
                             'name': 'compareInstance',
                             'action': 'compareInstance'
                         });
@@ -569,33 +569,52 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.model.id && !this.buttonsDisabled) {
-                this.dropdownItemList.push({
-                    divider: true
-                });
-                this.dropdownItemList.push({
-                    preloader: true
-                });
-                this.additionalButtons.push({
-                    preloader: true
-                });
+                const recordActions = this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []
+
+                if (recordActions.filter(a => a.display === 'single').length > 0) {
+                    this.additionalButtons.push({
+                        preloader: true
+                    });
+                }
+
+                if (recordActions.filter(a => a.display === 'dropdown').length > 0) {
+                    this.dropdownItemList.push({
+                        divider: true
+                    });
+                    this.dropdownItemList.push({
+                        preloader: true
+                    });
+                }
             }
         },
 
-        loadDynamicActions: function () {
-            if (this.dropdownItemList.find(i => i.divider) == null) {
-                return
-            }
-
+        loadDynamicActions: function (display) {
             const $buttons = $(this.$el).find('.record-buttons')
 
-            if (this.model.dynamicActions == null) {
-                $buttons.find('li.preloader,li.divider,a.preloader').show()
-                $buttons.find('.dynamic-action').remove()
+            if (display === 'single') {
+                const hasButton = !!this.additionalButtons.find(i => i.preloader)
+                if (!hasButton && this.getMetadata().get(['scopes', this.entityType, 'bookmarkDisabled'])) {
+                    return
+                }
+                $buttons.find('.btn-group >.dynamic-action').remove()
+                if (hasButton) {
+                    $buttons.find('a.preloader').show()
+                }
             }
 
-            this.model.fetchDynamicActions()
+            if (display === 'dropdown') {
+                if (this.dropdownItemList.find(i => i.preloader) == null) {
+                    return
+                }
+                $buttons.find('.dropdown-menu .dynamic-action').remove()
+                $buttons.find('li.preloader,li.divider').show()
+            }
+
+
+            this.model.fetchDynamicActions(display)
                 .then(actions => {
                     $buttons.find('.dynamic-action').remove()
+
                     const dropdownItemList = [];
                     const additionalButtons = [];
                     actions.forEach(action => {
@@ -613,31 +632,35 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             });
                         }
 
-                        if(action.action === 'bookmark') {
+                        if (action.action === 'bookmark') {
                             this.model.set('bookmarkId', action.data['bookmark_id'])
                         }
                     })
 
-                    let template = this._templator.compileTemplate(`
-                   {{#each dropdownItemList}}
-                        <li class="dynamic-action"><a href="javascript:" class="action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=scope}}{{/if}}</a></li>
-                {{/each}}`)
-                    let html = this._renderer.render(template, {dropdownItemList, scope: this.scope})
+                    if (display === 'dropdown') {
+                        let template = this._templator.compileTemplate(`
+                        {{#each dropdownItemList}}
+                                <li class="dynamic-action"><a href="javascript:" class="action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=scope}}{{/if}}</a></li>
+                        {{/each}}`)
+                        let html = this._renderer.render(template, {dropdownItemList, scope: this.scope})
 
-                    $buttons.find('li.preloader').hide()
-                    $(html).insertBefore($buttons.find('ul > li.preloader'))
-                    if (dropdownItemList.length === 0) {
-                        $buttons.find('li.divider').hide()
+                        $buttons.find('li.preloader').hide()
+                        $(html).insertBefore($buttons.find('ul > li.preloader'))
+                        if (dropdownItemList.length === 0) {
+                            $buttons.find('li.divider').hide()
+                        }
                     }
 
-                    template = this._templator.compileTemplate(`
-                   {{#each additionalButtons}}
-                            <button type="button" class="btn btn-default additional-button action dynamic-action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>
-                {{/each}}`)
-                    html = this._renderer.render(template, {additionalButtons})
+                    if (display === 'single') {
+                        let template = this._templator.compileTemplate(`
+                            {{#each additionalButtons}}
+                                <button type="button" class="btn btn-default additional-button action dynamic-action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>
+                            {{/each}}`)
+                        let html = this._renderer.render(template, {additionalButtons})
 
-                    $buttons.find('a.preloader').hide()
-                    $(html).insertBefore($buttons.find('a.preloader'))
+                        $buttons.find('a.preloader').hide()
+                        $(html).insertBefore($buttons.find('a.preloader'))
+                    }
                 })
         },
 
@@ -747,7 +770,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         afterRender: function () {
-            this.loadDynamicActions()
+            this.loadDynamicActions('single')
+
+            this.listenTo(this.model, 'after:save', ()=> {
+                this.loadDynamicActions('single')
+            })
+
+            $(this.$el).find('.record-buttons button[data-toggle="dropdown"]').parent().on('show.bs.dropdown', () => {
+                this.loadDynamicActions('dropdown')
+            })
 
             var $container = this.$el.find('.detail-button-container');
 
