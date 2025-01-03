@@ -25,7 +25,7 @@ class Size extends Base
         if(!empty($content)) {
             $imageSize = (strlen($content) / 1024);
         }else{
-            $imageSize = $file->get('fileSize');
+            $imageSize = $file->get('fileSize') / 1024;
         }
 
         if ($imageSize >= $this->rule->get('min') && $imageSize <= $this->rule->get('max')) {
