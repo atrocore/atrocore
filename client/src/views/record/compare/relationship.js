@@ -334,7 +334,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 data.push({
                     field: this.isLinkedColumns,
                     title: linkedEntity.name,
-                    label: `<a href="#/${this.relationship.scope}/view/${linkedEntity.id}"> ${linkedEntity.name ?? linkedEntity.id} </a>`,
+                    label: `<a href="#/${this.relationship.scope}/view/${linkedEntity.id}" target="_blank"> ${linkedEntity.name ?? linkedEntity.id} </a>`,
                     linkedEntityId: linkedEntity.id,
                     entityValueKeys: []
                 });
