@@ -1,6 +1,6 @@
 {{#each relationshipsPanels}}
 
- <div class="panel panel-default panel-{{name}}" >
+ <div class="panel panel-default panel-{{name}}" id="{{name}}" data-name="{{name}}">
         <div class="panel-heading">
             <h4 class="panel-title">
               {{label}}

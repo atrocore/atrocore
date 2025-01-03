@@ -1,10 +1,13 @@
-<div class="detail">
+<div class="detail" id="{{id}}">
     <div class="detail-button-container button-container record-buttons clearfix">
         {{#if merging }}
         <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
-        <button class="btn btn-default" data-action="cancel">{{translate 'Cancel'}}</button>
+        <button class="btn btn-default" data-action="cancel" style="margin-right: 15px">{{translate 'Cancel'}}</button>
         {{/if}}
         <div class="clearfix"></div>
+        <div class="panel-navigation panel-left pull-left">
+
+        </div>
     </div>
     <div class="row">
         <div class="compare-panel list col-md-12">
@@ -149,9 +152,28 @@
         width: 100%;
         min-width: 0!important;
     }
+
     .compare-panel table td.cell {
-        overflow:inherit;
+        overflow: inherit;
     }
+
+    .compare-panel table td.cell:first-child {
+        overflow: hidden;
+    }
+
+    .detail > .detail-button-container {
+        position: fixed;
+        top: 50px;
+        z-index: 1000;
+        background-color: white;
+        width: 100%;
+        display: flex;
+    }
+
+    .detail > .row {
+        margin-top: 80px;
+    }
+
 
 
 </style>
