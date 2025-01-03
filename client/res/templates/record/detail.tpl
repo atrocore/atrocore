@@ -23,7 +23,7 @@
             {{#if additionalButtons}}
                 {{#each additionalButtons}}
                     {{# if preloader }}
-                            <a class="preloader" style="margin-left: 20px" href="javascript:"><img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg"></a>
+                            <a class="preloader" style="margin-left: 20px;display: none" href="javascript:"><img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg"></a>
                     {{else}}
                             <button type="button" class="btn btn-default additional-button action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>
                     {{/if}}

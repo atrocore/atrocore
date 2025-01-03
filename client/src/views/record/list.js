@@ -1104,7 +1104,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
 
-
             if (this.selectable) {
                 this.events['click .list a.link'] = function (e) {
                     e.preventDefault();
@@ -1146,6 +1145,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (this.noRebuild) {
                     this.noRebuild = null;
                     return;
+                }
+
+                if (options && typeof options.noRebuild == 'function') {
+                    if (options.noRebuild()) {
+                        return;
+                    }
                 }
 
                 if (!options || !options.keepSelected) {
