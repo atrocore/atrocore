@@ -286,7 +286,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
         generateUrl(node) {
             let url = this.treeScope + `/action/Tree?isTreePanel=1&scope=${this.scope}`;
-
             if (node && node.showMoreDirection) {
                 let offset = node.offset;
                 let maxSize = this.maxSize;
@@ -308,7 +307,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 }
             } else if (node && node.id) {
                 url += '&node=' + node.id + '&offset=0&maxSize=' + this.maxSize;
-            } else if (this.model && this.model.id && this.treeScope === this.model.urlRoot) {
+            } else if (this.model && this.model.id && [this.model.urlRoot, 'Bookmark'].includes(this.treeScope)) {
                 url += '&selectedId=' + this.model.id;
             }
 
@@ -472,7 +471,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                         }
                     }
 
-                    if (data && this.getStorage().get('treeScope', this.scope) === this.scope && this.model && this.model.get('id') === node.id) {
+                    let treeScope = this.getStorage().get('treeScope', this.scope);
+
+                    if (data && [this.scope, 'Bookmark'].includes(treeScope) && this.model && this.model.get('id') === node.id) {
                         $tree.tree('addToSelection', node);
                         $li.addClass('jqtree-selected');
                     }

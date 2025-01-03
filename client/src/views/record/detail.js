@@ -2688,7 +2688,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         selectNode(data) {
-            if (this.getStorage().get('treeScope', this.scope) === this.scope) {
+            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
             } else {
                 this.getStorage().set('selectedNodeId', this.scope, data.id);
