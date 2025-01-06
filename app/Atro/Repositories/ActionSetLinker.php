@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Relation;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ActionSetLinker extends Relation
@@ -34,7 +34,20 @@ class ActionSetLinker extends Relation
         }
 
         if ($entity->isNew()) {
-            $entity->set('sortOrder', time() - (new \DateTime('2024-01-01'))->getTimestamp());
+            $lastOrder = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('MAX(sort_order)')
+                ->from('action_set_linker')
+                ->where('set_id=:id')
+                ->andWhere('deleted=:false')
+                ->setParameter('id', $setId)
+                ->setParameter('false', 'false')
+                ->fetchOne();
+
+            if (empty($lastOrder)) {
+                $lastOrder = 0;
+            }
+
+            $entity->set('sortOrder', $lastOrder + 1);
         }
 
         parent::beforeSave($entity, $options);
