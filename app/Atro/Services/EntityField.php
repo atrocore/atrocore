@@ -16,6 +16,7 @@ namespace Atro\Services;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Services\ReferenceData;
 use Atro\Core\Twig\Twig;
 use Espo\ORM\Entity;
@@ -23,6 +24,20 @@ use Espo\ORM\EntityCollection;
 
 class EntityField extends ReferenceData
 {
+    public function resetToDefault(string $scope, string $field): bool
+    {
+        if ($this->getMetadata()->get("entityDefs.$scope.fields.$field.isCustom")) {
+            throw new Error("Can't reset to defaults custom entity field '$field'.");
+        }
+
+        $this->getMetadata()->delete('entityDefs', $scope, ["fields.$field"]);
+        $this->getMetadata()->save();
+
+        $this->getInjection('dataManager')->clearCache();
+
+        return true;
+    }
+
     public function renderScriptPreview(\stdClass $data): array
     {
         if (!property_exists($data, 'scope') || !property_exists($data, 'script') || !property_exists($data, 'field')) {
@@ -136,6 +151,7 @@ class EntityField extends ReferenceData
 
         $this->addDependency('eventManager');
         $this->addDependency('twig');
+        $this->addDependency('dataManager');
     }
 
     protected function getEventManager(): Manager

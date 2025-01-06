@@ -1,5 +1,8 @@
 {
   "controller": "controllers/record",
+  "recordViews": {
+    "detail": "views/admin/field-manager/record/detail"
+  },
   "dynamicLogic": {
     "fields": {
       "type": {
