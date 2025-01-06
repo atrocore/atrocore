@@ -17,10 +17,13 @@ use Espo\Core\Utils\Metadata;
 class FieldManager
 {
     protected Container $container;
+    protected Metadata $metadata;
+    protected array $fieldByTypeListCache = [];
 
     public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->metadata = $container->get('metadata');
     }
 
     public function getActualAttributeList(string $scope, string $name): array
@@ -33,20 +36,43 @@ class FieldManager
         return $this->getAttributeListByType($scope, $name, 'notActual');
     }
 
-    protected function getMetadata(): Metadata
+    public function getAttributeList(string $scope, string $name): array
     {
-        return $this->container->get('metadata');
+        return array_merge(
+            $this->getActualAttributeList($scope, $name),
+            $this->getNotActualAttributeList($scope, $name)
+        );
+    }
+
+    public function getFieldByTypeList(string $scope, string $type): array
+    {
+        if (!array_key_exists($scope, $this->fieldByTypeListCache)) {
+            $this->fieldByTypeListCache[$scope] = [];
+        }
+
+        if (!array_key_exists($type, $this->fieldByTypeListCache[$scope])) {
+            $fieldDefs = $this->metadata->get(['entityDefs', $scope, 'fields'], []);
+            $list = [];
+            foreach ($fieldDefs as $field => $defs) {
+                if (isset($defs['type']) && $defs['type'] === $type) {
+                    $list[] = $field;
+                }
+            }
+            $this->fieldByTypeListCache[$scope][$type] = $list;
+        }
+
+        return $this->fieldByTypeListCache[$scope][$type];
     }
 
     protected function getAttributeListByType(string $scope, string $name, string $type): array
     {
-        $fieldType = $this->getMetadata()->get('entityDefs.' . $scope . '.fields.' . $name . '.type');
+        $fieldType = $this->metadata->get('entityDefs.' . $scope . '.fields.' . $name . '.type');
 
         if (!$fieldType) {
             return [];
         }
 
-        $defs = $this->getMetadata()->get('fields.' . $fieldType);
+        $defs = $this->metadata->get('fields.' . $fieldType);
         if (!$defs) {
             return [];
         }
