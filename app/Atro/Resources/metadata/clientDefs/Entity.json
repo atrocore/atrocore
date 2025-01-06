@@ -1,7 +1,8 @@
 {
   "controller": "controllers/record",
   "recordViews": {
-    "list": "views/admin/entity-manager/record/list"
+    "list": "views/admin/entity-manager/record/list",
+    "detail": "views/admin/entity-manager/record/detail"
   },
   "relationshipPanels": {
     "fields": {

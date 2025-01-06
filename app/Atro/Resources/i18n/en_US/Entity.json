@@ -47,7 +47,11 @@
     "Create Entity": "Create Entity",
     "accessManagement": "Access management",
     "hierarchyManagement": "Hierarchy Management",
-    "other": "Other"
+    "other": "Other",
+    "resetToDefault": "Reset to default"
+  },
+  "confirmations": {
+    "resetToDefault": "Are you sure you want to reset configuration to default?"
   },
   "tooltips": {
     "disabled": "Check if you don't need this entity in your system.",

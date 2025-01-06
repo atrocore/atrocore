@@ -79,7 +79,11 @@
       "datetime": "Date-time"
     }
   },
+  "confirmations": {
+    "resetToDefault": "Are you sure you want to reset configuration to default?"
+  },
   "labels": {
-    "Create Entity Field": "Create Entity Field"
+    "Create Entity Field": "Create Entity Field",
+    "resetToDefault": "Reset to default"
   }
 }
