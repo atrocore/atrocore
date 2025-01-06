@@ -13,12 +13,43 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\ReferenceData;
+use Atro\Core\Twig\Twig;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class EntityField extends ReferenceData
 {
+    public function renderScriptPreview(\stdClass $data): array
+    {
+        if (!property_exists($data, 'scope') || !property_exists($data, 'script') || !property_exists($data, 'field')) {
+            throw new BadRequest();
+        }
+
+        $event = new Event(['data' => $data, 'result' => null]);
+        $event = $this->getEventManager()->dispatch('FieldManagerController', 'renderScriptPreview', $event);
+        if (!empty($event->getArgument('result'))) {
+            return $event->getArgument('result');
+        }
+
+        $outputType = property_exists($data, 'outputType') ? $data->outputType : 'text';
+        $entity = $this->getEntityManager()->getRepository($data->scope)->order('id', 'ASC')->findOne();
+        $preview = $this->twig()->renderTemplate($data->script, ['entity' => $entity], $outputType);
+        if (is_string($preview)) {
+            $outputType = 'text';
+        }
+
+        return [
+            'preview'    => $preview,
+            'entityType' => $entity->getEntityType(),
+            'entity'     => $entity->toArray(),
+            'outputType' => $outputType
+        ];
+    }
+
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
@@ -97,5 +128,23 @@ class EntityField extends ReferenceData
                 $entity->set('defaultName', $foreign->get('name'));
             }
         }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('eventManager');
+        $this->addDependency('twig');
+    }
+
+    protected function getEventManager(): Manager
+    {
+        return $this->getInjection('eventManager');
+    }
+
+    protected function twig(): Twig
+    {
+        return $this->getInjection('twig');
     }
 }

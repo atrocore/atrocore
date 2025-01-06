@@ -44,7 +44,7 @@ Espo.define('views/admin/field-manager/fields/script-preview', 'views/fields/bas
                 return;
             }
 
-            this.ajaxPostRequest('FieldManager/action/renderScriptPreview', {
+            this.ajaxPostRequest('EntityField/action/renderScriptPreview', {
                 scope: this.scope,
                 field: this.name,
                 script: this.model.get(this.relatedScriptFieldName) || '',
