@@ -11,5 +11,6 @@
   "type": "Base",
   "object": true,
   "notificationDisabled": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "actionDisabled": true
 }

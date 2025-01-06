@@ -3,5 +3,6 @@
   "module": "TreoCore",
   "streamDisabled": true,
   "notificationDisabled": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "actionDisabled": true
 }

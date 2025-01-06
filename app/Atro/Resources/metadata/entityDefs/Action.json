@@ -28,7 +28,7 @@
     },
     "sourceEntity": {
       "type": "varchar",
-      "view": "views/fields/entity-type"
+      "view": "views/action/fields/source-entity"
     },
     "conditionsType": {
       "type": "extensibleEnum",
