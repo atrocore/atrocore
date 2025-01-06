@@ -14,11 +14,12 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Relation;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ActionSetLinker extends Relation
 {
+    private ?int $sortOrder = null;
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!empty($setId = $entity->get('setId'))) {
@@ -33,8 +34,14 @@ class ActionSetLinker extends Relation
             throw new BadRequest("Action Set shouldn't be chosen.");
         }
 
+        if(empty($this->sortOrder)){
+            $this->sortOrder = time() - (new \DateTime('2024-01-01'))->getTimestamp();
+        }else{
+            $this->sortOrder = $this->sortOrder + 1;
+        }
+
         if ($entity->isNew()) {
-            $entity->set('sortOrder', time() - (new \DateTime('2024-01-01'))->getTimestamp());
+            $entity->set('sortOrder', $this->sortOrder);
         }
 
         parent::beforeSave($entity, $options);
