@@ -603,7 +603,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
                     let translatedOptions = {};
                     options.forEach(scope => {
-                        translatedOptions[scope] = this.translate(scope, 'scopeNames', 'Global');
+                        translatedOptions[scope] = this.translate(scope, 'scopeNamesPlural', 'Global');
                     });
 
                     this.createView('scopesEnum', 'views/fields/enum', {
