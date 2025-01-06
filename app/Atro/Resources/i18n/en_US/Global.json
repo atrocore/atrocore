@@ -2,7 +2,6 @@
   "scopeNames": {
     "Entity": "Entity",
     "EntityField": "Entity Field",
-    "EntityRelation": "Entity Relation",
     "Language": "Language",
     "EmailTemplate": "Email Template",
     "Storage": "Storage",
