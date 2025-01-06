@@ -46,7 +46,7 @@ Espo.define('views/record/compare-instance','views/record/compare', function (De
                 instances: this.instances,
                 columns: this.buildComparisonTableHeaderColumn(),
                 instanceComparison: this.instanceComparison,
-                models: [this.model, ...this.distantModels],
+                models: this.getModels(),
                 merging: this.merging,
                 el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
             }, view => {
@@ -70,5 +70,9 @@ Espo.define('views/record/compare-instance','views/record/compare', function (De
                 view.render();
             })
         },
+
+        getModels() {
+            return [this.model, ...this.distantModels];
+        }
     });
 });

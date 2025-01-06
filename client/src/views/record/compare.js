@@ -20,6 +20,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         relationshipsPanelsView: 'views/record/compare/relationships-panels',
 
+        panelNavigationView: 'views/record/compare/panel-navigation',
+
         buttonList: [],
 
         fieldsArr: [],
@@ -199,14 +201,19 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 instanceComparison: this.instanceComparison,
                 columns: this.buildComparisonTableHeaderColumn(),
                 merging: this.merging,
-                el: `${this.options.el} .compare-panel[data-name="relationshipsPanels"]`
+                el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`
             }, view => {
                 view.render();
                 if(view.isRendered()) {
                     this.handlePanelRendering('relationshipsPanels');
+                    this.createPanelNavigationView();
                 }
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.handlePanelRendering('relationshipsPanels');
+                });
+
+                this.listenTo(view, 'after:render', () => {
+                    this.createPanelNavigationView();
                 });
             }, true);
         },
@@ -294,7 +301,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 columns: column,
                 columnLength: column.length,
                 scope: this.scope,
-                id: this.id,
+                id: this.getId(),
                 merging: this.merging
             };
         },
@@ -433,6 +440,29 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }else{
                     $(this).prop('disabled', state)
                 }
+            });
+        },
+
+        getId() {
+            return this.simpleHash(JSON.stringify(this.getModels().map(m => m.id)));
+        },
+
+        getModels() {
+            return this.collection.models ?? [];
+        },
+
+        createPanelNavigationView() {
+            let panelList = this.getRelationshipPanels().map(m => {
+                m.title = m.label;
+                return m;
+            });
+
+            this.createView('panelDetailNavigation', this.panelNavigationView, {
+                panelList: panelList,
+                model: this.model,
+                el: this.options.el + ' #'+ this.getId() + ' .panel-navigation.panel-left',
+            }, function (view) {
+                view.render();
             });
         }
     });
