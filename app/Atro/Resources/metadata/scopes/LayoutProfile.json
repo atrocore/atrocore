@@ -15,5 +15,6 @@
     "layouts"
   ],
   "hideFieldTypeFilters": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "actionDisabled": true
 }

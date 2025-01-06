@@ -3,5 +3,6 @@
   "notificationDisabled": true,
   "bookmarkDisabled": true,
   "autoDeleteAfterDays": 21,
-  "clearDeletedAfterDays": 35
+  "clearDeletedAfterDays": 35,
+  "actionDisabled": true
 }

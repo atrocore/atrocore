@@ -589,6 +589,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         loadDynamicActions: function (display) {
+            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled'])) {
+                return;
+            }
+
             const $buttons = $(this.$el).find('.record-buttons')
 
             if (display === 'single') {
