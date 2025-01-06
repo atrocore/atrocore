@@ -105,9 +105,14 @@ class MassActions extends HasContainer
                     }
                 } else if (count($uniqueIndexes) > 0) {
                     foreach ($uniqueIndexes as $indexes) {
-                        if (array_reduce($indexes, fn($carry, $index) => $carry && $node->payload->{$index} !== null, true)) {
+                        if (array_reduce($indexes, fn($carry, $index) => $carry && property_exists($node->payload, $index) && $node->payload->{$index} !== null, true)) {
+                            $where = [];
                             foreach ($indexes as $index) {
-                                $whereClause[] = [$index => $node->payload->{$index}];
+                                $where[$index] = $node->payload->{$index};
+                            }
+
+                            if (!empty($where)) {
+                                $whereClause[] = $where;
                             }
                         }
                     }
