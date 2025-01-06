@@ -613,8 +613,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.model.fetchDynamicActions(display)
                 .then(actions => {
-                    $buttons.find('.dynamic-action').remove()
-
                     const dropdownItemList = [];
                     const additionalButtons = [];
                     actions.forEach(action => {
@@ -772,7 +770,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         afterRender: function () {
             this.loadDynamicActions('single')
 
-            this.listenTo(this.model, 'after:save', ()=> {
+            this.listenTo(this.model, 'after:save', () => {
                 this.loadDynamicActions('single')
             })
 
