@@ -19,6 +19,7 @@ use Espo\ORM\Entity;
 
 class ActionSetLinker extends Relation
 {
+    private ?int $sortOrder = null;
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!empty($setId = $entity->get('setId'))) {
@@ -33,21 +34,14 @@ class ActionSetLinker extends Relation
             throw new BadRequest("Action Set shouldn't be chosen.");
         }
 
+        if(empty($this->sortOrder)){
+            $this->sortOrder = time() - (new \DateTime('2024-01-01'))->getTimestamp();
+        }else{
+            $this->sortOrder = $this->sortOrder + 1;
+        }
+
         if ($entity->isNew()) {
-            $lastOrder = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('MAX(sort_order)')
-                ->from('action_set_linker')
-                ->where('set_id=:id')
-                ->andWhere('deleted=:false')
-                ->setParameter('id', $setId)
-                ->setParameter('false', 'false')
-                ->fetchOne();
-
-            if (empty($lastOrder)) {
-                $lastOrder = 0;
-            }
-
-            $entity->set('sortOrder', $lastOrder + 1);
+            $entity->set('sortOrder', $this->sortOrder);
         }
 
         parent::beforeSave($entity, $options);
