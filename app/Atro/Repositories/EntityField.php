@@ -66,10 +66,6 @@ class EntityField extends ReferenceData
                         $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
                     }
                     $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
-
-//                    "layoutDetailDisabled" => !$linkMultipleFieldForeign,
-//                    "massUpdateDisabled"   => !$linkMultipleFieldForeign,
-//                    "noLoad"               => !$linkMultipleFieldForeign,
                 }
 
                 $items[] = array_merge($fieldDefs, [
@@ -133,11 +129,108 @@ class EntityField extends ReferenceData
 
     protected function updateField(OrmEntity $entity, array $loadedData): void
     {
-        $saveMetadata = false;
-        $saveLanguage = false;
+        $saveMetadata = $entity->isNew();
+        $saveLanguage = $entity->isNew();
 
         if ($entity->isAttributeChanged('tooltipText') || $entity->isAttributeChanged('tooltipLink')) {
             $entity->set('tooltip', !empty($entity->get('tooltipText')) || !empty($entity->get('tooltipLink')));
+        }
+
+        if ($entity->isNew()) {
+            if ($entity->get('type') === 'link') {
+                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                    'links' => [
+                        $entity->get('code') => [
+                            'type'    => 'belongsTo',
+                            'foreign' => $entity->get('foreignCode'),
+                            'entity'  => $entity->get('foreignEntityId'),
+                        ]
+                    ]
+                ]);
+
+                $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                    'fields' => [
+                        $entity->get('foreignCode') => [
+                            'type'                 => 'linkMultiple',
+                            'noLoad'               => true,
+                            'layoutDetailDisabled' => true,
+                            'massUpdateDisabled'   => true,
+                            'isCustom'             => true
+                        ]
+                    ]
+                ]);
+                $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                    'links' => [
+                        $entity->get('foreignCode') => [
+                            'type'    => 'hasMany',
+                            'foreign' => $entity->get('code'),
+                            'entity'  => $entity->get('entityId'),
+                        ]
+                    ]
+                ]);
+            } elseif ($entity->get('type') === 'linkMultiple') {
+                if ($entity->get('relationType') === 'manyToMany') {
+                    $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                        'links' => [
+                            $entity->get('code') => [
+                                'type'         => 'hasMany',
+                                'foreign'      => $entity->get('foreignCode'),
+                                'relationName' => $entity->get('relationName'),
+                                'entity'       => $entity->get('foreignEntityId'),
+                            ]
+                        ]
+                    ]);
+
+                    $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                        'fields' => [
+                            $entity->get('foreignCode') => [
+                                'type'                 => 'linkMultiple',
+                                'noLoad'               => true,
+                                'layoutDetailDisabled' => true,
+                                'massUpdateDisabled'   => true,
+                                'isCustom'             => true
+                            ]
+                        ]
+                    ]);
+                    $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                        'links' => [
+                            $entity->get('foreignCode') => [
+                                'type'         => 'hasMany',
+                                'foreign'      => $entity->get('code'),
+                                'relationName' => $entity->get('relationName'),
+                                'entity'       => $entity->get('entityId'),
+                            ]
+                        ]
+                    ]);
+                } else {
+                    $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                        'links' => [
+                            $entity->get('code') => [
+                                'type'    => 'hasMany',
+                                'foreign' => $entity->get('foreignCode'),
+                                'entity'  => $entity->get('foreignEntityId'),
+                            ]
+                        ]
+                    ]);
+
+                    $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                        'fields' => [
+                            $entity->get('foreignCode') => [
+                                'type' => 'link'
+                            ]
+                        ]
+                    ]);
+                    $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                        'links' => [
+                            $entity->get('foreignCode') => [
+                                'type'    => 'belongsTo',
+                                'foreign' => $entity->get('code'),
+                                'entity'  => $entity->get('entityId'),
+                            ]
+                        ]
+                    ]);
+                }
+            }
         }
 
         foreach ($entity->toArray() as $field => $value) {
@@ -146,12 +239,21 @@ class EntityField extends ReferenceData
             }
 
             if (in_array($field, ['name'])) {
-//                $category = $field === 'namePlural' ? 'scopeNamesPlural' : 'scopeNames';
-//                $this->getLanguage()->set('Global', $category, $entity->get('code'), $entity->get($field));
-//                $saveLanguage = true;
+                $this->getLanguage()->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get($field));
+                $saveLanguage = true;
             } elseif ($field === 'tooltipText') {
                 $this->getLanguage()->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $value);
                 $saveLanguage = true;
+            } elseif ($field === 'linkMultipleFieldForeign') {
+                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                    'fields' => [
+                        $entity->get('code') => [
+                            'noLoad'               => empty($entity->get($field)),
+                            'layoutDetailDisabled' => empty($entity->get($field)),
+                            'massUpdateDisabled'   => empty($entity->get($field))
+                        ]
+                    ]
+                ]);
             } else {
                 $loadedVal = $loadedData['entityDefs'][$entity->get('code')][$field] ?? null;
                 if ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields', $field, 'type']) === 'bool') {
