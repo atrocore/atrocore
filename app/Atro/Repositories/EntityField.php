@@ -109,6 +109,15 @@ class EntityField extends ReferenceData
             if ($this->getMetadata()->get("entityDefs.{$entity->get('foreignEntityId')}.fields.{$entity->get('foreignCode')}")) {
                 throw new Conflict("Entity field '{$entity->get('foreignCode')}' is already exists.");
             }
+
+            if ($entity->get('type') === 'linkMultiple') {
+                if (
+                    empty($entity->get('relationName'))
+                    || !preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $entity->get('relationName'))
+                ) {
+                    throw new BadRequest("Middle Table Name is invalid.");
+                }
+            }
         }
 
         $entity->id = "{$entity->get('entityId')}_{$entity->get('code')}";
@@ -126,12 +135,24 @@ class EntityField extends ReferenceData
             throw new BadRequest("Code cannot be changed.");
         }
 
+        if ($entity->isAttributeChanged('foreignCode')) {
+            throw new BadRequest("Foreign Code cannot be changed.");
+        }
+
         if ($entity->isAttributeChanged('type')) {
             throw new BadRequest("Type cannot be changed.");
         }
 
         if ($entity->isAttributeChanged('entityId')) {
             throw new BadRequest("Entity cannot be changed.");
+        }
+
+        if ($entity->isAttributeChanged('foreignEntityId')) {
+            throw new BadRequest("Foreign Entity cannot be changed.");
+        }
+
+        if ($entity->isAttributeChanged('relationName')) {
+            throw new BadRequest("Middle Table Name cannot be changed.");
         }
 
         $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
@@ -253,11 +274,14 @@ class EntityField extends ReferenceData
             }
 
             if (in_array($field, ['name'])) {
-                $this->getLanguage()->set($entity->get('entityId'), 'fields', $entity->get('code'),
-                    $entity->get($field));
+                $this
+                    ->getLanguage()
+                    ->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get($field));
                 $saveLanguage = true;
             } elseif ($field === 'tooltipText') {
-                $this->getLanguage()->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $value);
+                $this
+                    ->getLanguage()
+                    ->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $value);
                 $saveLanguage = true;
             } elseif ($field === 'linkMultipleFieldForeign') {
                 $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
