@@ -157,6 +157,7 @@ class EntityField extends ReferenceData
 
         $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
 
+        $entity->set('isCustom', true);
         $this->updateField($entity, $loadedData);
 
         return true;
@@ -337,7 +338,7 @@ class EntityField extends ReferenceData
         $name = $entity->get('code');
 
         if (empty($this->getMetadata()->get("entityDefs.$scope.fields.$name.isCustom"))) {
-            return false;
+            return true;
         }
 
         $foreignScope = $this->getMetadata()->get("entityDefs.$scope.links.$name.entity");

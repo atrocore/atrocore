@@ -131,6 +131,10 @@
                 "link",
                 "linkMultiple"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "id"
             }
           ]
         }
