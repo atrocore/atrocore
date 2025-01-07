@@ -74,7 +74,8 @@ class EntityField extends ReferenceData
                     'name'        => $this->translate($fieldName, 'fields', $entityName),
                     'entityId'    => $entityName,
                     'entityName'  => $this->translate($entityName, 'scopeNames'),
-                    'tooltipText' => !empty($fieldDefs['tooltip']) ? $this->translate($fieldName, 'tooltips', $entityName) : null,
+                    'tooltipText' => !empty($fieldDefs['tooltip']) ? $this->translate($fieldName, 'tooltips',
+                        $entityName) : null,
                     'tooltipLink' => !empty($fieldDefs['tooltip']) && !empty($fieldDefs['tooltipLink']) ? $fieldDefs['tooltipLink'] : null,
                 ]);
             }
@@ -95,6 +96,19 @@ class EntityField extends ReferenceData
 
         if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}")) {
             throw new Conflict("Entity field '{$entity->get('code')}' is already exists.");
+        }
+
+        if (in_array($entity->get('type'), ['link', 'linkMultiple'])) {
+            if (
+                empty($entity->get('foreignCode'))
+                || !preg_match('/^[a-z][A-Za-z0-9]*$/', $entity->get('foreignCode'))
+            ) {
+                throw new BadRequest("Foreign Code is invalid.");
+            }
+
+            if ($this->getMetadata()->get("entityDefs.{$entity->get('foreignEntityId')}.fields.{$entity->get('foreignCode')}")) {
+                throw new Conflict("Entity field '{$entity->get('foreignCode')}' is already exists.");
+            }
         }
 
         $entity->id = "{$entity->get('entityId')}_{$entity->get('code')}";
@@ -239,7 +253,8 @@ class EntityField extends ReferenceData
             }
 
             if (in_array($field, ['name'])) {
-                $this->getLanguage()->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get($field));
+                $this->getLanguage()->set($entity->get('entityId'), 'fields', $entity->get('code'),
+                    $entity->get($field));
                 $saveLanguage = true;
             } elseif ($field === 'tooltipText') {
                 $this->getLanguage()->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $value);
