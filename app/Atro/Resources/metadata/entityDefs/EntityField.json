@@ -11,12 +11,27 @@
       "trim": true,
       "unique": true
     },
+    "foreignCode": {
+      "type": "varchar",
+      "trim": true
+    },
     "type": {
       "type": "varchar",
       "required": true,
       "view": "views/admin/field-manager/fields/type"
     },
+    "relationType": {
+      "type": "enum",
+      "options": [
+        "oneToMany",
+        "manyToMany"
+      ]
+    },
     "entity": {
+      "type": "link",
+      "required": true
+    },
+    "foreignEntity": {
       "type": "link",
       "required": true
     },
@@ -161,6 +176,14 @@
       "tooltip": true,
       "view": "views/admin/field-manager/fields/foreign-name"
     },
+    "relationName": {
+      "type": "varchar",
+      "trim": true
+    },
+    "linkMultipleFieldForeign": {
+      "type": "bool",
+      "tooltip": true
+    },
     "fileTypes": {
       "type": "array",
       "view": "views/admin/field-manager/fields/file-types"
@@ -243,6 +266,10 @@
     "entity": {
       "type": "belongsTo",
       "foreign": "fields",
+      "entity": "Entity"
+    },
+    "foreignEntity": {
+      "type": "belongsTo",
       "entity": "Entity"
     },
     "measure": {

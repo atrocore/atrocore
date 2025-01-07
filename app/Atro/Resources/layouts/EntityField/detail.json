@@ -243,5 +243,44 @@
         }
       ]
     ]
+  },
+  {
+    "label": "relationManagement",
+    "dynamicLogicVisible": {
+      "conditionGroup": [
+        {
+          "type": "in",
+          "attribute": "type",
+          "value": [
+            "link",
+            "linkMultiple"
+          ]
+        }
+      ]
+    },
+    "rows": [
+      [
+        {
+          "name": "relationType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "foreignEntity"
+        },
+        {
+          "name": "foreignCode"
+        }
+      ],
+      [
+        {
+          "name": "relationName"
+        },
+        {
+          "name": "linkMultipleFieldForeign"
+        }
+      ]
+    ]
   }
 ]

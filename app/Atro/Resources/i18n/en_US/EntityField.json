@@ -43,7 +43,12 @@
     "strip": "Strip",
     "height": "Height (px)",
     "useIframe": "Use iframe in view mode",
-    "htmlSanitizer": "HTML Sanitizer"
+    "htmlSanitizer": "HTML Sanitizer",
+    "foreignCode": "Foreign Code",
+    "relationType": "Relation Type",
+    "foreignEntity": "Foreign Entity",
+    "relationName": "Middle Entity Name",
+    "linkMultipleFieldForeign": "Foreign Link Multiple Field"
   },
   "links": {
     "entity": "Entity",
@@ -62,7 +67,8 @@
     "max": "Max acceptable value.",
     "foreignName": "Field to be shown in the relation.",
     "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
-    "lengthOfCut": "Excessive characters will be hidden in the view mode."
+    "lengthOfCut": "Excessive characters will be hidden in the view mode.",
+    "linkMultipleFieldForeign": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records."
   },
   "options": {
     "previewSize": {
@@ -77,6 +83,10 @@
       "bool": "Boolean",
       "date": "Date",
       "datetime": "Date-time"
+    },
+    "relationType": {
+      "oneToMany": "One-to-Many",
+      "manyToMany": "Many-to-Many"
     }
   },
   "confirmations": {
@@ -84,6 +94,7 @@
   },
   "labels": {
     "Create Entity Field": "Create Entity Field",
-    "resetToDefault": "Reset to default"
+    "resetToDefault": "Reset to default",
+    "relationManagement": "Relation Management"
   }
 }

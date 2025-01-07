@@ -34,6 +34,105 @@
             }
           ]
         }
+      },
+      "relationType": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      },
+      "foreignEntity": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      },
+      "foreignCode": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      },
+      "relationName": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      },
+      "linkMultipleFieldForeign": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
       }
     }
   }
