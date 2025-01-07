@@ -32,8 +32,7 @@
       "required": true
     },
     "foreignEntity": {
-      "type": "link",
-      "required": true
+      "type": "link"
     },
     "isMultilang": {
       "type": "bool",

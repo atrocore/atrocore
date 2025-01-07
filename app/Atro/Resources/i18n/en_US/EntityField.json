@@ -47,7 +47,7 @@
     "foreignCode": "Foreign Code",
     "relationType": "Relation Type",
     "foreignEntity": "Foreign Entity",
-    "relationName": "Middle Entity Name",
+    "relationName": "Middle Table Name",
     "linkMultipleFieldForeign": "Foreign Link Multiple Field"
   },
   "links": {

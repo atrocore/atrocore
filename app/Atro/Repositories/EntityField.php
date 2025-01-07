@@ -54,14 +54,31 @@ class EntityField extends ReferenceData
                     $fieldDefs[$boolField] = !empty($fieldDefs[$boolField]);
                 }
 
+                if (in_array($fieldDefs['type'], ['link', 'linkMultiple'])) {
+                    $linkDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'links', $fieldName], []);
+                    if ($fieldDefs['type'] === 'linkMultiple') {
+                        $fieldDefs['relationType'] = !empty($linkDefs['relationName']) ? 'manyToMany' : 'oneToMany';
+                        $fieldDefs['relationName'] = $linkDefs['relationName'] ?? null;
+                        $fieldDefs['linkMultipleFieldForeign'] = empty($fieldDefs['noLoad']);
+                    }
+                    if (!empty($linkDefs['entity'])) {
+                        $fieldDefs['foreignEntityId'] = $linkDefs['entity'];
+                        $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
+                    }
+                    $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
+
+//                    "layoutDetailDisabled" => !$linkMultipleFieldForeign,
+//                    "massUpdateDisabled"   => !$linkMultipleFieldForeign,
+//                    "noLoad"               => !$linkMultipleFieldForeign,
+                }
+
                 $items[] = array_merge($fieldDefs, [
                     'id'          => "{$entityName}_{$fieldName}",
                     'code'        => $fieldName,
-                    'name'        => $this->getLanguage()->translate($fieldName, 'fields', $entityName),
+                    'name'        => $this->translate($fieldName, 'fields', $entityName),
                     'entityId'    => $entityName,
-                    'entityName'  => $this->getLanguage()->translate($entityName, 'scopeNames'),
-                    'tooltipText' => !empty($fieldDefs['tooltip']) ?
-                        $this->getLanguage()->translate($fieldName, 'tooltips', $entityName) : null,
+                    'entityName'  => $this->translate($entityName, 'scopeNames'),
+                    'tooltipText' => !empty($fieldDefs['tooltip']) ? $this->translate($fieldName, 'tooltips', $entityName) : null,
                     'tooltipLink' => !empty($fieldDefs['tooltip']) && !empty($fieldDefs['tooltipLink']) ? $fieldDefs['tooltipLink'] : null,
                 ]);
             }
@@ -193,6 +210,11 @@ class EntityField extends ReferenceData
     protected function getLanguage(): Language
     {
         return $this->getInjection('language');
+    }
+
+    protected function translate(string $label, ?string $category = 'labels', ?string $scope = 'Global'): string
+    {
+        return $this->getLanguage()->translate($label, $category, $scope);
     }
 
     protected function getDataManager(): DataManager

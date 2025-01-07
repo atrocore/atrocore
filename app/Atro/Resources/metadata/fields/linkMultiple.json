@@ -36,7 +36,6 @@
   "notActualFields": [
     "names"
   ],
-  "notCreatable": true,
   "notSortable": true,
   "filter": true
 }

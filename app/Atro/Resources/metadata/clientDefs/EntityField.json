@@ -54,6 +54,17 @@
               ]
             }
           ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            }
+          ]
         }
       },
       "foreignEntity": {
@@ -66,6 +77,18 @@
           ]
         },
         "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        },
+        "required": {
           "conditionGroup": [
             {
               "type": "in",
@@ -98,6 +121,18 @@
               ]
             }
           ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
         }
       },
       "relationName": {
@@ -117,6 +152,31 @@
               "value": [
                 "linkMultiple"
               ]
+            },
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
+              ]
             }
           ]
         }
@@ -129,6 +189,13 @@
               "attribute": "type",
               "value": [
                 "linkMultiple"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
               ]
             }
           ]
