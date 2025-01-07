@@ -268,31 +268,6 @@ class EntityField extends ReferenceData
             }
         }
 
-        if ($entity->isAttributeChanged('name')) {
-            $this->getLanguage()
-                ->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get('name'));
-            $saveLanguage = true;
-        }
-
-        if ($entity->isAttributeChanged('tooltipText')) {
-            $this->getLanguage()
-                ->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $entity->get('tooltipText'));
-            $saveLanguage = true;
-        }
-
-        if ($entity->isAttributeChanged('linkMultipleFieldForeign')) {
-            $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
-                'fields' => [
-                    $entity->get('code') => [
-                        'noLoad'               => empty($entity->get('linkMultipleFieldForeign')),
-                        'layoutDetailDisabled' => empty($entity->get('linkMultipleFieldForeign')),
-                        'massUpdateDisabled'   => empty($entity->get('linkMultipleFieldForeign'))
-                    ]
-                ]
-            ]);
-            $saveMetadata = true;
-        }
-
         $commonFields = ['tooltipLink', 'type', 'isCustom'];
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
@@ -318,6 +293,31 @@ class EntityField extends ReferenceData
                     ]
                 ]);
             }
+            $saveMetadata = true;
+        }
+
+        if ($entity->isAttributeChanged('name')) {
+            $this->getLanguage()
+                ->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get('name'));
+            $saveLanguage = true;
+        }
+
+        if ($entity->isAttributeChanged('tooltipText')) {
+            $this->getLanguage()
+                ->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $entity->get('tooltipText'));
+            $saveLanguage = true;
+        }
+
+        if ($entity->get('type') === 'linkMultiple' && $entity->isAttributeChanged('linkMultipleFieldForeign')) {
+            $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                'fields' => [
+                    $entity->get('code') => [
+                        'noLoad'               => empty($entity->get('linkMultipleFieldForeign')),
+                        'layoutDetailDisabled' => empty($entity->get('linkMultipleFieldForeign')),
+                        'massUpdateDisabled'   => empty($entity->get('linkMultipleFieldForeign'))
+                    ]
+                ]
+            ]);
             $saveMetadata = true;
         }
 
