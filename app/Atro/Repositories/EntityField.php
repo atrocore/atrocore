@@ -268,50 +268,57 @@ class EntityField extends ReferenceData
             }
         }
 
-        foreach ($entity->toArray() as $field => $value) {
-            if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code'])) {
+        if ($entity->isAttributeChanged('name')) {
+            $this->getLanguage()
+                ->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get('name'));
+            $saveLanguage = true;
+        }
+
+        if ($entity->isAttributeChanged('tooltipText')) {
+            $this->getLanguage()
+                ->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $entity->get('tooltipText'));
+            $saveLanguage = true;
+        }
+
+        if ($entity->isAttributeChanged('linkMultipleFieldForeign')) {
+            $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                'fields' => [
+                    $entity->get('code') => [
+                        'noLoad'               => empty($entity->get('linkMultipleFieldForeign')),
+                        'layoutDetailDisabled' => empty($entity->get('linkMultipleFieldForeign')),
+                        'massUpdateDisabled'   => empty($entity->get('linkMultipleFieldForeign'))
+                    ]
+                ]
+            ]);
+            $saveMetadata = true;
+        }
+
+        $commonFields = ['tooltipLink', 'type', 'isCustom'];
+        $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
+
+        foreach (array_merge($commonFields, $typeFields) as $field) {
+            if (!$entity->isAttributeChanged($field)) {
                 continue;
             }
 
-            if (in_array($field, ['name'])) {
-                $this
-                    ->getLanguage()
-                    ->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get($field));
-                $saveLanguage = true;
-            } elseif ($field === 'tooltipText') {
-                $this
-                    ->getLanguage()
-                    ->set($entity->get('entityId'), 'tooltips', $entity->get('code'), $value);
-                $saveLanguage = true;
-            } elseif ($field === 'linkMultipleFieldForeign') {
+            $loadedVal = $loadedData['entityDefs'][$entity->get('code')][$field] ?? null;
+            if ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields', $field, 'type']) === 'bool') {
+                $loadedVal = !empty($loadedVal);
+            }
+            if ($loadedVal === $entity->get($field)) {
+                $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                    "fields.{$entity->get('code')}.{$field}"
+                ]);
+            } else {
                 $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                     'fields' => [
                         $entity->get('code') => [
-                            'noLoad'               => empty($entity->get($field)),
-                            'layoutDetailDisabled' => empty($entity->get($field)),
-                            'massUpdateDisabled'   => empty($entity->get($field))
+                            $field => $entity->get($field)
                         ]
                     ]
                 ]);
-            } else {
-                $loadedVal = $loadedData['entityDefs'][$entity->get('code')][$field] ?? null;
-                if ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields', $field, 'type']) === 'bool') {
-                    $loadedVal = !empty($loadedVal);
-                }
-                if ($loadedVal === $entity->get($field)) {
-                    $this->getMetadata()->delete('entityDefs', $entity->get('entityId'),
-                        ["fields.{$entity->get('code')}.{$field}"]);
-                } else {
-                    $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
-                        'fields' => [
-                            $entity->get('code') => [
-                                $field => $entity->get($field)
-                            ]
-                        ]
-                    ]);
-                }
-                $saveMetadata = true;
             }
+            $saveMetadata = true;
         }
 
         if ($saveMetadata) {
@@ -331,6 +338,14 @@ class EntityField extends ReferenceData
 
         if (empty($this->getMetadata()->get("entityDefs.$scope.fields.$name.isCustom"))) {
             return false;
+        }
+
+        $foreignScope = $this->getMetadata()->get("entityDefs.$scope.links.$name.entity");
+        if (!empty($foreignScope)) {
+            $foreign = $this->getMetadata()->get("entityDefs.$scope.links.$name.foreign");
+            if (!empty($foreign)) {
+                $this->getMetadata()->delete('entityDefs', $foreignScope, ["fields.$foreign", "links.$foreign"]);
+            }
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);

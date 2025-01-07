@@ -28,6 +28,14 @@
     {
       "name": "readOnly",
       "type": "bool"
+    },
+    {
+      "name": "relationName",
+      "type": "varchar"
+    },
+    {
+      "name": "linkMultipleFieldForeign",
+      "type": "bool"
     }
   ],
   "actualFields": [
