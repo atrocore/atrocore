@@ -79,12 +79,6 @@
             "type": "bool",
             "tooltip": true
         },
-        "scopeColorsDisabled": {
-            "type": "bool"
-        },
-        "tabColorsDisabled": {
-            "type": "bool"
-        },
         "closedPanelOptions": {
             "type": "jsonObject"
         },

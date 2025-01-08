@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "Entity": "Entity",
+    "EntityField": "Entity Field",
     "Language": "Language",
     "EmailTemplate": "Email Template",
     "Storage": "Storage",
@@ -62,6 +64,9 @@
     "Bookmark": "Bookmark"
   },
   "scopeNamesPlural": {
+    "Entity": "Entities",
+    "EntityField": "Entity Fields",
+    "EntityRelation": "Entity Relations",
     "Language": "Languages",
     "EmailTemplate": "Email Templates",
     "Storage": "Storages",

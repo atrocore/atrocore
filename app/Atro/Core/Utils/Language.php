@@ -145,6 +145,7 @@ class Language
                 $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode($key);
                 if (empty($label)) {
                     $label = $this->getEntityManager()->getRepository('Translation')->get();
+                    $label->id = md5($key);
                     $label->set(['code' => $key, 'module' => 'custom']);
                 }
                 $label->set('isCustomized', true);

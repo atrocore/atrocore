@@ -63,22 +63,8 @@
     }
   },
   "tooltips": {
-    "isMultilang": "Création automatique de champs par clonage du champ actuel autant de fois qu'il y a de langues activées dans les Paramètres multi-langues.",
-    "required": "Le champ sera obligatoire. Il ne peut être laissé vide.",
     "fontSize": "Taille de la police en em (par rapport à la taille de la police actuelle).",
-    "isSorted": "Les options seront triées après l'enregistrement.",
-    "default": "La valeur sera définie par défaut lors de la création.",
-    "after": "La valeur de la date doit être postérieure à la valeur de la date du champ spécifié.",
-    "maxLength": "Longueur maximale acceptable du texte.",
-    "min": "Valeur minimale acceptable.",
-    "max": "Valeur maximale acceptable.",
-    "seeMoreDisabled": "Si cette case n'est pas cochée, les textes longs à afficher seront raccourcis.",
-    "lengthOfCut": "Les caractères en trop seront masqués dans le mode d'affichage.",
-    "before": "La valeur de la date doit être antérieure à la valeur de la date du champ spécifié.",
-    "readOnly": "La valeur du champ ne peut pas être spécifiée par l'utilisateur.",
     "maxFileSize": "Si vide ou 0, il n'y a pas de limite.",
-    "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
-    "foreignName": "Champ à indiquer dans la relation."
   },
   "messages": {
     "defaultValidationFailed": "La valeur par défaut ne peut pas contenir de caractères spéciaux"

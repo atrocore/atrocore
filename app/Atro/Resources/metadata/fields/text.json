@@ -1,65 +1,69 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name": "notNull",
-         "type": "bool",
-         "default": false
-      },
-      {
-         "name":"default",
-         "type":"text"
-      },
-      {
-         "name":"maxLength",
-         "type":"int"
-      },
-      {
-         "name":"countBytesInsteadOfCharacters",
-         "type":"bool"
-      },
-      {
-         "name":"seeMoreDisabled",
-         "type":"bool",
-         "tooltip": true
-      },
-      {
-         "name": "rowsMin",
-         "type": "int",
-         "default": 2,
-         "min": 1
-      },
-      {
-         "name": "rowsMax",
-         "type": "int",
-         "default": 10,
-         "min": 1
-      },
-      {
-         "name": "lengthOfCut",
-         "type": "int",
-         "default": 400,
-         "min": 1,
-         "tooltip": true
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
-         "name":"useDisabledTextareaInViewMode",
-         "type": "bool",
-         "default":false
-      }
-   ],
-   "filter": true,
-   "auditable": true,
-   "qbFilterType": "string",
-   "multilingual": true,
-   "personalData": true,
-   "textFilter": true
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "text"
+    },
+    {
+      "name": "maxLength",
+      "type": "int"
+    },
+    {
+      "name": "countBytesInsteadOfCharacters",
+      "type": "bool"
+    },
+    {
+      "name": "seeMoreDisabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    {
+      "name": "rowsMin",
+      "type": "int",
+      "default": 2,
+      "min": 1
+    },
+    {
+      "name": "rowsMax",
+      "type": "int",
+      "default": 10,
+      "min": 1
+    },
+    {
+      "name": "lengthOfCut",
+      "type": "int",
+      "default": 400,
+      "min": 1,
+      "tooltip": true
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "useDisabledTextareaInViewMode",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "qbFilterType": "string",
+  "personalData": true,
+  "textFilter": true
 }

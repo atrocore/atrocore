@@ -63,22 +63,8 @@
     }
   },
   "tooltips": {
-    "isMultilang": "Automatyczne tworzenie pól poprzez klonowanie bieżącego pola tyle razy, ile jest aktywowanych języków w ustawieniach wielojęzycznych.",
     "fontSize": "Rozmiar czcionki w em (względem bieżącego rozmiaru czcionki).",
-    "isSorted": "Opcje zostaną posortowane po zapisaniu.",
-    "required": "Pole będzie obowiązkowe. Nie może pozostać puste.",
-    "default": "Wartość zostanie ustawiona domyślnie podczas tworzenia.",
-    "min": "Minimalna dopuszczalna wartość.",
-    "max": "Maksymalna dopuszczalna wartość.",
-    "seeMoreDisabled": "Jeśli nie zaznaczone, długie teksty do wyświetlenia zostaną skrócone.",
-    "lengthOfCut": "Zbyt długie znaki będą ukryte w trybie widoku.",
-    "maxLength": "Maksymalna dopuszczalna długość tekstu.",
-    "before": "Wartość daty powinna być przed wartością daty określonego pola.",
-    "after": "Wartość daty powinna być po wartości daty określonego pola.",
-    "readOnly": "Wartość pola nie może być określana przez użytkownika.",
-    "maxFileSize": "Jeśli puste lub 0, to brak limitu.",
-    "pattern": "Aby umożliwić tylko duże litery o długości 10 znaków, użyj \"/^[A-Z]{1,10}$/\"",
-    "foreignName": "Pole do pokazania w relacji."
+    "maxFileSize": "Jeśli puste lub 0, to brak limitu."
   },
   "fieldParts": {
     "unit": {

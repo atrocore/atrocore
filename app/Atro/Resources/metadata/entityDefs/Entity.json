@@ -1,0 +1,197 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "namePlural": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "code": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/code",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "Base",
+        "Hierarchy",
+        "ReferenceData"
+      ]
+    },
+    "iconClass": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/icon-class"
+    },
+    "color": {
+      "type": "color"
+    },
+    "sortBy": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/sort-by"
+    },
+    "sortDirection": {
+      "type": "enum",
+      "options": [
+        "asc",
+        "desc"
+      ]
+    },
+    "textFilterFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/text-filter-fields",
+      "tooltip": true
+    },
+    "statusField": {
+      "type": "varchar",
+      "view": "views/admin/entity-manager/fields/status-field",
+      "tooltip": true
+    },
+    "kanbanViewMode": {
+      "type": "bool"
+    },
+    "kanbanStatusIgnoreList": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/kanban-status-ignore-list"
+    },
+    "deleteWithoutConfirmation": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "clearDeletedAfterDays": {
+      "type": "int",
+      "tooltip": true
+    },
+    "autoDeleteAfterDays": {
+      "type": "int",
+      "tooltip": true
+    },
+    "modifiedExtendedRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/modified-extended-relations",
+      "tooltip": true
+    },
+    "duplicatableRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/duplicatable-relations"
+    },
+    "hasOwner": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "hasAssignedUser": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "hasTeam": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "hasAccount": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "multiParents": {
+      "type": "bool"
+    },
+    "dragAndDrop": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "fieldValueInheritance": {
+      "type": "bool"
+    },
+    "unInheritedFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/un-inherited-fields",
+      "tooltip": true
+    },
+    "relationInheritance": {
+      "type": "bool",
+      "default": false
+    },
+    "disableHierarchy": {
+      "type": "bool",
+      "default": false
+    },
+    "unInheritedRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/un-inherited-relations",
+      "tooltip": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "disabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "hasActive": {
+      "type": "bool"
+    },
+    "hasArchive": {
+      "type": "bool"
+    },
+    "hideFieldTypeFilters": {
+      "type": "bool"
+    },
+    "streamDisabled": {
+      "type": "bool"
+    },
+    "isCustom": {
+      "type": "bool",
+      "readOnly": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "fields": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "fields": {
+      "type": "hasMany",
+      "foreign": "entity",
+      "entity": "EntityField"
+    }
+  },
+  "collection": {
+    "sortBy": "code",
+    "asc": true
+  }
+}

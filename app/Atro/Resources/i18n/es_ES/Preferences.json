@@ -13,9 +13,7 @@
     "dashboardLayout": "Diseño del escritorio",
     "followEntityOnStreamPost": "Seguimiento automático después de publicar en la historia",
     "followCreatedEntities": "Seguimiento automático de registros creados",
-    "assignmentNotifications": "Notifications upon assignment",
-    "scopeColorsDisabled": "Disable scope colors",
-    "tabColorsDisabled": "Disable tab icons colors"
+    "assignmentNotifications": "Notifications upon assignment"
   },
   "links": {
   },

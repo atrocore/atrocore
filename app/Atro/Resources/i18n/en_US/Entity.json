@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "name": "Name Singular",
+    "namePlural": "Name Plural",
+    "disabled": "Disabled",
+    "hasArchive": "Archivable",
+    "hasActive": "Activatable",
+    "hideFieldTypeFilters": "Hide field type filters",
+    "streamDisabled": "Disable Track changes",
+    "iconClass": "Icon",
+    "color": "Color",
+    "sortBy": "Default Order (field)",
+    "sortDirection": "Default Order (direction)",
+    "textFilterFields": "Text Filter Fields",
+    "statusField": "Status Field",
+    "kanbanViewMode": "Kanban View",
+    "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
+    "deleteWithoutConfirmation": "Delete without confirmation",
+    "autoDeleteAfterDays": "Auto-delete period, in days",
+    "clearDeletedAfterDays": "Permanent deletion period, days",
+    "modifiedExtendedRelations": "Relations effecting modification date/time",
+    "duplicatableRelations": "Duplicatable Relations",
+    "hasAssignedUser": "Assigned User",
+    "hasTeam": "Teams",
+    "hasAccount": "Accounts",
+    "hasOwner": "Owner",
+    "multiParents": "Multiple Parents",
+    "dragAndDrop": "Drag & Drop",
+    "fieldValueInheritance": "Field Value Inheritance",
+    "unInheritedFields": "Uninherited Fields",
+    "relationInheritance": "Relation Inheritance",
+    "unInheritedRelations": "Uninherited Relations",
+    "disableHierarchy": "Disable Hierarchy"
+  },
+  "options": {
+    "type": {
+      "Base": "Base",
+      "Hierarchy": "Hierarchy",
+      "ReferenceData": "Reference Data"
+    },
+    "sortDirection": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    }
+  },
+  "labels": {
+    "Create Entity": "Create Entity",
+    "accessManagement": "Access management",
+    "hierarchyManagement": "Hierarchy Management",
+    "other": "Other",
+    "resetToDefault": "Reset to default"
+  },
+  "confirmations": {
+    "resetToDefault": "Are you sure you want to reset configuration to default?"
+  },
+  "tooltips": {
+    "disabled": "Check if you don't need this entity in your system.",
+    "textFilterFields": "Fields used by text search.",
+    "statusField": "Updates of this field are logged in stream.",
+    "deleteWithoutConfirmation": "If checked, the individual record is deleted without user confirmation. Deletion of multiple records is still  to be confirmed.",
+    "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time.",
+    "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
+    "unInheritedFields": "Values for these fields will not be inherited from parent item.",
+    "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",
+    "hasAssignedUser": "Show Assigned User in Access Management",
+    "hasTeam": "Show Teams in Access Management",
+    "hasAccount": "Show Accounts in Access Management",
+    "hasOwner": "Show Owner in Access Management"
+  }
+}

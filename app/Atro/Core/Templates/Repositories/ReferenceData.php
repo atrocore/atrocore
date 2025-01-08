@@ -109,10 +109,6 @@ class ReferenceData extends Repository implements Injectable
         $items = $this->getAllItems();
         $items[$entity->get('code')] = $item;
 
-        if (!is_dir(self::DIR_PATH)) {
-            mkdir(self::DIR_PATH);
-        }
-
         return $this->saveDataToFile($items);
     }
 
@@ -311,6 +307,16 @@ class ReferenceData extends Repository implements Injectable
         return $collection;
     }
 
+    public function findRelated(Entity $entity, string $link, array $selectParams): EntityCollection
+    {
+        return new EntityCollection();
+    }
+
+    public function countRelated(Entity $entity, string $relationName, array $params = []): int
+    {
+        return 0;
+    }
+
     public function findByIds(array $ids)
     {
         $result = $this->getAllItems();
@@ -362,6 +368,10 @@ class ReferenceData extends Repository implements Injectable
 
     protected function saveDataToFile(array $data): bool
     {
+        if (!is_dir(self::DIR_PATH)) {
+            mkdir(self::DIR_PATH);
+        }
+
         return !is_bool(file_put_contents($this->filePath, json_encode($data)));
     }
 

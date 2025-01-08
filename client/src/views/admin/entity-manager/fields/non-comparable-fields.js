@@ -24,13 +24,13 @@ Espo.define('views/admin/entity-manager/fields/non-comparable-fields', 'views/fi
         setupOptions() {
             this.params.options = [];
             this.translatedOptions = {};
-            $.each((this.getMetadata().get(['entityDefs', this.model.get('name'), 'fields']) || {}), (field, fieldDefs) => {
+            $.each((this.getMetadata().get(['entityDefs', this.model.get('code'), 'fields']) || {}), (field, fieldDefs) => {
                 if (
                     fieldDefs.type !== 'jsonArray'
                     && fieldDefs.emHidden !== true
                 ) {
                     this.params.options.push(field);
-                    this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('name'));
+                    this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('code'));
                 }
             });
 

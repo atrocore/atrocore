@@ -16,8 +16,7 @@
     },
     {
       "name": "defaultUnit",
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
+      "type": "varchar"
     },
     {
       "name": "minFrom",

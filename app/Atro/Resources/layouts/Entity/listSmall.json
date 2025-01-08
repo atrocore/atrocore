@@ -1,0 +1,21 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "disabled"
+  },
+  {
+    "name": "hasActive"
+  },
+  {
+    "name": "hasArchive"
+  }
+]

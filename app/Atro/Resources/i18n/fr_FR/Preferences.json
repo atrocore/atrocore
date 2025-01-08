@@ -16,8 +16,6 @@
     "followCreatedEntities": "Suivi automatique des enregistrements créés",
     "layoutProfile": "Profil de la mise en page",
     "notificationProfile": "Profil de notification",
-    "scopeColorsDisabled": "Désactiver les couleurs de l'oscilloscope",
-    "tabColorsDisabled": "Désactiver les couleurs des icônes des onglets",
     "hideFeedbackIcon": "Cacher l'icône de retour d'information",
     "receiveNotifications": "Recevoir des notifications"
   },

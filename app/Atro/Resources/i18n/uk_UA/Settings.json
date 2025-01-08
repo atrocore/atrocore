@@ -36,8 +36,6 @@
     "followCreatedEntities": "Підписуватися на створювані об'єкти",
     "adminNotifications": "Системні повідомлення на панелі адміністрування",
     "authTokenPreventConcurrent": "Тільки один токен аутентифікації для кожного користувача",
-    "scopeColorsDisabled": "Вимкнути кольори меж",
-    "tabColorsDisabled": "Вимкнути кольори вкладок",
     "tabIconsDisabled": "Вимкнути значки вкладок",
     "textFilterUseContainsForVarchar": "Використовувати оператор 'містить' при фільтрації полів varchar",
     "emailAddressIsOptedOutByDefault": "Відзначити нові адреси ел. пошти як ті, які не беруть участі в ел. розсилці",

@@ -1,0 +1,295 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/name",
+      "required": true,
+      "trim": true
+    },
+    "code": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/code",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
+    "foreignCode": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/foreign-code",
+      "trim": true
+    },
+    "type": {
+      "type": "varchar",
+      "required": true,
+      "view": "views/admin/field-manager/fields/type"
+    },
+    "relationType": {
+      "type": "enum",
+      "options": [
+        "oneToMany",
+        "manyToMany"
+      ]
+    },
+    "entity": {
+      "type": "link",
+      "required": true
+    },
+    "foreignEntity": {
+      "type": "link"
+    },
+    "isMultilang": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "required": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "notNull": {
+      "type": "bool"
+    },
+    "readOnly": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "tooltip": {
+      "type": "bool",
+      "readOnly": true
+    },
+    "isCustom": {
+      "type": "bool",
+      "readOnly": true
+    },
+    "unique": {
+      "type": "bool"
+    },
+    "index": {
+      "type": "bool"
+    },
+    "measure": {
+      "type": "link"
+    },
+    "trim": {
+      "type": "bool",
+      "default": true
+    },
+    "maxLength": {
+      "type": "int",
+      "tooltip": true
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool"
+    },
+    "default": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/value-container",
+      "tooltip": true
+    },
+    "defaultName": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "defaultNames": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "setDefaultOnlyIfRequired": {
+      "type": "bool"
+    },
+    "pattern": {
+      "type": "varchar",
+      "tooltip": true
+    },
+    "defaultUnit": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit"
+    },
+    "tooltipText": {
+      "type": "text"
+    },
+    "tooltipLink": {
+      "type": "url"
+    },
+    "noEmptyString": {
+      "type": "bool"
+    },
+    "prohibitedEmptyValue": {
+      "type": "bool"
+    },
+    "useNumericFormat": {
+      "type": "bool"
+    },
+    "isSorted": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "dropdown": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "options": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/options-extended"
+    },
+    "extensibleEnum": {
+      "type": "link"
+    },
+    "extensibleEnumOptions": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "readOnly": true,
+      "view": "views/admin/field-manager/fields/extensible-enum-options"
+    },
+    "fileType": {
+      "type": "link"
+    },
+    "previewSize": {
+      "type": "enum",
+      "required": false,
+      "prohibitedEmptyValue": false,
+      "default": "small",
+      "options": [
+        "small",
+        "medium",
+        "large"
+      ]
+    },
+    "min": {
+      "type": "float",
+      "view": "views/admin/field-manager/fields/value-container",
+      "tooltip": true
+    },
+    "max": {
+      "type": "float",
+      "view": "views/admin/field-manager/fields/value-container",
+      "tooltip": true
+    },
+    "disableFormatting": {
+      "type": "bool"
+    },
+    "amountOfDigitsAfterComma": {
+      "type": "int",
+      "min": 0
+    },
+    "foreignName": {
+      "type": "varchar",
+      "tooltip": true,
+      "view": "views/admin/field-manager/fields/foreign-name"
+    },
+    "relationName": {
+      "type": "varchar",
+      "trim": true,
+      "view": "views/admin/field-manager/fields/relation-name"
+    },
+    "linkMultipleFieldForeign": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "fileTypes": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/file-types"
+    },
+    "fileTypesNames": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "seeMoreDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "minHeight": {
+      "type": "int",
+      "default": 250,
+      "min": 100
+    },
+    "maxHeight": {
+      "type": "int",
+      "default": 400,
+      "min": 100
+    },
+    "lengthOfCut": {
+      "type": "int",
+      "default": 400,
+      "min": 1,
+      "tooltip": true
+    },
+    "script": {
+      "type": "text",
+      "view": "views/fields/script"
+    },
+    "outputType": {
+      "type": "enum",
+      "default": "text",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "text",
+        "int",
+        "float",
+        "bool",
+        "date",
+        "datetime"
+      ]
+    },
+    "preview": {
+      "type": "text",
+      "view": "views/admin/field-manager/fields/script-preview",
+      "readOnly": true
+    },
+    "rowsMin": {
+      "type": "int",
+      "default": 2,
+      "min": 1
+    },
+    "rowsMax": {
+      "type": "int",
+      "default": 10,
+      "min": 1
+    },
+    "useDisabledTextareaInViewMode": {
+      "type": "bool",
+      "default": false
+    },
+    "strip": {
+      "type": "bool"
+    },
+    "height": {
+      "type": "int"
+    },
+    "useIframe": {
+      "type": "bool"
+    },
+    "htmlSanitizer": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "entity": {
+      "type": "belongsTo",
+      "foreign": "fields",
+      "entity": "Entity"
+    },
+    "foreignEntity": {
+      "type": "belongsTo",
+      "entity": "Entity"
+    },
+    "measure": {
+      "type": "belongsTo",
+      "entity": "Measure"
+    },
+    "extensibleEnum": {
+      "type": "belongsTo",
+      "entity": "ExtensibleEnum"
+    },
+    "htmlSanitizer": {
+      "type": "belongsTo",
+      "entity": "HtmlSanitizer"
+    }
+  },
+  "collection": {
+    "sortBy": "code",
+    "asc": true
+  }
+}
