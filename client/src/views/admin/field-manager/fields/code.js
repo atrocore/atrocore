@@ -16,6 +16,9 @@ Espo.define('views/admin/field-manager/fields/code', 'views/fields/varchar', Dep
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:code', () => {
+                if (!this.model.get('name')) {
+                    this.model.set('name', this.model.get('code'));
+                }
                 this.model.set('code', this.sanitize(this.model.get('code')));
             });
 
