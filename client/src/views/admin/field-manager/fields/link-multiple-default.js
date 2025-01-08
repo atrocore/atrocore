@@ -18,12 +18,29 @@ Espo.define('views/admin/field-manager/fields/link-multiple-default', 'views/fie
             this.idsName = 'default';
             this.nameHashName = 'defaultNames';
             this.foreignScope = this.getForeignScope();
+            this.listenTo(this.model, 'change:foreignEntityId', () => {
+                this.foreignScope = this.getForeignScope();
+                this.reRender();
+            });
 
             Dep.prototype.setup.call(this);
         },
 
         getForeignScope() {
-            return this.getMetadata().get(`entityDefs.${this.model.get('entityId')}.links.${this.model.get('code')}.entity`);
+            return this.model.get('foreignEntityId');
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode === 'edit' && this.name === 'default') {
+                if (!this.getForeignScope()) {
+                    this.$el.parent().parent().hide();
+                } else {
+                    this.$el.parent().parent().show();
+                }
+            }
+
         },
 
     });

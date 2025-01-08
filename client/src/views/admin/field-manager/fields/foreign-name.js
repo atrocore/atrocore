@@ -54,6 +54,19 @@ Espo.define('views/admin/field-manager/fields/foreign-name', 'views/fields/enum'
                 });
             },
 
+            afterRender() {
+                Dep.prototype.afterRender.call(this);
+
+                if (this.mode === 'edit') {
+                    if (!this.model.get('foreignEntityId')) {
+                        this.$el.parent().hide();
+                    } else {
+                        this.$el.parent().show();
+                    }
+                }
+
+            },
+
         });
 
     });
