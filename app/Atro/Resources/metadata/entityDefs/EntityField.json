@@ -13,6 +13,7 @@
     },
     "foreignCode": {
       "type": "varchar",
+      "view": "views/admin/field-manager/fields/foreign-code",
       "trim": true
     },
     "type": {
