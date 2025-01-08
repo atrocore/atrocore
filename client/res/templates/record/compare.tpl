@@ -163,7 +163,7 @@
 
     .detail > .detail-button-container {
         position: fixed;
-        top: 50px;
+        top: 48px;
         z-index: 1000;
         background-color: white;
         width: 100%;
