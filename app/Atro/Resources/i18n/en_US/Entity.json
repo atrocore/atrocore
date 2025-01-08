@@ -1,40 +1,36 @@
 {
   "fields": {
-    "name": "Name Singular",
-    "namePlural": "Name Plural",
+    "name": "Name singular",
+    "namePlural": "Name plural",
     "disabled": "Disabled",
     "hasArchive": "Archivable",
     "hasActive": "Activatable",
     "hideFieldTypeFilters": "Hide field type filters",
-    "streamDisabled": "Disable Track changes",
+    "streamDisabled": "Disable Stream",
     "iconClass": "Icon",
     "color": "Color",
-    "sortBy": "Default Order (field)",
-    "sortDirection": "Default Order (direction)",
-    "textFilterFields": "Text Filter Fields",
-    "statusField": "Status Field",
+    "sortBy": "Default order field",
+    "sortDirection": "Default order direction",
+    "textFilterFields": "Text filter fields",
+    "statusField": "Status field",
     "kanbanViewMode": "Kanban View",
-    "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
+    "kanbanStatusIgnoreList": "Ignored lists in Kanban View",
     "deleteWithoutConfirmation": "Delete without confirmation",
     "autoDeleteAfterDays": "Auto-delete period, in days",
     "clearDeletedAfterDays": "Permanent deletion period, days",
     "modifiedExtendedRelations": "Relations effecting modification date/time",
-    "duplicatableRelations": "Duplicatable Relations",
-    "hasAssignedUser": "Assigned User",
-    "hasTeam": "Teams",
-    "hasAccount": "Accounts",
-    "hasOwner": "Owner",
-    "multiParents": "Multiple Parents",
+    "duplicatableRelations": "Duplicatable relations",
+    "hasAssignedUser": "Enable Assigned User",
+    "hasTeam": "Enable Teams",
+    "hasAccount": "Enable Accounts",
+    "hasOwner": "Enable Owner",
+    "multiParents": "Multiple parents",
     "dragAndDrop": "Drag & Drop",
-    "fieldValueInheritance": "Field Value Inheritance",
-    "unInheritedFields": "Uninherited Fields",
-    "relationInheritance": "Relation Inheritance",
-    "unInheritedRelations": "Uninherited Relations",
-    "disableHierarchy": "Disable Hierarchy",
-    "fields": "Fields"
-  },
-  "links": {
-    "fields": "Fields"
+    "fieldValueInheritance": "Field value inheritance",
+    "unInheritedFields": "Uninherited fields",
+    "relationInheritance": "Relation inheritance",
+    "unInheritedRelations": "Uninherited relations",
+    "disableHierarchy": "Disable hierarchy"
   },
   "options": {
     "type": {
@@ -48,9 +44,9 @@
     }
   },
   "labels": {
-    "Create Entity": "Create Entity",
+    "Create Entity": "Create entity",
     "accessManagement": "Access management",
-    "hierarchyManagement": "Hierarchy Management",
+    "hierarchyManagement": "Hierarchy management",
     "other": "Other",
     "resetToDefault": "Reset to default"
   },
@@ -63,12 +59,12 @@
     "statusField": "Updates of this field are logged in stream.",
     "deleteWithoutConfirmation": "If checked, the individual record is deleted without user confirmation. Deletion of multiple records is still  to be confirmed.",
     "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time.",
-    "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
-    "unInheritedFields": "Values for these fields will not be inherited from parent item.",
+    "dragAndDrop": "This option activates the hierarchy sort order. This means that no other sorting is possible in hierarchical navigation.",
+    "unInheritedFields": "Values for these fields will not be inherited from the parent item.",
     "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",
-    "hasAssignedUser": "Show Assigned User in Access Management.",
-    "hasTeam": "Show Teams in Access Management.",
-    "hasAccount": "Show Accounts in Access Management.",
-    "hasOwner": "Show Owner in Access Management."
+    "hasAssignedUser": "Enable Assigned User for Access Management.",
+    "hasTeam": "Enable Teams for Access Management.",
+    "hasAccount": "Enable Accounts for Access Management.",
+    "hasOwner": "Enable Owner for Access Management."
   }
 }
