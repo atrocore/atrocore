@@ -589,6 +589,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         loadDynamicActions: function (display) {
+            if (!this.model.id) {
+                return;
+            }
+
             const $buttons = $(this.$el).find('.record-buttons')
 
             if (display === 'single') {
@@ -772,7 +776,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         afterRender: function () {
             this.loadDynamicActions('single')
 
-            this.listenTo(this.model, 'after:save', ()=> {
+            this.listenTo(this.model, 'after:save', () => {
                 this.loadDynamicActions('single')
             })
 
