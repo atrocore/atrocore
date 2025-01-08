@@ -706,6 +706,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             view.toggleVisibilityForResetButton();
 
             this.getView('search').silentResetFilters();
+
+            if(![this.scope, 'Bookmark'].includes(view.treeScope)) {
+                this.collection.fetch();
+            }
         },
 
         selectNode(data) {

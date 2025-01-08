@@ -252,6 +252,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
         selectTreeNode(id, ids) {
             const $tree = this.getTreeEl();
+            debugger
             const onFinished = () => {
                 let node = $tree.tree('getNodeById', id);
                 if (node) {
