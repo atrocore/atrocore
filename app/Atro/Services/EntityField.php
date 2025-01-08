@@ -26,17 +26,14 @@ class EntityField extends ReferenceData
 {
     public function resetToDefault(string $scope, string $field): bool
     {
-        if (
-            $this->getMetadata()->get("scopes.$scope.isCustom")
-            || $this->getMetadata()->get("entityDefs.$scope.fields.$field.isCustom")
-        ) {
+        if ($this->getMetadata()->get("scopes.$scope.isCustom") || $this->getMetadata()->get("entityDefs.$scope.fields.$field.isCustom")) {
             throw new Error("Can't reset to defaults custom entity field '$field'.");
         }
 
-        $this->getMetadata()->delete('entityDefs', $scope, ["fields.$field"]);
-        $this->getMetadata()->save();
-
-        $this->getInjection('dataManager')->clearCache();
+        $entity = $this->getEntity("{$scope}_{$field}");
+        if (!empty($entity)) {
+            $this->getEntityManager()->removeEntity($entity);
+        }
 
         return true;
     }
