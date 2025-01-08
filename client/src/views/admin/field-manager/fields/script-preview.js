@@ -24,12 +24,8 @@ Espo.define('views/admin/field-manager/fields/script-preview', 'views/fields/bas
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.name = this.model.get('code');
-            this.scope = this.model.get('entityId');
-
             if (this.params.language) {
                 let locale = this.params.language;
-
                 this.relatedScriptFieldName += locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
             }
 
@@ -45,11 +41,11 @@ Espo.define('views/admin/field-manager/fields/script-preview', 'views/fields/bas
             }
 
             this.ajaxPostRequest('EntityField/action/renderScriptPreview', {
-                scope: this.scope,
-                field: this.name,
+                scope: this.model.get('entityId'),
+                field: this.model.get('code'),
                 script: this.model.get(this.relatedScriptFieldName) || '',
                 outputType: this.model.get('outputType'),
-                id: this.model.get('id')
+                id: `${this.model.get('entityId')}_${this.model.get('code')}`
             }).then(res => {
                 this.previewData = res;
                 this.model.set(this.name, res.preview);
