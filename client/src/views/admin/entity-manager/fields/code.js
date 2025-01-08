@@ -24,6 +24,12 @@ Espo.define('views/admin/entity-manager/fields/code', 'views/fields/varchar', De
                 }
                 this.model.set('code', this.sanitize(this.model.get('code')));
             });
+
+            this.listenTo(this.model, 'change:name', () => {
+                if (!this.model.get('code')) {
+                    this.model.set('code', this.sanitize(this.model.get('name')));
+                }
+            });
         },
 
         sanitize(input) {
