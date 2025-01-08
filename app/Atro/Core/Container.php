@@ -62,7 +62,6 @@ class Container
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
             'entityManager'            => \Espo\Core\Factories\EntityManager::class,
             EntityManager::class       => \Espo\Core\Factories\EntityManager::class,
-            'entityManagerUtil'        => \Espo\Core\Factories\EntityManagerUtil::class,
             'filePathBuilder'          => \Espo\Core\Factories\FilePathBuilder::class,
             'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
             'number'                   => \Espo\Core\Factories\Number::class,
