@@ -2,11 +2,13 @@
   "fields": {
     "name": {
       "type": "varchar",
+      "view": "views/admin/field-manager/fields/name",
       "required": true,
       "trim": true
     },
     "code": {
       "type": "varchar",
+      "view": "views/admin/field-manager/fields/code",
       "required": true,
       "trim": true,
       "unique": true
