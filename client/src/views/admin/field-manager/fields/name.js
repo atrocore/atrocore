@@ -25,7 +25,7 @@ Espo.define('views/admin/field-manager/fields/name', ['views/fields/varchar', 'l
 
             let $link = $('<a href="javascript:" class="pull-right inline-label-edit-link hidden" style="margin-left: 7px"><span class="fas fa-globe fa-sm"></span></a>');
 
-            if ($cell.size() == 0) {
+            if ($cell.size() === 0) {
                 this.listenToOnce(this, 'after:render', this.initInlineLabelEdit, this);
                 return;
             }
