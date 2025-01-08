@@ -589,6 +589,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         loadDynamicActions: function (display) {
+            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled'])) {
+                return;
+            }
+
             const $buttons = $(this.$el).find('.record-buttons')
 
             if (display === 'single') {
@@ -613,8 +617,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.model.fetchDynamicActions(display)
                 .then(actions => {
-                    $buttons.find('.dynamic-action').remove()
-
                     const dropdownItemList = [];
                     const additionalButtons = [];
                     actions.forEach(action => {
@@ -772,7 +774,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         afterRender: function () {
             this.loadDynamicActions('single')
 
-            this.listenTo(this.model, 'after:save', ()=> {
+            this.listenTo(this.model, 'after:save', () => {
                 this.loadDynamicActions('single')
             })
 
@@ -2688,7 +2690,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         selectNode(data) {
-            if (this.getStorage().get('treeScope', this.scope) === this.scope) {
+            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
             } else {
                 this.getStorage().set('selectedNodeId', this.scope, data.id);

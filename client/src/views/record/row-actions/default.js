@@ -94,6 +94,10 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 return
             }
 
+            if (this.getMetadata().get(['scopes', this.model.name, 'actionDisabled'])) {
+                return;
+            }
+
             if (this.model.dynamicActions == null) {
                 $(this.$el).find('li.preloader,li.divider').show()
                 $(this.$el).find('li.dynamic-action').remove()

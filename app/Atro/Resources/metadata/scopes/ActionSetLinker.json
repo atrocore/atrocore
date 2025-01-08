@@ -2,5 +2,6 @@
   "isActiveUnavailable": true,
   "streamDisabled": true,
   "notificationDisabled": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "actionDisabled": true
 }

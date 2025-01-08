@@ -13,5 +13,6 @@
   "hasOwner": false,
   "hasAssignedUser": false,
   "hasTeam": false,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "actionDisabled": true
 }
