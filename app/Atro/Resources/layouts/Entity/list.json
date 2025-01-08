@@ -8,5 +8,14 @@
   },
   {
     "name": "type"
+  },
+  {
+    "name": "disabled"
+  },
+  {
+    "name": "hasActive"
+  },
+  {
+    "name": "hasArchive"
   }
 ]
