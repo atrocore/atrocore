@@ -589,7 +589,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         loadDynamicActions: function (display) {
-            if (!this.model.id) {
+            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled']) || !this.model.id) {
                 return;
             }
 
@@ -617,8 +617,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.model.fetchDynamicActions(display)
                 .then(actions => {
-                    $buttons.find('.dynamic-action').remove()
-
                     const dropdownItemList = [];
                     const additionalButtons = [];
                     actions.forEach(action => {
@@ -2630,9 +2628,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             if (!treeScopes.includes(this.scope)
                 && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true
+                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
             ) {
-                treeScopes.includes(this.scope);
+                treeScopes.unshift(this.scope);
             }
 
             treeScopes.forEach(scope => {
@@ -2692,7 +2690,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         selectNode(data) {
-            if (this.getStorage().get('treeScope', this.scope) === this.scope) {
+            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
             } else {
                 this.getStorage().set('selectedNodeId', this.scope, data.id);

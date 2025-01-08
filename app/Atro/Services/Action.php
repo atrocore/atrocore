@@ -160,6 +160,10 @@ class Action extends Base
 
     public function getRecordDynamicActions(string $scope, string $id, ?string $display)
     {
+        if ($this->getMetadata()->get(['scopes', $scope, 'actionDisabled'], false)) {
+            throw new Error("Action for '$scope' disabled");
+        }
+
         $recordService = $this->getServiceFactory()->create($scope);
         $entity = $recordService->getEntity($id);
 

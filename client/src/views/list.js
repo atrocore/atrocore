@@ -577,9 +577,9 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             if(!treeScopes.includes(this.scope)
                 && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
+                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
             ) {
-                treeScopes.includes(this.scope);
+                treeScopes.unshift(this.scope);
             }
 
             treeScopes.forEach(scope => {

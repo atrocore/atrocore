@@ -68,13 +68,14 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.scope = this.options.scope || this.scope;
             this.treeScope = this.scope;
 
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+            let treeScopes = this.getTreeScopes();
             if (treeScopes) {
                 const treeScope = this.getStorage().get('treeScope', this.scope);
                 if (!treeScope || !treeScopes.includes(treeScope)) {
                     this.getStorage().set('treeScope', this.scope, treeScopes[0]);
+                }else{
+                    this.treeScope = treeScope;
                 }
-                this.treeScope = this.getStorage().get('treeScope', this.scope);
             }
 
             this.wait(true);
@@ -285,7 +286,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
         generateUrl(node) {
             let url = this.treeScope + `/action/Tree?isTreePanel=1&scope=${this.scope}`;
-
             if (node && node.showMoreDirection) {
                 let offset = node.offset;
                 let maxSize = this.maxSize;
@@ -307,7 +307,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 }
             } else if (node && node.id) {
                 url += '&node=' + node.id + '&offset=0&maxSize=' + this.maxSize;
-            } else if (this.model && this.model.id && this.treeScope === this.model.urlRoot) {
+            } else if (this.model && this.model.id && [this.model.urlRoot, 'Bookmark'].includes(this.treeScope)) {
                 url += '&selectedId=' + this.model.id;
             }
 
@@ -471,7 +471,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                         }
                     }
 
-                    if (data && this.getStorage().get('treeScope', this.scope) === this.scope && this.model && this.model.get('id') === node.id) {
+                    let treeScope = this.getStorage().get('treeScope', this.scope);
+
+                    if (data && [this.scope, 'Bookmark'].includes(treeScope) && this.model && this.model.get('id') === node.id) {
                         $tree.tree('addToSelection', node);
                         $li.addClass('jqtree-selected');
                     }
@@ -587,13 +589,12 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 });
             });
 
-            const treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+            const treeScopes = this.getTreeScopes();
+
             if (treeScopes) {
                 this.getModelFactory().create(this.scope, model => {
                     model.set('scopesEnum', this.getStorage().get('treeScope', this.scope) || treeScopes[0]);
-
                     let options = [];
-
                     treeScopes.forEach(scope => {
                         if (this.getAcl().check(scope, 'read')) {
                             options.push(scope);
@@ -719,6 +720,17 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 listContainer.removeClass('col-xs-12 col-lg-9');
             }
         },
+
+        getTreeScopes() {
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
+            if(!treeScopes.includes(this.scope)
+                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
+            ) {
+                treeScopes.unshift(this.scope);
+            }
+            return treeScopes;
+        }
 
     })
 );

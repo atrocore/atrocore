@@ -1,18 +1,29 @@
-
 <div class="list">
     <table class="table full-table table-fixed table-striped table-scrolled table-bordered">
         <colgroup>
             {{#each columns}}
             {{#if isFirst }}
-                <col style="width: 250px;">
+            <col style="width: 250px;">
             {{else}}
-                <col class="col-min-width">
+            {{#if ../merging}}
+            <col style="width: 50px">
+            {{/if}}
+            <col class="col-min-width">
             {{/if}}
             {{/each}}
         </colgroup>
         <thead>
         <tr>
             {{#each columns}}
+            {{#unless isFirst }}
+            {{#if ../merging }}
+                <th>
+                   <div class="center-child">
+                       <input type="radio" disabled="disabled" name="check-all" value="{{id}}" data-id="{{id}}">
+                   </div>
+                </th>
+            {{/if}}
+            {{/unless}}
             <th class="text-center">
                 {{{name}}}
                 {{#if _error}}
@@ -27,28 +38,34 @@
         <tbody>
         {{#each fieldList}}
         <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
-            <td class="cell " >{{translate label scope=../scope category='fields'}}</td>
-            <td class="cell  {{#unless shouldNotCenter}} text-center {{/unless}}">
-                <div class="current">Loading...</div>
+            <td class="cell " title="{{translate label scope=../scope category='fields'}}">{{translate label scope=../scope category='fields'}}{{#if required }}*{{/if}}</td>
+            {{#each fieldValueRows}}
+            {{#if ../../merging}}
+            <td>
+               <div class="center-child" >
+                   <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
+               </div>
             </td>
-            {{#each others}}
+            {{/if}}
             <td class="cell  {{#unless shouldNotCenter}} text-center {{/unless}}">
-                <div class="other{{index}}">Loading...</div>
+                <div class="{{class}}  field">Loading...</div>
             </td>
             {{/each}}
         </tr>
         {{/each}}
         </tbody>
     </table>
-    <div class="panel-scroll hidden" style="display: block;"><div></div></div>
+    <div class="panel-scroll hidden" style="display: block;">
+        <div></div>
+    </div>
 </div>
 <style>
-    .hidden-cell{
-        display:none !important;
+    .hidden-cell {
+        display: none !important;
     }
 
-    .compare-panel th:first-child{
-       text-align: left !important;
+    .compare-panel th:first-child {
+        text-align: left !important;
     }
 </style>
 

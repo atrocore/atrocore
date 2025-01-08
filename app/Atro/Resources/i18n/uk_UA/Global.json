@@ -443,7 +443,8 @@
     "recordDontExistInInstance": "Цей запис не існує в екземплярі",
     "badTokenInstance": "Наприклад, поганий токен авторизації",
     "dontHaveAccessInInstance": "У вас немає доступу до цього запису на екземплярі",
-    "selectNoMoreThan": "Вибрати не більше {count} записів"
+    "selectNoMoreThan": "Вибрати не більше {count} записів",
+    "fillEmptyFieldBeforeMerging": "Деякі поля є обов'язковими для заповнення, будь ласка, заповніть їх перед злиттям."
   },
   "boolFilters": {
     "onlyActive": "Активні",

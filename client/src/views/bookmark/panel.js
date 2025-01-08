@@ -31,6 +31,9 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
             'click [data-action="compare"]': function (e) {
                 this.compareEntities($(e.currentTarget).data('key'))
             },
+            'click [data-action="merge"]': function (e) {
+                this.compareEntities($(e.currentTarget).data('key'), true)
+            },
         },
 
         setup() {
@@ -192,7 +195,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
             callback();
         },
 
-        compareEntities(groupKey) {
+        compareEntities(groupKey, merging = false) {
             let group = this.groups.find(group => group.key === groupKey);
             this.getCollectionFactory().create(group.key, collection => {
                 collection.sortBy = 'name';
@@ -205,20 +208,17 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
 
                 this.notify(this.translate('Loading'))
                 collection.fetch().success(() => {
-                        this.createView('dialog', 'views/modals/compare', {
-                            collection: collection,
-                            scope: group.key,
-                            mode: "details",
-                            className: 'full-page-modal',
-                            hideRelationship: false
-                        }, function (dialog) {
-                            dialog.render();
-                            this.notify(false)
-                        })
-
-                })
-
-            })
+                    this.createView('dialog', 'views/modals/compare', {
+                        collection: collection,
+                        scope: group.key,
+                        mode: "details",
+                        merging: merging
+                    }, function (dialog) {
+                        dialog.render();
+                        this.notify(false)
+                    });
+                });
+            });
         }
     })
 });

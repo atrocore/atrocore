@@ -49,7 +49,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                this.header = this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name;
             } else {
                 this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
-                this.header = this.getLanguage().translate('Record Comparison');
+                this.header = this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison');
             }
 
             this.setupRecord()
@@ -63,7 +63,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 model: this.model,
                 instanceComparison: this.instanceComparison,
                 collection: this.options.collection,
-                scope: this.scope
+                scope: this.scope,
+                merging: this.options.merging
             };
 
             if (this.instanceComparison) {
@@ -103,6 +104,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
                             let distantModel = scopeModel.clone();
                             distantModel.set(attr);
+                            distantModel.set('_instance', this.instances[index]);
                             options.distantModels.push(distantModel);
                         }
                         this.createModalView(options);
@@ -128,7 +130,9 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
         },
 
         createModalView(options) {
-            this.createView('modalRecord', this.recordView, options);
+            this.createView('modalRecord', this.recordView, options, (view) => {
+                this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
+            });
         }
     });
 });

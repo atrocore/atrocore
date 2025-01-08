@@ -22,17 +22,20 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
 
         selectFields: ['id'],
 
+        deferRendering: false,
+
         setup() {
             this.scope = this.options.scope;
             this.baseModel = this.options.model;
             this.relationship = this.options.relationship ?? {};
             this.collection = this.options.collection;
+            this.models = this.options.models;
+            this.merging = this.options.merging;
+            if (this.collection) {
+                this.models = this.collection.models;
+            }
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.columns = this.options.columns
-            this.checkedList = [];
-            this.enabledFixedHeader = false;
-            this.dragableListRows = false;
-            this.showMore = false
             this.fields = [];
             this.relationFields = [];
             this.relationModels = {};
@@ -49,13 +52,39 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 this.selectFields.push('name')
             }
 
+            this.listenTo(this.model, 'select-model', (modelId) => {
+
+                let selectedIndex = this.models.findIndex(model => model.id === modelId);
+                this.tableRows.forEach(row => {
+
+                    row.entityValueKeys.forEach((data, index) => {
+                        let view = this.getView(data.key);
+                        if (!view) {
+                            return;
+                        }
+                        let mode = view.mode;
+                        // we set the checkbox to edit mode or the relation field to edit mode if the checkbox is true
+                        if (selectedIndex === index && (row.field === this.isLinkedColumns || this.relationModels[row.linkedEntityId][index].get(this.isLinkedColumns))) {
+                            view.setMode('edit');
+                        } else {
+                            view.setMode('detail');
+                        }
+
+                        if (mode !== view.mode) {
+                            view.reRender();
+                        }
+                    });
+                })
+
+            });
+
             this.fetchModelsAndSetup();
         },
 
         fetchModelsAndSetup() {
             this.wait(true)
 
-            this.prepareModels( () => this.setupRelationship(() => this.wait(false)));
+            this.prepareModels(() => this.setupRelationship(() => this.wait(false)));
         },
 
         data() {
@@ -75,37 +104,85 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
 
         setupRelationship(callback) {
             this.tableRows = [];
-            this.linkedEntities.forEach((linkEntity) => {
-                let data = this.getFieldColumns(linkEntity);
+            this.linkedEntities.forEach((linkedEntity) => {
+                let selectedModelId = $('input[name="check-all"]:checked').val();
+                let selectedIndex = this.models.findIndex(model => model.id === selectedModelId);
+                let data = this.getFieldColumns(linkedEntity);
 
                 this.getRelationAdditionalFields().forEach(field => {
+
                     data.push({
                         field: field,
-                        label: this.translate(field, 'fields', this.relationName),
+                        label: this.translate(field, 'fields', this.relationName) ,
                         title: this.translate(field, 'fields', this.relationName),
+                        linkedEntityId: linkedEntity.id,
                         entityValueKeys: []
                     });
                 })
 
-                this.relationModels[linkEntity.id].forEach((model, index) => {
-                    data.forEach(el => {
-                        if(!el.field) {
+                this.relationModels[linkedEntity.id].forEach((model, index) => {
+
+                    data.forEach((el,key) => {
+                        if (!el.field) {
                             el.entityValueKeys.push({key: null});
                             return;
                         }
+
                         let field = el.field;
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(model.getFieldType(field))
-                        let viewKey = linkEntity.id + field + index + 'Current';
-                        el.entityValueKeys.push({key: viewKey})
+                        let viewKey = linkedEntity.id + field + index + 'Current';
+                        let mode = 'detail';
+                        el.entityValueKeys.push({key: viewKey});
+
+                        if (this.merging && selectedIndex === el.entityValueKeys.length - 1) {
+                            if (field === this.isLinkedColumns || model.get(this.isLinkedColumns)) {
+                                mode = 'edit';
+                            }
+                        }
+
+                        let isRequired = !!model.getFieldParam(field,'required');
+                        if(isRequired && el.label[el.label.length-1] !== '*') {
+                            el.label += '*';
+                        }
                         this.createView(viewKey, viewName, {
                             el: this.options.el + ` [data-field="${viewKey}"]`,
-                            model: model,
-                            readOnly: true,
+                            model: model.clone(),
                             defs: {
                                 name: field,
                             },
-                            mode: 'detail',
+                            params: {
+                                required: isRequired,
+                                readOnly: mode === 'detail' || model.getFieldParam(field, 'readOnly'),
+                            },
+                            mode: mode,
                             inlineEditDisabled: true,
+                            entityIndex: el.entityValueKeys.length - 1
+                        }, view => {
+                            if (field === this.isLinkedColumns) {
+                                this.listenTo(view.model, 'change:' + this.isLinkedColumns, () => {
+                                    data.forEach(el => {
+                                        if (!el.field || el.field === this.isLinkedColumns) {
+                                            return;
+                                        }
+
+                                        let key = el.entityValueKeys[view.options.entityIndex].key;
+                                        const fieldView = this.getView(key);
+                                        if (!fieldView) {
+                                            return;
+                                        }
+                                        const mode = fieldView.mode
+                                        if (view.model.get(this.isLinkedColumns)) {
+                                            fieldView.setMode('edit');
+                                        } else {
+                                            fieldView.setMode('detail');
+                                        }
+                                        if (mode !== fieldView.mode) {
+                                            fieldView.model = this.relationModels[el.linkedEntityId][view.options.entityIndex].clone();
+                                            fieldView.reRender();
+                                        }
+                                    });
+                                });
+                            }
                         });
                     });
                 });
@@ -141,7 +218,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
 
                     data.maxSize = 500 * this.collection.models.length;
 
-                    if(res.total > data.maxSize) {
+                    if (res.total > data.maxSize) {
                         this.hasToManyRecords = true;
                         callback();
                         return;
@@ -195,13 +272,13 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 return this.relationFields;
             }
 
-            this.getModelFactory().create(this.relationName, relationModel  => {
+            this.getModelFactory().create(this.relationName, relationModel => {
                 for (let field in relationModel.defs.fields) {
-                    if(!this.isFieldEnabled(relationModel, field) || relationModel.getFieldParam(field, 'relationField')){
+                    if (!this.isFieldEnabled(relationModel, field) || relationModel.getFieldParam(field, 'relationField')) {
                         continue;
                     }
 
-                    if(['createdAt', 'modifiedAt', 'createdBy', 'modifiedBy', 'id'].includes(field)) {
+                    if (['createdAt', 'modifiedAt', 'createdBy', 'modifiedBy', 'id'].includes(field)) {
                         continue;
                     }
 
@@ -209,28 +286,29 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 }
             });
 
-            this.relationFields.sort((v1, v2) =>{
+            this.relationFields.sort((v1, v2) => {
                 return this.translate(v1, 'fields', this.relationName).localeCompare(this.translate(v2, 'fields', this.relationName));
             })
 
             return this.relationFields;
         },
 
-        getFieldColumns(linkEntity) {
+        getFieldColumns(linkedEntity) {
             let data = [];
             if (this.relationship.scope === 'File') {
                 data.push({
                     field: this.isLinkedColumns,
-                    label: linkEntity.name,
-                    title: linkEntity.name,
+                    label: linkedEntity.name,
+                    title: linkedEntity.name,
                     isField: true,
-                    key: linkEntity.id,
+                    key: linkedEntity.id,
+                    linkedEntityId: linkedEntity.id,
                     entityValueKeys: []
                 });
                 this.getModelFactory().create('File', fileModel => {
-                    fileModel.set(linkEntity);
+                    fileModel.set(linkedEntity);
                     let viewName = fileModel.getFieldParam('preview', 'view') || this.getFieldManager().getViewName(fileModel.getFieldType('preview'));
-                    let viewKey = linkEntity.id;
+                    let viewKey = linkedEntity.id;
                     this.createView(viewKey, viewName, {
                         el: `${this.options.el} [data-key="${viewKey}"] .attachment-preview`,
                         model: fileModel,
@@ -244,10 +322,10 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                         view.previewSize = 'small';
                         view.once('after:render', () => {
                             this.$el.find(`[data-key="${viewKey}"]`).append(`<div class="file-link">
-<a href="?entryPoint=download&id=${linkEntity.id}" download="" title="Download">
+<a href="?entryPoint=download&id=${linkedEntity.id}" download="" title="Download">
  <span class="glyphicon glyphicon-download-alt small"></span>
  </a> 
- <a href="/#File/view/${linkEntity.id}" title="${linkEntity.name}" class="link" data-id="${linkEntity.id}">${linkEntity.name}</a>
+ <a href="/#File/view/${linkedEntity.id}" title="${linkedEntity.name}" class="link" data-id="${linkedEntity.id}">${linkedEntity.name}</a>
  </div>`);
                         })
                     });
@@ -255,8 +333,9 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
             } else {
                 data.push({
                     field: this.isLinkedColumns,
-                    title: linkEntity.name,
-                    label: `<a href="#/${this.relationship.scope}/view/${linkEntity.id}"> ${linkEntity.name ?? linkEntity.id} </a>`,
+                    title: linkedEntity.name,
+                    label: `<a href="#/${this.relationship.scope}/view/${linkedEntity.id}" target="_blank"> ${linkedEntity.name ?? linkedEntity.id} </a>`,
+                    linkedEntityId: linkedEntity.id,
                     entityValueKeys: []
                 });
             }
@@ -285,16 +364,102 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
 
         getModelRelationColumnId() {
             let midKeys = this.model.defs.links[this.relationship.name].midKeys;
-            return (midKeys && midKeys.length === 2) ? midKeys[1] : this.scope.toLowerCase() + 'Id';
+            if(midKeys && midKeys.length === 2) {
+                return midKeys[1];
+            }
+
+            return this.scope.charAt(0).toLowerCase() + this.scope.slice(1) + 'Id';
         },
 
         getRelationshipRelationColumnId() {
             let midKeys = this.model.defs.links[this.relationship.name].midKeys;
-            return (midKeys && midKeys.length === 2) ? midKeys[0] : this.relationship.scope.toLowerCase() + 'Id';
+            if(midKeys && midKeys.length === 2) {
+                return midKeys[0];
+            }
+
+            return this.relationship.scope.charAt(0).toLowerCase() + this.relationship.scope.slice(1) + 'Id';
         },
 
         getLinkName() {
             return this.relationship.name;
+        },
+
+        fetch() {
+            let selectedModelId = $('input[name="check-all"]:checked').val();
+            let selectedIndex = this.models.findIndex(model => model.id === selectedModelId);
+            let toUpsert = [];
+            let toDelete = [];
+            let scope = this.relationName;
+            for (let linkedEntity of this.linkedEntities) {
+
+                let isLinkedFieldRow = this.tableRows.find(row => row.field === this.isLinkedColumns && row.linkedEntityId === linkedEntity.id);
+                let view = this.getView(isLinkedFieldRow.entityValueKeys[selectedIndex].key);
+
+                if (!view) {
+                    continue;
+                }
+
+                if (!view.model.get(this.isLinkedColumns)) {
+                    if(view.model.get('id')) {
+                        toDelete.push(view.model.get('id'));
+                    }
+                    continue;
+                }
+
+                let attr = {};
+                attr[this.getModelRelationColumnId()] = selectedModelId;
+                attr[this.getRelationshipRelationColumnId()] = linkedEntity.id;
+
+
+                let otherRows = this.tableRows.filter(row => {
+                    return row.field && row.linkedEntityId === linkedEntity.id && row.field !== this.isLinkedColumns;
+                });
+
+                otherRows.forEach(row => {
+                    let view = this.getView(row.entityValueKeys[selectedIndex].key);
+                    if (!view) {
+                        return;
+                    }
+                    attr = _.extend({}, attr, view.fetch());
+                    if (view.model.get('id')) {
+                        attr['id'] = view.model.get('id');
+                    }
+                });
+
+                toUpsert.push(attr);
+            }
+
+            return {
+                scope, toUpsert, toDelete
+            };
+        },
+
+        validate() {
+            let selectedModelId = $('input[name="check-all"]:checked').val();
+            let selectedIndex = this.models.findIndex(model => model.id === selectedModelId);
+            let validate = false;
+            for (let linkedEntity of this.linkedEntities) {
+                let isLinkedFieldRow = this.tableRows.find(row => row.field === this.isLinkedColumns && row.linkedEntityId === linkedEntity.id);
+                let view = this.getView(isLinkedFieldRow.entityValueKeys[selectedIndex].key);
+
+                if (!view || !view.model.get(this.isLinkedColumns)) {
+                    continue;
+                }
+
+                let otherRows = this.tableRows.filter(row => {
+                    return row.field && row.linkedEntityId === linkedEntity.id && row.field !== this.isLinkedColumns;
+                });
+
+                otherRows.forEach(row => {
+                    let view = this.getView(row.entityValueKeys[selectedIndex].key);
+                    if (!view) {
+                        return;
+                    }
+                    validate = validate || view.validate();
+                });
+            }
+
+            return validate;
         }
     })
 })

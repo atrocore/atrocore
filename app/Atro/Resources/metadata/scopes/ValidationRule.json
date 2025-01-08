@@ -9,5 +9,6 @@
   "type": "Base",
   "object": true,
   "isActiveUnavailable": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "actionDisabled": true
 }
