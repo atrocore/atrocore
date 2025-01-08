@@ -15,29 +15,40 @@ Espo.define('views/admin/field-manager/fields/foreign-name', 'views/fields/enum'
 
             prohibitedEmptyValue: true,
 
-            afterRender() {
-                Dep.prototype.afterRender.call(this);
+            setup() {
+                Dep.prototype.setup.call(this);
 
-                if (!this.model.get('foreignName')) {
-                    this.model.set('foreignName', 'name');
-                }
+                this.prepareOptionsList();
+                this.listenTo(this.model, 'change:foreignEntityId', () => {
+                    this.prepareOptionsList();
+                    this.reRender();
+                });
             },
 
-            setupOptions: function () {
-                const foreign = this.getMetadata().get(`entityDefs.${this.model.get('entityId')}.links.${this.model.get('code')}.entity`);
-                const foreignFields = this.getMetadata().get(`entityDefs.${foreign}.fields`) || {};
-
+            prepareOptionsList() {
                 this.params.options = [];
                 this.translatedOptions = {};
+
+                let foreignEntity = this.model.get('foreignEntityId');
+
+                if (!foreignEntity) {
+                    return;
+                }
+
+                let foreignFields = this.getMetadata().get(`entityDefs.${foreignEntity}.fields`) || {};
+
                 $.each(foreignFields, (name, data) => {
+                    if (name === 'name' && !this.model.get('foreignName')) {
+                        this.model.set('foreignName', 'name');
+                    }
                     if (data.type === 'varchar' && !data.notStorable) {
                         this.params.options.push(name);
-                        this.translatedOptions[name] = this.translate(name, 'fields', foreign);
+                        this.translatedOptions[name] = this.translate(name, 'fields', foreignEntity);
                     } else if (data.type === 'link' && ['ownerUser', 'assignedUser'].includes(name)) {
-                        let linkEntity = this.getMetadata().get(['entityDefs', foreign, 'links', name, 'entity']);
+                        let linkEntity = this.getMetadata().get(['entityDefs', foreignEntity, 'links', name, 'entity']);
                         if (linkEntity && this.getMetadata().get(['entityDefs', linkEntity, 'fields', 'name'])) {
                             this.params.options.push(name + 'Name');
-                            this.translatedOptions[name + 'Name'] = this.translate('name', 'fields', 'Global') + ': ' + this.translate(name, 'fields', foreign);
+                            this.translatedOptions[name + 'Name'] = this.translate('name', 'fields', 'Global') + ': ' + this.translate(name, 'fields', foreignEntity);
                         }
                     }
                 });
