@@ -7,7 +7,7 @@
   "relationshipPanels": {
     "fields": {
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink"
     }
   },
   "dynamicLogic": {
