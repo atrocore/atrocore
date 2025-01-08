@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/name', ['views/fields/varchar', 'lib!MD5'], (Dep, MD5) => {
+Espo.define('views/admin/field-manager/fields/name', 'views/fields/varchar', Dep => {
 
     return Dep.extend({
 
@@ -36,27 +36,32 @@ Espo.define('views/admin/field-manager/fields/name', ['views/fields/varchar', 'l
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
                 let scope = 'Translation';
                 let viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) || 'views/modals/edit';
-                let id = MD5(`${this.model.get('entityId')}.fields.${this.model.get('code')}`);
-
-                this.ajaxGetRequest(`${scope}/${id}`).then(res => {
+                let key = `${this.model.get('entityId')}.fields.${this.model.get('code')}`;
+                this.ajaxGetRequest(`${scope}?where[0][type]=textFilter&where[0][value]=${key}`).then(res => {
+                    let data = res.list[0] ?? {id: null, code: key};
                     this.getModelFactory().create(scope, model => {
-                        model.set(res);
+                        model.set(data);
+
                         let options = {
                             scope: scope,
-                            id: res.id,
                             model: model,
+                            id: data.id,
                             fullFormDisabled: this.getMetadata().get('clientDefs.' + scope + '.modalFullFormDisabled') || false,
                         };
 
                         this.createView('modal', viewName, options, view => {
                             Espo.Ui.notify(false);
+                            if (!view.model.get('code')) {
+                                view.model.set('code', key);
+                            }
+
                             view.render();
 
                             this.listenToOnce(view, 'remove', () => {
                                 this.clearView('modal');
                             });
 
-                            this.listenToOnce(view, 'after:save', m => {
+                            this.listenToOnce(view, 'after:save', () => {
                                 this.model.fetch();
                             });
                         });
