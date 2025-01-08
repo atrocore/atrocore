@@ -1,5 +1,6 @@
 <script>
     import {editor} from 'monaco-editor';
+
     import {onMount} from 'svelte';
     import Text from './Text.svelte';
 
@@ -35,9 +36,32 @@
     }
 
     onMount(() => {
+        self.MonacoEnvironment = {
+            getWorker: async function (_moduleId, label) {
+                if (label === "json") {
+                    const { default: JsonWorker } = await import('monaco-editor/esm/vs/language/json/json.worker?worker');
+                    return new JsonWorker();
+                }
+                if (label === "css" || label === "scss" || label === "less") {
+                    const { default: CssWorker } = await import('monaco-editor/esm/vs/language/css/css.worker?worker');
+                    return new CssWorker();
+                }
+                if (label === "html" || label === "handlebars" || label === "razor") {
+                    const { default: HtmlWorker } = await import('monaco-editor/esm/vs/language/html/html.worker?worker');
+                    return new HtmlWorker();
+                }
+                if (label === "typescript" || label === "javascript") {
+                    const { default: TsWorker } = await import('monaco-editor/esm/vs/language/typescript/ts.worker?worker');
+                    return new TsWorker();
+                }
+                const { default: EditorWorker } = await import('monaco-editor/esm/vs/editor/editor.worker?worker');
+                return new EditorWorker();
+            },
+        };
+
         editorComponent = editor.create(containerElement, {
             value,
-            language: "twig",
+            language: params.language || model.getFieldParam(name, 'language') || "twig",
             automaticLayout: true,
             minimap: {
                 enabled: false
@@ -48,6 +72,10 @@
         editorComponent.onDidChangeModelContent(() => {
             value = editorComponent.getValue();
         });
+
+        return () => {
+            editorComponent.dispose();
+        };
     });
 </script>
 
