@@ -589,7 +589,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         loadDynamicActions: function (display) {
-            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled'])) {
+            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled']) || !this.model.id) {
                 return;
             }
 
