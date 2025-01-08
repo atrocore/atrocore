@@ -178,7 +178,8 @@
     },
     "relationName": {
       "type": "varchar",
-      "trim": true
+      "trim": true,
+      "view": "views/admin/field-manager/fields/relation-name"
     },
     "linkMultipleFieldForeign": {
       "type": "bool",
