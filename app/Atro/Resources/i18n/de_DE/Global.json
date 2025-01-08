@@ -1,7 +1,7 @@
 {
   "scopeNames": {
-    "Entity": "Entity",
-    "EntityField": "Entity Field",
+    "Entity": "Entität",
+    "EntityField": "Entitätsfeld",
     "Language": "Sprache",
     "EmailTemplate": "E-Mail-Vorlage",
     "Storage": "Dateiablage",
@@ -53,8 +53,8 @@
     "Bookmark": "Lesezeichen"
   },
   "scopeNamesPlural": {
-    "Entity": "Entities",
-    "EntityField": "Entity Fields",
+    "Entity": "Entitäten",
+    "EntityField": "Entitätsfelder",
     "Language": "Sprachen",
     "EmailTemplate": "E-Mail-Vorlagen",
     "Storage": "Dateiablagen",

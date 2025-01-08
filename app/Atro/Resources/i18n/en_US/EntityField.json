@@ -47,8 +47,8 @@
     "foreignCode": "Foreign Code",
     "relationType": "Relation Type",
     "foreignEntity": "Foreign Entity",
-    "relationName": "Middle Table Name",
-    "linkMultipleFieldForeign": "Foreign Link Multiple Field"
+    "relationName": "Relation Code",
+    "linkMultipleField": "Link Multiple Field"
   },
   "links": {
     "entity": "Entity",
@@ -68,7 +68,7 @@
     "foreignName": "Field to be shown in the relation.",
     "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
     "lengthOfCut": "Excessive characters will be hidden in the view mode.",
-    "linkMultipleFieldForeign": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records."
+    "linkMultipleField": "This option enables a handy way to edit relations. Don't use it if you can have a large number of related records."
   },
   "options": {
     "previewSize": {
