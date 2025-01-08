@@ -14,6 +14,7 @@ import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
 import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
+import Script from "./components/fields/Script.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -23,4 +24,4 @@ window.SvelteMetadata = Metadata;
 window.SvelteModelFactory = ModelFactory;
 window.driver = driver;
 
-export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent};
+export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent, Script};
