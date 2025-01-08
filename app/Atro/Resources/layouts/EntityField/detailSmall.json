@@ -278,7 +278,7 @@
           "name": "relationName"
         },
         {
-          "name": "linkMultipleFieldForeign"
+          "name": "linkMultipleField"
         }
       ]
     ]

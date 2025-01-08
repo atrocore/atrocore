@@ -59,7 +59,7 @@ class EntityField extends ReferenceData
                     if ($fieldDefs['type'] === 'linkMultiple') {
                         $fieldDefs['relationType'] = !empty($linkDefs['relationName']) ? 'manyToMany' : 'oneToMany';
                         $fieldDefs['relationName'] = $linkDefs['relationName'] ?? null;
-                        $fieldDefs['linkMultipleFieldForeign'] = empty($fieldDefs['noLoad']);
+                        $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
                     }
                     if (!empty($linkDefs['entity'])) {
                         $fieldDefs['foreignEntityId'] = $linkDefs['entity'];
@@ -309,13 +309,13 @@ class EntityField extends ReferenceData
             $saveLanguage = true;
         }
 
-        if ($entity->get('type') === 'linkMultiple' && $entity->isAttributeChanged('linkMultipleFieldForeign')) {
+        if ($entity->get('type') === 'linkMultiple' && $entity->isAttributeChanged('linkMultipleField')) {
             $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                 'fields' => [
                     $entity->get('code') => [
-                        'noLoad'               => empty($entity->get('linkMultipleFieldForeign')),
-                        'layoutDetailDisabled' => empty($entity->get('linkMultipleFieldForeign')),
-                        'massUpdateDisabled'   => empty($entity->get('linkMultipleFieldForeign'))
+                        'noLoad'               => empty($entity->get('linkMultipleField')),
+                        'layoutDetailDisabled' => empty($entity->get('linkMultipleField')),
+                        'massUpdateDisabled'   => empty($entity->get('linkMultipleField'))
                     ]
                 ]
             ]);

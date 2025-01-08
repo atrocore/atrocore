@@ -183,7 +183,7 @@
       "trim": true,
       "view": "views/admin/field-manager/fields/relation-name"
     },
-    "linkMultipleFieldForeign": {
+    "linkMultipleField": {
       "type": "bool",
       "tooltip": true
     },

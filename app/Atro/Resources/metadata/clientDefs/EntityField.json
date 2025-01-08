@@ -186,7 +186,7 @@
           ]
         }
       },
-      "linkMultipleFieldForeign": {
+      "linkMultipleField": {
         "visible": {
           "conditionGroup": [
             {
