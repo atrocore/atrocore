@@ -12,7 +12,7 @@ Espo.define('views/admin/field-manager/fields/foreign-code', 'views/fields/varch
 
     return Dep.extend({
 
-        setup: function () {
+        setup() {
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:entityId change:type change:relationType', () => {
@@ -31,6 +31,14 @@ Espo.define('views/admin/field-manager/fields/foreign-code', 'views/fields/varch
                 }
                 this.reRender();
             });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode === 'detail'){
+                this.$el.html(`<a href="/#EntityField/view/${this.model.get('foreignEntityId')}_${this.model.get(this.name)}">${this.model.get(this.name)}</a>`)
+            }
         },
 
         lcfirst(str) {
