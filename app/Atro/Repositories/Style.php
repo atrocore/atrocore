@@ -44,7 +44,12 @@ class Style extends ReferenceData
 
             $entity->set('customHeadCodePath', $path);
             $entity->set('customHeadCode', null);
-        }else if(!empty($path = $this->get('customHeadCodePath')) && is_file($path)){
+        }else if(
+            !empty($entity->_input)
+            && property_exists($entity->_input, 'customHeadCode')
+            && !empty($path = $this->get('customHeadCodePath'))
+            && is_file($path)
+        ){
             unlink($path);
             $entity->set('customHeadCodePath', null);
         }
@@ -57,7 +62,12 @@ class Style extends ReferenceData
 
             $entity->set('customStylesheetPath', $path);
             $entity->set('customStylesheet', null);
-        }else if (!empty($path = $entity->get('customStylesheetPath')) && is_file($path)) {
+        }else if (
+            !empty($entity->_input)
+            && property_exists($entity->_input, 'customStylesheet')
+            && !empty($path = $entity->get('customStylesheetPath'))
+            && is_file($path)
+        ) {
             unlink($path);
             $entity->set('customStylesheetPath', null);
         }
@@ -82,6 +92,15 @@ class Style extends ReferenceData
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
+
+        if (!empty($path = $entity->get('customStylesheetPath')) && is_file($path)) {
+            unlink($path);
+        }
+
+        if(!empty($path = $this->get('customHeadCodePath')) && is_file($path)){
+            unlink($path);
+            $entity->set('customHeadCodePath', null);
+        }
 
         $this->refreshCache();
     }

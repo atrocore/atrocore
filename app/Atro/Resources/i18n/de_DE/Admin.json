@@ -66,7 +66,8 @@
     "upsert": "Upsert",
     "execute": "Ausführen",
     "status": "Status",
-    "apiRequest": "API-Anfrag"
+    "apiRequest": "API-Anfrag",
+    "style": "Stile"
   },
   "logicalOperators": {
     "and": "UND",
@@ -233,7 +234,8 @@
     "notificationTemplates": "Verwalten Sie die Vorlage für die Standardmeldung des Systems.",
     "notificationProfiles": "Konfigurieren Sie Benachrichtigungsprofile und -regeln, um Ihren Alarmmanagementprozess effektiv zu optimieren, damit er zeitnah und relevant ist.",
     "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an",
-    "apiRequest": "Führen Sie API-Anfragen aus, indem Sie direkt einen JSON-Text liefern. Verwenden Sie diese Funktion, um schnell komplexe Datenstrukturen zu erstellen, wie z. B. konfigurierte Import- oder Export-Feeds."
+    "apiRequest": "Führen Sie API-Anfragen aus, indem Sie direkt einen JSON-Text liefern. Verwenden Sie diese Funktion, um schnell komplexe Datenstrukturen zu erstellen, wie z. B. konfigurierte Import- oder Export-Feeds.",
+    "style": "Erstellen, Aktualisieren und Anpassen von neuen Stilen, um Anpassungen an Standard-CSS vorzunehmen"
 
   },
   "options": {
