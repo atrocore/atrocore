@@ -5,7 +5,7 @@
 <div class="category-panel">
     <div class="panel-group text-center">
         <div class="btn-group">
-            <a href="/#{{scope}}" class="btn btn-default active reset-tree-filter">{{translate 'Reset'}}</a>
+            <a href="/#{{scope}}" class="btn btn-default active reset-tree-filter">{{translate 'Unset Selection'}}</a>
         </div>
     </div>
     <div class="panel-group category-search">

@@ -344,7 +344,8 @@
     "Unbookmarking": "Видалити закладку",
     "youShouldHaveAtLeastOneRecord": "Ви повинні мати принаймні 2 записи в списку, щоб мати можливість порівняти",
     "weCannotCompareMoreThan": "Максимальна кількість записів для порівняння - %s.",
-    "thereAreTooManyRecord": "Занадто багато записів. Неможливо порівняти"
+    "thereAreTooManyRecord": "Занадто багато записів. Неможливо порівняти",
+    "Unset Selection": "Зняти виділення"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
