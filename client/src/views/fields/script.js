@@ -48,7 +48,8 @@ Espo.define('views/fields/script', ['views/fields/base'], Dep => {
             this.svelteComponent = new Svelte.Script({
                 target: this.$el.children()[0],
                 props: {
-                    model: this.model,
+                    value: this.model.get(this.name),
+                    scope: this.model.name,
                     name: this.name,
                     params: this.params,
                     mode: this.mode,

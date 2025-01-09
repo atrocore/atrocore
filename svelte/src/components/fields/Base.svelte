@@ -6,7 +6,6 @@
     export let name = '';
     export let value = null;
     export let mode = 'detail';
-    export let model = null;
     export let params = {};
 
     export let isRequired = false;
@@ -47,9 +46,6 @@
 
     function handleFocus() {
         dispatch('focus', { name });
-        if (model) {
-            model.trigger('focusField', name);
-        }
     }
 
     export function fetch() {

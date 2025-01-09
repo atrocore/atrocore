@@ -5,7 +5,6 @@
     export let value = '';
     export let mode = 'detail';
     export let name = '';
-    export let model = null;
     export let params = {};
 
     export let rowsMin = 2;
@@ -122,7 +121,7 @@
     }
 </script>
 
-<Base {name} {value} {mode} {model} {params}>
+<Base {name} {value} {mode} {params}>
     <slot>
         {#if mode === 'detail' || (mode === 'detail' && useDisabledTextareaInViewMode)}
             {#if useDisabledTextareaInViewMode}
