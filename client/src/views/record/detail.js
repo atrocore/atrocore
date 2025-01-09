@@ -2709,6 +2709,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         treeReset(view) {
+            let previousSelectNodeId = this.getStorage().get('selectedNodeId', this.scope);
+            if(!previousSelectNodeId) {
+                return;
+            }
             this.getStorage().clear('selectedNodeId', this.scope);
             this.getStorage().clear('selectedNodeRoute', this.scope);
 
@@ -2719,6 +2723,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.getStorage().set('reSetupSearchManager', view.treeScope, true);
 
             view.toggleVisibilityForResetButton();
+
+            if([this.scope, 'Bookmark'].includes(view.treeScope) && this.model.id === previousSelectNodeId) {
+                window.location.href = `/#${this.scope}`;
+                return;
+            }
+
             view.rebuildTree();
         },
 

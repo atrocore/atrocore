@@ -629,8 +629,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 })
             });
 
-            this.modifyCollectionForSelectedNode()
-
             this.listenTo(this, 'record-list-rendered', (recordView) => {
                 this.listenTo(recordView, `bookmarked-${this.scope}`, (_) => {
                     this.reloadBookmarks();
@@ -707,8 +705,11 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             this.getView('search').silentResetFilters();
 
+            this.modifyCollectionForSelectedNode()
+
             if(![this.scope, 'Bookmark'].includes(view.treeScope)) {
-                this.collection.fetch();
+                this.notify('Please wait...');
+                this.collection.fetch().then(() => this.notify(false));
             }
         },
 
