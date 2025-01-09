@@ -25,14 +25,6 @@
                                 {{/each}}
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="theme">{{translate 'theme' category='fields' scope='Settings'}}</label>
-                            <select class="form-control" name="theme" id="theme">
-                                {{#each themes}}
-                                <option value="{{name}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
                         <div>
                             <a href="javascript:" class="btn btn-link pull-right" data-action="passwordChangeRequest" tabindex="4">{{translate 'Forgot Password?' scope='User'}}</a>
                             <button type="submit" class="btn btn-primary" id="btn-login" tabindex="3">{{translate 'Login' scope='User'}}</button>

@@ -30,8 +30,8 @@ class Style extends Base
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
-        parent::prepareCollectionForOutput($collection, $selectParams);
         $this->isCollectionRequest = true;
+        parent::prepareCollectionForOutput($collection, $selectParams);
     }
 
     public function prepareEntityForOutput(Entity $entity)
