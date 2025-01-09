@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "navigationManuBackgroundColor": "Navigation menu background",
+    "navigationMenuFontColor": "Navigation font color",
+    "linkFontColor": "Link color",
+    "customStylesheetPath": "СSS File Path",
+    "customStylesheet": "CSS",
+    "primaryColor": "Primary color",
+    "secondaryColor": "Secondary color",
+    "primaryFontColor": "Primary font color",
+    "secondaryFontColor": "Secondary font color",
+    "labelColor": "Label color",
+    "anchorNavigationBackground": "Anchor navigation background",
+    "iconColor": "Icon color",
+    "primaryBorderColor": "Primary border color",
+    "secondaryBorderColor": "Secondary border color",
+    "panelTitleColor": "Panel title color",
+    "headerTitleColor": "Header title color",
+    "success": "Success",
+    "notice": "Notice",
+    "information": "Information",
+    "error": "Error",
+    "customHeadCode": "Head Code"
+  },
+  "tooltips": {
+    "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too.",
+    "customHeadCode": "Add code at the end of the <head> tag. Atrocore doesn't validate custom code for you, so be sure to check your code before publishing."
+  },
+  "exceptions": {
+    "styleIsUsed": "Style in use cannot be removed."
+  }
+}

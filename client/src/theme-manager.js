@@ -47,13 +47,7 @@ Espo.define('theme-manager', [], function () {
         },
 
         getName: function () {
-            if (!this.config.get('userThemesDisabled')) {
-                var name = this.preferences.get('theme');
-                if (name && name !== '') {
-                    return name;
-                }
-            }
-            return this.config.get('theme');
+            return 'TreoClassicTheme';
         },
 
         getAppliedName: function () {
@@ -67,7 +61,7 @@ Espo.define('theme-manager', [], function () {
         },
 
         getStylesheet: function () {
-            var link = this.metadata.get(['themes', this.getName(), 'stylesheet']) || 'client/css/espo/espo.css';
+            var link = 'client/modules/treo-core/css/treo/treo-classic-theme.css';
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
             }
@@ -75,22 +69,16 @@ Espo.define('theme-manager', [], function () {
         },
 
         getCustomStylesheet: function () {
-            let currTheme = this.getName(),
-                customThemeList = this.config.get('customStylesheetsList') || {};
+            let style = this.getStyle();
 
-            if (Object.keys(customThemeList).length > 0) {
-                let customThemeData = customThemeList[currTheme] || {};
+            if (style && style['customStylesheetPath']) {
+                let link = style['customStylesheetPath'];
 
-                if (customThemeData && customThemeData['customStylesheetPath']) {
-                    let link = customThemeData['customStylesheetPath'];
-
-                    if (this.config.get('cacheTimestamp')) {
-                        link += '?r=' + this.config.get('cacheTimestamp').toString();
-                    }
-                    return link;
+                if (this.config.get('cacheTimestamp')) {
+                    link += '?r=' + this.config.get('cacheTimestamp').toString();
                 }
+                return link;
             }
-
             return null;
         },
 
@@ -103,21 +91,34 @@ Espo.define('theme-manager', [], function () {
         },
 
         getParam: function (name) {
-            return this.metadata.get(['themes', this.getName(), name]) || this.defaultParams[name] || null;
+            let style = this.getStyle() ?? {};
+            debugger
+            return style[name] ?? this.metadata.get(['themes', this.getName(), name]) || this.defaultParams[name] || null;
         },
 
         isUserTheme: function () {
             if (!this.config.get('userThemesDisabled')) {
-                var name = this.preferences.get('theme');
+                var name = this.preferences.get('styleId');
                 if (name && name !== '') {
-                    if (name !== this.config.get('theme')) {
+                    if (name !== this.config.get('defaultStyleId')) {
                         return true;
                     }
                 }
             }
             return false;
-        }
+        },
 
+        getStyle() {
+            let defaultStyleId = this.preferences.get('styleId') ?? this.config.get('defaultStyleId');
+
+            if(!defaultStyleId) {
+                return null;
+            }
+
+            let styles = (this.config.get('referenceData') ?? {})['Style'] ?? {};
+
+            return  styles[defaultStyleId];
+        },
     });
 
     return ThemeManager;

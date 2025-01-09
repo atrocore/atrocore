@@ -58,10 +58,8 @@
         "presetFilters": {
             "type": "jsonObject"
         },
-        "theme": {
-            "type": "enum",
-            "view": "views/preferences/fields/theme",
-            "translation": "Global.themes"
+        "style": {
+            "type": "link"
         },
         "useCustomTabList": {
             "type": "bool",
@@ -110,6 +108,10 @@
         "layoutProfile": {
             "type": "belongsTo",
             "entity": "LayoutProfile"
+        },
+        "style": {
+            "type": "belongsTo",
+            "entity": "Style"
         }
     }
 }

@@ -1,0 +1,127 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "maxLength": 255
+    },
+    "code": {
+      "type": "varchar",
+      "required": true
+    },
+    "customStylesheetPath": {
+      "type": "varchar",
+      "readOnly": true,
+      "tooltip": true
+    },
+    "customStylesheet": {
+      "type": "text",
+      "notStorable": true
+    },
+    "customStylesheetsList": {
+      "type": "jsonObject"
+    },
+    "navigationManuBackgroundColor": {
+      "type": "color"
+    },
+    "navigationMenuFontColor": {
+      "type": "color"
+    },
+    "linkFontColor": {
+      "type": "color"
+    },
+    "primaryColor": {
+      "type": "color"
+    },
+    "secondaryColor": {
+      "type": "color"
+    },
+    "primaryFontColor": {
+      "type": "color"
+    },
+    "secondaryFontColor": {
+      "type": "color"
+    },
+    "labelColor": {
+      "type": "color"
+    },
+    "anchorNavigationBackground": {
+      "type": "color"
+    },
+    "iconColor": {
+      "type": "color"
+    },
+    "primaryBorderColor": {
+      "type": "color"
+    },
+    "secondaryBorderColor": {
+      "type": "color"
+    },
+    "panelTitleColor": {
+      "type": "color"
+    },
+    "headerTitleColor": {
+      "type": "color"
+    },
+    "success": {
+      "type": "color"
+    },
+    "notice": {
+      "type": "color"
+    },
+    "information": {
+      "type": "color"
+    },
+    "error": {
+      "type": "color"
+    },
+    "customHeadCode": {
+      "type": "text",
+      "tooltip": true,
+      "notStorable": true
+    },
+    "navbarStaticItemsHeight": {
+      "type": "int"
+    },
+    "logo": {
+      "type": "varchar"
+    },
+    "customHeadCodePath": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": true
+  }
+}

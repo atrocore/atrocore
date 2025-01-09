@@ -190,71 +190,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "customStylesheetPath": {
-      "type": "varchar",
-      "readOnly": true,
-      "tooltip": true
-    },
-    "customStylesheet": {
-      "type": "text"
-    },
-    "customStylesheetsList": {
-      "type": "jsonObject"
-    },
-    "navigationManuBackgroundColor": {
-      "type": "color"
-    },
-    "navigationMenuFontColor": {
-      "type": "color"
-    },
-    "linkFontColor": {
-      "type": "color"
-    },
-    "primaryColor": {
-      "type": "color"
-    },
-    "secondaryColor": {
-      "type": "color"
-    },
-    "primaryFontColor": {
-      "type": "color"
-    },
-    "secondaryFontColor": {
-      "type": "color"
-    },
-    "labelColor": {
-      "type": "color"
-    },
-    "anchorNavigationBackground": {
-      "type": "color"
-    },
-    "iconColor": {
-      "type": "color"
-    },
-    "primaryBorderColor": {
-      "type": "color"
-    },
-    "secondaryBorderColor": {
-      "type": "color"
-    },
-    "panelTitleColor": {
-      "type": "color"
-    },
-    "headerTitleColor": {
-      "type": "color"
-    },
-    "success": {
-      "type": "color"
-    },
-    "notice": {
-      "type": "color"
-    },
-    "information": {
-      "type": "color"
-    },
-    "error": {
-      "type": "color"
-    },
     "fileNameRegexPattern": {
       "type": "varchar",
       "default": "/^[^\\\\\\/:\\*\\\"\\?<>%|\\s,]{1,64}/",
@@ -279,14 +214,6 @@
       "filterDisabled": true,
       "noLoad": true
     },
-    "customHeadCode": {
-      "type": "text",
-      "tooltip": true
-    },
-    "customHeadCodePath": {
-      "type": "varchar",
-      "readOnly": true
-    },
     "notificationSmtpConnection": {
       "type": "link",
       "view": "views/admin/notification/fields/notification-smtp-connection"
@@ -296,6 +223,9 @@
     },
     "sendOutNotifications": {
       "type": "bool"
+    },
+    "defaultStyle": {
+      "type": "link"
     },
     "automaticFileExtensionCorrection": {
       "type": "bool"
@@ -313,6 +243,10 @@
     "defaultNotificationProfile": {
       "type": "belongsTo",
       "entity": "NotificationProfile"
+    },
+    "defaultStyle": {
+      "type": "belongsTo",
+      "entity": "Style"
     }
   }
 }
