@@ -64,7 +64,7 @@
   },
   "tooltips": {
     "fontSize": "Taille de la police en em (par rapport à la taille de la police actuelle).",
-    "maxFileSize": "Si vide ou 0, il n'y a pas de limite.",
+    "maxFileSize": "Si vide ou 0, il n'y a pas de limite."
   },
   "messages": {
     "defaultValidationFailed": "La valeur par défaut ne peut pas contenir de caractères spéciaux"
