@@ -95,7 +95,69 @@
         if (languageId === 'json') {
             newLanguageId = `${languageId}-twig`;
             monaco.languages.register({id: newLanguageId});
+            monaco.languages.setLanguageConfiguration(newLanguageId, {
+                // Characters that should auto close
+                autoClosingPairs: [
+                    { open: '{', close: '}' },
+                    { open: '[', close: ']' },
+                    { open: '(', close: ')' },
+                    { open: '"', close: '"' },
+                    { open: "'", close: "'" },
+                    { open: '{{', close: '}}' },
+                    { open: '{%', close: '%}' },
+                    { open: '{#', close: '#}' }
+                ],
 
+                // Characters that should surround a selection
+                surroundingPairs: [
+                    { open: '{', close: '}' },
+                    { open: '[', close: ']' },
+                    { open: '(', close: ')' },
+                    { open: '"', close: '"' },
+                    { open: "'", close: "'" },
+                    { open: '{{', close: '}}' },
+                    { open: '{%', close: '%}' },
+                    { open: '{#', close: '#}' }
+                ],
+
+                // Brackets definition for bracket matching
+                brackets: [
+                    ['{', '}'],
+                    ['[', ']'],
+                    ['(', ')'],
+                    ['{{', '}}'],
+                    ['{%', '%}'],
+                    ['{#', '#}']
+                ],
+
+                // Characters that are used as word separators
+                wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\$\%\^\&\*\(\)\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
+
+                // Comment configuration
+                comments: {
+                    blockComment: ['{#', '#}']
+                },
+
+                // Auto indentation rules
+                onEnterRules: [
+                    {
+                        beforeText: /^\s*\{\%\s*(if|for|block|verbatim|filter|spaceless|with|trans|autoescape|embed|macro)\s*.*\%\}$/,
+                        afterText: /^\s*\{\%\s*end\1\s*\%\}$/,
+                        action: {
+                            indentAction: monaco.languages.IndentAction.IndentOutdent,
+                            appendText: '    '
+                        }
+                    }
+                ],
+
+                // Folding rules
+                folding: {
+                    markers: {
+                        start: new RegExp('^\\s*{%\\s*(if|for|block|verbatim|filter|spaceless|with|trans|autoescape|embed|macro)\\s.*%}'),
+                        end: new RegExp('^\\s*{%\\s*end\\w+\\s*%}')
+                    }
+                }
+            });
             // Set up tokens provider
             monaco.languages.setMonarchTokensProvider(newLanguageId, jsonTwigLanguageConfig);
         }
