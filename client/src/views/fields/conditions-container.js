@@ -72,7 +72,6 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
                 } else if (this.model.get('conditionsType') === 'script') {
                     view = 'views/fields/script'
                     options.params.required = true;
-                    options.params.useDisabledTextareaInViewMode = true;
                 }
 
                 this.show();
