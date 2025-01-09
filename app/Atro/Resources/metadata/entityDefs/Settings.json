@@ -190,7 +190,9 @@
       "tooltip": true
     },
     "customStylesheet": {
-      "type": "text"
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "css"
     },
     "customStylesheetsList": {
       "type": "jsonObject"
