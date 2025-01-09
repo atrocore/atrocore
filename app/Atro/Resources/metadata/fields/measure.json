@@ -23,13 +23,11 @@
       "name": "measure",
       "required": true,
       "entity": "Measure",
-      "type": "link",
-      "view": "views/admin/field-manager/fields/link/measure"
+      "type": "link"
     },
     {
       "name": "default",
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/link/measure-default"
+      "type": "varchar"
     }
   ],
   "filter": true,

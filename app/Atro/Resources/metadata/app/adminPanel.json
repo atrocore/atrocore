@@ -155,7 +155,7 @@
         "description": "layoutProfiles"
       },
       {
-        "url": "#Admin/entityManager",
+        "url": "#Entity",
         "label": "Entity Manager",
         "description": "entityManager"
       },

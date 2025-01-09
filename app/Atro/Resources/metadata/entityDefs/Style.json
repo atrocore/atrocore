@@ -17,10 +17,9 @@
     },
     "customStylesheet": {
       "type": "text",
-      "notStorable": true
-    },
-    "customStylesheetsList": {
-      "type": "jsonObject"
+      "notStorable": true,
+      "view": "views/fields/script",
+      "language": "css"
     },
     "navigationManuBackgroundColor": {
       "type": "color"

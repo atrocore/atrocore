@@ -1,38 +1,41 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"options",
-         "type":"array",
-         "view": "views/admin/field-manager/fields/options"
-      },
-      {
-         "name":"translation",
-         "type":"varchar",
-         "hidden": true
-      },
-      {
-         "name": "noEmptyString",
-         "type": "bool",
-         "default": false
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "filter": true,
-   "auditable": true,
-   "multilingual": true,
-   "notCreatable": false,
-   "notSortable": true,
-   "fieldDefs":{
-      "type":"jsonArray"
-   },
-   "translatedOptions": false,
-   "personalData": true
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "options",
+      "type": "array"
+    },
+    {
+      "name": "translation",
+      "type": "varchar",
+      "hidden": true
+    },
+    {
+      "name": "noEmptyString",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "notCreatable": false,
+  "notSortable": true,
+  "fieldDefs": {
+    "type": "jsonArray"
+  },
+  "translatedOptions": false,
+  "personalData": true
 }

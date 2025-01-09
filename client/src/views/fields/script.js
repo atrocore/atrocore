@@ -30,21 +30,42 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/script', ['views/fields/text', 'lib!Highlight'], Dep => {
+Espo.define('views/fields/script', ['views/fields/base'], Dep => {
 
     return Dep.extend({
 
-        detailTemplate: 'fields/script/detail',
+        _template: '<div></div>',
+        svelteComponent: null,
 
-        seeMoreDisabled: true,
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === 'detail' && !this.$el.hasClass('hidden')) {
-                hljs.highlightAll();
-            }
+        fetch: function () {
+            return this.svelteComponent.fetch()
         },
 
+        afterRender: function () {
+            if (!this.$el.children()[0]) {
+                return
+            }
+            this.svelteComponent = new Svelte.Script({
+                target: this.$el.children()[0],
+                props: {
+                    value: this.model.get(this.name),
+                    scope: this.model.name,
+                    name: this.name,
+                    params: this.params,
+                    mode: this.mode,
+                }
+            });
+        },
+
+        remove(dontEmpty) {
+            if (this.svelteComponent) {
+                try {
+                    this.svelteComponent.$destroy()
+                } catch (e) {
+                }
+            }
+
+            Dep.prototype.remove.call(this, dontEmpty)
+        }
     });
 });

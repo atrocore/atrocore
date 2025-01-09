@@ -31,8 +31,7 @@
     },
     {
       "name": "default",
-      "type": "link",
-      "view": "views/admin/field-manager/fields/file/default"
+      "type": "varchar"
     }
   ],
   "actualFields": [

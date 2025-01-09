@@ -42,8 +42,6 @@
     "adminNotifications": "Powiadomienia systemowe w panelu administracyjnym",
     "textFilterUseContainsForVarchar": "Użyj operatora 'zawiera' podczas filtrowania pól varchar",
     "authTokenPreventConcurrent": "Tylko jeden token autoryzacyjny na użytkownika",
-    "scopeColorsDisabled": "Wyłącz kolory zakresu",
-    "tabColorsDisabled": "Wyłącz kolory ikon zakładek",
     "tabIconsDisabled": "Wyłącz ikony zakładek",
     "emailAddressIsOptedOutByDefault": "Oznacz nowe adresy e-mail jako zrezygnowane",
     "navigationManuBackgroundColor": "Kolor tła menu nawigacyjnego",

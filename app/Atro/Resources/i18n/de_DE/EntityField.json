@@ -1,0 +1,100 @@
+{
+  "fields": {
+    "type": "Typ",
+    "entity": "Entität",
+    "isMultilang": "Mehrsprachig",
+    "required": "Erforderlich",
+    "notNull": "Nullwert deaktivieren",
+    "readOnly": "Schreibgeschützt",
+    "unique": "Einheitlich",
+    "index": "Datenbank-Index",
+    "measure": "Maß",
+    "trim": "Führende und nachfolgende Whitespaces entfernen",
+    "maxLength": "Maximale Länge",
+    "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
+    "pattern": "Regex-Muster",
+    "defaultUnit": "Standard-Einheit",
+    "default": "Standard",
+    "setDefaultOnlyIfRequired": "Standardwert nur bei Bedarf anwenden",
+    "tooltipText": "Tooltip-Text",
+    "tooltipLink": "Tooltip-Link",
+    "noEmptyString": "Leere Zeichenfolgen sind nicht zulässig",
+    "options": "Optionen",
+    "useNumericFormat": "Numerisches Format verwenden",
+    "isSorted": "Ist sortiert (alphabetisch)",
+    "dropdown": "Auswahlliste",
+    "previewSize": "Größe der Vorschau",
+    "min": "Minimum",
+    "max": "Maximum",
+    "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
+    "disableFormatting": "Formatierung deaktivieren",
+    "foreignName": "Fremd-Feld",
+    "fileTypes": "Datei-Typen",
+    "seeMoreDisabled": "Verkürzung des angezeigten Textes deaktivieren",
+    "minHeight": "Minimale Höhe (px)",
+    "maxHeight": "Maximale Höhe (px)",
+    "lengthOfCut": "Anzuzeigende Symbolmenge",
+    "script": "Script",
+    "outputType": "Ausgangstyp",
+    "preview": "Vorschau",
+    "rowsMax": "Maximale Anzahl der Zeilen des Textfeldes",
+    "rowsMin": "Mindestanzahl der Zeilen des Textfeldes",
+    "useDisabledTextareaInViewMode": "Deaktivierten Textfeld im Ansichtsmodus verwenden",
+    "strip": "Leere Zeichen vorne und hinten abschneiden",
+    "height": "Height (px)",
+    "useIframe": "Iframe im Ansichtsmodus verwenden",
+    "htmlSanitizer": "HTML Sanitizer",
+    "foreignCode": "Fremd-Code",
+    "relationType": "Beziehungstyp",
+    "foreignEntity": "Fremd-Entität",
+    "relationName": "Beziehungs-Code",
+    "linkMultipleField": "Verknüpfung mehrerer Felder"
+  },
+  "links": {
+    "entity": "Entität",
+    "measure": "Maß"
+  },
+  "tooltips": {
+    "isMultilang": "Automatische Erstellung von Feldern durch Klonen des aktuellen Feldes, und zwar so oft, wie in den Mehrspracheneinstellungen Gebietsschemata aktiviert sind.",
+    "required": "Das Feld ist obligatorisch. Kann nicht leer gelassen werden.",
+    "readOnly": "Der Feldwert kann nicht vom Benutzer angegeben werden.",
+    "maxLength": "Maximal zulässige Länge des Textes.",
+    "pattern": "Um nur Großbuchstaben mit einer maximalen Länge von 10 Zeichen zu aktivieren, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
+    "default": "Der Wert wird bei der Erstellung standardmäßig festgelegt.",
+    "isSorted": "Die Optionen werden nach dem Speichern sortiert.",
+    "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind.",
+    "min": "Minimaler akzeptabler Wert.",
+    "max": "Maximal zulässiger Wert.",
+    "foreignName": "Feld, das in der Beziehung angezeigt werden soll.",
+    "seeMoreDisabled": "Ist diese Option nicht aktiviert, werden lange Texte, die angezeigt werden sollen, gekürzt.",
+    "lengthOfCut": "Überzählige Zeichen werden im Ansichtsmodus ausgeblendet.",
+    "linkMultipleField": "Das Feld Mehrfach verknüpfen bietet eine praktische Möglichkeit, Beziehungen zu bearbeiten. Verwenden Sie es nicht, wenn Sie eine große Anzahl von Bezugsdatensätzen haben können."
+  },
+  "options": {
+    "previewSize": {
+      "small": "Klein",
+      "medium": "Mittel",
+      "large": "Groß"
+    },
+    "outputType": {
+      "text": "Text",
+      "int": "Integer",
+      "float": "Float",
+      "bool": "Boolesch",
+      "date": "Datum",
+      "datetime": "Datum und Zeit"
+    },
+    "relationType": {
+      "oneToMany": "Eins-zu-viele",
+      "manyToMany": "Viele-zu-Viele"
+    }
+  },
+  "confirmations": {
+    "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardwerte zurücksetzen wollen?"
+  },
+  "labels": {
+    "Create EntityField": "Entitätsfeld erstellen",
+    "resetToDefault": "Auf Standardwerte zurücksetzen",
+    "relationManagement": "Beziehungs-Management"
+  }
+}

@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "Entity": "Entity",
+    "EntityField": "Entity Field",
     "Language": "Language",
     "EmailTemplate": "Email Template",
     "Storage": "Storage",
@@ -62,6 +64,9 @@
     "Bookmark": "Bookmark"
   },
   "scopeNamesPlural": {
+    "Entity": "Entities",
+    "EntityField": "Entity Fields",
+    "EntityRelation": "Entity Relations",
     "Language": "Languages",
     "EmailTemplate": "Email Templates",
     "Storage": "Storages",
@@ -353,7 +358,8 @@
     "Unbookmarking": "Unbookmarking",
     "youShouldHaveAtLeastOneRecord": "You should have at list 2 records to be able to compare",
     "weCannotCompareMoreThan": "The maximum number records to be compared is %s.",
-    "thereAreTooManyRecord": "There are too many records. No comparison is possible"
+    "thereAreTooManyRecord": "There are too many records. No comparison is possible",
+    "Unset Selection": "Unset Selection"
 
   },
   "messages": {

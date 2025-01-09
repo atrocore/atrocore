@@ -18,24 +18,21 @@
       "name": "dropdown",
       "type": "bool",
       "default": false,
-      "view": "views/admin/field-manager/fields/dropdown",
       "tooltip": true
     },
     {
       "name": "extensibleEnum",
       "required": true,
       "entity": "ExtensibleEnum",
-      "type": "link",
-      "view": "views/admin/field-manager/fields/link/extensible-enum"
+      "type": "link"
     },
     {
       "name": "default",
-      "type": "link",
-      "view": "views/admin/field-manager/fields/link/extensible-enum-default"
+      "type": "varchar"
     },
     {
       "name": "extensibleEnumOptions",
-      "view": "views/admin/field-manager/fields/linkMultiple/extensible-enum-options"
+      "type": "array"
     }
   ],
   "notSortable": true,

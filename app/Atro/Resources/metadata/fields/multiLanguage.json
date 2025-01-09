@@ -17,7 +17,6 @@
   ],
   "filter": true,
   "auditable": true,
-  "multilingual": false,
   "notCreatable": false,
   "notSortable": true,
   "fieldDefs":{

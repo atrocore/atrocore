@@ -563,7 +563,7 @@ class File extends Base
             return;
         }
 
-        $allowFileTypesIds = $this->getMetadata()->get(['entityDefs', $file->_input->_uploadForEntityData->scope, 'fields', $file->_input->_uploadForEntityData->link, 'allowFileTypesIds']);
+        $allowFileTypesIds = $this->getMetadata()->get(['entityDefs', $file->_input->_uploadForEntityData->scope, 'fields', $file->_input->_uploadForEntityData->link, 'fileTypes']);
 
         if(empty($allowFileTypesIds)) {
             return;

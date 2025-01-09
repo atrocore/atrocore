@@ -44,8 +44,6 @@
     "adminNotifications": "System notifications in administration panel",
     "textFilterUseContainsForVarchar": "Use 'contains' operator when filtering varchar fields",
     "authTokenPreventConcurrent": "Only one auth token per user",
-    "scopeColorsDisabled": "Disable scope colors",
-    "tabColorsDisabled": "Disable tab icons colors",
     "tabIconsDisabled": "Disable tab icons",
     "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
     "passwordRegexPattern": "Password Regex Pattern",

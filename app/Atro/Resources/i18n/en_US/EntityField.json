@@ -1,0 +1,100 @@
+{
+  "fields": {
+    "type": "Type",
+    "entity": "Entity",
+    "isMultilang": "Multilingual",
+    "required": "Required",
+    "notNull": "Disable null value",
+    "readOnly": "Read-only",
+    "unique": "Unique",
+    "index": "Database Index",
+    "measure": "Measure",
+    "trim": "Remove leading and trailing whitespaces",
+    "maxLength": "Max length",
+    "countBytesInsteadOfCharacters": "Count bytes instead of characters",
+    "pattern": "Regex pattern",
+    "defaultUnit": "Default Unit",
+    "default": "Default",
+    "setDefaultOnlyIfRequired": "Apply default value only if required",
+    "tooltipText": "Tooltip text",
+    "tooltipLink": "Tooltip link",
+    "noEmptyString": "Empty string value is not allowed",
+    "options": "Options",
+    "useNumericFormat": "Use numeric format",
+    "isSorted": "Is sorted (alphabetically)",
+    "dropdown": "Dropdown",
+    "previewSize": "Preview size",
+    "min": "Min",
+    "max": "Max",
+    "amountOfDigitsAfterComma": "Amount of digits after comma",
+    "disableFormatting": "Disable formatting",
+    "foreignName": "Foreign field",
+    "fileTypes": "File Types",
+    "seeMoreDisabled": "Disable Displayed Text Shortening",
+    "minHeight": "Min height (px)",
+    "maxHeight": "Max height (px)",
+    "lengthOfCut": "Symbol amount to be displayed",
+    "script": "Script",
+    "outputType": "Output Type",
+    "preview": "Preview",
+    "rowsMax": "Maximum number of rows of textarea",
+    "rowsMin": "Minimum number of rows of textarea",
+    "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
+    "strip": "Strip",
+    "height": "Height (px)",
+    "useIframe": "Use iframe in view mode",
+    "htmlSanitizer": "HTML Sanitizer",
+    "foreignCode": "Foreign Code",
+    "relationType": "Relation Type",
+    "foreignEntity": "Foreign Entity",
+    "relationName": "Relation Code",
+    "linkMultipleField": "Link Multiple Field"
+  },
+  "links": {
+    "entity": "Entity",
+    "measure": "Measure"
+  },
+  "tooltips": {
+    "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
+    "required": "Field will be mandatory. Can't be left empty.",
+    "readOnly": "Field value can't be specified by user.",
+    "maxLength": "Max acceptable length of text.",
+    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
+    "default": "Value will be set by default upon creating.",
+    "isSorted": "Options will be sorted after saving.",
+    "dropdown": "Do not use the dropdown if there are more than 300 options in the list.",
+    "min": "Min acceptable value.",
+    "max": "Max acceptable value.",
+    "foreignName": "Field to be shown in the relation.",
+    "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
+    "lengthOfCut": "Excessive characters will be hidden in the view mode.",
+    "linkMultipleField": "This option enables a handy way to edit relations. Don't use it if you can have a large number of related records."
+  },
+  "options": {
+    "previewSize": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "outputType": {
+      "text": "Text",
+      "int": "Integer",
+      "float": "Float",
+      "bool": "Boolean",
+      "date": "Date",
+      "datetime": "Date-time"
+    },
+    "relationType": {
+      "oneToMany": "One-to-Many",
+      "manyToMany": "Many-to-Many"
+    }
+  },
+  "confirmations": {
+    "resetToDefault": "Are you sure you want to reset configuration to default?"
+  },
+  "labels": {
+    "Create EntityField": "Create Entity Field",
+    "resetToDefault": "Reset to default",
+    "relationManagement": "Relation Management"
+  }
+}

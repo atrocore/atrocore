@@ -45,8 +45,6 @@
     "followCreatedEntities": "Подписываться на создаваемые объекты",
     "adminNotifications": "Системные уведомления на панели администрирования",
     "authTokenPreventConcurrent": "Только один токен аутентификации для каждого пользователя",
-    "scopeColorsDisabled": "Отключить цвета границ",
-    "tabColorsDisabled": "Отключить цвета вкладок",
     "tabIconsDisabled": "Отключить значки вкладок",
     "textFilterUseContainsForVarchar": "Использовать оператор 'содержит' при фильтрации полей varchar",
     "emailAddressIsOptedOutByDefault": "Отметить новые адреса эл. почты как те, которые не принимают участия в эл. рассылке",

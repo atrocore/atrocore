@@ -13,8 +13,7 @@
     {
       "name": "measure",
       "type": "link",
-      "entity": "Measure",
-      "view": "views/admin/field-manager/fields/link/measure"
+      "entity": "Measure"
     },
     {
       "name": "default",
@@ -22,13 +21,11 @@
     },
     {
       "name": "setDefaultOnlyIfRequired",
-      "type": "bool",
-      "view": "views/admin/field-manager/fields/set-default-only-if-required"
+      "type": "bool"
     },
     {
       "name": "defaultUnit",
-      "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
+      "type": "varchar"
     },
     {
       "name": "maxLength",
@@ -59,12 +56,16 @@
     {
       "name": "index",
       "type": "bool"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
     }
   ],
   "filter": true,
   "auditable": true,
   "qbFilterType": "string",
-  "multilingual": true,
   "personalData": true,
   "textFilter": true
 }

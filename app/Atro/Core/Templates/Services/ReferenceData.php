@@ -20,11 +20,6 @@ use Espo\ORM\EntityCollection;
 
 class ReferenceData extends Record
 {
-    public function findLinkedEntities($id, $link, $params)
-    {
-        throw new BadRequest();
-    }
-
     public function linkEntity($id, $link, $foreignId)
     {
         throw new BadRequest();
@@ -82,7 +77,7 @@ class ReferenceData extends Record
         $foreigns = [];
 
         foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'links'], []) as $link => $defs) {
-            if ($defs['type'] === 'belongsTo' && !empty($defs['entity'])) {
+            if ($defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->getMetadata()->get(['scopes', $defs['entity'], 'type']) !== 'ReferenceData') {
                 $foreigns[$link] = $this->getEntityManager()
                     ->getRepository($defs['entity'])
                     ->where([

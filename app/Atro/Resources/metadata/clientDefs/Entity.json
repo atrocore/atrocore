@@ -1,0 +1,227 @@
+{
+  "controller": "controllers/record",
+  "recordViews": {
+    "list": "views/admin/entity-manager/record/list",
+    "detail": "views/admin/entity-manager/record/detail"
+  },
+  "relationshipPanels": {
+    "fields": {
+      "select": false,
+      "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink"
+    }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "code": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "sortBy": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "sortDirection": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "textFilterFields": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "statusField": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "hasArchive": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      },
+      "hasActive": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      },
+      "hideFieldTypeFilters": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      },
+      "streamDisabled": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      },
+      "kanbanViewMode": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "statusField"
+            }
+          ]
+        }
+      },
+      "kanbanStatusIgnoreList": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "kanbanViewMode"
+            }
+          ]
+        }
+      },
+      "deleteWithoutConfirmation": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      },
+      "clearDeletedAfterDays": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      },
+      "autoDeleteAfterDays": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      },
+      "modifiedExtendedRelations": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      },
+      "duplicatableRelations": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      },
+      "multiParents": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -8,7 +8,6 @@
       {
          "name":"default",
          "type":"enum",
-         "view": "views/admin/field-manager/fields/date/default",
          "options": [
             "",
             "javascript: return this.dateTime.getNow(1);",

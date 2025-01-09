@@ -24,6 +24,8 @@ use Espo\ORM\EntityManager;
 
 class Container
 {
+    protected array $data = [];
+
     protected array $classAliases
         = [
             'route'                    => \Atro\Core\Factories\RouteFactory::class,
@@ -49,10 +51,13 @@ class Container
             'config'                   => \Atro\Core\Utils\Config::class,
             'htmlSanitizer'            => \Atro\Core\Utils\HTMLSanitizer::class,
             'actionManager'            => \Atro\Core\ActionManager::class,
+            'fieldManager'             => \Atro\Core\Utils\FieldManager::class,
+            'fieldManagerUtil'         => \Atro\Core\Utils\FieldManager::class,
+            'dataManager'              => \Atro\Core\DataManager::class,
+            'schema'                   => \Atro\Core\Utils\Database\Schema\Schema::class,
             'styleManager'             => \Atro\Core\Factories\StyleManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
-            'fieldManager'             => \Espo\Core\Utils\FieldManager::class,
             'layout'                   => \Espo\Core\Utils\Layout::class,
             'acl'                      => \Espo\Core\Factories\Acl::class,
             'aclManager'               => \Espo\Core\Factories\AclManager::class,
@@ -60,28 +65,22 @@ class Container
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
             'entityManager'            => \Espo\Core\Factories\EntityManager::class,
             EntityManager::class       => \Espo\Core\Factories\EntityManager::class,
-            'entityManagerUtil'        => \Espo\Core\Factories\EntityManagerUtil::class,
-            'fieldManagerUtil'         => \Espo\Core\Factories\FieldManagerUtil::class,
             'filePathBuilder'          => \Espo\Core\Factories\FilePathBuilder::class,
             'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
             'number'                   => \Espo\Core\Factories\Number::class,
             'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,
             'output'                   => \Espo\Core\Factories\Output::class,
             'preferences'              => \Espo\Core\Factories\Preferences::class,
-            'schema'                   => \Espo\Core\Factories\Schema::class,
             'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
             'serviceFactory'           => \Espo\Core\ServiceFactory::class,
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
             'defaultLanguage'          => \Espo\Core\Factories\DefaultLanguage::class,
             'baseLanguage'             => \Espo\Core\Factories\BaseLanguage::class,
             Utils\Language::class      => \Espo\Core\Factories\Language::class,
-            'dataManager'              => \Espo\Core\Factories\DataManager::class,
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
         ];
-
-    protected array $data = [];
 
     public function __construct()
     {
