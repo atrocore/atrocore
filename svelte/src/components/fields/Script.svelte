@@ -68,7 +68,7 @@
     export let value = null;
 
     let language = params.language || Metadata.get(['entityDefs', scope, 'fields', name, 'language']) || 'twig';
-
+    let twigVariables = params.twigVariables || Metadata.get(['entityDefs', scope, 'fields', name, 'twigVariables']) || [];
     let editorComponent;
     let containerElement;
     let height = 200;
@@ -104,12 +104,13 @@
             monaco.languages.registerCompletionItemProvider(newLanguageId, {
                 provideCompletionItems: function (model, position) {
                     const editor = monaco.editor.getEditors().find(editor => editor.getModel() === model);
-                    const params = editor?.getOptions()?.get('params') ?? {};
-
-                    console.log('completion provider')
+                    const params = editor?.getRawOptions()?.params ?? {};
+                    const twigVariables = editor?.getRawOptions()?.twigVariables ?? [];
+                    console.log(twigVariables);
                     if (model.getLanguageId() === 'css') {
                         return {suggestions: []}
                     }
+                    let order = 100;
 
                     const wordUntilPosition = model.getWordUntilPosition(position);
                     const textUntilPosition = model.getValueInRange({
@@ -191,16 +192,22 @@
                             }
                         ];
 
-                        let filters = Object.keys(Metadata.get(['twig', 'filters']) ?? {});
-                        if (params.isExport) {
-                            filters.push(...Object.keys(Metadata.get(['app', 'twigFilters']) ?? {}))
-                        }
-                        filters.forEach(filter => {
+                        let filters = Metadata.get(['twigDescriptions', 'filters']) ?? {};
+
+                        Object.keys(filters).forEach(key => {
+                            const filter = filters[key]
+                            if (filter.tag) {
+                                if (!params.isExport) {
+                                    return;
+                                }
+                            }
                             twigFilters.push({
-                                label: filter,
+                                label: key,
                                 kind: monaco.languages.CompletionItemKind.Function,
+                                insertText: filter.insertText ?? key,
+                                insertTextRules: filter.insertText ? monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet : monaco.languages.CompletionItemInsertTextRule.None,
                                 detail: "Filter",
-                                insertText: filter,
+                                documentation: filter.description
                             })
                         })
 
@@ -215,27 +222,41 @@
 
 
                     // Entity variable suggestions
-                    let suggestions = [
-                        {
-                            label: 'entities',
+                    let suggestions = [...twigVariables, {
+                        name: 'config',
+                        description: 'Configuration object of the system',
+                    }].sort((v1, v2) => {
+                        return v1.name.localeCompare(v2.name);
+                    }).map(variable => {
+                        return {
+                            label: variable.name,
                             kind: monaco.languages.CompletionItemKind.Variable,
-                            insertText: 'entities',
-                            documentation: 'Entities to export',
-                            detail: 'Variable'
-                        }
-                    ];
+                            insertText: variable.name,
+                            documentation: variable.description,
+                            detail: 'Variable',
+                            sortText: (order++) + ''
+                        };
+                    });
 
-                    let functions = Object.keys(Metadata.get(['twig', 'functions']) ?? {});
-                    if (params.isExport) {
-                        functions.push(...Object.keys(Metadata.get(['app', 'twigFunctions']) ?? {}))
-                    }
-                    functions.forEach(fn => {
+                    let functions = Metadata.get(['twigDescriptions', 'functions']) ?? {};
+
+                    Object.keys(functions).sort((v1, v2) => {
+                        return v1.localeCompare(v2);
+                    }).forEach(key => {
+                        const fn = functions[key]
+                        if (fn.tag) {
+                            if (!params.isExport) {
+                                return;
+                            }
+                        }
                         suggestions.push({
-                            label: fn,
+                            label: key,
                             kind: monaco.languages.CompletionItemKind.Function,
-                            insertText: fn + '($0)',
+                            insertText: fn.insertText ?? (key + '($0)'),
                             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                             detail: 'Function',
+                            documentation: fn.description,
+                            sortText: (order++) + ''
                         })
                     })
 
@@ -277,7 +298,7 @@
                     ];
 
                     snippetSuggestions.forEach(suggestion => {
-                        if (isInTwigBlock) {
+                        if (/{%\s*$/.test(textUntilPosition)) {
                             range = {
                                 startLineNumber: position.lineNumber,
                                 endLineNumber: position.lineNumber,
@@ -365,10 +386,9 @@
             },
             theme: 'twig',
             readOnly: readOnly,
-            params: params
+            params: params,
+            twigVariables
         };
-
-        console.log(params)
 
         if (language === 'json') {
             options = {

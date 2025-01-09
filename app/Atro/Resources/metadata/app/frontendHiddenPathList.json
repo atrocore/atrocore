@@ -15,5 +15,8 @@
   [
     "app",
     "systemEmailTemplates"
+  ],
+  [
+    "twig"
   ]
 ]

@@ -1,0 +1,26 @@
+{
+  "prepareEntity": {
+    "description": "Prepare entity for display or processing"
+  },
+  "prepareHtmlField": {
+    "description": "Prepare HTML field content for safe display"
+  },
+  "isImage": {
+    "description": "Check if content is an image"
+  },
+  "escapeDoubleQuote": {
+    "description": "Escape double quotes in a string"
+  },
+  "escapeStr": {
+    "description": "Escape special characters in a string"
+  },
+  "backslashNToBr": {
+    "description": "Convert \\n to HTML line breaks"
+  },
+  "generateBorderColor": {
+    "description": "Generate a border color value"
+  },
+  "generateFontColor": {
+    "description": "Generate a font color value"
+  }
+}
