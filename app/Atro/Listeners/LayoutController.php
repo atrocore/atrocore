@@ -45,12 +45,25 @@ class LayoutController extends AbstractListener
         }
     }
 
+    protected function getAllUiLanguages(): array
+    {
+        $languages = array_unique(array_column($this->getConfig()->get('locales', []), 'language'));
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                if (!in_array($language, $languages)) {
+                    $languages[] = $language;
+                }
+            }
+        }
+
+        return $languages;
+    }
+
     protected function modifyTranslationList(Event $event)
     {
         $result = Json::decode($event->getArgument('result'), true);
 
-        $languages = array_unique(array_column($this->getConfig()->get('locales', []), 'language'));
-        foreach ($languages as $language) {
+        foreach ($this->getAllUiLanguages() as $language) {
             $result[] = ['name' => Util::toCamelCase(strtolower($language))];
         }
 
@@ -61,8 +74,7 @@ class LayoutController extends AbstractListener
     {
         $result = Json::decode($event->getArgument('result'), true);
 
-        $languages = array_unique(array_column($this->getConfig()->get('locales', []), 'language'));
-        foreach ($languages as $language) {
+        foreach ($this->getAllUiLanguages() as $language) {
             $result[0]['rows'][] = [['name' => Util::toCamelCase(strtolower($language)), 'fullWidth' => true]];
         }
 
@@ -108,13 +120,13 @@ class LayoutController extends AbstractListener
 
         $rows = [];
 
-        foreach(array_keys(($this->getMetadata()->get(['app','notificationTransports'], []))) as $transport){
-            $rows[] = [["name" => $transport.'Active'], ["name" => $transport.'TemplateId']];
+        foreach (array_keys(($this->getMetadata()->get(['app', 'notificationTransports'], []))) as $transport) {
+            $rows[] = [["name" => $transport . 'Active'], ["name" => $transport . 'TemplateId']];
         }
 
         $result[] = [
             "label" => "Transport",
-            "rows" => $rows
+            "rows"  => $rows
         ];
 
         $event->setArgument('result', Json::encode($result));
