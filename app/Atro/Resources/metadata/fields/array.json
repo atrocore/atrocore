@@ -6,10 +6,6 @@
       "default": false
     },
     {
-      "name": "options",
-      "type": "array"
-    },
-    {
       "name": "translation",
       "type": "varchar",
       "hidden": true
