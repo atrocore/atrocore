@@ -647,6 +647,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         let html = this._renderer.render(template, {dropdownItemList, scope: this.scope})
 
                         $buttons.find('li.preloader').hide()
+                        $buttons.find('.dropdown-menu .dynamic-action').remove()
                         $(html).insertBefore($buttons.find('ul > li.preloader'))
                         if (dropdownItemList.length === 0) {
                             $buttons.find('li.divider').hide()
@@ -661,6 +662,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         let html = this._renderer.render(template, {additionalButtons})
 
                         $buttons.find('a.preloader').hide()
+                        $buttons.find('.btn-group >.dynamic-action').remove()
                         $(html).insertBefore($buttons.find('a.preloader'))
                     }
                 })
@@ -775,6 +777,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.loadDynamicActions('single')
 
             this.listenTo(this.model, 'after:save', () => {
+                this.loadDynamicActions('single')
+            })
+
+            this.listenTo(this.model, 'sync', () => {
                 this.loadDynamicActions('single')
             })
 
