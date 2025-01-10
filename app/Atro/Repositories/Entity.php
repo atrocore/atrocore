@@ -169,10 +169,10 @@ class Entity extends ReferenceData
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $contents = file_get_contents(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json");
-            file_put_contents(
-                "data/metadata/$type/{$entity->get('code')}.json",
-                str_replace('{entityType}', $entity->get('code'), $contents)
-            );
+            if ($entity->get('type') === 'Hierarchy' && $type === 'entityDefs') {
+                $contents = str_replace('{entityType}', $entity->get('code'), $contents);
+            }
+            file_put_contents("data/metadata/$type/{$entity->get('code')}.json", $contents);
         }
 
         $entity->id = $entity->get('code');
