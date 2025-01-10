@@ -55,7 +55,7 @@ class Container
             'fieldManagerUtil'         => \Atro\Core\Utils\FieldManager::class,
             'dataManager'              => \Atro\Core\DataManager::class,
             'schema'                   => \Atro\Core\Utils\Database\Schema\Schema::class,
-            'styleManager'             => \Atro\Core\Factories\StyleManager::class,
+            'themeManager'             => \Atro\Core\Factories\ThemeManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
             'layout'                   => \Espo\Core\Utils\Layout::class,

@@ -16,10 +16,10 @@ namespace Atro\Core\Factories;
 use Atro\Core\Container;
 use Atro\Core\Factories\FactoryInterface as Factory;
 
-class StyleManager implements Factory
+class ThemeManager implements Factory
 {
     public function create(Container $container)
     {
-        return new \Atro\Core\Utils\StyleManager($container->get('config'), $container->get('preferences'));
+        return new \Atro\Core\Utils\ThemeManager($container->get('config'), $container->get('preferences'));
     }
 }

@@ -14,7 +14,7 @@ namespace Atro\Core\Utils;
 use Espo\Core\Utils\Config;
 use Espo\Entities\Preferences;
 
-class StyleManager
+class ThemeManager
 {
     protected Config $config;
 
