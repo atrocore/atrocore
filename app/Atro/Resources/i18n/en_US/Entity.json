@@ -30,7 +30,11 @@
     "unInheritedFields": "Uninherited fields",
     "relationInheritance": "Relation inheritance",
     "unInheritedRelations": "Uninherited relations",
-    "disableHierarchy": "Disable hierarchy"
+    "disableHierarchy": "Disable hierarchy",
+    "fields": "Fields"
+  },
+  "links": {
+    "fields": "Fields"
   },
   "options": {
     "type": {
