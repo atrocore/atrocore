@@ -168,9 +168,10 @@ class Entity extends ReferenceData
 
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
+            $contents = file_get_contents(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json");
             file_put_contents(
                 "data/metadata/$type/{$entity->get('code')}.json",
-                file_get_contents(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json")
+                str_replace('{entityType}', $entity->get('code'), $contents)
             );
         }
 
