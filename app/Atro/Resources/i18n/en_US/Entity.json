@@ -58,6 +58,8 @@
     "resetToDefault": "Are you sure you want to reset configuration to default?"
   },
   "tooltips": {
+    "clearDeletedAfterDays": "Records for this entity are permanently deleted XX days after the deletion date.",
+    "autoDeleteAfterDays": "Updates of this field are logged in stream.",
     "disabled": "Check if you don't need this entity in your system.",
     "textFilterFields": "Fields used by text search.",
     "statusField": "Updates of this field are logged in stream.",

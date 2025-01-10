@@ -54,6 +54,8 @@
     "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardeinstellungen zurücksetzen möchten?"
   },
   "tooltips": {
+    "clearDeletedAfterDays": "Datensätze für diese Entität werden XX Tage nach dem Löschungsdatum endgültig gelöscht.",
+    "autoDeleteAfterDays": "Datensätze für diese Entität werden automatisch XX Tage nach dem Datum der letzten Änderung gelöscht.",
     "disabled": "Prüfen Sie, ob Sie diese Entität in Ihrem System nicht benötigen.",
     "textFilterFields": "Für die Textsuche verwendete Felder.",
     "statusField": "Aktualisierungen dieses Feldes werden im Stream protokolliert.",

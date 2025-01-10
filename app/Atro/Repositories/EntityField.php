@@ -269,16 +269,21 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'type', 'isCustom'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isCustom'];
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
         foreach (array_merge($commonFields, $typeFields) as $field) {
+            $fieldType = $this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.type");
+            if ($fieldType === 'link') {
+                $field .= 'Id';
+            }
+
             if (!$entity->isAttributeChanged($field)) {
                 continue;
             }
 
             $loadedVal = $loadedData['entityDefs'][$entity->get('code')][$field] ?? null;
-            if ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields', $field, 'type']) === 'bool') {
+            if ($fieldType === 'bool') {
                 $loadedVal = !empty($loadedVal);
             }
             if ($loadedVal === $entity->get($field)) {
