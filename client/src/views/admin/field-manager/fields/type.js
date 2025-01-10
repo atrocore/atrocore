@@ -15,7 +15,7 @@ Espo.define('views/admin/field-manager/fields/type', 'views/fields/enum', Dep =>
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.params.options = [];
+            this.params.options = [''];
             this.translatedOptions = {'': ''};
 
             $.each(this.getMetadata().get('fields'), (type, typeDefs) => {
