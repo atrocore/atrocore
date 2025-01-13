@@ -12,10 +12,10 @@ Espo.define('views/admin/field-manager/fields/extensible-multi-enum-default', 'v
 
     return Dep.extend({
 
-        selectBoolFilterList: ['fieldsFilter'],
+        selectBoolFilterList: ['defaultOption'],
 
         boolFilterData: {
-            fieldsFilter() {
+            defaultOption() {
                 return {
                     extensibleEnumId: this.model.get('extensibleEnumId')
                 };
