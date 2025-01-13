@@ -37,7 +37,11 @@ class FileManager extends Manager
         }
 
         if (filesize($fileName) < $this->chunkSize) {
-            return md5_file($fileName);
+            $hash = md5_file($fileName);
+            if (!$hash) {
+                return null;
+            }
+            return $hash;
         }
 
         $handle = fopen($fileName, 'rb');

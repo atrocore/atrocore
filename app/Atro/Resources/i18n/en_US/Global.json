@@ -124,7 +124,7 @@
     "customizeLayout": "Customize Layout",
     "deletePermanently": "Delete Permanently",
     "Reupload": "Reupload",
-    "attachFiles":"Attach Files",
+    "attachFiles": "Attach Files",
     "typeToSearch": "Type and press Enter...",
     "dragAndDropBtnText": "Drag & Drop",
     "dragAndDropBtnTextSmall": "your file(s) here or",
@@ -141,7 +141,7 @@
     "floatPart": "(Float)",
     "unitPart": "(Unit)",
     "inheritAllForChildren": "Inherit all for children items",
-    "inheritAllFromParent":"Inherit all from parent",
+    "inheritAllFromParent": "Inherit all from parent",
     "homepage": "Homepage",
     "Sharing": "Sharing",
     "customDownload": "Custom Download",
@@ -360,7 +360,6 @@
     "weCannotCompareMoreThan": "The maximum number records to be compared is %s.",
     "thereAreTooManyRecord": "There are too many records. No comparison is possible",
     "Unset Selection": "Unset Selection"
-
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
@@ -1092,5 +1091,42 @@
     },
     "invert": "Invert",
     "NOT": "NOT"
+  },
+  "twig": {
+    "functions": {
+      "isNew": "Check if an entity is new",
+      "isAttributeChanged": "Check if an attribute has been changed",
+      "getFetched": "Get fetched entity data",
+      "get": "Get field value",
+      "createEntity": "Create a new entity",
+      "createRecord": "Create a new entity record",
+      "findEntity": "Find a single entity",
+      "findRecord": "Find a single entity record",
+      "findEntities": "Find multiple entities \n Params: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
+      "findRecords": "Find multiple entities \n Params: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
+      "convertFileToBase64FromUrl": "Convert a file to base64 from URL",
+      "translate": "Translate a string",
+      "translateOption": "Translate an option value",
+      "convertFileToBase64": "Convert a file to base64",
+      "getConvertedImageUrl": "Get URL of a converted image",
+      "editable": "Check if an entity is editable",
+      "getAllLanguageFields": "Get all language-specific fields",
+      "parseMarkdown": "Parse markdown content",
+      "formatField": "Format a field value"
+    },
+    "filters": {
+      "prepareEntity": "Prepare entity for display or processing",
+      "prepareHtmlField": "Prepare HTML field content for safe display",
+      "isImage": "Check if content is an image",
+      "escapeDoubleQuote": "Escape double quotes in a string",
+      "escapeStr": "Escape special characters in a string",
+      "backslashNToBr": "Convert \\n to HTML line breaks",
+      "generateBorderColor": "Generate a border color value",
+      "generateFontColor": "Generate a font color value"
+    }
+  },
+  "twigVariables": {
+    "entity": "Entity to check",
+    "config": "Configuration object of the system"
   }
 }

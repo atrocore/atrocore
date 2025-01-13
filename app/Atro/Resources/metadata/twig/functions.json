@@ -1,22 +1,65 @@
 {
-  "isNew": "\\Atro\\TwigFunction\\IsNew",
-  "isAttributeChanged": "\\Atro\\TwigFunction\\IsAttributeChanged",
-  "getFetched": "\\Atro\\TwigFunction\\GetFetched",
-  "get": "\\Atro\\TwigFunction\\GetField",
-  "createEntity": "\\Atro\\TwigFunction\\CreateEntity",
-  "createRecord": "\\Atro\\TwigFunction\\CreateEntity",
-  "findEntity": "\\Atro\\TwigFunction\\FindEntity",
-  "findRecord": "\\Atro\\TwigFunction\\FindEntity",
-  "findEntities": "\\Atro\\TwigFunction\\FindEntities",
-  "findRecords": "\\Atro\\TwigFunction\\FindEntities",
-  "convertAssetToBase64FromUrl": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl",
-  "convertFileToBase64FromUrl": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl",
-  "translate": "\\Atro\\TwigFunction\\Translate",
-  "translateOption": "\\Atro\\TwigFunction\\TranslateOption",
-  "convertFileToBase64": "\\Atro\\TwigFunction\\ConvertFileToBase64",
-  "getConvertedImageUrl": "\\Atro\\TwigFunction\\GetConvertedImageUrl",
-  "editable": "\\Atro\\TwigFunction\\EditableEntity",
-  "getAllLanguageFields": "\\Atro\\TwigFunction\\GetAllLanguageFields",
-  "parseMarkdown": "\\Atro\\TwigFunction\\ParseMarkdown",
-  "formatField": "\\Atro\\TwigFunction\\FormatField"
+  "isNew": {
+    "handler": "\\Atro\\TwigFunction\\IsNew"
+  },
+  "isAttributeChanged": {
+    "handler": "\\Atro\\TwigFunction\\IsAttributeChanged"
+  },
+  "getFetched": {
+    "handler": "\\Atro\\TwigFunction\\GetFetched"
+  },
+  "get": {
+    "handler": "\\Atro\\TwigFunction\\GetField"
+  },
+  "createEntity": {
+    "handler": "\\Atro\\TwigFunction\\CreateEntity"
+  },
+  "createRecord": {
+    "handler": "\\Atro\\TwigFunction\\CreateEntity"
+  },
+  "findEntity": {
+    "handler": "\\Atro\\TwigFunction\\FindEntity"
+  },
+  "findRecord": {
+    "handler": "\\Atro\\TwigFunction\\FindEntity"
+  },
+  "findEntities": {
+    "handler": "\\Atro\\TwigFunction\\FindEntities",
+    "insertText": "findEntities(${1:entityName}, ${2:{}})"
+  },
+  "findRecords": {
+    "handler": "\\Atro\\TwigFunction\\FindEntities",
+    "insertText": "findEntities(${1:entityName}, $0)"
+
+  },
+  "convertAssetToBase64FromUrl": {
+    "handler": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl"
+  },
+  "convertFileToBase64FromUrl": {
+    "handler": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl"
+  },
+  "translate": {
+    "handler": "\\Atro\\TwigFunction\\Translate"
+  },
+  "translateOption": {
+    "handler": "\\Atro\\TwigFunction\\TranslateOption"
+  },
+  "convertFileToBase64": {
+    "handler": "\\Atro\\TwigFunction\\ConvertFileToBase64"
+  },
+  "getConvertedImageUrl": {
+    "handler": "\\Atro\\TwigFunction\\GetConvertedImageUrl"
+  },
+  "editable": {
+    "handler": "\\Atro\\TwigFunction\\EditableEntity"
+  },
+  "getAllLanguageFields": {
+    "handler": "\\Atro\\TwigFunction\\GetAllLanguageFields"
+  },
+  "parseMarkdown": {
+    "handler": "\\Atro\\TwigFunction\\ParseMarkdown"
+  },
+  "formatField": {
+    "handler": "\\Atro\\TwigFunction\\FormatField"
+  }
 }
