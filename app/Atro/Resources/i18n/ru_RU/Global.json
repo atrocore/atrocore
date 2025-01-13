@@ -456,24 +456,10 @@
     "measure": "Измерение",
     "units": "Единицы",
     "id": "ID",
-    "ids": "IDs"
-  },
-  "links": {
-    "connection": "Соединение",
-    "file": "Файл",
-    "files": "Файлы",
-    "assignedAccounts": "Контрагенты",
-    "assignedUser": "Ответственный",
-    "createdBy": "Создан (кем)",
-    "modifiedBy": "Изменен (кем)",
+    "ids": "IDs",
     "team": "Группа",
     "roles": "Роли",
-    "teams": "Группы",
-    "users": "Пользователи",
-    "parent": "Источник",
-    "parents": "Родительские записи",
-    "children": "Дочерние записи",
-    "ownerUser": "Owner"
+    "users": "Пользователи"
   },
   "dashlets": {
     "Stream": "Лента",

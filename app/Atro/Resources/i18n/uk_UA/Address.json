@@ -23,11 +23,5 @@
   },
   "labels": {
     "Create Address": "Створити адресу"
-  },
-  "links": {
-    "prospect": "Перспективи",
-    "country": "провінційний",
-    "accounts": "Аккаунти",
-    "contacts": "Kонтакти"
   }
 }

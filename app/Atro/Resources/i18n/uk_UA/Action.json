@@ -12,10 +12,6 @@
     "conditionsType": "Тип умови",
     "conditions": "Умови"
   },
-  "links": {
-    "actionsSet": "Набори дій",
-    "actions": "Дії"
-  },
   "labels": {
     "Create Action": "Створити дію",
     "execute": "Виконати"

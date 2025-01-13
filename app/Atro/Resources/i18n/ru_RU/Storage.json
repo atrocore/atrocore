@@ -5,10 +5,6 @@
     "files": "Файлы",
     "folders": "Папки"
   },
-  "links": {
-    "files": "Файлы",
-    "folders": "Папки"
-  },
   "options": {
     "type": {
       "local": "Local (Linux)"

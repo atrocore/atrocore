@@ -4,9 +4,6 @@
     "description": "вид",
     "hideShowFullList": "Приховати \"Показати повний список\" на панелях зв'язків"
   },
-  "links": {
-    "layouts": "влаштовування"
-  },
   "labels": {
     "Create LayoutProfile": "Створити профіль макета"
   }

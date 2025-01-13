@@ -7,7 +7,9 @@
     "type": "типовий",
     "role": "Роль",
     "number": "Номер",
-    "language": "Мова"
+    "language": "Мова",
+    "addresses": "Адреси",
+    "contacts": "Контакти"
   },
   "options": {
     "type": {
@@ -21,10 +23,6 @@
   },
   "labels": {
     "Create Account": "Створити контрагента"
-  },
-  "links": {
-    "addresses": "Адреси",
-    "contacts": "Контакти"
   },
   "exceptions": {
     "defaultAddressAlreadyExist": "Адреса за замовчуванням для облікового запису вже існує."

@@ -10,11 +10,7 @@
     "authToken": "Токен аутентифікації створено",
     "requestUrl": "URL запиту",
     "requestMethod": "Метод запиту",
-    "authTokenIsActive": "Токен аутентифікації активний"
-  },
-  "links": {
-    "authToken": "Токен аутентифікації створено",
-    "user": "Користувач",
+    "authTokenIsActive": "Токен аутентифікації активний",
     "actionHistoryRecords": "Історія дій"
   },
   "presetFilters": {

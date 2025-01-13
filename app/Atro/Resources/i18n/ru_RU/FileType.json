@@ -4,10 +4,6 @@
     "assignAutomatically": "Назначить автоматически",
     "files": "Файлы"
   },
-  "links": {
-    "validationRules": "Правила проверки",
-    "files": "Файлы"
-  },
   "exceptions": {
     "fileTypeCannotBeDeleted": "Запись не может быть удалена, так как она используется в поле '%s' сущности '%s'."
   },

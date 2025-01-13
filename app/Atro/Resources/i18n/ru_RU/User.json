@@ -24,13 +24,9 @@
     "ipAddress": "IP адрес",
     "passwordPreview": "Предпросмотр пароля",
     "lastAccess": "Последнее подключение",
-    "type": "Тип"
-  },
-  "links": {
+    "type": "Тип",
     "teams": "Группы",
-    "roles": "Роли",
     "notes": "Заметки",
-    "account": "Контрагент",
     "tasks": "Задачи"
   },
   "labels": {

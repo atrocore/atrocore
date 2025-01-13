@@ -6,9 +6,7 @@
     "weekStart": "Перший день тижня",
     "timeFormat": "Формат часу",
     "thousandSeparator": "Тисячний роздільник",
-    "decimalMark": "Десятковий роздільник"
-  },
-  "links": {
+    "decimalMark": "Десятковий роздільник",
     "measures": "Заходи"
   },
   "labels": {
