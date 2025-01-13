@@ -581,22 +581,9 @@
     "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
     "type": "Typ",
     "dropdown": "Auswahlliste",
-    "isActive": "Aktiv"
-  },
-  "links": {
-    "connection": "Verbindung",
-    "file": "Datei",
-    "files": "Dateien",
-    "parent": "Parent",
-    "ownerUser": "Besitzer",
-    "assignedAccounts": "Accounts",
-    "assignedUser": "Zugewiesener Benutzer",
-    "createdBy": "Erstellt von",
-    "modifiedBy": "Geändert von",
+    "isActive": "Aktiv",
     "roles": "Rollen",
-    "users": "Benutzer",
-    "parents": "Übergeordnete Datensätze",
-    "children": "Untergeordnete Datensätze"
+    "users": "Benutzer"
   },
   "dashlets": {
     "Stream": "Aktivitäten",

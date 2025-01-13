@@ -3,9 +3,7 @@
     "data": "Daten",
     "roles": "Rollen",
     "assignmentPermission": "Zuweisungsberechtigung",
-    "dataPrivacyPermission": "Datenschutz Erlaubnis"
-  },
-  "links": {
+    "dataPrivacyPermission": "Datenschutz Erlaubnis",
     "users": "Benutzer"
   },
   "tooltips": {

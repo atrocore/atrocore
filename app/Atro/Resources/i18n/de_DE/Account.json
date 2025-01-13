@@ -6,7 +6,9 @@
     "type": "Typ",
     "role": "Rolle",
     "number": "Nummer",
-    "language": "Sprache"
+    "language": "Sprache",
+    "addresses": "Adressen",
+    "contacts": "Kontakte"
   },
   "options": {
     "type": {
@@ -20,10 +22,6 @@
   },
   "labels": {
     "Create Account": "Account erstellen"
-  },
-  "links": {
-    "addresses": "Adressen",
-    "contacts": "Kontakte"
   },
   "exceptions": {
     "defaultAddressAlreadyExist": "Die Standardadresse für das Konto ist bereits vorhanden."
