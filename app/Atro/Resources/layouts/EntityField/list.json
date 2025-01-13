@@ -10,6 +10,9 @@
     "name": "type"
   },
   {
+    "name": "required"
+  },
+  {
     "name": "tooltip"
   },
   {
