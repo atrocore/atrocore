@@ -73,10 +73,7 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
                     view = 'views/fields/script'
                     options.params.required = true;
                     options.params.twigVariables = [
-                        {
-                            "name": "entity",
-                            "description": "Entity to check"
-                        }
+                        "entity"
                     ]
                 }
 

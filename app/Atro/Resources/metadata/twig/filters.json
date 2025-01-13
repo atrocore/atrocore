@@ -1,10 +1,26 @@
 {
-  "prepareEntity": "\\Atro\\TwigFilter\\PrepareEntity",
-  "prepareHtmlField": "\\Atro\\TwigFilter\\PrepareHtmlField",
-  "isImage": "\\Atro\\TwigFilter\\IsImage",
-  "escapeDoubleQuote": "\\Atro\\TwigFilter\\EscapeDoubleQuote",
-  "escapeStr": "\\Atro\\TwigFilter\\EscapeString",
-  "backslashNToBr": "\\Atro\\TwigFilter\\BackslashNToBr",
-  "generateBorderColor": "\\Atro\\TwigFilter\\GenerateBorderColor",
-  "generateFontColor": "\\Atro\\TwigFilter\\GenerateFontColor"
+  "prepareEntity": {
+    "handler": "\\Atro\\TwigFilter\\PrepareEntity"
+  },
+  "prepareHtmlField": {
+    "handler": "\\Atro\\TwigFilter\\PrepareHtmlField"
+  },
+  "isImage": {
+    "handler": "\\Atro\\TwigFilter\\IsImage"
+  },
+  "escapeDoubleQuote": {
+    "handler": "\\Atro\\TwigFilter\\EscapeDoubleQuote"
+  },
+  "escapeStr": {
+    "handler": "\\Atro\\TwigFilter\\EscapeString"
+  },
+  "backslashNToBr": {
+    "handler": "\\Atro\\TwigFilter\\BackslashNToBr"
+  },
+  "generateBorderColor": {
+    "handler": "\\Atro\\TwigFilter\\GenerateBorderColor"
+  },
+  "generateFontColor": {
+    "handler": "\\Atro\\TwigFilter\\GenerateFontColor"
+  }
 }

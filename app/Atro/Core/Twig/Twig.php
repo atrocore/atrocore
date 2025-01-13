@@ -32,7 +32,8 @@ class Twig
         $templateData['config'] = $this->getConfig()->getData();
 
         try {
-            foreach ($this->getMetadata()->get(['twig', 'filters'], []) as $alias => $className) {
+            foreach ($this->getMetadata()->get(['twig', 'filters'], []) as $alias => $data) {
+                $className = is_array($data) ? $data['handler'] : $data;
                 $filter = $this->container->get($className);
                 if ($filter instanceof AbstractTwigFilter) {
                     $filter->setTemplateData($templateData);
@@ -40,7 +41,8 @@ class Twig
                 }
             }
 
-            foreach ($this->getMetadata()->get(['twig', 'functions'], []) as $alias => $className) {
+            foreach ($this->getMetadata()->get(['twig', 'functions'], []) as $alias => $data) {
+                $className = is_array($data) ? $data['handler'] : $data;
                 $twigFunction = $this->container->get($className);
                 if ($twigFunction instanceof AbstractTwigFunction && method_exists($twigFunction, 'run')) {
                     $twigFunction->setTemplateData($templateData);

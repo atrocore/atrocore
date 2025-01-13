@@ -60,6 +60,7 @@
     import {onMount} from 'svelte';
     import Text from './Text.svelte';
     import {Metadata} from "../../utils/Metadata";
+    import {Language} from "../../utils/Language";
 
     export let mode = 'detail';
     export let name = '';
@@ -98,26 +99,26 @@
             monaco.languages.setLanguageConfiguration(newLanguageId, {
                 // Characters that should auto close
                 autoClosingPairs: [
-                    { open: '{', close: '}' },
-                    { open: '[', close: ']' },
-                    { open: '(', close: ')' },
-                    { open: '"', close: '"' },
-                    { open: "'", close: "'" },
-                    { open: '{{', close: '}}' },
-                    { open: '{%', close: '%}' },
-                    { open: '{#', close: '#}' }
+                    {open: '{', close: '}'},
+                    {open: '[', close: ']'},
+                    {open: '(', close: ')'},
+                    {open: '"', close: '"'},
+                    {open: "'", close: "'"},
+                    {open: '{{', close: '}}'},
+                    {open: '{%', close: '%}'},
+                    {open: '{#', close: '#}'}
                 ],
 
                 // Characters that should surround a selection
                 surroundingPairs: [
-                    { open: '{', close: '}' },
-                    { open: '[', close: ']' },
-                    { open: '(', close: ')' },
-                    { open: '"', close: '"' },
-                    { open: "'", close: "'" },
-                    { open: '{{', close: '}}' },
-                    { open: '{%', close: '%}' },
-                    { open: '{#', close: '#}' }
+                    {open: '{', close: '}'},
+                    {open: '[', close: ']'},
+                    {open: '(', close: ')'},
+                    {open: '"', close: '"'},
+                    {open: "'", close: "'"},
+                    {open: '{{', close: '}}'},
+                    {open: '{%', close: '%}'},
+                    {open: '{#', close: '#}'}
                 ],
 
                 // Brackets definition for bracket matching
@@ -166,9 +167,12 @@
             monaco.languages.registerCompletionItemProvider(newLanguageId, {
                 provideCompletionItems: function (model, position) {
                     const editor = monaco.editor.getEditors().find(editor => editor.getModel() === model);
-                    const params = editor?.getRawOptions()?.params ?? {};
-                    const twigVariables = editor?.getRawOptions()?.twigVariables ?? [];
-                    console.log(twigVariables);
+                    const options = editor?.getRawOptions() ?? {};
+                    const params = options.params ?? {};
+                    const twigVariables = options.twigVariables ?? [];
+                    const name = options.name;
+                    const scope = options.scope;
+
                     if (model.getLanguageId() === 'css') {
                         return {suggestions: []}
                     }
@@ -254,22 +258,23 @@
                             }
                         ];
 
-                        let filters = Metadata.get(['twigDescriptions', 'filters']) ?? {};
+                        let filters = Metadata.get(['twig', 'filters']) ?? {};
+                        if (params.isExport) {
+                            filters.push(...(Metadata.get(['app', 'twigFilters'])))
+                        }
+
+                        let filterTranslations = Language.get('Global', 'twig', 'filters') ?? {};
 
                         Object.keys(filters).forEach(key => {
                             const filter = filters[key]
-                            if (filter.tag) {
-                                if (!params.isExport) {
-                                    return;
-                                }
-                            }
+
                             twigFilters.push({
                                 label: key,
                                 kind: monaco.languages.CompletionItemKind.Function,
                                 insertText: filter.insertText ?? key,
                                 insertTextRules: filter.insertText ? monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet : monaco.languages.CompletionItemInsertTextRule.None,
                                 detail: "Filter",
-                                documentation: filter.description
+                                documentation: filterTranslations[key]
                             })
                         })
 
@@ -282,12 +287,15 @@
                         return {suggestions: []}
                     }
 
-
+                    let variableTranslations = Language.get(scope, 'twigVariables', name) ?? {}
                     // Entity variable suggestions
-                    let suggestions = [...twigVariables, {
-                        name: 'config',
-                        description: 'Configuration object of the system',
-                    }].sort((v1, v2) => {
+                    let suggestions = [
+                        ...twigVariables,
+                        'config',
+                    ].map(variable => ({
+                        name: variable,
+                        description: variableTranslations[variable] ?? Language.get('Global', 'twigVariables', variable)
+                    })).sort((v1, v2) => {
                         return v1.name.localeCompare(v2.name);
                     }).map(variable => {
                         return {
@@ -300,24 +308,24 @@
                         };
                     });
 
-                    let functions = Metadata.get(['twigDescriptions', 'functions']) ?? {};
+                    let functions = Metadata.get(['twig', 'functions']) ?? {};
+                    if (params.isExport) {
+                        functions.push(...(Metadata.get(['app', 'twigFunctions'])))
+                    }
+
+                    let functionTranslations = Language.get('Global', 'twig', 'functions') ?? {};
 
                     Object.keys(functions).sort((v1, v2) => {
                         return v1.localeCompare(v2);
                     }).forEach(key => {
                         const fn = functions[key]
-                        if (fn.tag) {
-                            if (!params.isExport) {
-                                return;
-                            }
-                        }
                         suggestions.push({
                             label: key,
                             kind: monaco.languages.CompletionItemKind.Function,
                             insertText: fn.insertText ?? (key + '($0)'),
                             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                             detail: 'Function',
-                            documentation: fn.description,
+                            documentation: functionTranslations[key],
                             sortText: (order++) + ''
                         })
                     })
@@ -449,6 +457,8 @@
             theme: 'twig',
             readOnly: readOnly,
             params: params,
+            name,
+            scope,
             twigVariables
         };
 
