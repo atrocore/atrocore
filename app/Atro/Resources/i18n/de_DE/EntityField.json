@@ -50,10 +50,6 @@
     "relationName": "Beziehungs-Code",
     "linkMultipleField": "Verknüpfung mehrerer Felder"
   },
-  "links": {
-    "entity": "Entität",
-    "measure": "Maß"
-  },
   "tooltips": {
     "isMultilang": "Automatische Erstellung von Feldern durch Klonen des aktuellen Feldes, und zwar so oft, wie in den Mehrspracheneinstellungen Gebietsschemata aktiviert sind.",
     "required": "Das Feld ist obligatorisch. Kann nicht leer gelassen werden.",

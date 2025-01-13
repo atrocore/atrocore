@@ -4,9 +4,7 @@
     "ipAddress": "IP адреса",
     "lastAccess": "Дата останнього підключення",
     "createdAt": "Дата входу",
-    "isActive": "Активний"
-  },
-  "links": {
+    "isActive": "Активний",
     "actionHistoryRecords": "Історія дій"
   }
 }

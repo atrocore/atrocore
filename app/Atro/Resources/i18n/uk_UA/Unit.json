@@ -9,9 +9,6 @@
     "symbol": "Знак",
     "isActive": "Активний"
   },
-  "links": {
-    "measure": "Міра"
-  },
   "labels": {
     "Create Unit": "Створити одиницю виміру",
     "unitSetDefault": "Встановити як дефолтне"

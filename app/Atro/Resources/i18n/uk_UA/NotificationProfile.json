@@ -1,9 +1,7 @@
 {
   "fields": {
     "isActive": "Активний",
-    "description": "Опис"
-  },
-  "links": {
+    "description": "Опис",
     "notificationRules": "Правила сповіщення"
   },
   "labels": {

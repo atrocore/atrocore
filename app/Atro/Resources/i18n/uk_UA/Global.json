@@ -548,24 +548,10 @@
     "id": "ID",
     "ids": "IDs",
     "dropdown": "Список",
-    "isActive": "Активний"
-  },
-  "links": {
-    "connection": "З'єднання",
-    "file": "Файл",
-    "files": "Файли",
-    "assignedAccounts": "Контрагенти",
-    "assignedUser": "Відповідальний",
-    "createdBy": "Створено (ким)",
-    "modifiedBy": "Змінено (ким)",
+    "isActive": "Активний",
     "team": "Група",
     "roles": "Ролі",
-    "teams": "Групи",
-    "users": "Користувачі",
-    "parent": "Джерело",
-    "parents": "Батьківські записи",
-    "children": "Дочірні записи",
-    "ownerUser": "Owner"
+    "users": "Користувачі"
   },
   "dashlets": {
     "Stream": "Стрічка",

@@ -26,13 +26,9 @@
     "lastAccess": "Останнє підключення",
     "type": "Тип",
     "passwordUpdatedAt": "Пароль оновлено в",
-    "passwordUpdatedBy": "Пароль оновлено користувачем"
-  },
-  "links": {
+    "passwordUpdatedBy": "Пароль оновлено користувачем",
     "teams": "Групи",
-    "roles": "Ролі",
     "notes": "Нотатки",
-    "account": "Контрагент",
     "tasks": "Завдання"
   },
   "labels": {

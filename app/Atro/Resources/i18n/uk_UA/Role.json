@@ -3,9 +3,7 @@
     "name": "Назва",
     "roles": "Ролі",
     "assignmentPermission": "Дозвіл для призначення",
-    "dataPrivacyPermission": "Дозвіл на обробку конфіденційних даних"
-  },
-  "links": {
+    "dataPrivacyPermission": "Дозвіл на обробку конфіденційних даних",
     "users": "Користувачі",
     "teams": "Групи"
   },
