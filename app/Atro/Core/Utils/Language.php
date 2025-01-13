@@ -70,6 +70,9 @@ class Language
 
     public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
     {
+        if ($category === 'links') {
+            $category = 'fields';
+        }
         if (is_array($label)) {
             $translated = [];
 
@@ -301,7 +304,8 @@ class Language
         }
 
         if ($installed) {
-            $this->data = $this->getEventManager()->dispatch('Language', 'modify', new Event(['data' => $this->data]))->getArgument('data');
+            $this->data = $this->getEventManager()->dispatch('Language', 'modify',
+                new Event(['data' => $this->data]))->getArgument('data');
         }
     }
 
