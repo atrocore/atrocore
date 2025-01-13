@@ -16,8 +16,6 @@
     "followCreatedEntities": "Автоматически подписаться на созданные записи",
     "assignmentNotifications": "Notifications upon assignment"
   },
-  "links": {
-  },
   "labels": {
     "Notifications": "Оповещения",
     "User Interface": "Интерфейс пльзователя",

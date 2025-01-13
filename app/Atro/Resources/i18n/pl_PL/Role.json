@@ -1,48 +1,46 @@
 {
-	"fields": {
-		"name": "Nazwa",
-		"roles": "Role",
-		"assignmentPermission": "Uprawnienie do przypisywania",
-		"dataPrivacyPermission": "Uprawnienie do ochrony danych osobowych"
-	},
-	"links": {
-		"users": "Użytkownicy",
-		"teams": "Zespoły"
-	},
-	"tooltips": {
-		"assignmentPermission": "Pozwala na ograniczenie możliwości przypisywania rekordów i wysyłania wiadomości do innych użytkowników.\n\nwszystkie - brak ograniczeń\n\ndrużyna - może przypisywać i wysyłać tylko do członków zespołu\n\nnie - może przypisywać i wysyłać tylko do siebie",
-		"dataPrivacyPermission": "Pozwala na przeglądanie i usuwanie danych osobowych."
-	},
-	"labels": {
-		"Access": "Dostęp",
-		"Create Role": "Utwórz Rolę",
-		"Scope Level": "Poziom Zakresu",
-		"Field Level": "Poziom Pola"
-	},
-	"options": {
-		"accessList": {
-			"not-set": "nieustawione",
-			"enabled": "włączone",
-			"disabled": "wyłączone"
-		},
-		"levelList": {
-			"all": "wszyscy",
-			"team": "zespołowi",
-			"account": "konto",
-			"own": "własne",
-			"no": "nie",
-			"yes": "tak",
-			"not-set": "nieustawione"
-		}
-	},
-	"actions": {
-		"read": "Odczyt",
-		"edit": "Edytuj",
-		"delete": "Usuń",
-		"stream": "Strumień",
-		"create": "Utwórz"
-	},
-	"messages": {
-		"changesAfterClearCache": "Wszystkie zmiany w kontroli dostępu zostaną zastosowane po wyczyszczeniu pamięci podręcznej."
-	}
+  "fields": {
+    "name": "Nazwa",
+    "roles": "Role",
+    "assignmentPermission": "Uprawnienie do przypisywania",
+    "dataPrivacyPermission": "Uprawnienie do ochrony danych osobowych",
+    "users": "Użytkownicy",
+    "teams": "Zespoły"
+  },
+  "tooltips": {
+    "assignmentPermission": "Pozwala na ograniczenie możliwości przypisywania rekordów i wysyłania wiadomości do innych użytkowników.\n\nwszystkie - brak ograniczeń\n\ndrużyna - może przypisywać i wysyłać tylko do członków zespołu\n\nnie - może przypisywać i wysyłać tylko do siebie",
+    "dataPrivacyPermission": "Pozwala na przeglądanie i usuwanie danych osobowych."
+  },
+  "labels": {
+    "Access": "Dostęp",
+    "Create Role": "Utwórz Rolę",
+    "Scope Level": "Poziom Zakresu",
+    "Field Level": "Poziom Pola"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "nieustawione",
+      "enabled": "włączone",
+      "disabled": "wyłączone"
+    },
+    "levelList": {
+      "all": "wszyscy",
+      "team": "zespołowi",
+      "account": "konto",
+      "own": "własne",
+      "no": "nie",
+      "yes": "tak",
+      "not-set": "nieustawione"
+    }
+  },
+  "actions": {
+    "read": "Odczyt",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "stream": "Strumień",
+    "create": "Utwórz"
+  },
+  "messages": {
+    "changesAfterClearCache": "Wszystkie zmiany w kontroli dostępu zostaną zastosowane po wyczyszczeniu pamięci podręcznej."
+  }
 }

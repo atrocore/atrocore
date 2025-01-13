@@ -69,7 +69,10 @@
     "connection": "Connexion",
     "addressPostalCode": "Code postal",
     "shippingAddressStreet": "Rue (Expédition)",
-    "createdAt": "Créé à"
+    "createdAt": "Créé à",
+    "users": "Utilisateurs",
+    "roles": "Rôles",
+    "team": "L'équipe"
   },
   "scopeNames": {
     "UiHandler": "Gestionnaire d'interface utilisateur",
@@ -500,23 +503,6 @@
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
-  },
-  "links": {
-    "users": "Utilisateurs",
-    "files": "Fichiers",
-    "teams": "Les équipes",
-    "roles": "Rôles",
-    "connection": "Connexion",
-    "file": "Fichier",
-    "ownerUser": "Propriétaire",
-    "assignedUser": "Utilisateur assigné",
-    "createdBy": "Créé par",
-    "modifiedBy": "Modifié par",
-    "team": "L'équipe",
-    "assignedAccounts": "Comptes",
-    "parent": "Parent",
-    "parents": "Fiche(s) parent(s)",
-    "children": "Fiche(s) de l'enfant"
   },
   "boolFilters": {
     "onlyMyTeams": "Mes équipes",

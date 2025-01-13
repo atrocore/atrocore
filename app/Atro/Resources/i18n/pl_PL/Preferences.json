@@ -15,7 +15,6 @@
     "followEntityOnStreamPost": "Automatyczne śledzenie rekordu po opublikowaniu w Strumieniu",
     "followCreatedEntities": "Automatyczne śledzenie utworzonych rekordów"
   },
-  "links": {},
   "labels": {
     "Notifications": "Powiadomienia",
     "User Interface": "Interfejs użytkownika",

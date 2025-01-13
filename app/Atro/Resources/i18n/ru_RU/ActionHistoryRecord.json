@@ -9,12 +9,6 @@
     "ipAddress": "IP адрес",
     "authLogRecord": "Запись Лога Аутентификации"
   },
-  "links": {
-    "authToken": "Токен аутентификации",
-    "user": "Пользователь",
-    "target": "Цель",
-    "authLogRecord": "Запись Лога Аутентификации"
-  },
   "presetFilters": {
     "onlyMy": "Только мои"
   },

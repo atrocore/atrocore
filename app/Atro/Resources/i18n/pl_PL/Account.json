@@ -1,27 +1,25 @@
 {
-	"fields": {
-		"name": "Imię",
-		"emailAddress": "Email",
-		"phoneNumber": "Numer telefonu",
-		"description": "Opis",
-		"type": "Typ",
-		"role": "Rola"
-	},
-	"options": {
-		"type": {
-			"individual": "Osoba prywatna",
-			"company": "Firma"
-		},
-		"role": {
-			"supplier": "Dostawca",
-			"customer": "Klient"
-		}
-	},
-	"labels": {
-		"Create Account": "Utwórz konto"
-	},
-	"links": {
-		"addresses": "Adresy",
-		"contacts": "Kontakty"
-	}
+  "fields": {
+    "name": "Imię",
+    "emailAddress": "Email",
+    "phoneNumber": "Numer telefonu",
+    "description": "Opis",
+    "type": "Typ",
+    "role": "Rola",
+    "addresses": "Adresy",
+    "contacts": "Kontakty"
+  },
+  "options": {
+    "type": {
+      "individual": "Osoba prywatna",
+      "company": "Firma"
+    },
+    "role": {
+      "supplier": "Dostawca",
+      "customer": "Klient"
+    }
+  },
+  "labels": {
+    "Create Account": "Utwórz konto"
+  }
 }

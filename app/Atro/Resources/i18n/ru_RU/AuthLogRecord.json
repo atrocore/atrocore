@@ -10,11 +10,7 @@
     "authToken": "Токен аутентификации создан",
     "requestUrl": "URL запроса",
     "requestMethod": "Метод запроса",
-    "authTokenIsActive": "Токен аутентификации активен"
-  },
-  "links": {
-    "authToken": "Токен аутентификации создан",
-    "user": "Пользователь",
+    "authTokenIsActive": "Токен аутентификации активен",
     "actionHistoryRecords": "История действий"
   },
   "presetFilters": {

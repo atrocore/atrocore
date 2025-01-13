@@ -11,10 +11,6 @@
     "fileSize": "Rozmiar pliku (bajty)",
     "fileMtime": "Data modyfikacji pliku"
   },
-  "links": {
-    "folder": "Folder",
-    "storage": "Przechowywanie plików"
-  },
   "labels": {
     "Create File": "Utwórz plik",
     "Preview": "Podgląd",

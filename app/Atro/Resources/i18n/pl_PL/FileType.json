@@ -4,10 +4,6 @@
     "assignAutomatically": "Przypisz automatycznie",
     "files": "Pliki"
   },
-  "links": {
-    "validationRules": "Reguły walidacji",
-    "files": "Pliki"
-  },
   "exceptions": {
     "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w polu \"%s\" podmiotu \"%s\"."
   },

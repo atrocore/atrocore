@@ -9,10 +9,6 @@
 		"symbol": "Symbol",
 		"isActive": "Aktywny"
 	},
-	"links": {
-		"measure": "Miara",
-		"convertTo": "Konwertuj na"
-	},
 	"labels": {
 		"Create Unit": "Utwórz jednostkę",
 		"unitSetDefault": "Ustaw jako domyślną"
