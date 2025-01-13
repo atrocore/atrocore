@@ -21,19 +21,4 @@ class Layout extends Base
     {
         return true;
     }
-
-    public function checkEntityCreate(User $user, Entity $entity, $data)
-    {
-        return $user->isAdmin();
-    }
-
-    public function checkEntityEdit(User $user, Entity $entity, $data)
-    {
-        return $user->isAdmin();
-    }
-
-    public function checkEntityDelete(User $user, Entity $entity, $data)
-    {
-        return $user->isAdmin();
-    }
 }
