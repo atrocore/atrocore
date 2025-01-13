@@ -15,7 +15,7 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-fields', 'views/fiel
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:type', () => {
+            this.listenTo(this.model, 'change:type change:fieldValueInheritance', () => {
                 this.reRender();
             });
         },
@@ -24,7 +24,7 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-fields', 'views/fiel
             this.params.options = [];
             this.translatedOptions = {};
 
-            const scope = this.model.get('code') ?? this.model.get('name');
+            const scope = this.model.get('code');
 
             $.each((this.getMetadata().get(['entityDefs', scope, 'fields']) || {}), (field, fieldDefs) => {
                 if (
@@ -38,29 +38,12 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-fields', 'views/fiel
                     this.translatedOptions[field] = this.translate(field, 'fields', scope);
                 }
             });
-
-            let newValue = [];
-            (this.model.get(this.name) || []).forEach(field => {
-                if (this.params.options.includes(field)) {
-                    newValue.push(field);
-                }
-            });
-            this.model.set(this.name, newValue);
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.checkFieldVisibility(this.model.get('fieldValueInheritance'));
-
-            const $fieldValueInheritance = this.$el.parent().parent().parent().find('.field[data-name="fieldValueInheritance"] input');
-            $fieldValueInheritance.change(() => {
-                this.checkFieldVisibility($fieldValueInheritance.is(':checked'));
-            });
-        },
-
-        checkFieldVisibility(fieldValueInheritance) {
-            if (this.model.get('type') === 'Hierarchy' && fieldValueInheritance === true) {
+            if (this.model.get('fieldValueInheritance')) {
                 this.$el.parent().show();
             } else {
                 this.$el.parent().hide();

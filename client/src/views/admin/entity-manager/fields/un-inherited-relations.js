@@ -15,7 +15,7 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-relations', 'views/f
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:type', () => {
+            this.listenTo(this.model, 'change:type change:relationInheritance', () => {
                 this.reRender();
             });
         },
@@ -24,7 +24,7 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-relations', 'views/f
             this.params.options = [];
             this.translatedOptions = {};
 
-            const scope = this.model.get('code') ?? this.model.get('name');
+            const scope = this.model.get('code');
 
             $.each((this.getMetadata().get(['entityDefs', scope, 'fields']) || {}), (field, fieldDefs) => {
                 if (
@@ -40,29 +40,12 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-relations', 'views/f
                     }
                 }
             });
-
-            let newValue = [];
-            (this.model.get(this.name) || []).forEach(field => {
-                if (this.params.options.includes(field)) {
-                    newValue.push(field);
-                }
-            });
-            this.model.set(this.name, newValue);
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.checkFieldVisibility(this.model.get('relationInheritance'));
-
-            const $relationInheritance = this.$el.parent().parent().parent().find('.field[data-name="relationInheritance"] input');
-            $relationInheritance.change(() => {
-                this.checkFieldVisibility($relationInheritance.is(':checked'));
-            });
-        },
-
-        checkFieldVisibility(relationInheritance) {
-            if (this.model.get('type') === 'Hierarchy' && relationInheritance === true) {
+            if (this.model.get('relationInheritance')) {
                 this.$el.parent().show();
             } else {
                 this.$el.parent().hide();
