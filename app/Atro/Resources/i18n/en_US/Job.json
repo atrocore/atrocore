@@ -11,9 +11,6 @@
     "startedAt": "Started At",
     "endedAt": "Ended At"
   },
-  "links": {
-    "scheduledJob": "Scheduled Job"
-  },
   "labels": {
     "Create Job": "Create Job",
     "cancel": "Cancel"

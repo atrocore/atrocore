@@ -9,10 +9,6 @@
     "symbol": "Symbol",
     "isActive": "Active"
   },
-  "links": {
-    "measure": "Measure",
-    "convertTo": "Convert to"
-  },
   "labels": {
     "Create Unit": "Create Unit",
     "unitSetDefault": "Set as default"

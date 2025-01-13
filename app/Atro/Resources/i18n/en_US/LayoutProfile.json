@@ -3,9 +3,7 @@
     "isActive": "Active",
     "isDefault": "Default",
     "description": "Description",
-    "hideShowFullList": "Hide \"Show Full List\" on Relation Panels"
-  },
-  "links": {
+    "hideShowFullList": "Hide \"Show Full List\" on Relation Panels",
     "layouts": "Layouts"
   },
   "labels": {

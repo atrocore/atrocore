@@ -73,11 +73,7 @@
     "sendNotificationInSync": "Send Notifications without job",
     "automaticFileExtensionCorrection": "Automatically correct file extension"
   },
-  "links": {
-    "variables": "Variables"
-  },
   "options": {
-
     "smtpAuthMechanism": {
       "login": "Login",
       "plain": "Plain",

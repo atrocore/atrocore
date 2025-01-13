@@ -9,12 +9,6 @@
     "ipAddress": "IP Address",
     "authLogRecord": "Auth Log Record"
   },
-  "links": {
-    "authToken": "Auth Token",
-    "authLogRecord": "Auth Log Record",
-    "user": "User",
-    "target": "Target"
-  },
   "presetFilters": {
     "onlyMy": "Only My"
   },

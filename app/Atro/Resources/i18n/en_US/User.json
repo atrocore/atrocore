@@ -26,13 +26,9 @@
     "lastAccess": "Last Access",
     "type": "Type",
     "passwordUpdatedAt": "Password Updated At",
-    "passwordUpdatedBy": "Password Updated By"
-  },
-  "links": {
+    "passwordUpdatedBy": "Password Updated By",
     "teams": "Teams",
-    "roles": "Roles",
     "notes": "Notes",
-    "account": "Account",
     "tasks": "Tasks"
   },
   "labels": {

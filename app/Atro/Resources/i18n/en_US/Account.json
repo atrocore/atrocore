@@ -7,7 +7,9 @@
     "type": "Type",
     "role": "Role",
     "number": "Number",
-    "language": "Language"
+    "language": "Language",
+    "addresses": "Addresses",
+    "contacts": "Contacts"
   },
   "options": {
     "type": {
@@ -21,10 +23,6 @@
   },
   "labels": {
     "Create Account": "Create Account"
-  },
-  "links": {
-    "addresses": "Addresses",
-    "contacts": "Contacts"
   },
   "exceptions": {
     "defaultAddressAlreadyExist": "Default address for the Account already exists."

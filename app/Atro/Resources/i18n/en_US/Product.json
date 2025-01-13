@@ -11,9 +11,5 @@
   },
   "labels": {
     "Create Product": "Create Product"
-  },
-  "links": {
-    "children": "Child Products",
-    "parents": "Parent Products"
   }
 }

@@ -7,9 +7,7 @@
     "isActive": "Active",
     "lifetime": "Life Time",
     "idleTime": "Idle Time",
-    "authToken": "Authorization-Token"
-  },
-  "links": {
+    "authToken": "Authorization-Token",
     "actionHistoryRecords": "Action History"
   },
   "tooltips": {

@@ -16,12 +16,6 @@
     "accounts": "Accounts",
     "contacts": "Contacts"
   },
-  "links": {
-    "prospect": "Prospects",
-    "country": "Country",
-    "accounts": "Accounts",
-    "contacts": "Contacts"
-  },
   "options": {
     "type": {
       "billing": "Billing",

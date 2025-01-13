@@ -570,24 +570,10 @@
     "names": "Names",
     "targetListIsOptedOut": "Is Opted Out (Target List)",
     "dropdown": "Dropdown",
-    "isActive": "Active"
-  },
-  "links": {
-    "connection": "Connection",
-    "file": "File",
-    "files": "Files",
-    "ownerUser": "Owner",
-    "assignedUser": "Assigned User",
-    "createdBy": "Created By",
-    "modifiedBy": "Modified By",
+    "isActive": "Active",
     "team": "Team",
     "roles": "Roles",
-    "teams": "Teams",
-    "assignedAccounts": "Accounts",
-    "users": "Users",
-    "parent": "Parent",
-    "parents": "Parent Record(s)",
-    "children": "Child Record(s)"
+    "users": "Users"
   },
   "dashlets": {
     "Stream": "Stream",

@@ -50,10 +50,6 @@
     "relationName": "Relation Code",
     "linkMultipleField": "Link Multiple Field"
   },
-  "links": {
-    "entity": "Entity",
-    "measure": "Measure"
-  },
   "tooltips": {
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "required": "Field will be mandatory. Can't be left empty.",

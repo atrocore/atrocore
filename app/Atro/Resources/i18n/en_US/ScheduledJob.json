@@ -1,9 +1,7 @@
 {
   "fields": {
     "name": "Name",
-    "scheduling": "Scheduling"
-  },
-  "links": {
+    "scheduling": "Scheduling",
     "jobs": "Jobs"
   },
   "labels": {

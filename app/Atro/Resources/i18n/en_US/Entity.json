@@ -33,9 +33,6 @@
     "disableHierarchy": "Disable hierarchy",
     "fields": "Fields"
   },
-  "links": {
-    "fields": "Fields"
-  },
   "options": {
     "type": {
       "Base": "Base",
