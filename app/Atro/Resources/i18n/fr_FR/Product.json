@@ -11,9 +11,5 @@
   },
   "labels": {
     "Create Product": "Créer un produit"
-  },
-  "links": {
-    "children": "Sous-Produits",
-    "parents": "Produits de base"
   }
 }

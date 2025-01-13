@@ -10,11 +10,7 @@
     "authToken": "Création du jeton d'authentification",
     "requestUrl": "URL de la demande",
     "requestMethod": "Méthode de demande",
-    "authTokenIsActive": "Le jeton d'authentification est actif"
-  },
-  "links": {
-    "authToken": "Création du jeton d'authentification",
-    "user": "Utilisateur",
+    "authTokenIsActive": "Le jeton d'authentification est actif",
     "actionHistoryRecords": "Historique de l'action"
   },
   "presetFilters": {

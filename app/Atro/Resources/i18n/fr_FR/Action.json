@@ -13,10 +13,6 @@
     "conditionsType": "Type de conditions",
     "conditions": "Conditions"
   },
-  "links": {
-    "actionsSet": "Ensemble d'actions",
-    "actions": "Actions"
-  },
   "labels": {
     "Create Action": "Créer une action",
     "execute": "Exécuter"

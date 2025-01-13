@@ -24,11 +24,5 @@
   },
   "labels": {
     "Create Address": "Créer une adresse"
-  },
-  "links": {
-    "contacts": "Contacts",
-    "accounts": "Comptes",
-    "prospect": "Perspectives",
-    "country": "Pays"
   }
 }

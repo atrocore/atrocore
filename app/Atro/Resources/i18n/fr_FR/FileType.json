@@ -4,10 +4,6 @@
     "assignAutomatically": "Attribuer automatiquement",
     "files": "Fichiers"
   },
-  "links": {
-    "validationRules": "Règles de validation",
-    "files": "Fichiers"
-  },
   "exceptions": {
     "fileTypeCannotBeDeleted": "L'enregistrement ne peut pas être supprimé car il est utilisé dans le champ \"%s\" de l'entité \"%s\"."
   },

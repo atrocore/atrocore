@@ -9,12 +9,6 @@
     "ipAddress": "Adresse IP",
     "authLogRecord": "Enregistrement du journal d'authentification"
   },
-  "links": {
-    "authToken": "Jeton d'authentification",
-    "authLogRecord": "Enregistrement du journal d'authentification",
-    "user": "Utilisateur",
-    "target": "Cible"
-  },
   "presetFilters": {
     "onlyMy": "Seul mon"
   },
