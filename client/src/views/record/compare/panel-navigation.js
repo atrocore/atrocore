@@ -22,5 +22,10 @@ Espo.define('views/record/compare/panel-navigation', 'views/record/panel-navigat
         isPanelClosed(name) {
             return false;
         },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+            this.$el.parent().css('top', $('.modal-header').css('height'));
+        }
     })
 );
