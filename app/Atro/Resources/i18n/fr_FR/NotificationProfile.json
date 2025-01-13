@@ -1,9 +1,7 @@
 {
   "fields": {
     "isActive": "Actif",
-    "description": "Description"
-  },
-  "links": {
+    "description": "Description",
     "notificationRules": "Règles de notification"
   },
   "labels": {

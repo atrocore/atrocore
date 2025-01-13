@@ -26,13 +26,9 @@
     "passwordPreview": "Aperçu du mot de passe",
     "lastAccess": "Dernier accès",
     "passwordUpdatedAt": "Mot de passe mis à jour le",
-    "passwordUpdatedBy": "Mot de passe mis à jour par"
-  },
-  "links": {
+    "passwordUpdatedBy": "Mot de passe mis à jour par",
     "teams": "Les équipes",
-    "roles": "Rôles",
     "notes": "Notes",
-    "account": "Compte",
     "tasks": "Tâches"
   },
   "labels": {

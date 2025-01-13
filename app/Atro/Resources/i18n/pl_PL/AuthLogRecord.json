@@ -12,11 +12,6 @@
 		"requestMethod": "Metoda żądania",
 		"authTokenIsActive": "Token autoryzacyjny jest aktywny"
 	},
-	"links": {
-		"authToken": "Utworzony token autoryzacyjny",
-		"user": "Użytkownik",
-		"actionHistoryRecords": "Historia akcji"
-	},
 	"presetFilters": {
 		"denied": "Odrzucone",
 		"accepted": "Zaakceptowane"

@@ -5,9 +5,6 @@
 		"units": "Jednostki",
 		"displayFormat": "Format wyświetlania"
 	},
-	"links": {
-		"units": "Jednostki"
-	},
 	"labels": {
 		"Create Measure": "Utwórz miarę"
 	},

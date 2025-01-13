@@ -7,10 +7,6 @@
     "folders": "Dossiers",
     "syncFolders": "Maintenir la structure des fichiers et des dossiers"
   },
-  "links": {
-    "files": "Fichiers",
-    "folders": "Dossiers"
-  },
   "options": {
     "type": {
       "local": "Local (Linux)"

@@ -115,9 +115,6 @@
     "Theme Configuration": "Configuration du thème",
     "Custom Code": "Code personnalisé"
   },
-  "links": {
-    "variables": "Variables"
-  },
   "options": {
     "smtpAuthMechanism": {
       "login": "Connexion",

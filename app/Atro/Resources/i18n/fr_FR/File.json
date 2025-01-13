@@ -12,10 +12,6 @@
     "fileMtime": "Date de modification du dossier",
     "url": "URL"
   },
-  "links": {
-    "folder": "Dossier",
-    "storage": "Stockage"
-  },
   "labels": {
     "Create File": "Créer un fichier",
     "Upload": "Télécharger",

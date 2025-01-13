@@ -9,12 +9,6 @@
 		"ipAddress": "Adres IP",
 		"authLogRecord": "Rekord Logowania"
 	},
-	"links": {
-		"authToken": "Token Autoryzacyjny",
-		"authLogRecord": "Rekord Logowania",
-		"user": "Użytkownik",
-		"target": "Cel"
-	},
 	"presetFilters": {
 		"onlyMy": "Tylko Moje"
 	},

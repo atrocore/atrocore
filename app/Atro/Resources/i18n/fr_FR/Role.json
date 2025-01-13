@@ -3,9 +3,7 @@
     "name": "Nom",
     "roles": "Rôles",
     "assignmentPermission": "Autorisation d'affectation",
-    "dataPrivacyPermission": "Autorisation de confidentialité des données"
-  },
-  "links": {
+    "dataPrivacyPermission": "Autorisation de confidentialité des données",
     "users": "Utilisateurs",
     "teams": "Les équipes"
   },

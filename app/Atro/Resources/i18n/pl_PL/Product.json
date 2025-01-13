@@ -11,9 +11,5 @@
 	},
 	"labels": {
 		"Create Product": "Utwórz Produkt"
-	},
-	"links": {
-		"children": "Produkty potomne",
-		"parents": "Produkty nadrzędne"
 	}
 }

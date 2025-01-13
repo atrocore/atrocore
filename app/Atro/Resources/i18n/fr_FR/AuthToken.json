@@ -7,9 +7,7 @@
     "isActive": "Actif",
     "lifetime": "Durée de vie",
     "idleTime": "Temps d'inactivité",
-    "authToken": "Jeton d'autorisation"
-  },
-  "links": {
+    "authToken": "Jeton d'autorisation",
     "actionHistoryRecords": "Historique de l'action"
   },
   "tooltips": {

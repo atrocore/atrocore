@@ -1,6 +1,14 @@
 {
-	"fields": {"name": "Nazwa", "roles": "Role"},
-	"links": {"users": "Użytkownicy", "notes": "Notatki", "roles": "Role"},
-	"tooltips": {"roles": "Role dostępu. Użytkownicy tego zespołu uzyskują poziom kontroli dostępu z wybranych ról."},
-	"labels": {"Create Team": "Utwórz Zespół"}
+  "fields": {
+    "name": "Nazwa",
+    "roles": "Role",
+    "users": "Użytkownicy",
+    "notes": "Notatki"
+  },
+  "tooltips": {
+    "roles": "Role dostępu. Użytkownicy tego zespołu uzyskują poziom kontroli dostępu z wybranych ról."
+  },
+  "labels": {
+    "Create Team": "Utwórz Zespół"
+  }
 }

@@ -66,9 +66,6 @@
     "error": "Błąd",
     "customHeadCode": "Kod Head"
   },
-  "links": {
-    "variables": "Zmienne"
-  },
   "options": {
     "smtpAuthMechanism": {
       "login": "Login",
