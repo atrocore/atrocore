@@ -47,16 +47,7 @@ class LayoutController extends AbstractListener
 
     protected function getAllUiLanguages(): array
     {
-        $languages = array_unique(array_column($this->getConfig()->get('locales', []), 'language'));
-        if (!empty($this->getConfig()->get('isMultilangActive'))) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                if (!in_array($language, $languages)) {
-                    $languages[] = $language;
-                }
-            }
-        }
-
-        return $languages;
+        return array_unique(array_column($this->getConfig()->get('locales', []), 'language'));
     }
 
     protected function modifyTranslationList(Event $event)
