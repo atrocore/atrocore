@@ -166,6 +166,21 @@ class Entity extends ReferenceData
             throw new Conflict("Entity name '{$entity->get('code')}' is not allowed.");
         }
 
+        // copy default layouts
+        $layoutsPath = CORE_PATH . "/Atro/Core/Templates/Layouts/{$entity->get('type')}";
+        if (is_dir($layoutsPath)) {
+            Util::createDir("data/layouts/{$entity->get('code')}");
+            foreach (scandir($layoutsPath) as $fileName) {
+                if (in_array($fileName, ['.', '..']) || !is_file("$layoutsPath/$fileName")) {
+                    continue;
+                }
+                file_put_contents(
+                    "data/layouts/{$entity->get('code')}/$fileName",
+                    file_get_contents("$layoutsPath/$fileName")
+                );
+            }
+        }
+
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $contents = file_get_contents(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json");
@@ -181,20 +196,11 @@ class Entity extends ReferenceData
         // update metadata
         $this->updateScope($entity, [], true);
 
-        // copy default layouts
-        $layoutsPath = CORE_PATH . "/Atro/Core/Templates/Layouts/{$entity->get('type')}";
-        if (is_dir($layoutsPath)) {
-            Util::createDir("data/layouts/{$entity->get('code')}");
-            foreach (scandir($layoutsPath) as $fileName) {
-                if (in_array($fileName, ['.', '..']) || !is_file("$layoutsPath/$fileName")) {
-                    continue;
-                }
-                file_put_contents(
-                    "data/layouts/{$entity->get('code')}/$fileName",
-                    file_get_contents("$layoutsPath/$fileName")
-                );
-            }
+        // update config
+        foreach (['quickCreateList', 'tabList'] as $key) {
+            $this->getConfig()->set($key, array_merge($this->getConfig()->get($key, []), [$entity->get('code')]));
         }
+        $this->getConfig()->save();
 
         return true;
     }
