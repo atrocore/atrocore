@@ -1879,7 +1879,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
                     ['detail', 'detailSmall', ...availableLayouts].includes(this.layoutName) &&
-                    this.getAcl().check('Layout', 'create')
+                    this.getAcl().check('LayoutProfile', 'read')
                 ) {
                     let html = `<a class="btn btn-link collapsing-button pull-right" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
                          <span class="fas fa-cog cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>

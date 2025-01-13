@@ -362,7 +362,7 @@ class Language
         return $this->container->get('eventManager');
     }
 
-    protected function getDataManager(): \Espo\Core\DataManager
+    protected function getDataManager(): \Atro\Core\DataManager
     {
         return $this->container->get('dataManager');
     }

@@ -15,7 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Language;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
 

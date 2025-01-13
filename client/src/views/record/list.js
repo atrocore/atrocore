@@ -1180,7 +1180,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.hasLayoutEditor = !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall', ...availableLayouts].includes(this.layoutName) &&
-                this.getAcl().check('Layout', 'create');
+                this.getAcl().check('LayoutProfile', 'read');
 
             this.listenTo(this, 'after:save', () => {
                 this.afterSave();
