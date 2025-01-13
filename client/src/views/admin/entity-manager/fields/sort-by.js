@@ -19,7 +19,7 @@ Espo.define('views/admin/entity-manager/fields/sort-by', 'views/fields/enum', De
             const fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
 
             this.params.options = Object.keys(fieldDefs).filter(function (item) {
-                if (fieldDefs[item].notStorable || ['linkMultiple'].includes(fieldDefs[item].type)) {
+                if (fieldDefs[item].notStorable || ['link', 'linkMultiple'].includes(fieldDefs[item].type)) {
                     return false;
                 }
                 return true;
