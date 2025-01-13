@@ -44,7 +44,7 @@ class FormatField extends AbstractTwigFunction
             $value = array_map(fn($i) => $this->language->translateOption($i, $field, $entity->getEntityType()), $value);
         }
 
-        if ($value && $metadata['measureId'] ?? null && in_array($metadata['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
+        if ($value && !empty($metadata['measureId']) && in_array($metadata['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
             $value .= ' ' . $entity->get($field . 'UnitName');
         }
 
