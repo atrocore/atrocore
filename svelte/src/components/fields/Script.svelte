@@ -260,7 +260,7 @@
 
                         let filters = Metadata.get(['twig', 'filters']) ?? {};
                         if (params.isExport) {
-                            filters.push(...(Metadata.get(['app', 'twigFilters'])))
+                            filters = {...filters, ...(Metadata.get(['app', 'twigFilters']))}
                         }
 
                         let filterTranslations = Language.get('Global', 'twig', 'filters') ?? {};
@@ -310,7 +310,7 @@
 
                     let functions = Metadata.get(['twig', 'functions']) ?? {};
                     if (params.isExport) {
-                        functions.push(...(Metadata.get(['app', 'twigFunctions'])))
+                        functions = {...functions, ...(Metadata.get(['app', 'twigFunctions']))}
                     }
 
                     let functionTranslations = Language.get('Global', 'twig', 'functions') ?? {};
