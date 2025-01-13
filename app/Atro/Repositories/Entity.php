@@ -18,7 +18,7 @@ use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityCollection;
 

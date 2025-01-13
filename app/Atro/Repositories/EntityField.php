@@ -17,7 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Language;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData

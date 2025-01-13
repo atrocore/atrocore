@@ -19,7 +19,7 @@ use Atro\Core\Templates\Repositories\Relation;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Atro\Core\Utils\Util;
 

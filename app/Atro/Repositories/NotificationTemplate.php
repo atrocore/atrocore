@@ -15,7 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 

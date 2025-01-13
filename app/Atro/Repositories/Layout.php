@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 use Espo\ORM\Entity;
 
 class Layout extends Base

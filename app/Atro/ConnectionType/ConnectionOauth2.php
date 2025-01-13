@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\ConnectionType;
 
 use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 use Espo\ORM\Entity;
 
 class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface

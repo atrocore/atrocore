@@ -15,7 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Repositories\ReferenceData;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Language;
 use Espo\ORM\Entity;
