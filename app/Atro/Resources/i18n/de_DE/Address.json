@@ -16,12 +16,6 @@
     "accounts": "Konten",
     "contacts": "Kontakte"
   },
-  "links": {
-    "prospect": "Interessenten",
-    "country": "Land",
-    "accounts": "Konten",
-    "contacts": "Kontakte"
-  },
   "options": {
     "type": {
       "billing": "Rechnungsschreibung",

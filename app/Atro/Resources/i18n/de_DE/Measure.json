@@ -5,9 +5,6 @@
     "units": "Einheiten",
     "displayFormat": "Anzeigeformat"
   },
-  "links": {
-    "units": "Einheiten"
-  },
   "labels": {
     "Create Measure": "Maß erstellen"
   },

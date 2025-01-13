@@ -8,11 +8,6 @@
     "user": "Benutzer",
     "createdAt": "Datum"
   },
-  "links": {
-    "user": "Benutzer",
-    "target": "Ziel",
-    "authLogRecord": "Auth Log-Datensatz"
-  },
   "presetFilters": {
     "onlyMy": "Nur meine"
   },

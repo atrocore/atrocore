@@ -1,12 +1,9 @@
 {
   "fields": {
     "userRole": "Benutzer Rolle",
-    "roles": "Rollen"
-  },
-  "links": {
+    "roles": "Rollen",
     "users": "Benutzer",
-    "notes": "Notizen",
-    "roles": "Rollen"
+    "notes": "Notizen"
   },
   "tooltips": {
     "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen."

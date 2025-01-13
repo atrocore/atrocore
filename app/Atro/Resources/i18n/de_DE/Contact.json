@@ -12,9 +12,7 @@
     "street": "Straße",
     "zip": "ZIP",
     "box": "Box",
-    "city": "City"
-  },
-  "links": {
+    "city": "City",
     "accounts": "Konto"
   },
   "labels": {

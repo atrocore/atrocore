@@ -2,9 +2,7 @@
   "fields": {
     "isActive": "Aktiv",
     "description": "Beschreibung",
-    "hideShowFullList": "„Vollständige Liste anzeigen“ auf Beziehungsfeldern ausblenden"
-  },
-  "links": {
+    "hideShowFullList": "„Vollständige Liste anzeigen“ auf Beziehungsfeldern ausblenden",
     "layouts": "Layout"
   },
   "labels": {

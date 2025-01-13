@@ -71,9 +71,6 @@
     "sendNotificationInSync": "Benachrichtigungen ohne Auftrag senden",
     "automaticFileExtensionCorrection": "Dateierweiterung automatisch korrigieren"
   },
-  "links": {
-    "variables": "Variablen"
-  },
   "tooltips": {
     "maxConcurrentWorkers": "Obergrenze für die Anzahl der Aufgaben oder Prozesse, die gleichzeitig im Hintergrund eines Servers laufen können.",
     "fileNameRegexPattern": "Um nur die Kleinbuchstaben mit max. Länge von 24 Symbolen zu erlauben, verwenden Sie \"/^[a-z]{1,24}$/\".",

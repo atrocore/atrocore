@@ -10,11 +10,7 @@
     "authToken": "Auth Token erstellt",
     "requestUrl": "Anforderungs-URL",
     "requestMethod": "Anforderungsmethode",
-    "authTokenIsActive": "Auth Token ist aktiv"
-  },
-  "links": {
-    "user": "Benutzer",
-    "authToken": "Auth Token erstellt",
+    "authTokenIsActive": "Auth Token ist aktiv",
     "actionHistoryRecords": "Aktionsverlauf"
   },
   "presetFilters": {

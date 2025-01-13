@@ -5,9 +5,6 @@
     "sortOrder": "Sortierreihenfolge",
     "extensibleEnums": "Listen"
   },
-  "links": {
-    "extensibleEnums": "Listen"
-  },
   "labels": {
     "Create ExtensibleEnumOption": "Auswahloption erstellen"
   },
