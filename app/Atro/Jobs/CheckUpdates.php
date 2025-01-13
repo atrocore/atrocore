@@ -15,7 +15,7 @@ namespace Atro\Jobs;
 
 use Atro\Console\AbstractConsole;
 use Atro\Entities\Job;
-use Espo\Core\DataManager;
+use Atro\Core\DataManager;
 
 class CheckUpdates extends AbstractJob implements JobInterface
 {
