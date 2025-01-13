@@ -70,9 +70,6 @@ class Language
 
     public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
     {
-        if ($category === 'links') {
-            $category = 'fields';
-        }
         if (is_array($label)) {
             $translated = [];
 

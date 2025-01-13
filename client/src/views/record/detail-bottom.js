@@ -591,7 +591,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 let translated = this.translate(panel.name)
                 panel.title = translated === panel.name ? this.translate(panel.label, 'labels', this.scope) : translated;
             } else {
-                panel.title = this.translate(panel.name, 'links', this.scope);
+                panel.title = this.translate(panel.name, 'fields', this.scope);
             }
             return panel;
         }

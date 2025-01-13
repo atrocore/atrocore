@@ -57,7 +57,6 @@ Espo.define('language', ['ajax'], function (Ajax) {
         },
 
         get: function (scope, category, name) {
-            category = category === 'links' ? 'fields' : category;
             if (scope in this.data) {
                 if (category in this.data[scope]) {
                     if (name in this.data[scope][category]) {

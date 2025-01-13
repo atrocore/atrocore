@@ -87,7 +87,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
-            this.title = this.title || this.translate(this.link, 'links', this.model.name);
+            this.title = this.title || this.translate(this.link, 'fields', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);

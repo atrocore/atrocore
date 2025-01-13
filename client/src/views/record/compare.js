@@ -248,7 +248,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
 
                 let panelData = {
-                    label: this.translate(link, 'links', this.scope),
+                    label: this.translate(link, 'fields', this.scope),
                     scope: relationScope,
                     name: link,
                     type: relationDefs['type'],
