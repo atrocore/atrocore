@@ -15,8 +15,6 @@
     "followCreatedEntities": "Seguimiento automático de registros creados",
     "assignmentNotifications": "Notifications upon assignment"
   },
-  "links": {
-  },
   "options": {
     "weekStart": {
       "0": "Domingo",

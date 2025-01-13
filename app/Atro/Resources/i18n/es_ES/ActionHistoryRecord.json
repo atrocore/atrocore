@@ -9,12 +9,6 @@
     "ipAddress": "Dirección IP",
     "authLogRecord": "Auth Log Record"
   },
-  "links": {
-    "authToken": "Token de autenticación",
-    "user": "Usuario",
-    "target": "Objetivo",
-    "authLogRecord": "Auth Log Record"
-  },
   "presetFilters": {
     "onlyMy": "Solo míos"
   },

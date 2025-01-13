@@ -3,9 +3,7 @@
     "name": "Nombre",
     "assignmentPermission": "Asignación de permisos",
     "roles": "Roles",
-    "dataPrivacyPermission": "Data Privacy Permission"
-  },
-  "links": {
+    "dataPrivacyPermission": "Data Privacy Permission",
     "users": "Usuarios",
     "teams": "Equipos"
   },

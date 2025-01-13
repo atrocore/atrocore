@@ -1,12 +1,9 @@
 {
   "fields": {
     "name": "Nom",
-    "roles": "Rôles"
-  },
-  "links": {
+    "roles": "Rôles",
     "users": "Utilisateurs",
-    "notes": "Notes",
-    "roles": "Rôles"
+    "notes": "Notes"
   },
   "tooltips": {
     "roles": "Rôles d'accès. Les utilisateurs de cette équipe obtiennent le niveau de contrôle d'accès à partir des rôles sélectionnés."

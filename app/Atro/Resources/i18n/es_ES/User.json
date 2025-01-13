@@ -22,14 +22,10 @@
     "passwordPreview": "Vista previa de la contraseña",
     "roles": "Roles",
     "avatar": "Avatar",
-    "lastAccess": "Last Access"
-  },
-  "links": {
+    "lastAccess": "Last Access",
     "teams": "Equipos",
     "notes": "Notas",
-    "account": "Cuenta",
-    "tasks": "Tareas",
-    "roles": "Roles"
+    "tasks": "Tareas"
   },
   "labels": {
     "Create User": "Crear usuario",

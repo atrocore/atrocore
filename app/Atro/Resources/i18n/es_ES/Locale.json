@@ -6,9 +6,7 @@
     "timeZone": "Zona horaria",
     "weekStart": "Primer día de la semana",
     "thousandSeparator": "Separador de miles",
-    "decimalMark": "Separador decimal"
-  },
-  "links": {
+    "decimalMark": "Separador decimal",
     "users": "Users"
   },
   "labels": {
