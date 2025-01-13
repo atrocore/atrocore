@@ -236,6 +236,12 @@
       ],
       [
         {
+          "name": "tooltip"
+        },
+        false
+      ],
+      [
+        {
           "name": "tooltipText"
         },
         {

@@ -205,6 +205,26 @@
             }
           ]
         }
+      },
+      "tooltipText": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "tooltip"
+            }
+          ]
+        }
+      },
+      "tooltipLink": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "tooltip"
+            }
+          ]
+        }
       }
     }
   }

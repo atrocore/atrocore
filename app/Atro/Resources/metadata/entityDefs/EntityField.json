@@ -52,10 +52,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "tooltip": {
-      "type": "bool",
-      "readOnly": true
-    },
     "isCustom": {
       "type": "bool",
       "readOnly": true
@@ -106,8 +102,12 @@
       "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit"
     },
+    "tooltip": {
+      "type": "bool"
+    },
     "tooltipText": {
-      "type": "text"
+      "type": "text",
+      "view": "views/admin/field-manager/fields/tooltip-text"
     },
     "tooltipLink": {
       "type": "url"

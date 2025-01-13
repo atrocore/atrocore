@@ -74,9 +74,7 @@ class EntityField extends ReferenceData
                     'name'        => $this->translate($fieldName, 'fields', $entityName),
                     'entityId'    => $entityName,
                     'entityName'  => $this->translate($entityName, 'scopeNames'),
-                    'tooltipText' => !empty($fieldDefs['tooltip']) ? $this->translate($fieldName, 'tooltips',
-                        $entityName) : null,
-                    'tooltipLink' => !empty($fieldDefs['tooltip']) && !empty($fieldDefs['tooltipLink']) ? $fieldDefs['tooltipLink'] : null,
+                    'tooltipText' => $this->translate($fieldName, 'tooltips', $entityName)
                 ]);
             }
         }
@@ -167,10 +165,6 @@ class EntityField extends ReferenceData
     {
         $saveMetadata = $entity->isNew();
         $saveLanguage = $entity->isNew();
-
-        if ($entity->isAttributeChanged('tooltipText') || $entity->isAttributeChanged('tooltipLink')) {
-            $entity->set('tooltip', !empty($entity->get('tooltipText')) || !empty($entity->get('tooltipLink')));
-        }
 
         if ($entity->isNew()) {
             if ($entity->get('type') === 'link') {

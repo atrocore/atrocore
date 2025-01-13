@@ -16,6 +16,7 @@
     "defaultUnit": "Default Unit",
     "default": "Default",
     "setDefaultOnlyIfRequired": "Apply default value only if required",
+    "tooltip": "Tooltip",
     "tooltipText": "Tooltip text",
     "tooltipLink": "Tooltip link",
     "noEmptyString": "Empty string value is not allowed",

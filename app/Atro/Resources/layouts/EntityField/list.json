@@ -10,6 +10,9 @@
     "name": "type"
   },
   {
+    "name": "tooltip"
+  },
+  {
     "name": "entity"
   }
 ]
