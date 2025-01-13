@@ -1,0 +1,286 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "required"
+        },
+        {
+          "name": "isMultilang"
+        }
+      ],
+      [
+        {
+          "name": "readOnly"
+        },
+        {
+          "name": "notNull"
+        }
+      ],
+      [
+        {
+          "name": "index"
+        },
+        {
+          "name": "unique"
+        }
+      ],
+      [
+        {
+          "name": "measure"
+        },
+        {
+          "name": "defaultUnit"
+        }
+      ],
+      [
+        {
+          "name": "trim"
+        },
+        false
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        false
+      ],
+      [
+        {
+          "name": "countBytesInsteadOfCharacters"
+        },
+        false
+      ],
+      [
+        {
+          "name": "pattern"
+        },
+        false
+      ],
+      [
+        {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      [
+        {
+          "name": "disableFormatting"
+        },
+        {
+          "name": "amountOfDigitsAfterComma"
+        }
+      ],
+      [
+        {
+          "name": "options"
+        },
+        {
+          "name": "noEmptyString"
+        }
+      ],
+      [
+        {
+          "name": "fileType"
+        },
+        {
+          "name": "previewSize"
+        }
+      ],
+      [
+        {
+          "name": "fileTypes"
+        },
+        false
+      ],
+      [
+        {
+          "name": "extensibleEnum"
+        },
+        false
+      ],
+      [
+        {
+          "name": "foreignName"
+        },
+        false
+      ],
+      [
+        {
+          "name": "seeMoreDisabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "minHeight"
+        },
+        {
+          "name": "maxHeight"
+        }
+      ],
+      [
+        {
+          "name": "lengthOfCut"
+        },
+        false
+      ],
+      [
+        {
+          "name": "script"
+        },
+        {
+          "name": "outputType"
+        }
+      ],
+      [
+        {
+          "name": "preview",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "rowsMin"
+        },
+        {
+          "name": "rowsMax"
+        }
+      ],
+      [
+        {
+          "name": "useDisabledTextareaInViewMode"
+        },
+        false
+      ],
+      [
+        {
+          "name": "strip"
+        },
+        false
+      ],
+      [
+        {
+          "name": "height"
+        },
+        false
+      ],
+      [
+        {
+          "name": "useIframe"
+        },
+        false
+      ],
+      [
+        {
+          "name": "htmlSanitizer"
+        },
+        false
+      ],
+      [
+        {
+          "name": "extensibleEnumOptions"
+        },
+        false
+      ],
+      [
+        {
+          "name": "dropdown"
+        },
+        false
+      ],
+      [
+        {
+          "name": "prohibitedEmptyValue"
+        },
+        false
+      ],
+      [
+        {
+          "name": "useNumericFormat"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isSorted"
+        },
+        false
+      ],
+      [
+        {
+          "name": "default"
+        },
+        {
+          "name": "setDefaultOnlyIfRequired"
+        }
+      ],
+      [
+        {
+          "name": "tooltipText"
+        },
+        {
+          "name": "tooltipLink"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "relationManagement",
+    "dynamicLogicVisible": {
+      "conditionGroup": [
+        {
+          "type": "in",
+          "attribute": "type",
+          "value": [
+            "link",
+            "linkMultiple"
+          ]
+        }
+      ]
+    },
+    "rows": [
+      [
+        {
+          "name": "relationType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "foreignEntity"
+        },
+        {
+          "name": "foreignCode"
+        }
+      ],
+      [
+        {
+          "name": "relationName"
+        },
+        {
+          "name": "linkMultipleField"
+        }
+      ]
+    ]
+  }
+]

@@ -63,23 +63,8 @@
     }
   },
   "tooltips": {
-    "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "fontSize": "Font size in em (relative to current font size).",
-    "isSorted": "Options will be sorted after saving.",
-    "required": "Field will be mandatory. Can't be left empty.",
-    "default": "Value will be set by default upon creating.",
-    "min": "Min acceptable value.",
-    "max": "Max acceptable value.",
-    "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
-    "lengthOfCut": "Excessive characters will be hidden in the view mode.",
-    "maxLength": "Max acceptable length of text.",
-    "before": "The date value should be before the date value of the specified field.",
-    "after": "The date value should be after the date value of the specified field.",
-    "readOnly": "Field value can't be specified by user.",
-    "maxFileSize": "If empty or 0 then no limit.",
-    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
-    "foreignName": "Field to be shown in the relation.",
-    "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
+    "maxFileSize": "If empty or 0 then no limit."
   },
   "fieldParts": {
     "unit": {

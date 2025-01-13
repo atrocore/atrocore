@@ -177,12 +177,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "scopeColorsDisabled": {
-      "type": "bool"
-    },
-    "tabColorsDisabled": {
-      "type": "bool"
-    },
     "tabIconsDisabled": {
       "type": "bool"
     },

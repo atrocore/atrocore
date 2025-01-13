@@ -13,9 +13,7 @@
     "tabList": "Menu nawigacyjne",
     "dashboardLayout": "Układ pulpitu",
     "followEntityOnStreamPost": "Automatyczne śledzenie rekordu po opublikowaniu w Strumieniu",
-    "followCreatedEntities": "Automatyczne śledzenie utworzonych rekordów",
-    "scopeColorsDisabled": "Wyłącz kolory zakresu",
-    "tabColorsDisabled": "Wyłącz kolory ikon zakładek"
+    "followCreatedEntities": "Automatyczne śledzenie utworzonych rekordów"
   },
   "links": {},
   "labels": {

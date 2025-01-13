@@ -62,23 +62,8 @@
     }
   },
   "tooltips": {
-    "isSorted": "Optionen werden nach dem Speichern sortiert.",
-    "isMultilang": "Automatische Erstellung von Feldern durch Klonen des ausgewählten Felds, sofern in den Einstellungen für Mehrsprachigkeit Ländereinstellungen aktiviert sind.",
     "fontSize": "Schriftgröße in em (relativ zur aktuellen Schriftgröße).",
-    "required": "Das Feld ist ein Pflichtfeld und darf nicht leer sein.",
-    "default": "Der Wert wird beim Erstellen standardmäßig gesetzt.",
-    "min": "Min. zulässiger Wert",
-    "max": "Max. zulässiger Wert",
-    "seeMoreDisabled": "Wenn nicht aktiviert, werden lange anzuzeigende Texte gekürzt.",
-    "lengthOfCut": "Zu viele Zeichen werden im Ansichtsmodus ausgeblendet.",
-    "maxLength": "Maximal zulässige Textlänge.",
-    "before": "Der Datumswert sollte vor dem Datumswert des angegebenen Feldes liegen.",
-    "after": "Der Datumswert sollte nach dem Datumswert des angegebenen Feldes liegen.",
-    "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden.",
-    "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
-    "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
-    "foreignName": "In der Relation anzuzeigendes Feld.",
-    "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."
+    "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung."
   },
   "fieldParts": {
     "datetimeOptional": {

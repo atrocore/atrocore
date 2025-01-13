@@ -2,9 +2,8 @@
   "params": [
     {
       "name": "foreignName",
-      "type": "enum",
-      "tooltip": true,
-      "view": "views/admin/field-manager/fields/foreign-name"
+      "type": "varchar",
+      "tooltip": true
     },
     {
       "name": "required",
@@ -14,8 +13,7 @@
     {
       "name": "dropdown",
       "type": "bool",
-      "default": false,
-      "view": "views/admin/field-manager/fields/dropdown"
+      "default": false
     },
     {
       "name": "sortable",
@@ -24,13 +22,16 @@
       "hidden": true
     },
     {
-      "name": "allowFileTypes",
-      "type": "linkMultiple",
-      "view": "views/admin/field-manager/fields/linkMultiple/allow-file-types"
+      "name": "fileTypes",
+      "type": "array"
     },
     {
       "name": "readOnly",
       "type": "bool"
+    },
+    {
+      "name": "default",
+      "type": "array"
     }
   ],
   "actualFields": [
@@ -39,7 +40,6 @@
   "notActualFields": [
     "names"
   ],
-  "notCreatable": true,
   "notSortable": true,
   "filter": true
 }

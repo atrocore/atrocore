@@ -40,8 +40,6 @@
     "followCreatedEntities": "Eigene Einträge abonnieren",
     "adminNotifications": "Systembenachrichtigungen im Administrationsbereich",
     "authTokenPreventConcurrent": "Nur ein Auth Token pro Benutzer",
-    "scopeColorsDisabled": "Bereichsfarben deaktivieren",
-    "tabColorsDisabled": "Tabfarben deaktivieren",
     "tabIconsDisabled": "Tab Icon deaktivieren",
     "textFilterUseContainsForVarchar": "Verwenden Sie den Operator 'enthält', wenn Sie Varchar-Felder filtern",
     "emailAddressIsOptedOutByDefault": "Neue E-Mail-Adressen als Opt-Out markieren",

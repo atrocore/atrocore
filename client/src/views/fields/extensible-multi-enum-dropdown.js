@@ -38,24 +38,30 @@ Espo.define('views/fields/extensible-multi-enum-dropdown', 'views/fields/link-mu
             return data;
         },
 
-        getWhereFilter() {
-            let boolWhere = {
-                type: 'bool',
-                value:['onlyForExtensibleEnum'],
-                data:{
-                    'onlyForExtensibleEnum': this.getExtensibleEnumId()
+        prepareOptionsList: function () {
+            this.params.options = [];
+            this.translatedOptions = {};
+            this.params.optionColors = [];
+
+            this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
+                if (option.id) {
+                    this.params.options.push(option.id);
+                    this.translatedOptions[option.id] = option.name || option.id;
+                    this.params.optionColors.push(option.color || null);
                 }
-            };
+            })
 
-            if( Array.isArray(this.selectBoolFilterList) && this.selectBoolFilterList.length > 0) {
-                boolWhere.value.push(...this.selectBoolFilterList);
+            if(this.mode === 'edit') {
+                let newValues = [];
+                (this.model.get(this.idsName) ?? []).forEach((id) => {
+                    if((this.params.options ?? []).includes(id)){
+                        newValues.push(id);
+                    }
+                })
+                if ((this.model.get(this.idsName) ?? []).length  !== newValues.length) {
+                    this.model.set(this.idsName, newValues);
+                }
             }
-
-            let boolData = this.getBoolFilterData();
-            if (boolData && Object.keys(boolData).length > 0) {
-                boolWhere.data = {...boolWhere.data, ...boolData}
-            }
-            return [boolWhere];
         }
     });
 });

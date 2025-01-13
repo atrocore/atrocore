@@ -48,10 +48,6 @@ class MassActionCreator extends AbstractJob implements JobInterface
 
         $select = ['id'];
         $orderBy = 'id';
-        if (!empty($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'createdAt']))) {
-            $orderBy = 'createdAt';
-            $select[] = $orderBy;
-        }
 
         if (empty($ids)) {
             $sp = $this->getServiceFactory()

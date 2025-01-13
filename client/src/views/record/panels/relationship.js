@@ -90,14 +90,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
-            if (!this.getConfig().get('scopeColorsDisabled')) {
-                var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-                if (iconHtml) {
-                    if (this.defs.label) {
-                        this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
-                    } else {
-                        this.titleHtml = iconHtml + this.title;
-                    }
+            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            if (iconHtml) {
+                if (this.defs.label) {
+                    this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
+                } else {
+                    this.titleHtml = iconHtml + this.title;
                 }
             }
 
@@ -152,7 +150,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if(this.model.urlRoot === 'File') {
                 let foreign = this.getMetadata().get(['entityDefs', 'File', 'links', this.link, 'foreign']);
                 let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields', foreign]);
-                if(fieldDefs['type'] === 'linkMultiple' && !(fieldDefs['allowFileTypesIds'] ?? []).includes(this.model.get('typeId'))) {
+                if(fieldDefs['type'] === 'linkMultiple' && !(fieldDefs['fileTypes'] ?? []).includes(this.model.get('typeId'))) {
                     canSelect = false;
                     this.defs.create = false;
                 }
@@ -421,7 +419,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
             if(this.scope === 'File' && !data['onlyType']) {
-                let typeIds = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.link, 'allowFileTypesIds'], []);
+                let typeIds = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.link, 'fileTypes'], []);
                 if(typeIds && typeIds.length) {
                     data['onlyType'] = typeIds;
                 }

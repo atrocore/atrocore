@@ -1,68 +1,72 @@
 {
-   "params":[
-      {
-         "name": "required",
-         "type": "bool",
-         "default": false
-      },
-      {
-         "name": "notNull",
-         "type": "bool",
-         "default": false
-      },
-      {
-         "name": "default",
-         "type": "text"
-      },
-      {
-         "name": "height",
-         "type": "int"
-      },
-      {
-         "name": "minHeight",
-         "type": "int"
-      },
-      {
-         "name":"maxLength",
-         "type":"int"
-      },
-      {
-         "name":"countBytesInsteadOfCharacters",
-         "type":"bool"
-      },
-      {
-         "name":"seeMoreDisabled",
-         "type":"bool",
-         "tooltip": true
-      },
-      {
-         "name": "lengthOfCut",
-         "type": "int",
-         "default": 400,
-         "min": 1,
-         "tooltip": true
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
-         "name": "useIframe",
-         "type": "bool"
-      },
-      {
-         "name": "htmlSanitizer",
-         "entity": "HtmlSanitizer",
-         "type": "link"
-      }
-   ],
-   "filter": true,
-   "auditable": true,
-   "qbFilterType": "string",
-   "multilingual": true,
-   "fieldDefs":{
-      "type":"text"
-   },
-   "personalData": true,
-   "textFilter": true
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "text"
+    },
+    {
+      "name": "height",
+      "type": "int"
+    },
+    {
+      "name": "minHeight",
+      "type": "int"
+    },
+    {
+      "name": "maxLength",
+      "type": "int"
+    },
+    {
+      "name": "countBytesInsteadOfCharacters",
+      "type": "bool"
+    },
+    {
+      "name": "seeMoreDisabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    {
+      "name": "lengthOfCut",
+      "type": "int",
+      "default": 400,
+      "min": 1,
+      "tooltip": true
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "useIframe",
+      "type": "bool"
+    },
+    {
+      "name": "htmlSanitizer",
+      "entity": "HtmlSanitizer",
+      "type": "link"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "qbFilterType": "string",
+  "fieldDefs": {
+    "type": "text"
+  },
+  "personalData": true,
+  "textFilter": true
 }

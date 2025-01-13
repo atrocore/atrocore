@@ -31,14 +31,6 @@
       ],
       [
         {
-          "name": "scopeColorsDisabled"
-        },
-        {
-          "name": "tabColorsDisabled"
-        }
-      ],
-      [
-        {
           "name": "useCustomTabList"
         },
         {

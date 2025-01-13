@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "Entity": "Entität",
+    "EntityField": "Entitätsfeld",
     "Language": "Sprache",
     "EmailTemplate": "E-Mail-Vorlage",
     "Storage": "Dateiablage",
@@ -51,6 +53,8 @@
     "Bookmark": "Lesezeichen"
   },
   "scopeNamesPlural": {
+    "Entity": "Entitäten",
+    "EntityField": "Entitätsfelder",
     "Language": "Sprachen",
     "EmailTemplate": "E-Mail-Vorlagen",
     "Storage": "Dateiablagen",
@@ -331,7 +335,8 @@
     "Unbookmarking": "Lesezeichen entfernen",
     "youShouldHaveAtLeastOneRecord": "Sie sollten mindestens 2 Datensätze haben, um vergleichen zu können",
     "weCannotCompareMoreThan": " Die maximale Anzahl der zu vergleichenden Datensätze beträgt %s.",
-    "thereAreTooManyRecord": "Es gibt zu viele Datensätze. Kein Vergleich ist möglich"
+    "thereAreTooManyRecord": "Es gibt zu viele Datensätze. Kein Vergleich ist möglich",
+    "Unset Selection": "Nicht eingestellte Auswahl"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

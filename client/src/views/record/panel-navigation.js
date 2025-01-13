@@ -72,7 +72,7 @@ Espo.define('views/record/panel-navigation', 'view',
 
                     const panelElement = document.querySelector(`div.panel[data-name="${panel.name}"]`);
 
-                    return panelElement && panelElement.style.display !== 'none';
+                    return panelElement && panelElement.style.display !== 'none' && !$(panelElement).hasClass('hidden');
                 });
         },
 

@@ -72,15 +72,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             this.langFieldNames = this.getLangFieldNames();
 
-            if (this.model.get(this.name) && !this.model.get(this.name + 'Ids')) {
-                this.model.set(this.name + 'Ids', this.model.get(this.name));
-                if (!this.isAttribute) {
-                    this.model.save().then(() => {
-                        location.reload();
-                    });
-                }
-            }
-
             this.updateSelectedComplex();
             const eventStr = this.langFieldNames.reduce((prev, curr) => `${prev} change:${curr}`, `change:${this.name}`);
             this.listenTo(this.model, eventStr, () => this.updateSelectedComplex());

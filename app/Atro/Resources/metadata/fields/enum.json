@@ -1,48 +1,50 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"prohibitedEmptyValue",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"options",
-         "type":"array",
-         "view": "views/admin/field-manager/fields/options-extended"
-      },
-      {
-         "name":"default",
-         "type":"enum",
-         "view": "views/admin/field-manager/fields/options/default"
-      },
-      {
-         "name":"isSorted",
-         "type":"bool",
-         "tooltip": true
-      },
-      {
-         "name":"translation",
-         "type":"varchar",
-         "hidden": true
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "filter": true,
-   "auditable": true,
-   "notCreatable": true,
-   "multilingual": true,
-   "fieldDefs":{
-      "type":"varchar"
-   },
-   "translatedOptions": false,
-   "personalData": true,
-   "view": "views/fields/colored-enum"
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "prohibitedEmptyValue",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "options",
+      "type": "array"
+    },
+    {
+      "name": "default",
+      "type": "varchar"
+    },
+    {
+      "name": "isSorted",
+      "type": "bool",
+      "tooltip": true
+    },
+    {
+      "name": "translation",
+      "type": "varchar",
+      "hidden": true
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "notCreatable": true,
+  "fieldDefs": {
+    "type": "varchar"
+  },
+  "translatedOptions": false,
+  "personalData": true,
+  "view": "views/fields/colored-enum"
 }

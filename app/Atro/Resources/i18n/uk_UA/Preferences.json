@@ -13,8 +13,6 @@
     "dashboardLayout": "Планування панелі віджетів",
     "followEntityOnStreamPost": "Автоматично підписатися поле публікації в стрічці",
     "followCreatedEntities": "Автоматично підписатися на створені записи",
-    "scopeColorsDisabled": "Відключити кольори меж",
-    "tabColorsDisabled": "Вимкнути кольори вкладок",
     "assignmentNotifications": "Notifications upon assignment",
     "hideFeedbackIcon": "Приховати іконку зворотнього зв'язку",
     "receiveNotifications": "Отримувати сповіщення",

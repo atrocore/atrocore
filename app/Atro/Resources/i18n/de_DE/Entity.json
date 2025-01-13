@@ -1,0 +1,72 @@
+{
+  "fields": {
+    "name": "Name Singular",
+    "namePlural": "Name Plural",
+    "disabled": "Deaktiviert",
+    "hasArchive": "Archivierbar",
+    "hasActive": "Aktivierbar",
+    "hideFieldTypeFilters": "Feldtypfilter ausblenden",
+    "streamDisabled": "Stream deaktivieren",
+    "iconClass": "Icon",
+    "color": "Farbe",
+    "sortBy": "Standard-Sortierfeld",
+    "sortDirection": "Standard-Sortierrichtung",
+    "textFilterFields": "Textfilterfelder",
+    "statusField": "Statusfeld",
+    "kanbanViewMode": "Kanban-Ansicht",
+    "kanbanStatusIgnoreList": "Die in der Kanban-Ansicht ignorierten Listen ",
+    "deleteWithoutConfirmation": "Löschen ohne Bestätigung",
+    "autoDeleteAfterDays": "Zeitraum für automatisches Löschen, in Tagen",
+    "clearDeletedAfterDays": "Zeitraum für dauerhaftes Löschen, in Tagen",
+    "modifiedExtendedRelations": "Beziehungen, die Datum/Uhrzeit der Änderung betreffen",
+    "duplicatableRelations": "Duplizierbare Beziehungen",
+    "hasAssignedUser": "Zugewiesenen Benutzer ermöglichen",
+    "hasTeam": "Teams ermöglichen",
+    "hasAccount": "Accounts ermöglichen",
+    "hasOwner": "Eigentümer ermöglichen",
+    "multiParents": "Mehrere Eltern",
+    "dragAndDrop": "Ziehen und ablegen",
+    "fieldValueInheritance": "Feldwertvererbung",
+    "unInheritedFields": "Unvererbbare Felder",
+    "relationInheritance": "Beziehungsvererbung",
+    "unInheritedRelations": "Unvererbbare Beziehungen",
+    "disableHierarchy": "Hierarchie deaktivieren"
+  },
+  "options": {
+    "type": {
+      "Base": "Basis",
+      "Hierarchy": "Hierarchie",
+      "ReferenceData": "Referenzdaten"
+    },
+    "sortDirection": {
+      "asc": "Aufsteigend",
+      "desc": "Absteigend"
+    }
+  },
+  "labels": {
+    "Create Entity": "Entität erstellen",
+    "accessManagement": "Zugriffsverwaltung",
+    "hierarchyManagement": "Hierarchieverwaltung",
+    "other": "Sonstiges",
+    "resetToDefault": "Auf Standardwerte zurücksetzen"
+  },
+  "confirmations": {
+    "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardeinstellungen zurücksetzen möchten?"
+  },
+  "tooltips": {
+    "clearDeletedAfterDays": "Datensätze für diese Entität werden XX Tage nach dem Löschungsdatum endgültig gelöscht.",
+    "autoDeleteAfterDays": "Datensätze für diese Entität werden automatisch XX Tage nach dem Datum der letzten Änderung gelöscht.",
+    "disabled": "Prüfen Sie, ob Sie diese Entität in Ihrem System nicht benötigen.",
+    "textFilterFields": "Für die Textsuche verwendete Felder.",
+    "statusField": "Aktualisierungen dieses Feldes werden im Stream protokolliert.",
+    "deleteWithoutConfirmation": "Wenn diese Option aktiviert ist, wird der einzelne Datensatz ohne Benutzerbestätigung gelöscht. Die Löschung mehrerer Datensätze soll weiterhin bestätigt werden.",
+    "modifiedExtendedRelations": "Änderungen bei diesen Beziehungen führen zur Aktualisierung des Datums und der Uhrzeit von \"Geändert am\"",
+    "dragAndDrop": "Mit dieser Option wird die Sortierreihenfolge der Hierarchie aktiviert. Dies bedeutet, dass keine andere Sortierung in der hierarchischen Navigation möglich ist.",
+    "unInheritedFields": "Die Werte für diese Felder werden nicht vom übergeordneten Element vererbt.",
+    "unInheritedRelations": "Die Beziehungen zu diesen Entitäten werden nicht vom übergeordneten Element vererbt.",
+    "hasAssignedUser": "Zugewiesene Benutzer für die Zugriffsverwaltung aktivieren.",
+    "hasTeam": "Teams für die Zugriffsverwaltung aktivieren.",
+    "hasAccount": "Accounts für die Zugriffsverwaltung aktivieren.",
+    "hasOwner": "Eigentümer für die Zugriffsverwaltung aktivieren."
+  }
+}

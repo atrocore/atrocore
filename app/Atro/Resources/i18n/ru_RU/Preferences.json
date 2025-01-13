@@ -14,8 +14,6 @@
     "dashboardLayout": "Планировка панели виджетов",
     "followEntityOnStreamPost": "Автоматически подписаться поле публикации в ленте",
     "followCreatedEntities": "Автоматически подписаться на созданные записи",
-    "scopeColorsDisabled": "Отключить цвета границ",
-    "tabColorsDisabled": "Отключить цвета вкладок",
     "assignmentNotifications": "Notifications upon assignment"
   },
   "links": {
