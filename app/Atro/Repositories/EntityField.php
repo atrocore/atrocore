@@ -305,10 +305,6 @@ class EntityField extends ReferenceData
         if ($entity->isAttributeChanged('name')) {
             $this->getLanguage()
                 ->set($entity->get('entityId'), 'fields', $entity->get('code'), $entity->get('name'));
-            if ($entity->get('type') === 'linkMultiple') {
-                $this->getLanguage()
-                    ->set($entity->get('entityId'), 'links', $entity->get('code'), $entity->get('name'));
-            }
             $saveLanguage = true;
         }
 
