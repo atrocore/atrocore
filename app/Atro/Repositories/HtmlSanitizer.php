@@ -23,7 +23,6 @@ class HtmlSanitizer extends ReferenceData
     {
         parent::init();
 
-        $this->addDependency('language');
         $this->addDependency('serviceFactory');
         $this->addDependency('htmlSanitizer');
     }
@@ -44,11 +43,6 @@ class HtmlSanitizer extends ReferenceData
     protected function getInvalidYamlMessage(): string
     {
         return $this->getLanguage()->translate('notValidYaml', 'exceptions', $this->entityName);
-    }
-
-    protected function getLanguage(): \Atro\Core\Utils\Language
-    {
-        return $this->getInjection('language');
     }
 
     protected function getHtmlSanitizer(): \Atro\Core\Utils\HTMLSanitizer

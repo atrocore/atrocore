@@ -626,6 +626,7 @@ class Installer extends HasContainer
                 'id'                => 'main',
                 'name'              => 'Main',
                 'code'              => 'en_US',
+                'languageCode'      => 'en_US',
                 'dateFormat'        => 'DD.MM.YYYY',
                 'timeZone'          => 'UTC',
                 'weekStart'         => 'monday',

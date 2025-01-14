@@ -78,16 +78,10 @@ class UiHandler extends ReferenceData
         return $this->getInjection('memoryStorage');
     }
 
-    protected function getLanguage(): Language
-    {
-        return $this->getInjection('language');
-    }
-
     protected function init()
     {
         parent::init();
 
         $this->addDependency('memoryStorage');
-        $this->addDependency('language');
     }
 }

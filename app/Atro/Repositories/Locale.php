@@ -24,6 +24,15 @@ class Locale extends ReferenceData
         $this->getInjection('dataManager')->clearCache();
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if ($entity->isAttributeChanged('code') && !preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $entity->get('code'))) {
+            throw new BadRequest("Code is invalid.");
+        }
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);

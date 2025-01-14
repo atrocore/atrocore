@@ -17,8 +17,9 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
-use Espo\Core\Interfaces\Injectable;
 use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Language;
+use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
@@ -93,7 +94,8 @@ class ReferenceData extends Repository implements Injectable
         foreach ($items as $item) {
             foreach ($uniques as $unique) {
                 if ($item['id'] !== $entity->get('id') && $item[$unique] === $entity->get($unique)) {
-                    throw new NotUnique('The record cannot be created due to database constraints.');
+                    $fieldName = $this->translate($unique, 'fields', $this->entityName);
+                    throw new NotUnique(sprintf($this->translate('notUniqueRecordField', 'exceptions'), $fieldName));
                 }
             }
         }
@@ -380,6 +382,7 @@ class ReferenceData extends Repository implements Injectable
         $this->addDependency('config');
         $this->addDependency('metadata');
         $this->addDependency('eventManager');
+        $this->addDependency('language');
     }
 
     public function getDependencyList()
@@ -428,5 +431,15 @@ class ReferenceData extends Repository implements Injectable
     protected function getMetadata(): Metadata
     {
         return $this->getInjection('metadata');
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('language');
+    }
+
+    protected function translate(string $label, ?string $category = 'labels', ?string $scope = 'Global'): string
+    {
+        return $this->getLanguage()->translate($label, $category, $scope);
     }
 }

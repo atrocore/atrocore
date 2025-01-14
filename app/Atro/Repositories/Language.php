@@ -79,7 +79,6 @@ class Language extends ReferenceData
         parent::init();
 
         $this->addDependency('dataManager');
-        $this->addDependency('language');
     }
 
     protected function clearCache(): void
@@ -92,10 +91,5 @@ class Language extends ReferenceData
     {
         $this->getConfig()->clearReferenceDataCache();
         $this->getInjection('dataManager')->rebuild();
-    }
-
-    protected function getLanguage(): \Atro\Core\Utils\Language
-    {
-        return $this->getInjection('language');
     }
 }

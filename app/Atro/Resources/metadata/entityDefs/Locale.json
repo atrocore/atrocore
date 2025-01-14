@@ -10,9 +10,15 @@
       "type": "text"
     },
     "code": {
+      "type": "varchar",
+      "view": "views/locale/fields/code",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
+    "languageCode": {
       "type": "enum",
       "required": true,
-      "unique": true,
       "maxLength": 6,
       "len": 6,
       "options": [

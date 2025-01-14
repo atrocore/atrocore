@@ -6,7 +6,9 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "code"
+        }
       ],
       [
         {
@@ -16,7 +18,7 @@
       ],
       [
         {
-          "name": "code"
+          "name": "languageCode"
         },
         {
           "name": "fallbackLanguageCode"
