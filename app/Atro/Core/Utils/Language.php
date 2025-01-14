@@ -27,45 +27,44 @@ class Language
     protected array $data = [];
     protected array $deletedData = [];
     protected array $changedData = [];
-    protected string $currentLanguage;
+    protected ?string $localeId;
 
-    public function __construct(Container $container, string $currentLanguage = null)
+    public function __construct(Container $container, ?string $localeId = null)
     {
-        if ($currentLanguage === null) {
+        if ($localeId === null) {
             $preferences = $container->get('config')->get('isInstalled', false) ? $container->get('preferences') : null;
-            $currentLanguage = self::detectLanguage($container->get('config'), $preferences);
+            $localeId = self::detectLocale($container->get('config'), $preferences);
         }
 
         $this->container = $container;
-        $this->currentLanguage = $currentLanguage;
+        $this->localeId = $localeId;
         $this->unifier = new Unifier($this->container->get('fileManager'), $this->getMetadata());
     }
 
-    public static function detectLanguage(Config $config, Preferences $preferences = null): string
+    public static function detectLocale(Config $config, Preferences $preferences = null): ?string
     {
         if ($preferences) {
-            $language = $preferences->get('language');
+            $localeId = $preferences->get('locale');
+        } else {
+            $localeId = $config->get('localeId');
         }
 
-        if (empty($language)) {
-            $language = $config->get('language');
-        }
-
-        if (empty($language)) {
-            $language = self::DEFAULT_LANGUAGE;
-        }
-
-        return $language;
+        return $localeId ?? null;
     }
 
-    public function getLanguage(): string
+    public static function detectLanguage(Config $config, Preferences $preferences = null): ?string
     {
-        return $this->currentLanguage;
+        $localeId = self::detectLocale($config, $preferences);
+        if (!empty($localeId)) {
+            return $config->get('locales')[$localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+        }
+
+        return self::DEFAULT_LANGUAGE;
     }
 
-    public function setLanguage(string $language): void
+    public function setLocale(?string $localeId): void
     {
-        $this->currentLanguage = $language;
+        $this->localeId = $localeId;
     }
 
     public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
@@ -308,36 +307,31 @@ class Language
 
     protected function getData()
     {
-        $currentLanguage = $this->getLanguage();
         if (empty($this->data)) {
             $this->init();
         }
 
-        if ($currentLanguage === self::DEFAULT_LANGUAGE) {
-            return $this->data[$currentLanguage];
+        if (empty($this->localeId)) {
+            return $this->data[self::DEFAULT_LANGUAGE];
         }
 
-        if (empty($data = $this->getDataManager()->getCacheData($currentLanguage))) {
-            $data = $this->data[self::DEFAULT_LANGUAGE];
+        $cacheName = "locale_{$this->localeId}";
 
-            foreach ($this->getConfig()->get('locales', []) as $locale) {
-                if (empty($locale['fallbackLanguage'])) {
-                    continue;
-                }
-                if ($locale['language'] !== $currentLanguage) {
-                    continue;
-                }
-                if (!isset($this->data[$locale['fallbackLanguage']])) {
-                    continue;
-                }
-                $data = Util::merge($data, $this->data[$locale['fallbackLanguage']]);
+        if (empty($data = $this->getDataManager()->getCacheData($cacheName))) {
+            $data = $this->data[self::DEFAULT_LANGUAGE];
+            $locales = $this->getConfig()->get('locales') ?? [];
+
+            $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
+            if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
+                $data = Util::merge($data, $this->data[$fallbackLanguage]);
             }
 
-            if (isset($this->data[$currentLanguage])) {
+            $currentLanguage = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+            if ($currentLanguage !== self::DEFAULT_LANGUAGE) {
                 $data = Util::merge($data, $this->data[$currentLanguage]);
             }
 
-            $this->getDataManager()->setCacheData($currentLanguage, $data);
+            $this->getDataManager()->setCacheData($cacheName, $data);
         }
 
         return $data;
