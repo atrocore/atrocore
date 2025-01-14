@@ -59,7 +59,7 @@ class Config extends \Espo\Core\Utils\Config
                         if (!empty($row['id'])) {
                             $this->data['locales'][$row['id']] = [
                                 'name'              => $row['name'] ?? 'en_US',
-                                'language'          => $row['code'] ?? 'en_US',
+                                'language'          => $row['languageCode'] ?? 'en_US',
                                 'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
                                 'weekStart'         => $row['weekStart'] === 'monday' ? 1 : 0,
                                 'dateFormat'        => $row['dateFormat'] ?? 'MM/DD/YYYY',
