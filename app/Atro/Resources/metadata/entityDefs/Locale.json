@@ -11,6 +11,7 @@
     },
     "code": {
       "type": "varchar",
+      "view": "views/locale/fields/code",
       "required": true,
       "trim": true,
       "unique": true

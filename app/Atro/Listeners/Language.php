@@ -94,11 +94,6 @@ class Language extends AbstractListener
         foreach ($this->getConfig()->get('referenceData.Language', []) as $item) {
             $languages[$item['code']] = $item['name'];
         }
-        foreach ($this->getConfig()->get('referenceData.Locale', []) as $item) {
-            if (!isset($languages[$item['code']])) {
-                $languages[$item['code']] = $item['name'];
-            }
-        }
         if (isset($languages[$this->getConfig()->get('mainLanguage')])) {
             unset($languages[$this->getConfig()->get('mainLanguage')]);
         }
@@ -122,15 +117,6 @@ class Language extends AbstractListener
                             }
                         }
                     }
-                }
-            }
-        }
-
-        if (!empty($referenceData = $this->getConfig()->get('referenceData.Locale', []))) {
-            foreach ($data as $locale => $rows) {
-                foreach ($referenceData as $item) {
-                    $value = $this->getLabel($data, $locale, 'Admin', 'label') . ' / ' . $item['name'];
-                    $data[$locale]['Admin']['fields'][Util::toCamelCase('label_' . strtolower($item['code']))] = $value;
                 }
             }
         }
