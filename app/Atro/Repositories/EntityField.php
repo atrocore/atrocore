@@ -359,18 +359,7 @@ class EntityField extends ReferenceData
     {
         parent::init();
 
-        $this->addDependency('language');
         $this->addDependency('dataManager');
-    }
-
-    protected function getLanguage(): Language
-    {
-        return $this->getInjection('language');
-    }
-
-    protected function translate(string $label, ?string $category = 'labels', ?string $scope = 'Global'): string
-    {
-        return $this->getLanguage()->translate($label, $category, $scope);
     }
 
     protected function getDataManager(): DataManager

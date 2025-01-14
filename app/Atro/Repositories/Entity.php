@@ -362,14 +362,8 @@ class Entity extends ReferenceData
     {
         parent::init();
 
-        $this->addDependency('language');
         $this->addDependency('baseLanguage');
         $this->addDependency('dataManager');
-    }
-
-    protected function getLanguage(): \Atro\Core\Utils\Language
-    {
-        return $this->getInjection('language');
     }
 
     protected function getBaseLanguage(): \Atro\Core\Utils\Language
