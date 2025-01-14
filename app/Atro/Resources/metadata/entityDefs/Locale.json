@@ -10,9 +10,14 @@
       "type": "text"
     },
     "code": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "unique": true
+    },
+    "languageCode": {
       "type": "enum",
       "required": true,
-      "unique": true,
       "maxLength": 6,
       "len": 6,
       "options": [
