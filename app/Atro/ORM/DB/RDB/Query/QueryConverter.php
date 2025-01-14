@@ -93,7 +93,8 @@ class QueryConverter
             'LOWER',
             'UPPER',
             'TRIM',
-            'LENGTH'
+            'LENGTH',
+            'VARCHAR'
         ];
 
     protected array $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
@@ -268,6 +269,8 @@ class QueryConverter
             throw new \Exception("Not allowed function '" . $function . "'.");
         }
         switch ($function) {
+            case 'VARCHAR':
+                return "CONCAT({$part}, '')";
             case 'MONTH':
                 return "DATE_FORMAT({$part}, '%Y-%m')";
             case 'DAY':
