@@ -311,6 +311,19 @@ class Entity extends ReferenceData
         }
     }
 
+    public function beforeSave(OrmEntity $entity, array $options = [])
+    {
+        if ($entity->get('type') === 'Hierarchy' && !empty($entity->get('modifiedExtendedRelations'))) {
+            if (in_array('parents', $entity->get('modifiedExtendedRelations')) && in_array('children', $entity->get('modifiedExtendedRelations'))) {
+                throw new BadRequest(str_replace(['{parents}', '{children}'],
+                    [$this->getLanguage()->translate('parents', 'fields', $entity->get('code')), $this->getLanguage()->translate('children', 'fields', $entity->get('code'))],
+                    $this->getLanguage()->translate('parentsAndChildrenShouldNotBeInModifiedExtendedRelations', 'exceptions', 'Entity')));
+            }
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     protected function beforeRemove(OrmEntity $entity, array $options = [])
     {
         if (empty($entity->get('isCustom'))) {
