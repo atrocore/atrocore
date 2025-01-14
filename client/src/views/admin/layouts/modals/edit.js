@@ -44,7 +44,7 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
         afterRender() {
             this.getLayoutProfiles()
 
-            let allowSwitch = this.getUser().isAdmin()
+            let allowSwitch = true
             if (this.options.allowSwitch === false) {
                 allowSwitch = false
             }

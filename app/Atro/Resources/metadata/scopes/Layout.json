@@ -2,7 +2,7 @@
   "entity": true,
   "layouts": false,
   "tab": false,
-  "acl": true,
+  "acl": false,
   "customizable": false,
   "importable": false,
   "notifications": false,
