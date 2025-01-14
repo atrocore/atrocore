@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "navigationManuBackgroundColor": "Hintergrund des Navigationsmenüs",
+    "navigationMenuFontColor": "Schriftfarbe des Navigationsmenüs",
+    "linkFontColor": "Linkfarbe",
+    "customStylesheetPath": "CSS-Dateipfad",
+    "customStylesheet": "CSS",
+    "primaryColor": "Primärfarbe",
+    "secondaryColor": "Sekundäre Farbe",
+    "primaryFontColor": "Primärschriftfarbe",
+    "secondaryFontColor": "Sekundäre Schriftfarbe",
+    "labelColor": "Etikettenfarbe",
+    "anchorNavigationBackground": "Hintergrund der Ankernavigation",
+    "iconColor": "Iconfarbe",
+    "primaryBorderColor": "Primäre Rahmenfarbe",
+    "secondaryBorderColor": "Sekundäre Rahmenfarbe",
+    "panelTitleColor": "Panel-Titelfarbe",
+    "headerTitleColor": "itelfarbe der Kopfzeile",
+    "success": "Erfolg",
+    "notice": "Notiz",
+    "information": "Information",
+    "error": "Fehler",
+    "customHeadCode": "Head Code"
+  },
+  "tooltips": {
+    "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen.",
+    "customHeadCode": "Fügen Sie den Code am Ende des <head>-Tags ein. Atrocore validiert benutzerdefinierten Code nicht für Sie, also überprüfen Sie Ihren Code vor der Veröffentlichung."
+  },
+  "exceptions": {
+    "styleIsUsed": "Der verwendete Stil kann nicht entfernt werden."
+  }
+}

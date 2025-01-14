@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "navigationManuBackgroundColor": "Фон меню навігації",
+    "navigationMenuFontColor": "Колір шрифту навігації",
+    "linkFontColor": "Колір посилання",
+    "customStylesheetPath": "Шлях до файлу СSS",
+    "customStylesheet": "CSS",
+    "primaryColor": "Основний колір",
+    "secondaryColor": "Вторинний колір",
+    "primaryFontColor": "Основний колір шрифту",
+    "secondaryFontColor": "Додатковий колір шрифту",
+    "labelColor": "Колір ярлика",
+    "anchorNavigationBackground": "Якірний навігаційний фон",
+    "iconColor": "Колір значка",
+    "primaryBorderColor": "Основний колір кордону",
+    "secondaryBorderColor": "Вторинний колір кордону",
+    "panelTitleColor": "Колір заголовка панелі",
+    "headerTitleColor": "Колір заголовка заголовка",
+    "success": "Успіх",
+    "notice": "Повідомлення",
+    "information": "Інформація",
+    "error": "Помилка",
+    "customHeadCode": "Код Head"
+  },
+  "tooltips": {
+    "customStylesheetPath": "Ваші користувацькі стилі CSS будуть записані в цей файл. Ви також можете вносити зміни в нього безпосередньо.",
+    "customHeadCode": "Додайте код в кінці тегу <head>. Atrocore не перевіряє кастомний код, тому обов'язково перевіряйте його перед публікацією."
+  },
+  "exceptions": {
+    "styleIsUsed": "Використовуваний стиль не можна видалити."
+  }
+}

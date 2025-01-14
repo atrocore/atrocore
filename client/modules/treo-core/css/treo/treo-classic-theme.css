@@ -5135,12 +5135,12 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
-    color: #fff;
+    color: var(--nav-font-color);
     background-color: transparent
 }
 
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
-    color: #fff;
+    color: var(--nav-font-color);
     background-color: #3f535c
 }
 
@@ -14981,7 +14981,7 @@ body > #header .navbar-brand span.home-icon {
     }
     .navbar-inverse .navbar-nav > li > a:hover,
     .navbar-inverse .navbar-nav > li > a:focus {
-        color: #000;
+        color: var(--nav-font-color);
         background-color: none;
     }
     #header .navbar-form {
@@ -21160,7 +21160,7 @@ button.category:focus {
     }
     .navbar-inverse .navbar-nav > li > a:hover,
     .navbar-inverse .navbar-nav > li > a:focus {
-        color: #000;
+        color: color: var(--nav-font-color);;
         background-color: #dcdcdc;
     }
 

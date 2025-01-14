@@ -6,7 +6,6 @@
     "emailAddress": "E-Mail",
     "dashboardTabList": "Navigationsmenü",
     "tabList": "Navigationsmenü",
-    "theme": "Design",
     "useCustomTabList": "Benutzerdefiniertes Navigationsmenü",
     "receiveAssignmentEmailNotifications": "Nachrichten bei Zuweisungen erhalten",
     "receiveMentionEmailNotifications": "Benachrichtigungen über Erwähnungen in Beiträgen",
@@ -16,7 +15,8 @@
     "hideFeedbackIcon": "Feedback-Icon ausblenden",
     "receiveNotifications": "Erhalten Sie Benachrichtigungen",
     "notificationProfile": "Benachrichtigungsprofil",
-    "layoutProfiles": "Layoutprofile"
+    "layoutProfiles": "Layoutprofile",
+    "style": "Design"
   },
   "labels": {
     "Notifications": "Benachrichtigungen",

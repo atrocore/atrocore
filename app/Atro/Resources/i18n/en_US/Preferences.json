@@ -8,7 +8,6 @@
     "receiveMentionEmailNotifications": "Notifications about mentions in posts",
     "receiveStreamEmailNotifications": "Notifications about updates in Stream",
     "dashboardTabList": "Tab List",
-    "theme": "Theme",
     "useCustomTabList": "Custom Tab List",
     "tabList": "Navigation menu",
     "dashboardLayout": "Dashboard Layout",
@@ -17,7 +16,8 @@
     "hideFeedbackIcon": "Hide feedback icon",
     "receiveNotifications": "Receive Notifications",
     "notificationProfile": "Notification Profile",
-    "layoutProfile": "Layout Profile"
+    "layoutProfile": "Layout Profile",
+    "style": "Style"
   },
   "labels": {
     "Notifications": "Notifications",

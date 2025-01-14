@@ -72,7 +72,8 @@
     "upsert": "Upsert",
     "execute": "Execute",
     "status": "Status",
-    "apiRequest": "API request"
+    "apiRequest": "API request",
+    "style": "Styles"
   },
   "layouts": {
     "relationships": "Relation panels",
@@ -190,7 +191,7 @@
     "outboundEmails": "Set SMTP server settings for outgoing emails.",
     "layoutManager": "Manage standard system layouts for (side) list view, (side) detail view, relation panels and their sorting order, mass update, etc.",
     "entityManager": "Configure your data model – manage pre-configured and create new entities of different types (base, hierarchy), manage their configurations, fields of different types (there are more than 20 field types available), and relations (many-to-many, one-to-many, many-to-one) between entities as well as define dynamic logic conditions for making fields visible, read-only or required.",
-    "userInterface": "Select your theme, configure main navigation items, default dashboards and entities, available for quick create as well as manage other settings for user interfaces.",
+    "userInterface": "Select your CSS style, configure main navigation items, default dashboards and entities, available for quick create as well as manage other settings for user interfaces.",
     "authTokens": "Investigate active authorization sessions, including users' IP address and last access date and time.",
     "authentication": "Manage authentication methods and settings.",
     "notifications": "Manage settings for in-app and email notifications.",
@@ -206,7 +207,8 @@
     "notificationTemplates": "Manage  template for standard notification of the system.",
     "notificationProfiles": "Configure Notification Profiles and Notification Rules to effectively streamline your alert management process so that it is timely and relevant.",
     "layoutProfiles": "Manage and customize different layout configurations for the system's user interface",
-    "apiRequest": "Use this feature to quickly create complex data structures such as configured import or export feeds."
+    "apiRequest": "Use this feature to quickly create complex data structures such as configured import or export feeds.",
+    "style": "Create, update and customize new styles to make adjustments to standard CSS"
   },
   "logicalOperators": {
     "and": "AND",

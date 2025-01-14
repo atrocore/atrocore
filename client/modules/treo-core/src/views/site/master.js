@@ -34,13 +34,20 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
         afterRender() {
             if ($(":root").length > 0) {
-                const config = this.getConfig().get('customStylesheetsList') || [],
-                      theme = this.getPreferences().get('theme') || this.getConfig().get('theme');
+                let defaultStyleId = this.getPreferences().get('styleId') ?? this.getConfig().get('defaultStyleId');
 
-                if (config[theme]) {
+                if(!defaultStyleId) {
+                    return null;
+                }
+
+                let styles = (this.getConfig().get('referenceData') ?? {})['Style'] ?? {};
+
+                let style =  styles[defaultStyleId];
+
+                if (style) {
                     (Object.keys(this.styleVariableMap) || []).forEach(param => {
-                        if (config[theme][param]) {
-                            $(":root")[0].style.setProperty(this.styleVariableMap[param], config[theme][param]);
+                        if (style[param]) {
+                            $(":root")[0].style.setProperty(this.styleVariableMap[param], style[param]);
                         }
                     });
                 }
