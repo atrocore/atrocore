@@ -93,7 +93,7 @@ class ReferenceData extends Repository implements Injectable
         foreach ($items as $item) {
             foreach ($uniques as $unique) {
                 if ($item['id'] !== $entity->get('id') && $item[$unique] === $entity->get($unique)) {
-                    throw new NotUnique('The record cannot be created due to database constraints.');
+                    throw new NotUnique("The record cannot be created. '$unique' must be unique.");
                 }
             }
         }
