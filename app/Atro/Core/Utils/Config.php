@@ -58,6 +58,7 @@ class Config extends \Espo\Core\Utils\Config
                     foreach ($items as $row) {
                         if (!empty($row['id'])) {
                             $this->data['locales'][$row['id']] = [
+                                'code'              => $row['code'],
                                 'name'              => $row['name'] ?? 'en_US',
                                 'language'          => $row['languageCode'] ?? 'en_US',
                                 'fallbackLanguage'  => $row['fallbackLanguageCode'] ?? null,
