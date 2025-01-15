@@ -3,7 +3,7 @@
     "handler": "\\Atro\\TwigFunction\\IsNew"
   },
   "md5": {
-    "handler": "\\Atro\\TwigFunction\\md5"
+    "handler": "\\Atro\\TwigFunction\\Md5"
   },
   "isAttributeChanged": {
     "handler": "\\Atro\\TwigFunction\\IsAttributeChanged"

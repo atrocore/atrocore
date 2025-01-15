@@ -15,7 +15,7 @@ namespace Atro\TwigFunction;
 
 use Atro\Core\Twig\AbstractTwigFunction;
 
-class md5 extends AbstractTwigFunction
+class Md5 extends AbstractTwigFunction
 {
     public function run(string $value): string
     {
