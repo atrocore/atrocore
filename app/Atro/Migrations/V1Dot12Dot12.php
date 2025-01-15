@@ -143,7 +143,7 @@ class V1Dot12Dot12 extends Base
             ],
             "classic" => [
                 "id" => "classic",
-                "name" => "Classic",
+                "name" => "Standard",
                 "code" => "classic",
                 "customStylesheet" => null,
                 "navigationManuBackgroundColor" => "#f5f5f5",
