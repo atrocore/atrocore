@@ -61,6 +61,9 @@ class V1Dot12Dot12 extends Base
                 $oldConfig = $config->get('customStylesheetsList', []);
                 if(!empty($oldConfig[$theme])) {
                     foreach ($styles[$key] as $param => $_) {
+                        if(in_array($param, ['customStylesheetPath', 'customHeadCodePath'])) {
+                            continue;
+                        }
                         if(!empty($oldConfig[$theme][$param])) {
                             $styles[$key][$param] = $oldConfig[$theme][$param];
                         }
