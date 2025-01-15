@@ -8,7 +8,9 @@
     },
     "code": {
       "type": "varchar",
-      "required": true
+      "required": true,
+      "unique": true,
+      "trim": true
     },
     "customStylesheetPath": {
       "type": "varchar",
