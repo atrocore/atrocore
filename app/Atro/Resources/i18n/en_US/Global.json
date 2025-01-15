@@ -1082,6 +1082,7 @@
   "twig": {
     "functions": {
       "isNew": "Check if an entity is new",
+      "md5": "Convert input string into md5 hash",
       "isAttributeChanged": "Check if an attribute has been changed",
       "getFetched": "Get fetched entity data",
       "get": "Get field value",
