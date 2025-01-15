@@ -91,9 +91,8 @@ Espo.define('theme-manager', [], function () {
         },
 
         getParam: function (name) {
-            let style = this.getStyle() ?? {};
-            debugger
-            return style[name] ?? this.metadata.get(['themes', this.getName(), name]) || this.defaultParams[name] || null;
+            let style = this.getStyle() ||  {};
+            return style[name] ||  this.metadata.get(['themes', this.getName(), name]) || this.defaultParams[name] || null;
         },
 
         isUserTheme: function () {
@@ -109,18 +108,21 @@ Espo.define('theme-manager', [], function () {
         },
 
         getStyle() {
-            let defaultStyleId = this.preferences.get('styleId') ?? this.config.get('defaultStyleId');
+            let defaultStyleId = this.preferences.get('styleId') ||  this.config.get('defaultStyleId');
 
             if(!defaultStyleId) {
                 return null;
             }
 
-            let styles = (this.config.get('referenceData') ?? {})['Style'] ?? {};
+            let styles = (this.config.get('referenceData') ||  {})['Style'] ||  {};
 
-            return  styles[defaultStyleId];
+            for (const key in styles) {
+                if(styles[key].id === defaultStyleId) {
+                    return styles[key];
+                }
+            }
         },
     });
 
     return ThemeManager;
-
 });

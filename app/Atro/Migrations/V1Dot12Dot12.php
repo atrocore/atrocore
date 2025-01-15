@@ -58,6 +58,14 @@ class V1Dot12Dot12 extends Base
             $config = $this->getConfig();
             $theme = $config->get('theme');
             if ($theme === 'Treo' . ucfirst($key) . 'Theme') {
+                $oldConfig = $config->get('customStylesheetsList', []);
+                if(!empty($oldConfig[$theme])) {
+                    foreach ($styles[$key] as $param => $_) {
+                        if(!empty($oldConfig[$theme][$param])) {
+                            $styles[$key][$param] = $oldConfig[$theme][$param];
+                        }
+                    }
+                }
                 $config->set('defaultStyleId', $value['id']);
                 $config->set('defaultStyleName', $value['name']);
                 $config->save();

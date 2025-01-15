@@ -5,7 +5,7 @@
   "entity": true,
   "layouts": true,
   "tab": true,
-  "acl": false,
+  "acl": true,
   "customizable": true,
   "streamDisabled": true,
   "importable": false,

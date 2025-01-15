@@ -34,16 +34,7 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
         afterRender() {
             if ($(":root").length > 0) {
-                let defaultStyleId = this.getPreferences().get('styleId') ?? this.getConfig().get('defaultStyleId');
-
-                if(!defaultStyleId) {
-                    return null;
-                }
-
-                let styles = (this.getConfig().get('referenceData') ?? {})['Style'] ?? {};
-
-                let style =  styles[defaultStyleId];
-
+                let style = this.getThemeManager().getStyle();
                 if (style) {
                     (Object.keys(this.styleVariableMap) || []).forEach(param => {
                         if (style[param]) {
