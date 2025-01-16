@@ -59,7 +59,8 @@
             "type": "jsonObject"
         },
         "style": {
-            "type": "link"
+            "type": "link",
+            "view": "views/preferences/fields/style"
         },
         "useCustomTabList": {
             "type": "bool",
