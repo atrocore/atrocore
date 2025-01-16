@@ -12,6 +12,7 @@
     },
     "code": {
       "type": "varchar",
+      "maxLength": 30,
       "view": "views/admin/entity-manager/fields/code",
       "required": true,
       "trim": true,
