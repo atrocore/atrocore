@@ -79,7 +79,8 @@
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
     "passwordRegexPattern": "Set password complexity rules using regular expression. \nTip: use groups like (?=.*\\d) to define required symbols. \n\nFollow this <a href=\"{message_link}\" target=\"_blank\">link</a> to update an validation error message.",
     "passwordExpireDays": "Define the period (in days) after which users must update their password.",
-    "automaticFileExtensionCorrection": "If enabled, the system will automatically adjust, if necessary, the extension of each uploaded file to match its MIME type."
+    "automaticFileExtensionCorrection": "If enabled, the system will automatically adjust, if necessary, the extension of each uploaded file to match its MIME type.",
+    "favicon": "We recommend keeping this value as short as possible, as the width of the browser tab is limited and you may still want to see page titles."
   },
   "labels": {
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",

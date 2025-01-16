@@ -69,7 +69,8 @@
     "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert.",
     "passwordRegexPattern": "Regeln für die Passwortkomplexität mit regulären Ausdrücken festlegen. \nTipp: Verwenden Sie Gruppen wie (?=.*\\d), um erforderliche Symbole zu definieren. \n\nFolgen Sie diesem <a href=\"{message_link}\" target=\"_blank\">Link</a>, um eine Validierungsfehlermeldung zu aktualisieren.",
     "passwordExpireDays": "Legen Sie den Zeitraum (in Tagen) fest, nach dem Benutzer ihr Kennwort aktualisieren müssen.",
-    "automaticFileExtensionCorrection": "Wenn diese Option aktiviert ist, passt das System bei Bedarf automatisch die Erweiterung jeder hochgeladenen Datei an ihren MIME-Typ an."
+    "automaticFileExtensionCorrection": "Wenn diese Option aktiviert ist, passt das System bei Bedarf automatisch die Erweiterung jeder hochgeladenen Datei an ihren MIME-Typ an.",
+    "favicon": "Wir empfehlen, diesen Wert so kurz wie möglich zu halten, da die Breite des Browser-Tabs begrenzt ist und Sie möglicherweise noch Seitentitel sehen wollen."
   },
   "labels": {
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",
