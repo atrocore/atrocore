@@ -16,7 +16,6 @@ use Atro\Core\EventManager\Event;
 use Atro\Repositories\Translation as TranslationRepository;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Entities\Preferences;
-use Espo\ORM\Entity;
 
 class Language
 {
