@@ -1031,7 +1031,7 @@ class Metadata extends AbstractListener
                             $mParams['required'] = false;
                             $mParams['emHidden'] = true;
                         }
-                        if ($mParams['type'] == 'script') {
+                        if ($mParams['type'] == 'script' && isset($mParams['script' . $preparedLocale])) {
                             $mParams['script'] = $mParams['script' . $preparedLocale];
                         }
 

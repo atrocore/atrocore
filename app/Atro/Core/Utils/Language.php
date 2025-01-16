@@ -16,6 +16,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Repositories\Translation as TranslationRepository;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Entities\Preferences;
+use Espo\ORM\Entity;
 
 class Language
 {
@@ -60,6 +61,11 @@ class Language
         }
 
         return self::DEFAULT_LANGUAGE;
+    }
+
+    public function getLanguage(): string
+    {
+        return $this->getConfig()->get('locales')[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
     }
 
     public function setLocale(?string $localeId): void
