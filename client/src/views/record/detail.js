@@ -1220,12 +1220,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
             this.model.trigger('after:change-mode', 'edit');
+            this.$el.find('.fa-cog.layout-editor').addClass('hidden');
         },
 
         setDetailMode: function () {
             this.trigger('before:set-detail-mode');
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
+            this.$el.find('.fa-cog.layout-editor').removeClass('hidden')
 
             var fields = this.getFieldViews(true);
             for (var field in fields) {
@@ -1876,10 +1878,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         availableLayouts.push(key)
                     }
                 }
-
                 if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
                     ['detail', 'detailSmall', ...availableLayouts].includes(this.layoutName) &&
                     this.getAcl().check('LayoutProfile', 'read')
+                    && this.mode !== 'edit'
                 ) {
                     let html = `<a class="btn btn-link collapsing-button pull-right" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
                          <span class="fas fa-cog cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
