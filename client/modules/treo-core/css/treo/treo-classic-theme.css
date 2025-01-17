@@ -16299,10 +16299,12 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
+    position: relative;
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
-.list > table td.cell[data-name="buttons"] > .list-row-buttons > .inherited {
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .inherited,
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button {
     width: 25px;
     height: 25px;
     border: 0;
@@ -16313,10 +16315,20 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     padding: 5px;
 }
 
-.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle {
+.list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 50%;
     margin-left: 0;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container {
+    position: absolute;
+    right: calc(100% + 3px);
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button[data-action="loadCounters"] {
+    padding: 5px;
 }
 
 .dashboard-header .dashboard-buttons {
