@@ -11,6 +11,12 @@
       "trim": true,
       "unique": true
     },
+    "image": {
+      "type": "file",
+      "required": true,
+      "fileTypeId": "a_image",
+      "previewSize": "medium"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
