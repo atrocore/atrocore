@@ -77,16 +77,16 @@
     "error": {
       "type": "color"
     },
-    "customHeadCode": {
-      "type": "text",
-      "tooltip": true,
-      "notStorable": true
-    },
     "navbarStaticItemsHeight": {
       "type": "int"
     },
     "logo": {
       "type": "varchar"
+    },
+    "customHeadCode": {
+      "type": "text",
+      "tooltip": true,
+      "notStorable": true
     },
     "customHeadCodePath": {
       "type": "varchar",

@@ -32,12 +32,23 @@ class V1Dot12Dot12 extends Base
 
         $styles = static::getDefaultStyles();
 
+        $config = $this->getConfig();
+
+        // migrate head code folder
+        $oldCodeHeadFile = 'code/atro/atro-head-code.html';
+        if (is_file($oldCodeHeadFile)) {
+            $newDir = 'client/custom/html';
+            @mkdir($newDir, 0777, true);
+            @rename($oldCodeHeadFile, "$newDir/head-code.html");
+            $config->set('customHeadCodePath', "$newDir/head-code.html");
+        }
+
         foreach ($styles as $key => $value) {
             $oldCustomFileName = 'css/treo/treo-' . $key . '-theme-custom.css';
-            $newDir = "css/atro/$key";
+            $newDir = "client/custom/css";
             if (is_file($oldCustomFileName) || $key === 'light') {
                 @mkdir($newDir, 0777, true);
-                @rename($oldCustomFileName, $newFilePath = $newDir . DIRECTORY_SEPARATOR . 'custom.css');
+                @rename($oldCustomFileName, $newFilePath = $newDir . DIRECTORY_SEPARATOR . "custom-css_{$value['code']}.css");
                 $styles[$key]['customStylesheetPath'] = $newFilePath;
                 if ($key === 'light') {
                     $finalContent = $this->getLightStyleCustomContent();
@@ -48,20 +59,12 @@ class V1Dot12Dot12 extends Base
                 }
             }
 
-            $oldCodeHeadFile = 'code/atro/atro-head-code.html';
-            if (is_file($oldCodeHeadFile)) {
-                @mkdir("code/atro/$key", 0777, true);
-                @copy($oldCodeHeadFile, $finalPath = "code/atro/$key/atro-head-code.html");
-                $styles[$key]['customHeadCodePath'] = $finalPath;
-            }
-
-            $config = $this->getConfig();
             $theme = $config->get('theme');
             if ($theme === 'Treo' . ucfirst($key) . 'Theme') {
                 $oldConfig = $config->get('customStylesheetsList', []);
                 if(!empty($oldConfig[$theme])) {
                     foreach ($styles[$key] as $param => $_) {
-                        if(in_array($param, ['customStylesheetPath', 'customHeadCodePath'])) {
+                        if($param === 'customStylesheetPath') {
                             continue;
                         }
                         if(!empty($oldConfig[$theme][$param])) {
@@ -71,12 +74,14 @@ class V1Dot12Dot12 extends Base
                 }
                 $config->set('defaultStyleId', $value['id']);
                 $config->set('defaultStyleName', $value['name']);
-                $config->save();
             }
         }
-
+        $config->save();
         file_put_contents($filePath, json_encode($styles, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        Util::removeDir('css');
+        Util::removeDir('code');
     }
+
 
     public static function getDefaultStyles(): array
     {
@@ -173,7 +178,7 @@ class V1Dot12Dot12 extends Base
         ];
     }
 
-    private function getLightStyleCustomContent()
+    private function getLightStyleCustomContent(): string
     {
         return ".modal-header { 
   background-color: #ececec;
