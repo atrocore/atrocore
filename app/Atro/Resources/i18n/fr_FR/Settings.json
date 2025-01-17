@@ -90,7 +90,8 @@
     "fileNameRegexPattern": "Pour activer uniquement les lettres minuscules d'une longueur maximale de 24 symboles, utilisez \"/^[a-z]{1,24}$/\". 24 symboles, utilisez \"/^[a-z]{1,24}$/\".",
     "isStreamSide": "Si elle est activée : Le panneau de flux s'affiche sur le côté.",
     "passwordRegexPattern": "Définissez des règles de complexité pour les mots de passe à l'aide d'expressions régulières. \nConseil : utilisez des groupes comme (?=.*\\d) pour définir les symboles requis. \n\nSuivez ce lien <a href=\"{message_link}\" target=\"_blank\"></a> pour mettre à jour un message d'erreur de validation.",
-    "passwordExpireDays": "Définissez la période (en jours) après laquelle les utilisateurs doivent mettre à jour leur mot de passe."
+    "passwordExpireDays": "Définissez la période (en jours) après laquelle les utilisateurs doivent mettre à jour leur mot de passe.",
+    "favicon": "Il est recommandé de réduire cette valeur au maximum, car la largeur de l'onglet du navigateur est limitée et il se peut que vous souhaitiez toujours voir les titres des pages."
   },
   "labels": {
     "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues pour cette locale sont automatiquement supprimées par le biais de la tâche cron <a href=\"/#ScheduledJob\" target=\"_blank\"></a> .",

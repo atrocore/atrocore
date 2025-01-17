@@ -81,7 +81,8 @@
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
     "customStylesheetPath": "Sus estilos CSS personalizados se escribirán en este archivo. También puede realizar cambios en él directamente.",
-    "customHeadCode": "Añade el código al final de la etiqueta <head>. Atrocore no valida el código personalizado por ti, así que asegúrate de comprobar tu código antes de publicarlo."
+    "customHeadCode": "Añade el código al final de la etiqueta <head>. Atrocore no valida el código personalizado por ti, así que asegúrate de comprobar tu código antes de publicarlo.",
+    "favicon": "Recomendamos mantener este valor lo más corto posible, ya que el ancho de la pestaña del navegador es limitado y es posible que aún desee ver los títulos de las páginas."
   },
   "labels": {
     "System": "Sistema",

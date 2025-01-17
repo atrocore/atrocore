@@ -116,6 +116,10 @@ Espo.define('views/admin/api-request/index', 'view', function (Dep) {
                     }
                 });
             })
+        },
+
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate('apiRequest', 'labels', 'Admin'));
         }
     })
 })
