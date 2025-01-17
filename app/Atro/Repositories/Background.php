@@ -26,6 +26,13 @@ class Background extends ReferenceData
         $this->getDataManager()->clearCache();
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->getDataManager()->clearCache();
+    }
+
     protected function init()
     {
         parent::init();
