@@ -167,4 +167,9 @@
         width: 100%;
         display: flex;
     }
+
+    .detail > .row {
+        margin-top: 80px;
+    }
+
 </style>
