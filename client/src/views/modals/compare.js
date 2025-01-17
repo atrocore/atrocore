@@ -41,6 +41,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.instances = this.getMetadata().get(['app', 'comparableInstances']);
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.collection = this.options.collection ?? this.collection;
+            this.recordView = this.options.recordView ?? this.recordView;
 
             Modal.prototype.setup.call(this)
 
