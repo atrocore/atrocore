@@ -2,11 +2,13 @@
   "fields": {
     "name": {
       "type": "varchar",
+      "view": "views/background/fields/name",
       "required": true,
       "trim": true
     },
     "code": {
       "type": "varchar",
+      "view": "views/background/fields/code",
       "required": true,
       "trim": true,
       "unique": true
