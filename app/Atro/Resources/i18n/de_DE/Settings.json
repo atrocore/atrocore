@@ -49,7 +49,10 @@
     "sendOutNotifications": "Benachrichtigungen verschicken",
     "sendNotificationInSync": "Benachrichtigungen ohne Auftrag senden",
     "automaticFileExtensionCorrection": "Dateierweiterung automatisch korrigieren",
-    "defaultStyle": "Standard-Stil"
+    "defaultStyle": "Standard-Stil",
+    "customHeadCode": "Head Code",
+    "customStylesheetPath": "CSS-Dateipfad",
+    "customStylesheet": "CSS"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Obergrenze für die Anzahl der Aufgaben oder Prozesse, die gleichzeitig im Hintergrund eines Servers laufen können.",
@@ -69,7 +72,9 @@
     "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert.",
     "passwordRegexPattern": "Regeln für die Passwortkomplexität mit regulären Ausdrücken festlegen. \nTipp: Verwenden Sie Gruppen wie (?=.*\\d), um erforderliche Symbole zu definieren. \n\nFolgen Sie diesem <a href=\"{message_link}\" target=\"_blank\">Link</a>, um eine Validierungsfehlermeldung zu aktualisieren.",
     "passwordExpireDays": "Legen Sie den Zeitraum (in Tagen) fest, nach dem Benutzer ihr Kennwort aktualisieren müssen.",
-    "automaticFileExtensionCorrection": "Wenn diese Option aktiviert ist, passt das System bei Bedarf automatisch die Erweiterung jeder hochgeladenen Datei an ihren MIME-Typ an."
+    "automaticFileExtensionCorrection": "Wenn diese Option aktiviert ist, passt das System bei Bedarf automatisch die Erweiterung jeder hochgeladenen Datei an ihren MIME-Typ an.",
+    "customHeadCode": "Fügen Sie den Code am Ende des <head>-Tags ein. Atrocore validiert benutzerdefinierten Code nicht für Sie, also überprüfen Sie Ihren Code vor der Veröffentlichung.",
+    "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen."
   },
   "labels": {
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",

@@ -29,23 +29,39 @@ class ThemeManager
 
     public function getCustomStylesheet(): ?string
     {
-        if(!empty($style = $this->getStyle()) && !empty($style['customStylesheetPath'])) {
+
+        if(!empty($style = $this->getStyle()) && !empty($style['customStylesheetPath']) && file_exists($style['customStylesheetPath'])) {
             return $style['customStylesheetPath'];
         }
+
         return null;
     }
 
     public function getCustomHeadCode(): ?string
     {
+        $html = '';
+
+        if(!empty($this->config->get('customHeadCodePath')) && file_exists($this->config->get('customHeadCodePath'))) {
+            $html = file_get_contents($this->config->get('customHeadCodePath'));
+        }
+
         if(!empty($style = $this->getStyle()) && !empty($style['customHeadCodePath'])) {
             if (file_exists($path = $style['customHeadCodePath'])) {
-                return file_get_contents($path);
+                $html .= PHP_EOL . file_get_contents($path);
             }
         }
 
-        return null;
+        return $html;
     }
 
+    public function getGlobalCustomStylesheet(): ?string
+    {
+        if(!empty($this->config->get('customStylesheetPath')) && file_exists($this->config->get('customStylesheetPath'))) {
+            return $this->config->get('customStylesheetPath');
+        }
+
+        return  null;
+    }
 
     public function getStyle(): ?array
     {
