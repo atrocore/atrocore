@@ -22,6 +22,13 @@
             "tooltip": true,
             "translation": "Role.options.levelList"
         },
+        "styleControlPermission": {
+            "type": "enum",
+            "optionsIds": ["not-set", "yes", "no"],
+            "options": ["not-set", "yes", "no"],
+            "default": "not-set",
+            "translation": "Role.options.levelList"
+        },
         "data": {
             "type": "jsonObject"
         },
