@@ -250,12 +250,23 @@
     },
     "automaticFileExtensionCorrection": {
       "type": "bool"
+    },
+    "backgrounds": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
     "variables": {
       "type": "hasMany",
       "entity": "Variable"
+    },
+    "backgrounds": {
+      "type": "hasMany",
+      "entity": "Background"
     },
     "notificationSmtpConnection": {
       "type": "belongsTo",
