@@ -27,6 +27,7 @@
     "customHeadCode": "Add code at the end of the <head> tag. Atrocore doesn't validate custom code for you, so be sure to check your code before publishing."
   },
   "exceptions": {
-    "styleIsUsed": "Style in use cannot be removed."
+    "styleIsUsed": "Style in use cannot be removed.",
+    "codeShouldBeString": "Code should be valid string without special character and space"
   }
 }

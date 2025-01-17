@@ -20,12 +20,9 @@ use Espo\ORM\Entity;
 
 class Style extends ReferenceData
 {
-    protected $customStylesheetDir = 'css/atro';
+    protected $customStylesheetDir = 'client/custom/css';
 
-    protected $customHeadCodeDir = 'code/atro';
-
-    protected $customHeadCodeFilename = 'atro-head-code.html';
-
+    protected $customHeadCodeDir = 'client/custom/html';
 
     public function refreshCache(): void
     {
@@ -36,33 +33,40 @@ class Style extends ReferenceData
     {
         parent::beforeSave($entity, $options);
 
+        if ($entity->isNew() || $entity->isAttributeChanged('code')) {
+            $pattern = '/^[a-zA-Z0-9._\-]+$/';
+            if (preg_match($pattern, $entity->get('code')) !== 1) {
+                throw new BadRequest($this->getInjection('language')->translate('codeShouldBeString', 'exceptions', 'Style'));
+            }
+        }
+
         if (!empty($entity->get('customHeadCode'))) {
-            Util::createDir($this->customHeadCodeDir . DIRECTORY_SEPARATOR . $entity->get('id'));
+            Util::createDir($this->customHeadCodeDir);
             $path = $this->getCustomHeadCodePath($entity);
 
             file_put_contents($path, $entity->get('customHeadCode'));
 
             $entity->set('customHeadCodePath', $path);
             $entity->set('customHeadCode', null);
-        }else if(
+        } else if (
             !empty($entity->_input)
             && property_exists($entity->_input, 'customHeadCode')
-            && !empty($path = $this->get('customHeadCodePath'))
+            && !empty($path = $entity->get('customHeadCodePath'))
             && is_file($path)
-        ){
+        ) {
             unlink($path);
             $entity->set('customHeadCodePath', null);
         }
 
         if (!empty($entity->get('customStylesheet'))) {
-            Util::createDir($this->customStylesheetDir . DIRECTORY_SEPARATOR . $entity->get('id'));
+            Util::createDir($this->customStylesheetDir);
             $path = $this->getCustomStylesheetPath($entity);
 
             file_put_contents($path, $entity->get('customStylesheet'));
 
             $entity->set('customStylesheetPath', $path);
             $entity->set('customStylesheet', null);
-        }else if (
+        } else if (
             !empty($entity->_input)
             && property_exists($entity->_input, 'customStylesheet')
             && !empty($path = $entity->get('customStylesheetPath'))
@@ -97,25 +101,22 @@ class Style extends ReferenceData
             unlink($path);
         }
 
-        if(!empty($path = $this->get('customHeadCodePath')) && is_file($path)){
+        if (!empty($path = $this->get('customHeadCodePath')) && is_file($path)) {
             unlink($path);
-            $entity->set('customHeadCodePath', null);
         }
 
         $this->refreshCache();
     }
 
-
     protected function getCustomStylesheetPath(Entity $entity): string
     {
-        return $this->customStylesheetDir . DIRECTORY_SEPARATOR . $entity->get('id') . DIRECTORY_SEPARATOR . 'custom.css';
+        return $this->customStylesheetDir . DIRECTORY_SEPARATOR . "custom-css_{$entity->get('code')}.css";
     }
 
     public function getCustomHeadCodePath(Entity $entity): string
     {
-        return $this->customHeadCodeDir . DIRECTORY_SEPARATOR . $entity->get('id') . DIRECTORY_SEPARATOR . $this->customHeadCodeFilename;
+        return $this->customHeadCodeDir . DIRECTORY_SEPARATOR . "head-code_{$entity->get('code')}.html";
     }
-
 
     protected function init()
     {
