@@ -15,7 +15,7 @@
       "type": "file",
       "required": true,
       "fileTypeId": "a_image",
-      "previewSize": "medium"
+      "previewSize": "large"
     },
     "createdAt": {
       "type": "datetime",
