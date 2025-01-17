@@ -34,7 +34,9 @@ Espo.define('views/admin/user-interface', 'views/settings/record/edit', function
 
     return Dep.extend({
 
-        layoutName: 'userInterface'
+        layoutName: 'userInterface',
+
+        bottomView: 'views/user-interface/record/edit-bottom',
 
     });
 });
