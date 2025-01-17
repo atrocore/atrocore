@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/background/fields/code', 'views/fields/varchar', Dep => {
+Espo.define('views/background/fields/image', 'views/fields/file', Dep => {
 
     return Dep.extend({
 
@@ -16,9 +16,14 @@ Espo.define('views/background/fields/code', 'views/fields/varchar', Dep => {
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:imageName', () => {
-                this.model.set(this.name, this.model.get('imageName'));
+                this.model.set('name', this.model.get('imageName'));
+                this.model.set('code', this.model.get('imageName'));
             });
-        }
+        },
+
+        afterFileUpload(view) {
+            view.dialog.close();
+        },
 
     });
 });

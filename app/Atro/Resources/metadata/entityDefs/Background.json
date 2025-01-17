@@ -2,19 +2,18 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "view": "views/background/fields/name",
       "required": true,
       "trim": true
     },
     "code": {
       "type": "varchar",
-      "view": "views/background/fields/code",
       "required": true,
       "trim": true,
       "unique": true
     },
     "image": {
       "type": "file",
+      "view": "views/background/fields/image",
       "required": true,
       "fileTypeId": "a_image",
       "previewSize": "large"
