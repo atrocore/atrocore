@@ -46,7 +46,7 @@ Espo.define('controllers/base', 'controller', function (Dep) {
         },
 
         logout: function () {
-            var title = this.getConfig().get('applicationName') || 'EspoCRM';
+            var title = this.getConfig().get('applicationName') || '';
             $('head title').text(title);
             this.trigger('logout');
         },

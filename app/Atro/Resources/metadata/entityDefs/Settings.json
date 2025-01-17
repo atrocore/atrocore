@@ -74,7 +74,8 @@
     },
     "favicon": {
       "type": "file",
-      "fileTypeId": "a_favicon"
+      "fileTypeId": "a_favicon",
+      "tooltip": true
     },
     "b2cMode": {
       "type": "bool",
@@ -186,6 +187,7 @@
     "tabIconsDisabled": {
       "type": "bool"
     },
+
     "emailAddressIsOptedOutByDefault": {
       "type": "bool",
       "tooltip": true
@@ -213,6 +215,25 @@
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
       "noLoad": true
+    },
+    "customStylesheetPath": {
+      "type": "varchar",
+      "readOnly": true,
+      "tooltip": true
+    },
+    "customStylesheet": {
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "css"
+    },
+    "customHeadCode": {
+      "type": "text",
+      "tooltip": true,
+      "notStorable": true
+    },
+    "customHeadCodePath": {
+      "type": "varchar",
+      "readOnly": true
     },
     "notificationSmtpConnection": {
       "type": "link",

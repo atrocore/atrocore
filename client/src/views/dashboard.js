@@ -357,6 +357,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                     callback.call(this, view);
                 }
             }, this);
+        },
+
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate('Dashboard', 'labels'));
         }
     });
 });

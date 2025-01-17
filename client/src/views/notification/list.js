@@ -90,7 +90,11 @@ Espo.define('views/notification/list', 'view', function (Dep) {
                 });
             }, this);
             this.collection.fetch();
-        }
+        },
+
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate('Notification', 'scopeNamesPlural'));
+        },
 
     });
 

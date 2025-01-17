@@ -81,19 +81,23 @@
     },
     "valuePermissionList": [
         "assignmentPermission",
-        "dataPrivacyPermission"
+        "dataPrivacyPermission",
+        "styleControlPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
-        "dataPrivacyPermission": "yes"
+        "dataPrivacyPermission": "yes",
+        "styleControlPermission": "yes"
     },
     "permissionsDefaults": {
         "assignmentPermission": "all",
-        "dataPrivacyPermission": "no"
+        "dataPrivacyPermission": "no",
+        "styleControlPermission": "yes"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "all",
-        "dataPrivacyPermission": "no"
+        "dataPrivacyPermission": "no",
+        "styleControlPermission": "yes"
     },
     "scopeLevelTypesDefaults": {
         "boolean": true,

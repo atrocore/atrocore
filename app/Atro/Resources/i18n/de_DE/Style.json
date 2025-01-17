@@ -27,6 +27,7 @@
     "customHeadCode": "Fügen Sie den Code am Ende des <head>-Tags ein. Atrocore validiert benutzerdefinierten Code nicht für Sie, also überprüfen Sie Ihren Code vor der Veröffentlichung."
   },
   "exceptions": {
-    "styleIsUsed": "Der verwendete Stil kann nicht entfernt werden."
+    "styleIsUsed": "Der verwendete Stil kann nicht entfernt werden.",
+    "codeShouldBeString": "Der Code sollte eine gültige Zeichenkette ohne Sonderzeichen und Leerzeichen sein."
   }
 }
