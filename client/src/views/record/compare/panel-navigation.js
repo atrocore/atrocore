@@ -25,6 +25,7 @@ Espo.define('views/record/compare/panel-navigation', 'views/record/panel-navigat
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
+            this.$el.parent().css('position', 'fixed');
             this.$el.parent().css('top', $('.modal-header').css('height'));
         }
     })

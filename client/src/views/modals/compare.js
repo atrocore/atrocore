@@ -41,15 +41,14 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.instances = this.getMetadata().get(['app', 'comparableInstances']);
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.collection = this.options.collection ?? this.collection;
-            this.recordView = this.options.recordView ?? this.recordView;
 
             Modal.prototype.setup.call(this)
 
             if (this.instanceComparison) {
-                this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
+                this.recordView = this.options.recordView  ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
                this.header = this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name;
             } else {
-                this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
+                this.recordView = this.options.recordView  ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
                 this.header = this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison');
             }
 

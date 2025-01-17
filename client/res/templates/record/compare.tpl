@@ -162,17 +162,9 @@
     }
 
     .detail > .detail-button-container {
-        position: fixed;
         z-index: 1000;
         background-color: white;
         width: 100%;
         display: flex;
     }
-
-    .detail > .row {
-        margin-top: 80px;
-    }
-
-
-
 </style>
