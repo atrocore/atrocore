@@ -1,3 +1,4 @@
 {
-  "controller": "controllers/record"
+  "controller": "controllers/record",
+  "iconClass": "fas fa-image"
 }

@@ -4,16 +4,16 @@
     "rows": [
       [
         {
-          "name": "name"
-        },
-        {
-          "name": "code"
+          "name": "image",
+          "fullWidth": true
         }
       ],
       [
         {
-          "name": "image",
-          "fullWidth": true
+          "name": "name"
+        },
+        {
+          "name": "code"
         }
       ]
     ]
