@@ -16,7 +16,7 @@ body {
     --nav-font-color: #000;
     --primary-font-color: #000;
     --secondary-font-color: #000;
-    --label-color: #000;
+    --label-color: #777;
     --anchor-nav-background: #fafafa;
     --icon-color: #06c;
     --primary-border-color: #dcdcdc;
@@ -15434,7 +15434,7 @@ div.list-kanban > div.kanban-columns-container > table {
 
 table.table > thead th > a,
 table.table > thead th > div > a {
-    color: #999
+    color: var(--label-color)
 }
 
 #main > .list-container > .list {
@@ -15529,7 +15529,7 @@ table.table > thead th > div > a {
 }
 
 table.table > thead th {
-    color: #999
+    color: var(--label-color)
 }
 
 .cell label, .filter label {

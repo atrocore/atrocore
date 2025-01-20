@@ -45,7 +45,8 @@
       "type": "color"
     },
     "labelColor": {
-      "type": "color"
+      "type": "color",
+      "default": "#777"
     },
     "anchorNavigationBackground": {
       "type": "color"
