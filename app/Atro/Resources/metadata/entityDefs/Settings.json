@@ -228,6 +228,8 @@
     },
     "customHeadCode": {
       "type": "text",
+      "view": "views/fields/script",
+      "language": "html",
       "tooltip": true,
       "notStorable": true
     },

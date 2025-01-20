@@ -63,7 +63,7 @@ class Container
             'layout'                   => \Espo\Core\Utils\Layout::class,
             'acl'                      => \Espo\Core\Factories\Acl::class,
             'aclManager'               => \Espo\Core\Factories\AclManager::class,
-            'clientManager'            => \Espo\Core\Factories\ClientManager::class,
+            'clientManager'            => Factories\ClientManager::class,
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
             'entityManager'            => \Espo\Core\Factories\EntityManager::class,
             EntityManager::class       => \Espo\Core\Factories\EntityManager::class,
