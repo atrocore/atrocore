@@ -60,7 +60,7 @@ class Container
             'themeManager'             => \Atro\Core\Factories\ThemeManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
-            'layout'                   => \Espo\Core\Utils\Layout::class,
+            'layout'                   => \Atro\Core\Utils\Layout::class,
             'acl'                      => \Espo\Core\Factories\Acl::class,
             'aclManager'               => \Espo\Core\Factories\AclManager::class,
             'clientManager'            => \Espo\Core\Factories\ClientManager::class,

@@ -121,7 +121,7 @@
     <div id="layout" class="row" bind:this={layoutElement}>
         <div class="col-sm-5">
             <div class="well">
-                <header>{Language.translate('Enabled', 'labels', 'Admin')}</header>
+                <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
                 <ul class="enabled connected">
                     {#each enabledFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
                         <li {...getDataAttributeProps(item)}>
@@ -143,7 +143,7 @@
         </div>
         <div class="col-sm-5">
             <div class="well">
-                <header>{Language.translate('Disabled', 'labels', 'Admin')}</header>
+                <header>{Language.translate('Available', 'labels', 'Admin')}</header>
                 <ul class="disabled connected">
                     {#each disabledFields as field (field.name)}
                         <li {...getDataAttributeProps(field)}>
@@ -159,6 +159,10 @@
 </BaseLayout>
 
 <style>
+    header {
+        font-size: large;
+    }
+
     ul {
         width: 100%;
         min-height: 100px;

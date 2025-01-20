@@ -64,7 +64,7 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
             if (this.layoutIsBeingLoaded) return;
 
             this.layoutIsBeingLoaded = true;
-            this._helper.layoutManager.get(this.collection.name, type, function (listLayout) {
+            this._helper.layoutManager.get(this.collection.name, type,null, function (listLayout) {
                 this.layoutLoadCallbackList.forEach(function (c) {
                     c(listLayout)
                     this.layoutLoadCallbackList = [];

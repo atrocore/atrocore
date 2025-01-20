@@ -229,7 +229,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.setupActions();
 
-            var layoutName = 'listSmall';
+            var layoutName = 'list';
             this.setupListLayout();
 
             if (this.listLayoutName) {
@@ -303,6 +303,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.createView('list', viewName, {
                         collection: collection,
                         layoutName: layoutName,
+                        layoutRelatedScope: this.model.name,
                         listLayout: listLayout,
                         checkboxes: false,
                         rowActionsView: (this.defs.readOnly || this.readOnly) ? false : (this.defs.rowActionsView || this.rowActionsView),

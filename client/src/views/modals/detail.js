@@ -248,8 +248,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var options = {
                 model: model,
                 el: this.containerSelector + ' .record-container',
-                type: 'detailSmall',
-                layoutName: this.layoutName || 'detailSmall',
+                layoutName: this.layoutName,
                 columnCount: this.columnCount,
                 buttonsDisabled: true,
                 inlineEditDisabled: true,

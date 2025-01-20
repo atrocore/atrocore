@@ -419,7 +419,8 @@
     "method": "get",
     "params": {
       "controller": "Layout",
-      "scope": ":controller"
+      "scope": ":controller",
+      "action": "getContent"
     }
   },
   {
@@ -427,15 +428,8 @@
     "method": "put",
     "params": {
       "controller": "Layout",
-      "scope": ":controller"
-    }
-  },
-  {
-    "route": "/:controller/layout/:name",
-    "method": "patch",
-    "params": {
-      "controller": "Layout",
-      "scope": ":controller"
+      "scope": ":controller",
+      "action": "updateContent"
     }
   },
   {

@@ -186,9 +186,6 @@ class Layout extends Base
                     }
                     break;
                 case 'sidePanelsDetail':
-                case 'sidePanelsEdit':
-                case 'sidePanelsDetailSmall':
-                case 'sidePanelsEditSmall':
                     $repository = $this->getEntityManager()->getRepository('LayoutSidePanelItem');
                     $panelItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
                     $processedItems = [];

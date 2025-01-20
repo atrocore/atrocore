@@ -38,6 +38,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         type: 'detail',
 
+        isSmall: false,
+
         name: 'detail',
 
         layoutName: 'detail',
@@ -1375,7 +1377,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
-                isSmall: this.type == 'editSmall' || this.type == 'detailSmall',
+                isSmall: this.isSmall,
                 isTreePanel: this.isTreePanel
             };
 
@@ -1664,7 +1666,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             });
 
-            if (!this.model.isNew() && (this.type === 'detail' || this.type === 'edit')) {
+            if (!this.model.isNew() && (this.type === 'detail' || this.type === 'edit') && !this.isSmall) {
                 this.listenTo(this, 'after:render', () => {
                     this.applyOverviewFilters();
                 });
@@ -1687,7 +1689,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.setupTourButton()
             });
 
-            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
+            if (!this.isWide && !this.isSmall) {
                 this.isTreePanel = this.isTreeAllowed();
                 this.setupTreePanel();
             }
@@ -1872,13 +1874,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 const additionalLayouts = this.getMetadata().get(['clientDefs', this.model.name, 'additionalLayouts']) || {};
                 const availableLayouts = []
                 for (let key in additionalLayouts) {
-                    if (['detail', 'detailSmall'].includes(additionalLayouts[key])) {
+                    if (['detail'].includes(additionalLayouts[key])) {
                         availableLayouts.push(key)
                     }
                 }
 
                 if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
-                    ['detail', 'detailSmall', ...availableLayouts].includes(this.layoutName) &&
+                    ['detail', ...availableLayouts].includes(this.layoutName) &&
                     this.getAcl().check('LayoutProfile', 'read')
                 ) {
                     let html = `<a class="btn btn-link collapsing-button pull-right" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
@@ -1888,7 +1890,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if ($parent.length > 0) {
                         $parent.append(html)
                     } else {
-                        // detail small case with no header
+                        // if first panel has no header
                         view.$el.find('.panel:first').prepend(`<div class="panel-heading">${html}</div>`)
                     }
                 }
@@ -2327,7 +2329,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
 
-            this._helper.layoutManager.get(this.model.name, this.layoutName, function (simpleLayout) {
+            this._helper.layoutManager.get(this.model.name, this.layoutName,null, function (simpleLayout) {
                 this.gridLayout = {
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(simpleLayout)
@@ -2343,6 +2345,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 scope: this.scope,
                 el: el + ' .side',
                 type: this.type,
+                isSmall: this.isSmall,
                 readOnly: this.readOnly,
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,

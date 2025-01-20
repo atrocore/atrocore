@@ -89,19 +89,12 @@
         "notificationProfile": {
             "type": "link",
             "view": "views/preferences/fields/notification-profile"
-        },
-        "layoutProfile": {
-            "type": "link"
         }
     },
     "links": {
         "notificationProfile": {
             "type": "belongsTo",
             "entity": "NotificationProfile"
-        },
-        "layoutProfile": {
-            "type": "belongsTo",
-            "entity": "LayoutProfile"
         },
         "style": {
             "type": "belongsTo",

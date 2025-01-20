@@ -44,7 +44,7 @@
     }
 
     function loadLayout(callback): void {
-        LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
+        LayoutManager.get(params.scope, params.type, null, params.layoutProfileId, (layout) => {
             if (callback) {
                 readDataFromLayout(layout);
                 callback();

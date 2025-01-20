@@ -258,7 +258,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
         loadRelationshipsLayout: function (callback) {
             var layoutName = 'relationships';
-            this._helper.layoutManager.get(this.model.name, layoutName, function (layout) {
+            this._helper.layoutManager.get(this.model.name, layoutName, null, function (layout) {
                 this.relationshipsLayout = layout;
                 callback.call(this);
             }.bind(this));

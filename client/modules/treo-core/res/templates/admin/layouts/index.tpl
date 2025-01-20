@@ -26,6 +26,11 @@
             </div>
             <div class="col-xs-12 cell form-group">
                 <label class="control-label"
+                       data-name="relatedEntity">{{translate 'relatedEntity' scope='Layout' category='fields'}}</label>
+                <div class="field" data-name="relatedEntity">{{{relatedEntity}}}</div>
+            </div>
+            <div class="col-xs-12 cell form-group">
+                <label class="control-label"
                        data-name="layoutProfile">{{translate 'layoutProfile' scope='Layout' category='fields'}}</label>
                 <div class="field" data-name="layoutProfile">{{{layoutProfile}}}</div>
             </div>

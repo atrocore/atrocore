@@ -42,8 +42,6 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
         },
 
         afterRender() {
-            this.getLayoutProfiles()
-
             let allowSwitch = true
             if (this.options.allowSwitch === false) {
                 allowSwitch = false
@@ -51,10 +49,12 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
             LayoutUtils.renderComponent.call(this, {
                 type: this.options.type,
                 scope: this.options.scope,
-                layoutProfileId: this.options.layoutProfileId ?? 'custom',
+                relatedScope: this.options.relatedScope,
+                layoutProfileId: this.options.layoutProfileId,
                 editable: true,
                 onUpdate: this.layoutUpdated.bind(this),
-                allowSwitch: allowSwitch
+                allowSwitch: allowSwitch,
+                layoutProfiles: this.getLayoutProfiles()
             })
         },
 

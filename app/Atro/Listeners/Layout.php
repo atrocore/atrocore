@@ -17,33 +17,8 @@ use Atro\Core\EventManager\Event;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
 
-class LayoutController extends AbstractListener
+class Layout extends AbstractLayoutListener
 {
-    /**
-     * @param Event $event
-     */
-    public function afterActionRead(Event $event)
-    {
-        /** @var string $scope */
-        $scope = $event->getArgument('params')['scope'];
-
-        /** @var string $name */
-        $name = $event->getArgument('params')['name'];
-
-        /** @var bool $isAdminPage */
-        $isAdminPage = $event->getArgument('request')->get('isAdminPage') === 'true';
-
-        $method = 'modify' . $scope . ucfirst($name);
-        $methodAdmin = $method . 'Admin';
-
-        if (!$isAdminPage && method_exists($this, $method)) {
-            $this->{$method}($event);
-        } else {
-            if ($isAdminPage && method_exists($this, $methodAdmin)) {
-                $this->{$methodAdmin}($event);
-            }
-        }
-    }
 
     protected function getAllUiLanguages(): array
     {
@@ -52,24 +27,24 @@ class LayoutController extends AbstractListener
 
     protected function modifyTranslationList(Event $event)
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         foreach ($this->getAllUiLanguages() as $language) {
             $result[] = ['name' => Util::toCamelCase(strtolower($language))];
         }
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result', $result);
     }
 
     protected function modifyTranslationDetail(Event $event)
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         foreach ($this->getAllUiLanguages() as $language) {
             $result[0]['rows'][] = [['name' => Util::toCamelCase(strtolower($language)), 'fullWidth' => true]];
         }
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyTranslationDetailSmall(Event $event)
@@ -79,35 +54,35 @@ class LayoutController extends AbstractListener
 
     protected function modifyActionDetailSmall(Event $event): void
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         $result[0]['rows'][] = [['name' => 'ActionSetLinker__sortOrder'], ['name' => 'ActionSetLinker__isActive']];
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyActionListSmall(Event $event): void
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         $result[] = ['name' => 'ActionSetLinker__isActive'];
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyActionRelationships(Event $event): void
     {
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         $result[] = ['name' => 'actions'];
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyNotificationRuleDetail(Event $event): void
     {
 
-        $result = Json::decode($event->getArgument('result'), true);
+        $result = $event->getArgument('result');
 
         $rows = [];
 
@@ -120,7 +95,7 @@ class LayoutController extends AbstractListener
             "rows"  => $rows
         ];
 
-        $event->setArgument('result', Json::encode($result));
+        $event->setArgument('result',  $result);
     }
 
     protected function modifyNotificationRuleDetailSmall(Event $event): void

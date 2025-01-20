@@ -54,7 +54,7 @@
         promiseList.push(
             new Promise(resolve => {
                 ModelFactory.create(params.scope, m => {
-                    LayoutManager.get(params.scope, params.type, params.layoutProfileId, layoutLoaded => {
+                    LayoutManager.get(params.scope, params.type,params.relatedScope, params.layoutProfileId, layoutLoaded => {
                         layout = layoutLoaded;
                         model = m;
                         resolve();
@@ -63,10 +63,10 @@
             })
         );
 
-        if (['detail', 'detailSmall'].includes(params.type)) {
+        if (params.type === "detail") {
             promiseList.push(
                 new Promise(resolve => {
-                    LayoutManager.get(params.scope, 'sidePanels' + Espo.utils.upperCaseFirst(params.type), params.layoutProfileId, layoutLoaded => {
+                    LayoutManager.get(params.scope, 'sidePanelsDetail',null, params.layoutProfileId, layoutLoaded => {
                         sidePanelsLayout = layoutLoaded;
                         resolve();
                     }, false);

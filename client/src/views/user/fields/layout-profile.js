@@ -30,12 +30,17 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/edit-small', 'views/record/edit', function (Dep) {
+Espo.define('views/user/fields/layout-profile', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
-        bottomView: null,
-        isSmall: true,
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            if (!this.getAcl().check('LayoutProfile', 'read')) {
+                this.hide()
+            }
+        }
     });
 
 });
-

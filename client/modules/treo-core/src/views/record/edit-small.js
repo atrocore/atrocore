@@ -46,6 +46,7 @@ Espo.define('treo-core:views/record/edit-small', 'class-replace!treo-core:views/
                 el: el + ' .side',
                 type: this.type,
                 readOnly: this.readOnly,
+                isSmall: true,
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
                 recordViewObject: this

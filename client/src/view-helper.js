@@ -104,7 +104,7 @@ Espo.define('view-helper', [], function () {
                 className += ' ' + additionalClassName;
             }
 
-            return '<img class="'+className+'" width="'+width+'" src="'+basePath+'?entryPoint=avatar&size='+size+'&id=' + id +'">';
+            return '<img class="' + className + '" width="' + width + '" src="' + basePath + '?entryPoint=avatar&size=' + size + '&id=' + id + '">';
         },
 
         _registerHandlebarsHelpers: function () {
@@ -187,7 +187,7 @@ Espo.define('view-helper', [], function () {
                 var label = options.hash.label || name;
 
                 var html = options.hash.html || options.hash.text || self.language.translate(label, 'labels', scope);
-                return new Handlebars.SafeString('<button class="btn btn-'+style+' action'+ (options.hash.hidden ? ' hidden' : '')+'" data-action="'+name+'" type="button">'+html+'</button>');
+                return new Handlebars.SafeString('<button class="btn btn-' + style + ' action' + (options.hash.hidden ? ' hidden' : '') + '" data-action="' + name + '" type="button">' + html + '</button>');
             });
 
             Handlebars.registerHelper('hyphen', function (string) {
@@ -283,6 +283,66 @@ Espo.define('view-helper', [], function () {
                 for (var key in list) {
                     var keyVal = list[key];
                     html += "<option value=\"" + keyVal + "\" " + (checkOption(list[key]) ? 'selected' : '') + ">" + translate(list[key]) + "</option>"
+                }
+                return new Handlebars.SafeString(html);
+            });
+
+            Handlebars.registerHelper('groupedOptions', function (list, value, options) {
+                if (typeof value === 'undefined') {
+                    value = false;
+                }
+                list = list || {};
+                var html = '';
+                var isArray = (Object.prototype.toString.call(list) === '[object Array]');
+
+                var multiple = (Object.prototype.toString.call(value) === '[object Array]');
+                var checkOption = function (name) {
+                    if (multiple) {
+                        return value.indexOf(name) !== -1;
+                    } else {
+                        return value === name;
+                    }
+                };
+
+                options.hash = options.hash || {};
+
+                var scope = options.hash.scope || false;
+                var category = options.hash.category || false;
+                var field = options.hash.field || false;
+
+                var translationHash = options.hash.translationHash || options.hash.translatedOptions || null;
+
+                if (translationHash === null) {
+                    if (!category && field) {
+                        translationHash = self.language.translate(field, 'options', scope) || {};
+                        if (typeof translationHash !== 'object') {
+                            translationHash = {};
+                        }
+                    } else {
+                        translationHash = {};
+                    }
+                }
+
+                var translate = function (name) {
+                    if (!category) {
+                        return translationHash[name] || name;
+                    }
+                    return self.language.translate(name, category, scope);
+                };
+
+                var translateGroup = function (name) {
+                    return (options.hash.translatedGroupOptions || {})[name] || name
+                }
+
+                for (var groupKey in list) {
+                    let groupHtml = '';
+                    for (var key in list[groupKey]) {
+                        var keyVal = list[key];
+                        groupHtml += "<option value=\"" + keyVal + "\" " + (checkOption(list[groupKey][key]) ? 'selected' : '') + ">" + translate(list[groupKey][key]) + "</option>"
+                    }
+                    if (groupHtml.length) {
+                        html += '<optgroup label="' + translateGroup(groupKey) + '">' + groupHtml + '</optgroup>'
+                    }
                 }
                 return new Handlebars.SafeString(html);
             });
