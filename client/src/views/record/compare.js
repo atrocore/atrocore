@@ -332,7 +332,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return result
             }
 
-            if (fieldDef['type'] === 'link') {
+            if(fieldDef['unitField']) {
+                let mainField = fieldDef['mainField'];
+                let mainFieldDef = this.getMetadata().get(['entityDefs', this.scope, 'fields', mainField]);
+                let unitIdField = mainField + 'Unit'
+                let unitFieldDef = this.getMetadata().get(['entityDefs', this.scope, 'fields', unitIdField]);
+                return this.areEquals(current, others, mainField, mainFieldDef) && this.areEquals(current, others, unitIdField, unitFieldDef);
+            }
+
+            if (['link', 'file'].includes(fieldDef['type'])) {
                 const fieldId = field + 'Id';
                 const fieldName = field + 'Name'
                 result = true;

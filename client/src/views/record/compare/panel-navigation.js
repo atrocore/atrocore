@@ -25,8 +25,14 @@ Espo.define('views/record/compare/panel-navigation', 'views/record/panel-navigat
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
-            this.$el.parent().css('position', 'fixed');
-            this.$el.parent().css('top', $('.modal-header').css('height'));
+            if(this.panelList.length) {
+                this.$el.parent().css('position', 'fixed');
+                this.$el.parent().css('top', $('.modal-header').css('height'));
+                $('.detail > .row').css('margin-top', '80px');
+            }else{
+                this.$el.parent().hide();
+                $('.detail > .row').css('margin-top', '40px');
+            }
         }
     })
 );
