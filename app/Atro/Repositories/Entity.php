@@ -115,6 +115,8 @@ class Entity extends ReferenceData
 
     protected function getAllItems(array $params = []): array
     {
+        $scopeTypes = $params['whereClause'][0]['type'] ?? null;
+
         $boolFields = [];
         foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
             if ($defs['type'] === 'bool') {
@@ -124,7 +126,7 @@ class Entity extends ReferenceData
 
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
-            if (!empty($row['emHidden'])) {
+            if (!empty($row['emHidden']) || (!empty($scopeTypes) && !in_array($row['type'], $scopeTypes))) {
                 continue;
             }
 

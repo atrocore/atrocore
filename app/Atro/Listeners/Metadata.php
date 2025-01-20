@@ -1380,7 +1380,7 @@ class Metadata extends AbstractListener
     protected function addBoolFilters(array &$data): void
     {
         foreach ($data['scopes'] as $entity => $defs) {
-            if (empty($defs['type']) || $defs['type'] === 'ReferenceData') {
+            if (empty($defs['type'])) {
                 continue;
             }
 

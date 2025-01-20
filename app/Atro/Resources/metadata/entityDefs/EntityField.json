@@ -36,7 +36,8 @@
       "required": true
     },
     "foreignEntity": {
-      "type": "link"
+      "type": "link",
+      "view": "views/admin/field-manager/fields/foreign-entity"
     },
     "isMultilang": {
       "type": "bool",

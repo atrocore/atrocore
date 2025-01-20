@@ -15,11 +15,13 @@ Espo.define('views/admin/field-manager/fields/type', 'views/fields/enum', Dep =>
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            let scopeType = this.getMetadata().get(`scopes.${this.model.get('entityId')}.type`);
+
             this.params.options = [''];
             this.translatedOptions = {'': ''};
 
             $.each(this.getMetadata().get('fields'), (type, typeDefs) => {
-                if (!typeDefs.notCreatable) {
+                if (!typeDefs.notCreatable && !(scopeType === 'ReferenceData' && ['link', 'linkMultiple'].includes(type))) {
                     this.params.options.push(type);
                 }
                 this.translatedOptions[type] = this.translate(type, 'fieldTypes', 'Admin');

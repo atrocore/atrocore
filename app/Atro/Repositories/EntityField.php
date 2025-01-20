@@ -90,6 +90,20 @@ class EntityField extends ReferenceData
     {
     }
 
+    protected function beforeSave(OrmEntity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if (in_array($entity->get('type'), ['link', 'linkMultiple'])) {
+            if (
+                $this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData'
+                || $this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.type") === 'ReferenceData'
+            ) {
+                throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
+            }
+        }
+    }
+
     public function insertEntity(OrmEntity $entity): bool
     {
         if (!preg_match('/^[a-z][A-Za-z0-9]*$/', $entity->get('code'))) {
