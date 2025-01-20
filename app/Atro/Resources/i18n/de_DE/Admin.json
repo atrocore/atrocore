@@ -77,14 +77,9 @@
   "layouts": {
     "relationships": "Relations-Paneele",
     "list": "Liste",
-    "listSmall": "Liste (Klein)",
-    "detailSmall": "Detail (Klein)",
+    "detail": "Details",
     "massUpdate": "Massenänderung",
-    "sidePanelsDetail": "Seitenpanel (Detail)",
-    "sidePanelsEdit": "Seitenpanel (Bearbeiten)",
-    "sidePanelsDetailSmall": "Seitenpanel (Detail klein)",
-    "sidePanelsEditSmall": "Seitenpanel (Bearbeiten klein)",
-    "listForAccount": "Liste (für Firma)"
+    "sidePanelsDetail": "Seitenpanel (Detail)"
   },
   "fieldTypes": {
     "color": "Farbe",
@@ -199,6 +194,5 @@
     "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an",
     "apiRequest": "Führen Sie API-Anfragen aus, indem Sie direkt einen JSON-Text liefern. Verwenden Sie diese Funktion, um schnell komplexe Datenstrukturen zu erstellen, wie z. B. konfigurierte Import- oder Export-Feeds.",
     "style": "Erstellen, Aktualisieren und Anpassen von neuen Stilen, um Anpassungen an Standard-CSS vorzunehmen"
-
   }
 }

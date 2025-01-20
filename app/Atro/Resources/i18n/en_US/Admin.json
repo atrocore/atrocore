@@ -78,13 +78,10 @@
   "layouts": {
     "relationships": "Relation panels",
     "list": "List",
-    "detail": "Detail",
-    "listSmall": "List (Small)",
-    "detailSmall": "Detail (Small)",
+    "detail": "Details",
     "massUpdate": "Mass Update",
     "sidePanelsDetail": "Side panels (Detail)",
     "kanban": "Kanban",
-    "listForAccount": "List (for account)",
     "upload": "Upload"
   },
   "fieldTypes": {

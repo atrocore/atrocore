@@ -59,16 +59,10 @@
   "layouts": {
     "list": "Lista",
     "detail": "Detalle",
-    "listSmall": "Lista (pequeña)",
-    "detailSmall": "Detalle (Pequeño)",
     "massUpdate": "Actualización masiva",
     "relationships": "Paneles de relaciones",
     "sidePanelsDetail": "Paneles laterales (detalle)",
-    "sidePanelsEdit": "Paneles laterales (editar)",
-    "sidePanelsDetailSmall": "Paneles laterales (detalle pequeño)",
-    "sidePanelsEditSmall": "Paneles laterales (editar pequeño)",
-    "kanban": "Kanban",
-    "listForAccount": "List (for Account)"
+    "kanban": "Kanban"
   },
   "fieldTypes": {
     "array": "Lista ordenable",
