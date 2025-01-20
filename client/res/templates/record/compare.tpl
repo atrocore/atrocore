@@ -167,5 +167,4 @@
         width: 100%;
         display: flex;
     }
-
 </style>
