@@ -12,7 +12,7 @@
         "rows": [
             [
                 {"name": "assignmentPermission"},
-                false
+                {"name": "styleControlPermission"}
             ],
             [
                 {"name": "dataPrivacyPermission"},

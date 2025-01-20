@@ -272,6 +272,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 view.render();
                 this.notify(false);
                 this.listenTo(view.model, 'after:file-upload', entity => {
+                    this.afterFileUpload(view);
                     this.getModelFactory().create('File', model => {
                         model.set(entity);
                         this.select(model);
@@ -283,6 +284,9 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     this.clearView('upload');
                 });
             });
+        },
+
+        afterFileUpload(view) {
         },
 
         getCreateAttributes: function () {

@@ -187,10 +187,13 @@ class PostUpdate
      *
      * @return void
      */
-    public static function removeDir(string $dir): void
+    public static function removeDir(string $dir, array $exceptDirs = []): void
     {
         if (file_exists($dir) && is_dir($dir)) {
             foreach (self::scanDir($dir) as $object) {
+                if(in_array($dir . "/" . $object, $exceptDirs)) {
+                    continue;
+                }
                 if (is_dir($dir . "/" . $object)) {
                     self::removeDir($dir . "/" . $object);
                 } else {
@@ -489,7 +492,7 @@ class PostUpdate
 
         self::renderLine('Copying frontend files');
 
-        self::removeDir('client');
+        self::removeDir('client', ['client/custom']);
         self::copyDir(dirname(CORE_PATH) . '/client', 'client');
         foreach (self::$container->get('moduleManager')->getModules() as $module) {
             self::copyDir($module->getClientPath(), 'client');

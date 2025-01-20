@@ -1,0 +1,21 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "image",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ]
+    ]
+  }
+]

@@ -11,38 +11,16 @@
 
 namespace Atro\EntryPoints;
 
+use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
 
 class Background extends AbstractEntryPoint
 {
     public static bool $authRequired = false;
 
-    public static function setBackground(): void
-    {
-        $imagesPath = 'client/img/background';
-        if (!file_exists($imagesPath)) {
-            header("HTTP/1.0 404 Not Found");
-            exit;
-        }
-
-        session_start();
-        if (!isset($_SESSION['background']) || $_SESSION['background']['till'] < new \DateTime() || !file_exists($_SESSION['background']['imagePath'])) {
-            $images = Util::scanDir($imagesPath);
-
-            $_SESSION['background']['till'] = (new \DateTime())->modify('+2 hours');
-            $_SESSION['background']['imageName'] = $images[array_rand($images)];
-            $_SESSION['background']['imagePath'] = $imagesPath . '/' . $_SESSION['background']['imageName'];
-
-            $imageMetadata = \exif_read_data($_SESSION['background']['imagePath']);
-
-            $_SESSION['background']['authorName'] = isset($imageMetadata['Artist']) ? $imageMetadata['Artist'] : '';
-            $_SESSION['background']['authorLink'] = isset($imageMetadata['COMPUTED']['UserComment']) ? $imageMetadata['COMPUTED']['UserComment'] : '';
-        }
-    }
-
     public function run()
     {
-        self::setBackground();
+        $this->setBackground();
 
         $content = file_get_contents($_SESSION['background']['imagePath']);
 
@@ -54,5 +32,63 @@ class Background extends AbstractEntryPoint
 
         echo $content;
         exit;
+    }
+
+    public function setBackground(): void
+    {
+        $timestamp = DataManager::getPublicData('dataTimestamp');
+
+        session_start();
+        if (
+            !isset($_SESSION['background'])
+            || $_SESSION['background']['till'] < new \DateTime()
+            || !file_exists($_SESSION['background']['imagePath'])
+            || $_SESSION['background']['dataTimestamp'] !== $timestamp
+        ) {
+            $_SESSION['background'] = $this->getBackground();
+            $_SESSION['background']['dataTimestamp'] = $timestamp;
+            $_SESSION['background']['till'] = (new \DateTime())->modify('+2 hours');
+        }
+    }
+
+    protected function getBackground(): array
+    {
+        if ($this->getConfig()->get('isInstalled')) {
+            $backgrounds = $this->getConfig()->get('referenceData.Background', []);
+            if (!empty($backgrounds)) {
+                $files = $this->getEntityManager()->getRepository('File')
+                    ->where(['id' => array_column($backgrounds, 'imageId')])
+                    ->find();
+
+                if (!empty($files[0])) {
+                    $file = $files[rand(0, count($files) - 1)];
+                    return [
+                        'imageName'  => $file->get('name'),
+                        'imagePath'  => $file->findOrCreateLocalFilePath('data/.backgrounds'),
+                        'authorName' => '',
+                        'authorLink' => '',
+                    ];
+                }
+            }
+        }
+
+        $imagesPath = 'client/img/background';
+        if (!file_exists($imagesPath)) {
+            header("HTTP/1.0 404 Not Found");
+            exit;
+        }
+
+        $images = Util::scanDir($imagesPath);
+        $imageName = $images[array_rand($images)];
+        $imagePath = $imagesPath . '/' . $imageName;
+
+        $imageMetadata = \exif_read_data($imagePath);
+
+        return [
+            'imageName'  => $imageName,
+            'imagePath'  => $imagePath,
+            'authorName' => $imageMetadata['Artist'] ?? '',
+            'authorLink' => $imageMetadata['COMPUTED']['UserComment'] ?? ''
+        ];
     }
 }

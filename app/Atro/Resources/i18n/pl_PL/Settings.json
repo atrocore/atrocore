@@ -89,7 +89,8 @@
     "authTokenPreventConcurrent": "Użytkownicy nie będą mogli być zalogowani na kilku urządzeniach jednocześnie.",
     "emailAddressIsOptedOutByDefault": "Tworząc nowy rekord, adres e-mail będzie oznaczony jako zrezygnowany.",
     "customStylesheetPath": "Twoje niestandardowe style CSS zostaną zapisane w tym pliku. Możesz w nim również dokonywać zmian bezpośrednio.",
-    "customHeadCode": "Dodaj kod na końcu znacznika <head>. Atrocore nie weryfikuje niestandardowego kodu, więc upewnij się, że sprawdziłeś swój kod przed opublikowaniem."
+    "customHeadCode": "Dodaj kod na końcu znacznika <head>. Atrocore nie weryfikuje niestandardowego kodu, więc upewnij się, że sprawdziłeś swój kod przed opublikowaniem.",
+    "favicon": "Zalecamy, aby wartość ta była jak najkrótsza, ponieważ szerokość karty przeglądarki jest ograniczona i nadal możesz chcieć zobaczyć tytuły stron."
   },
   "labels": {
     "confirmLocaleChanges": "Jeśli język zostanie usunięty, wszystkie dane wcześniej wprowadzone w polach wielojęzycznych dla tej lokalizacji zostaną automatycznie usunięte za pomocą <a href=\"/#ScheduledJob\" target=\"_blank\">zadania cron</a>.",

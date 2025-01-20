@@ -17,7 +17,7 @@ Espo.define('views/admin/field-manager/fields/extensible-enum-default', 'views/a
         boolFilterData: {
             defaultOption() {
                 return {
-                    extensibleEnumId: this.model.get('extensibleEnumId')
+                    extensibleEnumId: this.model.get('extensibleEnumId') ?? this.model.defs.fields[this.name]?.extensibleEnumId
                 };
             }
         },

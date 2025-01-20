@@ -20,8 +20,15 @@
     {
         "label": "Style Configuration",
         "rows": [
-            [{"name": "defaultStyle"}, false]
-
+            [{"name": "defaultStyle"}, false],
+            [{"name": "customStylesheet", "fullWidth": true}],
+            [{"name": "customStylesheetPath", "fullWidth": true}]
+        ]
+    },
+    {
+        "label": "Custom Code",
+        "rows": [
+            [{"name": "customHeadCode", "fullWidth":  true}]
         ]
     }
 ]

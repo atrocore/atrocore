@@ -166,9 +166,9 @@ Espo.define('view', [], function () {
         },
 
         setPageTitle: function (title) {
-            var prefix = this.getConfig().get('applicationName') || 'EspoCRM';
-            if (title) {
-                prefix += ' / '
+            var prefix = this.getConfig().get('applicationName') || '';
+            if (title && prefix) {
+                prefix += ' | '
             }
             $('head title').text(prefix + title);
         },

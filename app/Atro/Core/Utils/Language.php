@@ -62,6 +62,11 @@ class Language
         return self::DEFAULT_LANGUAGE;
     }
 
+    public function getLanguage(): string
+    {
+        return $this->getConfig()->get('locales')[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+    }
+
     public function setLocale(?string $localeId): void
     {
         $this->localeId = $localeId;
@@ -318,7 +323,7 @@ class Language
         $cacheName = "locale_{$this->localeId}";
 
         if (empty($data = $this->getDataManager()->getCacheData($cacheName))) {
-            $data = $this->data[self::DEFAULT_LANGUAGE];
+            $data = [];
             $locales = $this->getConfig()->get('locales') ?? [];
 
             $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
@@ -326,10 +331,7 @@ class Language
                 $data = Util::merge($data, $this->data[$fallbackLanguage]);
             }
 
-            $currentLanguage = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
-            if ($currentLanguage !== self::DEFAULT_LANGUAGE) {
-                $data = Util::merge($data, $this->data[$currentLanguage]);
-            }
+            $data = Util::merge($data, $this->data[$locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE]);
 
             $this->getDataManager()->setCacheData($cacheName, $data);
         }

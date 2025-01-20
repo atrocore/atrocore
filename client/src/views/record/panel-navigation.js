@@ -70,6 +70,10 @@ Espo.define('views/record/panel-navigation', 'view',
                         return true;
                     }
 
+                    if(this.isPanelClosed(panel.name)) {
+                        return true;
+                    }
+
                     const panelElement = document.querySelector(`div.panel[data-name="${panel.name}"]`);
 
                     return panelElement && panelElement.style.display !== 'none' && !$(panelElement).hasClass('hidden');

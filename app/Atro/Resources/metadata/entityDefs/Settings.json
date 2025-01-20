@@ -133,7 +133,8 @@
       "type": "varchar"
     },
     "applicationName": {
-      "type": "varchar"
+      "type": "varchar",
+      "tooltip": true
     },
     "readableDateFormatDisabled": {
       "type": "bool"
@@ -186,6 +187,7 @@
     "tabIconsDisabled": {
       "type": "bool"
     },
+
     "emailAddressIsOptedOutByDefault": {
       "type": "bool",
       "tooltip": true
@@ -214,6 +216,25 @@
       "filterDisabled": true,
       "noLoad": true
     },
+    "customStylesheetPath": {
+      "type": "varchar",
+      "readOnly": true,
+      "tooltip": true
+    },
+    "customStylesheet": {
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "css"
+    },
+    "customHeadCode": {
+      "type": "text",
+      "tooltip": true,
+      "notStorable": true
+    },
+    "customHeadCodePath": {
+      "type": "varchar",
+      "readOnly": true
+    },
     "notificationSmtpConnection": {
       "type": "link",
       "view": "views/admin/notification/fields/notification-smtp-connection"
@@ -229,12 +250,23 @@
     },
     "automaticFileExtensionCorrection": {
       "type": "bool"
+    },
+    "backgrounds": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
     "variables": {
       "type": "hasMany",
       "entity": "Variable"
+    },
+    "backgrounds": {
+      "type": "hasMany",
+      "entity": "Background"
     },
     "notificationSmtpConnection": {
       "type": "belongsTo",
