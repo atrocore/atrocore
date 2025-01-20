@@ -389,7 +389,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             this.collection.models.forEach(model => columns.push({
                 id: model.id,
-                name: `<a href="#/${this.scope}/view/${model.id}"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
+                name: `<a href="#/${this.scope}/view/${model.id}" target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
             }));
 
             return columns;
