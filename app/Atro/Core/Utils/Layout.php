@@ -342,7 +342,6 @@ class Layout extends Injectable
 
         switch ($name) {
             case 'list':
-            case 'listSmall':
                 $data = [
                     [
                         'name' => $relationFields[0]
@@ -353,10 +352,9 @@ class Layout extends Injectable
                 ];
                 break;
             case 'detail':
-            case 'detailSmall':
                 $data = [
                     [
-                        "label" => "Overview",
+                        "label" => "Relationship",
                         "rows"  => [
                             [
                                 [
@@ -531,7 +529,6 @@ class Layout extends Injectable
                     $data = array_values(array_intersect($data, $fields));
                     break;
                 case 'detail':
-                case 'detailSmall':
                     for ($key = 0; $key < count($data[0]['rows']); $key++) {
                         foreach ($data[0]['rows'][$key] as $fieldKey => $fieldData) {
                             if (isset($fieldData['name']) && !in_array($fieldData['name'], $fields)) {
@@ -541,7 +538,6 @@ class Layout extends Injectable
                     }
                     break;
                 case 'list':
-                case 'listSmall':
                     foreach ($data as $key => $row) {
                         if (isset($row['name']) && !in_array($row['name'], $fields)) {
                             array_splice($data, $key, 1);

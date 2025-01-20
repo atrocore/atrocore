@@ -49,9 +49,8 @@ class Layout extends AbstractRecordController
         if ($result === false) {
             throw new Error("Error while saving layout.");
         }
-        if ($layoutProfileId !== 'custom') {
-            $this->getContainer()->get('dataManager')->clearCache();
-        }
+
+        $this->getContainer()->get('dataManager')->clearCache();
 
         return $layoutManager->get($params['scope'], $params['name'], $relatedEntity, $layoutProfileId);
     }
