@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Migrations;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Migration\Base;
 use Atro\ORM\DB\RDB\Mapper;
 
@@ -98,6 +99,11 @@ class V1Dot13Dot0 extends Base
             $this->exec("CREATE INDEX IDX_LAYOUT_PROFILE_PARENT_ID ON layout_profile (parent_id, deleted);");
         }
 
+    }
+
+    public function down(): void
+    {
+        throw new Error('Downgrade is prohibited.');
     }
 
     protected function removeAllLayouts($ids)
