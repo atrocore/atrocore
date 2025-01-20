@@ -36,11 +36,11 @@ class Job extends Base
         $qb->orderBy("$j.priority", 'DESC');
         $qb->addOrderBy("$j.execute_time", 'ASC');
 
-        $qb->andWhere("$j.status=:pendingStatus");
+        $qb->andWhere("$j.status IN (:statuses)");
         $qb->andWhere("$j.type IS NOT NULL");
         $qb->andWhere("$j.execute_time <= :executeTime");
 
-        $qb->setParameter('pendingStatus', 'Pending');
+        $qb->setParameter('statuses', ['Pending', 'Running'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
         $qb->setParameter('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
     }
 }
