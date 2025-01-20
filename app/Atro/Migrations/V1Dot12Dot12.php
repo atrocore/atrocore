@@ -114,7 +114,7 @@ class V1Dot12Dot12 extends Base
                 "createdAt" => date('Y-m-d H:i:s'),
                 "modifiedAt" => date('Y-m-d H:i:s'),
                 "createdById" => "1",
-                "modifiedById" => "1"
+                "createdByName" => "System",
             ],
             "light" => [
                 "id" => "light",
@@ -144,7 +144,7 @@ class V1Dot12Dot12 extends Base
                 "createdAt" => date('Y-m-d H:i:s'),
                 "modifiedAt" => date('Y-m-d H:i:s'),
                 "createdById" => "1",
-                "modifiedById" => "1"
+                "createdByName" => "System",
             ],
             "classic" => [
                 "id" => "classic",
@@ -173,7 +173,7 @@ class V1Dot12Dot12 extends Base
                 "createdAt" => date('Y-m-d H:i:s'),
                 "modifiedAt" => date('Y-m-d H:i:s'),
                 "createdById" => "1",
-                "modifiedById" => "1"
+                "createdByName" => "System",
             ]
         ];
     }
