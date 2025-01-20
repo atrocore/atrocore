@@ -299,19 +299,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 collection.url = 'Job';
                 collection.sortBy = 'priority';
                 collection.asc = false;
-                collection.where = [
-                    {
-                        attribute: 'status',
-                        type: 'in',
-                        value: ['Running', 'Pending']
-                    },
-                    {
-                        attribute: 'executeTime',
-                        type: 'past',
-                        dateTime: true,
-                        timeZone: 'UTC'
-                    }
-                ];
+                collection.where = [{type: 'bool', value: ['jobManagerItems']}];
                 this.listenToOnce(collection, 'sync', () => {
                     this.createView('list', 'views/record/list', {
                         el: this.options.el + ' .list-container',

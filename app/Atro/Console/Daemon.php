@@ -18,6 +18,7 @@ use Atro\Core\JobManager;
 use Atro\Core\PseudoTransactionManager;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 
@@ -177,15 +178,21 @@ class Daemon extends AbstractConsole
                 $numberOfWorkers = substr_count($processes, $this->getPhpBin() . " index.php job {$id}_");
 
                 if ($numberOfWorkers < $workersCount) {
-                    $jobs = $this->getEntityManager()->getRepository('Job')
-                        ->where([
-                            'status'        => 'Pending',
-                            'type!='        => null,
-                            'executeTime<=' => (new \DateTime())->format('Y-m-d H:i:s')
-                        ])
-                        ->limit(0, $workersCount - $numberOfWorkers)
-                        ->order('priority', 'DESC')
-                        ->find();
+                    $jobs = $this->getConnection()->createQueryBuilder()
+                        ->select('id, name, priority, execute_time')
+                        ->from($this->getConnection()->quoteIdentifier('job'))
+                        ->where('deleted=:false')
+                        ->andWhere('status=:pendingStatus')
+                        ->andWhere('type IS NOT NULL')
+                        ->andWhere('execute_time <= :executeTime')
+                        ->addOrderBy('priority', 'DESC')
+                        ->addOrderBy('execute_time', 'ASC')
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->setParameter('pendingStatus', 'Pending')
+                        ->setParameter('executeTime', (new \DateTime())->format('Y-m-d H:i:s'))
+                        ->setFirstResult(0)
+                        ->setMaxResults($workersCount - $numberOfWorkers)
+                        ->fetchAllAssociative();
 
                     if (empty($jobs[0])) {
                         if (file_exists(JobManager::QUEUE_FILE)) {
@@ -193,7 +200,7 @@ class Daemon extends AbstractConsole
                         }
                     } else {
                         foreach ($jobs as $job) {
-                            exec($this->getPhpBin() . " index.php job {$id}_{$job->get('id')} --run >/dev/null 2>&1 &");
+                            exec($this->getPhpBin() . " index.php job {$id}_{$job['id']} --run >/dev/null 2>&1 &");
                         }
                     }
                 }
