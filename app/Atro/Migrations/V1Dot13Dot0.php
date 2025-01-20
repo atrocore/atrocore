@@ -25,12 +25,8 @@ class V1Dot13Dot0 extends Base
 
     public function up(): void
     {
-        if ($this->isPgSQL()) {
-            $this->exec('ALTER TABLE "user" ADD layout_profile_id VARCHAR(36) DEFAULT NULL;');
-            $this->exec('CREATE INDEX IDX_USER_LAYOUT_PROFILE_ID ON "user" (layout_profile_id, deleted)');
-        } else {
-
-        }
+        $this->exec('ALTER TABLE "user" ADD layout_profile_id VARCHAR(36) DEFAULT NULL;');
+        $this->exec('CREATE INDEX IDX_USER_LAYOUT_PROFILE_ID ON "user" (layout_profile_id, deleted)');
 
         try {
             $preferences = $this->getConnection()->createQueryBuilder()
@@ -56,11 +52,15 @@ class V1Dot13Dot0 extends Base
         }
 
         // delete all custom layout
-        $ids = $this->getConnection()->createQueryBuilder()
-            ->select('id')
-            ->from('layout')
-            ->where('preferences_id is not null')
-            ->fetchFirstColumn();
+        try {
+            $ids = $this->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('layout')
+                ->where('preferences_id is not null')
+                ->fetchFirstColumn();
+        } catch (\Exception $e) {
+            $ids = [];
+        }
 
         $this->removeAllLayouts($ids);
 
@@ -68,7 +68,8 @@ class V1Dot13Dot0 extends Base
             $this->exec("DROP INDEX idx_layout_preferences;");
             $this->exec("ALTER TABLE layout DROP preferences_id");
         } else {
-
+            $this->exec("DROP INDEX IDX_LAYOUT_PREFERENCES ON layout;");
+            $this->exec("ALTER TABLE layout DROP preferences_id");
         }
 
         // delete all small layouts
@@ -90,8 +91,13 @@ class V1Dot13Dot0 extends Base
             $this->exec("ALTER TABLE layout_profile ADD parent_id VARCHAR(36) DEFAULT NULL;");
             $this->exec("CREATE INDEX IDX_LAYOUT_PROFILE_PARENT_ID ON layout_profile (parent_id, deleted)");
         } else {
-
+            $this->exec("ALTER TABLE layout ADD related_entity VARCHAR(255) DEFAULT NULL");
+            $this->exec("DROP INDEX IDX_LAYOUT_LAYOUT_PROFILE ON layout;");
+            $this->exec("CREATE UNIQUE INDEX IDX_LAYOUT_LAYOUT_PROFILE ON layout (layout_profile_id, entity, related_entity, view_type, deleted);");
+            $this->exec("ALTER TABLE layout_profile ADD parent_id VARCHAR(36) DEFAULT NULL;");
+            $this->exec("CREATE INDEX IDX_LAYOUT_PROFILE_PARENT_ID ON layout_profile (parent_id, deleted);");
         }
+
     }
 
     protected function removeAllLayouts($ids)
