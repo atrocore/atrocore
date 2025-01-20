@@ -52,12 +52,11 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.header = this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison');
             }
 
-            this.setupRecord()
+            this.listenTo(this, 'after:render', () => this.setupRecord());
         },
 
         setupRecord() {
             this.notify('Loading...');
-            this.wait(true);
             let options = {
                 el: this.options.el + ' .modal-record',
                 model: this.model,
@@ -108,7 +107,6 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                             options.distantModels.push(distantModel);
                         }
                         this.createModalView(options);
-                        this.wait(false);
                     });
                 });
             } else {
@@ -131,6 +129,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         createModalView(options) {
             this.createView('modalRecord', this.recordView, options, (view) => {
+                view.render();
                 this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
             });
         }
