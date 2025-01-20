@@ -279,25 +279,23 @@ class Layout extends Injectable
             $data = $this->getLayoutFromFiles($scope, $name);
         }
 
+
         // default by method
         if (empty($data)) {
             $type = $this->getMetadata()->get(['scopes', $scope, 'type']);
             $method = "getDefaultFor{$type}EntityType";
             if (method_exists($this, $method)) {
                 $data = $this->$method($scope, $name);
-            }
-        }
+            } else {
+                $fileFullPath = $this->concatPath(CORE_PATH . '/Atro/Core/Templates/Layouts/' . $type, $name . '.json');
 
-        if (empty($data)) {
-            // prepare file path
-            $fileFullPath = $this->concatPath($this->concatPath(VENDOR_PATH . '/atrocore-legacy/app/Espo/Core/defaults', 'layouts'), $name . '.json');
+                if (file_exists($fileFullPath)) {
+                    // get file data
+                    $fileData = $this->getFileManager()->getContents($fileFullPath);
 
-            if (file_exists($fileFullPath)) {
-                // get file data
-                $fileData = $this->getFileManager()->getContents($fileFullPath);
-
-                // prepare data
-                $data = Json::decode($fileData, true);
+                    // prepare data
+                    $data = Json::decode($fileData, true);
+                }
             }
         }
 
