@@ -24,6 +24,8 @@ use Espo\ORM\EntityManager;
 
 class Container
 {
+    protected array $data = [];
+
     protected array $classAliases
         = [
             'route'                    => \Atro\Core\Factories\RouteFactory::class,
@@ -78,8 +80,6 @@ class Container
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
         ];
-
-    protected array $data = [];
 
     public function __construct()
     {
