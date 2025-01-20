@@ -160,7 +160,7 @@
 
 <style>
     header {
-        font-size: large;
+        font-weight: bold;
     }
 
     ul {

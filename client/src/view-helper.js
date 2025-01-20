@@ -337,7 +337,7 @@ Espo.define('view-helper', [], function () {
                 for (var groupKey in list) {
                     let groupHtml = '';
                     for (var key in list[groupKey]) {
-                        var keyVal = list[key];
+                        var keyVal = list[groupKey][key];
                         groupHtml += "<option value=\"" + keyVal + "\" " + (checkOption(list[groupKey][key]) ? 'selected' : '') + ">" + translate(list[groupKey][key]) + "</option>"
                     }
                     if (groupHtml.length) {
