@@ -1,1 +1,1 @@
-<div class="modal-record">{{{modalRecord}}}</div>
+<div class="modal-record"></div>
