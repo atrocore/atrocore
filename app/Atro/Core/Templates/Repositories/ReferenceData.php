@@ -266,11 +266,13 @@ class ReferenceData extends Repository implements Injectable
         $items = array_values($items);
 
         // filter by name
-        if (!empty($params['whereClause'][0]['name*'])) {
-            $search = str_replace('%', '', $params['whereClause'][0]['name*']);
-            $items = array_filter($items, function ($item) use ($search) {
-                return isset($item['name']) && preg_match('/^' . preg_quote($search, '/') . '/i', $item['name']);
-            });
+        foreach ($params['whereClause'] ?? [] as $row) {
+            if (!empty($row['name*'])) {
+                $search = str_replace('%', '', $row['name*']);
+                $items = array_filter($items, function ($item) use ($search) {
+                    return isset($item['name']) && preg_match('/^' . preg_quote($search, '/') . '/i', $item['name']);
+                });
+            }
         }
 
         // text filter
