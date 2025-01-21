@@ -30,7 +30,7 @@ class EntityField extends ReferenceData
     {
         $entities = [];
 
-        $entityName = $params['whereClause'][0]['entityId='] ?? null;
+        $entityName = $params['whereClause'][0]['entityId='] ?? $params['whereClause'][0]['entityId'] ?? null;
 
         if (!empty($entityName)) {
             $entities[] = $entityName;
