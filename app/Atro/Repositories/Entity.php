@@ -126,7 +126,7 @@ class Entity extends ReferenceData
 
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
-            if (!empty($row['emHidden']) || (!empty($scopeTypes) && !in_array($row['type'], $scopeTypes))) {
+            if (!empty($row['emHidden']) || (!empty($scopeTypes) && !empty($row['type']) && !in_array($row['type'], $scopeTypes))) {
                 continue;
             }
 
