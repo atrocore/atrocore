@@ -177,8 +177,8 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'sidePanelsDetail',null, function (layoutData) {
-                if (layoutData) {
-                    this.alterPanels(layoutData);
+                if (layoutData.layout) {
+                    this.alterPanels(layoutData.layout);
                 }
 
                 if (this.streamPanel && !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && this.getConfig().get('isStreamSide') && !this.model.isNew()) {

@@ -1982,8 +1982,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var layoutName = this.layoutName;
 
-            this._helper.layoutManager.get(this.collection.name, layoutName, this.options.layoutRelatedScope ?? null, function (listLayout) {
-                var filteredListLayout = this.filterListLayout(listLayout);
+            this._helper.layoutManager.get(this.collection.name, layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+                var filteredListLayout = this.filterListLayout(data.layout);
                 this.layoutLoadCallbackList.forEach(function (callbackItem) {
                     callbackItem(filteredListLayout);
                     this.layoutLoadCallbackList = [];

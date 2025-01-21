@@ -55,7 +55,7 @@
             new Promise(resolve => {
                 ModelFactory.create(params.scope, m => {
                     LayoutManager.get(params.scope, params.type,params.relatedScope, params.layoutProfileId, layoutLoaded => {
-                        layout = layoutLoaded;
+                        layout = layoutLoaded.layout;
                         model = m;
                         resolve();
                     }, false);
@@ -67,7 +67,7 @@
             promiseList.push(
                 new Promise(resolve => {
                     LayoutManager.get(params.scope, 'sidePanelsDetail',null, params.layoutProfileId, layoutLoaded => {
-                        sidePanelsLayout = layoutLoaded;
+                        sidePanelsLayout = layoutLoaded.layout;
                         resolve();
                     }, false);
                 })

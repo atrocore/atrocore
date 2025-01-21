@@ -54,7 +54,7 @@
         ModelFactory.create(params.scope, (model) => {
             LayoutManager.get(params.scope, params.type, params.relatedScope, params.layoutProfileId, (layout) => {
                 if (callback) {
-                    readDataFromLayout(model, layout);
+                    readDataFromLayout(model, layout.layout);
                     callback();
                 }
             }, false);

@@ -11,7 +11,7 @@
 
     export let loadLayout = () => {
         LayoutManager.get(scope, type, layoutProfileId, (fetchedLayout) => {
-            layout = fetchedLayout;
+            layout = fetchedLayout.layout;
         }, false);
     }
 

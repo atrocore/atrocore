@@ -15,6 +15,7 @@ use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Acl;
 use Espo\Core\Injectable;
 use Espo\Core\Utils\Config;
@@ -76,8 +77,30 @@ class Layout extends Injectable
         // prepare name
         $name = $this->sanitizeInput($name);
 
+        if (empty($relatedEntity)) {
+            $relatedEntity = null;
+        }
+
+        $selectedProfileId = $this->getEntityManager()->getConnection()
+            ->createQueryBuilder()
+            ->select('layout_profile_id')
+            ->from('user_entity_layout', 'uel')
+            ->where('uel.user_id=:userId and uel.entity=:entity and uel.view_type=:viewType and uel.related_entity=:relatedEntity and deleted=:false')
+            ->setParameters([
+                'entity'        => $scope,
+                'viewType'      => $name,
+                'relatedEntity' => $relatedEntity,
+                'userId'        => $this->getUser()->id,
+            ])
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchOne();
+
+        if (!empty($selectedProfileId) && empty($layoutProfileId)) {
+            $layoutProfileId = $selectedProfileId;
+        }
+
         // compose
-        list($isCustom, $layout) = $this->compose($scope, $name, $relatedEntity, $layoutProfileId);
+        list($layout, $storedProfile) = $this->compose($scope, $name, $relatedEntity, $layoutProfileId);
 
         // remove fields from layout if this fields not exist in metadata
         $layout = $this->disableNotExistingFields($scope, $name, $layout);
@@ -97,15 +120,34 @@ class Layout extends Injectable
                 'relatedEntity'   => $relatedEntity,
                 'layoutProfileId' => $layoutProfileId,
                 'isAdminPage'     => $isAdminPage,
-                'isCustom'        => $isCustom,
+                'isCustom'        => !empty($storedProfile),
             ],
             'result' => $layout]);
 
         $layout = $this->getInjection('eventManager')->dispatch('Layout', 'afterGetLayoutContent', $event)
             ->getArgument('result');
 
+        $storedProfiles = $this->getEntityManager()->getConnection()
+            ->createQueryBuilder()
+            ->select('lp.id', 'lp.name')
+            ->from('layout', 'l')
+            ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
+            ->where('l.entity=:entity and l.view_type=:viewType and l.related_entity=:relatedEntity and l.deleted=:false and lp.deleted=:false')
+            ->setParameters([
+                'entity'        => $scope,
+                'viewType'      => $name,
+                'relatedEntity' => $relatedEntity
+            ])
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
 
-        return Json::encode($layout);
+
+        return Json::encode([
+            'layout'            => $layout,
+            'storedProfile'     => empty($storedProfile) ? [] : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
+            'storedProfiles'    => $storedProfiles,
+            'selectedProfileId' => $selectedProfileId ?? null,
+        ]);
     }
 
 
@@ -246,18 +288,17 @@ class Layout extends Injectable
         }
 
         if (!empty($layout)) {
-            return $layout->getData($isOriginal);
+            return [$layout->getData($isOriginal), $layout->get('layoutProfile')];
         }
-        return [];
+        return [[], null];
     }
 
     protected function compose(string $scope, string $name, ?string $relatedEntity, ?string $layoutProfileId): array
     {
         // from custom layout
-        $customLayout = $this->getCustomLayout($scope, $name, $relatedEntity, $layoutProfileId);
-        $this->customData[$scope][$name] = !empty($customLayout);
+        list ($customLayout, $storedProfile) = $this->getCustomLayout($scope, $name, $relatedEntity, $layoutProfileId);
         if (!empty($customLayout)) {
-            return [true, $customLayout];
+            return [$customLayout, $storedProfile];
         }
 
         // prepare data
@@ -303,7 +344,7 @@ class Layout extends Injectable
             $data = $this->injectMultiLanguageFields($data, $scope);
         }
 
-        return [false, $data];
+        return [$data, null];
     }
 
     public function getLayoutFromFiles(string $scope, string $name): array

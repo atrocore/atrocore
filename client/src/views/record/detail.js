@@ -2331,10 +2331,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
 
-            this._helper.layoutManager.get(this.model.name, this.layoutName,null, function (simpleLayout) {
+            this._helper.layoutManager.get(this.model.name, this.layoutName,null, function (data) {
                 this.gridLayout = {
                     type: gridLayoutType,
-                    layout: this.convertDetailLayout(simpleLayout)
+                    layout: this.convertDetailLayout(data.layout)
                 };
                 callback(this.gridLayout);
             }.bind(this));
