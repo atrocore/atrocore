@@ -201,7 +201,7 @@ class Metadata extends AbstractListener
                         'id'         => $action['id'],
                         'name'       => $action['name'],
                         'display'    => $action['display'],
-                        'massAction' => false,
+                        'massAction' => !empty($action['mass_action']),
                         'acl'        => [
                             'scope'  => $action['source_entity'],
                             'action' => 'read',
