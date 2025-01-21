@@ -81,7 +81,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         setup: function () {
-            this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
+            this.collection.maxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
             this.collectionUrl = this.collection.url;
             this.collectionMaxSize = this.collection.maxSize;
