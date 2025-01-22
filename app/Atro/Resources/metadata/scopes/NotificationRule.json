@@ -12,5 +12,6 @@
   "type": "Base",
   "object": true,
   "isActiveUnavailable": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "emHidden": true
 }

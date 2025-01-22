@@ -10,5 +10,6 @@
   "type": "Base",
   "streamDisabled": true,
   "object": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "emHidden": true
 }

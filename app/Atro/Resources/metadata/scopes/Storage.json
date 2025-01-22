@@ -9,5 +9,6 @@
   "object": true,
   "hasActive": true,
   "notificationDisabled": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "emHidden": true
 }
