@@ -128,31 +128,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.openMenu();
 
-            this.listenTo(Backbone, 'tree-panel-expanded', () => {
-                this.switchMinimizer(true);
-            });
-
             this.setupBookmark();
 
-        },
-
-        switchMinimizer(afterTrigger) {
-            let $body = $('body');
-            if (!afterTrigger && $body.hasClass('minimized')) {
-                $body.removeClass('minimized');
-                this.getStorage().set('state', 'siteLayoutState', 'expanded');
-                Backbone.trigger('menu-expanded');
-            } else {
-                $body.addClass('minimized');
-                if (!afterTrigger) {
-                    this.getStorage().set('state', 'siteLayoutState', 'collapsed');
-                }
-            }
-            if (window.Event) {
-                try {
-                    window.dispatchEvent(new Event('resize'));
-                } catch (e) {}
-            }
         },
 
         adjust: function () {

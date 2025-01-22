@@ -14578,10 +14578,6 @@ li.ui-timepicker-selected .ui-timepicker-duration, .ui-timepicker-list li:hover 
 }
 
 @media screen and (max-width: 767px) {
-    #header a.minimizer {
-        display: none
-    }
-
     #header .navbar ul.nav > li.global-search-container {
         display: block
     }
@@ -14675,22 +14671,6 @@ body > #header .navbar-brand span.home-icon {
     #header ul.tabs {
         width: 100%;
         overflow-y: hidden
-    }
-
-    #header a.minimizer {
-        color: #000000;
-        text-decoration: none;
-        margin-top: 4px;
-        display: inline-block;
-        margin-left: 4px
-    }
-
-    #header a.minimizer > span.left {
-        display: inline
-    }
-
-    #header a.minimizer > span.right {
-        display: none
     }
 
     #header .navbar {
@@ -17626,11 +17606,6 @@ a.field-info > span.fa-info-circle {
     background-color: transparent;
 }
 
-#header .navbar-header > a.minimizer span {
-    margin-top: 7px;
-    margin-left: 8px
-}
-
 @media screen and (min-width: 768px) {
     #global-search-panel {
         margin-top: -1px
@@ -19170,12 +19145,6 @@ a:hover, a:focus {
     text-decoration: underline;
 }
 
-#header a.minimizer {
-    position: relative;
-    top: 0;
-    color: #ccc;
-}
-
 .dropdown-menu {
     border: 0;
     box-shadow: 0 0 13px rgba(0, 0, 0, 0.175)
@@ -20284,6 +20253,9 @@ button.category:focus {
     cursor: pointer;
 }
 
+#header .menu{
+    border-bottom: 1px solid var(--primary-border-color);
+}
 
 @media screen and (min-width: 768px) {
     body {
@@ -20349,6 +20321,7 @@ button.category:focus {
     #header .navbar-header, #header .menu, #header .navbar, #header .navbar-brand {
         border-right: 1px solid var(--primary-border-color);
     }
+
 
     #header ul.tabs li.more-group > ul.dropdown-menu a::before {
         left: 24px
@@ -23863,4 +23836,57 @@ span[data-img-src]::after {
 
 .textcomplete-item.active {
     background-color: #ddd;
+}
+
+/* Vertical */
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a > span.full-label {
+    position: static;
+    margin-left: 8px;
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul {
+    position: relative;
+    left: 0;
+    float: none;
+    width: 100%;
+    min-width: 155px;
+    margin-top: 0;
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    overflow: hidden;
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a {
+    position: relative;
+    background-color: transparent;
+    white-space: normal;
+    padding-left: 35px;
+    color: var(--nav-font-color);
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group.keep-open > ul {
+    display: block;
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li.active > a {
+    color: #fff;
+    background-color: #3f535c;
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs > li.open:not(.more-group-name) > a {
+    background-color: transparent;
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a > span.full-label {
+    padding-left: 0;
+    margin-left: 8px;
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a > span.short-label {
+    position: static;
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a > span.short-label span.short-label-text,
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a > span.short-label span.short-label-text {
+    display: none;
+}
+
+/* Vertical Mobile*/
+@media (max-width: 767px) {
+    .navbar-nav .keep-open .dropdown-menu > li > a {
+        padding: 5px 15px 5px 25px;
+    }
 }
