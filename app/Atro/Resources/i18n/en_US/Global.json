@@ -158,6 +158,7 @@
     "deleteAll": "Delete All",
     "setAsInherited": "Set as inherited",
     "inherited": "Inherited",
+    "notInherited": "Not Inherited",
     "resetAllToDefault": "Reset all to Default",
     "pleaseReloadPage": "Please <a href=\"javascript:\" onClick=\"window.location.reload();\">refresh</a> the page to update the metadata.",
     "pleaseRebuildDatabase": "Please <a href=\"javascript:\" data-action=\"rebuild-notification\">rebuild the database</a> from Administration. Database schema is inconsistent.",
