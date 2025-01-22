@@ -21,7 +21,7 @@ class V1Dot13Dot0 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-01-20 11:00:00');
+        return new \DateTime('2025-01-22 15:00:00');
     }
 
     public function up(): void
@@ -99,6 +99,15 @@ class V1Dot13Dot0 extends Base
             $this->exec("CREATE INDEX IDX_LAYOUT_PROFILE_PARENT_ID ON layout_profile (parent_id, deleted);");
         }
 
+
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE TABLE user_entity_layout (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', entity VARCHAR(255) DEFAULT NULL, view_type VARCHAR(255) DEFAULT NULL, related_entity VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, layout_profile_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id));");
+            $this->exec("CREATE UNIQUE INDEX IDX_USER_ENTITY_LAYOUT_UNIQUE ON user_entity_layout (user_id, entity, view_type, related_entity, layout_profile_id, deleted);");
+            $this->exec("CREATE INDEX IDX_USER_ENTITY_LAYOUT_USER_ID ON user_entity_layout (user_id, deleted);");
+            $this->exec("CREATE INDEX IDX_USER_ENTITY_LAYOUT_MODIFIED_BY_ID ON user_entity_layout (modified_by_id, deleted)");
+        } else {
+            $this->exec("CREATE TABLE user_entity_layout (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', entity VARCHAR(255) DEFAULT NULL, view_type VARCHAR(255) DEFAULT NULL, related_entity VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, layout_profile_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_ENTITY_LAYOUT_UNIQUE (user_id, entity, view_type, related_entity, layout_profile_id, deleted), INDEX IDX_USER_ENTITY_LAYOUT_USER_ID (user_id, deleted), INDEX IDX_USER_ENTITY_LAYOUT_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+        }
     }
 
     public function down(): void

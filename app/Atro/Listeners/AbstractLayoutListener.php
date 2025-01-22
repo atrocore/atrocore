@@ -19,7 +19,6 @@ use Atro\Core\Utils\Util;
 
 abstract class AbstractLayoutListener extends AbstractListener
 {
-
     public function isCustomLayout(Event $event): bool
     {
         return $event->getArgument('params')['isCustom'];

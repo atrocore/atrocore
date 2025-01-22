@@ -24,7 +24,7 @@ class TranslationLayout extends AbstractLayoutListener
         return array_unique(array_column($this->getConfig()->get('locales', []), 'language'));
     }
 
-    protected function list(Event $event)
+    public function list(Event $event)
     {
         $result = $event->getArgument('result');
 
@@ -35,7 +35,7 @@ class TranslationLayout extends AbstractLayoutListener
         $event->setArgument('result', $result);
     }
 
-    protected function detail(Event $event)
+    public function detail(Event $event)
     {
         $result = $event->getArgument('result');
 

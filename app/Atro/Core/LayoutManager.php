@@ -135,7 +135,7 @@ class LayoutManager
             'layout'            => $layout,
             'storedProfile'     => empty($storedProfile) ? [] : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
             'storedProfiles'    => $storedProfiles,
-            'selectedProfileId' => $selectedProfileId ?? null,
+            'selectedProfileId' => empty($selectedProfileId) ? null : $selectedProfileId,
         ];
     }
 
@@ -595,7 +595,7 @@ class LayoutManager
         return $this->container->get('config');
     }
 
-    protected function getEntityManager(): \Espo\Core\Utils\EntityManager
+    protected function getEntityManager(): \Espo\Core\Orm\EntityManager
     {
         return $this->container->get('entityManager');
     }

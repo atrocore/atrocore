@@ -475,7 +475,6 @@
         "layout": {
           "type": "array",
           "items": {
-            "type": "any"
           }
         },
         "storedProfiles": {
@@ -546,7 +545,6 @@
         "layout": {
           "type": "array",
           "items": {
-            "type": "object"
           }
         },
         "storedProfiles": {
@@ -616,7 +614,6 @@
         "layout": {
           "type": "array",
           "items": {
-            "type": "object"
           }
         },
         "storedProfiles": {
