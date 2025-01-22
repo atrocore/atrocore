@@ -39,12 +39,6 @@
 
     <div class="menu">
         <ul class="nav navbar-nav tabs">
-            <li>
-                <a class="minimizer" href="javascript:">
-                    <span class="fas fa-angle-right right"></span>
-                    <span class="fas fa-angle-left left"></span>
-                </a>
-            </li>
             {{#each tabDefsList}}
             {{#unless isInMore}}
             <li data-name="{{name}}" class="not-in-more tab">
@@ -102,7 +96,7 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
-                    <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
+                    <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" {{#if targetBlank}} target="_blank" {{/if}} class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
                     {{else}}
                     <li class="divider"></li>
                     {{/unless}}

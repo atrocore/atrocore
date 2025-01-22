@@ -19,12 +19,16 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         openMenu: function () {
             this.events = _.extend({}, this.events || {}, {
                 'click .navbar-toggle': function () {
-                    this.$el.find('.menu').toggleClass('open-menu');
-                    let headerBreadcrumbs = $('.header-breadcrumbs');
-                    if ($(window).scrollTop() > $('.page-header').outerHeight() && !$('#header .navbar .menu').hasClass('open-menu')) {
-                        headerBreadcrumbs.addClass('fixed-header-breadcrumbs');
-                    } else {
-                        headerBreadcrumbs.removeClass('fixed-header-breadcrumbs');
+                    if(this.$el.find('.menu').hasClass('open-menu')) {
+                        $(document).off('mouseup.menu');
+                        this.$el.find('.menu').removeClass('open-menu');
+                    }else{
+                        this.$el.find('.menu').addClass('open-menu');
+                        $(document).on('mouseup.menu', function (e) {
+                            if (!$(e.target).closest('.navbar .menu').length && !$(e.target).closest('.navbar-toggle').length) {
+                                this.$el.find('.menu').removeClass('open-menu');
+                            }
+                        }.bind(this));
                     }
                 },
 
@@ -128,7 +132,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 this.switchMinimizer(true);
             });
 
-            this.setupBookmark()
+            this.setupBookmark();
 
         },
 
