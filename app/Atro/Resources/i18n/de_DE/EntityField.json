@@ -51,6 +51,8 @@
     "linkMultipleField": "Verknüpfung mehrerer Felder"
   },
   "tooltips": {
+    "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
+    "foreignEntity": "Dies ist die verwandte Entität, auf deren Datensätze im aktuellen Feld verwiesen wird.",
     "relationName": "Dieser Code wird verwendet, um den Systemnamen für die Entität vom Typ „Relation“ festzulegen, die automatisch erstellt wird.",
     "isMultilang": "Automatische Erstellung von Feldern durch Klonen des aktuellen Feldes, und zwar so oft, wie in den Mehrspracheneinstellungen Gebietsschemata aktiviert sind.",
     "required": "Das Feld ist obligatorisch. Kann nicht leer gelassen werden.",

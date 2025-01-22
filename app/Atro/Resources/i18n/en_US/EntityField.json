@@ -52,6 +52,8 @@
     "linkMultipleField": "Link Multiple Field"
   },
   "tooltips": {
+    "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
+    "foreignEntity": "This is the related entity which records are referenced in the current field.",
     "relationName": "This code is used to set the system name for the entity of type \"Relation\" that is automatically created.",
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "required": "Field will be mandatory. Can't be left empty.",
