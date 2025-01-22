@@ -322,7 +322,8 @@ class Language
 
         $cacheName = "locale_{$this->localeId}";
 
-        if (empty($data = $this->getDataManager()->getCacheData($cacheName))) {
+        $data = $this->getDataManager()->getCacheData($cacheName);
+        if (empty($data)) {
             $data = [];
             $locales = $this->getConfig()->get('locales') ?? [];
 
