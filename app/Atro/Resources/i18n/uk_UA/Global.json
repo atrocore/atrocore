@@ -345,7 +345,9 @@
     "youShouldHaveAtLeastOneRecord": "Ви повинні мати принаймні 2 записи в списку, щоб мати можливість порівняти",
     "weCannotCompareMoreThan": "Максимальна кількість записів для порівняння - %s.",
     "thereAreTooManyRecord": "Занадто багато записів. Неможливо порівняти",
-    "Unset Selection": "Зняти виділення"
+    "Unset Selection": "Зняти виділення",
+    "Report a bug": "Повідомити про помилку",
+    "Visit Community": "Відвідати спільноту"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
