@@ -16370,6 +16370,7 @@ label.attach-file-label > input.file {
 .stick-sub {
     position: fixed;
     top: 0;
+    left: 0;
     margin: 43px 0 0 -15px;
     z-index: 4
 }
@@ -20574,15 +20575,19 @@ button.category:focus {
         width: calc(100% - 279px);
     }
 
-    #main > .record > .detail > .detail-button-container.collapsed {
-        left: 220px;
-    }
-
     #main > .record > .detail > .detail-button-container.detail-tree-button-container:not(.stick-sub) {
         position: relative;
         padding-right: 15px;
         padding-left: 15px;
         left: -15px;
+    }
+
+    #main > .record > .detail > .detail-button-container.not-collapsed.detail-tree-button-container.stick-sub {
+        left: auto;
+    }
+
+    #main > .record > .detail > .detail-button-container.collapsed.detail-tree-button-container.stick-sub {
+        left: 0;
     }
 
     #main > .page-header.collapsed .overview-filters-container
