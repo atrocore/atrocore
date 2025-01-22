@@ -183,6 +183,7 @@
     "relationName": {
       "type": "varchar",
       "trim": true,
+      "tooltip": true,
       "view": "views/admin/field-manager/fields/relation-name"
     },
     "linkMultipleField": {

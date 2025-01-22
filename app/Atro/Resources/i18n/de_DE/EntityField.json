@@ -51,6 +51,7 @@
     "linkMultipleField": "Verknüpfung mehrerer Felder"
   },
   "tooltips": {
+    "relationName": "Dieser Code wird verwendet, um den Systemnamen für die Entität vom Typ „Relation“ festzulegen, die automatisch erstellt wird.",
     "isMultilang": "Automatische Erstellung von Feldern durch Klonen des aktuellen Feldes, und zwar so oft, wie in den Mehrspracheneinstellungen Gebietsschemata aktiviert sind.",
     "required": "Das Feld ist obligatorisch. Kann nicht leer gelassen werden.",
     "readOnly": "Der Feldwert kann nicht vom Benutzer angegeben werden.",
