@@ -92,6 +92,22 @@ class Entity extends ReferenceData
         'common'
     ];
 
+    protected ?array $boolFields = null;
+
+    protected function getEntityById($id)
+    {
+        $item = $this->prepareItem($id);
+        if (!empty($item)) {
+            $entity = $this->entityFactory->create($this->entityName);
+            $entity->set($item);
+            $entity->setAsFetched();
+
+            return $entity;
+        }
+
+        return null;
+    }
+
     public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
     {
         if ($link === 'fields') {
@@ -113,16 +129,47 @@ class Entity extends ReferenceData
         return parent::countRelated($entity, $relationName, $params);
     }
 
+    protected function prepareItem(string $code, array $row = null): ?array
+    {
+        if ($row === null){
+            $row = $this->getMetadata()->get("scopes.$code");
+        }
+
+        if (empty($row) || !empty($row['emHidden'])) {
+            return null;
+        }
+
+        if ($this->boolFields === null) {
+            $this->boolFields = [];
+            foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
+                if ($defs['type'] === 'bool') {
+                    $this->boolFields[] = $field;
+                }
+            }
+        }
+
+        foreach ($this->boolFields as $boolField) {
+            $row[$boolField] = !empty($row[$boolField]);
+        }
+
+        return array_merge($row, [
+            'id'                    => $code,
+            'code'                  => $code,
+            'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
+            'namePlural'            => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
+            'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
+            'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
+            'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
+            'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
+            'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
+            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
+            'textFilterFields'      => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'textFilterFields']),
+        ]);
+    }
+
     protected function getAllItems(array $params = []): array
     {
         $scopeTypes = $params['whereClause'][0]['type'] ?? null;
-
-        $boolFields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
-            if ($defs['type'] === 'bool') {
-                $boolFields[] = $field;
-            }
-        }
 
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
@@ -130,25 +177,9 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            foreach ($boolFields as $boolField) {
-                $row[$boolField] = !empty($row[$boolField]);
+            if (!empty($item = $this->prepareItem($code, $row))) {
+                $items[] = $item;
             }
-
-            $items[] = array_merge($row, [
-                'id'                    => $code,
-                'code'                  => $code,
-                'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
-                'namePlural'            => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
-                'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
-                'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
-                'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
-                'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
-                'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-                'sortDirection'         => $this->getMetadata()
-                    ->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
-                'textFilterFields'      => $this->getMetadata()
-                    ->get(['entityDefs', $code, 'collection', 'textFilterFields']),
-            ]);
         }
 
         return $items;

@@ -21,6 +21,74 @@ use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
 {
+    protected ?array $boolFields = null;
+
+    protected function getEntityById($id)
+    {
+        $parts = explode("_", $id);
+        if (count($parts) !== 2) {
+            return null;
+        }
+
+        $item = $this->prepareItem($parts[0], $parts[1]);
+        if (!empty($item)) {
+            $entity = $this->entityFactory->create($this->entityName);
+            $entity->set($item);
+            $entity->setAsFetched();
+
+            return $entity;
+        }
+
+        return null;
+    }
+
+    protected function prepareItem(string $entityName, string $fieldName, array $fieldDefs = null): ?array
+    {
+        if (empty($fieldDefs)) {
+            $fieldDefs = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName");
+        }
+
+        if (!empty($fieldDefs['emHidden'])) {
+            return null;
+        }
+
+        if ($this->boolFields === null) {
+            $this->boolFields = [];
+            foreach ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields']) as $field => $defs) {
+                if ($defs['type'] === 'bool') {
+                    $this->boolFields[] = $field;
+                }
+            }
+        }
+
+        foreach ($this->boolFields as $boolField) {
+            $fieldDefs[$boolField] = !empty($fieldDefs[$boolField]);
+        }
+
+        if (in_array($fieldDefs['type'], ['link', 'linkMultiple'])) {
+            $linkDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'links', $fieldName], []);
+            if ($fieldDefs['type'] === 'linkMultiple') {
+                $fieldDefs['relationType'] = !empty($linkDefs['relationName']) ? 'manyToMany' : 'oneToMany';
+                $fieldDefs['relationName'] = $linkDefs['relationName'] ?? null;
+                $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
+            }
+            if (!empty($linkDefs['entity'])) {
+                $fieldDefs['foreignEntityId'] = $linkDefs['entity'];
+                $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
+            }
+            $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
+        }
+
+        return array_merge($fieldDefs, [
+            'id'          => "{$entityName}_{$fieldName}",
+            'code'        => $fieldName,
+            'name'        => $this->translate($fieldName, 'fields', $entityName),
+            'entityId'    => $entityName,
+            'entityName'  => $this->translate($entityName, 'scopeNames'),
+            'tooltipText' => $this->translate($fieldName, 'tooltips', $entityName)
+        ]);
+    }
+
     protected function getAllItems(array $params = []): array
     {
         $entities = [];
@@ -30,51 +98,20 @@ class EntityField extends ReferenceData
         if (!empty($entityName)) {
             $entities[] = $entityName;
         } else {
-            foreach ($this->getEntityManager()->getRepository('Entity')->find() as $entity) {
-                $entities[] = $entity->get('code');
-            }
-        }
-
-        $boolFields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields']) as $field => $defs) {
-            if ($defs['type'] === 'bool') {
-                $boolFields[] = $field;
+            foreach ($this->getMetadata()->get('scopes') as $scope => $scopeDefs) {
+                if (!empty($scopeDefs['emHidden'])) {
+                    continue;
+                }
+                $entities[] = $scope;
             }
         }
 
         $items = [];
         foreach ($entities as $entityName) {
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
-                if (!empty($fieldDefs['emHidden'])) {
-                    continue;
+                if (!empty($item = $this->prepareItem($entityName, $fieldName, $fieldDefs))) {
+                    $items[] = $item;
                 }
-
-                foreach ($boolFields as $boolField) {
-                    $fieldDefs[$boolField] = !empty($fieldDefs[$boolField]);
-                }
-
-                if (in_array($fieldDefs['type'], ['link', 'linkMultiple'])) {
-                    $linkDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'links', $fieldName], []);
-                    if ($fieldDefs['type'] === 'linkMultiple') {
-                        $fieldDefs['relationType'] = !empty($linkDefs['relationName']) ? 'manyToMany' : 'oneToMany';
-                        $fieldDefs['relationName'] = $linkDefs['relationName'] ?? null;
-                        $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
-                    }
-                    if (!empty($linkDefs['entity'])) {
-                        $fieldDefs['foreignEntityId'] = $linkDefs['entity'];
-                        $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
-                    }
-                    $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
-                }
-
-                $items[] = array_merge($fieldDefs, [
-                    'id'          => "{$entityName}_{$fieldName}",
-                    'code'        => $fieldName,
-                    'name'        => $this->translate($fieldName, 'fields', $entityName),
-                    'entityId'    => $entityName,
-                    'entityName'  => $this->translate($entityName, 'scopeNames'),
-                    'tooltipText' => $this->translate($fieldName, 'tooltips', $entityName)
-                ]);
             }
         }
 
