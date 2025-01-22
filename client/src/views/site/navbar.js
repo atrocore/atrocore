@@ -474,10 +474,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             });
 
             list.push({
-                divider: true
-            });
-
-            list.push({
                 link: 'https://community.atrocore.com/c/issues/8',
                 label: this.getLanguage().translate('Report a bug'),
                 targetBlank: true
