@@ -415,21 +415,246 @@
     }
   },
   {
-    "route": "/:controller/layout/:name",
+    "route": "/:scope/layout/:viewType",
     "method": "get",
     "params": {
       "controller": "Layout",
-      "scope": ":controller",
+      "scope": ":scope",
       "action": "getContent"
+    },
+    "description": "Get layout content for an entity",
+    "requestParameters": [
+      {
+        "name": "scope",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "Product"
+        }
+      },
+      {
+        "name": "viewType",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "list"
+        }
+      },
+      {
+        "name": "relatedScope",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "Category"
+        }
+      },
+      {
+        "name": "layoutProfileId",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "isAdminPage",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "true"
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "array",
+          "items": {
+            "type": "any"
+          }
+        },
+        "storedProfiles": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "storedProfile": {
+          "type": "object"
+        },
+        "selectedProfileId": {
+          "type": "string",
+          "nullable": true
+        }
+      }
     }
   },
   {
-    "route": "/:controller/layout/:name",
+    "route": "/:scope/layout/:viewType",
     "method": "put",
     "params": {
       "controller": "Layout",
-      "scope": ":controller",
+      "scope": ":scope",
       "action": "updateContent"
+    },
+    "description": "Update layout content for an entity",
+    "requestParameters": [
+      {
+        "name": "scope",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "Product"
+        }
+      },
+      {
+        "name": "viewType",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "list"
+        }
+      },
+      {
+        "name": "relatedScope",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "Category"
+        }
+      },
+      {
+        "name": "layoutProfileId",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "storedProfiles": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "storedProfile": {
+          "type": "object"
+        },
+        "selectedProfileId": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    }
+  },
+  {
+    "route": "Layout/action/resetToDefault",
+    "method": "post",
+    "params": {
+      "controller": "Layout",
+      "action": "resetToDefault"
+    },
+    "description": "Remove configuration for a layout",
+    "requestParameters": [
+      {
+        "name": "scope",
+        "in": "body",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "Product"
+        }
+      },
+      {
+        "name": "viewType",
+        "in": "body",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "list"
+        }
+      },
+      {
+        "name": "relatedScope",
+        "in": "body",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "Category"
+        }
+      },
+      {
+        "name": "layoutProfileId",
+        "in": "body",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "storedProfiles": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "storedProfile": {
+          "type": "object"
+        },
+        "selectedProfileId": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    }
+  },
+  {
+    "route": "Layout/action/resetAllToDefault",
+    "method": "post",
+    "params": {
+      "controller": "Layout",
+      "action": "resetAllToDefault"
+    },
+    "description": "Remove all layout configuration for a layout profile",
+    "requestParameters": [
+      {
+        "name": "layoutProfileId",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "response": {
+      "type": "boolean"
     }
   },
   {

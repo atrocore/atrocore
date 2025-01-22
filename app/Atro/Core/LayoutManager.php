@@ -9,43 +9,30 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils;
+namespace Atro\Core;
 
-use Atro\Core\Container;
+use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Doctrine\DBAL\ParameterType;
-use Espo\Core\Acl;
-use Espo\Core\Injectable;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\File;
-use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Util;
-use Espo\Entities\Preferences;
-use Espo\ORM\IEntity;
+use Atro\Core\Utils\FileManager;
+use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
+use Doctrine\DBAL\ParameterType;
+use Espo\Core\Utils\Json;
+use Espo\ORM\IEntity;
 
 /**
- * Class Layout
+ * Class LayoutManager
  */
-class Layout extends Injectable
+class LayoutManager
 {
-    protected array $changedData = [];
-    protected array $customData = [];
+    protected Container $container;
     protected ?IEntity $defaultProfile;
 
-    public function __construct()
+    public function __construct(Container $container)
     {
-        $this->addDependency('container');
-        $this->addDependency('acl');
-        $this->addDependency('eventManager');
-    }
-
-    public function isCustom(string $scope, string $name): bool
-    {
-        return !empty($this->customData[$scope][$name]);
+        $this->container = $container;
     }
 
     /**
@@ -65,17 +52,17 @@ class Layout extends Injectable
      * Get Layout context
      *
      * @param string $scope
-     * @param string $name
+     * @param string $viewType
      *
      * @return json|string
      */
-    public function get(string $scope, string $name, ?string $relatedEntity = null, ?string $layoutProfileId = null, bool $isAdminPage = false)
+    public function get(string $scope, string $viewType, ?string $relatedEntity = null, ?string $layoutProfileId = null, bool $isAdminPage = false): array
     {
         // prepare scope
         $scope = $this->sanitizeInput($scope);
 
         // prepare name
-        $name = $this->sanitizeInput($name);
+        $viewType = $this->sanitizeInput($viewType);
 
         if (empty($relatedEntity)) {
             $relatedEntity = null;
@@ -88,7 +75,7 @@ class Layout extends Injectable
             ->where('uel.user_id=:userId and uel.entity=:entity and uel.view_type=:viewType and uel.related_entity=:relatedEntity and deleted=:false')
             ->setParameters([
                 'entity'        => $scope,
-                'viewType'      => $name,
+                'viewType'      => $viewType,
                 'relatedEntity' => $relatedEntity,
                 'userId'        => $this->getUser()->id,
             ])
@@ -100,12 +87,12 @@ class Layout extends Injectable
         }
 
         // compose
-        list($layout, $storedProfile) = $this->compose($scope, $name, $relatedEntity, $layoutProfileId);
+        list($layout, $storedProfile) = $this->compose($scope, $viewType, $relatedEntity, $layoutProfileId);
 
         // remove fields from layout if this fields not exist in metadata
-        $layout = $this->disableNotExistingFields($scope, $name, $layout);
+        $layout = $this->disableNotExistingFields($scope, $viewType, $layout);
 
-        if ($name === 'list') {
+        if ($viewType === 'list') {
             foreach ($layout as $k => $row) {
                 if (!empty($row['name']) && empty($row['notSortable']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $row['name'], 'notStorable']))) {
                     $layout[$k]['notSortable'] = true;
@@ -114,9 +101,10 @@ class Layout extends Injectable
         }
 
         $event = new Event([
+            'target' => $scope . 'Layout',
             'params' => [
                 'scope'           => $scope,
-                'name'            => $name,
+                'viewType'        => $viewType,
                 'relatedEntity'   => $relatedEntity,
                 'layoutProfileId' => $layoutProfileId,
                 'isAdminPage'     => $isAdminPage,
@@ -124,8 +112,9 @@ class Layout extends Injectable
             ],
             'result' => $layout]);
 
-        $layout = $this->getInjection('eventManager')->dispatch('Layout', 'afterGetLayoutContent', $event)
+        $layout = $this->getEventManager()->dispatch('Layout', 'afterGetLayoutContent', $event)
             ->getArgument('result');
+
 
         $storedProfiles = $this->getEntityManager()->getConnection()
             ->createQueryBuilder()
@@ -135,19 +124,19 @@ class Layout extends Injectable
             ->where('l.entity=:entity and l.view_type=:viewType and l.related_entity=:relatedEntity and l.deleted=:false and lp.deleted=:false')
             ->setParameters([
                 'entity'        => $scope,
-                'viewType'      => $name,
+                'viewType'      => $viewType,
                 'relatedEntity' => $relatedEntity
             ])
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
 
-        return Json::encode([
+        return [
             'layout'            => $layout,
             'storedProfile'     => empty($storedProfile) ? [] : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
             'storedProfiles'    => $storedProfiles,
             'selectedProfileId' => $selectedProfileId ?? null,
-        ]);
+        ];
     }
 
 
@@ -165,10 +154,7 @@ class Layout extends Injectable
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $layoutRepo->where(['entity' => $scope, 'viewType' => $name, 'relatedEntity' => empty($relatedScope) ? null : $relatedScope, 'layoutProfileId' => $layoutProfileId])->removeCollection();
 
-        if (!empty($this->changedData[$scope]) && !empty($this->changedData[$scope][$name])) {
-            unset($this->changedData[$scope][$name]);
-        }
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->getDataManager()->clearCache();
 
         return $this->get($scope, $name, $relatedScope, $layoutProfileId);
     }
@@ -178,7 +164,7 @@ class Layout extends Injectable
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $layoutRepo->where(['layoutProfileId' => $layoutProfileId])->removeCollection();
 
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->getDataManager()->clearCache();
 
         return true;
     }
@@ -594,53 +580,43 @@ class Layout extends Injectable
         return preg_replace("([\.]{2,})", '', $name);
     }
 
-    protected function getContainer(): Container
+    protected function getFileManager(): FileManager
     {
-        return $this->getInjection('container');
+        return $this->container->get('fileManager');
     }
 
-    protected function getFileManager(): File\Manager
+    protected function getMetadata(): \Espo\Core\Utils\Metadata
     {
-        return $this->getContainer()->get('fileManager');
+        return $this->container->get('metadata');
     }
 
-    protected function getMetadata(): Metadata
+    protected function getConfig(): \Espo\Core\Utils\Config
     {
-        return $this->getContainer()->get('metadata');
+        return $this->container->get('config');
     }
 
-    protected function getConfig(): Config
+    protected function getEntityManager(): \Espo\Core\Utils\EntityManager
     {
-        return $this->getContainer()->get('config');
-    }
-
-    protected function getEntityManager(): \Espo\Core\ORM\EntityManager
-    {
-        return $this->getContainer()->get('entityManager');
+        return $this->container->get('entityManager');
     }
 
     protected function getUser(): \Espo\Entities\User
     {
-        return $this->getContainer()->get('user');
+        return $this->container->get('user');
     }
 
-
-    private function getPreferences(): ?Preferences
+    private function getAcl(): \Espo\Core\Acl
     {
-        return $this->getContainer()->get('preferences');
+        return $this->container->get('acl');
     }
 
-    private function getAcl(): Acl
+    protected function getDataManager(): DataManager
     {
-        return $this->getInjection('acl');
+        return $this->container->get('dataManager');
     }
 
-    public function getPreferencesId(): string
+    protected function getEventManager(): Manager
     {
-        $preferences = $this->getPreferences();
-        if (!empty($preferences)) {
-            return $preferences->get('id');
-        }
-        return "";
+        return $this->container->get('eventManager');
     }
 }

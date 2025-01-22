@@ -19,23 +19,6 @@ use Atro\Core\Utils\Util;
 
 abstract class AbstractLayoutListener extends AbstractListener
 {
-    /**
-     * @param Event $event
-     */
-    public function afterGetLayoutContent(Event $event)
-    {
-        /** @var string $scope */
-        $scope = $event->getArgument('params')['scope'];
-
-        /** @var string $name */
-        $name = $event->getArgument('params')['name'];
-
-        $method = 'modify' . $scope . ucfirst($name);
-
-        if (method_exists($this, $method)) {
-            $this->{$method}($event);
-        }
-    }
 
     public function isCustomLayout(Event $event): bool
     {
@@ -45,5 +28,10 @@ abstract class AbstractLayoutListener extends AbstractListener
     public function isAdminPage(Event $event): bool
     {
         return $event->getArgument('params')['isAdminPage'];
+    }
+
+    public function isRelatedLayout(Event $event): bool
+    {
+        return !empty($event->getArgument('params')['relatedEntity']);
     }
 }

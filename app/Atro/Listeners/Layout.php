@@ -14,92 +14,23 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
 
 class Layout extends AbstractLayoutListener
 {
-
-    protected function getAllUiLanguages(): array
+    /**
+     * @param Event $event
+     */
+    public function afterGetLayoutContent(Event $event)
     {
-        return array_unique(array_column($this->getConfig()->get('locales', []), 'language'));
+        $this->getEventManager()->dispatch($event->getArgument('target'), $event->getArgument('params')['viewType'], $event);
     }
 
-    protected function modifyTranslationList(Event $event)
+
+    protected function getEventManager(): Manager
     {
-        $result = $event->getArgument('result');
-
-        foreach ($this->getAllUiLanguages() as $language) {
-            $result[] = ['name' => Util::toCamelCase(strtolower($language))];
-        }
-
-        $event->setArgument('result', $result);
-    }
-
-    protected function modifyTranslationDetail(Event $event)
-    {
-        $result = $event->getArgument('result');
-
-        foreach ($this->getAllUiLanguages() as $language) {
-            $result[0]['rows'][] = [['name' => Util::toCamelCase(strtolower($language)), 'fullWidth' => true]];
-        }
-
-        $event->setArgument('result',  $result);
-    }
-
-    protected function modifyTranslationDetailSmall(Event $event)
-    {
-        $this->modifyTranslationDetail($event);
-    }
-
-    protected function modifyActionDetailSmall(Event $event): void
-    {
-        $result = $event->getArgument('result');
-
-        $result[0]['rows'][] = [['name' => 'ActionSetLinker__sortOrder'], ['name' => 'ActionSetLinker__isActive']];
-
-        $event->setArgument('result',  $result);
-    }
-
-    protected function modifyActionListSmall(Event $event): void
-    {
-        $result = $event->getArgument('result');
-
-        $result[] = ['name' => 'ActionSetLinker__isActive'];
-
-        $event->setArgument('result',  $result);
-    }
-
-    protected function modifyActionRelationships(Event $event): void
-    {
-        $result = $event->getArgument('result');
-
-        $result[] = ['name' => 'actions'];
-
-        $event->setArgument('result',  $result);
-    }
-
-    protected function modifyNotificationRuleDetail(Event $event): void
-    {
-
-        $result = $event->getArgument('result');
-
-        $rows = [];
-
-        foreach (array_keys(($this->getMetadata()->get(['app', 'notificationTransports'], []))) as $transport) {
-            $rows[] = [["name" => $transport . 'Active'], ["name" => $transport . 'TemplateId']];
-        }
-
-        $result[] = [
-            "label" => "Transport",
-            "rows"  => $rows
-        ];
-
-        $event->setArgument('result',  $result);
-    }
-
-    protected function modifyNotificationRuleDetailSmall(Event $event): void
-    {
-        $this->modifyNotificationRuleDetail($event);
+        return $this->getContainer()->get('eventManager');
     }
 }

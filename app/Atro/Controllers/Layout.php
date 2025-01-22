@@ -14,17 +14,20 @@ namespace Atro\Controllers;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\LayoutManager;
 
 class Layout extends AbstractRecordController
 {
     public function actionGetContent($params, $data, $request)
     {
-        $data = $this->getContainer()->get('layout')->get($params['scope'], $params['name'],
+        $data = $this->getLayoutManager()->get($params['scope'], $params['viewType'],
             $request->get('relatedScope') ?? null, $request->get('layoutProfileId') ?? null,
             $request->get('isAdminPage') === 'true');
+
         if (empty($data)) {
-            throw new NotFound("Layout " . $params['scope'] . ":" . $params['name'] . ' is not found.');
+            throw new NotFound("Layout " . $params['scope'] . ":" . $params['viewType'] . ' is not found.');
         }
+
         return $data;
     }
 
@@ -41,18 +44,17 @@ class Layout extends AbstractRecordController
             throw new BadRequest();
         }
 
-        /** @var \Atro\Core\Utils\Layout $layoutManager */
-        $layoutManager = $this->getContainer()->get('layout');
+        $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile($layoutProfileId);
-        $result = $layoutManager->save($params['scope'], $params['name'], $relatedEntity, $layoutProfileId, json_decode(json_encode($data), true));
+        $result = $layoutManager->save($params['scope'], $params['viewType'], $relatedEntity, $layoutProfileId, json_decode(json_encode($data), true));
 
         if ($result === false) {
             throw new Error("Error while saving layout.");
         }
 
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->getDataManager()->clearCache();
 
-        return $layoutManager->get($params['scope'], $params['name'], $relatedEntity, $layoutProfileId);
+        return $layoutManager->get($params['scope'], $params['viewType'], $relatedEntity, $layoutProfileId);
     }
 
     public function actionResetToDefault($params, $data, $request)
@@ -61,14 +63,13 @@ class Layout extends AbstractRecordController
             throw new BadRequest();
         }
 
-        if (empty($data->scope) || empty($data->name) || empty($data->layoutProfileId)) {
+        if (empty($data->scope) || empty($data->viewType) || empty($data->layoutProfileId)) {
             throw new BadRequest();
         }
 
-        /** @var \Atro\Core\Utils\Layout $layoutManager */
-        $layoutManager = $this->getContainer()->get('layout');
+        $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile((string)$data->layoutProfileId);
-        return $layoutManager->resetToDefault((string)$data->scope, (string)$data->name, (string)$data->relatedScope, (string)$data->layoutProfileId);
+        return $layoutManager->resetToDefault((string)$data->scope, (string)$data->viewType, (string)$data->relatedScope, (string)$data->layoutProfileId);
     }
 
     /**
@@ -87,9 +88,18 @@ class Layout extends AbstractRecordController
             throw new BadRequest();
         }
 
-        /** @var \Atro\Core\Utils\Layout $layoutManager */
-        $layoutManager = $this->getContainer()->get('layout');
+        $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile($layoutProfileId);
         return $layoutManager->resetAllToDefault($layoutProfileId);
+    }
+
+    public function getLayoutManager(): LayoutManager
+    {
+        return $this->getContainer()->get('layoutManager');
+    }
+
+    public function getDataManager()
+    {
+        $this->getContainer()->get('dataManager');
     }
 }
