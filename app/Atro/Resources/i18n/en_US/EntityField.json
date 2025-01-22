@@ -48,7 +48,7 @@
     "foreignCode": "Foreign Code",
     "relationType": "Relation Type",
     "foreignEntity": "Foreign Entity",
-    "relationName": "Relation Code",
+    "relationName": "Relation Entity Code",
     "linkMultipleField": "Link Multiple Field"
   },
   "tooltips": {

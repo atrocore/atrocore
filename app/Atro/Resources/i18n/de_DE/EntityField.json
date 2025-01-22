@@ -47,7 +47,7 @@
     "foreignCode": "Fremd-Code",
     "relationType": "Beziehungstyp",
     "foreignEntity": "Fremd-Entität",
-    "relationName": "Beziehungs-Code",
+    "relationName": "Beziehungsentitäts-Code",
     "linkMultipleField": "Verknüpfung mehrerer Felder"
   },
   "tooltips": {
