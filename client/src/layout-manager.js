@@ -144,7 +144,7 @@ Espo.define('layout-manager', [], function () {
                 type: 'POST',
                 data: JSON.stringify({
                     scope: scope,
-                    name: type,
+                    viewType: type,
                     relatedScope: relatedScope,
                     layoutProfileId: layoutProfileId
                 }),
