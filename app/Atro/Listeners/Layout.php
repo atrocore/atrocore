@@ -18,7 +18,7 @@ use Atro\Core\EventManager\Manager;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
 
-class Layout extends AbstractLayoutListener
+class Layout extends AbstractListener
 {
     /**
      * @param Event $event
