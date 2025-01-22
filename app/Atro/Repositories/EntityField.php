@@ -21,11 +21,6 @@ use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
 {
-    protected function generateId(string $value): string
-    {
-        return substr(md5($value), 0, 36);
-    }
-
     protected function getAllItems(array $params = []): array
     {
         $entities = [];
@@ -73,7 +68,7 @@ class EntityField extends ReferenceData
                 }
 
                 $items[] = array_merge($fieldDefs, [
-                    'id'          => $this->generateId("{$entityName}_{$fieldName}"),
+                    'id'          => "{$entityName}_{$fieldName}",
                     'code'        => $fieldName,
                     'name'        => $this->translate($fieldName, 'fields', $entityName),
                     'entityId'    => $entityName,
@@ -136,7 +131,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $entity->id = $this->generateId("{$entity->get('entityId')}_{$entity->get('code')}");
+        $entity->id = "{$entity->get('entityId')}_{$entity->get('code')}";
         $entity->set('isCustom', true);
 
         // update metadata
