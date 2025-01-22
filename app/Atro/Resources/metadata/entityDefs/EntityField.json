@@ -17,7 +17,8 @@
     "foreignCode": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/foreign-code",
-      "trim": true
+      "trim": true,
+      "tooltip": true
     },
     "type": {
       "type": "varchar",
@@ -37,6 +38,7 @@
     },
     "foreignEntity": {
       "type": "link",
+      "tooltip": true,
       "view": "views/admin/field-manager/fields/foreign-entity"
     },
     "isMultilang": {
