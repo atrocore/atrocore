@@ -26,7 +26,7 @@ Espo.define('views/admin/field-manager/fields/relation-name', 'views/fields/varc
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'detail'){
+            if (this.mode === 'detail' && this.model.get(this.name)){
                 this.$el.html(`<a href="/#Entity/view/${this.model.get(this.name)}">${this.model.get(this.name)}</a>`)
             }
         },

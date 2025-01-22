@@ -36,8 +36,8 @@ Espo.define('views/admin/field-manager/fields/foreign-code', 'views/fields/varch
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'detail'){
-                this.$el.html(`<a href="/#EntityField/view/${this.model.get('foreignEntityId')}_${this.model.get(this.name)}">${this.model.get(this.name)}</a>`)
+            if (this.mode === 'detail' && this.model.get(this.name)) {
+                this.$el.html(`<a href="/#EntityField/view/${this.model.get('foreignEntityId')}_${this.model.get(this.name)}">${this.model.get(this.name)}</a>`);
             }
         },
 
