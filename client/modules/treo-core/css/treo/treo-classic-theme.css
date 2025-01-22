@@ -14671,7 +14671,7 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header ul.tabs {
-        width: 173px;
+        width: 220px;
         margin-left: -8px;
         overflow-y: hidden
     }
@@ -14692,157 +14692,6 @@ body > #header .navbar-brand span.home-icon {
         display: none
     }
 
-    body.minimized #header {
-        width: 38px
-    }
-
-    body.minimized #header .nav > li.more > ul.dropdown-menu {
-        left: 38px
-    }
-
-    body.minimized #header .navbar-brand img {
-        display: none
-    }
-
-    body.minimized #header a.navbar-brand {
-        position: fixed;
-        top: 0;
-        height: 48px;
-        width: 38px;
-        padding-top: 13px
-    }
-
-    body.minimized #header a.navbar-brand span.home-icon {
-        margin-left: 12px;
-        display: inline;
-        font-size: 14px
-    }
-
-    body.minimized #header .navbar-brand img {
-        display: none
-    }
-
-    body.minimized #header .navbar-header {
-        width: 38px;
-        height: 30px
-    }
-
-    body.minimized #header a.minimizer > span.left {
-        display: none
-    }
-
-    body.minimized #header a.minimizer > span.right {
-        display: inline
-    }
-
-    body.minimized #content {
-        margin-left: 38px
-    }
-
-    body.minimized #footer {
-        margin-left: 38px
-    }
-
-    body.minimized #header .navbar {
-        width: 38px
-    }
-
-    body.minimized #header ul.tabs {
-        width: 38px;
-        margin-top: 5px
-    }
-
-    body.minimized #header .navbar-right {
-        margin-left: 38px;
-        padding-right: 38px
-    }
-
-    body.minimized #header ul.tabs > li > a {
-        padding-left: 10px
-    }
-
-    body.minimized #header ul.tabs > li.tab > a {
-        padding-left: 10px
-    }
-
-    body.minimized #header ul.tabs > li > a > span.short-label {
-        display: inline
-    }
-
-    body.minimized #header ul.tabs > li > a > span.short-label > .color-icon {
-        display: none
-    }
-
-    body.minimized #header ul.tabs > li > a > span.full-label {
-        display: none
-    }
-
-    body.minimized > #header ul.tabs > li > a > span.short-label > .short-label-text {
-        position: relative;
-        left: -1px;
-        visibility: visible
-    }
-
-    body.minimized #header > #navbar .navbar-inverse .navbar-nav .more.keep-open > a:after {
-        content: '';
-        display: block;
-        width: 1px;
-        height: 50%;
-        background: #111111;
-        position: absolute;
-        left: 4px;
-        top: 19px;
-    }
-
-    body.minimized #header > #navbar .navbar-inverse .navbar-nav .more > a {
-        position: relative;
-    }
-
-    body.minimized #header > #navbar .navbar-inverse .navbar-nav .more > a:before {
-        content: '';
-        display: block;
-        width: 5px;
-        height: 5px;
-        background: #111111;
-        position: absolute;
-        left: 2px;
-        top: 14px;
-        -webkit-border-radius: 50%;
-        border-radius: 50%;
-    }
-
-    body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-menu > li a {
-        position: relative;
-    }
-
-    body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-menu > li a:before, body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-menu > li a:after {
-        content: '';
-        display: block;
-        background: #111111;
-        position: absolute;
-    }
-
-    body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-menu > li a:before {
-        width: 1px;
-        height: 100%;
-        left: 4px;
-        top: 0;
-    }
-
-    body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-menu > li a:after {
-        width: 5px;
-        height: 1px;
-        left: 4px;
-        top: 17px;
-    }
-
-    body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-menu > li:last-child a:before {
-        width: 1px;
-        height: 50%;
-        left: 4px;
-        top: 0;
-    }
-
     #header .navbar {
         top: 0;
         border-width: 0
@@ -14860,20 +14709,6 @@ body > #header .navbar-brand span.home-icon {
     #header a.navbar-brand {
         max-width: 173px;
         height: 35px
-    }
-
-    #header .navbar-header {
-        width: 173px
-    }
-
-    #header .navbar-header > a.minimizer {
-        width: 30px;
-        height: 30px;
-        float: right
-    }
-
-    body > .content {
-        margin-left: 173px
     }
 
     body {
@@ -14907,7 +14742,7 @@ body > #header .navbar-brand span.home-icon {
     #header .navbar {
         position: fixed;
         z-index: 1030;
-        width: 173px;
+        width: 220px;
         margin-bottom: 0;
         height: 100%
     }
@@ -14924,8 +14759,6 @@ body > #header .navbar-brand span.home-icon {
         height: 30px;
         width: 100%;
         background-color: #ececec;
-        margin-left: 173px;
-        padding-right: 173px
     }
 
     #header .navbar-right .global-search-container {
@@ -15003,14 +14836,6 @@ body > #header .navbar-brand span.home-icon {
     .container {
         max-width: 1800px
     }
-}
-
-body .stick-sub.button-container {
-    width: calc(100% - 220px)
-}
-
-body.minimized .stick-sub.button-container {
-    width: calc(100% - 38px)
 }
 
 .panel-body {
@@ -15551,12 +15376,6 @@ table.table > thead th {
 
 .navbar-inverse {
     border-bottom-width: 0 !important
-}
-
-@media screen and (min-width: 768px) {
-    .navbar .navbar-header {
-        width: 181px
-    }
 }
 
 .navbar .navbar-header a.navbar-brand {
@@ -19573,10 +19392,6 @@ input#sn-checkbox-open-in-new-window {
         right: 470px;
         white-space: normal;
     }
-
-    .minimized #main > .page-header .fixed-header-breadcrumbs {
-        left: 50px;
-    }
 }
 
 .panel-default > .panel-heading {
@@ -20508,33 +20323,6 @@ button.category:focus {
         padding-top: 48px
     }
 
-    body.minimized #header a.minimizer {
-        top: 0;
-        padding-left: 11px !important;
-        padding-top: 0;
-    }
-
-    #header a.minimizer {
-        color: #ccc;
-    }
-
-    body:not(.minimized) #header a.minimizer {
-        position: absolute;
-        top: 3px;
-        right: 5px;
-        z-index: 1500;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        padding: 2px 5px;
-        background-color:rgba(255, 255, 255, 0.5);
-    }
-
-    body:not(.minimized) #header a.minimizer.bottom-minimizer {
-        top: unset;
-        bottom: 5px;
-    }
-
     .record .list-container {
         padding-left: 0
     }
@@ -20574,10 +20362,6 @@ button.category:focus {
         font-size: 12px;
     }
 
-    .minimized #navbar footer {
-        display: none;
-    }
-
     #navbar footer > ul {
         width: 220px;
         padding: 10px 0 10px 10px;
@@ -20601,12 +20385,6 @@ button.category:focus {
     }
 
     #header .navbar-right {
-        width: calc(100% - 220px);
-        padding-right: 0;
-    }
-
-    body.minimized #header .navbar-right {
-        width: calc(100% - 40px);
         padding-right: 0;
     }
 
@@ -20619,38 +20397,8 @@ button.category:focus {
         height: 48px
     }
 
-    body.minimized #header ul.tabs {
-        overflow-x: hidden;
-        margin: 4px 0 0 -8px;
-    }
-
-    body.minimized #header ul.tabs::-webkit-scrollbar {
-        width: 3px;
-    }
-
-    body.minimized #header ul.tabs::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    body.minimized #header ul.tabs::-webkit-scrollbar-thumb {
-        background: #999;
-    }
-
-    body.minimized #header ul.tabs::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-
     #header .navbar-header, #header ul.tabs, #header .navbar, #header .navbar-brand {
-        width: 220px;
         border-right: 1px solid var(--primary-border-color);
-    }
-
-    body.minimized #header .navbar-header {
-        height: 48px;
-    }
-
-    #header a.navbar-brand {
-        max-width: 220px
     }
 
     #header ul.tabs li.more-group > ul.dropdown-menu a::before {
@@ -20666,10 +20414,6 @@ button.category:focus {
     li.more .dropdown-menu > .active > a:focus {
         color: #262626;
         background-color: #f5f5f5;
-    }
-
-    body > .content, #header .navbar-right, body > footer {
-        margin-left: 220px
     }
 
     #global-search-input {
@@ -20724,26 +20468,6 @@ button.category:focus {
     body > footer {
         height: 28px;
         background-color: #dcdcdc;
-    }
-
-    body.minimized > footer.is-collapsed.collapsed {
-        width: calc(100% - 318px);
-        margin-left: auto !important;
-    }
-
-    body.minimized > footer.is-collapsed.not-collapsed {
-        width: calc(100% - 64px);
-        margin-left: auto !important;
-    }
-
-    body:not(.minimized) > footer.is-collapsed.collapsed {
-        width: calc(100% - 500px);
-        margin-left: auto;
-    }
-
-    body:not(.minimized) > footer.is-collapsed.not-collapsed {
-        width: calc(100% - 246px);
-        margin-left: auto;
     }
 
     body > .content {
@@ -20852,10 +20576,6 @@ button.category:focus {
         padding-bottom: 0 !important
     }
 
-    body .stick-sub.button-container.not-collapsed {
-        width: calc(100% - 246px);
-    }
-
     .home-content > .row.dashlets {
         margin-left: -15px
     }
@@ -20950,12 +20670,6 @@ button.category:focus {
 
     #main > .record > .detail > .detail-button-container.stick-sub.not-collapsed {
         margin-left: 11px !important;
-    }
-
-    body.minimized #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
-        margin-left: 265px;
-        width: calc(100% - 318px);
-        left: 38px;
     }
 
     #main .detail .row > .overview.collapsed {
