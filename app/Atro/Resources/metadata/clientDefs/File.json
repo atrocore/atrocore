@@ -30,13 +30,6 @@
     "Folder"
   ],
   "sidePanels": {
-    "edit": [
-      {
-        "name": "preview",
-        "label": "Preview",
-        "view": "views/file/record/panels/side/preview"
-      }
-    ],
     "detail": [
       {
         "name": "preview",
@@ -53,19 +46,6 @@
         "name": "customDownload",
         "label": "customDownload",
         "view": "views/file/record/panels/side/download/main"
-      }
-    ],
-    "detailSmall": [
-      {
-        "name": "preview",
-        "label": "Preview",
-        "view": "views/file/record/panels/side/preview"
-      },
-      {
-        "name": "sharing",
-        "label": "Sharing",
-        "view": "views/file/record/panels/side/sharing",
-        "aclScope": "Sharing"
       }
     ]
   },

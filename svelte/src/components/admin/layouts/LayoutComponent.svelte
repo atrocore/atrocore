@@ -20,7 +20,6 @@
     $: {
         switch (reelType) {
             case 'list':
-            case 'listSmall':
                 LayoutComponent = ListLayout;
                 break
             case 'kanban':
@@ -49,23 +48,10 @@
                 LayoutComponent = RelationShipsLayout;
                 break;
             case 'detail':
-            case 'detailSmall':
                 LayoutComponent = GridLayout;
                 break;
             case 'sidePanelsDetail':
                 viewType = "detail"
-                LayoutComponent = SideDetailLayout
-                break;
-            case 'sidePanelsDetailSmall':
-                viewType = "detailSmall"
-                LayoutComponent = SideDetailLayout
-                break;
-            case 'sidePanelsEdit':
-                viewType = "edit";
-                LayoutComponent = SideDetailLayout
-                break;
-            case 'sidePanelsEditSmall':
-                viewType = "editSmall"
                 LayoutComponent = SideDetailLayout
                 break;
         }

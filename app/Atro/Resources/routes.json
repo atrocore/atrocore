@@ -473,9 +473,10 @@
       "type": "object",
       "properties": {
         "layout": {
-          "type": "array",
-          "items": {
-          }
+          "type": [
+            "array",
+            "object"
+          ]
         },
         "storedProfiles": {
           "type": "array",

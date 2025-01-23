@@ -65,7 +65,7 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
                 this.once('after:render', function () {
                     this.createView('list', viewName, {
                         collection: collection,
-                        layoutName: 'listSmall',
+                        layoutName: 'list',
                         listLayout: [
                             {
                                 "name": "available",

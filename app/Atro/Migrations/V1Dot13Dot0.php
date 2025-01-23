@@ -26,8 +26,13 @@ class V1Dot13Dot0 extends Base
 
     public function up(): void
     {
-        $this->exec('ALTER TABLE "user" ADD layout_profile_id VARCHAR(36) DEFAULT NULL;');
-        $this->exec('CREATE INDEX IDX_USER_LAYOUT_PROFILE_ID ON "user" (layout_profile_id, deleted)');
+        if ($this->isPgSQL()) {
+            $this->exec('ALTER TABLE "user" ADD layout_profile_id VARCHAR(36) DEFAULT NULL;');
+            $this->exec('CREATE INDEX IDX_USER_LAYOUT_PROFILE_ID ON "user" (layout_profile_id, deleted)');
+        } else {
+            $this->exec("ALTER TABLE user ADD layout_profile_id VARCHAR(36) DEFAULT NULL;");
+            $this->exec("CREATE INDEX IDX_USER_LAYOUT_PROFILE_ID ON user (layout_profile_id, deleted)");
+        }
 
         try {
             $preferences = $this->getConnection()->createQueryBuilder()

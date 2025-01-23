@@ -12,6 +12,7 @@ Espo.define('views/file/modals/upload', 'views/modals/edit',
     Dep => Dep.extend({
 
         fullFormDisabled: true,
+        sideDisabled: true,
 
         events: _.extend(Dep.prototype.events, {
                 'click #upload-via-url': function (e) {

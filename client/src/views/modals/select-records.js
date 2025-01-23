@@ -56,7 +56,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         disableSavePreset: false,
 
-        layoutName: "listSmall",
+        layoutName: "list",
 
         listLayout: null,
 
