@@ -2479,6 +2479,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 var options = {
                     scope: scope,
+                    layoutRelatedScope: this.options.layoutRelatedScope,
                     model: model,
                     id: id,
                     htmlStatusIcons: this.getStatusIcons(model) || []
@@ -2562,6 +2563,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
                 var options = {
                     scope: scope,
+                    layoutRelatedScope: this.options.layoutRelatedScope,
                     id: id,
                     model: model,
                     fullFormDisabled: this.getMetadata().get('clientDefs.' + scope + '.modalFullFormDisabled') || false,

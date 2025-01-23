@@ -31,6 +31,11 @@ abstract class AbstractLayoutListener extends AbstractListener
 
     public function isRelatedLayout(Event $event): bool
     {
-        return !empty($event->getArgument('params')['relatedEntity']);
+        return !empty($this->getRelatedEntity($event));
+    }
+
+    public function getRelatedEntity(Event $event): ?string
+    {
+        return $event->getArgument('params')['relatedEntity'];
     }
 }
