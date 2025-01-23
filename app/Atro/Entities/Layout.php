@@ -30,7 +30,6 @@ class Layout extends Base
         $reelType = $this->getEntityManager()->getEspoMetadata()->get("clientDefs.{$this->get('entity')}.additionalLayouts.{$this->get('viewType')}", $this->get('viewType'));
         switch ($reelType) {
             case 'list';
-            case 'listSmall':
             case 'kanban':
                 /* @var $listItems EntityCollection */
                 $listItems = $this->get('listItems');
@@ -56,7 +55,6 @@ class Layout extends Base
                 return $data;
 
             case 'detail':
-            case 'detailSmall':
                 $data = [];
                 foreach ($this->get('sections', ['orderBy' => 'sortOrder']) ?? [] as $section) {
                     $sectionData = ['label' => $section->get('name') ?? ''];

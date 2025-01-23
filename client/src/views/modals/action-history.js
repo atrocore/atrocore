@@ -106,7 +106,7 @@ Espo.define('views/modals/action-history', ['views/modal', 'search-manager'], fu
                     checkboxes: false,
                     massActionsDisabled: true,
                     rowActionsView: 'views/record/row-actions/view-only',
-                    type: 'listSmall',
+                    type: 'list',
                     searchManager: this.searchManager,
                     buttonsDisabled: true
                 });

@@ -73,7 +73,7 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/base', Dep => {
                     pagination: this.getOption('pagination') ? 'bottom' : false,
                     checkboxes: false,
                     showMore: true,
-                    layoutName: 'listSmall',
+                    layoutName: 'list',
                     skipBuildRows: true
                 }, view => {
                     view.getSelectAttributeList(selectAttributeList => {

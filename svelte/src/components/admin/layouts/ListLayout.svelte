@@ -62,7 +62,6 @@
     }
 
     function readDataFromLayout(model: any, layout: LayoutItem[]): void {
-        console.log(layout, 'in list');
         const allFields = Object.keys(model.defs.fields).filter(field =>
             checkFieldType(model.getFieldParam(field, 'type')) && isFieldEnabled(model, field)
         ).sort((v1, v2) =>

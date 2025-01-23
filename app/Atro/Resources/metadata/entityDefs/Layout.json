@@ -18,11 +18,9 @@
       ],
       "options": [
         "list",
-        "listSmall",
         "detail",
         "relationships",
         "sidePanelsDetail",
-        "sidePanelsEdit",
         "kanban"
       ]
     },

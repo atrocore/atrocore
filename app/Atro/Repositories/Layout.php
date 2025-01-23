@@ -30,7 +30,6 @@ class Layout extends Base
 
             switch ($reelType) {
                 case 'list';
-                case 'listSmall':
                 case 'kanban':
                     $repository = $this->getEntityManager()->getRepository('LayoutListItem');
                     $listItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
@@ -74,7 +73,6 @@ class Layout extends Base
                     }
                     break;
                 case 'detail':
-                case 'detailSmall':
                     $repository = $this->getEntityManager()->getRepository('LayoutSection');
                     $rowItemRepository = $this->getEntityManager()->getRepository('LayoutRowItem');
                     $sections = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
@@ -242,13 +240,11 @@ class Layout extends Base
     {
         switch ($entity->get('viewType')) {
             case 'list';
-            case 'listSmall':
                 $this->getEntityManager()->getRepository('LayoutListItem')
                     ->where(['layoutId' => $entity->get('id')])
                     ->removeCollection();
                 break;
             case 'detail':
-            case 'detailSmall':
                 $this->getEntityManager()->getRepository('LayoutSection')
                     ->where(['layoutId' => $entity->get('id')])
                     ->removeCollection();
@@ -259,9 +255,6 @@ class Layout extends Base
                     ->removeCollection();
                 break;
             case 'sidePanelsDetail':
-            case 'sidePanelsEdit':
-            case 'sidePanelsDetailSmall':
-            case 'sidePanelsEditSmall':
                 $this->getEntityManager()->getRepository('LayoutSidePanelItem')
                     ->where(['layoutId' => $entity->get('id')])
                     ->removeCollection();
