@@ -12,5 +12,6 @@
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
   "bookmarkDisabled": true,
-  "actionDisabled": true
+  "actionDisabled": true,
+  "emHidden": true
 }

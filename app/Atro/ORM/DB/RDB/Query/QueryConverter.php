@@ -1237,7 +1237,6 @@ class QueryConverter
                 $condition = self::TABLE_ALIAS . ".{$this->toDb($key)} = {$midAlias}.{$this->toDb($nearKey)}";
                 if (!$withDeleted) {
                     $condition .= " AND {$midAlias}.deleted = :deleted_mm5";
-                    $this->parameters['deleted_mm5'] = false;
                 }
 
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
@@ -1266,6 +1265,9 @@ class QueryConverter
                     'alias'     => $alias,
                     'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)} AND {$alias}.deleted = :deleted_mm5"
                 ];
+
+                $this->parameters['deleted_mm5'] = false;
+
                 return $res;
             case IEntity::HAS_MANY:
             case IEntity::HAS_ONE:

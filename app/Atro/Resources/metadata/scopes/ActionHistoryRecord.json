@@ -4,5 +4,6 @@
   "bookmarkDisabled": true,
   "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35,
-  "actionDisabled": true
+  "actionDisabled": true,
+  "emHidden": true
 }

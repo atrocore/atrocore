@@ -17,7 +17,8 @@
     "foreignCode": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/foreign-code",
-      "trim": true
+      "trim": true,
+      "tooltip": true
     },
     "type": {
       "type": "varchar",
@@ -36,7 +37,9 @@
       "required": true
     },
     "foreignEntity": {
-      "type": "link"
+      "type": "link",
+      "tooltip": true,
+      "view": "views/admin/field-manager/fields/foreign-entity"
     },
     "isMultilang": {
       "type": "bool",
@@ -182,6 +185,7 @@
     "relationName": {
       "type": "varchar",
       "trim": true,
+      "tooltip": true,
       "view": "views/admin/field-manager/fields/relation-name"
     },
     "linkMultipleField": {

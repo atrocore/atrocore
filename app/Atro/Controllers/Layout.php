@@ -11,6 +11,7 @@
 
 namespace Atro\Controllers;
 
+use Atro\Core\DataManager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
@@ -98,8 +99,8 @@ class Layout extends AbstractRecordController
         return $this->getContainer()->get('layoutManager');
     }
 
-    public function getDataManager()
+    public function getDataManager(): DataManager
     {
-        $this->getContainer()->get('dataManager');
+        return $this->getContainer()->get('dataManager');
     }
 }

@@ -54,6 +54,16 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         events: {
+            'mouseover .menu:not(.menu-open)': function(e) {
+                e.preventDefault();
+                this.menuShouldBeOpen = true;
+                this.handleMenuVisibility(e);
+            },
+            'mouseover .navbar-toggle': function(e){
+                e.preventDefault();
+                this.menuShouldBeOpen = true;
+                this.handleMenuVisibility(e);
+            },
             'click .navbar-collapse.in a.nav-link': function (e) {
                 var $a = $(e.currentTarget);
                 var href = $a.attr('href');
@@ -65,9 +75,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 e.preventDefault();
                 var scope = $(e.currentTarget).data('name');
                 this.quickCreate(scope);
-            },
-            'click a.minimizer': function () {
-                this.switchMinimizer();
             },
             'click a.action': function (e) {
                 var $el = $(e.currentTarget);
@@ -82,19 +89,38 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             }
         },
 
-        switchMinimizer: function () {
-            var $body = $('body');
-            if ($body.hasClass('minimized')) {
-                $body.removeClass('minimized');
-                this.getStorage().set('state', 'siteLayoutState', 'expanded');
-            } else {
-                $body.addClass('minimized');
-                this.getStorage().set('state', 'siteLayoutState', 'collapsed');
+        handleMenuVisibility(e) {
+            if (window.innerWidth <= 768) {
+                return;
             }
-            if (window.Event) {
-                try {
-                    window.dispatchEvent(new Event('resize'));
-                } catch (e) {}
+            if(!this.$el.find('.menu').hasClass('open-menu')) {
+                this.$el.find('.menu').addClass('open-menu');
+                this.$el.find('.menu').removeClass('not-collapsed');
+                let self = this;
+                let handleMouseLeave = function(e) {
+                    e.preventDefault();
+                    self.menuShouldBeOpen = false;
+                    setTimeout(() => {
+                        if(!self.menuShouldBeOpen) {
+                            self.$el.find('.menu').removeClass('open-menu');
+                            self.$el.find('.menu', '.navbar-toggle').off('mouseleave.menu');
+                        }
+                    },500)
+                }
+                this.$el.find('.menu', '.navbar-toggle').on('mouseleave.menu', function(e) {
+                   handleMouseLeave(e);
+                });
+
+                this.$el.find('.navbar-toggle').on('mouseleave.menu', function(e) {
+                   handleMouseLeave(e);
+                });
+
+                this.$el.find('.menu').on('transitionend', function(e) {
+                    if(e.originalEvent.propertyName === 'transform' && !self.$el.find('.menu').hasClass('open-menu')) {
+                        self.$el.find('.menu').addClass('not-collapsed');
+                        self.$el.find('.menu').off('transitionend');
+                    }
+                })
             }
         },
 
@@ -471,6 +497,18 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             list.push({
                 action: 'openFeedbackModal',
                 label: this.getLanguage().translate('Provide Feedback')
+            });
+
+            list.push({
+                link: 'https://community.atrocore.com/c/issues/8',
+                label: this.getLanguage().translate('Report a bug'),
+                targetBlank: true
+            });
+
+            list.push({
+                link: 'https://community.atrocore.com',
+                label: this.getLanguage().translate('Visit Community'),
+                targetBlank: true
             });
 
             list.push({

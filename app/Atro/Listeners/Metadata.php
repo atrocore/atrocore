@@ -201,7 +201,7 @@ class Metadata extends AbstractListener
                         'id'         => $action['id'],
                         'name'       => $action['name'],
                         'display'    => $action['display'],
-                        'massAction' => false,
+                        'massAction' => !empty($action['mass_action']),
                         'acl'        => [
                             'scope'  => $action['source_entity'],
                             'action' => 'read',
@@ -1380,7 +1380,7 @@ class Metadata extends AbstractListener
     protected function addBoolFilters(array &$data): void
     {
         foreach ($data['scopes'] as $entity => $defs) {
-            if (empty($defs['type']) || $defs['type'] === 'ReferenceData') {
+            if (empty($defs['type'])) {
                 continue;
             }
 

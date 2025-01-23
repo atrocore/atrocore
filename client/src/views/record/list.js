@@ -2447,6 +2447,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return '<tr data-id="' + id + '" class="list-row"></tr>';
         },
 
+        getStatusIcons: function (model) {
+            const htmlIcons = [];
+
+            if (model.get('isInherited')) {
+                htmlIcons.push(`<span class="fas fa-link fa-sm" title="${this.translate('inherited')}"></span>`)
+            }
+
+            return htmlIcons;
+        },
+
         actionQuickView: function (data) {
             data = data || {};
             var id = data.id;
@@ -2470,7 +2480,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var options = {
                     scope: scope,
                     model: model,
-                    id: id
+                    id: id,
+                    htmlStatusIcons: this.getStatusIcons(model) || []
                 };
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
@@ -2554,6 +2565,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     id: id,
                     model: model,
                     fullFormDisabled: this.getMetadata().get('clientDefs.' + scope + '.modalFullFormDisabled') || false,
+                    htmlStatusIcons: this.getStatusIcons(model) || [],
                     returnUrl: this.getRouter().getCurrentUrl(),
                     returnDispatchParams: {
                         controller: scope,

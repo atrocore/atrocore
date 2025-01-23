@@ -1,5 +1,6 @@
 {
   "acl": false,
   "streamDisabled": true,
-  "notificationDisabled": true
+  "notificationDisabled": true,
+  "emHidden": true
 }

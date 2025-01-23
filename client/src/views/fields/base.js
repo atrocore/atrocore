@@ -92,6 +92,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.$el.parent();
         },
 
+        getStatusIconsContainer: function () {
+            return this.getCellElement().find('.status-icons');
+        },
+
+        getInlineActionsContainer: function () {
+            return this.getCellElement().find('.inline-actions');
+        },
+
         setDisabled: function (locked) {
             this.disabled = true;
             if (locked) {
@@ -394,32 +402,58 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        initStatusContainer: function () {
+            if (this.mode !== 'detail') {
+                return;
+            }
+
+            let container = this.getCellElement().find('.status-container');
+            if (container.size() === 0) {
+                this.getCellElement().prepend('<div class="status-container"></div>');
+                container = this.getCellElement().find('.status-container');
+            }
+
+            if (container.find('.inline-actions').size() === 0) {
+                container.prepend('<div class="inline-actions"></div>');
+            }
+
+            if (container.find('.status-icons').size() === 0) {
+                container.append('<div class="status-icons"></div>');
+            }
+        },
+
         initInlineActions: function () {
             if (!this.inlineEditDisabled) {
-                this.listenTo(this, 'after:render', this.initInlineEdit, this);
+                this.listenTo(this, 'after:render', () => {
+                    this.initStatusContainer();
+                    this.initInlineEdit();
+                }, this);
             }
         },
 
         initInheritanceActions: function () {
-            this.listenTo(this, 'after:render', this.initInheritedFieldMarker, this);
+            this.listenTo(this, 'after:render', () => {
+                this.initStatusContainer();
+                this.initInheritedFieldMarker();
+            }, this);
         },
 
         showRequiredSign: function () {
-            var $label = this.getLabelElement();
-            var $sign = $label.find('span.required-sign');
+            this.initStatusContainer();
 
-            if ($label.size() && !$sign.size()) {
-                $text = $label.find('span.label-text');
-                $('<span class="required-sign"> *</span>').insertAfter($text);
-                $sign = $label.find('span.required-sign');
+            const statusIcons = this.getStatusIconsContainer();
+            let $sign = statusIcons.find('span.required-sign');
+
+            if (statusIcons.size() && !$sign.size()) {
+                statusIcons.prepend(`<span class="pull-right fas fa-sm fa-exclamation required-sign" title="${this.translate('Required')}"></span>`);
+                $sign = statusIcons.find('span.required-sign');
             }
+
             $sign.show();
         },
 
         hideRequiredSign: function () {
-            var $label = this.getLabelElement();
-            var $sign = $label.find('span.required-sign');
-            $sign.hide();
+            this.getStatusIconsContainer().find('span.required-sign').hide();
         },
 
         getSearchParamsData: function () {
@@ -438,11 +472,23 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.searchTypeList;
         },
 
-        getUnlockLinkEl: function () {
-            return this.getCellElement().find(`.unlock-link[data-name="${this.name}"]`);
+        getInheritedIconEl: function () {
+            return this.getCellElement().find(`.info-field-icon.inherited[data-name="${this.name}"]`);
         },
 
-        getLockLinkEl: function () {
+        getInheritedIconHtml: function () {
+            return `<span data-name="${this.name}" class="fas fa-link fa-sm info-field-icon inherited" title="${this.translate('inherited')}"></span>`;
+        },
+
+        getNonInheritedIconEl: function () {
+            return this.getCellElement().find(`.info-field-icon.not-inherited[data-name="${this.name}"]`);
+        },
+
+        getNonInheritedIconHtml: function () {
+            return `<span data-name="${this.name}" class="fas fa-unlink fa-sm info-field-icon not-inherited" title="${this.translate('notInherited')}"></span>`;
+        },
+
+        getInheritActionEl: function () {
             return this.getCellElement().find(`.lock-link[data-name="${this.name}"]`);
         },
 
@@ -493,6 +539,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initInheritedFieldMarker: function () {
+            const $cell = this.getCellElement();
             const scope = this.model.urlRoot;
             const type = this.getMetadata().get(`entityDefs.${scope}.fields.${this.name}.type`);
 
@@ -500,36 +547,53 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
-            this.getUnlockLinkEl().remove();
-            this.getLockLinkEl().remove();
+            this.getInheritedIconEl().remove();
+            this.getNonInheritedIconEl().remove();
+            this.getInheritActionEl().remove();
 
-            if (!this.isInheritableField() || this.mode !== 'detail' || this.model.get('isRoot') === true || this.readOnly === true) {
+            if (!this.isInheritableField() || this.model.get('isRoot') === true || this.readOnly === true) {
                 return;
             }
 
-            if (this.getUnlockLinkEl().length === 0 && this.isInheritedField()) {
-                this.getCellElement().prepend(`<a href="javascript:" data-name="${this.name}" class="action pull-right unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`);
+            if (this.getInheritedIconEl().length === 0 && this.isInheritedField()) {
+                this.getStatusIconsContainer().prepend(this.getInheritedIconHtml());
                 return;
             }
 
-            if (this.getLockLinkEl().length === 0 && !this.isInheritedField()) {
-                this.getCellElement().prepend(`<a href="javascript:" data-name="${this.name}" data-action="setAsInherited" class="action pull-right lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`);
+            if (this.getNonInheritedIconEl().length === 0 && !this.isInheritedField()) {
+                this.getStatusIconsContainer().prepend(this.getNonInheritedIconHtml());
+                this.getInlineActionsContainer().append(`<a href="javascript:" data-name="${this.name}" data-action="setAsInherited" class="action lock-link hidden" title="${this.translate('setAsInherited')}"><span class="fas fa-link fa-sm"></span></a>`);
             }
+
+            $cell.on('mouseenter', function (e) {
+                e.stopPropagation();
+                if (this.disabled || this.readOnly) {
+                    return;
+                }
+                if (this.mode === 'detail') {
+                    this.getInheritActionEl().removeClass('hidden');
+                }
+            }.bind(this)).on('mouseleave', function (e) {
+                e.stopPropagation();
+                if (this.mode === 'detail') {
+                    this.getInheritActionEl().addClass('hidden');
+                }
+            }.bind(this));
         },
 
         initInlineEdit: function () {
-            var $cell = this.getCellElement();
+            const $cell = this.getCellElement();
+            const inlineActions = this.getInlineActionsContainer();
 
             $cell.find('.fa-pencil-alt').parent().remove();
 
-            var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden" style="margin-left: 7px"><span class="fas fa-pencil-alt fa-sm"></span></a>');
+            const $editLink = $(`<a href="javascript:" class="inline-edit-link hidden" title="${this.translate('Edit')}"><span class="fas fa-pencil-alt fa-sm"></span></a>`);
 
-            if ($cell.size() == 0) {
-                this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
-                return;
+            if (inlineActions.size()) {
+                inlineActions.prepend($editLink);
+            } else {
+                $cell.prepend($editLink);
             }
-
-            $cell.prepend($editLink);
 
             $editLink.on('click', function () {
                 this.inlineEdit();
@@ -651,11 +715,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         addInlineEditLinks: function () {
-            var $cell = this.getCellElement();
-            var $saveLink = $('<a href="javascript:" class="pull-right inline-save-link">' + this.translate('Update') + '</a>');
-            var $cancelLink = $('<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>');
-            $cell.prepend($saveLink);
-            $cell.prepend($cancelLink);
+            const fieldActions = this.getInlineActionsContainer();
+            const $cell = this.getCellElement();
+            const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><span class="fa fa-check"></span></a>`);
+            const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><span class="fa fa-times"></span></a>`);
+
+            if (fieldActions.size()) {
+                fieldActions.append($saveLink);
+                fieldActions.append($cancelLink);
+            } else {
+                $cell.prepend($saveLink);
+                $cell.prepend($cancelLink);
+            }
+
             $cell.find('.inline-edit-link').addClass('hidden');
             $saveLink.click(function () {
                 this.inlineEditSave();

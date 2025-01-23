@@ -1,5 +1,6 @@
 {
   "module": "TreoCore",
   "streamDisabled": true,
-  "notificationDisabled": true
+  "notificationDisabled": true,
+  "emHidden": true
 }

@@ -98,7 +98,7 @@ class V1Dot12Dot12 extends Base
                 "linkFontColor" => "#06c",
                 "primaryFontColor" => "#000000",
                 "secondaryFontColor" => "#000000",
-                "labelColor" => "#000000",
+                "labelColor" => "#777",
                 "anchorNavigationBackground" => "#fafafa",
                 "iconColor" => "#06c",
                 "primaryBorderColor" => "#dcdcdc",
@@ -114,7 +114,7 @@ class V1Dot12Dot12 extends Base
                 "createdAt" => date('Y-m-d H:i:s'),
                 "modifiedAt" => date('Y-m-d H:i:s'),
                 "createdById" => "1",
-                "modifiedById" => "1"
+                "createdByName" => "System",
             ],
             "light" => [
                 "id" => "light",
@@ -128,7 +128,7 @@ class V1Dot12Dot12 extends Base
                 "linkFontColor" => "#0081d1",
                 "primaryFontColor" => "#000000",
                 "secondaryFontColor" => "#000000",
-                "labelColor" => "#000000",
+                "labelColor" => "#777",
                 "anchorNavigationBackground" => "#fafafa",
                 "iconColor" => "#777777",
                 "primaryBorderColor" => "#e0e0e0",
@@ -144,7 +144,7 @@ class V1Dot12Dot12 extends Base
                 "createdAt" => date('Y-m-d H:i:s'),
                 "modifiedAt" => date('Y-m-d H:i:s'),
                 "createdById" => "1",
-                "modifiedById" => "1"
+                "createdByName" => "System",
             ],
             "classic" => [
                 "id" => "classic",
@@ -158,7 +158,7 @@ class V1Dot12Dot12 extends Base
                 "secondaryColor" => "#85b75f",
                 "primaryFontColor" => "#000000",
                 "secondaryFontColor" => "#000000",
-                "labelColor" => "#000000",
+                "labelColor" => "#777",
                 "anchorNavigationBackground" => "#fafafa",
                 "iconColor" => "#06c",
                 "primaryBorderColor" => "#dcdcdc",
@@ -173,7 +173,7 @@ class V1Dot12Dot12 extends Base
                 "createdAt" => date('Y-m-d H:i:s'),
                 "modifiedAt" => date('Y-m-d H:i:s'),
                 "createdById" => "1",
-                "modifiedById" => "1"
+                "createdByName" => "System",
             ]
         ];
     }

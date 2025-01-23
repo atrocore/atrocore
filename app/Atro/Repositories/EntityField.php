@@ -21,65 +21,97 @@ use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
 {
-    protected function generateId(string $value): string
+    protected ?array $boolFields = null;
+
+    protected function getEntityById($id)
     {
-        return substr(md5($value), 0, 36);
+        $parts = explode("_", $id);
+        if (count($parts) !== 2) {
+            return null;
+        }
+
+        $item = $this->prepareItem($parts[0], $parts[1]);
+        if (!empty($item)) {
+            $entity = $this->entityFactory->create($this->entityName);
+            $entity->set($item);
+            $entity->setAsFetched();
+
+            return $entity;
+        }
+
+        return null;
+    }
+
+    protected function prepareItem(string $entityName, string $fieldName, array $fieldDefs = null): ?array
+    {
+        if (empty($fieldDefs)) {
+            $fieldDefs = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName");
+        }
+
+        if (!empty($fieldDefs['emHidden'])) {
+            return null;
+        }
+
+        if ($this->boolFields === null) {
+            $this->boolFields = [];
+            foreach ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields']) as $field => $defs) {
+                if ($defs['type'] === 'bool') {
+                    $this->boolFields[] = $field;
+                }
+            }
+        }
+
+        foreach ($this->boolFields as $boolField) {
+            $fieldDefs[$boolField] = !empty($fieldDefs[$boolField]);
+        }
+
+        if (in_array($fieldDefs['type'], ['link', 'linkMultiple'])) {
+            $linkDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'links', $fieldName], []);
+            if ($fieldDefs['type'] === 'linkMultiple') {
+                $fieldDefs['relationType'] = !empty($linkDefs['relationName']) ? 'manyToMany' : 'oneToMany';
+                $fieldDefs['relationName'] = $linkDefs['relationName'] ?? null;
+                $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
+            }
+            if (!empty($linkDefs['entity'])) {
+                $fieldDefs['foreignEntityId'] = $linkDefs['entity'];
+                $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
+            }
+            $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
+        }
+
+        return array_merge($fieldDefs, [
+            'id'          => "{$entityName}_{$fieldName}",
+            'code'        => $fieldName,
+            'name'        => $this->translate($fieldName, 'fields', $entityName),
+            'entityId'    => $entityName,
+            'entityName'  => $this->translate($entityName, 'scopeNames'),
+            'tooltipText' => $this->translate($fieldName, 'tooltips', $entityName)
+        ]);
     }
 
     protected function getAllItems(array $params = []): array
     {
         $entities = [];
 
-        $entityName = $params['whereClause'][0]['entityId='] ?? null;
+        $entityName = $params['whereClause'][0]['entityId='] ?? $params['whereClause'][0]['entityId'] ?? null;
 
         if (!empty($entityName)) {
             $entities[] = $entityName;
         } else {
-            foreach ($this->getEntityManager()->getRepository('Entity')->find() as $entity) {
-                $entities[] = $entity->get('code');
-            }
-        }
-
-        $boolFields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields']) as $field => $defs) {
-            if ($defs['type'] === 'bool') {
-                $boolFields[] = $field;
+            foreach ($this->getMetadata()->get('scopes') as $scope => $scopeDefs) {
+                if (!empty($scopeDefs['emHidden'])) {
+                    continue;
+                }
+                $entities[] = $scope;
             }
         }
 
         $items = [];
         foreach ($entities as $entityName) {
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
-                if (!empty($fieldDefs['emHidden'])) {
-                    continue;
+                if (!empty($item = $this->prepareItem($entityName, $fieldName, $fieldDefs))) {
+                    $items[] = $item;
                 }
-
-                foreach ($boolFields as $boolField) {
-                    $fieldDefs[$boolField] = !empty($fieldDefs[$boolField]);
-                }
-
-                if (in_array($fieldDefs['type'], ['link', 'linkMultiple'])) {
-                    $linkDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'links', $fieldName], []);
-                    if ($fieldDefs['type'] === 'linkMultiple') {
-                        $fieldDefs['relationType'] = !empty($linkDefs['relationName']) ? 'manyToMany' : 'oneToMany';
-                        $fieldDefs['relationName'] = $linkDefs['relationName'] ?? null;
-                        $fieldDefs['linkMultipleField'] = empty($fieldDefs['noLoad']);
-                    }
-                    if (!empty($linkDefs['entity'])) {
-                        $fieldDefs['foreignEntityId'] = $linkDefs['entity'];
-                        $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
-                    }
-                    $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
-                }
-
-                $items[] = array_merge($fieldDefs, [
-                    'id'          => $this->generateId("{$entityName}_{$fieldName}"),
-                    'code'        => $fieldName,
-                    'name'        => $this->translate($fieldName, 'fields', $entityName),
-                    'entityId'    => $entityName,
-                    'entityName'  => $this->translate($entityName, 'scopeNames'),
-                    'tooltipText' => $this->translate($fieldName, 'tooltips', $entityName)
-                ]);
             }
         }
 
@@ -88,6 +120,20 @@ class EntityField extends ReferenceData
 
     public function validateUnique(OrmEntity $entity): void
     {
+    }
+
+    protected function beforeSave(OrmEntity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if (in_array($entity->get('type'), ['link', 'linkMultiple'])) {
+            if (
+                $this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData'
+                || $this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.type") === 'ReferenceData'
+            ) {
+                throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
+            }
+        }
     }
 
     public function insertEntity(OrmEntity $entity): bool
@@ -122,7 +168,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $entity->id = $this->generateId("{$entity->get('entityId')}_{$entity->get('code')}");
+        $entity->id = "{$entity->get('entityId')}_{$entity->get('code')}";
         $entity->set('isCustom', true);
 
         // update metadata
@@ -337,11 +383,24 @@ class EntityField extends ReferenceData
 
     public function deleteEntity(OrmEntity $entity): bool
     {
+        if (empty($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.isCustom"))) {
+            return true;
+        }
+
+        $this->deleteFromMetadata($entity);
+        $this->getMetadata()->save();
+        $this->getDataManager()->rebuild();
+
+        return true;
+    }
+
+    public function deleteFromMetadata(OrmEntity $entity): void
+    {
         $scope = $entity->get('entityId');
         $name = $entity->get('code');
 
         if (empty($this->getMetadata()->get("entityDefs.$scope.fields.$name.isCustom"))) {
-            return true;
+            return;
         }
 
         $foreignScope = $this->getMetadata()->get("entityDefs.$scope.links.$name.entity");
@@ -353,10 +412,6 @@ class EntityField extends ReferenceData
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);
-        $this->getMetadata()->save();
-        $this->getDataManager()->rebuild();
-
-        return true;
     }
 
     protected function init()

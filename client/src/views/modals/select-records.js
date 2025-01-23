@@ -182,7 +182,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             }
 
             this.getCollectionFactory().create(this.scope, function (collection) {
-                collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                collection.maxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
                 this.collection = collection;
 
                 this.defaultSortBy = collection.sortBy;

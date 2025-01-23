@@ -3,7 +3,11 @@
   "iconClass": "fas fa-tasks",
   "controller": "controllers/record",
   "boolFilterList": [
-    "onlyMy"
+    "onlyMy",
+    "jobManagerItems"
+  ],
+  "hiddenBoolFilterList": [
+    "jobManagerItems"
   ],
   "recordViews": {
     "detail": "views/job/record/detail"

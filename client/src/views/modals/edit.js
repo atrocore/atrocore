@@ -169,6 +169,12 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
             if (!this.model.isNew()) {
                 this.listenTo(this, 'after:render', () => {
+                    if ((this.options.htmlStatusIcons || []).length > 0) {
+                        const iconsContainer = $('<div class="icons-container pull-right"></div>');
+                        this.options.htmlStatusIcons.forEach(icon => iconsContainer.append(icon));
+                        this.$el.find('.modal-body').prepend(iconsContainer);
+                    }
+
                     this.applyOverviewFilters();
                 });
             }

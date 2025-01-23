@@ -10,5 +10,6 @@
   "hasTeam": false,
   "streamDisabled": true,
   "hideFieldTypeFilters": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "emHidden": true
 }
