@@ -16,9 +16,35 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
         setup() {
             this.scope = this.options.scope;
 
-            this.buttonList = [];
+            this.buttonList = ["save"];
 
-            this.header = this.getLanguage().translate('customizeLayout', 'labels');
+            this.header = this.getLanguage().translate('layoutManagement', 'labels');
+
+            let allowSwitch = true
+            if (this.options.allowSwitch === false) {
+                allowSwitch = false
+            }
+
+            this.getModelFactory().create('Layout', (model) => {
+                this.model = model;
+                model.set('id', '1')
+                model.set('layoutProfileId', this.layoutProfileId)
+
+                // create field views
+                this.createView('layoutProfile', 'views/fields/link', {
+                    name: 'layoutProfile',
+                    el: `${this.options.el} .field[data-name="layoutProfile"]`,
+                    model: this.model,
+                    scope: 'Layout',
+                    defs: {
+                        name: 'layoutProfile',
+                    },
+                    readOnly: !allowSwitch,
+                    mode: 'edit',
+                    inlineEditDisabled: true,
+                    prohibitedEmptyValue: true
+                })
+            })
         },
 
         getLayoutProfiles() {
@@ -42,10 +68,6 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
         },
 
         afterRender() {
-            let allowSwitch = true
-            if (this.options.allowSwitch === false) {
-                allowSwitch = false
-            }
             LayoutUtils.renderComponent.call(this, {
                 type: this.options.type,
                 scope: this.options.scope,
@@ -53,7 +75,6 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
                 layoutProfileId: this.options.layoutProfileId,
                 editable: true,
                 onUpdate: this.layoutUpdated.bind(this),
-                allowSwitch: allowSwitch,
                 layoutProfiles: this.getLayoutProfiles()
             })
         },

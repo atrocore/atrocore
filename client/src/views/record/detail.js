@@ -2331,7 +2331,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
 
-            this._helper.layoutManager.get(this.model.name, this.layoutName,null, function (data) {
+            this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
                 this.gridLayout = {
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(data.layout)
@@ -2721,7 +2721,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         treeReset(view) {
             let previousSelectNodeId = this.getStorage().get('selectedNodeId', this.scope);
-            if(!previousSelectNodeId) {
+            if (!previousSelectNodeId) {
                 return;
             }
             this.getStorage().clear('selectedNodeId', this.scope);
@@ -2735,7 +2735,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             view.toggleVisibilityForResetButton();
 
-            if([this.scope, 'Bookmark'].includes(view.treeScope) && this.model.id === previousSelectNodeId) {
+            if ([this.scope, 'Bookmark'].includes(view.treeScope) && this.model.id === previousSelectNodeId) {
                 window.location.href = `/#${this.scope}`;
                 return;
             }
