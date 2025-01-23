@@ -23,6 +23,7 @@ use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Exceptions;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
