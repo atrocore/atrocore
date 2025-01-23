@@ -23,7 +23,9 @@ class UserLayout extends AbstractLayoutListener
         if ($this->getRelatedEntity($event)==='Team') {
             $result = $event->getArgument('result');
 
-            $result[0]['rows'][] = [['name' => 'TeamUser__role'], false];
+            if(!str_contains(json_encode($result), '"TeamUser__role"')) {
+                $result[0]['rows'][] = [['name' => 'TeamUser__role'], false];
+            }
 
             $event->setArgument('result', $result);
         }
