@@ -791,7 +791,7 @@ class Installer extends HasContainer
                 ->update($this->getEntityManager()->getConnection()->quoteIdentifier('user'))
                 ->set('layout_profile_id', ':id')
                 ->where('id is not null')
-                ->setParameter('id', 'default')
+                ->setParameter('id', $defaultId)
                 ->executeStatement();
         } catch (\Throwable $e) {
 
