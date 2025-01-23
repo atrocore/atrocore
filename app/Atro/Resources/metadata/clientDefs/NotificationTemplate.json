@@ -1,9 +1,3 @@
 {
-  "controller": "controllers/record",
-  "boolFilterList": [
-    "transportType"
-  ],
-  "hiddenBoolFilterList": [
-    "transportType"
-  ]
+  "controller": "controllers/record"
 }
