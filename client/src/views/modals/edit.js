@@ -223,8 +223,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             var options = {
                 model: model,
                 el: this.containerSelector + ' .edit-container',
-                type: 'editSmall',
-                layoutName: this.layoutName || 'detailSmall',
+                layoutName: this.layoutName,
                 columnCount: this.columnCount,
                 buttonsDisabled: true,
                 sideDisabled: this.sideDisabled,

@@ -199,17 +199,11 @@
     "not": "PAS"
   },
   "layouts": {
-    "listSmall": "Liste (petite)",
-    "sidePanelsDetailSmall": "Panneaux latéraux (détail petit)",
     "relationships": "Panneaux de liaison",
     "list": "Liste",
-    "detail": "Détail",
-    "detailSmall": "Détail (petit)",
+    "detail": "Détails",
     "massUpdate": "Mise à jour des masses",
     "sidePanelsDetail": "Panneaux latéraux (Détail)",
-    "sidePanelsEdit": "Panneaux latéraux (Edit)",
-    "sidePanelsEditSmall": "Panneaux latéraux (Edit Small)",
-    "kanban": "Kanban",
-    "listForAccount": "Liste (pour le compte)"
+    "kanban": "Kanban"
   }
 }

@@ -92,8 +92,8 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
         },
 
         getGridLayout: function (callback) {
-            this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, function (simpleLayout) {
-                var layout = Espo.Utils.cloneDeep(simpleLayout);
+            this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, null, function (data) {
+                var layout = Espo.Utils.cloneDeep(data.layout);
 
                 layout.push({
                     "label": "Teams and Access Control",

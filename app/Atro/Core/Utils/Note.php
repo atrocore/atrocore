@@ -20,7 +20,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
-use Espo\Core\Utils\FieldManager;
+use Atro\Core\Utils\FieldManager;
 use Espo\Entities\User;
 
 class Note

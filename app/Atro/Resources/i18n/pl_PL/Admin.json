@@ -72,15 +72,9 @@
        "relationships":"Panele relacji",
        "list":"Lista",
        "detail":"Szczegóły",
-       "listSmall":"Lista (Mała)",
-       "detailSmall":"Szczegóły (Mała)",
        "massUpdate":"Masowa aktualizacja",
        "sidePanelsDetail":"Panele boczne (Szczegóły)",
-       "sidePanelsEdit":"Panele boczne (Edycja)",
-       "sidePanelsDetailSmall":"Panele boczne (Szczegóły Mała)",
-       "sidePanelsEditSmall":"Panele boczne (Edycja Mała)",
-       "kanban":"Kanban",
-       "listForAccount":"Lista (dla konta)"
+       "kanban":"Kanban"
     },
     "fieldTypes":{
        "color":"Kolor",

@@ -52,9 +52,9 @@
 
     function loadLayout(callback): void {
         ModelFactory.create(params.scope, (model) => {
-            LayoutManager.get(params.scope, params.type, params.layoutProfileId, (layout) => {
+            LayoutManager.get(params.scope, params.type, params.relatedScope, params.layoutProfileId, (layout) => {
                 if (callback) {
-                    readDataFromLayout(model, layout);
+                    readDataFromLayout(model, layout.layout);
                     callback();
                 }
             }, false);
@@ -62,6 +62,7 @@
     }
 
     function readDataFromLayout(model: any, layout: LayoutItem[]): void {
+        console.log(layout, 'in list');
         const allFields = Object.keys(model.defs.fields).filter(field =>
             checkFieldType(model.getFieldParam(field, 'type')) && isFieldEnabled(model, field)
         ).sort((v1, v2) =>

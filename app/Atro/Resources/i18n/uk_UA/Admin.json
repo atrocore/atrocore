@@ -14,8 +14,8 @@
     "measure": "Одиниці виміру",
     "addOption": "Додати варіант",
     "progressLog": "Лог прогресу",
-    "Enabled": "Увімкнено",
-    "Disabled": "Відключено",
+    "Selected": "Обрані",
+    "Available": "Доступні",
     "System": "Система",
     "FileManagement": "Керування файлами",
     "AccessManagement": "Управління доступом",
@@ -98,17 +98,11 @@
   },
   "layouts": {
     "kanban": "Канбан",
-    "listForAccount": "Список (для акаунта)",
     "list": "Список",
     "detail": "Деталі",
-    "listSmall": "Список (стислий)",
-    "detailSmall": "Деталі (стислі)",
     "massUpdate": "Масове оновлення",
     "relationships": "Панелі зв'язків",
-    "sidePanelsDetail": "Бічні панелі (Деталі)",
-    "sidePanelsEdit": "Бічні панелі (Редагування)",
-    "sidePanelsDetailSmall": "Бічні панелі (Деталі стислі)",
-    "sidePanelsEditSmall": "Бічні панелі (Редагування стислі)"
+    "sidePanelsDetail": "Бічні панелі (Деталі)"
   },
   "fields": {
     "request": "Запит",

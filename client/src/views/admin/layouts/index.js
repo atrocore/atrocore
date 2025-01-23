@@ -39,18 +39,15 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
         typeList: [
             'list',
             'detail',
-            'listSmall',
-            'detailSmall',
             'relationships',
-            'sidePanelsDetail',
-            'sidePanelsEdit',
-            'sidePanelsDetailSmall',
-            'sidePanelsEditSmall'
+            'sidePanelsDetail'
         ],
 
         scope: null,
 
         type: null,
+
+        relatedScope: null,
 
         data: function () {
             return {
@@ -69,32 +66,35 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     this.renderDefaultPage();
                 }
                 if (this.scope) {
-                    this.openLayout(this.scope, this.type, this.layoutProfileId);
+                    this.openLayout(this.scope, this.type, this.relatedScope, this.layoutProfileId);
                 }
-                this.listenTo(this.model, 'change:entity change:viewType change:layoutProfileId', () => {
+                this.listenTo(this.model, 'change:entity change:viewType change:layoutProfileId change:relatedEntity', () => {
                     if (this.model.get('entity') && this.model.get('viewType') && this.model.get('layoutProfileId')) {
                         const viewType = this.getView("viewType")
                         if (viewType && !viewType.getAvailableOptions().includes(this.model.get('viewType'))) {
                             return;
                         }
-                        this.openLayout(this.model.get('entity'), this.model.get('viewType'), this.model.get('layoutProfileId'))
+                        const relatedEntity = this.getView("relatedEntity")
+                        if (relatedEntity && this.model.get('relatedEntity') && !relatedEntity.getAvailableOptions().includes(this.model.get('relatedEntity'))) {
+                            return;
+                        }
+                        this.openLayout(this.model.get('entity'), this.model.get('viewType'), this.model.get('relatedEntity') ?? null, this.model.get('layoutProfileId'))
                     }
                 })
             });
 
             this.scope = this.options.scope || 'Account';
             this.type = this.options.type || 'list';
-            this.layoutProfileId = this.options.layoutProfileId || 'custom';
+            this.layoutProfileId = this.options.layoutProfileId;
+            this.relatedScope = this.options.relatedScope ?? null;
 
             this.getModelFactory().create('Layout', (model) => {
                 this.model = model;
                 model.set('id', '1')
                 model.set('entity', this.scope)
                 model.set('viewType', this.type)
+                model.set('relatedEntity', this.relatedScope)
                 model.set('layoutProfileId', this.layoutProfileId)
-
-                // remove caches profiles on page start
-                delete Espo['link_LayoutProfile']
 
                 // create field views
                 this.createView('entity', 'views/layout/fields/entity', {
@@ -123,6 +123,18 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     prohibitedEmptyValue: true
                 });
 
+                this.createView('relatedEntity', 'views/layout/fields/related-entity', {
+                    name: 'relatedEntity',
+                    el: `${this.options.el} .field[data-name="relatedEntity"]`,
+                    model: this.model,
+                    scope: 'Layout',
+                    defs: {
+                        name: 'relatedEntity',
+                    },
+                    mode: 'edit',
+                    inlineEditDisabled: true
+                });
+
                 this.createView('layoutProfile', 'views/layout/fields/layout-profile-dropdown', {
                     name: 'layoutProfile',
                     el: `${this.options.el} .field[data-name="layoutProfile"]`,
@@ -138,18 +150,23 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
             })
         },
 
-        openLayout: function (scope, type, layoutProfileId) {
+        openLayout: function (scope, type, relatedScope, layoutProfileId) {
             this.scope = scope;
             this.type = type;
+            this.relatedScope = relatedScope
             this.layoutProfileId = layoutProfileId
 
-            this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : ''), {trigger: false});
+            this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type
+                + (relatedScope ? ('&relatedScope=' + relatedScope) : '')
+                + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : ''), {trigger: false});
 
             LayoutUtils.renderComponent.call(this, {
                 type: type,
                 scope: scope,
+                relatedScope: relatedScope,
                 layoutProfileId: layoutProfileId,
                 editable: true,
+                layoutProfiles: this.getView('layoutProfile').params.linkOptions,
                 afterRender: () => {
                     this.renderLayoutHeader();
                 },

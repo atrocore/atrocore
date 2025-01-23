@@ -11,7 +11,7 @@
 
     export let loadLayout = () => {
         LayoutManager.get(scope, type, layoutProfileId, (fetchedLayout) => {
-            layout = fetchedLayout;
+            layout = fetchedLayout.layout;
         }, false);
     }
 
@@ -23,8 +23,7 @@
 
     let buttonList: Button[] = [];
 
-    const profiles = Espo['link_LayoutProfile'] ?? []
-
+    const profiles = params.layoutProfiles ?? []
 
     $:{
         buttonList = [
@@ -63,7 +62,7 @@
         }
         Notifier.notify('Saving...');
 
-        LayoutManager.set(params.scope, params.type, params.layoutProfileId, layoutToSave, () => {
+        LayoutManager.set(params.scope, params.type, params.relatedScope, params.layoutProfileId, layoutToSave, () => {
             Notifier.notify('Saved', 'success', 2000);
             emitUpdate()
             disabled = false
@@ -75,6 +74,7 @@
             params.onUpdate({
                 scope: params.scope,
                 type: params.type,
+                relatedScope: params.relatedScope,
                 layoutProfileId: params.layoutProfileId
             })
         }
@@ -86,7 +86,7 @@
 
     function resetToDefault(): void {
         Notifier.confirm('Are you sure you want to reset to default?', () => {
-            LayoutManager.resetToDefault(params.scope, params.type, params.layoutProfileId, () => {
+            LayoutManager.resetToDefault(params.scope, params.type, params.relatedScope, params.layoutProfileId, () => {
                 emitUpdate()
                 cancel();
             });
@@ -125,7 +125,6 @@
             <label class="control-label">{Language.translate('layoutProfile', 'fields', 'Layout')}</label>
             <select disabled="{disabled}" class="form-control" bind:value={params.layoutProfileId} on:change={loadData}
                     style="width: 150px; display:inline-block">
-                <option value="custom">Custom</option>
                 {#each profiles as profile}
                     <option value="{profile.id}">{profile.name}</option>
                 {/each}

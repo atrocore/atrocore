@@ -34,6 +34,9 @@
     },
     "hideShowFullList": {
       "type": "bool"
+    },
+    "parent": {
+      "type": "link"
     }
   },
   "links": {
@@ -49,6 +52,10 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "parent": {
+      "type": "belongsTo",
+      "entity": "LayoutProfile"
     }
   }
 }

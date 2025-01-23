@@ -20,8 +20,10 @@
       ],
       [
         {
-          "name": "description",
-          "fullWidth": true
+          "name": "parent"
+        },
+        {
+          "name": "description"
         }
       ]
     ]

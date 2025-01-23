@@ -4,7 +4,8 @@
     "isDefault": "Default",
     "description": "Description",
     "hideShowFullList": "Hide \"Show Full List\" on Relation Panels",
-    "layouts": "Layouts"
+    "layouts": "Layouts",
+    "parent": "Parent Layout Profile"
   },
   "labels": {
     "Create LayoutProfile": "Create Layout Profile"

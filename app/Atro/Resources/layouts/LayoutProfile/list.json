@@ -8,5 +8,8 @@
   },
   {
     "name": "isDefault"
+  },
+  {
+    "name": "parent"
   }
 ]

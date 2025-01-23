@@ -42,6 +42,8 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
         inlineEditDisabled: false,
 
+        isSmall: false,
+
         defaultPanel: true,
 
         streamPanel: true,
@@ -130,6 +132,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
             if ('type' in this.options) {
                 this.type = this.options.type;
             }
+            this.isSmall = this.options.isSmall || this.isSmall
 
             if (this.defaultPanel) {
                 this.setupDefaultPanel();
@@ -173,9 +176,9 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
             this.currentWidth = this.getStorage().get('sideWidth', this.scope) || 300;
 
             this.wait(true);
-            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {
-                if (layoutData) {
-                    this.alterPanels(layoutData);
+            this.getHelper().layoutManager.get(this.scope, 'sidePanelsDetail',null, function (layoutData) {
+                if (layoutData.layout) {
+                    this.alterPanels(layoutData.layout);
                 }
 
                 if (this.streamPanel && !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && this.getConfig().get('isStreamSide') && !this.model.isNew()) {
@@ -217,7 +220,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (['detail', 'edit'].includes(this.type)) {
+            if (['detail', 'edit'].includes(this.type) && !this.isSmall) {
                 this.actionCollapsePanel('open');
                 if ($(window).width() <= 767 || !!this.getStorage().get('side-panel', this.scope)) {
                     this.actionCollapsePanel();

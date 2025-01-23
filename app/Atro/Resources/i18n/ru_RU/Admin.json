@@ -82,17 +82,11 @@
   },
   "layouts": {
     "kanban": "Канбан",
-    "listForAccount": "Список (для аккаунта)",
     "list": "Список",
     "detail": "Детали",
-    "listSmall": "Список (сжатый)",
-    "detailSmall": "Детали (сжатые)",
     "massUpdate": "Массовое обновление",
     "relationships": "Панели связей",
-    "sidePanelsDetail": "Боковые панели (Детали)",
-    "sidePanelsEdit": "Боковые панели (Редактирование)",
-    "sidePanelsDetailSmall": "Боковые панели (Детали сжатые)",
-    "sidePanelsEditSmall": "Боковые панели (Редактирование сжатые)"
+    "sidePanelsDetail": "Боковые панели (Детали)"
   },
   "fieldTypes": {
   },

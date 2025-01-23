@@ -35,7 +35,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
     return Dep.extend({
 
         template: 'record/list', /**
-         * @param {String} Type of the list. Can be 'list', 'listSmall'.
+         * @param {String} Type of the list. Can be 'list'.
          */
         type: 'list',
 
@@ -225,6 +225,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.createView('dialog', 'views/admin/layouts/modals/edit', {
                 scope: this.scope,
                 type: this.layoutName,
+                relatedScope: this.getParentModel()?.urlRoot,
                 el: '[data-view="dialog"]',
             }, view => {
                 view.render()
@@ -1170,16 +1171,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.enabledFixedHeader = this.options.enabledFixedHeader || this.enabledFixedHeader;
             this.baseWidth = [];
 
-            // add layout configuration button
-            const additionalLayouts = this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts']) || {};
-            const availableLayouts = []
-            for (let key in additionalLayouts) {
-                if (['list', 'listSmall'].includes(additionalLayouts[key])) {
-                    availableLayouts.push(key)
-                }
-            }
 
-            this.hasLayoutEditor = !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && ['list', 'listSmall', ...availableLayouts].includes(this.layoutName) &&
+            this.hasLayoutEditor = !!this.getMetadata().get(['scopes', this.scope, 'layouts']) && 'list' === this.layoutName &&
                 this.getAcl().check('LayoutProfile', 'read');
 
             this.listenTo(this, 'after:save', () => {
@@ -1897,6 +1890,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.massActionUpdateRelation('removeRelation');
         },
 
+        getParentModel() {
+            let parentView = this.getParentView();
+            return parentView?.options?.model
+        },
+
         filterListLayout: function (listLayout) {
             if (this.dragableListRows && !((this.getParentView() || {}).defs || {}).readOnly && listLayout
                 && Array.isArray(listLayout) && !listLayout.find(item => item.name === 'draggableIcon')) {
@@ -1911,20 +1909,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
             }
 
-            let parentView = this.getParentView();
+            let parentModel = this.getParentModel();
 
             let entityType = null;
             let entityId = null;
 
-            if (parentView && parentView.options && parentView.options.model) {
-                entityType = parentView.options.model.urlRoot;
-                entityId = parentView.options.model.get('id');
+            if (parentModel) {
+                entityType = parentModel.urlRoot;
+                entityId = parentModel.get('id');
             }
 
             listLayout = Espo.Utils.cloneDeep(listLayout);
 
             // remove relation virtual fields
-            if (this.layoutName === 'listSmall') {
+            if (entityType) {
                 let toRemove = [];
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
@@ -1951,7 +1949,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
-                if (this.layoutName === 'listSmall' && this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.type`) === 'belongsTo') {
+                if (entityType && this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.type`) === 'belongsTo') {
                     if (this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.entity`) !== entityType) {
                         filteredListLayout.push(item);
                     }
@@ -1984,8 +1982,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var layoutName = this.layoutName;
 
-            this._helper.layoutManager.get(this.collection.name, layoutName, function (listLayout) {
-                var filteredListLayout = this.filterListLayout(listLayout);
+            this._helper.layoutManager.get(this.collection.name, layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+                var filteredListLayout = this.filterListLayout(data.layout);
                 this.layoutLoadCallbackList.forEach(function (callbackItem) {
                     callbackItem(filteredListLayout);
                     this.layoutLoadCallbackList = [];

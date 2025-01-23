@@ -120,9 +120,6 @@ class Layout extends Base
                 return $data;
 
             case 'sidePanelsDetail':
-            case 'sidePanelsEdit':
-            case 'sidePanelsDetailSmall':
-            case 'sidePanelsEditSmall':
                 $sidePanelItems = $this->get('sidePanelItems');
                 $sidePanelItems = empty($sidePanelItems) ? [] : $sidePanelItems->toArray();
                 usort($sidePanelItems, function ($a, $b) {

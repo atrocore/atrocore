@@ -29,7 +29,8 @@
     "passwordUpdatedBy": "Password Updated By",
     "teams": "Teams",
     "notes": "Notes",
-    "tasks": "Tasks"
+    "tasks": "Tasks",
+    "layoutProfile": "Layout Profile"
   },
   "labels": {
     "Create User": "Create User",
