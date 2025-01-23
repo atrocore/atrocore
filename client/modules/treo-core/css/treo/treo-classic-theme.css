@@ -4619,12 +4619,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     }
 }
 
-@media (min-width: 768px) {
-    .navbar-header {
-        float: left
-    }
-}
-
 .navbar-collapse {
     overflow-x: visible;
     padding-right: 8px;
