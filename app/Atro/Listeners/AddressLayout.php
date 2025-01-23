@@ -23,8 +23,21 @@ class AddressLayout extends AbstractLayoutListener
         if ($this->getRelatedEntity($event) === 'Account') {
             $result = $event->getArgument('result');
 
-            if(!str_contains(json_encode($result), '"AddressAccount__default"')){
+            if (!str_contains(json_encode($result), '"AddressAccount__default"')) {
                 $result[0]['rows'][] = [['name' => 'AddressAccount__default'], false];
+            }
+
+            $event->setArgument('result', $result);
+        }
+    }
+
+    public function list(Event $event): void
+    {
+        if ($this->getRelatedEntity($event) === 'Account') {
+            $result = $event->getArgument('result');
+
+            if (!str_contains(json_encode($result), '"AddressAccount__default"')) {
+                $result[] = ['name' => 'AddressAccount__default'];
             }
 
             $event->setArgument('result', $result);
