@@ -6603,6 +6603,10 @@ button.close {
     margin: 0;
 }
 
+.modal-body > .icons-container {
+    margin-bottom: .5em;
+}
+
 .dialog-confirm {
     z-index: 3000;
 }
@@ -15083,14 +15087,6 @@ blockquote {
     padding: 14px 14px 14px
 }
 
-.modal-footer > .main-btn-group {
-    float: right
-}
-
-.modal-footer > .additional-btn-group {
-    float: left
-}
-
 .modal-dialog > .modal-content {
     background-clip: border-box;
     border-color: #e8eced;
@@ -16315,6 +16311,14 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     padding: 5px;
 }
 
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > * {
+    color: #999;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > *:not(:last-child) {
+    margin-right: 2px;
+}
+
 .list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button {
     background-color: rgba(255, 255, 255, 0.9);
@@ -16322,7 +16326,18 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-left: 0;
 }
 
-.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container {
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container,
+.modal-body > .icons-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container:not(.fixed) {
+    margin-right: 3px;
+}
+
+.list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container.fixed {
     position: absolute;
     right: calc(100% + 3px);
 }
@@ -16869,6 +16884,7 @@ img.avatar.avatar-link {
 
 .side > .panel .field > img.avatar.avatar-link {
     margin-top: -25px;
+    margin-right: 7px;
 }
 
 stream-head-text-container .span {
@@ -17237,8 +17253,12 @@ h5 {
     width: 270px
 }
 
-.inline-cancel-link {
-    margin-left: 8px
+.cell .inline-actions > .inline-save-link,
+.cell .inline-actions > .inline-cancel-link {
+    padding-left: 6px;
+    font-size: 16px;
+    display: inline-flex;
+    text-decoration: none;
 }
 
 .panel .item-container.ui-sortable-helper {
@@ -18038,8 +18058,8 @@ table.table {
     float: left
 }
 
-.modal-footer > .additional-btn-group {
-    float: right
+.modal-body > .icons-container > * {
+    color: #999;
 }
 
 .dialog-confirm .modal-footer > .main-btn-group {
@@ -19745,7 +19765,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .list-row-buttons > button > span {
-    color: #999
+    color: #06c;
 }
 
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-group-panel {
@@ -22586,8 +22606,8 @@ select {
     overflow: hidden;
 }
 
-.hidden-cell .lock-link,
-.hidden-cell .unlock-link {
+.hidden-cell .info-field-icon.inherited,
+.hidden-cell .info-field-icon.not-inherited {
     display: none !important;
 }
 
@@ -22610,18 +22630,51 @@ select {
     margin-left: 3px;
 }
 
+.field .status-icons, .field .inline-actions {
+    display: inline;
+}
+
+.cell > .status-container > .status-icons:empty,
+.cell > .status-container > .inline-actions:empty {
+    display: none;
+}
+
+.cell > .status-container,
+.field > .status-container {
+    display: flex;
+    align-items: center;
+    gap: .4em;
+    float: right;
+}
+
+.cell .status-icons > * ,
+.field .status-icons > * {
+    color: #ddd !important;
+}
+
+.cell:not(.hidden-cell) .status-icons,
+.field > .status-icons,
+.cell:not(.hidden-cell) .inline-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    min-height: 20px;
+}
+
+.cell .status-icons > *,
+.field > .status-icons > *,
+.cell .inline-actions > * {
+    padding-left: 5px;
+    text-align: center;
+}
+
 .info-field-icon {
     color: #ccc;
 }
 
-.unlock-link, .unlock-link:hover {
-    color: #ccc;
-    cursor: default;
-}
-
-.info-field-icon,
-.lock-link,
-.unlock-link {
+.info-field-icon.inherited,
+.info-field-icon.not-inherited,
+.lock-link {
     padding-left: 5px;
     text-align: center;
     -webkit-border-radius: 3px;

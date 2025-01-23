@@ -144,6 +144,7 @@
     "deleteAll": "Видалити все",
     "setAsInherited": "Успадкувати значення",
     "inherited": "Успадковується",
+    "notInherited": "Не успадковується",
     "resetAllToDefault": "Відновити все за замовчуванням",
     "Merge": "Об'єднати",
     "None": "Немає",
