@@ -57,6 +57,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             'mouseover .menu:not(.menu-open)': function(e) {
                 e.preventDefault();
                 this.menuShouldBeOpen = true;
+                if(!this.$el.find('.menu').hasClass('open-menu') && !this.$el.find('.menu').hasClass('not-collapsed')){
+                    return;
+                }
                 this.handleMenuVisibility(e);
             },
             'mouseover .navbar-toggle': function(e){
