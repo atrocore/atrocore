@@ -14617,11 +14617,16 @@ body > #header ul.tabs > li span.short-label > span {
 }
 
 body > #header ul.tabs > li > a > span.full-label {
-    display: inline;
+    display: inline-flex;
     text-overflow: ellipsis;
     max-width: calc(100% - 50px);
     overflow: hidden;
-    white-space: nowrap
+    white-space: nowrap;
+    align-items: center;
+}
+
+body > #header ul.tabs > li > a > span.full-label span.fas {
+    padding-left: 5px;
 }
 
 body > #header .navbar-brand span.home-icon {
@@ -17616,6 +17621,7 @@ a.field-info > span.fa-info-circle {
     font-size: 13px;
     width: 200px;
     background-color: var(--nav-menu-background);
+    color: var(--nav-font-color);
 }
 
 #header .navbar-header > a {
@@ -20257,12 +20263,13 @@ button.category:focus {
     border-top: 1px solid #dcdcdc;
 }
 
-#navbar footer > .copyright span {
+#navbar footer > .copyright span:first-child {
     margin-top: 15px;
 }
 
-#navbar footer > .copyright:last-child {
+#navbar footer > .copyright span:last-child {
     margin-bottom: 15px;
+    margin-top: 5px;
 }
 
 #navbar footer span{
@@ -20276,9 +20283,15 @@ button.category:focus {
 
 #header .menu{
     border-bottom: 1px solid var(--primary-border-color);
+    border-top: 1px solid var(--primary-border-color);
+    margin-top: 3px;
 }
 
 @media screen and (min-width: 768px) {
+    #header .menu{
+        margin-top: 3px;
+    }
+
     body {
         padding-top: 48px
     }
@@ -20338,11 +20351,6 @@ button.category:focus {
     #header .navbar-right {
         height: 48px
     }
-
-    #header .navbar-header, #header .menu, #header .navbar, #header .navbar-brand {
-        border-right: 1px solid var(--primary-border-color);
-    }
-
 
     #header ul.tabs li.more-group > ul.dropdown-menu a::before {
         left: 24px
