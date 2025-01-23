@@ -383,11 +383,24 @@ class EntityField extends ReferenceData
 
     public function deleteEntity(OrmEntity $entity): bool
     {
+        if (empty($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.isCustom"))) {
+            return true;
+        }
+
+        $this->deleteFromMetadata($entity);
+        $this->getMetadata()->save();
+        $this->getDataManager()->rebuild();
+
+        return true;
+    }
+
+    public function deleteFromMetadata(OrmEntity $entity): void
+    {
         $scope = $entity->get('entityId');
         $name = $entity->get('code');
 
         if (empty($this->getMetadata()->get("entityDefs.$scope.fields.$name.isCustom"))) {
-            return true;
+            return;
         }
 
         $foreignScope = $this->getMetadata()->get("entityDefs.$scope.links.$name.entity");
@@ -399,10 +412,6 @@ class EntityField extends ReferenceData
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);
-        $this->getMetadata()->save();
-        $this->getDataManager()->rebuild();
-
-        return true;
     }
 
     protected function init()

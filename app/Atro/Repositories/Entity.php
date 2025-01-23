@@ -220,6 +220,7 @@ class Entity extends ReferenceData
             if ($entity->get('type') === 'Hierarchy' && $type === 'entityDefs') {
                 $contents = str_replace('{entityType}', $entity->get('code'), $contents);
             }
+            Util::createDir("data/metadata/{$type}");
             file_put_contents("data/metadata/$type/{$entity->get('code')}.json", $contents);
         }
 
@@ -231,7 +232,11 @@ class Entity extends ReferenceData
 
         // update config
         foreach (['quickCreateList', 'tabList'] as $key) {
-            $this->getConfig()->set($key, array_merge($this->getConfig()->get($key, []), [$entity->get('code')]));
+            $list = $this->getConfig()->get($key, []);
+            if (!in_array($entity->get('code'), $list)) {
+                $list[] = $entity->get('code');
+            }
+            $this->getConfig()->set($key, $list);
         }
         $this->getConfig()->save();
 
@@ -368,6 +373,18 @@ class Entity extends ReferenceData
 
     public function deleteEntity(OrmEntity $entity): bool
     {
+        // delete relationships
+        $saveMetadata = false;
+        foreach ($entity->get('fields') ?? [] as $field) {
+            if (in_array($field->get('type'), ['link', 'linkMultiple'])) {
+                $this->getEntityManager()->getRepository('EntityField')->deleteFromMetadata($field);
+                $saveMetadata = true;
+            }
+        }
+        if ($saveMetadata) {
+            $this->getMetadata()->save();
+        }
+
         // delete metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $fileName = "data/metadata/$type/{$entity->get('code')}.json";
@@ -396,8 +413,6 @@ class Entity extends ReferenceData
                 $this->getEntityManager()->removeEntity($label);
             }
         }
-
-        // @todo delete all relations
 
         $this->getDataManager()->clearCache();
 
