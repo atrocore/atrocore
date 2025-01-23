@@ -14625,7 +14625,6 @@ body > #header ul.tabs > li > a > span.full-label span.fas {
     padding-left: 5px;
 }
 
-
 body > #header .navbar-brand span.home-icon {
     display: none
 }
@@ -17602,6 +17601,7 @@ a.field-info > span.fa-info-circle {
     font-size: 13px;
     width: 200px;
     background-color: var(--nav-menu-background);
+    color: var(--nav-font-color);
 }
 
 #header .navbar-header > a {
