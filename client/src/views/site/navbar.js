@@ -57,12 +57,22 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             'mouseover .menu:not(.menu-open)': function(e) {
                 e.preventDefault();
                 this.menuShouldBeOpen = true;
+                if(!this.$el.find('.menu').hasClass('open-menu') && !this.$el.find('.menu').hasClass('not-collapsed')){
+                    return;
+                }
                 this.handleMenuVisibility(e);
             },
             'mouseover .navbar-toggle': function(e){
                 e.preventDefault();
                 this.menuShouldBeOpen = true;
                 this.handleMenuVisibility(e);
+            },
+            'click .menu.open-menu a.nav-link': function (e) {
+                var $a = $(e.currentTarget);
+                var href = $a.attr('href');
+                if (href && href != '#') {
+                    this.$el.find('.menu').removeClass('open-menu');
+                }
             },
             'click .navbar-collapse.in a.nav-link': function (e) {
                 var $a = $(e.currentTarget);

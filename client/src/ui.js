@@ -178,7 +178,7 @@ Espo.define('ui', [], function () {
             }.bind(this));
         }
 
-        $window = $(window);
+        $window = $(window) + 48;
 
         this.$el.on('shown.bs.modal', function (e) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');

@@ -4619,12 +4619,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     }
 }
 
-@media (min-width: 768px) {
-    .navbar-header {
-        float: left
-    }
-}
-
 .navbar-collapse {
     overflow-x: visible;
     padding-right: 8px;
@@ -6446,7 +6440,7 @@ button.close {
     display: none;
     overflow: hidden;
     position: fixed;
-    top: 0;
+    top: 48px;
     right: 0;
     bottom: 0;
     left: 0;
@@ -6477,15 +6471,12 @@ button.close {
 
 .modal-open .modal {
     overflow-x: hidden;
-    overflow-y: auto;
     align-items: center;
     background: rgba(255, 255, 255, 0.7);
 }
 
 .modal-open .modal .modal-dialog {
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
     padding-right: 0 !important;
 }
 
@@ -6514,7 +6505,7 @@ button.close {
 
 .modal-backdrop {
     position: fixed;
-    top: 0;
+    top: 48px;
     right: 0;
     bottom: 0;
     left: 0;

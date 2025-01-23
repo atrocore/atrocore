@@ -35,14 +35,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 },
 
-                'click .menu.open-menu a.nav-link': function (e) {
-                    var $a = $(e.currentTarget);
-                    var href = $a.attr('href');
-                    if (href && href != '#') {
-                        this.$el.find('.menu').removeClass('open-menu');
-                    }
-                },
-
                 'click .search-toggle': function () {
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
                 },
