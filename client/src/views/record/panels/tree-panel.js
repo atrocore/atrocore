@@ -35,7 +35,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
         template: 'record/tree-panel',
 
-        minWidth: 200,
+        minWidth: 220,
 
         maxWidth: 600,
 

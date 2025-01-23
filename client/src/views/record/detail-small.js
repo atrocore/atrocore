@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -34,9 +33,8 @@
 Espo.define('views/record/detail-small', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
-
-        bottomView: null
-
+        bottomView: null,
+        isSmall: true,
     });
 
 });

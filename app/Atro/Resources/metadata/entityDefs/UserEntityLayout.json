@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "user": {
+      "type": "link"
+    },
+    "entity": {
+      "type": "varchar"
+    },
+    "viewType": {
+      "type": "varchar"
+    },
+    "relatedEntity": {
+      "type": "varchar"
+    },
+    "layoutProfile": {
+      "type": "link"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "user": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "user_id",
+      "entity",
+      "view_type",
+      "related_entity",
+      "layout_profile_id",
+      "deleted"
+    ]
+  }
+}

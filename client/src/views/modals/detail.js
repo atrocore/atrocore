@@ -248,8 +248,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var options = {
                 model: model,
                 el: this.containerSelector + ' .record-container',
-                type: 'detailSmall',
-                layoutName: this.layoutName || 'detailSmall',
+                layoutName: this.layoutName,
                 columnCount: this.columnCount,
                 buttonsDisabled: true,
                 inlineEditDisabled: true,
@@ -269,6 +268,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             if (!this.navigateButtonsDisabled) {
                 this.controlNavigationButtons();
+            }
+
+            if ((this.options.htmlStatusIcons || []).length > 0) {
+                const iconsContainer = $('<div class="icons-container pull-right"></div>');
+                this.options.htmlStatusIcons.forEach(icon => iconsContainer.append(icon));
+                this.$el.find('.modal-body').prepend(iconsContainer);
             }
         },
 
@@ -381,7 +386,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             this.createView('quickEdit', viewName, {
                 scope: this.scope,
                 id: this.id,
-                fullFormDisabled: this.fullFormDisabled
+                fullFormDisabled: this.fullFormDisabled,
+                htmlStatusIcons: this.options.htmlStatusIcons
             }, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);

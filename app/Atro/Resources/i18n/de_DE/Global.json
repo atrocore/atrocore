@@ -137,6 +137,7 @@
     "unlinkAll": "Alle Verknüpfungen aufheben",
     "deleteAll": "Alles löschen",
     "inherited": "Vererbt",
+    "notInherited": "Nicht vererbt",
     "resetAllToDefault": "Alles auf Standardwerte zurücksetzen",
     "pleaseReloadPage": "Bitte <a href=\"javascript:\" onClick=\"window.location.reload();\">laden</a> Sie die Seite neu, um die Metadaten zu aktualisieren.",
     "pleaseRebuildDatabase": "Bitte <a href=\"javascript:\" data-action=\"rebuild-notification\">aktualisieren Sie die Datenbankstruktur</a> über die Administration. Das Datenbankschema ist inkonsistent.",
@@ -336,7 +337,9 @@
     "youShouldHaveAtLeastOneRecord": "Sie sollten mindestens 2 Datensätze haben, um vergleichen zu können",
     "weCannotCompareMoreThan": " Die maximale Anzahl der zu vergleichenden Datensätze beträgt %s.",
     "thereAreTooManyRecord": "Es gibt zu viele Datensätze. Kein Vergleich ist möglich",
-    "Unset Selection": "Nicht eingestellte Auswahl"
+    "Unset Selection": "Nicht eingestellte Auswahl",
+    "Report a bug": "Einen Fehler melden",
+    "Visit Community": "Gemeinschaft besuchen"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

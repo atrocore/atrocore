@@ -170,6 +170,10 @@
             "type": "link",
             "readOnly": true,
             "view": "views/fields/user"
+        },
+        "layoutProfile": {
+            "type": "link",
+            "view": "views/user/fields/layout-profile"
         }
     },
     "links": {
@@ -208,6 +212,10 @@
             "entity": "Note",
             "foreign": "users",
             "layoutRelationshipsDisabled": true
+        },
+        "layoutProfile": {
+            "type": "belongsTo",
+            "entity": "LayoutProfile"
         }
     },
     "collection": {

@@ -14,8 +14,8 @@
     "Measure": "Measures",
     "addOption": "Add option",
     "progressLog": "Progress log",
-    "Enabled": "Enabled",
-    "Disabled": "Disabled",
+    "Selected": "Selected",
+    "Available": "Available",
     "System": "System",
     "FileManagement": "File Management",
     "AccessManagement": "Access Management",
@@ -78,16 +78,10 @@
   "layouts": {
     "relationships": "Relation panels",
     "list": "List",
-    "detail": "Detail",
-    "listSmall": "List (Small)",
-    "detailSmall": "Detail (Small)",
+    "detail": "Details",
     "massUpdate": "Mass Update",
     "sidePanelsDetail": "Side panels (Detail)",
-    "sidePanelsEdit": "Side panels (Edit)",
-    "sidePanelsDetailSmall": "Side panels (Detail Small)",
-    "sidePanelsEditSmall": "Side panels (Edit Small)",
     "kanban": "Kanban",
-    "listForAccount": "List (for account)",
     "upload": "Upload"
   },
   "fieldTypes": {

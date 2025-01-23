@@ -197,11 +197,11 @@ abstract class AbstractModule
     public function loadLayouts(string $scope, string $name, array &$data)
     {
         // load layout class
-        $layout = $this->container->get('layout');
+        $layoutManager = $this->container->get('layoutManager');
 
         // prepare file path
-        $filePath = $layout->concatPath($this->getAppPath() . 'Resources/layouts', $scope);
-        $fileFullPath = $layout->concatPath($filePath, $name . '.json');
+        $filePath = $layoutManager->concatPath($this->getAppPath() . 'Resources/layouts', $scope);
+        $fileFullPath = $layoutManager->concatPath($filePath, $name . '.json');
 
         if (file_exists($fileFullPath)) {
             // get file data

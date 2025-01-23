@@ -24,7 +24,7 @@ class V1Dot12Dot14 extends Base
 
     public function up(): void
     {
-       $this->exec("ALTER TABLE role ADD style_control_permission VARCHAR(255) DEFAULT 'not-set'");
+        $this->exec("ALTER TABLE role ADD style_control_permission VARCHAR(255) DEFAULT 'not-set'");
     }
 
     protected function exec(string $query): void

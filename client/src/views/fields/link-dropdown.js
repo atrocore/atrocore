@@ -23,7 +23,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
         originalName: null,
 
-        selectBoolFilterList : [],
+        selectBoolFilterList: [],
 
         boolFilterData: {},
 
@@ -77,7 +77,12 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             this.translatedOptions = {};
             this.params.optionColors = [];
 
-            this.getLinkOptions(this.foreignScope, {maxSize: 300, sortBy: 'name', where: this.getWhereFilter()}).forEach(option => {
+            this.params.linkOptions = this.getLinkOptions(this.foreignScope, {
+                maxSize: 300,
+                sortBy: 'name',
+                where: this.getWhereFilter()
+            });
+            this.params.linkOptions.forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
                     this.translatedOptions[option.id] = option.name || option.id;

@@ -11,12 +11,14 @@
 Espo.define('views/layout/fields/layout-profile-dropdown', 'views/fields/link-dropdown', function (Dep) {
 
     return Dep.extend({
+        setup() {
+            Dep.prototype.setup.call(this)
 
-        prepareOptionsList: function () {
-            Dep.prototype.prepareOptionsList.call(this);
-            this.params.options.unshift("custom")
-            this.translatedOptions["custom"] = "Custom"
+            if (!this.model.get(this.idName) && this.params.options.length) {
+                this.model.set(this.idName, this.params.options[0])
+            }
         }
+
     });
 });
 

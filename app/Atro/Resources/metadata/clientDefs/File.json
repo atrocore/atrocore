@@ -46,7 +46,8 @@
       {
         "name": "sharing",
         "label": "Sharing",
-        "view": "views/file/record/panels/side/sharing"
+        "view": "views/file/record/panels/side/sharing",
+        "aclScope": "Sharing"
       },
       {
         "name": "customDownload",
@@ -63,7 +64,8 @@
       {
         "name": "sharing",
         "label": "Sharing",
-        "view": "views/file/record/panels/side/sharing"
+        "view": "views/file/record/panels/side/sharing",
+        "aclScope": "Sharing"
       }
     ]
   },
@@ -123,7 +125,7 @@
       },
       "unitSize": {
         "visible": {
-          "conditionGroup" : [
+          "conditionGroup": [
             {
               "type": "or",
               "value": [
@@ -144,7 +146,7 @@
       },
       "unitWidth": {
         "visible": {
-          "conditionGroup" : [
+          "conditionGroup": [
             {
               "type": "or",
               "value": [
@@ -165,7 +167,7 @@
       },
       "unitHeight": {
         "visible": {
-          "conditionGroup" : [
+          "conditionGroup": [
             {
               "type": "or",
               "value": [
@@ -186,7 +188,7 @@
       },
       "colorSpace": {
         "visible": {
-          "conditionGroup" : [
+          "conditionGroup": [
             {
               "type": "or",
               "value": [

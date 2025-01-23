@@ -2,7 +2,7 @@
   "fields": {
     "entity": {
       "type": "varchar",
-      "view": "views/fields/entity-type"
+      "view": "views/layout/fields/entity"
     },
     "viewType": {
       "type": "enum",
@@ -11,31 +11,24 @@
       "view": "views/layout/fields/view-type",
       "optionsIds": [
         "list",
-        "listSmall",
         "detail",
-        "detailSmall",
         "relationships",
         "sidePanelsDetail",
-        "sidePanelsDetailSmall",
-        "sidePanelsEdit",
-        "sidePanelsEditSmall",
         "kanban"
       ],
       "options": [
         "list",
         "listSmall",
         "detail",
-        "detailSmall",
         "relationships",
         "sidePanelsDetail",
-        "sidePanelsDetailSmall",
         "sidePanelsEdit",
-        "sidePanelsEditSmall",
         "kanban"
       ]
     },
-    "preferencesId": {
-      "type": "varchar"
+    "relatedEntity": {
+      "type": "varchar",
+      "view": "views/layout/fields/related-entity"
     },
     "createdAt": {
       "type": "datetime",
@@ -116,12 +109,7 @@
     "layout_profile": [
       "layout_profile_id",
       "entity",
-      "view_type",
-      "deleted"
-    ],
-    "preferences": [
-      "preferences_id",
-      "entity",
+      "related_entity",
       "view_type",
       "deleted"
     ]

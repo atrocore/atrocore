@@ -2,6 +2,13 @@
   "fields": {
     "entity": "Entity",
     "viewType": "View Type",
+    "relatedEntity": "Related Entity",
     "layoutProfile": "Layout Profile"
+  },
+  "groupOptions": {
+    "viewType": {
+      "view": "View",
+      "viewGroup": "View Group"
+    }
   }
 }
