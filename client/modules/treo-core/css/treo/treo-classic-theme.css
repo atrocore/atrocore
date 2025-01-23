@@ -4803,10 +4803,14 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .navbar-right .fas,
-.navbar-right .fas .far,
-.navbar-right .text-muted{
+.navbar-right .fas .far{
     color: var(--nav-font-color);
 }
+
+.navbar-right .text-muted{
+    color: var(--primary-font-color);
+}
+
 
 @media (max-width: 767px) {
     .navbar-nav .open .dropdown-menu {
@@ -14663,6 +14667,8 @@ body > #header .navbar-brand span.home-icon {
 
 #header ul.tabs {
     margin-bottom: 10px;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
 }
 
 @media screen and (min-width: 768px) {
@@ -14679,7 +14685,6 @@ body > #header .navbar-brand span.home-icon {
 
     #header ul.tabs {
         width: 100%;
-        overflow-y: hidden
     }
 
     #header .navbar {
@@ -20292,6 +20297,14 @@ button.category:focus {
         margin-top: 3px;
     }
 
+    #header .menu.not-collapsed {
+        background-color: transparent;
+        border-right : 1px solid transparent;
+        box-shadow:none;
+        -webkit-transform: translate(-95%, 0);
+        transform: translate(-95%, 0);
+    }
+
     body {
         padding-top: 48px
     }
@@ -20307,7 +20320,8 @@ button.category:focus {
     }
 
     #header a.navbar-brand {
-        height: 47px
+        height: 47px;
+        margin-left: -10px;
     }
 
     #header .navbar-brand img {
@@ -20331,7 +20345,6 @@ button.category:focus {
 
     #navbar footer {
         font-size: 11px;
-        padding: 0 5px;
     }
 
     #header .nav > li.more:not(.more-group) > .dropdown-menu {
@@ -20657,17 +20670,26 @@ button.category:focus {
     z-index: 100;
     background: var(--nav-menu-background);
     display: block;
-    max-height: calc(100vh - 44px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    height: calc(100vh - 44px);
     overflow-x: visible !important;
-    overflow-y: auto;
+    padding-right: 1px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .3);
+    border-right: 1px solid var(--primary-border-color);
 }
 
 #header .menu {
     -webkit-transform: translate(-110%, 0);
     transform: translate(-110%, 0);
-    background: var(--nav-menu-background);
     width: 220px;
+}
+
+
+#header .menu.not-collapsed ul.tabs{
+    display:none;
+}
+
+#header .menu.open-menu ul.tabs{
+    display:block;
 }
 
 #header .menu.open-menu {

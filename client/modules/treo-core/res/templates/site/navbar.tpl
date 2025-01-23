@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="menu">
+    <div class="menu not-collapsed">
         <ul class="nav navbar-nav tabs">
             {{#each tabDefsList}}
             {{#if group}}
