@@ -12,9 +12,11 @@
       ],
       [
         {
-          "name": "layoutProfile"
+          "name": "relatedEntity"
         },
-        false
+        {
+          "name": "layoutProfile"
+        }
       ]
     ]
   }
