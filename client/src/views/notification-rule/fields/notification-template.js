@@ -14,15 +14,7 @@ Espo.define('views/notification-rule/fields/notification-template', 'views/field
 
         createDisabled: true,
 
-        selectBoolFilterList: ['transportType'],
-
         transportType: null,
-
-        boolFilterData: {
-            transportType() {
-                return this.transportType;
-            }
-        },
 
         setup: function () {
             this.transportType = this.model.getFieldParam(this.name, 't_type')

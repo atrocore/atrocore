@@ -13,17 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\SelectManagers;
 
-use Atro\ConnectionType\HttpConnectionInterface;
 use Espo\Core\SelectManagers\Base;
 
 class NotificationTemplate extends Base
 {
-    protected function boolFilterTransportType(array &$result)
-    {
-        if (!empty($type = $this->getBoolFilterParameter('transportType'))) {
-            $result['whereClause'][] = [
-                'type' => $type
-            ];
-        }
-    }
 }
