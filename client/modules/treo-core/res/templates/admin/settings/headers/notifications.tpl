@@ -1,5 +1,5 @@
 <h3>
-    <div class="header-breadcrumbs fixed-header-breadcrumbs">
+    <div class="header-breadcrumbs ">
         <div class="breadcrumbs-wrapper">
             <a href="#Admin">{{translate 'Administration'}}</a>{{translate 'Notifications' scope='Admin'}}
         </div>

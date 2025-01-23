@@ -362,7 +362,9 @@
     "youShouldHaveAtLeastOneRecord": "You should have at list 2 records to be able to compare",
     "weCannotCompareMoreThan": "The maximum number records to be compared is %s.",
     "thereAreTooManyRecord": "There are too many records. No comparison is possible",
-    "Unset Selection": "Unset Selection"
+    "Unset Selection": "Unset Selection",
+    "Report a bug": "Report a bug",
+    "Visit Community": "Visit Community"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
