@@ -20,6 +20,7 @@
     "notice": "Notice",
     "information": "Information",
     "error": "Error",
+    "actionIconColor": "Action Icon Color",
     "customHeadCode": "Head Code"
   },
   "tooltips": {
