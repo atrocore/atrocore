@@ -109,7 +109,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                        this.$el.find('.menu').addClass('open-menu');
                        this.$el.find('.menu').removeClass('not-collapsed');
                    }
-               }, 300)
+               }, 500)
                 let self = this;
                 let handleMouseLeave = function(e) {
                     e.preventDefault();
