@@ -12,7 +12,6 @@
     "users": {
       "create": false,
       "rowActionsView": "views/record/row-actions/relationship-no-remove",
-      "layout": "listForTeam",
       "selectPrimaryFilterName": "active"
     }
   },

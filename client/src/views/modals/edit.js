@@ -230,6 +230,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 model: model,
                 el: this.containerSelector + ' .edit-container',
                 layoutName: this.layoutName,
+                layoutRelatedScope: this.options.layoutRelatedScope,
                 columnCount: this.columnCount,
                 buttonsDisabled: true,
                 sideDisabled: this.sideDisabled,

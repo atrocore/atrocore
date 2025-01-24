@@ -76,11 +76,11 @@
     "style": "Styles"
   },
   "layouts": {
-    "relationships": "Relation panels",
+    "relationships": "Relations",
     "list": "List",
     "detail": "Details",
     "massUpdate": "Mass Update",
-    "sidePanelsDetail": "Side panels (Detail)",
+    "sidePanelsDetail": "Sidebar",
     "kanban": "Kanban",
     "upload": "Upload"
   },
