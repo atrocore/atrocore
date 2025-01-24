@@ -1,5 +1,6 @@
 {
   "controller": "controllers/record",
+  "acl": "acl/entity",
   "limit": 2000,
   "recordViews": {
     "list": "views/admin/entity-manager/record/list",

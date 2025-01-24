@@ -141,6 +141,15 @@ class EntityField extends ReferenceData
         }
     }
 
+    protected function beforeRemove(OrmEntity $entity, array $options = [])
+    {
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
+            throw new Forbidden();
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
     public function insertEntity(OrmEntity $entity): bool
     {
         if (!preg_match('/^[a-z][A-Za-z0-9]*$/', $entity->get('code'))) {

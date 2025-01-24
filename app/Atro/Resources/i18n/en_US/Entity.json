@@ -3,6 +3,7 @@
     "name": "Name singular",
     "namePlural": "Name plural",
     "disabled": "Disabled",
+    "customizable": "Customizable",
     "hasArchive": "Archivable",
     "hasActive": "Activatable",
     "hideFieldTypeFilters": "Hide field type filters",

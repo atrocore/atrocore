@@ -58,6 +58,10 @@
     "kanbanViewMode": {
       "type": "bool"
     },
+    "customizable": {
+      "type": "bool",
+      "readOnly": true
+    },
     "kanbanStatusIgnoreList": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/kanban-status-ignore-list"

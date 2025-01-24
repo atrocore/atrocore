@@ -80,6 +80,17 @@
     "countBytesInsteadOfCharacters": {
       "type": "bool"
     },
+    "entityData": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "default": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/value-container",
