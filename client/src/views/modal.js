@@ -55,7 +55,7 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         width: false,
 
-        fitHeight: false,
+        fitHeight: true,
 
         escapeDisabled: false,
 
@@ -139,7 +139,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 if (this.getThemeManager().getParam('modalBodyDiffHeight') !== null) {
                     modalBodyDiffHeight = this.getThemeManager().getParam('modalBodyDiffHeight');
                 }
-                debugger
+
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
                     header: this.header,
@@ -159,7 +159,6 @@ Espo.define('views/modal', 'view', function (Dep) {
                         this.onDialogClose();
                     }.bind(this)
                 });
-
 
                 this.setElement(containerSelector + ' .body');
             }, this);

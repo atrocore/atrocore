@@ -20271,9 +20271,11 @@ button.category:focus {
     #header .menu.not-collapsed {
         background-color: transparent;
         border-right : 1px solid transparent;
+        border-top: 0;
         box-shadow:none;
         -webkit-transform: translate(-95%, 0);
         transform: translate(-95%, 0);
+        cursor: pointer;
     }
 
     body {
