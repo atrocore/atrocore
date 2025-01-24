@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Espo\ORM\EntityCollection;
 
@@ -50,12 +51,17 @@ class Bookmark extends Base
 
             /** @var Connection $connection */
             $connection = $this->getEntityManager()->getConnection();
-            $entityNames = $connection->createQueryBuilder()
-                ->select('id, deleted, '. ($hasName ? 'name' : 'id as name'))
-                ->from($connection->quoteIdentifier(strtolower(Util::toUnderScore($entityType))))
-                ->where('id IN (:ids)')
-                ->setParameter('ids', array_keys($items), Connection::PARAM_STR_ARRAY)
-                ->fetchAllAssociative();
+            if ($this->getMetadata()->get(['scopes', $entityType, 'type']) === 'ReferenceData') {
+                $entityNames = $this->getReferenceDataBookmarkedEntities($entityType, array_keys($items));
+                $entityNames = !empty($entityNames) ? $entityNames->toArray() : [];
+            } else {
+                $entityNames = $connection->createQueryBuilder()
+                    ->select('id, deleted, ' . ($hasName ? 'name' : 'id as name'))
+                    ->from($connection->quoteIdentifier(strtolower(Util::toUnderScore($entityType))))
+                    ->where('id IN (:ids)')
+                    ->setParameter('ids', array_keys($items), Connection::PARAM_STR_ARRAY)
+                    ->fetchAllAssociative();
+            }
 
             $entityNameByIds = [];
             foreach ($entityNames as $entityName) {
@@ -103,30 +109,54 @@ class Bookmark extends Base
 
     public function getBookmarkTree(string $scope, array $params): array
     {
-        $params['where'][] = [
-            'type' => 'bool',
-            'value' => ['onlyBookmarked']
-        ];
-
-        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
-
-        $selectParams['select'] = ['id', 'name'];
         $repository = $this->getEntityManager()->getRepository($scope);
-        $collection = $repository->find($selectParams);
-        $total = $repository->count($selectParams);
-        $offset = $params['offset'];
         $result = [];
 
-        foreach ($collection as $key => $item) {
-            $result[] = [
-                'id' => $item->get('id'),
-                'name' => $item->get('name') ?? $item->get('id'),
-                'offset' => $offset + $key,
-                'total' => $total,
-                'disabled' => false,
-                'load_on_demand' => false
+        if ($this->getMetadata()->get(['scopes', $scope, 'type']) === 'ReferenceData') {
+
+            $collection = $this->getReferenceDataBookmarkedEntities($scope);
+            $index = 0;
+
+            foreach ($collection as $item) {
+                $result[] = [
+                    'id' => $item->get('id'),
+                    'name' => $item->get('name') ?? $item->get('id'),
+                    'offset' => $index,
+                    'total' => $collection->count(),
+                    'disabled' => false,
+                    'load_on_demand' => false
+                ];
+                $index++;
+            }
+
+            $total = $collection->count();
+
+        } else {
+            $params['where'][] = [
+                'type' => 'bool',
+                'value' => ['onlyBookmarked']
             ];
+
+            $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+
+            $selectParams['select'] = ['id', 'name'];
+            $collection = $repository->find($selectParams);
+            $total = $repository->count($selectParams);
+            $offset = $params['offset'];
+            $result = [];
+
+            foreach ($collection as $key => $item) {
+                $result[] = [
+                    'id' => $item->get('id'),
+                    'name' => $item->get('name') ?? $item->get('id'),
+                    'offset' => $offset + $key,
+                    'total' => $total,
+                    'disabled' => false,
+                    'load_on_demand' => false
+                ];
+            }
         }
+
 
         return [
             'list' => $result,
@@ -147,7 +177,7 @@ class Bookmark extends Base
         $entity = $this->getRepository()->get();
         $entity->set($attachment);
 
-        if($this->storeEntity($entity)) {
+        if ($this->storeEntity($entity)) {
             $this->afterCreateEntity($entity, $attachment);
         }
 
@@ -162,6 +192,39 @@ class Bookmark extends Base
             throw new NotFound();
         }
 
-       return $this->getRepository()->remove($entity, $this->getDefaultRepositoryOptions());
+        return $this->getRepository()->remove($entity, $this->getDefaultRepositoryOptions());
     }
+
+    protected function getReferenceDataBookmarkedEntities(string $scope, ?array $entityIds = null): ?EntityCollection
+    {
+        if ($this->getMetadata()->get(['scopes', $scope, 'type']) !== 'ReferenceData') {
+            return null;
+        }
+
+        if (empty($entityIds)) {
+            $entityIds = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('entity_id')
+                ->from('bookmark')
+                ->where('entity_type = :scope')
+                ->andWhere('user_id = :userId')
+                ->andWhere('deleted = :false')
+                ->setParameter('scope', $scope)
+                ->setParameter('userId', $this->getUser()->id)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            $entityIds = array_column($entityIds, 'entity_id');
+        }
+
+        $collection = $this->getEntityManager()->getRepository($scope)->find();
+
+        foreach ($collection as $key => $item) {
+            if (in_array($item->get('id'), $entityIds)) {
+                continue;
+            }
+            unset($collection[$key]);
+        }
+        return $collection;
+    }
+
 }
