@@ -72,7 +72,9 @@
     let twigVariables = params.twigVariables || Metadata.get(['entityDefs', scope, 'fields', name, 'twigVariables']) || [];
     let editorComponent;
     let containerElement;
+    let rootElement;
     let height = 200;
+    let fullScreen = false;
     let readOnly = mode !== 'edit';
 
     params = {
@@ -82,12 +84,16 @@
 
     $: {
         const lines = (value ?? '').split('\n').length;
-        if (lines <= 3) {
-            height = 60
-        } else if (lines <= 40) {
-            height = lines * 20;
+        if (fullScreen) {
+            height = "100vh"
         } else {
-            height = 800
+            if (lines <= 3) {
+                height = "60px";
+            } else if (lines <= 40) {
+                height = (lines * 20) + "px";
+            } else {
+                height = "800px"
+            }
         }
     }
 
@@ -421,6 +427,42 @@
         return {[name]: value};
     }
 
+    function initFullScreenIcon(cell, editorComponent) {
+        cell.querySelectorAll('.fa-expand').forEach(el => el.parentElement.remove());
+
+        const link = document.createElement('a');
+        link.href = 'javascript:';
+        link.style.padding = "0 5px"
+        link.className = 'pull-right fullscreen hidden';
+        link.title = Language.translate('fullscreen', 'labels');
+        link.innerHTML = '<span class="fas fa-expand fa-sm"></span>';
+
+        cell.prepend(link);
+
+        link.addEventListener('click', () => {
+            editorComponent.getAction('fullscreen').run()
+        });
+
+        function handleMouseEnter(e) {
+            e.stopPropagation();
+            link.classList.remove('hidden');
+        }
+
+        function handleMouseLeave(e) {
+            e.stopPropagation();
+            link.classList.add('hidden');
+        }
+
+        cell.addEventListener('mouseenter', handleMouseEnter);
+        cell.addEventListener('mouseleave', handleMouseLeave);
+
+        return () => {
+            cell.removeEventListener('mouseenter', handleMouseEnter);
+            cell.removeEventListener('mouseleave', handleMouseLeave);
+            link.remove();
+        };
+    }
+
     onMount(() => {
         // Extend the completion provider while keeping existing functionality
         const newLanguage = registerTwigForLanguage(language)
@@ -473,24 +515,73 @@
 
         editorComponent = monaco.editor.create(containerElement, options);
 
+        const fullScreenContainer = document.createElement('div');
+        fullScreenContainer.classList.add('fullscreen-monaco-editor')
+        document.body.appendChild(fullScreenContainer);
+
+        editorComponent.addAction({
+            id: 'fullscreen',
+            label: 'Toggle Fullscreen',
+            keybindings: [
+                monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF
+            ],
+            run: function () {
+                if (!document.fullscreenElement) {
+                    fullScreen = true
+                    fullScreenContainer.appendChild(containerElement);
+                    fullScreenContainer.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+
+                editorComponent.layout(); // Resize editor content
+            }
+        });
+
+        const handleFullscreen = (evt) => {
+            if (!document.fullscreenElement && evt.target === fullScreenContainer) {
+                fullScreen = false
+                rootElement.appendChild(containerElement)
+                editorComponent.layout();
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreen);
+
+
         editorComponent.onDidChangeModelContent(() => {
             value = editorComponent.getValue();
         });
 
+        const onEnd = initFullScreenIcon(rootElement.closest('.cell'), editorComponent)
+
         return () => {
             editorComponent.dispose();
+            fullScreenContainer.remove();
+            document.removeEventListener('fullscreenchange', handleFullscreen);
+            onEnd()
         };
     });
 </script>
 
 <Text {name} {value} {mode} {params}>
-    <div class={`code-container ${readOnly?'read-only':''}`} style={`height: ${height}px`} bind:this={containerElement}>
+    <div bind:this={rootElement}>
+        <div class={`code-container ${readOnly?'read-only':''}`} style={`height: ${height}`}
+             bind:this={containerElement}>
+        </div>
     </div>
 </Text>
 
 <style>
     .code-container {
         border: 1px solid #ced4da;
+        resize: vertical;
+        overflow: auto;
+    }
+
+    :global(.fullscreen-monaco-editor .code-container) {
+        resize: none;
+        overflow: unset;
     }
 
     :global(.code-container .monaco-editor) {
