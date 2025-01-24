@@ -18,21 +18,20 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         openMenu: function () {
             this.events = _.extend({}, this.events || {}, {
-                'click .navbar-toggle': function () {
-                    this.$el.find('.menu').toggleClass('open-menu');
-                    let headerBreadcrumbs = $('.header-breadcrumbs');
-                    if ($(window).scrollTop() > $('.page-header').outerHeight() && !$('#header .navbar .menu').hasClass('open-menu')) {
-                        headerBreadcrumbs.addClass('fixed-header-breadcrumbs');
-                    } else {
-                        headerBreadcrumbs.removeClass('fixed-header-breadcrumbs');
+                'click .navbar-toggle': function (e) {
+                    if (window.innerWidth > 768) {
+                        return;
                     }
-                },
-
-                'click .menu.open-menu a.nav-link': function (e) {
-                    var $a = $(e.currentTarget);
-                    var href = $a.attr('href');
-                    if (href && href != '#') {
+                    if (this.$el.find('.menu').hasClass('open-menu')) {
+                        $(document).off('mouseup.menu');
                         this.$el.find('.menu').removeClass('open-menu');
+                    } else {
+                        this.$el.find('.menu').addClass('open-menu');
+                        $(document).on('mouseup.menu', function (e) {
+                            if (!$(e.target).closest('.navbar .menu').length && !$(e.target).closest('.navbar-toggle').length) {
+                                this.$el.find('.menu').removeClass('open-menu');
+                            }
+                        }.bind(this));
                     }
                 },
 
@@ -124,31 +123,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.openMenu();
 
-            this.listenTo(Backbone, 'tree-panel-expanded', () => {
-                this.switchMinimizer(true);
-            });
+            this.setupBookmark();
 
-            this.setupBookmark()
-
-        },
-
-        switchMinimizer(afterTrigger) {
-            let $body = $('body');
-            if (!afterTrigger && $body.hasClass('minimized')) {
-                $body.removeClass('minimized');
-                this.getStorage().set('state', 'siteLayoutState', 'expanded');
-                Backbone.trigger('menu-expanded');
-            } else {
-                $body.addClass('minimized');
-                if (!afterTrigger) {
-                    this.getStorage().set('state', 'siteLayoutState', 'collapsed');
-                }
-            }
-            if (window.Event) {
-                try {
-                    window.dispatchEvent(new Event('resize'));
-                } catch (e) {}
-            }
         },
 
         adjust: function () {
@@ -297,21 +273,9 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.getCollectionFactory().create('Job', collection => {
                 collection.maxSize = 20;
                 collection.url = 'Job';
-                collection.sortBy = 'startedAt';
-                collection.asc = true;
-                collection.where = [
-                    {
-                        attribute: 'status',
-                        type: 'in',
-                        value: ['Running', 'Pending']
-                    },
-                    {
-                        attribute: 'executeTime',
-                        type: 'past',
-                        dateTime: true,
-                        timeZone: 'UTC'
-                    }
-                ];
+                collection.sortBy = 'priority';
+                collection.asc = false;
+                collection.where = [{type: 'bool', value: ['jobManagerItems']}];
                 this.listenToOnce(collection, 'sync', () => {
                     this.createView('list', 'views/record/list', {
                         el: this.options.el + ' .list-container',

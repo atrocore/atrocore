@@ -1,5 +1,7 @@
 {
   "controller": "controllers/record",
+  "acl": "acl/entity",
+  "limit": 2000,
   "recordViews": {
     "list": "views/admin/entity-manager/record/list",
     "detail": "views/admin/entity-manager/record/detail"
@@ -7,6 +9,7 @@
   "relationshipPanels": {
     "fields": {
       "select": false,
+      "limit": 2000,
       "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink"
     }
   },

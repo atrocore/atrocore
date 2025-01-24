@@ -1,6 +1,6 @@
 <div class="page-header">
     <h3>
-        <div class="header-breadcrumbs fixed-header-breadcrumbs">
+        <div class="header-breadcrumbs">
             <div class="breadcrumbs-wrapper">
                 <a href="#Admin">{{translate 'Administration'}}</a>
                 <a href="#Admin/entityManager">{{translate 'Entity Manager' scope='Admin'}}</a>

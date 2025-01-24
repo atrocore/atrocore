@@ -28,6 +28,7 @@ class Language
     protected array $deletedData = [];
     protected array $changedData = [];
     protected ?string $localeId;
+    protected ?string $language = null;
 
     public function __construct(Container $container, ?string $localeId = null)
     {
@@ -65,6 +66,11 @@ class Language
     public function getLanguage(): string
     {
         return $this->getConfig()->get('locales')[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+    }
+
+    public function setLanguage(string $languageCode): void
+    {
+        $this->language = $languageCode;
     }
 
     public function setLocale(?string $localeId): void
@@ -316,27 +322,39 @@ class Language
             $this->init();
         }
 
-        if (empty($this->localeId)) {
-            return $this->data[self::DEFAULT_LANGUAGE];
-        }
-
-        $cacheName = "locale_{$this->localeId}";
-
-        if (empty($data = $this->getDataManager()->getCacheData($cacheName))) {
-            $data = [];
-            $locales = $this->getConfig()->get('locales') ?? [];
-
-            $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
-            if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
-                $data = Util::merge($data, $this->data[$fallbackLanguage]);
+        if (!empty($this->language)) {
+            $data = $this->data[self::DEFAULT_LANGUAGE];
+            if ($this->language !== self::DEFAULT_LANGUAGE) {
+                $data = Util::merge($this->data[self::DEFAULT_LANGUAGE], $this->data[$this->language]);
             }
 
-            $data = Util::merge($data, $this->data[$locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE]);
-
-            $this->getDataManager()->setCacheData($cacheName, $data);
+            return $data;
         }
 
-        return $data;
+        if (!empty($this->localeId)) {
+            $cacheName = "locale_{$this->localeId}";
+
+            $data = $this->getDataManager()->getCacheData($cacheName);
+            if (empty($data)) {
+                $data = [];
+                $locales = $this->getConfig()->get('locales') ?? [];
+
+                $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
+                if (!empty($fallbackLanguage) && $fallbackLanguage !== self::DEFAULT_LANGUAGE) {
+                    $data = Util::merge($data, $this->data[$fallbackLanguage]);
+                }
+
+                $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
+
+                $data = Util::merge($data, $this->data[$language]);
+
+                $this->getDataManager()->setCacheData($cacheName, $data);
+            }
+
+            return $data;
+        }
+
+        return $this->data[self::DEFAULT_LANGUAGE];
     }
 
     protected function unify(string $path): array

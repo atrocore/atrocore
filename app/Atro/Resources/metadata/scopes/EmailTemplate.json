@@ -8,5 +8,6 @@
   "stream": false,
   "type": "ReferenceData",
   "object": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "emHidden": true
 }

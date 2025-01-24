@@ -12,5 +12,6 @@
   "object": true,
   "notificationDisabled": true,
   "bookmarkDisabled": true,
-  "actionDisabled": true
+  "actionDisabled": true,
+  "emHidden": true
 }

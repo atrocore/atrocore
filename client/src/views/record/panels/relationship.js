@@ -156,20 +156,24 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
-            if (this.defs.create) {
-                if (canSelect && this.getAcl().check(this.scope, 'create') && !~['User', 'Team'].indexOf()) {
-                    this.buttonList.push({
-                        title: 'Create',
-                        action: this.defs.createAction || 'createRelated',
+            if (
+                this.defs.create
+                && canSelect
+                && this.getAcl().check(this.scope, 'create')
+                && !~['User', 'Team'].indexOf()
+                && !(this.scope === 'EntityField' && this.model.name === 'Entity' && this.model.get('customizable') === false)
+            ) {
+                this.buttonList.push({
+                    title: 'Create',
+                    action: this.defs.createAction || 'createRelated',
+                    link: this.link,
+                    acl: 'create',
+                    aclScope: this.scope,
+                    html: '<span class="fas fa-plus"></span>',
+                    data: {
                         link: this.link,
-                        acl: 'create',
-                        aclScope: this.scope,
-                        html: '<span class="fas fa-plus"></span>',
-                        data: {
-                            link: this.link,
-                        }
-                    });
-                }
+                    }
+                });
             }
 
             if (this.defs.select) {
@@ -262,7 +266,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
-                collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                collection.maxSize = this.getMetadata().get(`clientDefs.${this.model.name}.relationshipPanels.${this.link}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
                 if (this.defs.dragDrop && this.defs.dragDrop.maxSize) {
                     collection.maxSize = this.defs.dragDrop.maxSize;
                 }

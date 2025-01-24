@@ -25,7 +25,7 @@
                     {{# if preloader }}
                             <a class="preloader" style="margin-left: 20px;display: none" href="javascript:"><img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg"></a>
                     {{else}}
-                            <button type="button" class="btn btn-default additional-button action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>
+                        <button type="button" class="btn btn-default additional-button action"{{#if tooltip}} title="{{tooltip}}"{{/if}} data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</button>
                     {{/if}}
                 {{/each}}
             {{/if}}

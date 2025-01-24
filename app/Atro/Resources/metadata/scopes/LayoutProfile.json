@@ -17,5 +17,6 @@
   "hideFieldTypeFilters": true,
   "bookmarkDisabled": true,
   "actionDisabled": true,
-  "aclLevelList": ["no","own","all"]
+  "aclLevelList": ["no","own","all"],
+  "emHidden": true
 }

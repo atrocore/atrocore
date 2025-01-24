@@ -26,6 +26,7 @@ class Set extends AbstractAction
     {
         $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
         $input = new \stdClass();
+        $input->entityId = $event->getArgument('entity')->get('id');
 
         return $this->executeNow($action, $input);
     }
@@ -69,7 +70,7 @@ class Set extends AbstractAction
         $res = $actionService->executeNow($action->get('id'), $input);
 
         if (empty($action->get('inBackground')) &&
-            (!property_exists($input, 'where') || in_array(['export', 'import', 'synchronization'], $action->get('type'))) &&
+            (!property_exists($input, 'where') || in_array($action->get('type'), ['export', 'import', 'synchronization'])) &&
             !empty($next = $this->getNextAction($current))) {
             return $this->executeAction($next, $input);
         }

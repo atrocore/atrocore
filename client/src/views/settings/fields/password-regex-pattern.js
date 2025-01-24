@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/settings/fields/password-regex-pattern', 'views/fields/varchar', function (Dep) {
+Espo.define('views/settings/fields/password-regex-pattern', ['views/fields/varchar', 'lib!MD5'], (Dep, MD5) => {
     return Dep.extend({
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -73,26 +73,9 @@ Espo.define('views/settings/fields/password-regex-pattern', 'views/fields/varcha
         },
 
         getTooltipText: function () {
-            let link = null;
-            this.ajaxGetRequest(`Translation`, {
-                where: [
-                    {
-                        type: "equals",
-                        attribute: "name",
-                        value: 'User.messages.newPasswordInvalid'
-                    }
-                ]
-            }, {async: false}).then(res => {
-                if (res.list && Array.isArray(res.list) && res.list.length > 0) {
-                    link = `#Translation/edit/${res.list[0].id}`;
-                }
-            });
+            let link = '#Translation/edit/' + MD5('User.messages.newPasswordInvalid');
 
-            if (!link) {
-                console.error('Message User.messages.newPasswordInvalid is not available');
-            }
-
-            return (Dep.prototype.getTooltipText.call(this) ?? '').replace('{message_link}', link ?? '/');
+            return (Dep.prototype.getTooltipText.call(this) ?? '').replace('{message_link}', link);
         },
 
         validateRegexpValid: function () {

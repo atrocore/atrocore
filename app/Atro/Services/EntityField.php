@@ -78,6 +78,7 @@ class EntityField extends ReferenceData
     {
         parent::prepareEntityForOutput($entity);
 
+        $entity->set('entityData', $entity->get('entity')->toArray());
         if (empty($entity->_collectionPrepared)) {
             $this->prepareFileTypesField($entity);
             $this->prepareDefaultField($entity);

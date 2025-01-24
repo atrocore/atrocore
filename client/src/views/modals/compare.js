@@ -45,19 +45,18 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             Modal.prototype.setup.call(this)
 
             if (this.instanceComparison) {
-                this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
-               this.header = this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name;
+                this.recordView = this.options.recordView  ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
+               this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name);
             } else {
-                this.recordView = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
-                this.header = this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison');
+                this.recordView = this.options.recordView  ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
+                this.header = this.options.header ?? (this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison'));
             }
 
-            this.setupRecord()
+            this.listenTo(this, 'after:render', () => this.setupRecord());
         },
 
         setupRecord() {
             this.notify('Loading...');
-            this.wait(true);
             let options = {
                 el: this.options.el + ' .modal-record',
                 model: this.model,
@@ -108,7 +107,6 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                             options.distantModels.push(distantModel);
                         }
                         this.createModalView(options);
-                        this.wait(false);
                     });
                 });
             } else {
@@ -131,6 +129,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         createModalView(options) {
             this.createView('modalRecord', this.recordView, options, (view) => {
+                view.render();
                 this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
             });
         }

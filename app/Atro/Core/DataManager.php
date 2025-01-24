@@ -122,6 +122,11 @@ class DataManager
             return true;
         }
 
+        // for translations
+        if (str_starts_with($name, 'locale_')) {
+            return true;
+        }
+
         if (substr(php_sapi_name(), 0, 3) == 'cli') {
             return false;
         }
@@ -136,8 +141,7 @@ class DataManager
         }
 
         if (!$this->getMemoryStorage()->has($name)) {
-            $this->getMemoryStorage()->set($name,
-                @json_decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), $isArray));
+            $this->getMemoryStorage()->set($name, @json_decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), $isArray));
         }
 
         return $this->getMemoryStorage()->get($name);

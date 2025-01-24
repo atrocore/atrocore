@@ -336,6 +336,7 @@
     "deleteAll": "Supprimer tout",
     "setAsInherited": "Défini comme hérité",
     "inherited": "Héritée",
+    "notInherited": "Non hérité",
     "resetAllToDefault": "Réinitialiser tous les paramètres par défaut",
     "pleaseReloadPage": "Veuillez <a href=\"javascript:\" onClick=\"window.location.reload();\">rafraîchir</a> la page pour mettre à jour les métadonnées.",
     "pleaseRebuildDatabase": "Veuillez <a href=\"javascript:\" data-action=\"rebuild-notification\">reconstruire la base de données</a> à partir de l'administration. Le schéma de la base de données est incohérent.",

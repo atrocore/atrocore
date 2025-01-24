@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Atro\Core\DataManager;
 use Espo\ORM\EntityManager;
 
 class RefreshTranslations extends AbstractConsole
@@ -25,6 +26,7 @@ class RefreshTranslations extends AbstractConsole
     public function run(array $data): void
     {
         $this->getEntityManager()->getRepository('Translation')->refreshToDefault();
+        $this->getDataManager()->clearCache();
 
         self::show('Translations refreshed successfully.', self::SUCCESS);
     }
@@ -32,5 +34,10 @@ class RefreshTranslations extends AbstractConsole
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
+    }
+
+    protected function getDataManager(): DataManager
+    {
+        return $this->getContainer()->get('dataManager');
     }
 }

@@ -39,6 +39,9 @@ Espo.define('views/layout/fields/related-entity', 'views/layout/fields/entity', 
                         this.params.options.unshift('')
                     }
                 }
+                if (this.model.get('relatedEntity') && !this.params.options.includes(this.model.get('relatedEntity'))) {
+                    this.model.set('relatedEntity', '')
+                }
                 this.reRender()
             })
         },

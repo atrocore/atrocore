@@ -1,6 +1,6 @@
 [
   {
-    "label": "",
+    "label": "Details",
     "rows": [
       [{"name": "name"}, {"name": "code"}],
       [{"name": "navigationManuBackgroundColor"}, {"name": "navigationMenuFontColor"}],

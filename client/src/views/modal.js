@@ -55,7 +55,7 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         width: false,
 
-        fitHeight: false,
+        fitHeight: true,
 
         escapeDisabled: false,
 
@@ -153,12 +153,13 @@ Espo.define('views/modal', 'view', function (Dep) {
                     className: this.className,
                     bodyDiffHeight: modalBodyDiffHeight,
                     footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
-                    fullHeight: this.getThemeManager().getParam('modalFullHeight'),
+                    fullHeight: false,
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     onRemove: function () {
                         this.onDialogClose();
                     }.bind(this)
                 });
+
                 this.setElement(containerSelector + ' .body');
             }, this);
 

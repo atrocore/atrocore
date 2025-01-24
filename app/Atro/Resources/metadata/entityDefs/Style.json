@@ -45,7 +45,8 @@
       "type": "color"
     },
     "labelColor": {
-      "type": "color"
+      "type": "color",
+      "default": "#777"
     },
     "anchorNavigationBackground": {
       "type": "color"
@@ -77,6 +78,9 @@
     "error": {
       "type": "color"
     },
+    "actionIconColor": {
+      "type": "color"
+    },
     "navbarStaticItemsHeight": {
       "type": "int"
     },
@@ -85,6 +89,8 @@
     },
     "customHeadCode": {
       "type": "text",
+      "language": "html",
+      "view": "views/fields/script",
       "tooltip": true,
       "notStorable": true
     },

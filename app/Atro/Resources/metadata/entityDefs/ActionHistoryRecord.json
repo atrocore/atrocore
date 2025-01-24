@@ -18,6 +18,7 @@
         },
         "action": {
             "type": "enum",
+            "len": 8,
             "optionsIds": ["read", "update", "create", "delete","restore"],
             "options": ["read", "update", "create", "delete","restore"]
         },
@@ -29,6 +30,7 @@
         },
         "ipAddress": {
             "type": "varchar",
+            "len": 42,
             "maxLength": "39"
         },
         "authToken": {

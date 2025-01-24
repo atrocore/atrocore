@@ -6,5 +6,6 @@
     "customizable":false,
     "module": "TreoCore",
     "bookmarkDisabled": true,
-    "actionDisabled": true
+    "actionDisabled": true,
+    "emHidden": true
 }

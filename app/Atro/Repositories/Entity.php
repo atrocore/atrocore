@@ -92,6 +92,22 @@ class Entity extends ReferenceData
         'common'
     ];
 
+    protected ?array $boolFields = null;
+
+    protected function getEntityById($id)
+    {
+        $item = $this->prepareItem($id);
+        if (!empty($item)) {
+            $entity = $this->entityFactory->create($this->entityName);
+            $entity->set($item);
+            $entity->setAsFetched();
+
+            return $entity;
+        }
+
+        return null;
+    }
+
     public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
     {
         if ($link === 'fields') {
@@ -113,40 +129,57 @@ class Entity extends ReferenceData
         return parent::countRelated($entity, $relationName, $params);
     }
 
-    protected function getAllItems(array $params = []): array
+    protected function prepareItem(string $code, array $row = null): ?array
     {
-        $boolFields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
-            if ($defs['type'] === 'bool') {
-                $boolFields[] = $field;
+        if ($row === null){
+            $row = $this->getMetadata()->get("scopes.$code");
+        }
+
+        if (empty($row) || !empty($row['emHidden'])) {
+            return null;
+        }
+
+        if ($this->boolFields === null) {
+            $this->boolFields = [];
+            foreach ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields']) as $field => $defs) {
+                if ($defs['type'] === 'bool') {
+                    $this->boolFields[] = $field;
+                }
             }
         }
 
+        foreach ($this->boolFields as $boolField) {
+            $row[$boolField] = !empty($row[$boolField]);
+        }
+
+        return array_merge($row, [
+            'id'                    => $code,
+            'code'                  => $code,
+            'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
+            'namePlural'            => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
+            'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
+            'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
+            'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
+            'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
+            'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
+            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
+            'textFilterFields'      => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'textFilterFields']),
+        ]);
+    }
+
+    protected function getAllItems(array $params = []): array
+    {
+        $scopeTypes = $params['whereClause'][0]['type'] ?? null;
+
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
-            if (!empty($row['emHidden'])) {
+            if (!empty($row['emHidden']) || (!empty($scopeTypes) && !empty($row['type']) && !in_array($row['type'], $scopeTypes))) {
                 continue;
             }
 
-            foreach ($boolFields as $boolField) {
-                $row[$boolField] = !empty($row[$boolField]);
+            if (!empty($item = $this->prepareItem($code, $row))) {
+                $items[] = $item;
             }
-
-            $items[] = array_merge($row, [
-                'id'                    => $code,
-                'code'                  => $code,
-                'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
-                'namePlural'            => $this->getLanguage()->translate($code, 'scopeNamesPlural'),
-                'iconClass'             => $this->getMetadata()->get(['clientDefs', $code, 'iconClass']),
-                'kanbanViewMode'        => $this->getMetadata()->get(['clientDefs', $code, 'kanbanViewMode']),
-                'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
-                'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
-                'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-                'sortDirection'         => $this->getMetadata()
-                    ->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
-                'textFilterFields'      => $this->getMetadata()
-                    ->get(['entityDefs', $code, 'collection', 'textFilterFields']),
-            ]);
         }
 
         return $items;
@@ -187,6 +220,7 @@ class Entity extends ReferenceData
             if ($entity->get('type') === 'Hierarchy' && $type === 'entityDefs') {
                 $contents = str_replace('{entityType}', $entity->get('code'), $contents);
             }
+            Util::createDir("data/metadata/{$type}");
             file_put_contents("data/metadata/$type/{$entity->get('code')}.json", $contents);
         }
 
@@ -198,7 +232,11 @@ class Entity extends ReferenceData
 
         // update config
         foreach (['quickCreateList', 'tabList'] as $key) {
-            $this->getConfig()->set($key, array_merge($this->getConfig()->get($key, []), [$entity->get('code')]));
+            $list = $this->getConfig()->get($key, []);
+            if (!in_array($entity->get('code'), $list)) {
+                $list[] = $entity->get('code');
+            }
+            $this->getConfig()->set($key, $list);
         }
         $this->getConfig()->save();
 
@@ -313,6 +351,10 @@ class Entity extends ReferenceData
 
     public function beforeSave(OrmEntity $entity, array $options = [])
     {
+        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false) {
+            throw new Forbidden();
+        }
+
         if ($entity->get('type') === 'Hierarchy' && !empty($entity->get('modifiedExtendedRelations'))) {
             if (in_array('parents', $entity->get('modifiedExtendedRelations')) && in_array('children', $entity->get('modifiedExtendedRelations'))) {
                 throw new BadRequest(str_replace(['{parents}', '{children}'],
@@ -330,11 +372,27 @@ class Entity extends ReferenceData
             throw new Forbidden();
         }
 
+        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false) {
+            throw new Forbidden();
+        }
+
         parent::beforeRemove($entity, $options);
     }
 
     public function deleteEntity(OrmEntity $entity): bool
     {
+        // delete relationships
+        $saveMetadata = false;
+        foreach ($entity->get('fields') ?? [] as $field) {
+            if (in_array($field->get('type'), ['link', 'linkMultiple'])) {
+                $this->getEntityManager()->getRepository('EntityField')->deleteFromMetadata($field);
+                $saveMetadata = true;
+            }
+        }
+        if ($saveMetadata) {
+            $this->getMetadata()->save();
+        }
+
         // delete metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $fileName = "data/metadata/$type/{$entity->get('code')}.json";
@@ -363,8 +421,6 @@ class Entity extends ReferenceData
                 $this->getEntityManager()->removeEntity($label);
             }
         }
-
-        // @todo delete all relations
 
         $this->getDataManager()->clearCache();
 
