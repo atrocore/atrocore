@@ -53,11 +53,6 @@ class V1Dot13Dot1 extends Base
         }
     }
 
-    public function down(): void
-    {
-
-    }
-
     protected function exec(string $query): void
     {
         try {
