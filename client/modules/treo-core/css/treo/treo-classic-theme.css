@@ -14803,10 +14803,6 @@ body > #header .navbar-brand span.home-icon {
         height: 30px !important;
         margin-top: 0 !important
     }
-
-    #login {
-        margin-left: -173px
-    }
 }
 
 @media (min-width: 1200px) {
