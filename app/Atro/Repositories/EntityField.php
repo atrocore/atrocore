@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
 use Espo\ORM\Entity as OrmEntity;
@@ -125,6 +126,10 @@ class EntityField extends ReferenceData
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
+            throw new Forbidden();
+        }
 
         if (in_array($entity->get('type'), ['link', 'linkMultiple'])) {
             if (
