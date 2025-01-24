@@ -33,8 +33,6 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
 
                let diffHeight = headerHeight + footerHeight + $('.navbar .navbar-header').outerHeight();
 
-               debugger
-
                const adjustHeight = () => {
                    const windowHeight = window.innerHeight;
                    const windowWidth = window.innerWidth;
