@@ -786,27 +786,13 @@ class Installer extends HasContainer
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->executeStatement();
 
-            // update preferences
-            $preferences = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->select('id', 'data')
-                ->from('preferences')
-                ->fetchAllAssociative();
-
-            foreach ($preferences as $preference) {
-                $data = @json_decode($preference['data'], true);
-                if (empty($data)) {
-                    continue;
-                }
-                $data['layoutProfileId'] = $defaultId;
-
-                $this->getEntityManager()->getConnection()->createQueryBuilder()
-                    ->update('preferences')
-                    ->set('data', ':data')
-                    ->where('id = :id')
-                    ->setParameter('id', $preference['id'])
-                    ->setParameter('data', json_encode($data))
-                    ->executeStatement();
-            }
+            // update layout profile for all users
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->update($this->getEntityManager()->getConnection()->quoteIdentifier('user'))
+                ->set('layout_profile_id', ':id')
+                ->where('id is not null')
+                ->setParameter('id', $defaultId)
+                ->executeStatement();
         } catch (\Throwable $e) {
 
         }

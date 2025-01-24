@@ -23,6 +23,7 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
 
             this.listenTo(this.model, 'change:entity', () => {
                 this.setAvailableOptions()
+                this.reRender()
             })
         },
 
@@ -47,9 +48,11 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
             if (this.getMetadata().get(['clientDefs', this.model.get('entity'), 'kanbanViewMode'])) {
                 optionList.push("kanban")
             }
-            for (const layout of this.getMetadata().get(['clientDefs', this.model.get('entity'), 'additionalLayouts']) || []) {
-                optionList.push(layout)
-            }
+            Object.keys(this.getMetadata().get(['clientDefs', this.model.get('entity'), 'additionalLayouts']) || {})
+                .forEach(layout => {
+                    optionList.push(layout)
+
+                })
 
             return optionList
         }

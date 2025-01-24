@@ -6,6 +6,9 @@
     "name": "viewType"
   },
   {
+    "name": "relatedEntity"
+  },
+  {
     "name": "layoutProfile"
   }
 ]

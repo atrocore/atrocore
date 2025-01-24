@@ -19,6 +19,9 @@
     "name": "multiplier"
   },
   {
+    "name": "symbol"
+  },
+  {
     "name": "convertTo"
   }
 ]

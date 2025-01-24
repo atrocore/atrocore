@@ -249,6 +249,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 model: model,
                 el: this.containerSelector + ' .record-container',
                 layoutName: this.layoutName,
+                layoutRelatedScope: this.options.layoutRelatedScope,
                 columnCount: this.columnCount,
                 buttonsDisabled: true,
                 inlineEditDisabled: true,

@@ -47,7 +47,7 @@ class V1Dot13Dot0 extends Base
                 }
 
                 $this->getConnection()->createQueryBuilder()
-                    ->update('user')
+                    ->update($this->getConnection()->quoteIdentifier('user'))
                     ->set('layout_profile_id', ':layoutProfileId')
                     ->where('id= :id')
                     ->setParameter('layoutProfileId', $data['layoutProfileId'])
