@@ -178,7 +178,7 @@ Espo.define('ui', [], function () {
             }.bind(this));
         }
 
-        $window = $(window);
+        $window = $(window) ;
 
         this.$el.on('shown.bs.modal', function (e) {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
@@ -207,6 +207,7 @@ Espo.define('ui', [], function () {
                     var cssParams = {
                         overflow: 'auto'
                     };
+
                     if (options.fullHeight) {
                         cssParams.height = (windowHeight - diffHeight) + 'px';
                         this.$el.css('paddingRight', 0);

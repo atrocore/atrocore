@@ -6441,7 +6441,7 @@ button.close {
     display: none;
     overflow: hidden;
     position: fixed;
-    top: 0;
+    top: 48px;
     right: 0;
     bottom: 0;
     left: 0;
@@ -6472,15 +6472,12 @@ button.close {
 
 .modal-open .modal {
     overflow-x: hidden;
-    overflow-y: auto;
     align-items: center;
     background: rgba(255, 255, 255, 0.7);
 }
 
 .modal-open .modal .modal-dialog {
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
     padding-right: 0 !important;
 }
 
@@ -6509,7 +6506,7 @@ button.close {
 
 .modal-backdrop {
     position: fixed;
-    top: 0;
+    top: 48px;
     right: 0;
     bottom: 0;
     left: 0;
@@ -14811,10 +14808,6 @@ body > #header .navbar-brand span.home-icon {
         height: 30px !important;
         margin-top: 0 !important
     }
-
-    #login {
-        margin-left: -173px
-    }
 }
 
 @media (min-width: 1200px) {
@@ -20295,9 +20288,15 @@ button.category:focus {
     #header .menu.not-collapsed {
         background-color: transparent;
         border-right : 1px solid transparent;
+        border-top: 0;
         box-shadow:none;
         -webkit-transform: translate(-95%, 0);
         transform: translate(-95%, 0);
+        cursor: pointer;
+    }
+
+    #header .menu.not-collapsed:hover {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .3);
     }
 
     body {

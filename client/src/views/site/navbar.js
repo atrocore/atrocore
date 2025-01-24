@@ -67,6 +67,13 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 this.menuShouldBeOpen = true;
                 this.handleMenuVisibility(e);
             },
+            'click .menu.open-menu a.nav-link': function (e) {
+                var $a = $(e.currentTarget);
+                var href = $a.attr('href');
+                if (href && href != '#') {
+                    this.$el.find('.menu').removeClass('open-menu');
+                }
+            },
             'click .navbar-collapse.in a.nav-link': function (e) {
                 var $a = $(e.currentTarget);
                 var href = $a.attr('href');
@@ -97,8 +104,12 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 return;
             }
             if(!this.$el.find('.menu').hasClass('open-menu')) {
-                this.$el.find('.menu').addClass('open-menu');
-                this.$el.find('.menu').removeClass('not-collapsed');
+               setTimeout(() => {
+                   if( self.menuShouldBeOpen) {
+                       this.$el.find('.menu').addClass('open-menu');
+                       this.$el.find('.menu').removeClass('not-collapsed');
+                   }
+               }, 500)
                 let self = this;
                 let handleMouseLeave = function(e) {
                     e.preventDefault();

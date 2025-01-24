@@ -31,11 +31,9 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                const headerHeight = this.$el.find('header.modal-header').outerHeight();
                const footerHeight = this.$el.find('footer.modal-footer').outerHeight();
 
-               let diffHeight = headerHeight + footerHeight;
+               let diffHeight = headerHeight + footerHeight + $('.navbar .navbar-header').outerHeight();
 
-               if (!this.dialog.options.fullHeight) {
-                   diffHeight = diffHeight + this.dialog.options.bodyDiffHeight;
-               }
+               debugger
 
                const adjustHeight = () => {
                    const windowHeight = window.innerHeight;
@@ -43,6 +41,7 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                    const cssParams = {
                        overflow: 'auto'
                    };
+                   this.dialog.$el.css('paddingRight', 0);
                    if (!this.dialog.options.fullHeight && windowHeight < 512) {
                        cssParams.maxHeight = 'none';
                        cssParams.height = 'none';
