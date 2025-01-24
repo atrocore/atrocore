@@ -78,6 +78,9 @@
     "error": {
       "type": "color"
     },
+    "actionIconColor": {
+      "type": "color"
+    },
     "navbarStaticItemsHeight": {
       "type": "int"
     },

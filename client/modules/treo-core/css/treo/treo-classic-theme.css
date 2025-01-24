@@ -23,6 +23,7 @@ body {
     --secondary-border-color: #f5f5f5;
     --panel-title-color: #000;
     --header-title-color: #000;
+    --action-icon-color: #333;
     --success: #dff0d8;
     --notice: #fcf8e3;
     --information: #e0efff;
@@ -19538,7 +19539,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .list-row-buttons > button > span {
-    color: #06c;
+    color: var(--action-icon-color);
 }
 
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-group-panel {
@@ -22339,6 +22340,10 @@ select {
 .cell .inline-actions > * {
     padding-left: 5px;
     text-align: center;
+}
+
+.cell .inline-actions > * {
+    color: var(--action-icon-color);
 }
 
 .info-field-icon {
