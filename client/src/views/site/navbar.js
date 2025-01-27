@@ -67,6 +67,12 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 this.menuShouldBeOpen = true;
                 this.handleMenuVisibility(e);
             },
+            'mouseleave .menu': function(e) {
+                this.handleMouseLeave(e);
+            },
+            'mouseleave .navbar-toggle': function(e) {
+                this.handleMouseLeave(e);
+            },
             'click .menu.open-menu a.nav-link': function (e) {
                 var $a = $(e.currentTarget);
                 var href = $a.attr('href');
@@ -96,6 +102,12 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this[method](data, e);
                     e.preventDefault();
                 }
+            },
+            'transitionend .menu' : function(e) {
+                if(e.originalEvent.propertyName === 'transform' && !this.$el.find('.menu').hasClass('open-menu')) {
+                    this.$el.find('.menu').addClass('not-collapsed');
+                    this.$el.find('.menu').off('transitionend');
+                }
             }
         },
 
@@ -104,38 +116,24 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 return;
             }
             if(!this.$el.find('.menu').hasClass('open-menu')) {
+                this.menuShouldBeOpen = true;
                setTimeout(() => {
-                   if( self.menuShouldBeOpen) {
+                   if(this.menuShouldBeOpen) {
                        this.$el.find('.menu').addClass('open-menu');
                        this.$el.find('.menu').removeClass('not-collapsed');
                    }
                }, 500)
-                let self = this;
-                let handleMouseLeave = function(e) {
-                    e.preventDefault();
-                    self.menuShouldBeOpen = false;
-                    setTimeout(() => {
-                        if(!self.menuShouldBeOpen) {
-                            self.$el.find('.menu').removeClass('open-menu');
-                            self.$el.find('.menu', '.navbar-toggle').off('mouseleave.menu');
-                        }
-                    },500)
-                }
-                this.$el.find('.menu', '.navbar-toggle').on('mouseleave.menu', function(e) {
-                   handleMouseLeave(e);
-                });
-
-                this.$el.find('.navbar-toggle').on('mouseleave.menu', function(e) {
-                   handleMouseLeave(e);
-                });
-
-                this.$el.find('.menu').on('transitionend', function(e) {
-                    if(e.originalEvent.propertyName === 'transform' && !self.$el.find('.menu').hasClass('open-menu')) {
-                        self.$el.find('.menu').addClass('not-collapsed');
-                        self.$el.find('.menu').off('transitionend');
-                    }
-                })
             }
+        },
+
+        handleMouseLeave (e) {
+            e.preventDefault();
+            this.menuShouldBeOpen = false;
+            setTimeout(() => {
+                if(!this.menuShouldBeOpen) {
+                    this.$el.find('.menu').removeClass('open-menu');
+                }
+            },500)
         },
 
         getLogoSrc: function () {

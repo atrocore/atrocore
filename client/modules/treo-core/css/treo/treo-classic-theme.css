@@ -4734,15 +4734,17 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     .navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
         margin-left: -8px
     }
+
+    .navbar-toggle {
+        margin-left: 20px;
+    }
 }
 
 .navbar-toggle {
     position: relative;
     float: right;
-    margin-right: 8px;
-    padding: 9px 10px;
-    margin-top: 4.5px;
-    margin-bottom: 4.5px;
+    padding: 0;
+    margin: 5px 8px 5px 10px;
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;
@@ -20290,13 +20292,14 @@ button.category:focus {
         border-right : 1px solid transparent;
         border-top: 0;
         box-shadow:none;
-        -webkit-transform: translate(-95%, 0);
-        transform: translate(-95%, 0);
+        -webkit-transform: translate(-97%, 0);
+        transform: translate(-97%, 0);
         cursor: pointer;
     }
 
     #header .menu.not-collapsed:hover {
         box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .3);
+        background-color: var(--nav-menu-background);
     }
 
     body {
