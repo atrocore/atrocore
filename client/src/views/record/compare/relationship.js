@@ -460,6 +460,29 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
             }
 
             return validate;
+        },
+
+        changeViewMode(newMode) {
+            let selectedModelId = $('input[name="check-all"]:checked').val();
+            let selectedIndex = this.models.findIndex(model => model.id === selectedModelId);
+            this.tableRows.forEach(row => {
+
+                row.entityValueKeys.forEach((data, index) => {
+                    let view = this.getView(data.key);
+                    if (!view) {
+                        return;
+                    }
+                    let mode = view.mode;
+                    if (selectedIndex === index && (row.field === this.isLinkedColumns || this.relationModels[row.linkedEntityId][index].get(this.isLinkedColumns))) {
+                        view.setMode(newMode);
+                        if (mode !== view.mode) {
+                            view.reRender();
+                        }
+                    }
+
+                });
+            })
+
         }
     })
 })

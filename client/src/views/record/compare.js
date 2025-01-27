@@ -37,13 +37,31 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             },
 
             'click button[data-action="cancel"]': function () {
+                let relationshipsPanels = this.getView('relationshipsPanels');
+                if(this.merging) {
+                    this.merging = false;
+                    $('[data-action="cancel"]').addClass('hidden');
+                    relationshipsPanels.changeViewMode('detail');
+                    this.setupFieldsPanels();
+                    relationshipsPanels.merging = false;
+                    return;
+                }
                 this.getParentView().close();
             },
 
             'click button[data-action="merge"]': function () {
+                let relationshipsPanels = this.getView('relationshipsPanels');
+                if(!this.merging) {
+                    this.merging = true;
+                    $('[data-action="cancel"]').removeClass('hidden');
+                    this.setupFieldsPanels();
+                    this.handleRadioButtonsDisableState(false)
+                    relationshipsPanels.merging = true;
+                    relationshipsPanels.changeViewMode('edit');
+                    return;
+                }
                 this.notify('Loading...')
                 let fieldsPanels = this.getView('fieldsPanels');
-                let relationshipsPanels = this.getView('relationshipsPanels');
 
                 if(fieldsPanels.validate() || relationshipsPanels.validate()) {
                     this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
