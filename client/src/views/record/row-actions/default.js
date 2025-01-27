@@ -95,6 +95,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             }
 
             if (this.getMetadata().get(['scopes', this.model.name, 'actionDisabled'])) {
+                this.$el.find('.preloader').addClass('hidden');
                 return;
             }
 
