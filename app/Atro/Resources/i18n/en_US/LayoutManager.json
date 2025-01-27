@@ -30,7 +30,8 @@
   "labels": {
     "New panel": "New panel",
     "Layout": "Layout",
-    "resetToDefault": "Reset to Default Profile",
+    "reset": "Reset Layout",
+    "fullEdit": "Full Edit",
     "resetToSystem": "Reset To System Layout"
   }
 }

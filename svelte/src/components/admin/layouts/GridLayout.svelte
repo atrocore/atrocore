@@ -46,7 +46,7 @@
     const dispatch = createEventDispatcher();
 
     function loadLayout(callback) {
-        let layout;
+        let layoutData;
         let model;
 
         const promiseList = [];
@@ -55,7 +55,7 @@
             new Promise(resolve => {
                 ModelFactory.create(params.scope, m => {
                     LayoutManager.get(params.scope, params.type,params.relatedScope, params.layoutProfileId, layoutLoaded => {
-                        layout = layoutLoaded.layout;
+                        layoutData = layoutLoaded;
                         model = m;
                         resolve();
                     }, false);
@@ -76,12 +76,12 @@
 
         Promise.all(promiseList).then(() => {
             if (callback) {
-                readDataFromLayout(model, layout);
+                readDataFromLayout(model, layoutData.layout);
                 setupPanels();
                 tick().then(() => {
                     initializeSortable();
                 })
-                callback();
+                callback(layoutData);
             }
         });
     }
