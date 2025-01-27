@@ -4736,7 +4736,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     }
 
     .navbar-toggle {
-        margin-left: 20px;
+        margin-left: 20px !important;
     }
 }
 
@@ -4744,7 +4744,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     position: relative;
     float: right;
     padding: 0;
-    margin: 5px 8px 5px 10px;
+    margin: 5px 10px 5px 10px;
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;
@@ -20895,6 +20895,7 @@ button.category:focus {
     .navbar-toggle {
         float: left;
         border: 0;
+        margin-top: 14px !important;
     }
 
     .navbar-header-inner {
