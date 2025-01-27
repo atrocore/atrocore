@@ -20292,8 +20292,8 @@ button.category:focus {
         border-right : 1px solid transparent;
         border-top: 0;
         box-shadow:none;
-        -webkit-transform: translate(-97%, 0);
-        transform: translate(-97%, 0);
+        -webkit-transform: translate(-98.5%, 0);
+        transform: translate(-98.5%, 0);
         cursor: pointer;
     }
 
