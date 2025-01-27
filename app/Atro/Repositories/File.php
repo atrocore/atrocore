@@ -115,7 +115,7 @@ class File extends Base
     {
         $inTransaction = false;
 
-        if (!$this->getPDO()->inTransaction()) {
+        if (empty($this->getMemoryStorage()->get('exportJobId')) && !$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
         }
@@ -140,7 +140,7 @@ class File extends Base
     {
         $inTransaction = false;
 
-        if (!$this->getPDO()->inTransaction()) {
+        if (empty($this->getMemoryStorage()->get('exportJobId')) && !$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
         }
@@ -592,10 +592,6 @@ class File extends Base
 
     protected function assignTheFileTypeAutomatically(Entity $entity): void
     {
-        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
-            return;
-        }
-
         if (empty($entity->get('typeId'))) {
             $fileTypes = $this->getEntityManager()->getRepository('FileType')
                 ->where(['assignAutomatically' => true])
