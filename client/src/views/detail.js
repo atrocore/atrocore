@@ -590,10 +590,20 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                     this.notify(false)
                 });
 
-                this.listenTo(this.model, 'overview-filters-changed', () => {
-                    console.log('overview-filters-changed');
-                    this.handleFilterButton();
-                })
+                this.listenTo(view, 'save', (filterModel) => {
+                    let filterChanged = false;
+                    this.getOverviewFiltersList().forEach((filter) => {
+                        if(filterModel.get(filter.name)) {
+                            filterChanged = true;
+                            this.getStorage().set(filter.name, this.scope, filterModel.get(filter.name));
+                        }
+                    });
+
+                    if(filterChanged) {
+                        this.model.trigger('overview-filters-changed');
+                        this.handleFilterButton();
+                    }
+                });
             });
         },
 

@@ -15,17 +15,7 @@ Espo.define('views/modals/overview-filter', 'views/modal', function (Modal) {
         filterModel: null,
         events: {
             'click [data-name="apply"]': function () {
-                let filterChanged = false;
-                this.overviewFilters.forEach((filter) => {
-                    if(this.filterModel.get(filter.name)) {
-                        filterChanged = true;
-                        this.getStorage().set(filter.name, this.scope, this.filterModel.get(filter.name));
-                    }
-                });
-
-                if(filterChanged) {
-                    this.model.trigger('overview-filters-changed');
-                }
+                this.trigger('save', this.filterModel);
 
                 this.close();
 
