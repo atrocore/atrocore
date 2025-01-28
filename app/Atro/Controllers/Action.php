@@ -15,7 +15,7 @@ namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
-use Espo\Core\Templates\Controllers\Base;
+use Atro\Core\Templates\Controllers\Base;
 
 class Action extends Base
 {
