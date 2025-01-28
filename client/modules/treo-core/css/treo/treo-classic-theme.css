@@ -6483,8 +6483,8 @@ button.close {
 }
 
 .modal-open .dialog-confirm .modal-dialog {
-    top: 50%;
-    transform: translateY(-50%);
+    top: 40%;
+    transform: translateY(-40%);
 }
 
 .password-change-request-modal .modal-dialog {
