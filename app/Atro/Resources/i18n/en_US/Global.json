@@ -364,7 +364,10 @@
     "thereAreTooManyRecord": "There are too many records. No comparison is possible",
     "Unset Selection": "Unset Selection",
     "Report a bug": "Report a bug",
-    "Visit Community": "Visit Community"
+    "Visit Community": "Visit Community",
+    "fieldStatus": "Field Value",
+    "language": "Language",
+    "scopeFilter": "Channel"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
