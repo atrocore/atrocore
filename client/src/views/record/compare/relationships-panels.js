@@ -143,6 +143,17 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                 this.trigger('all-panels-rendered');
                 this.renderedPanels = [];
             }
+        },
+
+        changeViewMode(mode) {
+            this.relationshipsPanels.forEach(panelData => {
+                let view = this.getView(panelData.name);
+                if(!view){
+                    return;
+                }
+
+               view.changeViewMode(mode);
+            });
         }
     })
 })
