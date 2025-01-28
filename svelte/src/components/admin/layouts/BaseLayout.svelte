@@ -152,5 +152,6 @@
 <style>
     :global(.modal-layout-manager) {
         padding-top: 0 !important;
+        overflow: auto !important;
     }
 </style>
