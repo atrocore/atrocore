@@ -1,9 +1,8 @@
 <div class="detail" id="{{id}}">
     <div class="detail-button-container button-container record-buttons clearfix">
-        <div>
+        <div class="buttons">
             <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
             <button class="btn btn-default {{#unless merging }} hidden {{/unless}}#" data-action="cancel" style="margin-right: 15px">{{translate 'Cancel'}}</button>
-            <div class="clearfix"></div>
             <a href="javascript:" title="Click to filter" class="btn btn-default action pull-right" data-action="openFilter">
                 <span class="fas fa-filter"></span>
             </a>
@@ -146,7 +145,7 @@
     }
 
     .detail .button-container {
-        padding: 10px 0 10px 10px !important;
+        padding: 10px !important;
     }
 
     .compare-panel .center-child {
@@ -171,6 +170,8 @@
         width: 100%;
         display: flex;
         flex-direction: column;
+        right: 20px;
+        left: 15px;
     }
 
 
