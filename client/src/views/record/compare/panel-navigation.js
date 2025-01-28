@@ -29,7 +29,7 @@ Espo.define('views/record/compare/panel-navigation', 'views/record/panel-navigat
             this.$el.parent().css('width', 'auto');
             if(this.panelList.length) {
                 this.$el.parent().css('top', $('.modal-header').css('height'));
-                $('.detail > .row').css('margin-top', '120px');
+                $('.detail > .row').css('margin-top', '130px');
             }else{
                 this.$el.hide();
                 $('.detail > .row').css('margin-top', '80px');

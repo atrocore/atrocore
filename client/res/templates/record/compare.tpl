@@ -174,7 +174,6 @@
         left: 15px;
     }
 
-
     .detail  > .detail-button-container  > .panel-navigation {
         padding-top: 10px;
     }

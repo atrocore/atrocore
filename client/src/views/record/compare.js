@@ -52,12 +52,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             'click button[data-action="merge"]': function () {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 if(!this.merging) {
+                    this.notify('Loading...')
                     this.merging = true;
                     $('[data-action="cancel"]').removeClass('hidden');
                     this.setupFieldsPanels();
                     this.handleRadioButtonsDisableState(false)
                     relationshipsPanels.merging = true;
                     relationshipsPanels.changeViewMode('edit');
+                    this.notify(false)
                     return;
                 }
                 this.notify('Loading...')
@@ -175,6 +177,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             );
 
             this.listenTo(this, 'after:render', () => {
+                $('.full-page-modal  .modal-body').css('overflow', 'auto');
                 this.notify('Loading...');
                 this.renderedPanels = [];
                 this.setupFieldsPanels();
