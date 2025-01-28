@@ -28,6 +28,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         merging: false,
 
+        selectedFilter: {},
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -80,6 +82,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 });
 
             },
+
+            'click a[data-action="openOverviewFilter"': function() {
+
+            }
         },
 
         init() {
@@ -473,6 +479,106 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }, function (view) {
                 view.render();
             });
-        }
+        },
+
+        getOverviewFiltersList: function () {
+            if(this.overviewFilterList) {
+                return this.overviewFilterList;
+            }
+            let result = [
+                {
+                    name: "fieldFilter",
+                    label: this.translate('fieldStatus'),
+                    options: ["allValues", "filled", "empty", "optional", "required"],
+                    selfExcludedFieldsMap: {
+                        filled: 'empty',
+                        empty: 'filled',
+                        optional: 'required',
+                        required: 'optional'
+                    },
+                    defaultValue: 'allValues'
+                }
+            ];
+
+            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                let referenceData = this.getConfig().get('referenceData');
+
+                if (referenceData && referenceData['Language']) {
+                    let languages = referenceData['Language'] || {},
+                        options = ['allLanguages', 'unilingual'],
+                        translatedOptions = {};
+
+                    options.forEach(option => {
+                        translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
+                    });
+
+                    Object.keys(languages || {}).forEach((lang) => {
+                        if (languages[lang]['role'] === 'main') {
+                            options.push('main');
+                            translatedOptions['main'] = languages[lang]['name'];
+                        } else {
+                            options.push(lang);
+                            translatedOptions[lang] = languages[lang]['name'];
+                        }
+                    });
+
+                    result.push({
+                        name: "languageFilter",
+                        label: this.translate('language'),
+                        options,
+                        translatedOptions,
+                        defaultValue: 'allLanguages'
+                    });
+                }
+            }
+
+            return this.overviewFilterList = result;
+        },
+
+        isOverviewFilterApply() {
+            for (const filter of this.getOverviewFiltersList()) {
+                let selected = this.selectedFilter[filter.name] ?? [];
+                if(!Array.isArray(selected)) {
+                    continue;
+                }
+                if(selected && selected.join('') !== filter.defaultValue ) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        actionOpenOverviewFilter: function(e) {
+            this.notify('Loading...')
+            this.createView('overviewFilter', this.overviewFilterView, {
+                scope: this.scope,
+                model: this.model,
+                overviewFilters: this.getOverviewFiltersList()
+            }, view  => {
+                view.render()
+                if(view.isRendered()) {
+                    this.notify(false)
+                }
+                this.listenTo(view, 'after:render', () => {
+                    this.notify(false)
+                });
+
+                this.listenTo(view, 'save', (filterModel) => {
+                    let filterChanged = false;
+                    this.getOverviewFiltersList().forEach((filter) => {
+                        if(filterModel.get(filter.name)) {
+                            filterChanged = true;
+                            this.getStorage().set(filter.name, this.scope, filterModel.get(filter.name));
+                        }
+                    });
+
+                    if(filterChanged) {
+                        this.model.trigger('overview-filters-changed');
+                        this.handleFilterButton();
+                    }
+                });
+            });
+        },
     });
 });
