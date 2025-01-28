@@ -428,16 +428,22 @@
     }
 
     function initFullScreenIcon(cell, editorComponent) {
+        if (!cell) {
+            return
+        }
         cell.querySelectorAll('.fa-expand').forEach(el => el.parentElement.remove());
 
         const link = document.createElement('a');
         link.href = 'javascript:';
-        link.style.padding = "0 5px"
         link.className = 'pull-right fullscreen hidden';
         link.title = Language.translate('fullscreen', 'labels');
         link.innerHTML = '<span class="fas fa-expand fa-sm"></span>';
 
-        cell.prepend(link);
+        let container = cell.querySelector(':scope > .status-container');
+        if (!container) {
+            container = cell
+        }
+        container.prepend(link)
 
         link.addEventListener('click', () => {
             editorComponent.getAction('fullscreen').run()
