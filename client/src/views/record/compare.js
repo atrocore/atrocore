@@ -22,6 +22,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         panelNavigationView: 'views/record/compare/panel-navigation',
 
+        overviewFilterView: 'views/modals/overview-filter',
+
         buttonList: [],
 
         fieldsArr: [],
@@ -40,7 +42,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             'click button[data-action="cancel"]': function () {
                 let relationshipsPanels = this.getView('relationshipsPanels');
-                if(this.merging) {
+                if (this.merging) {
                     this.merging = false;
                     $('[data-action="cancel"]').addClass('hidden');
                     relationshipsPanels.changeViewMode('detail');
@@ -53,7 +55,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             'click button[data-action="merge"]': function () {
                 let relationshipsPanels = this.getView('relationshipsPanels');
-                if(!this.merging) {
+                if (!this.merging) {
                     this.notify('Loading...')
                     this.merging = true;
                     $('[data-action="cancel"]').removeClass('hidden');
@@ -67,7 +69,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.notify('Loading...')
                 let fieldsPanels = this.getView('fieldsPanels');
 
-                if(fieldsPanels.validate() || relationshipsPanels.validate()) {
+                if (fieldsPanels.validate() || relationshipsPanels.validate()) {
                     this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
                     return;
                 }
@@ -103,8 +105,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             },
 
-            'click a[data-action="openOverviewFilter"': function() {
-
+            'click a[data-action="openOverviewFilter"]': function () {
+                this.openOverviewFilter();
             }
         },
 
@@ -122,7 +124,22 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         setup() {
-            this.notify('Loading...');
+            this.listenTo(this, 'after:render', () => {
+                $('.full-page-modal  .modal-body').css('overflow', 'auto');
+                this.notify('Loading...');
+                this.renderedPanels = [];
+                this.setupFieldsData();
+                this.setupFieldsPanels();
+                this.setupRelationshipsPanels();
+            });
+
+        },
+
+        getOtherModelsForComparison(model) {
+            return this.collection.models.filter(model => model.id !== this.model.id);
+        },
+
+        setupFieldsData() {
             this.fieldsArr = [];
             let modelCurrent = this.model;
             let modelOthers = this.getOtherModelsForComparison(this.model);
@@ -141,7 +158,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                if(this.merging  && fieldDef['unitField']) {
+                if (this.merging && fieldDef['unitField']) {
                     return;
                 }
 
@@ -181,19 +198,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.fieldsArr.sort((v1, v2) =>
                 this.translate(v1.field, 'fields', this.scope).localeCompare(this.translate(v2.field, 'fields', this.scope))
             );
-
-            this.listenTo(this, 'after:render', () => {
-                $('.full-page-modal  .modal-body').css('overflow', 'auto');
-                this.notify('Loading...');
-                this.renderedPanels = [];
-                this.setupFieldsPanels();
-                this.setupRelationshipsPanels();
-            });
-
-        },
-
-        getOtherModelsForComparison(model) {
-            return this.collection.models.filter(model => model.id !== this.model.id);
         },
 
         setupFieldsPanels() {
@@ -209,7 +213,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
             }, view => {
                 view.render();
-                if(view.isRendered()) {
+                if (view.isRendered()) {
                     this.handlePanelRendering('fieldsPanels');
                 }
                 this.listenTo(view, 'all-fields-rendered', () => {
@@ -231,7 +235,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`
             }, view => {
                 view.render();
-                if(view.isRendered()) {
+                if (view.isRendered()) {
                     this.handlePanelRendering('relationshipsPanels');
                     this.createPanelNavigationView();
                 }
@@ -359,7 +363,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return result
             }
 
-            if(fieldDef['unitField']) {
+            if (fieldDef['unitField']) {
                 let mainField = fieldDef['mainField'];
                 let mainFieldDef = this.getMetadata().get(['entityDefs', this.scope, 'fields', mainField]);
                 let unitIdField = mainField + 'Unit'
@@ -455,24 +459,25 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         handlePanelRendering(name) {
-            if(this.renderedPanels.includes(name)) {
+            if (this.renderedPanels.includes(name)) {
                 return;
             }
             this.renderedPanels.push(name);
-            if(this.renderedPanels.length === 2 || name === 'fieldsPanels') {
+            if (this.renderedPanels.length === 2 || name === 'fieldsPanels') {
                 this.notify(false);
-               this.handleRadioButtonsDisableState(false);
+                this.handleRadioButtonsDisableState(false);
                 $('.button-container button').removeClass('disabled');
+                $('.button-container a').removeClass('disabled');
             }
         },
 
         handleRadioButtonsDisableState(state) {
             let self = this;
-            $('input[type="radio"]').each(function(){
+            $('input[type="radio"]').each(function () {
                 let fieldData = self.fieldsArr.find(el => el.field === $(this).attr('name'));
-                if(fieldData && fieldData.disabled) {
+                if (fieldData && fieldData.disabled) {
                     $(this).prop('disabled', true);
-                }else{
+                } else {
                     $(this).prop('disabled', state)
                 }
             });
@@ -495,14 +500,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.createView('panelDetailNavigation', this.panelNavigationView, {
                 panelList: panelList,
                 model: this.model,
-                el: this.options.el + ' #'+ this.getId() + ' .panel-navigation.panel-left',
+                el: this.options.el + ' #' + this.getId() + ' .panel-navigation.panel-left',
             }, function (view) {
                 view.render();
             });
         },
 
         getOverviewFiltersList: function () {
-            if(this.overviewFilterList) {
+            if (this.overviewFilterList) {
                 return this.overviewFilterList;
             }
             let result = [
@@ -558,10 +563,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         isOverviewFilterApply() {
             for (const filter of this.getOverviewFiltersList()) {
                 let selected = this.selectedFilter[filter.name] ?? [];
-                if(!Array.isArray(selected)) {
+                if (!Array.isArray(selected)) {
                     continue;
                 }
-                if(selected && selected.join('') !== filter.defaultValue ) {
+                if (selected && selected.join('') !== filter.defaultValue) {
                     return true;
                 }
             }
@@ -569,15 +574,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             return false;
         },
 
-        actionOpenOverviewFilter: function(e) {
+        openOverviewFilter: function () {
             this.notify('Loading...')
-            this.createView('overviewFilter', this.overviewFilterView, {
+            this.createView('compareOverviewFilter', this.overviewFilterView, {
                 scope: this.scope,
                 model: this.model,
                 overviewFilters: this.getOverviewFiltersList()
-            }, view  => {
+            }, view => {
                 view.render()
-                if(view.isRendered()) {
+                if (view.isRendered()) {
                     this.notify(false)
                 }
                 this.listenTo(view, 'after:render', () => {
@@ -587,15 +592,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.listenTo(view, 'save', (filterModel) => {
                     let filterChanged = false;
                     this.getOverviewFiltersList().forEach((filter) => {
-                        if(filterModel.get(filter.name)) {
+                        if (filterModel.get(filter.name)) {
                             filterChanged = true;
-                            this.getStorage().set(filter.name, this.scope, filterModel.get(filter.name));
+                            this.selectedFilter[filter.name] = filterModel.get(filter.name);
                         }
                     });
 
-                    if(filterChanged) {
-                        this.model.trigger('overview-filters-changed');
-                        this.handleFilterButton();
+                    if (filterChanged) {
+                        $('[data-action="openOverviewFilter"]').css('color', this.isOverviewFilterApply() ? 'red' : 'black');
                     }
                 });
             });

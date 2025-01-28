@@ -3,7 +3,7 @@
         <div class="buttons">
             <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
             <button class="btn btn-default {{#unless merging }} hidden {{/unless}}#" data-action="cancel" style="margin-right: 15px">{{translate 'Cancel'}}</button>
-            <a href="javascript:" title="Click to filter" class="btn btn-default action pull-right" data-action="openFilter">
+            <a href="javascript:" title="Click to filter" class="btn btn-default action disabled pull-right" data-action="openOverviewFilter">
                 <span class="fas fa-filter"></span>
             </a>
         </div>
