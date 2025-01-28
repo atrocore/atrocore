@@ -339,7 +339,10 @@
     "thereAreTooManyRecord": "Es gibt zu viele Datensätze. Kein Vergleich ist möglich",
     "Unset Selection": "Nicht eingestellte Auswahl",
     "Report a bug": "Einen Fehler melden",
-    "Visit Community": "Gemeinschaft besuchen"
+    "Visit Community": "Gemeinschaft besuchen",
+    "fieldStatus": "Feld Wert",
+    "language": "Sprache",
+    "scopeFilter": "Kanal"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",

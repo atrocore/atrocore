@@ -107,9 +107,20 @@ class EntityField extends ReferenceData
             }
         }
 
+        $types = null;
+        foreach ($params['whereClause'] ?? [] as $v) {
+            if (!empty($v['type']) && is_array($v['type'])) {
+                $types = $v['type'];
+            }
+        }
+
         $items = [];
         foreach ($entities as $entityName) {
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
+                if (is_array($types) && !in_array($fieldDefs['type'], $types)) {
+                    continue;
+                }
+
                 if (!empty($item = $this->prepareItem($entityName, $fieldName, $fieldDefs))) {
                     $items[] = $item;
                 }
