@@ -10,7 +10,7 @@
         {{#if canConfigure }}
             {{#if storedProfiles.length }}
                 <li class="divider"></li> {{/if}}
-            <li><a href="javascript:" class="layout-editor">Configure</a></li>
+            <li><a href="javascript:" class="layout-editor">{{translate 'configure' category='labels' scope='LayoutManager'}}</a></li>
         {{/if}}
     </ul>
 {{/if}}
