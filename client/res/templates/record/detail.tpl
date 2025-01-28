@@ -67,7 +67,7 @@
 
     <div class="row">
         {{#if overviewFilters.length}}
-        <div class="col-lg-12 overview-filters-container">
+        <div class="overview-filters-container">
             {{#each overviewFilters}}
             <div class="cell filter-cell" data-name="{{this}}">
                 <div class="field" data-name="{{this}}">

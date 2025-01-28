@@ -90,12 +90,12 @@ Espo.define('views/record/panel-navigation', 'view',
             if (!name) {
                 return;
             }
-            let offset = this.getParentView().$el.find(`.panel[data-name="${name}"]`).offset();
-            let navbarHeight = $('#navbar .navbar-right').outerHeight() || 0;
-            let navigationHeight = $('.record-buttons').innerHeight() || 0;
-            navigationHeight += $('.edit-buttons').innerHeight() || 0 ;
-            $(window).scrollTop(offset.top - navbarHeight - navigationHeight + 5);
+            const panel = this.getParentView().$el.find(`.panel[data-name="${name}"]`);
+            if (panel.size() > 0) {
+                panel.get(0).scrollIntoView();
+            }
         },
+
         isPanelClosed(name){
             let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? []

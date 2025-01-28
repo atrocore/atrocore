@@ -795,219 +795,54 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
             var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
 
-            var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
-            var $middle = this.getView('middle').$el;
+            // var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
+            // var $middle = this.getView('middle').$el;
             var $window = $(window);
 
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
-            let $side = this.getView('side');
-
-            $window.off('scroll.side');
-            if ($side) {
-                let prevScroll = 0;
-
-                if (['detail', 'edit'].includes($side.type)) {
-                    let observer = new ResizeObserver(() => {
-                        let width = $side.$el.innerWidth();
-
-                        width = parseInt(width);
-
-                        const content = $('#content');
-                        if (content.length) {
-                            const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
-                            const overview = content.find('.overview');
-
-                            overview.outerWidth(contentWidth - $('.catalog-tree-panel').outerWidth() - width);
-                            $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
-                        }
-                    });
-                    observer.observe($('#content').get(0));
-
-                    $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
-                }
-
-                $window.resize(function () {
-                    let side = $('#main > .record .row > .side');
-
-                    if (side.length) {
-                        let width = side.outerWidth();
-
-                        if (side.outerHeight() < $window.height() - (parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight())) {
-                            side.attr('style', '');
-                            side.removeClass('fixed-top fixed-bottom scrolled');
-                        }
-
-                        if ($window.width() >= 768) {
-                            side.css({
-                                'width': width + 'px',
-                                'min-height': ($window.innerHeight() - side.offset().top) + 'px'
-                            });
-
-                            if (side.hasClass('collapsed')) {
-                                const recordButtons = $('.record-buttons.stick-sub');
-
-                                if (recordButtons.length && ($window.scrollTop() > recordButtons.outerHeight(true))) {
-                                    side.addClass('fixed-top');
-                                }
-                            }
-                        } else {
-                            side.css({'min-height': 'unset'});
-                        }
-                    }
-                });
-
-                $window.on('scroll.side', function (e) {
-                    let side = $('#main > .record .row > .side');
-
-                    let pageHeader = $('.nav.navbar-nav.navbar-right');
-                    let buttonContainer = $('.record-buttons');
-                    let topHeight = pageHeader.outerHeight() + buttonContainer.outerHeight();
-                    if (buttonContainer.hasClass('stick-sub')) {
-                        topHeight = $('.nav.navbar-right').outerHeight() + buttonContainer.outerHeight();
-                    }
-
-                    let overview = $('.overview');
-
-                    let scroll = $window.scrollTop();
-
-                    if (side.length) {
-                        // if screen width more than 768 pixels and side panel height more than screen height
-                        if ($window.width() >= 768 && overview.outerHeight() > side.outerHeight()) {
-                            let sideWidth = side.outerWidth();
-
-                            if (side.outerHeight() > $window.height() - topHeight) {
-
-                                // define scrolling direction
-                                if (scroll > prevScroll) {
-
-                                    // if side panel scrolled to end
-                                    if (scroll > side.outerHeight() - ($window.height() - side.offset().top)) {
-                                        side.attr('style', '');
-
-                                        if (side.hasClass('fixed-top')) {
-                                            side.addClass('scrolled');
-                                            side.css({
-                                                'top': side.offset().top + 'px'
-                                            });
-                                        } else {
-                                            side.removeClass('scrolled');
-                                            side.addClass('fixed-bottom');
-                                        }
-                                    } else {
-                                        if (!side.hasClass('fixed-bottom') && side.hasClass('fixed-top')) {
-                                            side.css({
-                                                'top': side.offset().top + 'px'
-                                            });
-                                            side.addClass('scrolled');
-                                            side.removeClass('fixed-top');
-                                        }
-                                    }
-
-                                    if (scroll > $('body').prop('scrollHeight') - $window.outerHeight() - 28) {
-                                        if (side.hasClass('scrolled')) {
-                                            let top = parseFloat(side.css('top'));
-                                            side.css({'top': (top - 28) + 'px'});
-                                        } else {
-                                            side.css({'bottom': '28px'});
-                                        }
-                                    }
-                                } else {
-
-                                    // if side panel has just start scrolling up
-                                    if (side.hasClass('fixed-bottom') && scroll !== 0) {
-                                        side.removeClass('fixed-bottom');
-
-                                        side.addClass('scrolled');
-                                        side.css({
-                                            'top': (scroll - (side.outerHeight() - $window.height())) + 'px'
-                                        });
-                                    } else {
-                                        // if panel scrolled to end
-                                        if (scroll < topHeight) {
-                                            side.attr('style', '');
-                                            side.removeClass('fixed-top fixed-bottom scrolled');
-                                        } else {
-                                            if (scroll < side.offset().top - topHeight) {
-                                                side.attr('style', '');
-                                                side.removeClass('scrolled');
-                                                side.addClass('fixed-top');
-                                                side.css('top', (topHeight - 5) + 'px');
-                                            }
-                                        }
-                                    }
-
-                                    if (scroll < $('body').prop('scrollHeight') - $window.outerHeight()) {
-                                        side.css({'bottom': 'unset'});
-                                    }
-                                }
-                            } else {
-                                if (scroll > prevScroll) {
-                                    if (scroll > side.offset().top - topHeight) {
-                                        side.addClass('fixed-top');
-                                        side.css('top', (topHeight - 5) + 'px');
-                                    }
-                                } else {
-                                    if (scroll < parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight()) {
-                                        side.attr('style', '');
-                                        side.removeClass('fixed-top');
-                                    }
-                                }
-                            }
-
-                            side.css({
-                                'width': sideWidth + 'px'
-                            });
-                        }
-
-                        prevScroll = scroll;
-                        side.css({'min-height': ($(window).innerHeight() - side.offset().top) + 'px'});
-                    }
-                }.bind(this));
-            }
-
-            $window.off('scroll.detail-' + this.numId);
-            $window.on('scroll.detail-' + this.numId, function (e) {
-                if ($(window.document).width() < screenWidthXs) {
-                    $container.removeClass('stick-sub');
-                    $block.hide();
-                    $container.show();
-                    return;
-                }
-
-                var edge = $middle.position().top + $middle.outerHeight(true);
-                var scrollTop = $window.scrollTop();
-
-                if (scrollTop < edge) {
-                    if (scrollTop > stickTop) {
-                        if (!$container.hasClass('stick-sub')) {
-                            $container.addClass('stick-sub');
-                            $block.show();
-
-                            var $p = $('.popover');
-                            $p.each(function (i, el) {
-                                $el = $(el);
-                                $el.css('top', ($el.position().top - blockHeight) + 'px');
-                            });
-                        }
-                    } else {
-                        if ($container.hasClass('stick-sub')) {
-                            $container.removeClass('stick-sub');
-                            $block.hide();
-
-                            var $p = $('.popover');
-                            $p.each(function (i, el) {
-                                $el = $(el);
-                                $el.css('top', ($el.position().top + blockHeight) + 'px');
-                            });
-                        }
-                    }
-                    $container.show();
-                } else {
-                    $container.hide();
-                    $block.show();
-                }
-            }.bind(this));
+            // $window.off('scroll.detail-' + this.numId);
+            // $window.on('scroll.detail-' + this.numId, function (e) {
+            //     if ($(window.document).width() < screenWidthXs) {
+            //         // $container.removeClass('stick-sub');
+            //         // $block.hide();
+            //         $container.show();
+            //         return;
+            //     }
+            //
+            //     var edge = $middle.position().top + $middle.outerHeight(true);
+            //     var scrollTop = $window.scrollTop();
+            //
+            //     if (scrollTop < edge) {
+            //         if (scrollTop > stickTop) {
+            //             if (!$container.hasClass('stick-sub')) {
+            //                 // $container.addClass('stick-sub');
+            //                 // $block.show();
+            //
+            //                 var $p = $('.popover');
+            //                 $p.each(function (i, el) {
+            //                     $el = $(el);
+            //                     $el.css('top', ($el.position().top - blockHeight) + 'px');
+            //                 });
+            //             }
+            //         } else {
+            //             if ($container.hasClass('stick-sub')) {
+            //                 // $container.removeClass('stick-sub');
+            //                 // $block.hide();
+            //
+            //                 var $p = $('.popover');
+            //                 $p.each(function (i, el) {
+            //                     $el = $(el);
+            //                     $el.css('top', ($el.position().top + blockHeight) + 'px');
+            //                 });
+            //             }
+            //         }
+            //         $container.show();
+            //     } else {
+            //         $container.hide();
+            //         // $block.show();
+            //     }
+            // }.bind(this));
 
             var fields = this.getFieldViews();
 
@@ -1045,57 +880,57 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            let overview = $('.record .overview');
-            let side = $('#main > .record .row > .side');
-            if (overview.length && side.length) {
-                setTimeout(function () {
-                    if (overview.outerHeight() > side.outerHeight()) {
-                        overview.addClass('bordered');
-                    } else {
-                        side.addClass('bordered');
-                    }
-                }, 100);
-
-                $window.resize(function () {
-                    let row = $('.record > .detail > .row');
-
-                    if ($window.outerWidth() > 768) {
-                        if (row.length && (side.hasClass('fixed-top') || side.hasClass('fixed-bottom') || side.hasClass('scrolled'))) {
-
-                            side.css({
-                                'width': (row.outerWidth() - overview.outerWidth(true)) + 'px'
-                            });
-                        }
-                    }
-                });
-
-                let content = $('#content');
-
-                if (content.length) {
-                    let pageHeader = $('.page-header');
-                    let detailButtons = $('.detail-button-container.record-buttons');
-                    let mainOverview = $('#main > .record > .detail > .row > .overview');
-                    let mainSide = $('#main > .record > .detail > .row > .side');
-
-                    let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
-
-                    if (mainOverview.outerHeight() > mainSide.outerHeight()) {
-                        mainOverview.css({
-                            'minHeight': minHeight + 'px'
-                        })
-                    } else {
-                        mainSide.css({
-                            'minHeight': minHeight + 'px'
-                        })
-                    }
-                }
-            }
+            // let overview = $('.record .overview');
+            // let side = $('#main > main > .record .row > .side');
+            // if (overview.length && side.length) {
+            //     setTimeout(function () {
+            //         if (overview.outerHeight() > side.outerHeight()) {
+            //             overview.addClass('bordered');
+            //         } else {
+            //             side.addClass('bordered');
+            //         }
+            //     }, 100);
+            //
+            //     $window.resize(function () {
+            //         let row = $('.record > .detail > .row');
+            //
+            //         if ($window.outerWidth() > 768) {
+            //             if (row.length && (side.hasClass('fixed-top') || side.hasClass('fixed-bottom') || side.hasClass('scrolled'))) {
+            //
+            //                 side.css({
+            //                     'width': (row.outerWidth() - overview.outerWidth(true)) + 'px'
+            //                 });
+            //             }
+            //         }
+            //     });
+            //
+            //     let content = $('#content');
+            //
+            //     if (content.length) {
+            //         let pageHeader = $('.page-header');
+            //         let detailButtons = $('.detail-button-container.record-buttons');
+            //         let mainOverview = $('#main > main > .record > .detail > .row > .overview');
+            //         let mainSide = $('#main > main > .record > .detail > .row > .side');
+            //
+            //         let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
+            //
+            //         if (mainOverview.outerHeight() > mainSide.outerHeight()) {
+            //             mainOverview.css({
+            //                 'minHeight': minHeight + 'px'
+            //             })
+            //         } else {
+            //             mainSide.css({
+            //                 'minHeight': minHeight + 'px'
+            //             })
+            //         }
+            //     }
+            // }
 
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
-                    $container.removeClass('stick-sub');
-                    $block.hide();
+                    // $container.removeClass('stick-sub');
+                    // $block.hide();
                     $container.show();
                     return;
                 }
@@ -1115,8 +950,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     $el.css('top', ($el.position().top - ($container.height() - blockHeight * 2 + 10)) + 'px');
                                 }.bind(this));
                             }
-                            $container.addClass('stick-sub');
-                            $block.show();
+                            // $container.addClass('stick-sub');
+                            // $block.show();
                         } else {
                             if ($container.hasClass('stick-sub') && this.mode !== 'edit') {
                                 var $p = $('.popover:not(.note-popover)');
@@ -1125,8 +960,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     $el.css('top', ($el.position().top + ($container.height() - blockHeight * 2 + 10)) + 'px');
                                 }.bind(this));
                             }
-                            $container.removeClass('stick-sub');
-                            $block.hide();
+                            // $container.removeClass('stick-sub');
+                            // $block.hide();
                         }
                         var $p = $('.popover');
                         $p.each(function (i, el) {
@@ -1165,7 +1000,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         resetSidebar() {
-            let side = $('#main > .record .row > .side');
+            let side = $('#main > main > .record .row > .side');
 
             if (side) {
                 side.removeClass('scrolled fixed-bottom fixed-top');
@@ -1692,8 +1527,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
 
             if (!this.isWide && !this.isSmall) {
-                this.isTreePanel = this.isTreeAllowed();
-                this.setupTreePanel();
+                // this.isTreePanel = this.isTreeAllowed();
+                // this.setupTreePanel();
             }
         },
 
@@ -2352,18 +2187,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
                 recordViewObject: this
-            }, view => {
-                this.listenTo(view, 'side-width-changed', width => {
-                    width = parseInt(width);
-
-                    const content = $('#content');
-                    if (content.length) {
-                        const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
-                        const overview = content.find('.overview');
-
-                        overview.outerWidth(Math.floor(contentWidth - $('.catalog-tree-panel').outerWidth() - width));
-                    }
-                })
             });
         },
 
@@ -2666,38 +2489,39 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 scope: this.scope,
                 model: this.model
             }, view => {
-                this.listenTo(this.model, 'after:save', () => {
-                    view.rebuildTree();
-                });
-                view.listenTo(view, 'select-node', data => {
-                    this.selectNode(data);
-                });
-                view.listenTo(view, 'tree-load', treeData => {
-                    this.treeLoad(view, treeData);
-                });
-                view.listenTo(view, 'tree-refresh', () => {
-                    view.treeRefresh();
-                });
-                view.listenTo(view, 'tree-reset', () => {
-                    this.treeReset(view);
-                });
-                this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
-                    if (['parents', 'children'].includes(link)) {
-                        view.rebuildTree();
-                    }
-                });
-                this.listenTo(view, 'tree-width-changed', function (width) {
-                    this.onTreeResize(width)
-                });
-                this.listenTo(view, 'tree-width-unset', function () {
-                    if ($('.catalog-tree-panel').length) {
-                        $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.overview-filters-container').css({'width': 'unset', 'marginLeft': 'unset'})
-                        $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
-                    }
-                })
+
             });
+        },
+
+        onTreePanelRendered(view) {
+            this.listenTo(this.model, 'after:save', () => {
+                view.rebuildTree();
+            });
+            view.listenTo(view, 'select-node', data => {
+                this.selectNode(data);
+            });
+            view.listenTo(view, 'tree-load', treeData => {
+                this.treeLoad(view, treeData);
+            });
+            view.listenTo(view, 'tree-refresh', () => {
+                view.treeRefresh();
+            });
+            view.listenTo(view, 'tree-reset', () => {
+                this.treeReset(view);
+            });
+            this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
+                if (['parents', 'children'].includes(link)) {
+                    view.rebuildTree();
+                }
+            });
+            this.listenTo(view, 'tree-width-changed', function (width) {
+                this.onTreeResize(width)
+            });
+            this.listenTo(view, 'tree-width-unset', function () {
+                if ($('.catalog-tree-panel').length) {
+                    // $('.detail-button-container').css({'marginLeft': 'unset'});
+                }
+            })
         },
 
         selectNode(data) {
@@ -2744,31 +2568,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         onTreeResize(width) {
-            if ($('.catalog-tree-panel').length) {
-                width = parseInt(width || $('.catalog-tree-panel').outerWidth());
-
-                const content = $('#content');
-                const main = content.find('#main');
-
-                const header = content.find('.page-header');
-                const btnContainer = content.find('.detail-button-container');
-                const filters = content.find('.overview-filters-container');
-                const overview = content.find('.overview');
-                const side = content.find('.side');
-
-                header.outerWidth(Math.floor(main.width() - width));
-                header.css('marginLeft', width + 'px');
-
-                filters.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width));
-                filters.css('marginLeft', width + 'px');
-
-                btnContainer.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width - 1));
-                btnContainer.addClass('detail-tree-button-container');
-                btnContainer.css('marginLeft', width + 1 + 'px');
-
-                overview.outerWidth(Math.floor(content.innerWidth() - side.outerWidth() - width));
-                overview.css('marginLeft', width + 'px');
-            }
+            // if ($('.catalog-tree-panel').length) {
+            //     width = parseInt(width || $('.catalog-tree-panel').outerWidth());
+            //
+            //     const content = $('#content');
+            //     const btnContainer = content.find('.detail-button-container');
+            //
+            //     btnContainer.addClass('detail-tree-button-container');
+            //     btnContainer.css('marginLeft', width + 1 + 'px');
+            // }
         }
     });
 });

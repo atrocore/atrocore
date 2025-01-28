@@ -1236,14 +1236,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
 
-            let list = $('#main > .list-container > .list');
+            let list = $('#main .list-container > .list');
             if (!list) {
                 return;
             }
 
-            var $bar = $('<div class="fixed-scrollbar" style="display: none"><div></div></div>').appendTo(list).css({
-                width: list.outerWidth()
-            });
+            var $bar = $('<div class="fixed-scrollbar" style="display: none"><div></div></div>').appendTo(list);
             $bar.scroll(function () {
                 list.scrollLeft($bar.scrollLeft());
             });
@@ -1652,7 +1650,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 setWidth = () => {
                     let widthTable = fullTable.outerWidth();
 
-                    fixedTable.css('width', widthTable);
+                    // fixedTable.css('width', widthTable);
 
                     fullTable.find('thead').find('th').each(function (i, elem) {
                         let width = $(this).outerWidth();
