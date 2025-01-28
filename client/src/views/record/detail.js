@@ -795,8 +795,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
             var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
 
-            // var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
-            // var $middle = this.getView('middle').$el;
+            var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
+            var $middle = this.getView('middle').$el;
             var $window = $(window);
 
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
@@ -804,8 +804,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             // $window.off('scroll.detail-' + this.numId);
             // $window.on('scroll.detail-' + this.numId, function (e) {
             //     if ($(window.document).width() < screenWidthXs) {
-            //         // $container.removeClass('stick-sub');
-            //         // $block.hide();
+            //         $container.removeClass('stick-sub');
+            //         $block.hide();
             //         $container.show();
             //         return;
             //     }
@@ -816,8 +816,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             //     if (scrollTop < edge) {
             //         if (scrollTop > stickTop) {
             //             if (!$container.hasClass('stick-sub')) {
-            //                 // $container.addClass('stick-sub');
-            //                 // $block.show();
+            //                 $container.addClass('stick-sub');
+            //                 $block.show();
             //
             //                 var $p = $('.popover');
             //                 $p.each(function (i, el) {
@@ -827,8 +827,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             //             }
             //         } else {
             //             if ($container.hasClass('stick-sub')) {
-            //                 // $container.removeClass('stick-sub');
-            //                 // $block.hide();
+            //                 $container.removeClass('stick-sub');
+            //                 $block.hide();
             //
             //                 var $p = $('.popover');
             //                 $p.each(function (i, el) {
@@ -840,7 +840,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             //         $container.show();
             //     } else {
             //         $container.hide();
-            //         // $block.show();
+            //         $block.show();
             //     }
             // }.bind(this));
 
@@ -2480,17 +2480,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupTreePanel() {
-            if (!this.isTreeAllowed()) {
-                return;
-            }
-
-            this.createView('treePanel', 'views/record/panels/tree-panel', {
-                el: `${this.options.el} .catalog-tree-panel`,
-                scope: this.scope,
-                model: this.model
-            }, view => {
-
-            });
+            // if (!this.isTreeAllowed()) {
+            //     return;
+            // }
+            //
+            // this.createView('treePanel', 'views/record/panels/tree-panel', {
+            //     el: `${this.options.el} .catalog-tree-panel`,
+            //     scope: this.scope,
+            //     model: this.model
+            // }, view => {
+            //
+            // });
         },
 
         onTreePanelRendered(view) {

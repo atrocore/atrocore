@@ -157,6 +157,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             );
 
             this.listenTo(this, 'after:render', () => {
+                $('.full-page-modal  .modal-body').css('overflow', 'auto');
                 this.notify('Loading...');
                 this.renderedPanels = [];
                 this.setupFieldsPanels();
