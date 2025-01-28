@@ -55,8 +55,10 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
 
                    this.$el.find('div.modal-body').css(cssParams);
 
-                   if(this.$el.find('div.modal-body')[0].scrollHeight <= this.$el.find('div.modal-body').innerHeight()) {
-                       this.$el.find('div.modal-body').css('overflow', 'inherit');
+                   if(this.$el.find('div.modal-body').length) {
+                       if(this.$el.find('div.modal-body')[0].scrollHeight <= this.$el.find('div.modal-body').innerHeight()) {
+                           this.$el.find('div.modal-body').css('overflow', 'inherit');
+                       }
                    }
                };
                $(window).off('resize.adjust-modal-height').on('resize.adjust-modal-height', adjustHeight);
