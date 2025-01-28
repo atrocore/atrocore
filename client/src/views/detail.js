@@ -577,10 +577,16 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         actionOpenOverviewFilter: function(e) {
             this.notify('Loading...')
+            let overviewFilterList = this.getOverviewFiltersList();
+            let currentValues = {};
+            overviewFilterList.forEach((filter) => {
+                currentValues[filter.name] = this.getStorage().get(filter.name, this.scope);
+            });
             this.createView('overviewFilter', this.overviewFilterView, {
                 scope: this.scope,
                 model: this.model,
-                overviewFilters: this.getOverviewFiltersList()
+                overviewFilters: overviewFilterList,
+                currentValues: currentValues
             }, view  => {
                 view.render()
                 if(view.isRendered()) {

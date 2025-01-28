@@ -11,14 +11,13 @@ Espo.define('views/modals/overview-filter', 'views/modal', function (Modal) {
     return Modal.extend({
         template: 'modals/overview-filter',
         overviewFilters: [],
-        defaultValues: {},
+        currentValues: {},
         filterModel: null,
         events: {
             'click [data-name="apply"]': function () {
                 this.trigger('save', this.filterModel);
 
                 this.close();
-
             }
         },
         setup() {
@@ -39,6 +38,8 @@ Espo.define('views/modals/overview-filter', 'views/modal', function (Modal) {
             this.model = this.options.model;
 
             this.overviewFilters = this.options.overviewFilters ?? [];
+
+            this.currentValues = this.options.currentValues ?? {};
 
             this.getModelFactory().create(null, model => {
                 this.filterModel = model;
@@ -71,9 +72,9 @@ Espo.define('views/modals/overview-filter', 'views/modal', function (Modal) {
             }
 
             let selected = [filter.defaultValue ?? options[0]];
-            if (this.getStorage().get(filter.name, this.scope)) {
+            if (this.currentValues[filter.name]) {
                 selected = [];
-                (this.getStorage().get(filter.name, this.scope) || []).forEach(option => {
+                (this.currentValues[filter.name] || []).forEach(option => {
                     if (options.includes(option)) {
                         selected.push(option);
                     }
@@ -83,7 +84,6 @@ Espo.define('views/modals/overview-filter', 'views/modal', function (Modal) {
                 }
             }
 
-            this.getStorage().set(filter.name, this.scope, selected);
             model.set(filter.name, selected);
 
             this.createView(filter.name, 'views/fields/multi-enum', {
