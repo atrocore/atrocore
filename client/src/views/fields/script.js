@@ -42,9 +42,14 @@ Espo.define('views/fields/script', ['views/fields/base'], Dep => {
         },
 
         afterRender: function () {
+            Dep.prototype.afterRender.call(this)
+
             if (!this.$el.children()[0]) {
                 return
             }
+
+            this.initStatusContainer()
+
             this.svelteComponent = new Svelte.Script({
                 target: this.$el.children()[0],
                 props: {
