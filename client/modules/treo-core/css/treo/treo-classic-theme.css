@@ -6481,6 +6481,12 @@ button.close {
 .modal-open .modal .modal-dialog {
     position: relative;
     padding-right: 0 !important;
+
+}
+
+.modal-open .dialog-confirm .modal-dialog {
+    top: 40%;
+    transform: translateY(-40%);
 }
 
 .password-change-request-modal .modal-dialog {
@@ -6551,6 +6557,7 @@ button.close {
 .modal-body {
     position: relative;
     padding-top: 30px;
+    padding-bottom: 20px;
 }
 
 .modal-body > div:not(.record-container):not(.edit-container):not(.entity-manager-container) {
