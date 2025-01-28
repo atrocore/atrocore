@@ -1,5 +1,5 @@
 {{#if showLayoutEditor}}
-    <a class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+    <a class="dropdown-toggle btn-link {{ linkClass }}" style="cursor: pointer" data-toggle="dropdown">
         <span class="fas fa-cog cursor-pointer" style="font-size: 1em;"></span>
     </a>
     <ul class="dropdown-menu pull-right">

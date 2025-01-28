@@ -1876,7 +1876,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     && this.mode !== 'edit'
                 ) {
 
-                    let html = `<div class="layout-editor-container btn-group pull-right"></div>`
+                    let html = `<div class="layout-editor-container pull-right"></div>`
                     const $parent = view.$el.find('.panel-heading:first')
                     if ($parent.length > 0) {
                         $parent.append(html)
@@ -2444,10 +2444,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         scope: this.scope,
                         viewType: 'relationships',
                         layoutData: bottomView.layoutData,
+                        linkClass: 'btn',
                         el: el + ' .detail-button-container .layout-editor-container',
                     }, (view) => {
                         view.on("refresh", () => {
-                            // bottomView.remove()
                             this.createBottomView(view => {
                                 view.render()
                             })

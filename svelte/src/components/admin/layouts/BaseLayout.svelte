@@ -38,9 +38,10 @@
             if (UserData.get().user.isAdmin) {
                 buttonList.push({name: 'fullEdit', label: Language.translate('Full Edit', 'labels', "LayoutManager")})
             }
-            if (layoutData?.canEdit) {
-                buttonList.unshift({name: 'save', label: Language.translate('Save', 'labels'), style: 'primary'})
-            }
+        }
+
+        if (!params.inModal || layoutData?.canEdit) {
+            buttonList.unshift({name: 'save', label: Language.translate('Save', 'labels'), style: 'primary'})
         }
 
 
@@ -76,7 +77,6 @@
 
         if (!validate(layoutToSave)) {
             disabled = false;
-            debugger
             return;
         }
         Notifier.notify('Saving...');
@@ -92,6 +92,9 @@
             Notifier.notify('Saved', 'success', 2000);
             emitUpdate(false)
             disabled = false
+            if (!params.inModal) {
+                loadLayout()
+            }
         });
     }
 

@@ -32,6 +32,7 @@
     "Layout": "Layout",
     "reset": "Reset Layout",
     "fullEdit": "Full Edit",
-    "resetToSystem": "Reset To System Layout"
+    "resetToSystem": "Reset To System Layout",
+    "layoutManagement": "Layout Management"
   }
 }

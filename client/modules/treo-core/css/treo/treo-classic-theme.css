@@ -23976,3 +23976,8 @@ span[data-img-src]::after {
         padding: 5px 15px 5px 25px;
     }
 }
+
+.layout-editor-container{
+    position: relative;
+    text-align: right;
+}

@@ -2315,7 +2315,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 viewType: this.layoutName,
                 relatedScope: this.getParentModel()?.urlRoot,
                 layoutData: this.layoutData,
-                el: this.getSelector() + '.layout-editor-container .btn-group',
+                el: this.getSelector() + ' .layout-editor-container',
             }, (view) => {
                 view.on("refresh", () => this.refreshLayout())
                 view.render()

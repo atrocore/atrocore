@@ -18,7 +18,7 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
 
             this.buttonList = [];
 
-            this.header = this.getLanguage().translate('layoutManagement', 'labels');
+            this.header = this.getLanguage().translate('layoutManagement', 'labels', 'LayoutManager');
 
             let allowSwitch = true
             if (this.options.allowSwitch === false) {

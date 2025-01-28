@@ -46,7 +46,8 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
                 showLayoutEditor: canConfigure || layoutProfiles.length > 0,
                 canConfigure: canConfigure,
                 storedProfiles: layoutProfiles,
-                selectedProfileId: this.layoutData?.selectedProfileId
+                selectedProfileId: this.layoutData?.selectedProfileId,
+                linkClass: this.options.linkClass ?? ''
             };
         },
 
