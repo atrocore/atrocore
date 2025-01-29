@@ -8,13 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/layout/fields/view-type', 'views/fields/grouped-enum', function (Dep) {
+Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
         setup: function () {
             this.params.translation = 'Admin.layouts';
             this.params.groupTranslation = 'Layout.groups.viewType'
-            this.setupGroups()
 
             Dep.prototype.setup.call(this);
 
@@ -27,10 +26,16 @@ Espo.define('views/layout/fields/view-type', 'views/fields/grouped-enum', functi
 
         setupGroups() {
             this.params.options = this.getAvailableOptions()
-            this.params.groups = {
-                "view": this.params.options.filter(o => !(["relationships", "sidePanelsDetail"].includes(o))),
-                "viewGroup": ["relationships", "sidePanelsDetail"]
-            }
+            this.params.groupOptions = [
+                {
+                    name: "view",
+                    options: this.params.options.filter(o => !(["relationships", "sidePanelsDetail"].includes(o)))
+                },
+                {
+                    name: "viewGroup",
+                    options: ["relationships", "sidePanelsDetail"]
+                }
+            ]
         },
 
         getAvailableOptions() {

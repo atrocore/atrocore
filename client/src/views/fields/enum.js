@@ -56,9 +56,19 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         hasListenOptions: false,
 
+        translatedGroups: null,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
+            data.hasGroups = this.hasGroups()
+
+            if (this.hasGroups()) {
+                data.translatedGroups = this.translatedGroups
+                data.prohibitedEmptyValue = this.prohibitedEmptyValue
+                data.groupOptions = this.getActiveGroups()
+            }
+
             var value = this.model.get(this.name);
 
             if (this.model.has(this.name + 'OptionId')) {
@@ -78,6 +88,17 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             return data;
+        },
+
+        getActiveGroups() {
+            const groupOptions = {}
+            this.params.groupOptions.forEach(group => {
+                const options = (group.options || []).filter(opt => this.params.options.includes(opt))
+                if (options.length) {
+                    groupOptions[group.name] = options
+                }
+            })
+            return groupOptions
         },
 
         setup: function () {
@@ -103,6 +124,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
+            this.setupGroups()
+
             this.setupOptions();
 
             if ('translatedOptions' in this.options) {
@@ -113,9 +136,14 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.translatedOptions = this.params.translatedOptions;
             }
 
+            if ('translatedGroups' in this.params) {
+                this.translatedGroups = this.params.translatedGroups;
+            }
+
             if (this.translatedOptions === null && this.model.defs.fields[this.name] && this.model.defs.fields[this.name].translatedOptions) {
                 this.translatedOptions = Espo.Utils.clone(this.model.defs.fields[this.name].translatedOptions);
             }
+
 
             this.setupTranslation();
 
@@ -178,6 +206,22 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
         },
 
+        setupGroups() {
+            this.params.groupOptions = this.params.groupOptions || this.model.getFieldParam(this.name, 'groupOptions')
+
+            if (this.params.groupOptions) {
+                const options = []
+               this.params.groupOptions.forEach(group => {
+                    options.push(...group.options)
+                })
+                this.params.options = options
+            }
+        },
+
+        hasGroups() {
+            return !!this.params.groupOptions
+        },
+
         setupTranslation: function () {
             if (this.params.translation) {
                 var translationObj;
@@ -209,6 +253,14 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     }
                     this.translatedOptions = translatedOptions;
                 }
+            }
+
+            if (this.params.groupTranslation) {
+                this.translatedGroups = this.translate(...this.params.groupTranslation.split('.').reverse())
+            }
+
+            if (this.translatedGroups == null || typeof this.translatedGroups != 'object') {
+                this.translatedGroups = this.translate(this.name, 'groupOptions', this.model?.name)
             }
         },
 
@@ -352,7 +404,37 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             });
         },
 
-        getSearchOptions(){
+        getSearchOptions() {
+            if (this.hasGroups()) {
+                const options = [];
+                const groupOptions = []
+                this.params.groupOptions.forEach((group) => {
+                    groupOptions.push({value: group.name, label: this.translatedGroups?.[group.name] || group.name});
+
+                    (group.options || []).forEach(value => {
+                        var label = this.getLanguage().translateOption(value, this.name, this.model?.name);
+                        if (this.translatedOptions) {
+                            if (value in this.translatedOptions) {
+                                label = this.translatedOptions[value];
+                            }
+                        }
+                        options.push({
+                            value: value,
+                            label: label,
+                            group: group.name
+                        });
+                    })
+                }, this);
+
+                return {
+                    options: options,
+                    optgroups: groupOptions,
+                    optgroupLabelField: 'label',
+                    optgroupValueField: 'value',
+                    optgroupField: 'group',
+                }
+            }
+
             var data = [];
             (this.params.options || []).forEach(function (value) {
                 var label = this.getLanguage().translateOption(value, this.name, this.scope);
@@ -388,7 +470,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
                 var valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
                 this.$element.val(valueList.join(':,:'));
-
 
 
                 this.$element.selectize({
