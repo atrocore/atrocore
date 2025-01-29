@@ -403,7 +403,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initStatusContainer: function () {
-            if (this.mode !== 'detail') {
+            if (!['detail', 'edit'].includes(this.mode)) {
+                return;
+            }
+
+            if (this.$el.parents('.panel[data-name="stream"]').size() > 0) {
                 return;
             }
 
