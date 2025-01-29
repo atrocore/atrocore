@@ -20,6 +20,7 @@ Espo.define('views/layout/fields/view-type', 'views/fields/grouped-enum', functi
 
             this.listenTo(this.model, 'change:entity', () => {
                 this.setupGroups()
+                this.setupTranslation()
                 this.reRender()
             })
         },
