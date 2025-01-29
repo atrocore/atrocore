@@ -159,7 +159,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                if(!this.isAllowFieldUsingFilter(field, this.areEquals(modelCurrent, modelOthers, field, fieldDef))) {
+                if(!this.isAllowFieldUsingFilter(field, fieldDef, this.areEquals(modelCurrent, modelOthers, field, fieldDef))) {
                     return;
                 }
 
@@ -447,25 +447,30 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             return true;
         },
 
-        isAllowFieldUsingFilter(field, equalValueForModels) {
+        isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
 
             const fieldFilter = this.selectedFilters['fieldFilter'] || ['allValues'];
             const languageFilter = this.selectedFilters['languageFilter'] || ['allLanguages'];
 
             let fields = this.getFieldManager().getActualAttributeList(this.model.getFieldType(field), field);
             let fieldValues = fields.map(field => this.model.get(field));
-
+            if (fieldDef['unitField']) {
+                let mainField = fieldDef['mainField'];
+                let unitIdField = mainField + 'Unit';
+                fields = [mainField, unitIdField];
+                fieldValues = fields.map(field => this.model.get(field));
+            }
             let hide = false;
 
             if (!fieldFilter.includes('allValues')) {
                 // hide filled
                 if (!hide && fieldFilter.includes('filled')) {
-                    hide = fieldValues.every(value => this.isEmptyValue(value));
+                    hide = fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
                 }
 
                 // hide empty
                 if (!hide && fieldFilter.includes('empty')) {
-                    hide = !fieldValues.every(value => this.isEmptyValue(value));
+                    hide = !(fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels) ;
                 }
 
                 // hide optional
