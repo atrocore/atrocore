@@ -15028,9 +15028,16 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
 }
 
 div.list-kanban {
-    margin-left: -14px;
-    width: calc(100% + 29px);
+    margin-left: -10px;
+    margin-right: -10px;
     overflow-x: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+div.list-kanban > div.kanban-columns-container {
+    flex: 1;
 }
 
 div.list-kanban > div.kanban-head-container,
@@ -15181,7 +15188,6 @@ div.list-kanban > div.kanban-columns-container > table {
     }
 
     div.list-kanban > div.kanban-columns-container > table, div.list-kanban > div.kanban-head-container > table {
-        display: block !important;
         border-collapse: unset;
         border-spacing: unset
     }
@@ -15256,6 +15262,7 @@ table.table > thead th > div > a {
 }
 
 @media screen and (min-width: 768px) {
+    div.list-kanban,
     #main > main > .list-container > .list {
         margin-left: -20px;
         margin-right: -20px;
@@ -19553,6 +19560,12 @@ input#sn-checkbox-open-in-new-window {
     font-weight: normal;
 }
 
+#main > main > .list-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
 .list-container .list-buttons-container {
     margin-bottom: 10px
 }
@@ -19602,6 +19615,8 @@ body > .content {
 #main > main {
     flex: 1;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 table.table > thead th > a {
@@ -20640,7 +20655,7 @@ button.category:focus {
     #main .catalog-tree-panel {
         position: sticky;
         top: 0;
-        height: calc(100vh - 47px);
+        height: calc(100vh - 49px);
     }
 
     #main .catalog-tree-panel .category-panel-resizer {
@@ -20805,8 +20820,9 @@ button.category:focus {
     }
 
     #main .detail .side {
-        margin: 0 -2px;
+        margin: 0;
         padding: 0;
+        width: 100% !important;
     }
 
     .detail .side > .panel-default > .panel-heading {
@@ -22832,9 +22848,6 @@ code.hljs {
 div.list-kanban > div > table td.group-column {
     height: 100%;
 }
-.kanban-columns-container {
-    height: calc(100vh - 245px);
-}
 .kanban-columns-container table.kanban-columns {
     height: 100%;
     padding: 20px 0;
@@ -22853,6 +22866,7 @@ div.list-kanban > div > table td.group-column {
     padding: 5px 5px 5px 5px;
     box-shadow: 0 0 10px rgba(0,0,0,.2);
     background-color: #fafafa;
+    height: calc(100vh - 320px);
 }
 .list-kanban .kanban-head-container {
     box-shadow: none;
@@ -22869,6 +22883,18 @@ div.list-kanban > div > table td.group-column {
 div.list-kanban > div > table .item .panel .form-group {
     padding-right: 35px;
 }
+
+@media (max-width: 768px) {
+    .kanban-columns-container table.kanban-columns tbody tr.kanban-row td.group-column {
+        min-width: 200px;
+        height: calc(100vh - 350px);
+    }
+
+    .list-kanban .kanban-head-container table.kanban-head thead tr.kanban-row th.group-header {
+        min-width: 200px;
+    }
+}
+
 @media (max-width: 1500px) {
     div.list-kanban {
         overflow-x: auto;
