@@ -8,19 +8,19 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/type', 'views/fields/grouped-enum', Dep => {
+Espo.define('views/admin/field-manager/fields/type', 'views/fields/enum', Dep => {
 
     return Dep.extend({
 
         setup: function () {
-            this.params.groupTranslation = 'EntityField.groups.type'
+            this.params.groupTranslation = 'EntityField.groupOptions.type'
 
             Dep.prototype.setup.call(this);
 
             let scopeType = this.getMetadata().get(`scopes.${this.model.get('entityId')}.type`);
 
             this.params.options = [''];
-            this.params.groups = {};
+            this.params.groupOptions = [];
             this.translatedOptions = {'': ''};
 
             $.each(this.getMetadata().get('fields'), (type, typeDefs) => {
@@ -28,27 +28,27 @@ Espo.define('views/admin/field-manager/fields/type', 'views/fields/grouped-enum'
                     this.params.options.push(type);
 
                     const group = typeDefs.group || 'other'
-                    if (!this.params.groups[group]) {
-                        this.params.groups[group] = []
+                    let groupObject = this.params.groupOptions.find(go => go.name === group)
+                    if (!groupObject) {
+                        groupObject = {name: group, options: []}
+                        this.params.groupOptions.push(groupObject)
                     }
 
-                    this.params.groups[group].push(type)
+                    groupObject.options.push(type)
                 }
                 this.translatedOptions[type] = this.translate(type, 'fieldTypes', 'Admin');
             })
 
-            this.params.groups = Object.fromEntries(
-                Object.entries(this.params.groups).sort(([v1], [v2]) => {
-                    if (v1 === 'other') return 1;
-                    if (v2 === 'other') return -1;
-                    const order = {numeric: 1, character: 2, date: 3, reference: 4};
-                    return (order[v1] || 999) - (order[v2] || 999) ||
-                        (this.translatedGroups[v1] || v1).localeCompare((this.translatedGroups[v2] || v2));
-                })
-            );
+            this.params.groupOptions = this.params.groupOptions.sort((v1, v2) => {
+                if (v1.name === 'other') return 1;
+                if (v2.name === 'other') return -1;
+                const order = {numeric: 1, character: 2, date: 3, reference: 4};
+                return (order[v1.name] || 999) - (order[v2.name] || 999) ||
+                    (this.translatedGroups[v1.name] || v1.name).localeCompare((this.translatedGroups[v2.name] || v2.name));
+            })
 
-            Object.keys(this.params.groups).forEach(group => {
-                this.params.groups[group] = this.params.groups[group].sort((v1, v2) => {
+            this.params.groupOptions.forEach(group => {
+                group.options = group.options.sort((v1, v2) => {
                     return this.translate(v1, 'fieldTypes', 'Admin').localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
                 });
             })

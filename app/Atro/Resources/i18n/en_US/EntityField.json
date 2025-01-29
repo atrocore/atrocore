@@ -89,7 +89,7 @@
       "manyToMany": "Many-to-Many"
     }
   },
-  "groups": {
+  "groupOptions": {
     "type": {
       "character": "Character",
       "numeric": "Numeric",
