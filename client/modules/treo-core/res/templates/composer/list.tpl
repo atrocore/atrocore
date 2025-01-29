@@ -60,6 +60,7 @@
     main.composer .row {
         display: flex;
         align-content: stretch;
+        flex-wrap: wrap;
     }
 
     .modules-installed table td.cell,
@@ -77,7 +78,7 @@
         background-color: #ffe5e5;
     }
     .module-list-container {
-        margin-left: -16px;
+        margin-left: -20px;
         margin-right: -8px;
     }
     .module-list-container > .panel > .panel-heading {
@@ -94,6 +95,19 @@
     .log-list-container {
         border-left: 1px solid #dcdcdc;
         margin-left: -9px;
-        margin-right: -15px;
+        margin-right: -20px;
+        height: 100%;
+    }
+
+    @media screen and (max-width: 768px) {
+        .log-list-container {
+            margin-left: -10px;
+            margin-right: -10px;
+        }
+
+        .module-list-container {
+            margin-left: -10px;
+            margin-right: -10px;
+        }
     }
 </style>
