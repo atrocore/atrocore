@@ -460,12 +460,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (!fieldFilter.includes('allValues')) {
                 // hide filled
                 if (!hide && fieldFilter.includes('filled')) {
-                    hide = fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
+                    hide = fieldValues.every(value => this.isEmptyValue(value));
                 }
 
                 // hide empty
                 if (!hide && fieldFilter.includes('empty')) {
-                    hide = !fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
+                    hide = !fieldValues.every(value => this.isEmptyValue(value));
                 }
 
                 // hide optional
