@@ -1343,10 +1343,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                                 this.loadMore(btn);
                             }
                         }.bind(this));
-                    } else if (this.$el.parent().prop('id') === 'main') {
-                        $(window).off('scroll', this.$el);
-                        $(window).on('scroll', this.$el, function () {
-                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && $(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
+                    } else if (this.$el.parent().prop('id') === 'main' || this.$el.parent().prop("tagName").toLowerCase() === 'main') {
+                        const content = $('#content')
+
+                        content.off('scroll', this.$el);
+                        content.on('scroll', this.$el, function () {
+                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && content.scrollTop() + content.height() >= content.get(0).scrollHeight - 50) {
                                 this.loadMore(this.$el.find('a[data-action="showMore"]'));
                             }
                         }.bind(this));
