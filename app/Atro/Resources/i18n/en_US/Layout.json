@@ -5,7 +5,7 @@
     "relatedEntity": "Related Entity",
     "layoutProfile": "Layout Profile"
   },
-  "groupOptions": {
+  "groups": {
     "viewType": {
       "view": "View",
       "viewGroup": "View Group"

@@ -1,3 +1,3 @@
 <select name="{{name}}" class="form-control main-element">
-    {{groupedOptions params.groupOptions value scope=scope field=name translatedGroupOptions=params.translatedGroupOptions translatedOptions=translatedOptions}}
+    {{groupedOptions groups value scope=scope field=name translatedGroups=translatedGroups prohibitedEmptyValue=prohibitedEmptyValue translatedOptions=translatedOptions}}
 </select>

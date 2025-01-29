@@ -27,7 +27,7 @@ Espo.define('views/ui-handler/fields/target-fields', ['views/fields/entity-field
             $.each((Field.prototype.getEntityFields.call(this) || []), field => {
                 if (this.model.get('type') === 'ui_disable_options') {
                     const type = this.getMetadata().get(['entityDefs', this.getEntityType(), 'fields', field, 'type'])
-                    if (!['enum', 'multiEnum', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
+                    if (!['enum', 'multiEnum','groupedEnum', 'extensibleEnum', 'extensibleMultiEnum'].includes(type)) {
                         return
                     }
                 }

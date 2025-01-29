@@ -5,24 +5,10 @@
       "view": "views/layout/fields/entity"
     },
     "viewType": {
-      "type": "enum",
+      "type": "groupedEnum",
       "required": true,
       "prohibitedEmptyValue": false,
-      "view": "views/layout/fields/view-type",
-      "optionsIds": [
-        "list",
-        "detail",
-        "relationships",
-        "sidePanelsDetail",
-        "kanban"
-      ],
-      "options": [
-        "list",
-        "detail",
-        "relationships",
-        "sidePanelsDetail",
-        "kanban"
-      ]
+      "view": "views/layout/fields/view-type"
     },
     "relatedEntity": {
       "type": "varchar",

@@ -352,6 +352,24 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             });
         },
 
+        getSearchOptions(){
+            var data = [];
+            (this.params.options || []).forEach(function (value) {
+                var label = this.getLanguage().translateOption(value, this.name, this.scope);
+                if (this.translatedOptions) {
+                    if (value in this.translatedOptions) {
+                        label = this.translatedOptions[value];
+                    }
+                }
+                data.push({
+                    value: value,
+                    label: label
+                });
+            }, this);
+
+            return {options: data}
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -371,22 +389,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 var valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
                 this.$element.val(valueList.join(':,:'));
 
-                var data = [];
-                (this.params.options || []).forEach(function (value) {
-                    var label = this.getLanguage().translateOption(value, this.name, this.scope);
-                    if (this.translatedOptions) {
-                        if (value in this.translatedOptions) {
-                            label = this.translatedOptions[value];
-                        }
-                    }
-                    data.push({
-                        value: value,
-                        label: label
-                    });
-                }, this);
+
 
                 this.$element.selectize({
-                    options: data,
+                    ...this.getSearchOptions(),
                     delimiter: ':,:',
                     labelField: 'label',
                     valueField: 'value',
