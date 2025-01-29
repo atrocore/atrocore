@@ -26,10 +26,16 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
 
         setupGroups() {
             this.params.options = this.getAvailableOptions()
-            this.params.groups = {
-                "view": this.params.options.filter(o => !(["relationships", "sidePanelsDetail"].includes(o))),
-                "viewGroup": ["relationships", "sidePanelsDetail"]
-            }
+            this.params.groupOptions = [
+                {
+                    name: "view",
+                    options: this.params.options.filter(o => !(["relationships", "sidePanelsDetail"].includes(o)))
+                },
+                {
+                    name: "viewGroup",
+                    options: ["relationships", "sidePanelsDetail"]
+                }
+            ]
         },
 
         getAvailableOptions() {
