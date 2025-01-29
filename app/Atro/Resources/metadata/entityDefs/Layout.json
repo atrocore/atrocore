@@ -5,7 +5,7 @@
       "view": "views/layout/fields/entity"
     },
     "viewType": {
-      "type": "groupedEnum",
+      "type": "enum",
       "required": true,
       "prohibitedEmptyValue": false,
       "view": "views/layout/fields/view-type"

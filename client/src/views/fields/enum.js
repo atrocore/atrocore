@@ -66,7 +66,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (this.hasGroups()) {
                 data.translatedGroups = this.translatedGroups
                 data.prohibitedEmptyValue = this.prohibitedEmptyValue
-                data.groups = this.getActiveGroups()
+                data.groupOptions = this.getActiveGroups()
             }
 
             var value = this.model.get(this.name);
@@ -91,14 +91,14 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         getActiveGroups() {
-            const groups = {}
-            Object.keys(this.params.groups).forEach(group => {
-                const options = (this.params.groups[group] || []).filter(opt => this.params.options.includes(opt))
+            const groupOptions = {}
+            this.params.groupOptions.forEach(group => {
+                const options = (group.options || []).filter(opt => this.params.options.includes(opt))
                 if (options.length) {
-                    groups[group] = options
+                    groupOptions[group.name] = options
                 }
             })
-            return groups
+            return groupOptions
         },
 
         setup: function () {
@@ -207,19 +207,19 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         setupGroups() {
-            this.params.groups = this.params.groups || this.model.getFieldParam(this.name, 'groups')
+            this.params.groupOptions = this.params.groupOptions || this.model.getFieldParam(this.name, 'groupOptions')
 
-            if (this.params.groups) {
+            if (this.params.groupOptions) {
                 const options = []
-                Object.keys(this.params.groups).forEach(group => {
-                    options.push(...this.params.groups[group])
+               this.params.groupOptions.forEach(group => {
+                    options.push(...group.options)
                 })
                 this.params.options = options
             }
         },
 
         hasGroups() {
-            return !!this.params.groups
+            return !!this.params.groupOptions
         },
 
         setupTranslation: function () {
@@ -260,7 +260,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             if (this.translatedGroups == null || typeof this.translatedGroups != 'object') {
-                this.translatedGroups = this.translate(this.name, 'groups', this.model?.name)
+                this.translatedGroups = this.translate(this.name, 'groupOptions', this.model?.name)
             }
         },
 
@@ -407,11 +407,11 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         getSearchOptions() {
             if (this.hasGroups()) {
                 const options = [];
-                const groups = []
-                Object.keys(this.params.groups).forEach((group) => {
-                    groups.push({value: group, label: this.translatedGroups?.[group] || group});
+                const groupOptions = []
+                this.params.groupOptions.forEach((group) => {
+                    groupOptions.push({value: group.name, label: this.translatedGroups?.[group.name] || group.name});
 
-                    (this.params.groups[group] || []).forEach(value => {
+                    (group.options || []).forEach(value => {
                         var label = this.getLanguage().translateOption(value, this.name, this.model?.name);
                         if (this.translatedOptions) {
                             if (value in this.translatedOptions) {
@@ -421,14 +421,14 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                         options.push({
                             value: value,
                             label: label,
-                            group: group
+                            group: group.name
                         });
                     })
                 }, this);
 
                 return {
                     options: options,
-                    optgroups: groups,
+                    optgroups: groupOptions,
                     optgroupLabelField: 'label',
                     optgroupValueField: 'value',
                     optgroupField: 'group',
