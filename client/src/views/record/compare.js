@@ -131,6 +131,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.setupFieldsData();
                 this.setupFieldsPanels();
                 this.setupRelationshipsPanels();
+                this.createPanelNavigationView();
             });
 
         },
@@ -242,15 +243,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 view.render();
                 if (view.isRendered()) {
                     this.handlePanelRendering('relationshipsPanels');
-                    this.createPanelNavigationView();
                 }
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.handlePanelRendering('relationshipsPanels');
                 });
 
-                this.listenTo(view, 'after:render', () => {
-                    this.createPanelNavigationView();
-                });
             }, true);
         },
 
@@ -468,17 +465,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 // hide empty
                 if (!hide && fieldFilter.includes('empty')) {
-                    hide = !fieldValues.every(value => this.isEmptyValue(value));
+                    hide = !fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
                 }
 
                 // hide optional
                 if (!hide && fieldFilter.includes('optional')) {
-                    hide = this.model.getFieldParam(field, 'isRequired')
+                    hide = this.model.getFieldParam(field, 'required')
                 }
 
                 // hide required
                 if (!hide && fieldFilter.includes('required')) {
-                    hide = !this.model.getFieldParam(field, 'isRequired');
+                    hide = !this.model.getFieldParam(field, 'required');
                 }
             }
 
@@ -523,7 +520,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         isEmptyValue(value) {
-            return value === null || value === '' || (Array.isArray(value) && !value.length);
+            return value === undefined || value === null || value === '' || (Array.isArray(value) && !value.length);
         },
 
         handlePanelRendering(name) {
