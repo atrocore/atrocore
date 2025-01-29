@@ -14815,7 +14815,7 @@ body > #header .navbar-brand span.home-icon {
 }
 
 .panel-body {
-    padding: 14px 20px;
+    padding: 14px 10px;
 }
 
 .panel-body:before, .panel-body:after {
@@ -15236,19 +15236,41 @@ table.table > thead th > div > a {
     overflow: hidden;
     overflow-x: auto;
     scrollbar-width: none;
+    margin-left: -10px;
+    margin-right: -10px;
+    display: grid;
 }
 
 #main > main > .list-container > .list::-webkit-scrollbar {
     display: none;
 }
 
+#main > main > .list-container > .list > .table thead th > .layout-editor-container {
+    padding-right: 2px;
+    min-width: auto;
+    width: 100%;
+}
+
+#main > main > .list-container > .list > table td:first-child, #main > main > .list-container > .list > table th:first-child {
+    padding-left: 10px;
+}
+
 @media screen and (min-width: 768px) {
+    #main > main > .list-container > .list {
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
     #main > main > .list-container > .list > .table thead th {
         vertical-align: middle;
     }
 
     #main > main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
         margin-top: 2px;
+    }
+
+    #main > main > .list-container > .list > table td:first-child, #main > main > .list-container > .list > table th:first-child {
+        padding-left: 20px;
     }
 
     .catalog-tree-panel {
@@ -15274,11 +15296,24 @@ table.table > thead th > div > a {
         top: 3px;
     }
 
+    .panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
+        padding-right: 10px;
+    }
+
+    #main > main > .list-container > .list > .table thead th > .layout-editor-container {
+        padding-right: 9px;
+    }
+
     .fixed-scrollbar {
         display: none;
         position: fixed;
         overflow-x: scroll;
         bottom: 0;
+    }
+
+    .panel-body {
+        padding-left: 20px;
+        padding-right: 20px;
     }
 }
 
@@ -15483,13 +15518,13 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 .search-row {
-    margin-left: -3px !important;
-    margin-right: -3px !important
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .search-row > div {
     padding-left: 2px !important;
-    padding-right: 2px !important
+    padding-right: 2px !important;
 }
 
 .cell > .field {
@@ -15801,7 +15836,7 @@ select[multiple].input-sm {
 .panel-body > div > .list,
 .panel-body .group .list {
     display: grid;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 .panel-body > div > .list > table td:first-child,
@@ -15823,16 +15858,6 @@ select[multiple].input-sm {
 
 .modal-body > div > .list > table td:last-child, .modal-body > div > .list > table th:last-child {
     padding-right: 14px
-}
-
-#main > main > .list-container > .list {
-    margin-left: -20px;
-    margin-right: -20px;
-    display: grid;
-}
-
-#main > main > .list-container > .list > table td:first-child, #main > main > .list-container > .list > table th:first-child {
-    padding-left: 20px;
 }
 
 .panel-body > .no-margin {
@@ -16076,7 +16101,7 @@ table.no-margin {
     background-color: transparent;
     padding-top: 3px;
     padding-bottom: 3px;
-    padding-right: 12px;
+    padding-right: 5px;
     right: 0;
 }
 
@@ -16084,16 +16109,18 @@ table.no-margin {
     position: sticky;
 }
 
-.panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
-    padding-right: 10px;
+.panel-body .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
+    padding-right: 0;
+}
+
+@media (min-width: 768px) {
+    .list > table td.cell[data-name="buttons"] {
+        padding-right: 12px;
+    }
 }
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -13px
-}
-
-#main > main > .list-container > .list > .table thead th > .layout-editor-container {
-    padding-right: 9px;
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons {
@@ -19817,6 +19844,8 @@ ul.dropdown-menu > li.checkbox {
 .overview-filters-container {
     background-color: #f9f9f9;
     padding: 10px 0 5px 13px;
+    margin-left: -20px;
+    margin-right: -20px;
 }
 
 .overview-filters-container .selectize-input {
@@ -20323,16 +20352,10 @@ button.category:focus {
     left: 0;
     z-index: 101;
     background-color: #fff;
-    padding: 8px 14px 0;
+    padding: 8px 10px 0;
     margin-left: -10px;
     margin-right: -10px;
     border-bottom: 1px solid #dedede;
-}
-
-#main .edit > .row,
-#main .detail > .row {
-    margin-left: -10px;
-    margin-right: -10px;
 }
 
 @media screen and (min-width: 768px) {
@@ -20519,7 +20542,6 @@ button.category:focus {
         margin-top: -1px;
         background-color: #fafafa;
         display: flex;
-        flex-wrap: wrap;
     }
 
     #main > main > .record > .detail > .detail-button-container,
@@ -20527,11 +20549,12 @@ button.category:focus {
         position: sticky;
         margin-left: -20px;
         margin-right: -20px;
+        padding: 8px 20px 0;
     }
 
     #main .edit > .row > .overview-filters-container,
     #main .detail > .row > .overview-filters-container {
-        flex-basis: 100%;
+        width: 100%;
     }
 
     #main > main > .record > .edit > .row > .side,
@@ -20618,7 +20641,6 @@ button.category:focus {
         position: sticky;
         top: 0;
         height: calc(100vh - 47px);
-        overflow-y: auto;
     }
 
     #main .catalog-tree-panel .category-panel-resizer {
@@ -20673,11 +20695,6 @@ button.category:focus {
 
     #main .page-header.collapsed .overview-filters-container {
         width: auto;
-    }
-
-    #main .detail .row > .overview.collapsed {
-        margin-left: 279px;
-        width: calc(66.6666666667% - 279px);
     }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
@@ -20736,6 +20753,10 @@ button.category:focus {
     color: var(--nav-font-color);
 }
 
+#main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
+    overflow-y: auto;
+}
+
 @media screen and (max-width: 767px) {
     #content {
         margin-top: 44px;
@@ -20757,14 +20778,15 @@ button.category:focus {
 
     .detail .panel-default > .panel-heading,
     .edit .panel-default > .panel-heading {
-        margin: 0 -14px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 0 -10px;
     }
 
     .detail .overview,
     .edit .overview,
     #main > main > .list-container,
-    #main > main > .page-header,
-    #main .overview-filters-container {
+    #main > main > .page-header {
         width: 100% !important;
         margin-left: 0 !important;
     }
@@ -20776,10 +20798,15 @@ button.category:focus {
         min-height: auto !important;
     }
 
+    .overview-filters-container {
+        margin-left: -10px;
+        margin-right: -10px;
+        padding-left: 5px;
+    }
+
     #main .detail .side {
-        margin: 0 -7px;
+        margin: 0 -2px;
         padding: 0;
-        width: calc(100% + 14px) !important;
     }
 
     .detail .side > .panel-default > .panel-heading {
@@ -20808,6 +20835,11 @@ button.category:focus {
         white-space: nowrap;
     }
 
+    .panel-body > div > .list {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+
     #header .navbar-right > li.progress-badge-container {
         display: inline-block;
         float: right
@@ -20829,6 +20861,11 @@ button.category:focus {
     .list-container .list-buttons-container {
         margin-bottom: 10px;
         margin-top: 10px;
+    }
+
+    .list-group-item {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .navbar {
@@ -20965,12 +21002,23 @@ button.category:focus {
     }
 
     #main .catalog-tree-panel {
-        min-height: 53px;
-        margin: 0;
-        padding: 0;
         width: 100%;
         border: none;
         float: none;
+        margin: 0;
+    }
+
+    #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
+        position: fixed;
+        top: 45px;
+        z-index: 1000;
+        bottom: 0;
+        left: 0;
+    }
+
+    #main .catalog-tree-panel.catalog-tree-panel-hidden {
+        min-height: 53px;
+        padding: 0;
     }
 
     #main .catalog-tree-panel button:active {
@@ -22176,14 +22224,20 @@ span.became .file-link {
     display: inline-block
 }
 
+.bottom .panel .group-container {
+    margin: -14px -20px;
+}
+
 @media screen and (max-width: 768px) {
     .content {
         position: relative;
     }
-}
 
-.bottom .panel .group-container {
-    margin: -14px -20px;
+
+    .bottom .panel .group-container {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
 }
 
 .bottom .panel .group-container > .group > .group-name {

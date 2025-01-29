@@ -795,54 +795,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
             var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
 
-            var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
-            var $middle = this.getView('middle').$el;
             var $window = $(window);
 
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
-            // $window.off('scroll.detail-' + this.numId);
-            // $window.on('scroll.detail-' + this.numId, function (e) {
-            //     if ($(window.document).width() < screenWidthXs) {
-            //         $container.removeClass('stick-sub');
-            //         $block.hide();
-            //         $container.show();
-            //         return;
-            //     }
-            //
-            //     var edge = $middle.position().top + $middle.outerHeight(true);
-            //     var scrollTop = $window.scrollTop();
-            //
-            //     if (scrollTop < edge) {
-            //         if (scrollTop > stickTop) {
-            //             if (!$container.hasClass('stick-sub')) {
-            //                 $container.addClass('stick-sub');
-            //                 $block.show();
-            //
-            //                 var $p = $('.popover');
-            //                 $p.each(function (i, el) {
-            //                     $el = $(el);
-            //                     $el.css('top', ($el.position().top - blockHeight) + 'px');
-            //                 });
-            //             }
-            //         } else {
-            //             if ($container.hasClass('stick-sub')) {
-            //                 $container.removeClass('stick-sub');
-            //                 $block.hide();
-            //
-            //                 var $p = $('.popover');
-            //                 $p.each(function (i, el) {
-            //                     $el = $(el);
-            //                     $el.css('top', ($el.position().top + blockHeight) + 'px');
-            //                 });
-            //             }
-            //         }
-            //         $container.show();
-            //     } else {
-            //         $container.hide();
-            //         $block.show();
-            //     }
-            // }.bind(this));
 
             var fields = this.getFieldViews();
 
@@ -879,58 +834,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     // headerButtonsContainer.addClass('full-row');
                 }
             }
-
-            // let overview = $('.record .overview');
-            // let side = $('#main > main > .record .row > .side');
-            // if (overview.length && side.length) {
-            //     setTimeout(function () {
-            //         if (overview.outerHeight() > side.outerHeight()) {
-            //             overview.addClass('bordered');
-            //         } else {
-            //             side.addClass('bordered');
-            //         }
-            //     }, 100);
-            //
-            //     $window.resize(function () {
-            //         let row = $('.record > .detail > .row');
-            //
-            //         if ($window.outerWidth() > 768) {
-            //             if (row.length && (side.hasClass('fixed-top') || side.hasClass('fixed-bottom') || side.hasClass('scrolled'))) {
-            //
-            //                 side.css({
-            //                     'width': (row.outerWidth() - overview.outerWidth(true)) + 'px'
-            //                 });
-            //             }
-            //         }
-            //     });
-            //
-            //     let content = $('#content');
-            //
-            //     if (content.length) {
-            //         let pageHeader = $('.page-header');
-            //         let detailButtons = $('.detail-button-container.record-buttons');
-            //         let mainOverview = $('#main > main > .record > .detail > .row > .overview');
-            //         let mainSide = $('#main > main > .record > .detail > .row > .side');
-            //
-            //         let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
-            //
-            //         if (mainOverview.outerHeight() > mainSide.outerHeight()) {
-            //             mainOverview.css({
-            //                 'minHeight': minHeight + 'px'
-            //             })
-            //         } else {
-            //             mainSide.css({
-            //                 'minHeight': minHeight + 'px'
-            //             })
-            //         }
-            //     }
-            // }
-
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
-                    // $container.removeClass('stick-sub');
-                    // $block.hide();
                     $container.show();
                     return;
                 }
@@ -950,8 +856,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     $el.css('top', ($el.position().top - ($container.height() - blockHeight * 2 + 10)) + 'px');
                                 }.bind(this));
                             }
-                            // $container.addClass('stick-sub');
-                            // $block.show();
                         } else {
                             if ($container.hasClass('stick-sub') && this.mode !== 'edit') {
                                 var $p = $('.popover:not(.note-popover)');
@@ -960,8 +864,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     $el.css('top', ($el.position().top + ($container.height() - blockHeight * 2 + 10)) + 'px');
                                 }.bind(this));
                             }
-                            // $container.removeClass('stick-sub');
-                            // $block.hide();
                         }
                         var $p = $('.popover');
                         $p.each(function (i, el) {
