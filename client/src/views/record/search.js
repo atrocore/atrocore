@@ -924,7 +924,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
 
             this.manageLabels();
             this.setupOperatorLabels();
-            this.setupAdvancedFiltersPosition();
             this.toggleResetVisibility();
             this.toggleFilterActionsVisibility();
 
@@ -1022,33 +1021,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     }
                 }
             });
-        },
-
-        setupAdvancedFiltersPosition() {
-            // let searchContainer = $('.page-header .search-container');
-            //
-            // if (searchContainer.has(this.$advancedFiltersPanel).length) {
-            //     let list = $('.list-container');
-            //     let $window = $(window);
-            //
-            //     if ($window.outerWidth() >= 768) {
-            //         this.$advancedFiltersPanel.css({
-            //             'width': list.outerWidth() + 'px'
-            //         });
-            //     }
-            //
-            //     $window.resize(function () {
-            //         if ($window.outerWidth() >= 768) {
-            //             this.$advancedFiltersPanel.css({
-            //                 'width': list.outerWidth() + 'px'
-            //             });
-            //         } else {
-            //             this.$advancedFiltersPanel.css({
-            //                 'width': 'unset'
-            //             });
-            //         }
-            //     }.bind(this));
-            // }
         },
 
         manageLabels: function () {
