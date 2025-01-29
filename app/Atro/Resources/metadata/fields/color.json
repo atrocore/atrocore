@@ -31,5 +31,6 @@
     "fieldDefs": {
         "type": "varchar"
     },
-    "view": "views/fields/color"
+    "view": "views/fields/color",
+    "group": "other"
 }

@@ -21,5 +21,6 @@
   "notCreatable": true,
   "fieldDefs": {
     "type": "text"
-  }
+  },
+  "group": "other"
 }

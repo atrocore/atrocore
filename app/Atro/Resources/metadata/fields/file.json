@@ -42,5 +42,6 @@
   ],
   "filter": true,
   "auditable": true,
-  "personalData": true
+  "personalData": true,
+  "group": "reference"
 }

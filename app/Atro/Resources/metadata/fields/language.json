@@ -27,5 +27,6 @@
   },
   "translatedOptions": false,
   "personalData": true,
-  "view": "views/fields/language"
+  "view": "views/fields/language",
+  "group": "reference"
 }

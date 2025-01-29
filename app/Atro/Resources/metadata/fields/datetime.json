@@ -40,5 +40,6 @@
    "fieldDefs":{
       "notNull":false
    },
-   "personalData": true
+   "personalData": true,
+   "group": "date"
 }

@@ -66,5 +66,6 @@
   "fieldDefs": {
     "notStorable": true
   },
-  "filter": false
+  "filter": false,
+  "group": "numeric"
 }
