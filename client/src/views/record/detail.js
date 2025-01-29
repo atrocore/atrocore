@@ -1116,8 +1116,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
-                isSmall: this.isSmall,
-                isTreePanel: this.isTreePanel
+                isSmall: this.isSmall
             };
 
             if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`)
@@ -1427,11 +1426,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
             });
-
-            if (!this.isWide && !this.isSmall) {
-                // this.isTreePanel = this.isTreeAllowed();
-                // this.setupTreePanel();
-            }
         },
 
         hotKeyEdit: function (e) {
@@ -2382,17 +2376,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupTreePanel() {
-            // if (!this.isTreeAllowed()) {
-            //     return;
-            // }
-            //
-            // this.createView('treePanel', 'views/record/panels/tree-panel', {
-            //     el: `${this.options.el} .catalog-tree-panel`,
-            //     scope: this.scope,
-            //     model: this.model
-            // }, view => {
-            //
-            // });
         },
 
         onTreePanelRendered(view) {
@@ -2420,9 +2403,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.onTreeResize(width)
             });
             this.listenTo(view, 'tree-width-unset', function () {
-                if ($('.catalog-tree-panel').length) {
-                    // $('.detail-button-container').css({'marginLeft': 'unset'});
-                }
+                this.onTreeUnset();
             })
         },
 
@@ -2470,15 +2451,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         onTreeResize(width) {
-            // if ($('.catalog-tree-panel').length) {
-            //     width = parseInt(width || $('.catalog-tree-panel').outerWidth());
-            //
-            //     const content = $('#content');
-            //     const btnContainer = content.find('.detail-button-container');
-            //
-            //     btnContainer.addClass('detail-tree-button-container');
-            //     btnContainer.css('marginLeft', width + 1 + 'px');
-            // }
+        },
+
+        onTreeUnset() {
         }
     });
 });
