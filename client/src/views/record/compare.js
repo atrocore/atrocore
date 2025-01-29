@@ -30,7 +30,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         merging: false,
 
-        selectedFilter: {},
+        selectedFilters: {},
 
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
@@ -158,6 +158,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
+                if(!this.isAllowFieldUsingFilter(field, this.areEquals(modelCurrent, modelOthers, field, fieldDef))) {
+                    return;
+                }
+
                 if (this.merging && fieldDef['unitField']) {
                     return;
                 }
@@ -232,7 +236,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 instanceComparison: this.instanceComparison,
                 columns: this.buildComparisonTableHeaderColumn(),
                 merging: this.merging,
-                el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`
+                el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`,
+                selectedFilters: this.selectedFilters
             }, view => {
                 view.render();
                 if (view.isRendered()) {
@@ -445,6 +450,65 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             return true;
         },
 
+        isAllowFieldUsingFilter(field, equalValueForModels) {
+
+            const fieldFilter = this.selectedFilters['fieldFilter'] || ['allValues'];
+            const languageFilter = this.selectedFilters['languageFilter'] || ['allLanguages'];
+
+            let fields = this.getFieldManager().getActualAttributeList(this.model.getFieldType(field), field);
+            let fieldValues = fields.map(field => this.model.get(field));
+
+            let hide = false;
+
+            if (!fieldFilter.includes('allValues')) {
+                // hide filled
+                if (!hide && fieldFilter.includes('filled')) {
+                    hide = fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
+                }
+
+                // hide empty
+                if (!hide && fieldFilter.includes('empty')) {
+                    hide = !fieldValues.every(value => this.isEmptyValue(value));
+                }
+
+                // hide optional
+                if (!hide && fieldFilter.includes('optional')) {
+                    hide = this.model.getFieldParam(field, 'isRequired')
+                }
+
+                // hide required
+                if (!hide && fieldFilter.includes('required')) {
+                    hide = !this.model.getFieldParam(field, 'isRequired');
+                }
+            }
+
+            if (!languageFilter.includes('allLanguages')) {
+                // for languages
+                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                    let fieldLanguage = this.model.getFieldParam(field, 'multilangLocale');
+
+                    if (!languageFilter.includes(fieldLanguage ?? 'main')) {
+                        hide = true;
+                    }
+
+                    if (!hide && this.isUniLingualField(field, fieldLanguage)) {
+                        hide = true
+                    }
+
+                    if (hide && languageFilter.includes('unilingual') && this.isUniLingualField(field, fieldLanguage)) {
+                        hide = false;
+                    }
+
+                }
+            }
+
+            return !hide;
+        },
+
+        isUniLingualField(name, fieldLanguage) {
+            return !(this.model.getFieldParam(name, 'isMultilang') || fieldLanguage !== null);
+        },
+
         isLinkEnabled(model, name) {
             return !model.getLinkParam(name, 'disabled') && !model.getLinkParam(name, 'layoutRelationshipsDisabled');
         },
@@ -456,6 +520,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
 
             return inverseRelationType === relationDefs['type'] && relationDefs['type'] === 'hasMany';
+        },
+
+        isEmptyValue(value) {
+            return value === null || value === '' || (Array.isArray(value) && !value.length);
         },
 
         handlePanelRendering(name) {
@@ -562,7 +630,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         isOverviewFilterApply() {
             for (const filter of this.getOverviewFiltersList()) {
-                let selected = this.selectedFilter[filter.name] ?? [];
+                let selected = this.selectedFilters[filter.name] ?? [];
                 if (!Array.isArray(selected)) {
                     continue;
                 }
@@ -575,11 +643,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         openOverviewFilter: function () {
-            this.notify('Loading...')
+            this.notify('Loading...');
+            let currentValues = {};
+            let overviewFilterList = this.getOverviewFiltersList();
+            overviewFilterList.forEach((filter) => {
+                currentValues[filter.name] = this.selectedFilters[filter.name];
+            });
             this.createView('compareOverviewFilter', this.overviewFilterView, {
                 scope: this.scope,
                 model: this.model,
-                overviewFilters: this.getOverviewFiltersList()
+                overviewFilters: overviewFilterList,
+                currentValues: currentValues
             }, view => {
                 view.render()
                 if (view.isRendered()) {
@@ -594,11 +668,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     this.getOverviewFiltersList().forEach((filter) => {
                         if (filterModel.get(filter.name)) {
                             filterChanged = true;
-                            this.selectedFilter[filter.name] = filterModel.get(filter.name);
+                            this.selectedFilters[filter.name] = filterModel.get(filter.name);
                         }
                     });
 
                     if (filterChanged) {
+                        this.model.trigger('overview-filters-changed', this.selectedFilters);
+                        this.reRender();
                         $('[data-action="openOverviewFilter"]').css('color', this.isOverviewFilterApply() ? 'red' : 'black');
                     }
                 });
