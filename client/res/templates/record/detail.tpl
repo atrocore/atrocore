@@ -32,6 +32,7 @@
         </div>
         {{/if}}
         <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
+        <div class="layout-editor-container btn-group"></div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
@@ -63,7 +64,6 @@
         <div class="panel-navigation panel-right pull-left">{{{panelEditNavigation}}}</div>
     </div>
     {{/unless}}
-
 
     <div class="row">
         {{#if isTreePanel}}<div class="catalog-tree-panel col-lg-3">{{{treePanel}}}</div>{{/if}}

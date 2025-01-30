@@ -55,7 +55,7 @@
             LayoutManager.get(params.scope, params.type, params.relatedScope, params.layoutProfileId, (layout) => {
                 if (callback) {
                     readDataFromLayout(model, layout.layout);
-                    callback();
+                    callback(layout);
                 }
             }, false);
         });

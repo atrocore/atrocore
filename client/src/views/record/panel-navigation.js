@@ -90,12 +90,26 @@ Espo.define('views/record/panel-navigation', 'view',
             if (!name) {
                 return;
             }
-            let offset = this.getParentView().$el.find(`.panel[data-name="${name}"]`).offset();
-            let navbarHeight = $('#navbar .navbar-right').outerHeight() || 0;
-            let navigationHeight = $('.record-buttons').innerHeight() || 0;
-            navigationHeight += $('.edit-buttons').innerHeight() || 0 ;
-            $(window).scrollTop(offset.top - navbarHeight - navigationHeight + 5);
+            const content = $('#content');
+            const buttons = $('.detail-button-container.button-container:not(.hidden)');
+            const panel = this.getParentView().$el.find(`.panel[data-name="${name}"]`);
+            if (panel.size() > 0) {
+                let offset = panel.position();
+                let headerHeight = $('#main .page-header').outerHeight() || 0;
+                let navigationHeight = buttons.outerHeight() || 0;
+                let scrollTop = offset.top + headerHeight - 10
+                if (window.width < 768) {
+                    const tree = $('#main > aside.catalog-tree-panel')
+                    scrollTop -= tree.outerHeight() || 0;
+                    scrollTop -= navigationHeight;
+                } else {
+                    scrollTop += navigationHeight
+                }
+
+                content.scrollTop(scrollTop);
+            }
         },
+
         isPanelClosed(name){
             let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? []

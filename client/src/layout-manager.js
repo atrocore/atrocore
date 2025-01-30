@@ -160,6 +160,26 @@ Espo.define('layout-manager', [], function () {
             });
         },
 
+        savePreference: function (scope, type, relatedScope, layoutProfileId, callback) {
+            this.ajax({
+                url: 'Layout/action/savePreference',
+                type: 'POST',
+                data: JSON.stringify({
+                    scope: scope,
+                    viewType: type,
+                    relatedScope: relatedScope,
+                    layoutProfileId: layoutProfileId
+                }),
+                success: function (layout) {
+                    this.clearCache(scope, type, relatedScope)
+                    this.trigger('sync');
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }.bind(this)
+            });
+        },
+
         clearCache: function (scope, type, relatedScope) {
             const re = new RegExp('^' + this.getKey(scope, type, relatedScope));
             for (let i in this.data) {

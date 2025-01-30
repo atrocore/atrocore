@@ -41,5 +41,6 @@
     "names"
   ],
   "notSortable": true,
-  "filter": true
+  "filter": true,
+  "group": "reference"
 }

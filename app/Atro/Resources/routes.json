@@ -490,6 +490,9 @@
         "selectedProfileId": {
           "type": "string",
           "nullable": true
+        },
+        "canEdit": {
+          "type": "boolean"
         }
       }
     }

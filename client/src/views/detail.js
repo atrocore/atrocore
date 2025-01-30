@@ -62,6 +62,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         navigateButtonsDisabled: false,
 
+        treeAllowed: false,
+
         navigationButtons: {
             previous: {
                 html: '<span class="fas fa-chevron-left"></span>',
@@ -76,6 +78,12 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         mode: 'detail',
+
+        data: function () {
+            return {
+                treeAllowed: this.treeAllowed,
+            };
+        },
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -248,7 +256,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
-                el: '#main > .header',
+                el: '#main > main > .header',
                 scope: this.scope
             });
 
@@ -425,10 +433,34 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }, true, false, true);
         },
 
+        isTreeAllowed() {
+            let result = false;
+
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
+
+            if (!treeScopes.includes(this.scope)
+                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
+            ) {
+                treeScopes.unshift(this.scope);
+            }
+
+            treeScopes.forEach(scope => {
+                if (this.getAcl().check(scope, 'read')) {
+                    result = true;
+                    if (!this.getStorage().get('treeScope', this.scope)) {
+                        this.getStorage().set('treeScope', this.scope, scope);
+                    }
+                }
+            })
+
+            return result;
+        },
+
         setupRecord: function () {
-            var o = {
+            const o = {
                 model: this.model,
-                el: '#main > .record',
+                el: '#main > main > .record',
                 scope: this.scope
             };
             this.optionsToPass.forEach(function (option) {
@@ -440,7 +472,20 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             if (!this.navigateButtonsDisabled) {
                 o.hasNext = !this.navigationButtons.next.disabled;
             }
-            this.createView('record', this.getRecordViewName(), o);
+
+            this.treeAllowed = !o.isWide && this.isTreeAllowed();
+
+            this.createView('record', this.getRecordViewName(), o, view => {
+                if (this.treeAllowed) {
+                    this.createView('treePanel', 'views/record/panels/tree-panel', {
+                        el: `${this.options.el} aside.catalog-tree-panel`,
+                        scope: this.scope,
+                        model: this.model
+                    }, panel => {
+                        view.onTreePanelRendered(panel);
+                    });
+                }
+            });
         },
 
         getRecordViewName: function () {

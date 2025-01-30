@@ -59,5 +59,6 @@
   "textFilter": true,
   "fieldDefs": {
     "type": "text"
-  }
+  },
+  "group": "character"
 }

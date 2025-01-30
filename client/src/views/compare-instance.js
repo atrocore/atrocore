@@ -37,7 +37,7 @@ Espo.define('views/compare-instance', ['views/main'], function (Dep) {
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
-                el: '#main > .page-header'
+                el: '#main > main > .page-header'
             });
         },
 
@@ -80,7 +80,7 @@ Espo.define('views/compare-instance', ['views/main'], function (Dep) {
                     model: this.model,
                     distantModelsAttribute: attr,
                     instanceComparison: true,
-                    el: '#main > .' + name,
+                    el: '#main > main > .' + name,
                     scope: this.scope
                 };
                 this.createView(name, this.recordView, o, view => view.render());

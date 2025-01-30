@@ -203,8 +203,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             $gridstack.gridstack({
                 minWidth: 4,
                 cellHeight: this.getThemeManager().getParam('dashboardCellHeight'),
-                verticalMargin: this.getThemeManager().getParam('dashboardCellMargin'),
+                verticalMargin: 10,
+                horizontalMargin: 10,
                 width: 4,
+                margin: 10,
                 minWidth: this.getThemeManager().getParam('screenWidthXs'),
                 handle: '.dashlet-container .panel-heading',
                 disableDrag: disableDrag,

@@ -45,5 +45,6 @@
    "fieldDefs":{
       "type":"varchar"
    },
-   "personalData": true
+   "personalData": true,
+   "group": "character"
 }

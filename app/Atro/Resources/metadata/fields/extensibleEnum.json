@@ -71,5 +71,6 @@
       "emHidden": true
     }
   },
-  "view": "views/fields/extensible-enum"
+  "view": "views/fields/extensible-enum",
+  "group": "reference"
 }

@@ -30,7 +30,12 @@
   "labels": {
     "New panel": "New panel",
     "Layout": "Layout",
-    "resetToDefault": "Reset to Default Profile",
-    "resetToSystem": "Reset To System Layout"
+    "reset": "Reset Layout",
+    "fullEdit": "Full Edit",
+    "resetToSystem": "Reset To System Layout",
+    "layoutManagement": "Layout Management",
+    "layoutSelection": "Layout Selection",
+    "layoutCustomization": "Layout Customization",
+    "configure": "Configure"
   }
 }
