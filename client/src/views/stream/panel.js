@@ -265,7 +265,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.listenToOnce(collection, 'sync', function () {
                 this.createView('list', 'views/stream/record/list', {
-                    el: this.options.el + ' > .list-container',
+                    el: this.options.el + ' .list-container',
                     collection: collection,
                     model: this.model
                 }, function (view) {

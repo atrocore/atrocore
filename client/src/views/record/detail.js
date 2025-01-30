@@ -795,54 +795,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
             var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
 
-            var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
-            var $middle = this.getView('middle').$el;
             var $window = $(window);
 
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
-            $window.off('scroll.detail-' + this.numId);
-            $window.on('scroll.detail-' + this.numId, function (e) {
-                if ($(window.document).width() < screenWidthXs) {
-                    $container.removeClass('stick-sub');
-                    $block.hide();
-                    $container.show();
-                    return;
-                }
-
-                var edge = $middle.position().top + $middle.outerHeight(true);
-                var scrollTop = $window.scrollTop();
-
-                if (scrollTop < edge) {
-                    if (scrollTop > stickTop) {
-                        if (!$container.hasClass('stick-sub')) {
-                            $container.addClass('stick-sub');
-                            $block.show();
-
-                            var $p = $('.popover');
-                            $p.each(function (i, el) {
-                                $el = $(el);
-                                $el.css('top', ($el.position().top - blockHeight) + 'px');
-                            });
-                        }
-                    } else {
-                        if ($container.hasClass('stick-sub')) {
-                            $container.removeClass('stick-sub');
-                            $block.hide();
-
-                            var $p = $('.popover');
-                            $p.each(function (i, el) {
-                                $el = $(el);
-                                $el.css('top', ($el.position().top + blockHeight) + 'px');
-                            });
-                        }
-                    }
-                    $container.show();
-                } else {
-                    $container.hide();
-                    $block.show();
-                }
-            }.bind(this));
 
             var fields = this.getFieldViews();
 
@@ -879,58 +834,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     // headerButtonsContainer.addClass('full-row');
                 }
             }
-
-            let overview = $('.record .overview');
-            let side = $('#main > .record .row > .side');
-            if (overview.length && side.length) {
-                setTimeout(function () {
-                    if (overview.outerHeight() > side.outerHeight()) {
-                        overview.addClass('bordered');
-                    } else {
-                        side.addClass('bordered');
-                    }
-                }, 100);
-
-                $window.resize(function () {
-                    let row = $('.record > .detail > .row');
-
-                    if ($window.outerWidth() > 768) {
-                        if (row.length && (side.hasClass('fixed-top') || side.hasClass('fixed-bottom') || side.hasClass('scrolled'))) {
-
-                            side.css({
-                                'width': (row.outerWidth() - overview.outerWidth(true)) + 'px'
-                            });
-                        }
-                    }
-                });
-
-                let content = $('#content');
-
-                if (content.length) {
-                    let pageHeader = $('.page-header');
-                    let detailButtons = $('.detail-button-container.record-buttons');
-                    let mainOverview = $('#main > .record > .detail > .row > .overview');
-                    let mainSide = $('#main > .record > .detail > .row > .side');
-
-                    let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
-
-                    if (mainOverview.outerHeight() > mainSide.outerHeight()) {
-                        mainOverview.css({
-                            'minHeight': minHeight + 'px'
-                        })
-                    } else {
-                        mainSide.css({
-                            'minHeight': minHeight + 'px'
-                        })
-                    }
-                }
-            }
-
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
-                    $container.removeClass('stick-sub');
-                    $block.hide();
                     $container.show();
                     return;
                 }
@@ -950,8 +856,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     $el.css('top', ($el.position().top - ($container.height() - blockHeight * 2 + 10)) + 'px');
                                 }.bind(this));
                             }
-                            $container.addClass('stick-sub');
-                            $block.show();
                         } else {
                             if ($container.hasClass('stick-sub') && this.mode !== 'edit') {
                                 var $p = $('.popover:not(.note-popover)');
@@ -960,8 +864,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     $el.css('top', ($el.position().top + ($container.height() - blockHeight * 2 + 10)) + 'px');
                                 }.bind(this));
                             }
-                            $container.removeClass('stick-sub');
-                            $block.hide();
                         }
                         var $p = $('.popover');
                         $p.each(function (i, el) {
@@ -1000,7 +902,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         resetSidebar() {
-            let side = $('#main > .record .row > .side');
+            let side = $('#main > main > .record .row > .side');
 
             if (side) {
                 side.removeClass('scrolled fixed-bottom fixed-top');
@@ -1214,8 +1116,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
-                isSmall: this.isSmall,
-                isTreePanel: this.isTreePanel
+                isSmall: this.isSmall
             };
 
             if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`)
@@ -1525,11 +1426,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
             });
-
-            if (!this.isWide && !this.isSmall) {
-                this.isTreePanel = this.isTreeAllowed();
-                this.setupTreePanel();
-            }
         },
 
         hotKeyEdit: function (e) {
@@ -2187,18 +2083,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
                 recordViewObject: this
-            }, view => {
-                this.listenTo(view, 'side-width-changed', width => {
-                    width = parseInt(width);
-
-                    const content = $('#content');
-                    if (content.length) {
-                        const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
-                        const overview = content.find('.overview');
-
-                        overview.outerWidth(Math.floor(contentWidth - $('.catalog-tree-panel').outerWidth() - width));
-                    }
-                })
             });
         },
 
@@ -2492,47 +2376,35 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupTreePanel() {
-            if (!this.isTreeAllowed()) {
-                return;
-            }
+        },
 
-            this.createView('treePanel', 'views/record/panels/tree-panel', {
-                el: `${this.options.el} .catalog-tree-panel`,
-                scope: this.scope,
-                model: this.model
-            }, view => {
-                this.listenTo(this.model, 'after:save', () => {
-                    view.rebuildTree();
-                });
-                view.listenTo(view, 'select-node', data => {
-                    this.selectNode(data);
-                });
-                view.listenTo(view, 'tree-load', treeData => {
-                    this.treeLoad(view, treeData);
-                });
-                view.listenTo(view, 'tree-refresh', () => {
-                    view.treeRefresh();
-                });
-                view.listenTo(view, 'tree-reset', () => {
-                    this.treeReset(view);
-                });
-                this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
-                    if (['parents', 'children'].includes(link)) {
-                        view.rebuildTree();
-                    }
-                });
-                this.listenTo(view, 'tree-width-changed', function (width) {
-                    this.onTreeResize(width)
-                });
-                this.listenTo(view, 'tree-width-unset', function () {
-                    if ($('.catalog-tree-panel').length) {
-                        $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.overview-filters-container').css({'width': 'unset', 'marginLeft': 'unset'})
-                        $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
-                    }
-                })
+        onTreePanelRendered(view) {
+            this.listenTo(this.model, 'after:save', () => {
+                view.rebuildTree();
             });
+            view.listenTo(view, 'select-node', data => {
+                this.selectNode(data);
+            });
+            view.listenTo(view, 'tree-load', treeData => {
+                this.treeLoad(view, treeData);
+            });
+            view.listenTo(view, 'tree-refresh', () => {
+                view.treeRefresh();
+            });
+            view.listenTo(view, 'tree-reset', () => {
+                this.treeReset(view);
+            });
+            this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
+                if (['parents', 'children'].includes(link)) {
+                    view.rebuildTree();
+                }
+            });
+            this.listenTo(view, 'tree-width-changed', function (width) {
+                this.onTreeResize(width)
+            });
+            this.listenTo(view, 'tree-width-unset', function () {
+                this.onTreeUnset();
+            })
         },
 
         selectNode(data) {
@@ -2579,31 +2451,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         onTreeResize(width) {
-            if ($('.catalog-tree-panel').length) {
-                width = parseInt(width || $('.catalog-tree-panel').outerWidth());
+        },
 
-                const content = $('#content');
-                const main = content.find('#main');
-
-                const header = content.find('.page-header');
-                const btnContainer = content.find('.detail-button-container');
-                const filters = content.find('.overview-filters-container');
-                const overview = content.find('.overview');
-                const side = content.find('.side');
-
-                header.outerWidth(Math.floor(main.width() - width));
-                header.css('marginLeft', width + 'px');
-
-                filters.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width));
-                filters.css('marginLeft', width + 'px');
-
-                btnContainer.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width - 1));
-                btnContainer.addClass('detail-tree-button-container');
-                btnContainer.css('marginLeft', width + 1 + 'px');
-
-                overview.outerWidth(Math.floor(content.innerWidth() - side.outerWidth() - width));
-                overview.css('marginLeft', width + 'px');
-            }
+        onTreeUnset() {
         }
     });
 });
