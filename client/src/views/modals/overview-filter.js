@@ -18,6 +18,11 @@ Espo.define('views/modals/overview-filter', 'views/modal', function (Modal) {
                 this.trigger('save', this.filterModel);
 
                 this.close();
+            },
+            'click [data-name="reset"]': function () {
+                 this.overviewFilters.forEach(filter => {
+                     this.filterModel.set(filter.name, [filter.defaultValue])
+                 });
             }
         },
         setup() {
@@ -31,6 +36,11 @@ Espo.define('views/modals/overview-filter', 'views/modal', function (Modal) {
                 {
                     name: 'cancel',
                     label: 'Cancel'
+                },
+                {
+                    name: 'reset',
+                    label: 'Reset all',
+                    style: "reset"
                 }
             ];
 

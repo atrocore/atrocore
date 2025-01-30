@@ -55,7 +55,7 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         width: false,
 
-        fitHeight: true,
+        fitHeight: false,
 
         escapeDisabled: false,
 
