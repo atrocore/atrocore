@@ -14,15 +14,17 @@ Espo.define('views/layout-profile/fields/navigation', 'views/fields/varchar', fu
 
         editTemplate: 'fields/varchar/detail',
 
-        detailTemplate: 'fields/varchar/detail',
-
         data: function () {
             var data = Dep.prototype.data.call(this);
             data['value'] = '...'
         },
 
         inlineEdit: function () {
-          console.log('iciiiii');
+            this.notify('Loading...')
+          this.createView('edit', 'views/layout-profile/modals/navigation', {}, view => {
+              this.notify(false)
+              view.render();
+          });
         },
     });
 });

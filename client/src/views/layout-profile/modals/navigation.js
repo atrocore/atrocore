@@ -8,8 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layouts/layout-utils'],
-    (Dep, LayoutUtils) => Dep.extend({
+Espo.define('views/admin/layouts/modals/edit', 'views/modal',
+    (Dep) => Dep.extend({
 
         template: 'admin/layout-profile/modals/navigation',
 
@@ -21,32 +21,11 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
         },
 
         afterRender() {
-            LayoutUtils.renderComponent.call(this, {
-                type: this.options.type,
-                scope: this.options.scope,
-                relatedScope: this.options.relatedScope,
-                layoutProfileId: this.model.get('layoutProfileId'),
-                editable: true,
-                onUpdate: this.layoutUpdated.bind(this),
-                getActiveLayoutProfileId: () => this.model.get('layoutProfileId'),
+            console.log('iiiiiiii')
+            window.layoutSvelteComponent = new Svelte.Navigation({
+                target: this.$el.get(0),
                 inModal: true
             })
-        },
-
-        layoutUpdated(reset) {
-            this.layoutIsUpdated = true
-            this._helper.layoutManager.savePreference(this.options.scope, this.options.type, this.options.relatedScope, reset ? null : this.model.get('layoutProfileId'), () => {
-                this.actionClose()
-            })
-        },
-
-        onDialogClose: function () {
-            if (!this.isBeingRendered()) {
-                this.trigger('close', {
-                    layoutIsUpdated: this.layoutIsUpdated
-                });
-                this.remove();
-            }
         }
     })
 );
