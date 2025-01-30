@@ -46,6 +46,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         recordView: 'views/record/detail',
 
+        overviewFilterView: 'views/modals/overview-filter',
+
         relatedAttributeMap: {},
 
         relatedAttributeFunctions: {},
@@ -121,6 +123,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 this.listenTo(this.model, 'change:bookmarkId', function () {
                     this.handleBookmarkButton();
                 }, this);
+            }
+
+            if (this.model && !this.model.isNew() && this.getMetadata().get(['scopes', this.scope, 'object'])
+                && this.getMetadata().get(['scopes', this.scope, 'overviewFilters']) === true
+                && this.getMetadata().get(['scopes', this.scope, 'hideFieldTypeFilters']) !== true
+            ) {
+               this.handleFilterButton();
             }
 
             var collection = this.collection = this.model.collection;
@@ -526,6 +535,127 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }
 
             this.addMenuItem('buttons', data, true, false, true);
+        },
+
+        handleFilterButton() {
+            let cssStyle = 'margin: 0 10px 0 0px'
+            if(this.isOverviewFilterApply()) {
+                cssStyle += ';color:red;'
+            }
+            this.addMenuItem('buttons',  {
+                name: 'filtering',
+                title: 'Open Filter',
+                style: 'default',
+                html: '<span class="fas fa-filter"></span>',
+                action: 'openOverviewFilter',
+                cssStyle: cssStyle
+            }, true, false, true)
+        },
+
+        getOverviewFiltersList: function () {
+            if(this.overviewFilterList) {
+                return this.overviewFilterList;
+            }
+            let result = [
+                {
+                    name: "fieldFilter",
+                    label: this.translate('fieldStatus'),
+                    options: ["allValues", "filled", "empty", "optional", "required"],
+                    selfExcludedFieldsMap: {
+                        filled: 'empty',
+                        empty: 'filled',
+                        optional: 'required',
+                        required: 'optional'
+                    },
+                    defaultValue: 'allValues'
+                }
+            ];
+
+            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                let referenceData = this.getConfig().get('referenceData');
+
+                if (referenceData && referenceData['Language']) {
+                    let languages = referenceData['Language'] || {},
+                        options = ['allLanguages', 'unilingual'],
+                        translatedOptions = {};
+
+                    options.forEach(option => {
+                        translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
+                    });
+
+                    Object.keys(languages || {}).forEach((lang) => {
+                        if (languages[lang]['role'] === 'main') {
+                            options.push('main');
+                            translatedOptions['main'] = languages[lang]['name'];
+                        } else {
+                            options.push(lang);
+                            translatedOptions[lang] = languages[lang]['name'];
+                        }
+                    });
+
+                    result.push({
+                        name: "languageFilter",
+                        label: this.translate('language'),
+                        options,
+                        translatedOptions,
+                        defaultValue: 'allLanguages'
+                    });
+                }
+            }
+
+            return this.overviewFilterList = result;
+        },
+
+        isOverviewFilterApply() {
+            for (const filter of this.getOverviewFiltersList()) {
+                let selected = this.getStorage().get(filter.name, this.scope) ?? [];
+                if(!Array.isArray(selected)) {
+                    continue;
+                }
+                if(selected && selected.join('') !== filter.defaultValue ) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        actionOpenOverviewFilter: function(e) {
+            this.notify('Loading...')
+            let overviewFilterList = this.getOverviewFiltersList();
+            let currentValues = {};
+            overviewFilterList.forEach((filter) => {
+                currentValues[filter.name] = this.getStorage().get(filter.name, this.scope);
+            });
+            this.createView('overviewFilter', this.overviewFilterView, {
+                scope: this.scope,
+                model: this.model,
+                overviewFilters: overviewFilterList,
+                currentValues: currentValues
+            }, view  => {
+                view.render()
+                if(view.isRendered()) {
+                    this.notify(false)
+                }
+                this.listenTo(view, 'after:render', () => {
+                    this.notify(false)
+                });
+
+                this.listenTo(view, 'save', (filterModel) => {
+                    let filterChanged = false;
+                    this.getOverviewFiltersList().forEach((filter) => {
+                        if(filterModel.get(filter.name)) {
+                            filterChanged = true;
+                            this.getStorage().set(filter.name, this.scope, filterModel.get(filter.name));
+                        }
+                    });
+
+                    if(filterChanged) {
+                        this.model.trigger('overview-filters-changed');
+                        this.handleFilterButton();
+                    }
+                });
+            });
         },
 
         actionBookmark: function() {
