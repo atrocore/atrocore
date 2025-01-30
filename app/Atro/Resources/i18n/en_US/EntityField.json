@@ -89,6 +89,15 @@
       "manyToMany": "Many-to-Many"
     }
   },
+  "groupOptions": {
+    "type": {
+      "character": "Character",
+      "numeric": "Numeric",
+      "date": "Date / Time",
+      "reference": "Reference",
+      "other": "Other"
+    }
+  },
   "confirmations": {
     "resetToDefault": "Are you sure you want to reset configuration to default?"
   },

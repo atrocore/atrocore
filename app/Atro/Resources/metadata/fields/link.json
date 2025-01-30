@@ -35,5 +35,6 @@
     "name"
   ],
   "filter": true,
-  "auditable": true
+  "auditable": true,
+  "group": "reference"
 }
