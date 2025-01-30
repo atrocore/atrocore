@@ -45,6 +45,11 @@
       "type": "bool",
       "tooltip": true
     },
+    "multilangField": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
     "required": {
       "type": "bool",
       "tooltip": true
