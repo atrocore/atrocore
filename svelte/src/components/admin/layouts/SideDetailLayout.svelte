@@ -44,10 +44,10 @@
     }
 
     function loadLayout(callback): void {
-        LayoutManager.get(params.scope, params.type, null, params.layoutProfileId, (layout) => {
+        LayoutManager.get(params.scope, params.type, null, params.layoutProfileId, (layoutData) => {
             if (callback) {
-                readDataFromLayout(layout.layout);
-                callback();
+                readDataFromLayout(layoutData.layout);
+                callback(layoutData);
             }
         }, false);
     }

@@ -15,5 +15,8 @@
   },
   "messages": {
     "profileWillBeNewDefault": "This profile will be the new default, are you sure ?"
+  },
+  "boolFilters": {
+    "withLayouts": "With Stored Layout"
   }
 }

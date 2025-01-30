@@ -1262,7 +1262,7 @@ class Metadata extends AbstractListener
         foreach ($previewTemplates as $previewTemplate) {
             $data['clientDefs'][$previewTemplate['entity_type']]['additionalButtons'][$previewTemplate['id']] = [
                 'name'           => $previewTemplate['id'],
-                'label'          => 'Preview: ' . $previewTemplate['name'],
+                'label'          => $previewTemplate['name'],
                 'actionViewPath' => 'views/preview-template/record/actions/preview',
                 'action'         => 'showHtmlPreview',
                 'optionsToPass'  => [

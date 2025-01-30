@@ -33,5 +33,6 @@
     "type": "jsonArray"
   },
   "translatedOptions": false,
-  "personalData": true
+  "personalData": true,
+  "group": "other"
 }

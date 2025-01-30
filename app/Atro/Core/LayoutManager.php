@@ -15,6 +15,7 @@ use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
@@ -72,7 +73,9 @@ class LayoutManager
             ->createQueryBuilder()
             ->select('layout_profile_id')
             ->from('user_entity_layout', 'uel')
-            ->where('uel.user_id=:userId and uel.entity=:entity and uel.view_type=:viewType and uel.related_entity=:relatedEntity and deleted=:false')
+            ->where('uel.user_id=:userId and uel.entity=:entity and uel.view_type=:viewType and '
+                . (empty($relatedEntity) ? "uel.related_entity is null" : "uel.related_entity=:relatedEntity")
+                . ' and deleted=:false')
             ->setParameters([
                 'entity'        => $scope,
                 'viewType'      => $viewType,
@@ -84,6 +87,14 @@ class LayoutManager
 
         if (!empty($selectedProfileId) && empty($layoutProfileId)) {
             $layoutProfileId = $selectedProfileId;
+        }
+
+        $layoutProfile = null;
+        if (!empty($layoutProfileId)) {
+            $layoutProfile = $this->getEntityManager()->getEntity('LayoutProfile', $layoutProfileId);
+            if (empty($layoutProfile)) {
+                $layoutProfileId = null;
+            }
         }
 
         // compose
@@ -115,30 +126,64 @@ class LayoutManager
         $layout = $this->getEventManager()->dispatch('Layout', 'afterGetLayoutContent', $event)
             ->getArgument('result');
 
-
         $storedProfiles = $this->getEntityManager()->getConnection()
             ->createQueryBuilder()
             ->select('lp.id', 'lp.name')
             ->from('layout', 'l')
             ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
-            ->where('l.entity=:entity and l.view_type=:viewType and l.related_entity=:relatedEntity and l.deleted=:false and lp.deleted=:false')
+            ->where("l.entity=:entity and l.view_type=:viewType and "
+                . (empty($relatedEntity) ? "l.related_entity is null" : "l.related_entity=:relatedEntity")
+                . " and l.deleted=:false and lp.deleted=:false")
             ->setParameters([
                 'entity'        => $scope,
                 'viewType'      => $viewType,
                 'relatedEntity' => $relatedEntity
-            ])
-            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ])->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
-
 
         return [
             'layout'            => $layout,
             'storedProfile'     => empty($storedProfile) ? [] : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
             'storedProfiles'    => $storedProfiles,
             'selectedProfileId' => empty($selectedProfileId) ? null : $selectedProfileId,
+            'canEdit'           => empty($layoutProfile) ? false : $this->getAcl()->check($layoutProfile, 'edit')
         ];
     }
 
+
+    public function saveUserPreference(string $scope, string $viewType, ?string $relatedScope = null, ?string $layoutProfileId = null): bool
+    {
+        /* @var $repository RDB */
+        $repository = $this->getEntityManager()->getRepository('UserEntityLayout');
+        $record = $repository
+            ->where([
+                'userId'        => $this->getUser()->id,
+                'entity'        => $scope,
+                'viewType'      => $viewType,
+                'relatedEntity' => empty($relatedScope) ? null : $relatedScope
+            ])
+            ->findOne();
+
+        if (empty($layoutProfileId)) {
+            if (!empty($record)) {
+                $repository->remove($record);
+            }
+        } else {
+            if (empty($record)) {
+                $record = $repository->get();
+                $record->set('userId', $this->getUser()->id);
+                $record->set('entity', $scope);
+                $record->set('viewType', $viewType);
+                if (!empty($relatedScope)) {
+                    $record->set('relatedEntity', $relatedScope);
+                }
+            }
+            $record->set('layoutProfileId', $layoutProfileId);
+            $repository->save($record);
+        }
+
+        return true;
+    }
 
     /**
      * @param string $scope

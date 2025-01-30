@@ -52,5 +52,6 @@
   "auditable": true,
   "qbFilterType": "integer",
   "textFilter": true,
-  "personalData": true
+  "personalData": true,
+  "group": "numeric"
 }

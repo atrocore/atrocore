@@ -79,6 +79,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         baseWidth: [],
 
+        layoutData: null,
+
+        layoutProfileId: null,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -214,42 +218,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 } else {
                     this.massAction(action);
                 }
-            },
-            'click .layout-editor': function (e) {
-                // open modal view
-                this.showLayoutEditorModal()
             }
         },
 
-        showLayoutEditorModal() {
-            this.createView('dialog', 'views/admin/layouts/modals/edit', {
-                scope: this.scope,
-                type: this.layoutName,
-                relatedScope: this.getParentModel()?.urlRoot,
-                el: '[data-view="dialog"]',
-            }, view => {
-                view.render()
-                this.listenToOnce(view, 'close', (data) => {
-                    this.clearView('dialog');
-                    if (data && data.layoutIsUpdated) {
-                        this.listLayout = null
-                        this._internalLayout = null
-                        this.getInternalLayout(() => {
-                            this.notify('Loading...')
-                            this.getSelectAttributeList(selectAttributeList => {
-                                if (selectAttributeList) {
-                                    this.collection.data.select = selectAttributeList.join(',');
-                                }
-                                this.collection.fetch({keepSelected: true})
-                                this.collection.once('sync', () => {
-                                    this.notify(false);
-                                })
-                            });
-                        })
-
+        refreshLayout() {
+            this.listLayout = null
+            this._internalLayout = null
+            this.notify('Loading...')
+            this.getInternalLayout(() => {
+                this.getSelectAttributeList(selectAttributeList => {
+                    if (selectAttributeList) {
+                        this.collection.data.select = selectAttributeList.join(',');
                     }
+                    this.collection.fetch({keepSelected: true})
+                    this.collection.once('sync', () => {
+                        this.notify(false);
+                    })
                 });
-            });
+            })
         },
 
         checkIntervalRecords(e, $target) {
@@ -397,8 +383,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.length && !fixedHeaderRow,
-                hasLayoutEditor: this.hasLayoutEditor
+                showNoData: !this.collection.length && !fixedHeaderRow
             };
         },
 
@@ -1226,6 +1211,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         afterRender: function () {
 
+            this.createLayoutConfigurator()
+
             if (this.allResultIsChecked) {
                 this.selectAllResult();
             } else {
@@ -1236,30 +1223,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
 
-            let list = $('#main > .list-container > .list');
+            let list = $('#main .list-container > .list');
             if (!list) {
                 return;
             }
-
-            var $bar = $('<div class="fixed-scrollbar" style="display: none"><div></div></div>').appendTo(list).css({
-                width: list.outerWidth()
-            });
-            $bar.scroll(function () {
-                list.scrollLeft($bar.scrollLeft());
-            });
-            $bar.data("status", "off");
-            if (this.hasHorizontalScroll() && $(window).width() >= 768) {
-                $bar.css('display', 'block');
-            }
-
-            var fixSize = function () {
-                var $container = $bar.parent();
-
-                if ($container.length) {
-                    $bar.children('div').height(1).width($container[0].scrollWidth);
-                    $bar.width($container.width()).scrollLeft($container.scrollLeft());
-                }
-            };
 
             if (this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
                 this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
@@ -1274,7 +1241,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         $('.fixed-scrollbar').css('display', 'none');
                     } else {
                         $('.fixed-scrollbar').css('display', 'block');
-                        fixSize();
                     }
                 }
             }.bind(this));
@@ -1284,8 +1250,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             if (this.hasHorizontalScroll()) {
-                fixSize();
-
                 var scrollTimeout = null;
 
                 $(window).on("scroll.fixed-scrollbar", function () {
@@ -1306,11 +1270,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                                 };
 
                                 if ((containerOffset.top > windowOffset.bottom) || (windowOffset.bottom > containerOffset.bottom)) {
-                                    if ($bar.data("status") == "on") {
+                                    if ($bar.data("status") === "on") {
                                         $bar.hide().data("status", "off");
                                     }
                                 } else {
-                                    if ($bar.data("status") == "off") {
+                                    if ($bar.data("status") === "off") {
                                         $bar.show().data("status", "on");
                                         $bar.scrollLeft($container.scrollLeft());
                                     }
@@ -1318,10 +1282,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             }
                         });
                     }, 50);
-                });
-
-                list.on("scroll", function () {
-                    $bar.scrollLeft(list.scrollLeft());
                 });
 
                 $(window).trigger("scroll.fixed-scrollbar");
@@ -1370,10 +1330,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                                 this.loadMore(btn);
                             }
                         }.bind(this));
-                    } else if (this.$el.parent().prop('id') === 'main') {
-                        $(window).off('scroll', this.$el);
-                        $(window).on('scroll', this.$el, function () {
-                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && $(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
+                    } else if (this.$el.parent().prop('id') === 'main' || this.$el.parent().prop("tagName").toLowerCase() === 'main') {
+                        const content = $('#content')
+
+                        content.off('scroll', this.$el);
+                        content.on('scroll', this.$el, function () {
+                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && content.scrollTop() + content.height() >= content.get(0).scrollHeight - 50) {
                                 this.loadMore(this.$el.find('a[data-action="showMore"]'));
                             }
                         }.bind(this));
@@ -1631,6 +1593,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         fixedTableHead() {
             let $window = $(window),
+                content = $('#content'),
                 fixedTable = this.$el.find('.fixed-header-table'),
                 fullTable = this.$el.find('.full-table'),
                 navBarRight = $('.navbar-right'),
@@ -1679,7 +1642,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 setWidth();
                 toggleClass();
 
-                $window.on('scroll', () => {
+                content.on('scroll', () => {
                     setPosition();
                     setWidth();
                     toggleClass();
@@ -1747,7 +1710,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         if (scroll.length) {
                             scroll.removeClass('hidden');
 
-                            scroll.css({width: list.width(), display: 'block'});
                             scroll.find('div').css('width', fullTable.width());
 
                             this.listenTo(this.collection, 'sync', function () {
@@ -1760,22 +1722,72 @@ Espo.define('views/record/list', 'view', function (Dep) {
                                 fullTable.css('left', -1 * scroll.scrollLeft());
                             });
 
-                            if ($(window).width() < 768) {
-                                let touchStartPosition = 0,
-                                    touchFinalPosition = 0,
-                                    currentScroll = 0;
+                            let touchStartPosition = 0,
+                                touchFinalPosition = 0,
+                                currentScroll = 0,
+                                velocity = 0,
+                                lastPosition = 0,
+                                lastTime = 0,
+                                isScrolling = false;
 
-                                list.on('touchstart', function (e) {
-                                    touchStartPosition = e.originalEvent.targetTouches[0].pageX;
-                                    currentScroll = scroll.scrollLeft();
-                                }.bind(this));
+                            list.on('touchstart', function (e) {
+                                touchStartPosition = e.originalEvent.targetTouches[0].pageX;
+                                currentScroll = scroll.scrollLeft();
+                                velocity = 0;
+                                lastPosition = touchStartPosition;
+                                lastTime = Date.now();
+                                isScrolling = true;
+                            }.bind(this));
 
-                                list.on('touchmove', function (e) {
-                                    touchFinalPosition = e.originalEvent.targetTouches[0].pageX;
+                            list.on('touchmove', function (e) {
+                                touchFinalPosition = e.originalEvent.targetTouches[0].pageX;
 
-                                    scroll.scrollLeft(currentScroll - (touchFinalPosition - touchStartPosition));
-                                }.bind(this));
-                            }
+                                const deltaPosition = touchFinalPosition - touchStartPosition;
+                                const newScroll = currentScroll - deltaPosition;
+                                scroll.scrollLeft(newScroll);
+
+                                const now = Date.now();
+                                const deltaTime = now - lastTime;
+
+                                if (deltaTime > 0) {
+                                    velocity = (touchFinalPosition - lastPosition) / deltaTime;
+                                }
+
+                                lastPosition = touchFinalPosition;
+                                lastTime = now;
+                            }.bind(this));
+
+                            list.on('touchend', function () {
+                                isScrolling = false;
+
+                                const friction = 0.95;
+                                let momentumScroll = scroll.scrollLeft();
+                                let animationFrame;
+
+                                function applyInertia() {
+                                    if (!isScrolling) {
+                                        velocity *= friction;
+                                        momentumScroll -= velocity * 16;
+                                        scroll.scrollLeft(momentumScroll);
+
+                                        if (Math.abs(velocity) > 0.1) {
+                                            animationFrame = requestAnimationFrame(applyInertia);
+                                        } else {
+                                            cancelAnimationFrame(animationFrame);
+                                        }
+                                    }
+                                }
+
+                                applyInertia();
+                            }.bind(this));
+
+                            list.on('wheel', function (e) {
+                                if (e.shiftKey) {
+                                    e.preventDefault();
+                                    const delta = e.originalEvent.deltaY;
+                                    currentScroll = scroll.scrollLeft(scroll.scrollLeft() + delta);
+                                }
+                            });
                         }
                     }
                 }
@@ -1982,7 +1994,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var layoutName = this.layoutName;
 
-            this._helper.layoutManager.get(this.collection.name, layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+            this._helper.layoutManager.get(this.collection.name, layoutName, this.options.layoutRelatedScope ?? null, null, function (data) {
+                this.layoutData = data
                 var filteredListLayout = this.filterListLayout(data.layout);
                 this.layoutLoadCallbackList.forEach(function (callbackItem) {
                     callbackItem(filteredListLayout);
@@ -2321,8 +2334,22 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }.bind(this), model);
         },
 
+        createLayoutConfigurator(){
+            this.createView('layoutConfigurator', "views/record/layout-configurator", {
+                scope: this.scope,
+                viewType: this.layoutName,
+                relatedScope: this.getParentModel()?.urlRoot,
+                layoutData: this.layoutData,
+                el: this.getSelector() + ' .layout-editor-container',
+            }, (view) => {
+                view.on("refresh", () => this.refreshLayout())
+                view.render()
+            })
+        },
+
         buildRows: function (callback) {
             this.rowList = [];
+
 
             if (this.collection.length > 0) {
                 var i = 0;

@@ -65,5 +65,6 @@
   "auditable": true,
   "qbFilterType": "string",
   "personalData": true,
-  "textFilter": true
+  "textFilter": true,
+  "group": "character"
 }

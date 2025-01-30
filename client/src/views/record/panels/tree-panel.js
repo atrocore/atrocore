@@ -686,18 +686,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             button.find('span.toggle-icon-right').addClass('hidden');
 
             this.$el.removeClass('catalog-tree-panel-hidden');
-
-            this.$el.addClass('col-xs-12 col-lg-3');
-            if (this.model) {
-
-                let detailContainer = this.$el.parents('#main').find('.overview');
-                detailContainer.removeClass('col-lg-9');
-                detailContainer.addClass('col-lg-6');
-
-            } else {
-                let listContainer = this.$el.parents('#main').find('.list-container');
-                listContainer.addClass('col-xs-12 col-lg-9');
-            }
         },
 
         hideUtilityElements() {
@@ -709,16 +697,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.$el.addClass('catalog-tree-panel-hidden');
 
             this.$el.removeClass('col-xs-12 col-lg-3');
-            if (this.model) {
-
-                let detailContainer = this.$el.parents('#main').find('.overview');
-                detailContainer.addClass('col-lg-9');
-                detailContainer.removeClass('col-lg-6');
-
-            } else {
-                let listContainer = this.$el.parents('#main').find('.list-container');
-                listContainer.removeClass('col-xs-12 col-lg-9');
-            }
         },
 
         getTreeScopes() {

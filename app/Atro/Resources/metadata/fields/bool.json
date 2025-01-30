@@ -24,5 +24,6 @@
   ],
   "filter": true,
   "auditable": true,
-  "qbFilterType": "boolean"
+  "qbFilterType": "boolean",
+  "group": "other"
 }

@@ -137,6 +137,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         panelNavigationView: 'views/record/panel-navigation',
 
+        layoutData: null,
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -163,45 +165,33 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.notify('Saved', 'success');
                     });
                 });
-            },
-            'click a[data-action="layoutEditor"]': function (e) {
-                // open modal view
-                this.createView('dialog', 'views/admin/layouts/modals/edit', {
-                    scope: this.scope,
-                    type: this.layoutName,
-                    el: '[data-view="dialog"]',
-                }, view => {
-                    view.render()
-                    this.listenToOnce(view, 'close', (data) => {
-                        this.clearView('dialog');
-                        if (data && data.layoutIsUpdated) {
-                            this.detailLayout = null
-                            this.gridLayout = null
-                            this.getGridLayout((layout) => {
-                                const middle = this.getView('middle')
-                                if (middle) {
-                                    middle._layout = layout
-                                    middle._loadNestedViews(() => {
-                                        middle.reRender()
-                                    })
-
-                                    // update panel navigation
-                                    let bottom = this.getView('bottom')
-                                    if (bottom) {
-                                        for (let key of ['panelDetailNavigation', 'panelEditNavigation']) {
-                                            let navigation = this.getView(key)
-                                            if (navigation) {
-                                                navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
-                                                navigation.reRender()
-                                            }
-                                        }
-                                    }
-                                }
-                            })
-                        }
-                    });
-                });
             }
+        },
+
+        refreshLayout() {
+            this.detailLayout = null
+            this.gridLayout = null
+            this.getGridLayout((layout) => {
+                const middle = this.getView('middle')
+                if (middle) {
+                    middle._layout = layout
+                    middle._loadNestedViews(() => {
+                        middle.reRender()
+                    })
+
+                    // update panel navigation
+                    let bottom = this.getView('bottom')
+                    if (bottom) {
+                        for (let key of ['panelDetailNavigation', 'panelEditNavigation']) {
+                            let navigation = this.getView(key)
+                            if (navigation) {
+                                navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
+                                navigation.reRender()
+                            }
+                        }
+                    }
+                }
+            })
         },
 
         actionEdit: function () {
@@ -795,54 +785,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
             var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
 
-            var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
-            var $middle = this.getView('middle').$el;
             var $window = $(window);
 
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
-            $window.off('scroll.detail-' + this.numId);
-            $window.on('scroll.detail-' + this.numId, function (e) {
-                if ($(window.document).width() < screenWidthXs) {
-                    $container.removeClass('stick-sub');
-                    $block.hide();
-                    $container.show();
-                    return;
-                }
-
-                var edge = $middle.position().top + $middle.outerHeight(true);
-                var scrollTop = $window.scrollTop();
-
-                if (scrollTop < edge) {
-                    if (scrollTop > stickTop) {
-                        if (!$container.hasClass('stick-sub')) {
-                            $container.addClass('stick-sub');
-                            $block.show();
-
-                            var $p = $('.popover');
-                            $p.each(function (i, el) {
-                                $el = $(el);
-                                $el.css('top', ($el.position().top - blockHeight) + 'px');
-                            });
-                        }
-                    } else {
-                        if ($container.hasClass('stick-sub')) {
-                            $container.removeClass('stick-sub');
-                            $block.hide();
-
-                            var $p = $('.popover');
-                            $p.each(function (i, el) {
-                                $el = $(el);
-                                $el.css('top', ($el.position().top + blockHeight) + 'px');
-                            });
-                        }
-                    }
-                    $container.show();
-                } else {
-                    $container.hide();
-                    $block.show();
-                }
-            }.bind(this));
 
             var fields = this.getFieldViews();
 
@@ -879,58 +824,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     // headerButtonsContainer.addClass('full-row');
                 }
             }
-
-            let overview = $('.record .overview');
-            let side = $('#main > .record .row > .side');
-            if (overview.length && side.length) {
-                setTimeout(function () {
-                    if (overview.outerHeight() > side.outerHeight()) {
-                        overview.addClass('bordered');
-                    } else {
-                        side.addClass('bordered');
-                    }
-                }, 100);
-
-                $window.resize(function () {
-                    let row = $('.record > .detail > .row');
-
-                    if ($window.outerWidth() > 768) {
-                        if (row.length && (side.hasClass('fixed-top') || side.hasClass('fixed-bottom') || side.hasClass('scrolled'))) {
-
-                            side.css({
-                                'width': (row.outerWidth() - overview.outerWidth(true)) + 'px'
-                            });
-                        }
-                    }
-                });
-
-                let content = $('#content');
-
-                if (content.length) {
-                    let pageHeader = $('.page-header');
-                    let detailButtons = $('.detail-button-container.record-buttons');
-                    let mainOverview = $('#main > .record > .detail > .row > .overview');
-                    let mainSide = $('#main > .record > .detail > .row > .side');
-
-                    let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
-
-                    if (mainOverview.outerHeight() > mainSide.outerHeight()) {
-                        mainOverview.css({
-                            'minHeight': minHeight + 'px'
-                        })
-                    } else {
-                        mainSide.css({
-                            'minHeight': minHeight + 'px'
-                        })
-                    }
-                }
-            }
-
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
-                    $container.removeClass('stick-sub');
-                    $block.hide();
                     $container.show();
                     return;
                 }
@@ -950,8 +846,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     $el.css('top', ($el.position().top - ($container.height() - blockHeight * 2 + 10)) + 'px');
                                 }.bind(this));
                             }
-                            $container.addClass('stick-sub');
-                            $block.show();
                         } else {
                             if ($container.hasClass('stick-sub') && this.mode !== 'edit') {
                                 var $p = $('.popover:not(.note-popover)');
@@ -960,8 +854,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     $el.css('top', ($el.position().top + ($container.height() - blockHeight * 2 + 10)) + 'px');
                                 }.bind(this));
                             }
-                            $container.removeClass('stick-sub');
-                            $block.hide();
                         }
                         var $p = $('.popover');
                         $p.each(function (i, el) {
@@ -1000,7 +892,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         resetSidebar() {
-            let side = $('#main > .record .row > .side');
+            let side = $('#main > main > .record .row > .side');
 
             if (side) {
                 side.removeClass('scrolled fixed-bottom fixed-top');
@@ -1214,8 +1106,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
-                isSmall: this.isSmall,
-                isTreePanel: this.isTreePanel
+                isSmall: this.isSmall
             };
 
             return data;
@@ -1381,11 +1272,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
             });
-
-            if (!this.isWide && !this.isSmall) {
-                this.isTreePanel = this.isTreeAllowed();
-                this.setupTreePanel();
-            }
         },
 
         hotKeyEdit: function (e) {
@@ -1576,9 +1462,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.getAcl().check('LayoutProfile', 'read')
                     && this.mode !== 'edit'
                 ) {
-                    let html = `<a class="btn btn-link collapsing-button pull-right" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
-                         <span class="fas fa-cog cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
-                    </a>`
+
+                    let html = `<div class="layout-editor-container pull-right"></div>`
                     const $parent = view.$el.find('.panel-heading:first')
                     if ($parent.length > 0) {
                         $parent.append(html)
@@ -1586,6 +1471,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         // if first panel has no header
                         view.$el.find('.panel:first').prepend(`<div class="panel-heading">${html}</div>`)
                     }
+
+                    this.createView('layoutConfigurator', "views/record/layout-configurator", {
+                        scope: this.model.name,
+                        viewType: this.layoutName,
+                        layoutData: this.layoutData,
+                        el: this.getSelector() + '.panel-heading .layout-editor-container',
+                    }, (view) => {
+                        view.on("refresh", () => this.refreshLayout())
+                        view.render()
+                    })
                 }
             });
         },
@@ -2023,6 +1918,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+                this.layoutData = data
                 this.gridLayout = {
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(data.layout)
@@ -2043,18 +1939,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
                 recordViewObject: this
-            }, view => {
-                this.listenTo(view, 'side-width-changed', width => {
-                    width = parseInt(width);
-
-                    const content = $('#content');
-                    if (content.length) {
-                        const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
-                        const overview = content.find('.overview');
-
-                        overview.outerWidth(Math.floor(contentWidth - $('.catalog-tree-panel').outerWidth() - width));
-                    }
-                })
             });
         },
 
@@ -2078,7 +1962,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
-        createBottomView: function () {
+        createBottomView: function (callback) {
             var el = this.options.el || '#' + (this.id);
             this.createView('bottom', this.bottomView, {
                 model: this.model,
@@ -2093,6 +1977,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.listenToOnce(view, 'after:render', () => {
                     this.createPanelNavigationView(this.getMiddlePanels().concat(view.panelList));
                 })
+                if (callback) {
+                    callback(view)
+                }
             });
         },
 
@@ -2117,12 +2004,36 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 model: this.model,
                 scope: this.scope,
                 el: el + ' .panel-navigation.panel-left',
-            }, function (view) {
+            }, (view) => {
                 this.listenTo(this, 'after:set-detail-mode', () => {
                     view.reRender();
                 });
                 view.render();
+
+                if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
+                    this.getAcl().check('LayoutProfile', 'read')
+                    && this.mode !== 'edit'
+                ) {
+                    var bottomView = this.getView('bottom');
+                    this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
+                        scope: this.scope,
+                        viewType: 'relationships',
+                        layoutData: bottomView.layoutData,
+                        linkClass: 'btn',
+                        el: el + ' .detail-button-container .layout-editor-container',
+                    }, (view) => {
+                        view.on("refresh", () => {
+                            this.createBottomView(view => {
+                                view.render()
+                            })
+                        })
+                        view.render()
+                    })
+                }
+
+
             });
+
             this.createView('panelEditNavigation', this.panelNavigationView, {
                 panelList: panelList,
                 model: this.model,
@@ -2134,6 +2045,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
                 view.render();
             });
+
+
         },
 
         build: function (callback) {
@@ -2348,47 +2261,35 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupTreePanel() {
-            if (!this.isTreeAllowed()) {
-                return;
-            }
+        },
 
-            this.createView('treePanel', 'views/record/panels/tree-panel', {
-                el: `${this.options.el} .catalog-tree-panel`,
-                scope: this.scope,
-                model: this.model
-            }, view => {
-                this.listenTo(this.model, 'after:save', () => {
-                    view.rebuildTree();
-                });
-                view.listenTo(view, 'select-node', data => {
-                    this.selectNode(data);
-                });
-                view.listenTo(view, 'tree-load', treeData => {
-                    this.treeLoad(view, treeData);
-                });
-                view.listenTo(view, 'tree-refresh', () => {
-                    view.treeRefresh();
-                });
-                view.listenTo(view, 'tree-reset', () => {
-                    this.treeReset(view);
-                });
-                this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
-                    if (['parents', 'children'].includes(link)) {
-                        view.rebuildTree();
-                    }
-                });
-                this.listenTo(view, 'tree-width-changed', function (width) {
-                    this.onTreeResize(width)
-                });
-                this.listenTo(view, 'tree-width-unset', function () {
-                    if ($('.catalog-tree-panel').length) {
-                        $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.overview-filters-container').css({'width': 'unset', 'marginLeft': 'unset'})
-                        $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
-                    }
-                })
+        onTreePanelRendered(view) {
+            this.listenTo(this.model, 'after:save', () => {
+                view.rebuildTree();
             });
+            view.listenTo(view, 'select-node', data => {
+                this.selectNode(data);
+            });
+            view.listenTo(view, 'tree-load', treeData => {
+                this.treeLoad(view, treeData);
+            });
+            view.listenTo(view, 'tree-refresh', () => {
+                view.treeRefresh();
+            });
+            view.listenTo(view, 'tree-reset', () => {
+                this.treeReset(view);
+            });
+            this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
+                if (['parents', 'children'].includes(link)) {
+                    view.rebuildTree();
+                }
+            });
+            this.listenTo(view, 'tree-width-changed', function (width) {
+                this.onTreeResize(width)
+            });
+            this.listenTo(view, 'tree-width-unset', function () {
+                this.onTreeUnset();
+            })
         },
 
         selectNode(data) {
@@ -2435,31 +2336,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         onTreeResize(width) {
-            if ($('.catalog-tree-panel').length) {
-                width = parseInt(width || $('.catalog-tree-panel').outerWidth());
+        },
 
-                const content = $('#content');
-                const main = content.find('#main');
-
-                const header = content.find('.page-header');
-                const btnContainer = content.find('.detail-button-container');
-                const filters = content.find('.overview-filters-container');
-                const overview = content.find('.overview');
-                const side = content.find('.side');
-
-                header.outerWidth(Math.floor(main.width() - width));
-                header.css('marginLeft', width + 'px');
-
-                filters.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width));
-                filters.css('marginLeft', width + 'px');
-
-                btnContainer.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width - 1));
-                btnContainer.addClass('detail-tree-button-container');
-                btnContainer.css('marginLeft', width + 1 + 'px');
-
-                overview.outerWidth(Math.floor(content.innerWidth() - side.outerWidth() - width));
-                overview.css('marginLeft', width + 'px');
-            }
+        onTreeUnset() {
         }
     });
 });

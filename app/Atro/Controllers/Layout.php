@@ -94,6 +94,26 @@ class Layout extends AbstractRecordController
         return $layoutManager->resetAllToDefault($layoutProfileId);
     }
 
+    public function actionSavePreference($params, $data, $request): bool
+    {
+        if (!$request->isPost() || empty($data->scope) || empty($data->viewType)) {
+            throw new BadRequest();
+        }
+
+        $relatedScope = null;
+        $layoutProfileId = null;
+
+        if (!empty($data->relatedScope)) {
+            $relatedScope = (string)$data->relatedScope;
+        }
+        if (!empty($data->layoutProfileId)) {
+            $layoutProfileId = (string)$data->layoutProfileId;
+        }
+
+        $layoutManager = $this->getLayoutManager();
+        return $layoutManager->saveUserPreference((string)$data->scope, (string)$data->viewType, $relatedScope, $layoutProfileId);
+    }
+
     public function getLayoutManager(): LayoutManager
     {
         return $this->getContainer()->get('layoutManager');

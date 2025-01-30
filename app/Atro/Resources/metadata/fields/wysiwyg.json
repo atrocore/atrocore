@@ -68,5 +68,6 @@
     "type": "text"
   },
   "personalData": true,
-  "textFilter": true
+  "textFilter": true,
+  "group": "character"
 }
