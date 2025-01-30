@@ -97,13 +97,13 @@ Espo.define('views/record/panel-navigation', 'view',
                 let offset = panel.position();
                 let headerHeight = $('#main .page-header').outerHeight() || 0;
                 let navigationHeight = buttons.outerHeight() || 0;
-                let scrollTop = offset.top + headerHeight - 10
-                if (window.width < 768) {
+                let scrollTop = offset.top + 10;
+
+                if (window.screen.width < 768) {
                     const tree = $('#main > aside.catalog-tree-panel')
-                    scrollTop -= tree.outerHeight() || 0;
-                    scrollTop -= navigationHeight;
+                    scrollTop += headerHeight + navigationHeight + (tree.outerHeight() || 0);
                 } else {
-                    scrollTop += navigationHeight
+                    scrollTop += navigationHeight;
                 }
 
                 content.scrollTop(scrollTop);
