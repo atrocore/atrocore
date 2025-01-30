@@ -25,9 +25,9 @@ class V1Dot13Dot7 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("ALTER TABLE action_history_record ALTER target_type TYPE VARCHAR(34)");
+            $this->exec("ALTER TABLE action_history_record ALTER target_type TYPE VARCHAR(60)");
         } else {
-            $this->exec("ALTER TABLE action_history_record CHANGE target_type target_type VARCHAR(34) DEFAULT NULL");
+            $this->exec("ALTER TABLE action_history_record CHANGE target_type target_type VARCHAR(60) DEFAULT NULL");
         }
     }
 
