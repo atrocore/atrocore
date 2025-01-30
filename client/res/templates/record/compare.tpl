@@ -1,14 +1,17 @@
 <div class="detail" id="{{id}}">
     <div class="detail-button-container button-container record-buttons clearfix">
-        {{#if merging }}
-        <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
-        <button class="btn btn-default" data-action="cancel" style="margin-right: 15px">{{translate 'Cancel'}}</button>
-        {{/if}}
-        <div class="clearfix"></div>
+        <div class="buttons">
+            <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
+            <button class="btn btn-default {{#unless merging }} hidden {{/unless}}#" data-action="cancel" style="margin-right: 15px">{{translate 'Cancel'}}</button>
+            <a href="javascript:" title="Click to filter" class="btn btn-default action disabled pull-right" data-action="openOverviewFilter">
+                <span class="fas fa-filter"></span>
+            </a>
+        </div>
         <div class="panel-navigation panel-left pull-left">
 
         </div>
     </div>
+
     <div class="row">
         <div class="compare-panel list col-md-12">
             <div class="panel panel-default panel-overviewPanels" data-panel="fields-overviews">
@@ -142,7 +145,7 @@
     }
 
     .detail .button-container {
-        padding: 20px 0 20px 10px !important;
+        padding: 10px !important;
     }
 
     .compare-panel .center-child {
@@ -166,5 +169,16 @@
         background-color: white;
         width: 100%;
         display: flex;
+        flex-direction: column;
+        right: 20px;
+        left: 15px;
+    }
+
+    .detail  > .detail-button-container  > .panel-navigation {
+        padding-top: 10px;
+    }
+
+    .detail  > .detail-button-container  > .panel-navigation > .nav-pills > li {
+        margin-left: 0;
     }
 </style>
