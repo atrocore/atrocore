@@ -117,6 +117,11 @@ class Metadata extends AbstractListener
                 }
             }
         }
+
+        $data['clientDefs']['EntityField']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'][] = [
+            "type"      => "isEmpty",
+            "attribute" => "multilangField"
+        ];
     }
 
     protected function prepareAclActionLevelListMap(array &$data): void
@@ -918,11 +923,12 @@ class Metadata extends AbstractListener
     }
 
     private function addScopesToRelationShip(
-        array &$metadata,
+        array  &$metadata,
         string $scope,
         string $relationEntityName,
         string $relation
-    ) {
+    )
+    {
         if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
@@ -1214,7 +1220,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array $indexes
+     * @param array  $indexes
      * @param string $fieldName
      *
      * @return array
