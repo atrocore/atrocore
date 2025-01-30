@@ -137,6 +137,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         panelNavigationView: 'views/record/panel-navigation',
 
+        layoutData: null,
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -163,45 +165,33 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.notify('Saved', 'success');
                     });
                 });
-            },
-            'click a[data-action="layoutEditor"]': function (e) {
-                // open modal view
-                this.createView('dialog', 'views/admin/layouts/modals/edit', {
-                    scope: this.scope,
-                    type: this.layoutName,
-                    el: '[data-view="dialog"]',
-                }, view => {
-                    view.render()
-                    this.listenToOnce(view, 'close', (data) => {
-                        this.clearView('dialog');
-                        if (data && data.layoutIsUpdated) {
-                            this.detailLayout = null
-                            this.gridLayout = null
-                            this.getGridLayout((layout) => {
-                                const middle = this.getView('middle')
-                                if (middle) {
-                                    middle._layout = layout
-                                    middle._loadNestedViews(() => {
-                                        middle.reRender()
-                                    })
-
-                                    // update panel navigation
-                                    let bottom = this.getView('bottom')
-                                    if (bottom) {
-                                        for (let key of ['panelDetailNavigation', 'panelEditNavigation']) {
-                                            let navigation = this.getView(key)
-                                            if (navigation) {
-                                                navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
-                                                navigation.reRender()
-                                            }
-                                        }
-                                    }
-                                }
-                            })
-                        }
-                    });
-                });
             }
+        },
+
+        refreshLayout() {
+            this.detailLayout = null
+            this.gridLayout = null
+            this.getGridLayout((layout) => {
+                const middle = this.getView('middle')
+                if (middle) {
+                    middle._layout = layout
+                    middle._loadNestedViews(() => {
+                        middle.reRender()
+                    })
+
+                    // update panel navigation
+                    let bottom = this.getView('bottom')
+                    if (bottom) {
+                        for (let key of ['panelDetailNavigation', 'panelEditNavigation']) {
+                            let navigation = this.getView(key)
+                            if (navigation) {
+                                navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
+                                navigation.reRender()
+                            }
+                        }
+                    }
+                }
+            })
         },
 
         actionEdit: function () {
@@ -1616,9 +1606,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.getAcl().check('LayoutProfile', 'read')
                     && this.mode !== 'edit'
                 ) {
-                    let html = `<a class="btn btn-link collapsing-button pull-right" data-action="layoutEditor" style="margin-left: 5px; padding: 0;">
-                         <span class="fas fa-cog cursor-pointer layout-editor" style="margin-top: -2px;font-size: 14px"></span>
-                    </a>`
+
+                    let html = `<div class="layout-editor-container pull-right"></div>`
                     const $parent = view.$el.find('.panel-heading:first')
                     if ($parent.length > 0) {
                         $parent.append(html)
@@ -1626,6 +1615,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         // if first panel has no header
                         view.$el.find('.panel:first').prepend(`<div class="panel-heading">${html}</div>`)
                     }
+
+                    this.createView('layoutConfigurator', "views/record/layout-configurator", {
+                        scope: this.model.name,
+                        viewType: this.layoutName,
+                        layoutData: this.layoutData,
+                        el: this.getSelector() + '.panel-heading .layout-editor-container',
+                    }, (view) => {
+                        view.on("refresh", () => this.refreshLayout())
+                        view.render()
+                    })
                 }
             });
         },
@@ -2063,6 +2062,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+                this.layoutData = data
                 this.gridLayout = {
                     type: gridLayoutType,
                     layout: this.convertDetailLayout(data.layout)
@@ -2106,7 +2106,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
-        createBottomView: function () {
+        createBottomView: function (callback) {
             var el = this.options.el || '#' + (this.id);
             this.createView('bottom', this.bottomView, {
                 model: this.model,
@@ -2121,6 +2121,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.listenToOnce(view, 'after:render', () => {
                     this.createPanelNavigationView(this.getMiddlePanels().concat(view.panelList));
                 })
+                if (callback) {
+                    callback(view)
+                }
             });
         },
 
@@ -2145,12 +2148,36 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 model: this.model,
                 scope: this.scope,
                 el: el + ' .panel-navigation.panel-left',
-            }, function (view) {
+            }, (view) => {
                 this.listenTo(this, 'after:set-detail-mode', () => {
                     view.reRender();
                 });
                 view.render();
+
+                if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
+                    this.getAcl().check('LayoutProfile', 'read')
+                    && this.mode !== 'edit'
+                ) {
+                    var bottomView = this.getView('bottom');
+                    this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
+                        scope: this.scope,
+                        viewType: 'relationships',
+                        layoutData: bottomView.layoutData,
+                        linkClass: 'btn',
+                        el: el + ' .detail-button-container .layout-editor-container',
+                    }, (view) => {
+                        view.on("refresh", () => {
+                            this.createBottomView(view => {
+                                view.render()
+                            })
+                        })
+                        view.render()
+                    })
+                }
+
+
             });
+
             this.createView('panelEditNavigation', this.panelNavigationView, {
                 panelList: panelList,
                 model: this.model,
@@ -2162,6 +2189,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
                 view.render();
             });
+
+
         },
 
         build: function (callback) {

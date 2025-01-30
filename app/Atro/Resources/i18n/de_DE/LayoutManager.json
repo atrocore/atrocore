@@ -24,6 +24,8 @@
     }
   },
   "labels": {
-    "New panel": "Neues Panel"
+    "New panel": "Neues Panel",
+    "reset": "Layout zurücksetzen",
+    "fullEdit": "Vollständige Bearbeitung"
   }
 }

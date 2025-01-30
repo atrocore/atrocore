@@ -79,6 +79,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         baseWidth: [],
 
+        layoutData: null,
+
+        layoutProfileId: null,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -214,42 +218,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 } else {
                     this.massAction(action);
                 }
-            },
-            'click .layout-editor': function (e) {
-                // open modal view
-                this.showLayoutEditorModal()
             }
         },
 
-        showLayoutEditorModal() {
-            this.createView('dialog', 'views/admin/layouts/modals/edit', {
-                scope: this.scope,
-                type: this.layoutName,
-                relatedScope: this.getParentModel()?.urlRoot,
-                el: '[data-view="dialog"]',
-            }, view => {
-                view.render()
-                this.listenToOnce(view, 'close', (data) => {
-                    this.clearView('dialog');
-                    if (data && data.layoutIsUpdated) {
-                        this.listLayout = null
-                        this._internalLayout = null
-                        this.getInternalLayout(() => {
-                            this.notify('Loading...')
-                            this.getSelectAttributeList(selectAttributeList => {
-                                if (selectAttributeList) {
-                                    this.collection.data.select = selectAttributeList.join(',');
-                                }
-                                this.collection.fetch({keepSelected: true})
-                                this.collection.once('sync', () => {
-                                    this.notify(false);
-                                })
-                            });
-                        })
-
+        refreshLayout() {
+            this.listLayout = null
+            this._internalLayout = null
+            this.notify('Loading...')
+            this.getInternalLayout(() => {
+                this.getSelectAttributeList(selectAttributeList => {
+                    if (selectAttributeList) {
+                        this.collection.data.select = selectAttributeList.join(',');
                     }
+                    this.collection.fetch({keepSelected: true})
+                    this.collection.once('sync', () => {
+                        this.notify(false);
+                    })
                 });
-            });
+            })
         },
 
         checkIntervalRecords(e, $target) {
@@ -397,8 +383,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.length && !fixedHeaderRow,
-                hasLayoutEditor: this.hasLayoutEditor
+                showNoData: !this.collection.length && !fixedHeaderRow
             };
         },
 
@@ -1226,6 +1211,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         afterRender: function () {
 
+            this.createLayoutConfigurator()
+
             if (this.allResultIsChecked) {
                 this.selectAllResult();
             } else {
@@ -2007,7 +1994,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var layoutName = this.layoutName;
 
-            this._helper.layoutManager.get(this.collection.name, layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+            this._helper.layoutManager.get(this.collection.name, layoutName, this.options.layoutRelatedScope ?? null, null, function (data) {
+                this.layoutData = data
                 var filteredListLayout = this.filterListLayout(data.layout);
                 this.layoutLoadCallbackList.forEach(function (callbackItem) {
                     callbackItem(filteredListLayout);
@@ -2346,8 +2334,22 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }.bind(this), model);
         },
 
+        createLayoutConfigurator(){
+            this.createView('layoutConfigurator', "views/record/layout-configurator", {
+                scope: this.scope,
+                viewType: this.layoutName,
+                relatedScope: this.getParentModel()?.urlRoot,
+                layoutData: this.layoutData,
+                el: this.getSelector() + ' .layout-editor-container',
+            }, (view) => {
+                view.on("refresh", () => this.refreshLayout())
+                view.render()
+            })
+        },
+
         buildRows: function (callback) {
             this.rowList = [];
+
 
             if (this.collection.length > 0) {
                 var i = 0;
