@@ -1368,7 +1368,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return
             }
 
-
             const fieldFilter = this.getStorage().get('fieldFilter', this.scope) || ['allValues'];
             const languageFilter = this.getStorage().get('languageFilter', this.scope) || ['allLanguages'];
 
