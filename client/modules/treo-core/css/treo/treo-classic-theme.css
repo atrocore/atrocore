@@ -16533,7 +16533,8 @@ label.attach-file-label > input.file {
 }
 
 body > footer {
-    background-color: #eee
+    background-color: #eee;
+    min-width: 100%;
 }
 
 body > footer > p {
