@@ -65,7 +65,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this.$el.find('.navbar-collapse.in').collapse('hide');
                 }
             },
-            'click a[data-action="quick-create"]': function (e) {
+            'click span[data-action="quickCreate"]': function (e) {
                 e.preventDefault();
                 var scope = $(e.currentTarget).data('name');
                 this.quickCreate(scope);
@@ -368,6 +368,24 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         quickCreate: function (scope) {
             Espo.Ui.notify(this.translate('Loading...'));
+            if(scope === 'File') {
+                this.notify('Loading...');
+                this.createView('upload', 'views/file/modals/upload', {
+                    scope: 'File',
+                    fullFormDisabled: true,
+                    layoutName: 'upload',
+                    multiUpload: true,
+                    attributes: {
+                        scope: scope
+                    },
+                }, view => {
+                    view.once('after:render', () => {
+                        this.notify(false);
+                    });
+                    view.render();
+                });
+                return;
+            }
             var type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
             var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
             this.createView('quickCreate', viewName, {scope: scope}, function (view) {

@@ -4405,13 +4405,13 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .nav > li {
     position: relative;
-    display: block
 }
 
 .nav > li > a {
     position: relative;
     display: block;
-    padding: 10px 15px
+    padding: 10px 15px;
+    width: 100%
 }
 
 .nav > li > a:hover, .nav > li > a:focus {
@@ -24069,6 +24069,7 @@ span[data-img-src]::after {
     background-color: transparent;
     white-space: normal;
     padding-left: 35px;
+    padding-right: 20px;
     color: var(--nav-font-color);
 }
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group.keep-open > ul {
@@ -24093,14 +24094,33 @@ span[data-img-src]::after {
     display: none;
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs >  li >  a.quick-create {
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) span.quick-create {
     display: none;
-    padding: 0;
+    position: absolute;
+    right: 10px;
 }
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs > li:hover > a.quick-create {
-    display: block;
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs  li:not(.more):hover  span.quick-create {
+    display: inline;
+    cursor: pointer;
 }
 
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more){
+    display: flex;
+    align-items: center;
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) > a.nav-link{
+    width: 100%;
+    display: flex;
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) > a.nav-link > span.full-label{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    padding-right: 30px;
+}
 /* Vertical Mobile*/
 @media (max-width: 767px) {
     .navbar-nav .keep-open .dropdown-menu > li > a {

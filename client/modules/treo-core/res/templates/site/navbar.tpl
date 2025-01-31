@@ -70,9 +70,9 @@
                             </span>
                             <span class="full-label">{{label}}</span>
                         </a>
-                        <a href="javascript:" data-action="quickCreate" data-name="{{name}}" class="quick-create">
-                            <i class="fas fa-plus"></i>
-                        </a>
+                        <span data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create">
+                    <i class="fas fa-plus"></i>
+                </span>
                     </li>
                     {{/each}}
                 </ul>
@@ -92,9 +92,9 @@
                         {{/if}}
                     </span>
                 </a>
-                <a href="javascript:" data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create">
+                <span data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create">
                     <i class="fas fa-plus"></i>
-                </a>
+                </span>
             </li>
             {{/if}}
             {{/each}}
