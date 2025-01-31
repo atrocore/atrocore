@@ -49,9 +49,9 @@ Espo.define('views/layout/fields/related-entity', 'views/layout/fields/entity', 
         afterRender: function () {
             Dep.prototype.afterRender.call(this)
             if (this.model.get('viewType') !== 'list') {
-                this.hide()
+                this.$el.children().addClass('invisible');
             } else {
-                this.show()
+                this.$el.children().removeClass('invisible');
             }
         }
     });
