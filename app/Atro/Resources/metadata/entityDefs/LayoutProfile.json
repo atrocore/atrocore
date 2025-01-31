@@ -47,7 +47,7 @@
       "emHidden": true
     },
     "navigation": {
-      "type": "array",
+      "type": "jsonObject",
       "view": "views/layout-profile/fields/navigation",
       "notStorable": true,
       "virtualField": true,

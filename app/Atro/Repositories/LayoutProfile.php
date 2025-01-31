@@ -19,6 +19,8 @@ use Espo\ORM\Entity;
 
 class LayoutProfile extends Base
 {
+    const CACHE_NAME = 'default_layout_profile';
+
     /**
      * @inheritDoc
      */
@@ -59,7 +61,7 @@ class LayoutProfile extends Base
         parent::afterSave($entity, $options);
 
         if ((empty($options['cascadeChange']) && $entity->isAttributeChanged('isDefault') && $entity->get('isDefault') === true) ||
-            $entity->isAttributeChanged('hideShowFullList')) {
+            $entity->isAttributeChanged('hideShowFullList') || $entity->isAttributeChanged('navigation')) {
             $this->getInjection('dataManager')->clearCache();
         }
     }

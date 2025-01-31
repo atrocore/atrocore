@@ -50,7 +50,7 @@
       "tooltip": true
     },
     "tabList": {
-      "type": "array",
+      "type": "jsonObject",
       "view": "views/settings/fields/tab-list"
     },
     "quickCreateList": {

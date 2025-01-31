@@ -1,7 +1,8 @@
 <script lang="ts">
     import {onDestroy, onMount} from 'svelte';
     import BaseLayout from './BaseLayout.svelte';
-    import type {Field, LayoutItem, Params} from '../../admin/layouts/Interfaces';
+    import type {Button} from '../../admin/layouts/Interfaces';
+    import type {Item, KeyValue, Params} from './Interfaces';
     import {Language} from "../../../utils/Language";
     import Sortable from 'sortablejs'
     import {Notifier} from "../../../utils/Notifier";
@@ -12,13 +13,38 @@
     let sortableDisabled: Sortable;
 
     export let params: Params;
-    export let enabledFields: Field[] = [];
-    export let disabledFields: Field[] = [];
+    export let enabledItems: Item[] = [];
+    export let disabledItems: Item[] = [];
+
+    export let buttonList: Button[]
     export let loadData: Function;
+    export let refresh: Function;
+
+    export let editItem: Function;
+
+    export let fieldsInGroup: KeyValue;
 
     let baseLayout: BaseLayout;
 
+    $: calculateFieldsInGroup(enabledItems)
+
+    function calculateFieldsInGroup(enabledItems: Item[]) {
+        let inGroup = false;
+        let inGroupValues: KeyValue = {}
+        enabledItems.forEach((item) => {
+            if (item.isGroup) {
+                inGroup = item.name !== ''
+                return;
+            }
+            if (inGroup) {
+                inGroupValues[item.name] = true;
+            }
+        });
+        fieldsInGroup = inGroupValues
+    }
+
     onMount(() => {
+        console.log('On mounted call')
         initializeSortable();
     });
 
@@ -26,6 +52,7 @@
         if (sortableEnabled) sortableEnabled.destroy();
         if (sortableDisabled) sortableDisabled.destroy();
     });
+
 
     function initializeSortable(): void {
         const options: Sortable.Options = {
@@ -38,54 +65,84 @@
             ...options,
             onEnd: function (evt) {
                 if (evt.to.closest('.connected').classList.contains('enabled')) {
-                    const [movedItem] = enabledFields.splice(evt.oldIndex, 1);
-                    enabledFields.splice(evt.newIndex, 0, movedItem);
+                    const [movedItem] = enabledItems.splice(evt.oldIndex, 1);
+                    enabledItems.splice(evt.newIndex, 0, movedItem);
+                    for (let i = evt.newIndex; i < enabledItems.length; i++) {
+                        enabledItems[i].sortOrder = (i > 0 ? enabledItems[i - 1].sortOrder : 0) + i;
+                    }
+                    calculateFieldsInGroup(enabledItems);
+                    refresh();
+                    return;
                 } else {
-                    const movedItem = enabledFields[evt.oldIndex]
-                    enabledFields.splice(evt.oldIndex, 1)
-                    disabledFields.splice(evt.newIndex, 0, movedItem)
-                    disabledFields = [...disabledFields]
+                    const movedItem = enabledItems[evt.oldIndex]
+                    if (movedItem.canDisabled === false) {
+                        refresh()
+                        return;
+                    }
+                    enabledItems.splice(evt.oldIndex, 1)
+                    disabledItems.splice(evt.newIndex, 0, movedItem)
+                    disabledItems = [...disabledItems]
                 }
-                enabledFields = [...enabledFields];
+                enabledItems = [...enabledItems];
             }
         });
         sortableDisabled = Sortable.create(layoutElement.querySelector('ul.disabled'), {
             ...options,
             onEnd: function (evt) {
                 if (evt.to.closest('.connected').classList.contains('disabled')) {
-                    const [movedItem] = disabledFields.splice(evt.oldIndex, 1);
-                    disabledFields.splice(evt.newIndex, 0, movedItem);
+                    const [movedItem] = disabledItems.splice(evt.oldIndex, 1);
+                    disabledItems.splice(evt.newIndex, 0, movedItem);
                 } else {
-                    const movedItem = disabledFields[evt.oldIndex]
-                    disabledFields.splice(evt.oldIndex, 1)
-                    enabledFields.splice(evt.newIndex, 0, movedItem)
-                    enabledFields = [...enabledFields]
+                    const movedItem = disabledItems[evt.oldIndex]
+                    disabledItems.splice(evt.oldIndex, 1)
+                    enabledItems.splice(evt.newIndex, 0, movedItem)
+                    for (let i = evt.newIndex; i < enabledItems.length; i++) {
+                        enabledItems[i].sortOrder = (i > 0 ? enabledItems[i - 1].sortOrder : 0) + i;
+                    }
+                    calculateFieldsInGroup(enabledItems);
+                    refresh();
+                    return;
                 }
-                disabledFields = [...disabledFields];
+                disabledItems = [...disabledItems];
             }
         });
     }
 
-    function editField(field): void {
-        params.openEditDialog(field, params.scope, params.dataAttributeList, params.dataAttributesDefs, (attributes) => {
-            enabledFields = enabledFields.map(item => {
-                if (item.name === field.name) {
-                    for (let key in attributes) {
-                        item[key] = attributes[key]
-                    }
-                }
-                return item
-            })
-        });
-    }
 
     export let fetch = () => {
-        return enabledFields;
+        let data = [];
+        let inGroup = false;
+        for (const item of enabledItems) {
+            if (item.isGroup) {
+                inGroup = item.name !== '';
+                data.push({
+                    id: item.id,
+                    name: item.name,
+                    color: item.color,
+                    iconClass: item.iconClass,
+                    items: []
+                });
+                continue;
+            }
+
+            if (inGroup) {
+                data[data.length - 1].items.push(item.name);
+            } else {
+                data.push(item.name)
+            }
+        }
+
+        return data;
     }
 
-    function validate(layout: LayoutItem[]): boolean {
-        if (layout.length === 0) {
-            Notifier.notify('Layout cannot be empty', 'error');
+    function removeItem(item: Item): void {
+        enabledItems.splice(enabledItems.findIndex(f => f.id === item.id), 1)
+        refresh();
+    }
+
+    function validate(itemToSaved: Array): boolean {
+        if (itemToSaved.length === 0) {
+            Notifier.notify('Menu cannot be empty', 'error');
             return false;
         }
         return true;
@@ -99,9 +156,9 @@
         return obj[key];
     }
 
-    function getDataAttributeProps(item: LayoutItem): any {
-        const dataAttributes = {};
-        params.dataAttributeList.forEach(attr => {
+    function getDataAttributeProps(item: Field): any {
+        let dataAttributes = {};
+        ['name', 'id'].forEach(attr => {
             if (prop(item, attr) != null) {
                 dataAttributes[`data-${toDom(attr)}`] = prop(item, attr);
             }
@@ -116,6 +173,7 @@
         {validate}
         {fetch}
         {loadData}
+        {buttonList}
 >
 
     <div id="layout" class="row" bind:this={layoutElement}>
@@ -123,32 +181,42 @@
             <div class="well">
                 <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
                 <ul class="enabled connected">
-                    {#each enabledFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
-                        <li {...getDataAttributeProps(item)}>
-                            <div class="left">
-                                <label>{item.label}</label>
+                    {#each enabledItems.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
+                        <li {...getDataAttributeProps(item)} class="{ fieldsInGroup[item.name] ? 'in-group': ''}">
+                            <div class="left ">
+                                <label title="{item.label}">{item.label}</label>
                             </div>
-                            {#if params.editable}
-                                <div class="right">
+                            <div class="right">
+                                {#if item.canEdit}
                                     <a href="javascript:" data-action="editField" class="edit-field"
-                                       on:click={()=>editField(item)}>
+                                       on:click={()=>editItem(item)}>
                                         <i class="fas fa-pencil-alt fa-sm"></i>
                                     </a>
-                                </div>
-                            {/if}
+                                {/if}
+                                {#if item.canRemove}
+
+                                    <a href="javascript:" data-action="removeField" class="remove-field"
+                                       on:click={()=>removeItem(item)}
+                                    >
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                {/if}
+                            </div>
+
                         </li>
                     {/each}
                 </ul>
             </div>
         </div>
+        <div class="col-sm-2"></div>
         <div class="col-sm-5">
             <div class="well">
                 <header>{Language.translate('Available', 'labels', 'Admin')}</header>
                 <ul class="disabled connected">
-                    {#each disabledFields as field (field.name)}
-                        <li {...getDataAttributeProps(field)}>
+                    {#each disabledItems as item (item.name)}
+                        <li {...getDataAttributeProps(item)}>
                             <div class="left">
-                                <label>{field.label}</label>
+                                <label title="{item.label}">{item.label}</label>
                             </div>
                         </li>
                     {/each}
@@ -179,9 +247,9 @@
         height: 32px;
     }
 
-
     ul > li .left {
         float: left;
+        width: 100%;
     }
 
     ul > li {
@@ -198,13 +266,15 @@
 
     label {
         font-weight: normal;
-    }
-
-    .enabled li a.edit-field {
-        display: none;
-    }
-
-    .enabled li:hover a.edit-field {
         display: block;
+        width: 100%;
+        text-overflow: ellipsis;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .enabled .in-group {
+        margin-left: 20px;
     }
 </style>

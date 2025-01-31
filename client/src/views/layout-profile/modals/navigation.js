@@ -8,23 +8,71 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/layouts/modals/edit', 'views/modal',
+Espo.define('views/layout-profile/modals/navigation', 'views/modal',
     (Dep) => Dep.extend({
 
-        template: 'admin/layout-profile/modals/navigation',
+        template: 'layout-profile/modals/navigation',
 
         setup() {
             this.buttonList = [];
-
-            this.header = this.getLanguage().translate('layoutManagement', 'labels', 'LayoutManager');
-
+            this.model = this.options.model;
+            this.field = this.options.field;
+            this.header = this.getLanguage().translate('navigation', 'fields', 'LayoutProfile');
+            Dep.prototype.setup.call(this);
         },
 
         afterRender() {
-            console.log('iiiiiiii')
+            if (window.layoutSvelteComponent) {
+                try {
+                    window.layoutSvelteComponent.$destroy()
+                } catch (e) {
+                }
+            }
+
+            this.$el.find('.modal-body').css('paddingTop', 0);
+
+            if(!this.$el.find('.navigation').length) {
+                return;
+            }
+
             window.layoutSvelteComponent = new Svelte.Navigation({
-                target: this.$el.get(0),
-                inModal: true
+                target: this.$el.find('.navigation').get(0),
+                props: {
+                    params: {
+                        navigation: this.model.get(this.field),
+                        onSaved: (navigation) => {
+                            let attributes = {};
+                            attributes[this.field] = navigation;
+                            this.close();
+                            this.notify('Loading...');
+                            this.model.save(attributes, {
+                                patch: true
+                            }).then(() => {
+                                this.notify('Done', 'success')
+                            });
+                        },
+                        onEditItem: (item, callback) => {
+                            this.createView('addGroupModal', 'views/layout-profile/modals/edit-tab-group', {
+                                attributes: item
+                            }, view => {
+                                view.render();
+                                this.listenToOnce(view, 'after:save', data => {
+                                    if (callback) {
+                                        callback({
+                                            ...item,
+                                            name: data.name,
+                                            label: data.name,
+                                            color: data.color,
+                                            iconClass: data.iconClass,
+                                        });
+                                    }
+                                    view.close();
+                                });
+                            })
+                        }
+                    },
+                    inModal: true
+                }
             })
         }
     })

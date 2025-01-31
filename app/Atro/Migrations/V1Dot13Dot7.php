@@ -30,6 +30,20 @@ class V1Dot13Dot7 extends Base
         }else{
             $this->exec("ALTER TABLE layout_profile ADD data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD parent_id VARCHAR(36) DEFAULT NULL;");
         }
+
+        // migrate menu
+        $this->getConnection()->createQueryBuilder()
+            ->update('layout_profile')
+            ->set('data', ':data')
+            ->setParameter('data', json_encode([
+                "field" => [
+                    "navigation" => $this->getConfig()->get('twoLevelTabList') ?? $this->getConfig()->get('tabList'),
+                    "quickCreateList" => $this->getConfig()->get('quickCreateList') ?? [],
+                    "dashboardLayout" => $this->getConfig()->get('dashboardLayout')
+                ]
+            ]))
+        ->executeStatement();
+
     }
 
     protected function exec(string $query): void

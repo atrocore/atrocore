@@ -3,6 +3,7 @@ export interface Button {
     label: string;
     style?: string;
     disabled?: boolean;
+    action?: Function
 }
 
 export interface Field {

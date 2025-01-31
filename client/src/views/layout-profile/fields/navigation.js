@@ -21,7 +21,12 @@ Espo.define('views/layout-profile/fields/navigation', 'views/fields/varchar', fu
 
         inlineEdit: function () {
             this.notify('Loading...')
-          this.createView('edit', 'views/layout-profile/modals/navigation', {}, view => {
+            console.log(this.name)
+
+          this.createView('edit', 'views/layout-profile/modals/navigation', {
+              field: this.name,
+              model: this.model
+          }, view => {
               this.notify(false)
               view.render();
           });

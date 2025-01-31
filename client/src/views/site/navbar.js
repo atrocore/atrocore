@@ -49,6 +49,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 userId: this.getUser().id,
                 logoSrc: this.getLogoSrc(),
                 hideFeedbackIcon: !!this.getPreferences().get('hideFeedbackIcon'),
+                navbarIsVertical: this.getThemeManager().getParam('navbarIsVertical'),
                 showBookmarked: true
             };
         },
@@ -145,57 +146,11 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         getTabList: function () {
-            var tabList = this.getPreferences().get('useCustomTabList') ? this.getPreferences().get('tabList') : this.getConfig().get('tabList');
-            return tabList || [];
+            return this.getConfig().get('layoutProfileNavigation') || [];
         },
 
         getQuickCreateList: function () {
             return this.getConfig().get('quickCreateList') || [];
-        },
-
-        setup: function () {
-            this.getRouter().on('routed', function (e) {
-                if (e.controller) {
-                    this.selectTab(e.controller);
-                } else {
-                    this.selectTab(false);
-                }
-            }.bind(this));
-
-            var tabList = this.getTabList();
-
-            var scopes = this.getMetadata().get('scopes') || {};
-
-            this.tabList = tabList.filter(function (scope) {
-                if ((scopes[scope] || {}).disabled) return;
-                if ((scopes[scope] || {}).acl) {
-                    return this.getAcl().check(scope);
-                }
-                return true;
-            }, this);
-
-            this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
-                if ((scopes[scope] || {}).disabled) return;
-                if ((scopes[scope] || {}).acl) {
-                    return this.getAcl().check(scope, 'create');
-                }
-                return true;
-            }, this);
-
-            this.createView('notificationsBadge', 'views/notification/badge', {
-                el: this.options.el + ' .notifications-badge-container'
-            });
-
-
-            this.setupGlobalSearch();
-
-
-            this.setupTabDefsList();
-
-            this.once('remove', function () {
-                $(window).off('resize.navbar');
-                $(window).off('scroll.navbar');
-            });
         },
 
         setupGlobalSearch: function () {
@@ -211,146 +166,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 this.createView('globalSearch', 'views/global-search/global-search', {
                     el: this.options.el + ' .global-search-container'
                 });
-            }
-        },
-
-        adjust: function () {
-            var $window = $(window);
-
-            var navbarIsVertical = this.getThemeManager().getParam('navbarIsVertical');
-            var navbarStaticItemsHeight = this.getThemeManager().getParam('navbarStaticItemsHeight') || 0;
-
-            var smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-
-            if (!navbarIsVertical) {
-                var $tabs = this.$el.find('ul.tabs');
-                var $moreDropdown = $tabs.find('li.more');
-                var $more = $tabs.find('li.more > ul');
-
-                $window.on('resize.navbar', function() {
-                    updateWidth();
-                });
-
-                var hideOneTab = function () {
-                    var count = $tabs.children().size();
-                    if (count <= 1) return;
-                    var $one = $tabs.children().eq(count - 2);
-                    $one.prependTo($more);
-                };
-                var unhideOneTab = function () {
-                    var $one = $more.children().eq(0);
-                    if ($one.size()) {
-                        $one.insertBefore($moreDropdown);
-                    }
-                };
-
-                var tabCount = this.tabList.length;
-                var $navbar = $('#navbar .navbar');
-                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 43) + 1;
-
-                $moreDd = $('#nav-more-tabs-dropdown');
-                $moreLi = $moreDd.closest('li');
-
-                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 516;
-
-                var updateWidth = function () {
-                    var windowWidth = $(window.document).width();
-                    var windowWidth = window.innerWidth;
-                    var moreWidth = $moreLi.width();
-
-                    $more.children('li.not-in-more').each(function (i, li) {
-                        unhideOneTab();
-                    });
-
-                    if (windowWidth < smallScreenWidth) {
-                        return;
-                    }
-
-                    $more.parent().addClass('hidden');
-
-                    var headerWidth = this.$el.width();
-
-                    var maxWidth = headerWidth - navbarBaseWidth - moreWidth;
-                    var width = $tabs.width();
-
-                    var i = 0;
-                    while (width > maxWidth) {
-                        hideOneTab();
-                        width = $tabs.width();
-                        i++;
-                        if (i >= tabCount) {
-                            setTimeout(function () {
-                                updateWidth();
-                            }, 100);
-                            break;
-                        }
-                    }
-
-                    if ($more.children().size() > 0) {
-                        $moreDropdown.removeClass('hidden');
-                    }
-                }.bind(this);
-
-                var processUpdateWidth = function (isRecursive) {
-                    if ($navbar.height() > navbarNeededHeight) {
-                        updateWidth();
-                        setTimeout(function () {
-                            processUpdateWidth(true);
-                        }, 200);
-                    } else {
-                        if (!isRecursive) {
-                            setTimeout(function () {
-                                processUpdateWidth(true);
-                            }, 10);
-                        }
-                        setTimeout(function () {
-                            processUpdateWidth(true);
-                        }, 1000);
-                    }
-                };
-
-                if ($navbar.height() <= navbarNeededHeight && $more.children().size() === 0) {
-                    $more.parent().addClass('hidden');
-                }
-
-                processUpdateWidth();
-
-            } else {
-                var $tabs = this.$el.find('ul.tabs');
-
-                var minHeight = $tabs.height() + navbarStaticItemsHeight;
-
-                var $more = $tabs.find('li.more > ul');
-
-                if ($more.children().size() === 0) {
-                    $more.parent().addClass('hidden');
-                }
-
-                $('body').css('minHeight', minHeight + 'px');
-
-                $window.on('scroll.navbar', function () {
-                    $tabs.scrollTop($window.scrollTop());
-                    $more.scrollTop($window.scrollTop());
-                }.bind(this));
-
-                var updateSizeForVertical = function () {
-                    var windowHeight = window.innerHeight;
-                    var windowWidth = window.innerWidth;
-
-                    if (windowWidth < smallScreenWidth) {
-                        $tabs.css('height', 'auto');
-                        $more.css('max-height', '');
-                    } else {
-                        $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
-                        $more.css('max-height', windowHeight + 'px');
-                    }
-
-                }.bind(this);
-
-                $(window).on('resize.navbar', function() {
-                    updateSizeForVertical();
-                });
-                updateSizeForVertical();
             }
         },
 
@@ -415,47 +230,78 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
                 this.currentTab = name;
             }
+
+            this.$el.find('ul.tabs .keep-open').removeClass('keep-open');
+            this.$el.find('ul.tabs .highlighted').removeClass('highlighted');
+            if (this.getThemeManager().getParam('navbarIsVertical')) {
+                this.$el.find(`ul.tabs li.in-more[data-name="${name}"]`).parents('.more-group').addClass('open keep-open highlighted');
+            }
         },
 
         setupTabDefsList: function () {
-            var tabDefsList = [];
-            var moreIsMet = false;
-            var colorsDisabled = false;
-            var tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
+            this.tabDefsList = this.tabList.map(tab => this.getTabDefs(tab));
+        },
 
-            this.tabList.forEach(function (tab, i) {
-                if (tab === '_delimiter_') {
-                    moreIsMet = true;
-                    return;
-                }
-                var label = this.getLanguage().translate(tab, 'scopeNamesPlural');
-                var color = null;
+        getTabDefs(tab) {
+            let result ={};
+            let id;
+            let group;
+            let name;
+            let translateCategory;
+            let items;
+            let link;
+            let color;
+            let iconClass;
+
+            let colorsDisabled =
+                this.getPreferences().get('scopeColorsDisabled') ||
+                this.getPreferences().get('tabColorsDisabled') ||
+                this.getConfig().get('scopeColorsDisabled') ||
+                this.getConfig().get('tabColorsDisabled');
+            let tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
+            if (Espo.Utils.isObject(tab)) {
                 if (!colorsDisabled) {
-                    var color = this.getMetadata().get(['clientDefs', tab, 'color']);
+                    color = tab.color || 'inherit';
                 }
-
-                var shortLabel = label.substr(0, 2);
-
-                var iconClass = null;
                 if (!tabIconsDisabled) {
-                    iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
+                    iconClass = tab.iconClass;
                 }
-
-                var o = {
-                    link: '#' + tab,
-                    label: label,
-                    shortLabel: shortLabel,
-                    name: tab,
-                    isInMore: moreIsMet,
-                    color: color,
-                    iconClass: iconClass
-                };
-                if (color && !iconClass) {
-                    o.colorIconClass = 'color-icon fas fa-square-full';
+                id = tab.id;
+                group = true;
+                name = tab.name;
+                translateCategory = 'navMenuDelimiters';
+                items = tab.items.map(item => this.getTabDefs(item));
+                link = 'javascript:';
+            } else {
+                if (!colorsDisabled) {
+                    color = this.getMetadata().get(['clientDefs', tab, 'color']) || 'inherit';
                 }
-                tabDefsList.push(o);
-            }, this);
-            this.tabDefsList = tabDefsList;
+                if (!tabIconsDisabled) {
+                    iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass']);
+                }
+                id = tab;
+                group = false;
+                name = tab;
+                translateCategory = 'scopeNamesPlural';
+                items = [];
+                link = `#${tab}`;
+            }
+            let label = this.getLanguage().translate(name, translateCategory);
+            result = {
+                id: id,
+                link: link,
+                label: label,
+                shortLabel: label.substr(0, 2),
+                name: name,
+                items: items,
+                group: group,
+                color: color,
+                iconClass: iconClass
+            };
+            if (color && !iconClass) {
+                result.colorIconClass = 'color-icon fas fa-stop';
+            }
+            return result;
         },
 
         getMenuDataList: function () {
