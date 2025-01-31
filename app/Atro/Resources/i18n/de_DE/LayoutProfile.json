@@ -5,7 +5,8 @@
     "hideShowFullList": "„Vollständige Liste anzeigen“ auf Beziehungsfeldern ausblenden",
     "layouts": "Layout",
     "navigation": "Menü Navigation",
-    "quickCreateList": "Liste schnell erstellen"
+    "quickCreateList": "Liste schnell erstellen",
+    "dashboardLayout": "Dashboard-Layout"
   },
   "labels": {
     "Create LayoutProfile": "Layoutprofil erstellen",

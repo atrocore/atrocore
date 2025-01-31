@@ -61,6 +61,14 @@
       "virtualField": true,
       "filterDisabled": true,
       "massUpdateDisabled": true
+    },
+    "dashboardLayout": {
+      "type": "jsonObject",
+      "view": "views/layout-profile/fields/dashboard",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
     }
   },
   "links": {

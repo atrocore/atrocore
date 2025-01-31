@@ -4,7 +4,8 @@
     "description": "вид",
     "hideShowFullList": "Приховати \"Показати повний список\" на панелях зв'язків",
     "navigation": "Меню навігації",
-    "quickCreateList": "Швидке створення списку"
+    "quickCreateList": "Швидке створення списку",
+    "dashboardLayout": "Макет інформаційної панелі"
   },
   "labels": {
     "Create LayoutProfile": "Створити профіль макета",
