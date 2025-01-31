@@ -19,8 +19,6 @@ use Espo\ORM\Entity;
 
 class LayoutProfile extends Base
 {
-    const CACHE_NAME = 'default_layout_profile';
-
     /**
      * @inheritDoc
      */
