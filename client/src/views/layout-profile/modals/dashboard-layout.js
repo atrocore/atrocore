@@ -46,12 +46,16 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
 
             'click [data-name="save"]': function () {
                 this.close();
-                this.notify('Loading...');
-                this.model.save(this.fetch(), {
-                    patch: true
-                }).then(() => {
-                    this.notify('Done', 'success');
-                });
+                if(this.options.avoidSaving)  {
+                    this.model.set(this.fetch())
+                    this.notify('Loading...');
+                }else{
+                    this.model.save(this.fetch(), {
+                        patch: true
+                    }).then(() => {
+                        this.notify('Done', 'success');
+                    });
+                }
             },
         },
 
