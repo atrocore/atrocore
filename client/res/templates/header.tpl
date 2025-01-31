@@ -2,7 +2,7 @@
     <div>
         <h3>{{{header}}}</h3>
     </div>
-    <div class="col-lg-4 col-sm-4 header-buttons-container">
+    <div class="header-buttons-container">
         <div class="header-buttons btn-group pull-right">
             <div class="header-items">
                 {{#each items.buttons}}
@@ -40,6 +40,6 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-5 col-sm-5 search-container">{{{search}}}</div>
+    <div class="search-container">{{{search}}}</div>
 </div>
 

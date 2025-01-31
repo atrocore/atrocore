@@ -11,31 +11,31 @@
 Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
-        editTemplate: 'layout/fields/edit',
-
         setup: function () {
-            if (!this.params.translation) {
-                this.params.translation = 'Admin.layouts';
-            }
+            this.params.translation = 'Admin.layouts';
+            this.params.groupTranslation = 'Layout.groups.viewType'
+
             Dep.prototype.setup.call(this);
 
-            this.setAvailableOptions()
-
             this.listenTo(this.model, 'change:entity', () => {
-                this.setAvailableOptions()
+                this.setupGroups()
+                this.setupTranslation()
                 this.reRender()
             })
         },
 
-        setAvailableOptions() {
+        setupGroups() {
             this.params.options = this.getAvailableOptions()
-            this.setupTranslation()
-            this.setOptionList(this.params.options)
-            this.params.groupOptions = {
-                "view": this.params.options.filter(o => !(["relationships", "sidePanelsDetail"].includes(o))),
-                "viewGroup": ["relationships", "sidePanelsDetail"]
-            }
-            this.params.translatedGroupOptions = this.translate("viewType", "groupOptions", "Layout")
+            this.params.groupOptions = [
+                {
+                    name: "view",
+                    options: this.params.options.filter(o => !(["relationships", "sidePanelsDetail"].includes(o)))
+                },
+                {
+                    name: "viewGroup",
+                    options: ["relationships", "sidePanelsDetail"]
+                }
+            ]
         },
 
         getAvailableOptions() {

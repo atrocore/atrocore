@@ -59,7 +59,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
-                el: '#main > .header',
+                el: '#main > main > .header',
                 scope: this.scope
             });
         },
@@ -67,7 +67,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
         setupRecord: function () {
             var o = {
                 model: this.model,
-                el: '#main > .record',
+                el: '#main > main > .record',
                 scope: this.scope
             };
             this.optionsToPass.forEach(function (option) {

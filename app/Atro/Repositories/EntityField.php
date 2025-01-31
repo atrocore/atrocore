@@ -81,12 +81,13 @@ class EntityField extends ReferenceData
         }
 
         return array_merge($fieldDefs, [
-            'id'          => "{$entityName}_{$fieldName}",
-            'code'        => $fieldName,
-            'name'        => $this->translate($fieldName, 'fields', $entityName),
-            'entityId'    => $entityName,
-            'entityName'  => $this->translate($entityName, 'scopeNames'),
-            'tooltipText' => $this->translate($fieldName, 'tooltips', $entityName)
+            'id'             => "{$entityName}_{$fieldName}",
+            'code'           => $fieldName,
+            'name'           => $this->translate($fieldName, 'fields', $entityName),
+            'entityId'       => $entityName,
+            'entityName'     => $this->translate($entityName, 'scopeNames'),
+            'tooltipText'    => $this->translate($fieldName, 'tooltips', $entityName),
+            'multilangField' => $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName, 'multilangField'])
         ]);
     }
 
@@ -107,9 +108,20 @@ class EntityField extends ReferenceData
             }
         }
 
+        $types = null;
+        foreach ($params['whereClause'] ?? [] as $v) {
+            if (!empty($v['type']) && is_array($v['type'])) {
+                $types = $v['type'];
+            }
+        }
+
         $items = [];
         foreach ($entities as $entityName) {
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
+                if (is_array($types) && !in_array($fieldDefs['type'], $types)) {
+                    continue;
+                }
+
                 if (!empty($item = $this->prepareItem($entityName, $fieldName, $fieldDefs))) {
                     $items[] = $item;
                 }

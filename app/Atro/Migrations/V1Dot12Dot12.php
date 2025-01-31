@@ -16,6 +16,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\Connection;
 
 class V1Dot12Dot12 extends Base
 {
@@ -62,12 +63,12 @@ class V1Dot12Dot12 extends Base
             $theme = $config->get('theme');
             if ($theme === 'Treo' . ucfirst($key) . 'Theme') {
                 $oldConfig = $config->get('customStylesheetsList', []);
-                if(!empty($oldConfig[$theme])) {
+                if (!empty($oldConfig[$theme])) {
                     foreach ($styles[$key] as $param => $_) {
-                        if($param === 'customStylesheetPath') {
+                        if ($param === 'customStylesheetPath') {
                             continue;
                         }
-                        if(!empty($oldConfig[$theme][$param])) {
+                        if (!empty($oldConfig[$theme][$param])) {
                             $styles[$key][$param] = $oldConfig[$theme][$param];
                         }
                     }
@@ -80,6 +81,7 @@ class V1Dot12Dot12 extends Base
         file_put_contents($filePath, json_encode($styles, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         Util::removeDir('css');
         Util::removeDir('code');
+        static::updatePreferenceStyle($this->getConnection());
     }
 
 
@@ -179,6 +181,34 @@ class V1Dot12Dot12 extends Base
                 "createdByName" => "System",
             ]
         ];
+    }
+
+    public static function updatePreferenceStyle(Connection $connection): void
+    {
+        $preferences = $connection->createQueryBuilder()
+            ->select('id, data')
+            ->from('preferences')
+            ->fetchAllAssociative();
+
+        foreach ($preferences as $preference) {
+            $data = @json_decode($preference['data'], true);
+            if (!empty($data['theme']) && empty($data['styleId'])) {
+                foreach (static::getDefaultStyles() as $key => $value) {
+                    if ($data['theme'] === 'Treo' . ucfirst($key) . 'Theme') {
+                        $data['styleId'] = $value['id'];
+                        $data['styleName'] = $value['name'];
+                    }
+                }
+                unset($data['theme']);
+                $connection->createQueryBuilder()
+                    ->update('preferences')
+                    ->set('data', ':data')
+                    ->where('id = :id')
+                    ->setParameter('data', json_encode($data))
+                    ->setParameter('id', $preference['id'])
+                    ->executeQuery();
+            }
+        }
     }
 
     private function getLightStyleCustomContent(): string

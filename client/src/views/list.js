@@ -241,7 +241,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 collection: this.collection,
-                el: '#main > .page-header',
+                el: '#main .page-header',
                 scope: this.scope,
                 isXsSingleRow: true
             });
@@ -273,7 +273,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         setupSearchPanel: function () {
             this.createView('search', this.searchView, {
                 collection: this.collection,
-                el: '#main > .page-header .row .search-container',
+                el: '#main .page-header .row .search-container',
                 searchManager: this.searchManager,
                 scope: this.scope,
                 viewMode: this.viewMode,
@@ -621,11 +621,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                     this.onTreeResize(width)
                 });
                 this.listenTo(view, 'tree-width-unset', function () {
-                    if ($('.catalog-tree-panel').length) {
-                        $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
-                        $('.advanced-filters').css({'width': 'unset'});
-                        $('#tree-list-table.list-container').css({'width': 'unset', 'marginLeft': 'unset'});
-                    }
                 })
             });
 
@@ -745,23 +740,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         onTreeResize(width) {
-            const content = $('#content');
-            const listContainer = content.find('#main > #tree-list-table.list-container');
 
-            if ($('.catalog-tree-panel').length && listContainer.length) {
-                const main = content.find('#main');
-
-                const header = content.find('.page-header');
-                const filters = content.find('.advanced-filters');
-
-                header.outerWidth(main.width() - width);
-                header.css('marginLeft', width + 'px');
-
-                filters.outerWidth(main.width() - width);
-
-                listContainer.outerWidth(main.width() - width);
-                listContainer.css('marginLeft', (width - 1) + 'px');
-            }
         },
 
         reloadBookmarks() {

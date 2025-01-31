@@ -22,11 +22,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         panelNavigationView: 'views/record/compare/panel-navigation',
 
+        overviewFilterView: 'views/modals/overview-filter',
+
         buttonList: [],
 
         fieldsArr: [],
 
         merging: false,
+
+        selectedFilters: {},
 
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
@@ -37,15 +41,35 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             },
 
             'click button[data-action="cancel"]': function () {
+                let relationshipsPanels = this.getView('relationshipsPanels');
+                if (this.merging) {
+                    this.merging = false;
+                    $('[data-action="cancel"]').addClass('hidden');
+                    relationshipsPanels.changeViewMode('detail');
+                    this.setupFieldsPanels();
+                    relationshipsPanels.merging = false;
+                    return;
+                }
                 this.getParentView().close();
             },
 
             'click button[data-action="merge"]': function () {
+                let relationshipsPanels = this.getView('relationshipsPanels');
+                if (!this.merging) {
+                    this.notify('Loading...')
+                    this.merging = true;
+                    $('[data-action="cancel"]').removeClass('hidden');
+                    this.setupFieldsPanels();
+                    this.handleRadioButtonsDisableState(false)
+                    relationshipsPanels.merging = true;
+                    relationshipsPanels.changeViewMode('edit');
+                    this.notify(false)
+                    return;
+                }
                 this.notify('Loading...')
                 let fieldsPanels = this.getView('fieldsPanels');
-                let relationshipsPanels = this.getView('relationshipsPanels');
 
-                if(fieldsPanels.validate() || relationshipsPanels.validate()) {
+                if (fieldsPanels.validate() || relationshipsPanels.validate()) {
                     this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
                     return;
                 }
@@ -80,6 +104,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 });
 
             },
+
+            'click a[data-action="openOverviewFilter"]': function () {
+                this.openOverviewFilter();
+            }
         },
 
         init() {
@@ -96,7 +124,26 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         setup() {
-            this.notify('Loading...');
+
+            this.listenTo(this, 'after:render', () => {
+                $('.full-page-modal  .modal-body').css('overflow', 'auto');
+                this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
+                $('[data-action="openOverviewFilter"]').css('color', this.isOverviewFilterApply() ? 'red' : 'black');
+                this.notify('Loading...');
+                this.renderedPanels = [];
+                this.setupFieldsData();
+                this.setupFieldsPanels();
+                this.setupRelationshipsPanels();
+                this.createPanelNavigationView();
+            });
+
+        },
+
+        getOtherModelsForComparison(model) {
+            return this.collection.models.filter(model => model.id !== this.model.id);
+        },
+
+        setupFieldsData() {
             this.fieldsArr = [];
             let modelCurrent = this.model;
             let modelOthers = this.getOtherModelsForComparison(this.model);
@@ -115,7 +162,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                if(this.merging  && fieldDef['unitField']) {
+                if(!this.isAllowFieldUsingFilter(field, fieldDef, this.areEquals(modelCurrent, modelOthers, field, fieldDef))) {
+                    return;
+                }
+
+                if (this.merging && fieldDef['unitField']) {
                     return;
                 }
 
@@ -155,18 +206,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.fieldsArr.sort((v1, v2) =>
                 this.translate(v1.field, 'fields', this.scope).localeCompare(this.translate(v2.field, 'fields', this.scope))
             );
-
-            this.listenTo(this, 'after:render', () => {
-                this.notify('Loading...');
-                this.renderedPanels = [];
-                this.setupFieldsPanels();
-                this.setupRelationshipsPanels();
-            });
-
-        },
-
-        getOtherModelsForComparison(model) {
-            return this.collection.models.filter(model => model.id !== this.model.id);
         },
 
         setupFieldsPanels() {
@@ -182,7 +221,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
             }, view => {
                 view.render();
-                if(view.isRendered()) {
+                if (view.isRendered()) {
                     this.handlePanelRendering('fieldsPanels');
                 }
                 this.listenTo(view, 'all-fields-rendered', () => {
@@ -201,20 +240,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 instanceComparison: this.instanceComparison,
                 columns: this.buildComparisonTableHeaderColumn(),
                 merging: this.merging,
-                el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`
+                el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`,
+                selectedFilters: this.selectedFilters
             }, view => {
                 view.render();
-                if(view.isRendered()) {
+                if (view.isRendered()) {
                     this.handlePanelRendering('relationshipsPanels');
-                    this.createPanelNavigationView();
                 }
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.handlePanelRendering('relationshipsPanels');
                 });
 
-                this.listenTo(view, 'after:render', () => {
-                    this.createPanelNavigationView();
-                });
             }, true);
         },
 
@@ -332,7 +368,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return result
             }
 
-            if(fieldDef['unitField']) {
+            if (fieldDef['unitField']) {
                 let mainField = fieldDef['mainField'];
                 let mainFieldDef = this.getMetadata().get(['entityDefs', this.scope, 'fields', mainField]);
                 let unitIdField = mainField + 'Unit'
@@ -414,6 +450,70 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             return true;
         },
 
+        isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
+
+            const fieldFilter = this.selectedFilters['fieldFilter'] || ['allValues'];
+            const languageFilter = this.selectedFilters['languageFilter'] || ['allLanguages'];
+
+            let fields = this.getFieldManager().getActualAttributeList(this.model.getFieldType(field), field);
+            let fieldValues = fields.map(field => this.model.get(field));
+            if (fieldDef['unitField']) {
+                let mainField = fieldDef['mainField'];
+                let unitIdField = mainField + 'Unit';
+                fields = [mainField, unitIdField];
+                fieldValues = fields.map(field => this.model.get(field));
+            }
+            let hide = false;
+
+            if (!fieldFilter.includes('allValues')) {
+                // hide filled
+                if (!hide && fieldFilter.includes('filled')) {
+                    hide = fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels;
+                }
+
+                // hide empty
+                if (!hide && fieldFilter.includes('empty')) {
+                    hide = !(fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels) ;
+                }
+
+                // hide optional
+                if (!hide && fieldFilter.includes('optional')) {
+                    hide = this.model.getFieldParam(field, 'required')
+                }
+
+                // hide required
+                if (!hide && fieldFilter.includes('required')) {
+                    hide = !this.model.getFieldParam(field, 'required');
+                }
+            }
+
+            if (!languageFilter.includes('allLanguages')) {
+                // for languages
+                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                    let fieldLanguage = this.model.getFieldParam(field, 'multilangLocale');
+
+                    if (!languageFilter.includes(fieldLanguage ?? 'main')) {
+                        hide = true;
+                    }
+
+                    if (!hide && this.isUniLingualField(field, fieldLanguage)) {
+                        hide = true
+                    }
+
+                    if (hide && languageFilter.includes('unilingual') && this.isUniLingualField(field, fieldLanguage)) {
+                        hide = false;
+                    }
+
+                }
+            }
+
+            return !hide;
+        },
+
+        isUniLingualField(name, fieldLanguage) {
+            return !(this.model.getFieldParam(name, 'isMultilang') || fieldLanguage !== null);
+        },
+
         isLinkEnabled(model, name) {
             return !model.getLinkParam(name, 'disabled') && !model.getLinkParam(name, 'layoutRelationshipsDisabled');
         },
@@ -427,25 +527,30 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             return inverseRelationType === relationDefs['type'] && relationDefs['type'] === 'hasMany';
         },
 
+        isEmptyValue(value) {
+            return value === undefined || value === null || value === '' || (Array.isArray(value) && !value.length);
+        },
+
         handlePanelRendering(name) {
-            if(this.renderedPanels.includes(name)) {
+            if (this.renderedPanels.includes(name)) {
                 return;
             }
             this.renderedPanels.push(name);
-            if(this.renderedPanels.length === 2 || name === 'fieldsPanels') {
+            if (this.renderedPanels.length === 2 || name === 'fieldsPanels') {
                 this.notify(false);
-               this.handleRadioButtonsDisableState(false);
+                this.handleRadioButtonsDisableState(false);
                 $('.button-container button').removeClass('disabled');
+                $('.button-container a').removeClass('disabled');
             }
         },
 
         handleRadioButtonsDisableState(state) {
             let self = this;
-            $('input[type="radio"]').each(function(){
+            $('input[type="radio"]').each(function () {
                 let fieldData = self.fieldsArr.find(el => el.field === $(this).attr('name'));
-                if(fieldData && fieldData.disabled) {
+                if (fieldData && fieldData.disabled) {
                     $(this).prop('disabled', true);
-                }else{
+                } else {
                     $(this).prop('disabled', state)
                 }
             });
@@ -468,10 +573,117 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.createView('panelDetailNavigation', this.panelNavigationView, {
                 panelList: panelList,
                 model: this.model,
-                el: this.options.el + ' #'+ this.getId() + ' .panel-navigation.panel-left',
+                el: this.options.el + ' #' + this.getId() + ' .panel-navigation.panel-left',
             }, function (view) {
                 view.render();
             });
-        }
+        },
+
+        getOverviewFiltersList: function () {
+            if (this.overviewFilterList) {
+                return this.overviewFilterList;
+            }
+            let result = [
+                {
+                    name: "fieldFilter",
+                    label: this.translate('fieldStatus'),
+                    options: ["allValues", "filled", "empty", "optional", "required"],
+                    selfExcludedFieldsMap: {
+                        filled: 'empty',
+                        empty: 'filled',
+                        optional: 'required',
+                        required: 'optional'
+                    },
+                    defaultValue: 'allValues'
+                }
+            ];
+
+            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                let referenceData = this.getConfig().get('referenceData');
+
+                if (referenceData && referenceData['Language']) {
+                    let languages = referenceData['Language'] || {},
+                        options = ['allLanguages', 'unilingual'],
+                        translatedOptions = {};
+
+                    options.forEach(option => {
+                        translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
+                    });
+
+                    Object.keys(languages || {}).forEach((lang) => {
+                        if (languages[lang]['role'] === 'main') {
+                            options.push('main');
+                            translatedOptions['main'] = languages[lang]['name'];
+                        } else {
+                            options.push(lang);
+                            translatedOptions[lang] = languages[lang]['name'];
+                        }
+                    });
+
+                    result.push({
+                        name: "languageFilter",
+                        label: this.translate('language'),
+                        options,
+                        translatedOptions,
+                        defaultValue: 'allLanguages'
+                    });
+                }
+            }
+
+            return this.overviewFilterList = result;
+        },
+
+        isOverviewFilterApply() {
+            for (const filter of this.getOverviewFiltersList()) {
+                let selected = this.selectedFilters[filter.name] ?? [];
+                if (!Array.isArray(selected)  || selected.length === 0) {
+                    continue;
+                }
+                if (selected && selected.join('') !== filter.defaultValue) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        openOverviewFilter: function () {
+            this.notify('Loading...');
+            let currentValues = {};
+            let overviewFilterList = this.getOverviewFiltersList();
+            overviewFilterList.forEach((filter) => {
+                currentValues[filter.name] = this.selectedFilters[filter.name];
+            });
+            this.createView('compareOverviewFilter', this.overviewFilterView, {
+                scope: this.scope,
+                model: this.model,
+                overviewFilters: overviewFilterList,
+                currentValues: currentValues
+            }, view => {
+                view.render()
+                if (view.isRendered()) {
+                    this.notify(false)
+                }
+                this.listenTo(view, 'after:render', () => {
+                    this.notify(false)
+                });
+
+                this.listenTo(view, 'save', (filterModel) => {
+                    let filterChanged = false;
+                    this.getOverviewFiltersList().forEach((filter) => {
+                        if (filterModel.get(filter.name)) {
+                            filterChanged = true;
+                            this.selectedFilters[filter.name] = filterModel.get(filter.name);
+                        }
+                    });
+
+                    if (filterChanged) {
+                        this.model.trigger('overview-filters-changed', this.selectedFilters);
+                        this.getStorage().set('compareFilters', this.scope, this.selectedFilters)
+                        this.reRender();
+                    }
+                });
+            });
+        },
     });
 });

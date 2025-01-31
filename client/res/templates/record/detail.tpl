@@ -32,6 +32,7 @@
         </div>
         {{/if}}
         <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
+        <div class="layout-editor-container btn-group"></div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
@@ -64,19 +65,7 @@
     </div>
     {{/unless}}
 
-
     <div class="row">
-        {{#if overviewFilters.length}}
-        <div class="col-lg-12 overview-filters-container">
-            {{#each overviewFilters}}
-            <div class="cell filter-cell" data-name="{{this}}">
-                <div class="field" data-name="{{this}}">
-                    {{{var this ../this}}}
-                </div>
-            </div>
-            {{/each}}
-        </div>
-        {{/if}}
         {{#if isTreePanel}}<div class="catalog-tree-panel col-lg-3">{{{treePanel}}}</div>{{/if}}
         <div class="overview {{#if isWide}}col-md-12{{else}}{{#if isSmall}}col-md-7{{else}}{{#if side}}col-md-8{{else}}col-md-12{{/if}}{{/if}}{{/if}}">
             <div class="middle">{{{middle}}}</div>

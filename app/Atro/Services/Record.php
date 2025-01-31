@@ -18,8 +18,8 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotModified;
-use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
+use Espo\ORM\Entity;
 use Espo\Services\RecordService;
 
 class Record extends RecordService
@@ -345,4 +345,14 @@ class Record extends RecordService
         return $links;
     }
 
+    protected function getRequiredFields(Entity $entity, \stdClass $data): array
+    {
+        $event = $this->dispatchEvent('beforeGetRequiredFields', new Event(['entity' => $entity, 'data' => $data]));
+
+        $res = parent::getRequiredFields($entity, $event->getArgument('data'));
+
+        return $this
+            ->dispatchEvent('afterGetRequiredFields', new Event(['entity' => $entity, 'data' => $data, 'result' => $res]))
+            ->getArgument('result');
+    }
 }

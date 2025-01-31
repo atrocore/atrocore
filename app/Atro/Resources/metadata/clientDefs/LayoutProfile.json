@@ -1,10 +1,7 @@
 {
   "controller": "controllers/record",
   "boolFilterList": [
-    "onlyActive"
-  ],
-  "hiddenBoolFilterList": [
-    "onlyActive"
+    "withLayouts"
   ],
   "recordViews": {
     "detail": "views/layout-profile/record/detail"

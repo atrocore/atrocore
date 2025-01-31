@@ -8,21 +8,7 @@
       "type": "enum",
       "required": true,
       "prohibitedEmptyValue": false,
-      "view": "views/layout/fields/view-type",
-      "optionsIds": [
-        "list",
-        "detail",
-        "relationships",
-        "sidePanelsDetail",
-        "kanban"
-      ],
-      "options": [
-        "list",
-        "detail",
-        "relationships",
-        "sidePanelsDetail",
-        "kanban"
-      ]
+      "view": "views/layout/fields/view-type"
     },
     "relatedEntity": {
       "type": "varchar",

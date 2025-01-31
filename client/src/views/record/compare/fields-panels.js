@@ -44,6 +44,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.listenTo(this.model, 'select-model', (modelId) => {
                 this.fieldList.forEach(fieldData => this.updateFieldState(fieldData.field, modelId));
             });
+
         },
 
         data() {

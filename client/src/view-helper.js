@@ -331,7 +331,11 @@ Espo.define('view-helper', [], function () {
                 };
 
                 var translateGroup = function (name) {
-                    return (options.hash.translatedGroupOptions || {})[name] || name
+                    return (options.hash.translatedGroups || {})[name] || name
+                }
+
+                if (!options.hash.prohibitedEmptyValue) {
+                    html += '<option value="" ' + (value ? '' : 'selected') + '></option>'
                 }
 
                 for (var groupKey in list) {

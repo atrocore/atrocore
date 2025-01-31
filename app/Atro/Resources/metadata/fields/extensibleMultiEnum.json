@@ -66,5 +66,6 @@
       "emHidden": true
     }
   },
-  "view": "views/fields/extensible-multi-enum"
+  "view": "views/fields/extensible-multi-enum",
+  "group": "reference"
 }

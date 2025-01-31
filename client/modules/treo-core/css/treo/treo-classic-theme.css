@@ -1369,7 +1369,12 @@ body {
     font-size: 14px;
     line-height: 1.36;
     color: #333;
-    background-color: #ececec
+    background-color: #ececec;
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
 }
 
 input, button, select, textarea {
@@ -1826,12 +1831,10 @@ pre code {
 }
 
 .container {
-    padding-left: 8px;
-    padding-right: 8px;
     margin-right: auto;
     margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px
+    padding-left: 10px;
+    padding-right: 10px
 }
 
 .container:before, .container:after {
@@ -1854,6 +1857,8 @@ pre code {
 
 @media (min-width: 768px) {
     .container {
+        padding-left: 20px;
+        padding-right: 20px;
         width: none
     }
 }
@@ -2788,6 +2793,10 @@ th {
 .group-records-list table th:first-child > div,
 .group-records-list table th:first-child > div > a {
     min-width: 65px;
+}
+
+.group-records-list .context-menu > .btn-group {
+    margin-right: 7px;
 }
 
 .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > th, .table > caption + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > td, .table > thead:first-child > tr:first-child > td {
@@ -4622,11 +4631,13 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .navbar-collapse {
     overflow-x: visible;
-    padding-right: 8px;
-    padding-left: 8px;
+    padding-right: 12px;
+    padding-left: 12px;
     border-top: 1px solid transparent;
+    border-bottom: 1px solid var(--primary-border-color);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    -webkit-overflow-scrolling: touch
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
 }
 
 .navbar-collapse.in {
@@ -4744,7 +4755,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     position: relative;
     float: right;
     padding: 0;
-    margin: 5px 10px 5px 10px;
+    margin: 5px 15px 5px 10px;
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;
@@ -5158,10 +5169,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .navbar-inverse .navbar-toggle .icon-bar {
     background-color: #fff
-}
-
-.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
-    border-color: #455b65
 }
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
@@ -5838,7 +5845,7 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 .list-group-item {
     position: relative;
     display: block;
-    padding: 10px 15px;
+    padding: 10px 20px;
     margin-bottom: -1px;
     background-color: #fff;
     border: 1px solid #e8eced
@@ -6020,7 +6027,7 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 }
 
 .panel-body {
-    padding: 15px
+    padding: 15px;
 }
 
 .panel-heading {
@@ -14693,10 +14700,6 @@ body > #header .navbar-brand span.home-icon {
         border-width: 0
     }
 
-    #header {
-        width: 173px
-    }
-
     #header .navbar-brand img {
         max-width: 161px;
         height: 33px
@@ -14706,21 +14709,12 @@ body > #header .navbar-brand span.home-icon {
         height: 35px
     }
 
-    body {
-        padding-top: 30px
-    }
-
     html, body {
         height: 100%
     }
 
     body > footer {
-        margin-top: -26x
-    }
-
-    body > .content {
-        height: auto;
-        min-height: 100%;
+        margin-top: -26px
     }
 
     body > footer {
@@ -14735,10 +14729,11 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header .navbar {
-        position: fixed;
+        position: relative;
         z-index: 2000;
-        width: 220px;
         margin-bottom: 0;
+        display: flex;
+        border-bottom: 1px solid var(--primary-border-color);
     }
 
     #header ul.tabs li {
@@ -14746,12 +14741,6 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header .navbar-right {
-        bottom: 20px;
-        position: fixed;
-        top: 0;
-        left: 220px;
-        height: 30px;
-        width: calc(100% - 220px);
         background-color: #ececec;
     }
 
@@ -14826,7 +14815,7 @@ body > #header .navbar-brand span.home-icon {
 }
 
 .panel-body {
-    padding: 14px
+    padding: 14px 10px;
 }
 
 .panel-body:before, .panel-body:after {
@@ -14923,6 +14912,10 @@ blockquote {
     display: none !important
 }
 
+.hidden-cell .status-icons, .hidden-cell .inline-actions {
+    display: none !important;
+}
+
 .panel-group .panel + .panel {
     margin-top: 4px
 }
@@ -14951,6 +14944,8 @@ label {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 #main .page-header .search-container {
@@ -15037,9 +15032,16 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
 }
 
 div.list-kanban {
-    margin-left: -14px;
-    width: calc(100% + 29px);
+    margin-left: -10px;
+    margin-right: -10px;
     overflow-x: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+div.list-kanban > div.kanban-columns-container {
+    flex: 1;
 }
 
 div.list-kanban > div.kanban-head-container,
@@ -15190,7 +15192,6 @@ div.list-kanban > div.kanban-columns-container > table {
     }
 
     div.list-kanban > div.kanban-columns-container > table, div.list-kanban > div.kanban-head-container > table {
-        display: block !important;
         border-collapse: unset;
         border-spacing: unset
     }
@@ -15241,30 +15242,53 @@ table.table > thead th > div > a {
     color: var(--label-color)
 }
 
-#main > .list-container > .list {
+#main > main > .list-container > .list {
     overflow: hidden;
     overflow-x: auto;
     scrollbar-width: none;
+    margin-left: -10px;
+    margin-right: -10px;
+    display: grid;
 }
 
-#main > .list-container > .list::-webkit-scrollbar {
+#main > main > .list-container > .list::-webkit-scrollbar {
     display: none;
 }
 
+#main > main > .list-container > .list > .table thead th > .layout-editor-container {
+    padding-right: 2px;
+    min-width: auto;
+    width: 100%;
+}
+
+#main > main > .list-container > .list > table td:first-child, #main > main > .list-container > .list > table th:first-child {
+    padding-left: 10px;
+}
+
 @media screen and (min-width: 768px) {
-    #main > .list-container > .list > .table thead th {
+    div.list-kanban,
+    #main > main > .list-container > .list {
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+    #main > main > .list-container > .list > .table thead th {
         vertical-align: middle;
     }
 
-    #main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
+    #main > main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
         margin-top: 2px;
+    }
+
+    #main > main > .list-container > .list > table td:first-child, #main > main > .list-container > .list > table th:first-child {
+        padding-left: 20px;
     }
 
     .catalog-tree-panel {
         z-index: 3;
     }
 
-    #main > .list-container > .list > table tr {
+    #main > main > .list-container > .list > table tr {
         position: relative;
     }
 
@@ -15283,11 +15307,24 @@ table.table > thead th > div > a {
         top: 3px;
     }
 
+    .panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
+        padding-right: 10px;
+    }
+
+    #main > main > .list-container > .list > .table thead th > .layout-editor-container {
+        padding-right: 9px;
+    }
+
     .fixed-scrollbar {
         display: none;
         position: fixed;
         overflow-x: scroll;
         bottom: 0;
+    }
+
+    .panel-body {
+        padding-left: 20px;
+        padding-right: 20px;
     }
 }
 
@@ -15305,6 +15342,10 @@ table.table > thead th > div > a {
 .bottom .list-container > .list > .table:not(.fixed-header-table),
 #main .list-container > .list > .table:not(.fixed-header-table) {
     width: auto;
+}
+
+.bottom .list-container > .list > .table .layout-editor-container {
+    padding-right: 7px;
 }
 
 .dashlet .list-container > .list > .table:not(.fixed-header-table) {
@@ -15452,7 +15493,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 .page-header h3 {
-    margin: 1px 7px 8px 5px;
+    margin: 0 8px 0 0;
 }
 
 .page-header .breadcrumb-separator {
@@ -15488,13 +15529,13 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 .search-row {
-    margin-left: -3px !important;
-    margin-right: -3px !important
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .search-row > div {
     padding-left: 2px !important;
-    padding-right: 2px !important
+    padding-right: 2px !important;
 }
 
 .cell > .field {
@@ -15799,8 +15840,14 @@ select[multiple].input-sm {
 }
 
 .panel-body > div > .list {
-    margin-left: -14px;
-    margin-right: -14px
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
+.panel-body > div > .list,
+.panel-body .group .list {
+    display: grid;
+    overflow-x: clip;
 }
 
 .panel-body > div > .list > table td:first-child,
@@ -15808,7 +15855,7 @@ select[multiple].input-sm {
 .panel-body > div > .group > .list-container > .list > table td:first-child,
 .panel-body > div > .group > .list-container > .list > table th:first-child,
 .bottom .panel .group-container > .group > .group-name {
-    padding-left: 14px !important;
+    padding-left: 20px !important;
 }
 
 .modal-body > div > .list {
@@ -15822,15 +15869,6 @@ select[multiple].input-sm {
 
 .modal-body > div > .list > table td:last-child, .modal-body > div > .list > table th:last-child {
     padding-right: 14px
-}
-
-#main > .list-container > .list {
-    margin-left: -15px;
-    margin-right: -15px
-}
-
-#main > .list-container > .list > table td:first-child, #main > .list-container > .list > table th:first-child {
-    padding-left: 15px
 }
 
 .panel-body > .no-margin {
@@ -16074,6 +16112,7 @@ table.no-margin {
     background-color: transparent;
     padding-top: 3px;
     padding-bottom: 3px;
+    padding-right: 5px;
     right: 0;
 }
 
@@ -16081,16 +16120,18 @@ table.no-margin {
     position: sticky;
 }
 
-.panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
-    padding-right: 4px;
+.panel-body .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
+    padding-right: 0;
+}
+
+@media (min-width: 768px) {
+    .list > table td.cell[data-name="buttons"] {
+        padding-right: 12px;
+    }
 }
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-right: -13px
-}
-
-#main > .list-container > .list > .table thead th > .layout-editor-container {
-    padding-right: 5px;
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons {
@@ -16189,8 +16230,18 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     overflow-x: hidden
 }
 
+.dashlets.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .dashlets.grid-stack .panel.dashlet {
     margin-bottom: 0
+}
+
+.dashlets.grid-stack .panel.dashlet .panel-heading,
+.dashlets.grid-stack .panel.dashlet .panel-heading > .panel-title {
+    cursor: all-scroll;
 }
 
 .dashlets.grid-stack .grid-stack-item .dashlet {
@@ -16198,7 +16249,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .dashlets.grid-stack .grid-stack-item .dashlet .dashlet-body {
-    height: calc(100% - 29px)
+    height: calc(100% - 30px)
 }
 
 .dashlets.grid-stack .grid-stack-item .grid-stack-item-content {
@@ -16393,7 +16444,7 @@ label.attach-file-label > input.file {
     position: fixed;
     top: 0;
     left: 0;
-    margin: 43px 0 0 -15px;
+    margin-top: 43px;
     z-index: 4
 }
 
@@ -16486,7 +16537,8 @@ label.attach-file-label > input.file {
 }
 
 body > footer {
-    background-color: #eee
+    background-color: #eee;
+    min-width: 100%;
 }
 
 body > footer > p {
@@ -17347,10 +17399,6 @@ pre > code {
         margin: 14px 0
     }
 
-    .panel-body > div:first-child > .list:first-child {
-        margin-top: 0
-    }
-
     .list > .table .dropdown-menu {
         position: absolute !important
     }
@@ -17748,10 +17796,11 @@ table.table {
     -moz-box-shadow: none
 }
 
-    #navbar .nav.navbar-nav.navbar-right {
-        background-color: #ececec;
-        border-bottom: 1px solid var(--primary-border-color);
-    }
+#navbar .nav.navbar-nav.navbar-right {
+    background-color: #ececec;
+    display: flex;
+    flex-direction: row-reverse;
+}
 
 .list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
     -webkit-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
@@ -19242,7 +19291,7 @@ a:hover, a:focus {
     color: #000
 }
 
-#main > .page-header > h3 {
+#main > main > .page-header > h3 {
     margin-left: 0;
 }
 
@@ -19362,7 +19411,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 @media screen and (min-width: 768px) {
-    #main > .page-header .header-breadcrumbs  {
+    #main .page-header .header-breadcrumbs {
         position:relative;
         width: auto !important;
         height: 47px;
@@ -19376,7 +19425,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading {
-    padding: 5px 10px 6px 14px;
+    padding: 5px 15px 6px 20px;
     color: rgba(0, 0, 0, 0.87);
     background-color: #ececec;
     border-top: 1px solid var(--primary-border-color);
@@ -19516,6 +19565,12 @@ input#sn-checkbox-open-in-new-window {
     font-weight: normal;
 }
 
+#main > main > .list-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
 .list-container .list-buttons-container {
     margin-bottom: 10px
 }
@@ -19547,6 +19602,19 @@ input#sn-checkbox-open-in-new-window {
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-group-panel {
     box-shadow: none;
     border: 0;
+}
+
+body > .content {
+    overflow-y: auto;
+    flex: 1;
+    position: relative;
+    width: 100%;
+}
+
+#main > main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 table.table > thead th > a {
@@ -19732,10 +19800,6 @@ ul.dropdown-menu > li.checkbox {
     background-color: #616161;
 }
 
-.row.dashlets .panel-default {
-    border: 0
-}
-
 .table-admin-panel tr > td:first-child {
     width: 200px
 }
@@ -19759,6 +19823,11 @@ ul.dropdown-menu > li.checkbox {
     margin: 14px 0 10px 0
 }
 
+.page-header.detail-page-header > .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .page-header h3 {
     font-size: 24px;
 }
@@ -19771,8 +19840,7 @@ ul.dropdown-menu > li.checkbox {
     display: flex;
     flex-direction: row;
     float: right;
-    margin-left: 15px;
-    margin-bottom: 8px;
+    margin: 8px 0 8px 15px;
     white-space: nowrap;
 }
 
@@ -19788,8 +19856,9 @@ ul.dropdown-menu > li.checkbox {
 
 .overview-filters-container {
     background-color: #f9f9f9;
-    border-top: 1px solid #eee;
-    padding: 10px 0px 5px 10px;
+    padding: 10px 0 5px 13px;
+    margin-left: -20px;
+    margin-right: -20px;
 }
 
 .overview-filters-container .selectize-input {
@@ -19951,8 +20020,8 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .dashlets.grid-stack > .grid-stack-item > .grid-stack-item-content {
-    right: 0;
-    left: 0;
+    right: 5px;
+    left: 5px;
 }
 
 .home-content > .row.dashlets {
@@ -19963,7 +20032,7 @@ ul.dropdown-menu > li.checkbox {
 #main .catalog-tree-panel {
     position: relative;
     border-right: 1px solid #e8eced;
-    margin: -6px 14px -10px -15px;
+    margin: 0 20px -10px -20px;
     padding: 0 10px;
     float: left;
     min-height: 35px;
@@ -20218,7 +20287,6 @@ button.category:focus {
 @media screen and (min-width: 768px) and (max-width: 1199px) {
     #main .catalog-tree-panel {
         padding: 0 10px 10px 10px;
-        float: none;
         min-height: 53px;
     }
 
@@ -20289,6 +20357,19 @@ button.category:focus {
     margin-top: 3px;
 }
 
+#main > main > .record > .detail > .detail-button-container,
+#main > main > .record > .edit > .detail-button-container {
+    position: static;
+    top: 0;
+    left: 0;
+    z-index: 101;
+    background-color: #fff;
+    padding: 8px 10px 0;
+    margin-left: -10px;
+    margin-right: -10px;
+    border-bottom: 1px solid #dedede;
+}
+
 @media screen and (min-width: 768px) {
     #header .menu{
         margin-top: 3px;
@@ -20309,16 +20390,11 @@ button.category:focus {
         background-color: var(--nav-menu-background);
     }
 
-    body {
-        padding-top: 48px
-    }
-
     .record .list-container {
         padding-left: 0
     }
 
     #header .navbar-header {
-        height: 48px;
         border-bottom: 1px solid var(--primary-border-color);
         display: flex;
     }
@@ -20473,64 +20549,74 @@ button.category:focus {
 
     #main .edit > .row,
     #main .detail > .row {
-        margin-left: -15px;
-        margin-right: -15px;
+        margin-left: -20px;
+        margin-right: -20px;
+        margin-top: -1px;
         background-color: #fafafa;
+        display: flex;
     }
 
-    #main > .record > .edit > .row > .side,
-    #main > .record > .detail > .row > .side {
+    #main > main > .record > .detail > .detail-button-container,
+    #main > main > .record > .edit > .detail-button-container {
+        position: sticky;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding: 8px 20px 0;
+    }
+
+    #main .edit > .row > .overview-filters-container,
+    #main .detail > .row > .overview-filters-container {
+        width: 100%;
+    }
+
+    #main > main > .record > .edit > .row > .side,
+    #main > main > .record > .detail > .row > .side {
         padding: 0;
         position: relative;
         border-top: 1px solid var(--primary-border-color);
+        border-left: 1px solid var(--primary-border-color);
         float: left;
     }
 
-    #main > .record > .detail > .row > .overview,
-    #main > .record > .edit > .row > .overview {
+    #main > main > .record > .detail > .detail-button-container .panel-navigation,
+    #main > main > .record > .edit > .detail-button-container .panel-navigation {
+        width: 100%;
+    }
+
+    #main > main > .record > .detail > .row > .overview,
+    #main > main > .record > .edit > .row > .overview {
         float: left;
         display: flex;
         flex-direction: column;
-    }
-
-    #main > .record > .detail > .row > .overview > .bottom,
-    #main > .record > .edit > .row > .overview > .bottom {
         flex: 1;
     }
 
-    #main > .record > .edit > .row > .side.fixed-top,
-    #main > .record > .detail > .row > .side.fixed-top,
-    #main > .record > .edit > .row > .side.fixed-bottom,
-    #main > .record > .detail > .row > .side.fixed-bottom {
+    #main > main > .record > .detail > .row > .overview > .bottom,
+    #main > main > .record > .edit > .row > .overview > .bottom {
+        flex: 1;
+    }
+
+    #main > main > .record > .edit > .row > .side.fixed-top,
+    #main > main > .record > .detail > .row > .side.fixed-top,
+    #main > main > .record > .edit > .row > .side.fixed-bottom,
+    #main > main > .record > .detail > .row > .side.fixed-bottom {
         position: fixed;
         right: 0;
     }
 
-    #main > .record > .edit > .row > .catalog-tree-panel ~ .side.fixed-top,
-    #main > .record > .detail > .row > .catalog-tree-panel ~ .side.fixed-top,
-    #main > .record > .edit > .row > .catalog-tree-panel ~ .side.fixed-bottom,
-    #main > .record > .detail > .row > .catalog-tree-panel ~ .side.fixed-bottom {
-        right: 0;
-    }
-
-    #main > .record > .edit > .row > .side.fixed-top,
-    #main > .record > .detail > .row > .side.fixed-top {
+    #main > main > .record > .edit > .row > .side.fixed-top,
+    #main > main > .record > .detail > .row > .side.fixed-top {
         top: 91px;
     }
 
-    #main > .record > .edit > .row > .side.fixed-bottom,
-    #main > .record > .detail > .row > .side.fixed-bottom {
+    #main > main > .record > .edit > .row > .side.fixed-bottom,
+    #main > main > .record > .detail > .row > .side.fixed-bottom {
         bottom: 0;
     }
 
-    #main > .record > .edit > .row > .side.scrolled,
-    #main > .record > .detail > .row > .side.scrolled {
+    #main > main > .record > .edit > .row > .side.scrolled,
+    #main > main > .record > .detail > .row > .side.scrolled {
         position: absolute;
-        right: 0;
-    }
-
-    #main > .record > .edit > .row > .catalog-tree-panel ~ .side.scrolled,
-    #main > .record > .detail > .row > .catalog-tree-panel ~ .side.scrolled {
         right: 0;
     }
 
@@ -20539,7 +20625,7 @@ button.category:focus {
     }
 
     .stick-sub.button-container {
-        margin: 44px 0 0 -15px;
+        margin-top: 44px;
         padding-top: 9px !important;
         padding-bottom: 0 !important
     }
@@ -20560,18 +20646,13 @@ button.category:focus {
     }
 
     #main {
-        padding-left: 15px;
-    }
-
-    .dashlets .dashlet {
-        border-right: 1px solid var(--primary-border-color) !important;
+        padding-left: 20px;
     }
 
     #main .catalog-tree-panel {
-        position: fixed;
-        top: 54px;
-        height: calc(100% - 47px);
-        overflow-y: auto;
+        position: sticky;
+        top: 0;
+        height: calc(100vh - 49px);
     }
 
     #main .catalog-tree-panel .category-panel-resizer {
@@ -20583,11 +20664,11 @@ button.category:focus {
         cursor: col-resize;
     }
 
-    #main > .record > .detail > .row > .side {
+    #main > main > .record > .detail > .row > .side {
         float: right;
     }
 
-    #main > .record > .detail > .row > .side > .side-panel-resizer {
+    #main > main > .record > .detail > .row > .side > .side-panel-resizer {
         width: 2px;
         height: 100%;
         position: absolute;
@@ -20613,40 +20694,19 @@ button.category:focus {
         top: 48px;
     }
 
-    #main > .list-container.collapsed,
-    #main > .page-header.collapsed .header-buttons-container,
-    #main > .page-header.collapsed .overview-filters-container
-    {
-        width: calc(100% - 279px);
-    }
-
-    #main > .record > .detail > .detail-button-container.detail-tree-button-container:not(.stick-sub) {
+    #main > main > .record > .detail > .detail-button-container.detail-tree-button-container:not(.stick-sub) {
         position: relative;
         padding-right: 15px;
         padding-left: 15px;
         left: -15px;
     }
 
-    #main > .record > .detail > .detail-button-container.not-collapsed.detail-tree-button-container.stick-sub {
-        left: auto;
-    }
-
-    #main > .record > .detail > .detail-button-container.collapsed.detail-tree-button-container.stick-sub {
+    #main > main > .record > .detail > .detail-button-container.collapsed.detail-tree-button-container.stick-sub {
         left: 0;
     }
 
-    #main > .page-header.collapsed .overview-filters-container
-    {
+    #main .page-header.collapsed .overview-filters-container {
         width: auto;
-    }
-
-    #main > .record > .detail > .detail-button-container.stick-sub.not-collapsed {
-        margin-left: 11px !important;
-    }
-
-    #main .detail .row > .overview.collapsed {
-        margin-left: 279px;
-        width: calc(66.6666666667% - 279px);
     }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
@@ -20654,6 +20714,7 @@ button.category:focus {
     }
 
 }
+
 @media screen and (min-width: 1200px) {
     #main .detail .catalog-tree-panel.catalog-tree-panel-hidden + .overview {
         width: calc(75% - 25px);
@@ -20664,7 +20725,7 @@ button.category:focus {
         width: 75%;
     }
 }
-#header .navbar-collapse,
+
 #header .menu {
     transition: .3s transform cubic-bezier(0.19, 1, .22, 1);
     position: absolute;
@@ -20687,7 +20748,6 @@ button.category:focus {
     width: 220px;
 }
 
-
 #header .menu.not-collapsed ul.tabs{
     display:none;
 }
@@ -20703,6 +20763,10 @@ button.category:focus {
 
 #header .header-right > li > a {
     color: var(--nav-font-color);
+}
+
+#main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
+    overflow-y: auto;
 }
 
 @media screen and (max-width: 767px) {
@@ -20726,15 +20790,15 @@ button.category:focus {
 
     .detail .panel-default > .panel-heading,
     .edit .panel-default > .panel-heading {
-        margin: 0 -14px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 0 -10px;
     }
 
     .detail .overview,
     .edit .overview,
-    #main > .list-container,
-    #main > .page-header,
-    #main .detail-button-container,
-    #main .overview-filters-container {
+    #main > main > .list-container,
+    #main > main > .page-header {
         width: 100% !important;
         margin-left: 0 !important;
     }
@@ -20746,10 +20810,16 @@ button.category:focus {
         min-height: auto !important;
     }
 
+    .overview-filters-container {
+        margin-left: -10px;
+        margin-right: -10px;
+        padding-left: 5px;
+    }
+
     #main .detail .side {
-        margin: 0 -7px;
+        margin: 0;
         padding: 0;
-        width: calc(100% + 14px) !important;
+        width: 100% !important;
     }
 
     .detail .side > .panel-default > .panel-heading {
@@ -20778,6 +20848,11 @@ button.category:focus {
         white-space: nowrap;
     }
 
+    .panel-body > div > .list {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+
     #header .navbar-right > li.progress-badge-container {
         display: inline-block;
         float: right
@@ -20796,13 +20871,14 @@ button.category:focus {
         overflow: unset !important;
     }
 
-    .panel-body > div > .list {
-        width: calc(100% + 28px);
-    }
-
     .list-container .list-buttons-container {
         margin-bottom: 10px;
         margin-top: 10px;
+    }
+
+    .list-group-item {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .navbar {
@@ -20920,7 +20996,7 @@ button.category:focus {
         padding: 0 !important;
         width: 100% !important;
         font-size: 14px;
-        line-height: 14px;
+        line-height: 1.25;
     }
 
     #main .catalog-tree-panel + .list-container.hidden-catalog-tree-panel {
@@ -20939,12 +21015,24 @@ button.category:focus {
     }
 
     #main .catalog-tree-panel {
-        min-height: 53px;
-        margin: 0;
-        padding: 0;
         width: 100%;
         border: none;
         float: none;
+        margin: 0;
+    }
+
+    #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
+        position: fixed;
+        top: 45px;
+        z-index: 1000;
+        bottom: 0;
+        left: 0;
+        width: 100% !important;
+    }
+
+    #main .catalog-tree-panel.catalog-tree-panel-hidden {
+        min-height: 53px;
+        padding: 0;
     }
 
     #main .catalog-tree-panel button:active {
@@ -21018,6 +21106,8 @@ button.category:focus {
 
     #main .catalog-tree-panel-hidden {
         background: #ffffff;
+        flex-basis: 100%;
+        min-height: auto;
     }
 
     .search-row > div .search-right-buttons-group button {
@@ -21231,6 +21321,12 @@ button.category:focus {
 
 .dashlets.grid-stack .grid-stack-item .dashlet .dashlet-body {
     width: 100%;
+    position: relative;
+}
+
+.dashlets .dashlet {
+    border: 1px solid var(--primary-border-color);
+    border-top: 0;
 }
 
 .list-nested-categories {
@@ -21878,7 +21974,7 @@ td[data-name="draggableIcon"] {
 }
 
 .panel-heading .btn[data-action="closePanel"] {
-    width: 35px;
+    width: 43px;
 }
 
 .panel-heading .btn[data-action="closePanel"] > span {
@@ -22142,14 +22238,20 @@ span.became .file-link {
     display: inline-block
 }
 
+.bottom .panel .group-container {
+    margin: -14px -20px;
+}
+
 @media screen and (max-width: 768px) {
     .content {
         position: relative;
     }
-}
 
-.bottom .panel .group-container {
-    margin: -14px;
+
+    .bottom .panel .group-container {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
 }
 
 .bottom .panel .group-container > .group > .group-name {
@@ -22744,9 +22846,6 @@ code.hljs {
 div.list-kanban > div > table td.group-column {
     height: 100%;
 }
-.kanban-columns-container {
-    height: calc(100vh - 245px);
-}
 .kanban-columns-container table.kanban-columns {
     height: 100%;
     padding: 20px 0;
@@ -22765,6 +22864,7 @@ div.list-kanban > div > table td.group-column {
     padding: 5px 5px 5px 5px;
     box-shadow: 0 0 10px rgba(0,0,0,.2);
     background-color: #fafafa;
+    height: calc(100vh - 320px);
 }
 .list-kanban .kanban-head-container {
     box-shadow: none;
@@ -22781,6 +22881,18 @@ div.list-kanban > div > table td.group-column {
 div.list-kanban > div > table .item .panel .form-group {
     padding-right: 35px;
 }
+
+@media (max-width: 768px) {
+    .kanban-columns-container table.kanban-columns tbody tr.kanban-row td.group-column {
+        min-width: 200px;
+        height: calc(100vh - 350px);
+    }
+
+    .list-kanban .kanban-head-container table.kanban-head thead tr.kanban-row th.group-header {
+        min-width: 200px;
+    }
+}
+
 @media (max-width: 1500px) {
     div.list-kanban {
         overflow-x: auto;
@@ -23986,4 +24098,9 @@ span[data-img-src]::after {
     .navbar-nav .keep-open .dropdown-menu > li > a {
         padding: 5px 15px 5px 25px;
     }
+}
+
+.layout-editor-container{
+    position: relative;
+    text-align: center;
 }

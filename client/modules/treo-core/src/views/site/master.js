@@ -29,7 +29,8 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
             success: '--success',
             notice: '--notice',
             information: '--information',
-            error: '--error'
+            error: '--error',
+            actionIconColor: '--action-icon-color',
         },
 
         afterRender() {

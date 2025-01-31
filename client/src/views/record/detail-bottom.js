@@ -48,6 +48,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
         canClose: true,
 
+        layoutData: null,
+
         data: function () {
             return {
                 panelList: this.panelList,
@@ -259,6 +261,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         loadRelationshipsLayout: function (callback) {
             var layoutName = 'relationships';
             this._helper.layoutManager.get(this.model.name, layoutName, null, function (data) {
+                this.layoutData = data
                 this.relationshipsLayout = data.layout;
                 callback.call(this);
             }.bind(this));

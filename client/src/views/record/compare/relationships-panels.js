@@ -53,7 +53,8 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                         collection: this.collection,
                         columns: this.columns,
                         defs: panelData.defs,
-                        merging: this.options.merging
+                        merging: this.options.merging,
+                        selectedFilters: this.options.selectedFilters
                     }
                     let relationshipView = '';
                     if (this.instanceComparison) {
@@ -143,6 +144,17 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                 this.trigger('all-panels-rendered');
                 this.renderedPanels = [];
             }
+        },
+
+        changeViewMode(mode) {
+            this.relationshipsPanels.forEach(panelData => {
+                let view = this.getView(panelData.name);
+                if(!view){
+                    return;
+                }
+
+               view.changeViewMode(mode);
+            });
         }
     })
 })

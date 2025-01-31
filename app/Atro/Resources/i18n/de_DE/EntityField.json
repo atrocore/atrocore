@@ -88,6 +88,15 @@
       "manyToMany": "Viele-zu-Viele"
     }
   },
+  "groupOptions": {
+    "type": {
+      "character": "Charakter",
+      "numeric": "Numerisch",
+      "date": "Datum / Uhrzeit",
+      "reference": "Referenz",
+      "other": "Andere"
+    }
+  },
   "confirmations": {
     "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardwerte zurücksetzen wollen?"
   },

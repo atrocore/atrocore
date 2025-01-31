@@ -348,7 +348,10 @@
     "thereAreTooManyRecord": "Занадто багато записів. Неможливо порівняти",
     "Unset Selection": "Зняти виділення",
     "Report a bug": "Повідомити про помилку",
-    "Visit Community": "Відвідати спільноту"
+    "Visit Community": "Відвідати спільноту",
+    "fieldStatus": "Значення поля",
+    "language": "Мова",
+    "scopeFilter": "Канал"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",

@@ -7,5 +7,6 @@
   "importable": false,
   "object": true,
   "streamDisabled": true,
-  "disabled": true
+  "disabled": true,
+  "type": "Base"
 }
