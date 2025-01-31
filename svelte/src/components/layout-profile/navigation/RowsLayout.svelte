@@ -18,7 +18,7 @@
 
     export let buttonList: Button[]
     export let loadData: Function;
-    export let refresh: Function;
+    export let refresh: Function = () => {};
 
     export let editItem: Function;
 

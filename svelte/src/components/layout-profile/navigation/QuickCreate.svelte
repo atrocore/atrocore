@@ -37,19 +37,13 @@
 
     disabledItems.sort((a, b) => a.label.localeCompare(b.label));
 
-    function refresh(): void {
-        key++;
-    }
 </script>
 
 <div>
-    {#key key}
-        <RowsLayout
-                bind:this={rowsLayout}
-                {params}
-                {enabledItems}
-                {disabledItems}
-                {refresh}
-        />
-    {/key}
+    <RowsLayout
+            bind:this={rowsLayout}
+            {params}
+            {enabledItems}
+            {disabledItems}
+    />
 </div>
