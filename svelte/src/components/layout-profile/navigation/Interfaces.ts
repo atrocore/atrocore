@@ -1,5 +1,6 @@
 export interface Params {
     list: Array<string | object>,
+    layout: Array<string | object>,
     onSaved: Function,
     onEditItem?: Function
 }
