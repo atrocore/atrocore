@@ -17,7 +17,6 @@ import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
 import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
-import QuickCreate from "./components/layout-profile/navigation/QuickCreate.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
