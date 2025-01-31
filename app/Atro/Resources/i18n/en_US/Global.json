@@ -367,7 +367,9 @@
     "Visit Community": "Visit Community",
     "fieldStatus": "Field Value",
     "language": "Language",
-    "scopeFilter": "Channel"
+    "scopeFilter": "Channel",
+    "editGroup": "Edit Group",
+    "addGroup": "Begin/ end group"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
@@ -581,7 +583,12 @@
     "isActive": "Active",
     "team": "Team",
     "roles": "Roles",
-    "users": "Users"
+    "users": "Users",
+    "groupEnd": "Group end",
+    "iconClass": "Icon"
+  },
+  "tooltips": {
+    "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."
   },
   "dashlets": {
     "Stream": "Stream",
