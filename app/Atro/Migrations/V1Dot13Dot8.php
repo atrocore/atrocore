@@ -38,7 +38,6 @@ class V1Dot13Dot8 extends Base
             ->setParameter('data', json_encode([
                 "field" => [
                     "navigation" => $this->getConfig()->get('twoLevelTabList') ?? $this->getConfig()->get('tabList'),
-                    "quickCreateList" => $this->getConfig()->get('quickCreateList') ?? [],
                     "dashboardLayout" => $this->getConfig()->get('dashboardLayout'),
                     "dashletsOptions" => $this->getConfig()->get('dashletsOptions')
                 ]
