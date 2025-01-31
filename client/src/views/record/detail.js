@@ -1360,8 +1360,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         applyOverviewFilters() {
             // skip overview filters
-            if (!this.model || this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) !== true || this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== true) {
-                return;
+            if (!this.model || this.model.isNew()
+                || !this.getMetadata().get(['scopes', this.scope, 'object'])
+                || this.getMetadata().get(['scopes', this.scope, 'overviewFilters']) === false
+                || this.getMetadata().get(['scopes', this.scope, 'hideFieldTypeFilters']) === true
+            ) {
+                return
             }
 
             const fieldFilter = this.getStorage().get('fieldFilter', this.scope) || ['allValues'];
