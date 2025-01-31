@@ -134,7 +134,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     filterButton.addClass('btn-danger')
                     filterButton.removeClass('btn-default')
                 }else{
-                    filterButton.css('color', 'white');
+                    filterButton.css('color', 'black');
                     filterButton.addClass('btn-default')
                     filterButton.removeClass('btn-danger')
                 }
