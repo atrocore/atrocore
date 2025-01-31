@@ -23,6 +23,7 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
                 const layoutProfileId = $(e.target).data('id')
                 this.notify('Loading...')
                 this._helper.layoutManager.savePreference(this.scope, this.viewType, this.relatedScope, layoutProfileId, () => {
+                    this.notify(false)
                     this.refreshLayout()
                 })
             }

@@ -171,7 +171,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         refreshLayout() {
             this.detailLayout = null
             this.gridLayout = null
+            this.notify('Loading...')
             this.getGridLayout((layout) => {
+                this.notify(false)
                 const middle = this.getView('middle')
                 if (middle) {
                     middle._layout = layout
