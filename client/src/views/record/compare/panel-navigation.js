@@ -12,7 +12,6 @@ Espo.define('views/record/compare/panel-navigation', 'views/record/panel-navigat
     Dep => Dep.extend({
 
         actionScrollToPanel(name) {
-            debugger
             if (!name) {
                 return;
             }
