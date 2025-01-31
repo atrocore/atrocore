@@ -90,23 +90,21 @@ Espo.define('views/record/panel-navigation', 'view',
             if (!name) {
                 return;
             }
-            const content = $('#content');
-            const buttons = $('.detail-button-container.button-container:not(.hidden)');
-            const panel = this.getParentView().$el.find(`.panel[data-name="${name}"]`);
+
+            let panel = this.getParentView().$el.find(`.panel[data-name="${name}"]`);
             if (panel.size() > 0) {
-                let offset = panel.position();
-                let headerHeight = $('#main .page-header').outerHeight() || 0;
-                let navigationHeight = buttons.outerHeight() || 0;
-                let scrollTop = offset.top + 10;
+                const content = document.querySelector("#content");
+                const recordButtons = document.querySelector(".detail-button-container.button-container:not(.hidden)");
+                panel = panel.get(0);
 
-                if (window.screen.width < 768) {
-                    const tree = $('#main > aside.catalog-tree-panel')
-                    scrollTop += headerHeight + navigationHeight + (tree.outerHeight() || 0);
-                } else {
-                    scrollTop += navigationHeight;
-                }
+                if (!content || !panel || !recordButtons) return;
 
-                content.scrollTop(scrollTop);
+                const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                const stickyOffset = recordButtons.offsetHeight;
+                content.scrollTo({
+                    top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
+                    behavior: "smooth"
+                });
             }
         },
 
