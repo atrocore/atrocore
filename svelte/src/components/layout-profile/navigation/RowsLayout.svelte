@@ -181,7 +181,7 @@
                 <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
                 <ul class="enabled connected">
                     {#each enabledItems.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
-                        <li {...getDataAttributeProps(item)} class="{ fieldsInGroup[item.name] ? 'in-group': ''}">
+                        <li {...getDataAttributeProps(item)} class="relative { (fieldsInGroup[item.name] && !item.isGroup) ? 'in-group': ''}">
                             <div class="left ">
                                 <label title="{item.label}">{item.label}</label>
                             </div>
@@ -275,5 +275,15 @@
 
     .enabled .in-group {
         margin-left: 20px;
+    }
+
+    .relative {
+        position:relative
+    }
+
+    .relative .right {
+        position: absolute;
+        top: 5px;
+        right: 5px;
     }
 </style>
