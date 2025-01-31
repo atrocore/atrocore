@@ -2,5 +2,20 @@
   "controller": "controllers/record",
   "recordViews": {
     "list": "views/layout/record/list"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "relatedEntity": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "viewType",
+              "type": "equals",
+              "value": "list"
+            }
+          ]
+        }
+      }
+    }
   }
 }
