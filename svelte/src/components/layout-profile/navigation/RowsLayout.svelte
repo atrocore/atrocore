@@ -71,7 +71,6 @@
                     }
                     calculateFieldsInGroup(enabledItems);
                     refresh();
-                    return;
                 } else {
                     const movedItem = enabledItems[evt.oldIndex]
                     if (movedItem.canDisabled === false) {
@@ -80,9 +79,8 @@
                     }
                     enabledItems.splice(evt.oldIndex, 1)
                     disabledItems.splice(evt.newIndex, 0, movedItem)
-                    disabledItems = [...disabledItems]
+                    refresh()
                 }
-                enabledItems = [...enabledItems];
             }
         });
         sortableDisabled = Sortable.create(layoutElement.querySelector('ul.disabled'), {
@@ -100,9 +98,7 @@
                     }
                     calculateFieldsInGroup(enabledItems);
                     refresh();
-                    return;
                 }
-                disabledItems = [...disabledItems];
             }
         });
     }
