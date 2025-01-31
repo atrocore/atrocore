@@ -54,14 +54,6 @@
       "filterDisabled": true,
       "massUpdateDisabled": true
     },
-    "quickCreateList": {
-      "type": "array",
-      "view": "views/layout-profile/fields/quick-create",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true,
-      "massUpdateDisabled": true
-    },
     "dashboardLayout": {
       "type": "jsonArray",
       "view": "views/layout-profile/fields/dashboard-layout",

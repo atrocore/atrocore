@@ -1,4 +1,15 @@
 <?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+declare(strict_types=1);
 
 namespace Atro\Listeners;
 
@@ -13,10 +24,6 @@ class SettingsController extends AbstractListener
         $defaultLayout = $this->getEntityManager()->getRepository('LayoutProfile')->where(['isDefault' => true])->findOne();
 
         $result['lpNavigation'] = $this->prepareNavigation($defaultLayout->get('navigation') ?? []);
-
-        $result['lpQuickCreateList'] = $this->prepareNavigation($defaultLayout->get('quickCreateList') ?? []);
-
-        $result['lpDashboardLayout'] = $this->prepareNavigation($defaultLayout->get('lpDashboardLayout') ?? []);
 
         $event->setArgument('result', $result);
     }

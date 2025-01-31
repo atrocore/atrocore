@@ -124,8 +124,21 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         setup() {
+
             this.listenTo(this, 'after:render', () => {
                 $('.full-page-modal  .modal-body').css('overflow', 'auto');
+                this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
+                let filterButton = $('[data-action="openOverviewFilter"]');
+                if(this.isOverviewFilterApply()) {
+                    filterButton.css('color', 'white');
+                    filterButton.addClass('btn-danger')
+                    filterButton.removeClass('btn-default')
+                }else{
+                    filterButton.css('color', 'black');
+                    filterButton.addClass('btn-default')
+                    filterButton.removeClass('btn-danger')
+                }
+
                 this.notify('Loading...');
                 this.renderedPanels = [];
                 this.setupFieldsData();
@@ -633,7 +646,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         isOverviewFilterApply() {
             for (const filter of this.getOverviewFiltersList()) {
                 let selected = this.selectedFilters[filter.name] ?? [];
-                if (!Array.isArray(selected)) {
+                if (!Array.isArray(selected)  || selected.length === 0) {
                     continue;
                 }
                 if (selected && selected.join('') !== filter.defaultValue) {
@@ -676,8 +689,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     if (filterChanged) {
                         this.model.trigger('overview-filters-changed', this.selectedFilters);
+                        this.getStorage().set('compareFilters', this.scope, this.selectedFilters)
                         this.reRender();
-                        $('[data-action="openOverviewFilter"]').css('color', this.isOverviewFilterApply() ? 'red' : 'black');
                     }
                 });
             });

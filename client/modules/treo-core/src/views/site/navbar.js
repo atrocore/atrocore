@@ -85,13 +85,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 return checkScope.call(this, scope);
             }, this);
 
-            this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
-                if ((scopes[scope] || {}).disabled) return;
-                if ((scopes[scope] || {}).acl) {
-                    return this.getAcl().check(scope, 'create');
-                }
-                return true;
-            }, this);
 
             this.createView('notificationsBadge', 'views/notification/badge', {
                 el: this.options.el + ' .notifications-badge-container',

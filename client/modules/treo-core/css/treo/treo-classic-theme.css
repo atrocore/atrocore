@@ -4405,13 +4405,13 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .nav > li {
     position: relative;
-    display: block
 }
 
 .nav > li > a {
     position: relative;
     display: block;
-    padding: 10px 15px
+    padding: 10px 15px;
+    width: 100%
 }
 
 .nav > li > a:hover, .nav > li > a:focus {
@@ -14912,6 +14912,10 @@ blockquote {
     display: none !important
 }
 
+.hidden-cell .status-icons, .hidden-cell .inline-actions {
+    display: none !important;
+}
+
 .panel-group .panel + .panel {
     margin-top: 4px
 }
@@ -16533,7 +16537,8 @@ label.attach-file-label > input.file {
 }
 
 body > footer {
-    background-color: #eee
+    background-color: #eee;
+    min-width: 100%;
 }
 
 body > footer > p {
@@ -19606,14 +19611,7 @@ body > .content {
     width: 100%;
 }
 
-#content > #main:has(> main) {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-}
-
 #main > main {
-    flex: 1;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -20289,7 +20287,6 @@ button.category:focus {
 @media screen and (min-width: 768px) and (max-width: 1199px) {
     #main .catalog-tree-panel {
         padding: 0 10px 10px 10px;
-        float: none;
         min-height: 53px;
     }
 
@@ -20383,8 +20380,8 @@ button.category:focus {
         border-right : 1px solid transparent;
         border-top: 0;
         box-shadow:none;
-        -webkit-transform: translate(-97.7%, 0);
-        transform: translate(-97.7%, 0);
+        -webkit-transform: translate(-98.3%, 0);
+        transform: translate(-98.3%, 0);
         cursor: pointer;
     }
 
@@ -20748,7 +20745,7 @@ button.category:focus {
 #header .menu {
     -webkit-transform: translate(-110%, 0);
     transform: translate(-110%, 0);
-    width: 220px;
+    width: 300px;
 }
 
 #header .menu.not-collapsed ul.tabs{
@@ -21030,6 +21027,7 @@ button.category:focus {
         z-index: 1000;
         bottom: 0;
         left: 0;
+        width: 100% !important;
     }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
@@ -24071,6 +24069,7 @@ span[data-img-src]::after {
     background-color: transparent;
     white-space: normal;
     padding-left: 35px;
+    padding-right: 20px;
     color: var(--nav-font-color);
 }
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group.keep-open > ul {
@@ -24095,6 +24094,33 @@ span[data-img-src]::after {
     display: none;
 }
 
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) span.quick-create {
+    display: none;
+    position: absolute;
+    right: 10px;
+}
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs  li:not(.more):hover  span.quick-create {
+    display: inline;
+    cursor: pointer;
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more){
+    display: flex;
+    align-items: center;
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) > a.nav-link{
+    width: 100%;
+    display: flex;
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) > a.nav-link > span.full-label{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    padding-right: 30px;
+}
 /* Vertical Mobile*/
 @media (max-width: 767px) {
     .navbar-nav .keep-open .dropdown-menu > li > a {

@@ -786,7 +786,6 @@ class Installer extends HasContainer
                     'data' => [
                         'field' => [
                             "navigation" => ['File', 'Folder'],
-                            "quickCreateList" => ['File', 'Folder'],
                             "dashboardLayout" => [
                                 'name'   => 'My AtroPIM',
                                 'layout' => []

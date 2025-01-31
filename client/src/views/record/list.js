@@ -1330,7 +1330,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                                 this.loadMore(btn);
                             }
                         }.bind(this));
-                    } else if (this.$el.parent().prop('id') === 'main' || this.$el.parent().prop("tagName").toLowerCase() === 'main') {
+                    } else if (this.$el.parent().prop('id') === 'main' || (this.$el.parent().prop("tagName") || '').toLowerCase() === 'main') {
                         const content = $('#content')
 
                         content.off('scroll', this.$el);
@@ -1760,6 +1760,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             list.on('touchend', function () {
                                 isScrolling = false;
 
+                                const inertiaDuration = 1000;
                                 const friction = 0.95;
                                 let momentumScroll = scroll.scrollLeft();
                                 let animationFrame;

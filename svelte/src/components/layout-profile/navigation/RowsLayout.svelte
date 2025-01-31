@@ -109,7 +109,7 @@
         let inGroup = false;
         for (const item of enabledItems) {
             if (item.isGroup) {
-                inGroup = item.groupEnd;
+                inGroup = !item.groupEnd;
                 data.push({
                     id: item.id,
                     name: item.name,
