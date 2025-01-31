@@ -48,10 +48,18 @@ Espo.define('views/layout/fields/related-entity', 'views/layout/fields/entity', 
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this)
-            if (this.model.get('viewType') !== 'list') {
-                this.$el.children().addClass('invisible');
-            } else {
-                this.$el.children().removeClass('invisible');
+            if(this.mode!=='list'){
+                if (this.model.get('viewType') !== 'list') {
+                    this.hide()
+                } else {
+                    this.show()
+                }
+            }else{
+                if (this.model.get('viewType') !== 'list') {
+                    this.$el.children().addClass('invisible');
+                } else {
+                    this.$el.children().removeClass('invisible');
+                }
             }
         }
     });

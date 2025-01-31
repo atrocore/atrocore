@@ -80,11 +80,7 @@
                         {{#if this.hasCustomLabel}}
                             {{this.customLabel}}
                         {{else if this.layoutEditor}}
-                            <div class="layout-editor-container">
-                                <a class="btn btn-link layout-editor" style="padding: 0 0 0 5px;width: 100%;">
-                                    <span class="fas fa-cog cursor-pointer" style="font-size: 1em;"></span>
-                                </a>
-                            </div>
+                            <div class="layout-editor-container"></div>
                         {{else}}
                             {{translate this.name scope=../collection.name category='fields'}}
                         {{/if}}
