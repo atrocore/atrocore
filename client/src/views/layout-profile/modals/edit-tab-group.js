@@ -35,10 +35,42 @@ Espo.define('views/layout-profile/modals/edit-tab-group', 'views/modal',
                 this.model = model;
                 this.attributes = this.model.getClonedAttributes();
                 this.buildFields();
+                this.listenTo(this.model, 'change:groupEnd', () => {
+                    if(!this.model.get('groupEnd')) {
+                        this.getView('name').show();
+                        this.getView('iconClass').show();
+                    }else{
+                        this.getView('name').hide();
+                        this.getView('iconClass').hide();
+                    }
+                });
+            });
+
+            this.listenTo(this, 'after:render', () => {
+                if(!this.model.get('groupEnd')) {
+                    this.getView('name').show();
+                    this.getView('iconClass').show();
+                }else{
+                    this.getView('name').hide();
+                    this.getView('iconClass').hide();
+                }
             });
         },
 
         buildFields() {
+            this.createView('groupEnd', 'views/fields/bool', {
+                model: this.model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="groupEnd"]',
+                defs: {
+                    name: 'groupEnd',
+                    params: {
+                        required: true,
+                        tooltip: true
+                    }
+                }
+            });
+
             this.createView('name', 'views/fields/varchar', {
                 model: this.model,
                 mode: 'edit',
@@ -50,17 +82,6 @@ Espo.define('views/layout-profile/modals/edit-tab-group', 'views/modal',
                     }
                 }
             });
-
-            if (!this.getConfig().get('scopeColorsDisabled')) {
-                this.createView('color', 'views/fields/colorpicker', {
-                    model: this.model,
-                    mode: 'edit',
-                    el: this.options.el + ' .field[data-name="color"]',
-                    defs: {
-                        name: 'color'
-                    }
-                });
-            }
 
             this.createView('iconClass', 'views/admin/entity-manager/fields/icon-class', {
                 model: this.model,
@@ -76,17 +97,19 @@ Espo.define('views/layout-profile/modals/edit-tab-group', 'views/modal',
             if (this.getView('name')) {
                 this.getView('name').fetchToModel();
             }
-            if (this.getView('color')) {
-                this.getView('color').fetchToModel();
-            }
+
             if (this.getView('iconClass')) {
                 this.getView('iconClass').fetchToModel();
             }
 
+            if (this.getView('groupEnd')) {
+                this.getView('groupEnd').fetchToModel();
+            }
+
             return {
-                name: this.model.get('name') || '',
-                color: this.model.get('color') || '',
-                iconClass: this.model.get('iconClass') || ''
+                groupEnd: this.model.get('groupEnd') || false,
+                name: this.model.get('groupEnd') ? '' :  this.model.get('name') || '',
+                iconClass: this.model.get('groupEnd') ? '': this.model.get('iconClass') || ''
             }
         },
 
@@ -121,7 +144,7 @@ Espo.define('views/layout-profile/modals/edit-tab-group', 'views/modal',
             let fields = {};
             Object.keys(this.nestedViews || {}).forEach(function (item) {
                 let view = this.getView(item);
-                if (view) {
+                if (view && !view.$el.hasClass('hidden')) {
                     fields[item] = view;
                 }
             }, this);

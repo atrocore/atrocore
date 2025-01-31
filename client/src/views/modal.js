@@ -61,6 +61,8 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         isDraggable: false,
 
+        fullHeight: false,
+
         events: {
             'click .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -83,6 +85,8 @@ Espo.define('views/modal', 'view', function (Dep) {
             this.header = this.options.header || this.header;
 
             this.options = this.options || {};
+
+            this.fullHeight =  this.options.fullHeight ?? this.fullHeight
 
             this.setSelector(this.containerSelector);
 
@@ -153,7 +157,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                     className: this.className,
                     bodyDiffHeight: modalBodyDiffHeight,
                     footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
-                    fullHeight: false,
+                    fullHeight: this.fullHeight,
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     onRemove: function () {
                         this.onDialogClose();

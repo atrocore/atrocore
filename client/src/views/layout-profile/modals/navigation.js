@@ -13,6 +13,8 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
 
         template: 'layout-profile/modals/navigation',
 
+        fullHeight: true,
+
         setup() {
             this.buttonList = [];
             this.model = this.options.model;
@@ -22,9 +24,9 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
         },
 
         afterRender() {
-            if (window.layoutSvelteComponent) {
+            if (window.layoutSvelteNavigation) {
                 try {
-                    window.layoutSvelteComponent.$destroy()
+                    window.layoutSvelteNavigation.$destroy()
                 } catch (e) {
                 }
             }
@@ -35,11 +37,11 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                 return;
             }
 
-            window.layoutSvelteComponent = new Svelte.Navigation({
+            window.layoutSvelteNavigation = new Svelte.Navigation({
                 target: this.$el.find('.navigation').get(0),
                 props: {
                     params: {
-                        navigation: this.model.get(this.field),
+                        list: this.model.get(this.field),
                         onSaved: (navigation) => {
                             let attributes = {};
                             attributes[this.field] = navigation;
@@ -60,10 +62,10 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                                     if (callback) {
                                         callback({
                                             ...item,
-                                            name: data.name,
-                                            label: data.name,
-                                            color: data.color,
+                                            name: data.name ?? '',
+                                            label: data.name ?? '',
                                             iconClass: data.iconClass,
+                                            groupEnd: data.groupEnd,
                                         });
                                     }
                                     view.close();

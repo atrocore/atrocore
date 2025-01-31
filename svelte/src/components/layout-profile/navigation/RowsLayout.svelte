@@ -18,7 +18,7 @@
 
     export let buttonList: Button[]
     export let loadData: Function;
-    export let refresh: Function;
+    export let refresh: Function = () => {};
 
     export let editItem: Function;
 
@@ -109,7 +109,7 @@
         let inGroup = false;
         for (const item of enabledItems) {
             if (item.isGroup) {
-                inGroup = item.name !== '';
+                inGroup = item.groupEnd;
                 data.push({
                     id: item.id,
                     name: item.name,
@@ -177,8 +177,8 @@
                 <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
                 <ul class="enabled connected">
                     {#each enabledItems.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
-                        <li {...getDataAttributeProps(item)} class="relative { (fieldsInGroup[item.name] && !item.isGroup) ? 'in-group': ''}">
-                            <div class="left ">
+                        <li {...getDataAttributeProps(item)} class="{item.isGroup ? 'group': ''} {item.groupEnd ? 'end' : ''} { (fieldsInGroup[item.name] && !item.isGroup) ? 'in-group': ''}">
+                            <div class="left">
                                 <label title="{item.label}">{item.label}</label>
                             </div>
                             <div class="right">
@@ -273,13 +273,36 @@
         margin-left: 20px;
     }
 
-    .relative {
-        position:relative
+    .group {
+        position:relative;
+        color: black;
     }
 
-    .relative .right {
+    .group label {
+        font-weight: bold;
+    }
+
+    .group.end {
+        padding: 15px 50px 0 10px;
+    }
+
+    .group.end div.left {
+        border-top: 1px solid #ccc;
+    }
+
+    .group .right {
         position: absolute;
         top: 5px;
+        right: 5px;
+    }
+
+    .group .right a {
+        position: relative;
+    }
+
+    .group .right a .fa-pencil-alt {
+        position: absolute;
+        top: 2px;
         right: 5px;
     }
 </style>
