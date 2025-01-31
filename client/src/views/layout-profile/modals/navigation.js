@@ -17,7 +17,7 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
             this.buttonList = [];
             this.model = this.options.model;
             this.field = this.options.field;
-            this.header = this.getLanguage().translate('navigation', 'fields', 'LayoutProfile');
+            this.header = this.getLanguage().translate(this.field, 'fields', 'LayoutProfile');
             Dep.prototype.setup.call(this);
         },
 
@@ -31,7 +31,7 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
 
             this.$el.find('.modal-body').css('paddingTop', 0);
 
-            if(!this.$el.find('.navigation').length) {
+            if (!this.$el.find('.navigation').length) {
                 return;
             }
 
