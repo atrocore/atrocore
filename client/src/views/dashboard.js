@@ -123,7 +123,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         "layout": []
                     }
                 ];
-                this.dashboardLayout = this.getConfig().get('lpDashboardLayout') || defaultLayout;
+                this.dashboardLayout = this.getPreferences().get('dashboardLayout') || this.getConfig().get('lpDashboardLayout') || defaultLayout;
 
                 if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
                     this.dashboardLayout = defaultLayout;

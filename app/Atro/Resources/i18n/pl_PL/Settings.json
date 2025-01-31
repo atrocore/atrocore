@@ -24,7 +24,6 @@
     "userThemesDisabled": "Wyłącz motywy użytkowników",
     "authTokenLifetime": "Czas życia tokenu autoryzacyjnego (w godzinach)",
     "authTokenMaxIdleTime": "Maksymalny czas bezczynności tokenu autoryzacyjnego (w godzinach)",
-    "dashboardLayout": "Układ pulpitu nawigacyjnego (domyślny)",
     "siteUrl": "Adres URL witryny",
     "addressPreview": "Podgląd adresu",
     "addressFormat": "Format adresu",

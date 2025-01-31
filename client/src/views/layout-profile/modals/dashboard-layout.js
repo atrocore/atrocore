@@ -48,8 +48,8 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
                 this.close();
                 if(this.options.avoidSaving)  {
                     this.model.set(this.fetch())
-                    this.notify('Loading...');
                 }else{
+                    this.notify('Loading...');
                     this.model.save(this.fetch(), {
                         patch: true
                     }).then(() => {

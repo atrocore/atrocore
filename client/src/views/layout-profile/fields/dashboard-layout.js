@@ -11,13 +11,6 @@
 Espo.define('views/layout-profile/fields/dashboard-layout', 'views/layout-profile/fields/navigation', function (Dep) {
 
     return Dep.extend({
-        setup() {
-            Dep.prototype.setup.call(this);
-            this.initMode = this.mode;
-            this.setMode('detail')
-            this.initInlineActions();
-        },
-
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
         },

@@ -35,9 +35,9 @@
       ],
       [
         {
-          "name": "dashboardLayout",
-          "fullWidth": true
-        }
+          "name": "dashboardLayout"
+        },
+        false
       ]
     ]
   },

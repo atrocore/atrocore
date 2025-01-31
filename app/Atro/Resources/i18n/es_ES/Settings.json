@@ -16,7 +16,6 @@
     "userThemesDisabled": "Deshabilitar temas de usuarios",
     "authTokenLifetime": "Vida del token de autenticación (horas)",
     "authTokenMaxIdleTime": "Máximo tiempo de inactividad del token de autenticación (horas)",
-    "dashboardLayout": "Diseño del escritorio (por defecto)",
     "siteUrl": "URL del sitio",
     "addressPreview": "Vista previa de la dirección",
     "addressFormat": "Formato de la Dirección",
