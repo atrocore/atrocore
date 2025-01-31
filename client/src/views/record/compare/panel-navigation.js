@@ -20,7 +20,7 @@ Espo.define('views/record/compare/panel-navigation', 'views/record/panel-navigat
         },
 
         isPanelClosed(name) {
-            return false;
+            return true;
         },
 
         afterRender() {
