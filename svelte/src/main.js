@@ -28,4 +28,4 @@ window.SvelteModelFactory = ModelFactory;
 window.SvelteConfig = Config;
 window.driver = driver;
 
-export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent, Script, Navigation, QuickCreate};
+export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent, Script, Navigation};
