@@ -127,17 +127,6 @@
                 {{{bookmarkBadge}}}
             </li>
             {{/if}}
-            {{#if enableQuickCreate}}
-            <li class="dropdown hidden-xs quick-create-container hidden-xs">
-                <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Create'}}"><i class="fas fa-plus"></i></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
-                    <li class="dropdown-header"><span class="panel-heading-title">{{translate 'quickCreate'}}</span></li>
-                    {{#each quickCreateList}}
-                    <li><a href="#{{./this}}/create" data-name="{{./this}}" data-action="quick-create">{{translate this category='scopeNames'}}</a></li>
-                    {{/each}}
-                </ul>
-            </li>
-            {{/if}}
             {{#if hasJM}}<li id='qqq' class="dropdown queue-badge-container hidden-xs"></li>{{/if}}
             <li class="dropdown notifications-badge-container hidden-xs">
                 {{{notificationsBadge}}}

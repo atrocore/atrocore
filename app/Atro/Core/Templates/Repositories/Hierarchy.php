@@ -689,7 +689,7 @@ class Hierarchy extends Base
             $selectCountQuery
                 ->andWhere($expr->in("$tableAlias.id", $subQuery->select("$tableAlias.id")->getSQL()));
 
-            $qb->select("$tableAlias.*", "({$selectCountQuery->where("$tableAlias.id = r1.parent_id ".($withDeleted?"":"and r1.deleted=:deleted"))->getSQL()}) as children_count");
+            $qb->select("$tableAlias.*", "({$selectCountQuery->andWhere("$tableAlias.id = r1.parent_id ".($withDeleted?"":"and r1.deleted=:deleted"))->getSQL()}) as children_count");
             if (!$withDeleted) {
                 $qb->setParameter('deleled', false, ParameterType::BOOLEAN);
             }

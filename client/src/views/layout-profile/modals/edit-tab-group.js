@@ -36,13 +36,13 @@ Espo.define('views/layout-profile/modals/edit-tab-group', 'views/modal',
                 this.attributes = this.model.getClonedAttributes();
                 this.buildFields();
                 this.listenTo(this.model, 'change:groupEnd', () => {
-                   if(!this.model.get('groupEnd')) {
-                       this.getView('name').show();
-                       this.getView('iconClass').show();
-                   }else{
-                       this.getView('name').hide();
-                       this.getView('iconClass').hide();
-                   }
+                    if(!this.model.get('groupEnd')) {
+                        this.getView('name').show();
+                        this.getView('iconClass').show();
+                    }else{
+                        this.getView('name').hide();
+                        this.getView('iconClass').hide();
+                    }
                 });
             });
 

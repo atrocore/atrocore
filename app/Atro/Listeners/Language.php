@@ -43,7 +43,10 @@ class Language extends AbstractListener
 
                     // add translate for relation virtual field
                     if (!isset($data[$locale][$entity]['fields'][$field]) && !empty($relData = Relation::isVirtualRelationField($field))) {
-                        $data[$locale][$entity]['fields'][$field] = $data[$locale][$relData['relationName']]['fields'][$relData['fieldName']] ?? $relData['fieldName'];
+                        $relFieldDefs = $this->getMetadata()->get(['entityDefs', $relData['relationName'], 'fields', $relData['fieldName']]);
+                        if (empty($relFieldDefs['multilangField'])) {
+                            $data[$locale][$entity]['fields'][$field] = $data[$locale][$relData['relationName']]['fields'][$relData['fieldName']] ?? $relData['fieldName'];
+                        }
                     }
 
                     switch ($fieldDefs['type']) {

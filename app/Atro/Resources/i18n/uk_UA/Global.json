@@ -354,6 +354,7 @@
     "scopeFilter": "Канал",
     "editGroup": "Група редагування",
     "addGroup": "Почати / завершити групу"
+
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",

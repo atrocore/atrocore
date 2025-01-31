@@ -1760,6 +1760,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             list.on('touchend', function () {
                                 isScrolling = false;
 
+                                const inertiaDuration = 1000;
                                 const friction = 0.95;
                                 let momentumScroll = scroll.scrollLeft();
                                 let animationFrame;

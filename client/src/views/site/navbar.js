@@ -22,8 +22,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 tabDefsList: this.tabDefsList,
                 title: this.options.title,
                 menuDataList: this.getMenuDataList(),
-                quickCreateList: this.quickCreateList,
-                enableQuickCreate: this.quickCreateList.length > 0,
                 userName: this.getUser().get('name'),
                 userId: this.getUser().id,
                 logoSrc: this.getLogoSrc(),
@@ -126,10 +124,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         getTabList: function () {
             return this.getConfig().get('lpNavigation') || [];
-        },
-
-        getQuickCreateList: function () {
-            return this.getConfig().get('lpQuickCreateList') || [];
         },
 
         setupGlobalSearch: function () {

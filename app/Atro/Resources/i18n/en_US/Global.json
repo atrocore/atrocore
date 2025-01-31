@@ -370,6 +370,7 @@
     "scopeFilter": "Channel",
     "editGroup": "Edit Group",
     "addGroup": "Begin/ end group"
+
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

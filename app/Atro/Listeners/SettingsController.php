@@ -14,8 +14,6 @@ class SettingsController extends AbstractListener
 
         $result['lpNavigation'] = $this->prepareNavigation($defaultLayout->get('navigation') ?? []);
 
-        $result['lpQuickCreateList'] = $this->prepareNavigation($defaultLayout->get('quickCreateList') ?? []);
-
         $event->setArgument('result', $result);
     }
 

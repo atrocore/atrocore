@@ -3,8 +3,7 @@
     "isActive": "активний",
     "description": "вид",
     "hideShowFullList": "Приховати \"Показати повний список\" на панелях зв'язків",
-    "navigation": "Меню навігації",
-    "quickCreateList": "Швидке створення списку"
+    "navigation": "Меню навігації"
   },
   "labels": {
     "Create LayoutProfile": "Створити профіль макета",

@@ -654,9 +654,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 $('.page-header').addClass('collapsed').removeClass('not-collapsed');
                 if ($list.length > 0) {
                     $list.addClass('collapsed');
-                } else {
-                    $('.detail-button-container').addClass('collapsed').removeClass('not-collapsed');
-                    $('.overview').addClass('collapsed').removeClass('not-collapsed');
                 }
                 this.showUtilityElements();
             } else {
@@ -664,9 +661,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 $('.page-header').removeClass('collapsed').addClass('not-collapsed');
                 if ($list.length > 0) {
                     $list.removeClass('collapsed');
-                } else {
-                    $('.detail-button-container').removeClass('collapsed').addClass('not-collapsed');
-                    $('.overview').removeClass('collapsed').addClass('not-collapsed');
                 }
                 this.hideUtilityElements();
             }

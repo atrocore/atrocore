@@ -50,7 +50,11 @@
     "NotificationRule": "Meldevorschrift",
     "Country": "Land",
     "HtmlSanitizer": "HTML Sanitizer",
-    "Bookmark": "Lesezeichen"
+    "Bookmark": "Lesezeichen",
+    "scopeFilter": "Kanal",
+    "editGroup": "Gruppe bearbeiten",
+    "addGroup": "Gruppen beginnen / beenden"
+
   },
   "scopeNamesPlural": {
     "Entity": "Entitäten",
@@ -342,9 +346,7 @@
     "Visit Community": "Gemeinschaft besuchen",
     "fieldStatus": "Feld Wert",
     "language": "Sprache",
-    "scopeFilter": "Kanal",
-    "editGroup": "Gruppe bearbeiten",
-    "addGroup": "Gruppen beginnen / beenden"
+    "scopeFilter": "Kanal"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -598,6 +600,7 @@
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
   },
+
   "dashlets": {
     "Stream": "Aktivitäten",
     "Records": "Datensatzliste"

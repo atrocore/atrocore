@@ -6,8 +6,7 @@
     "hideShowFullList": "Hide \"Show Full List\" on Relation Panels",
     "layouts": "Layouts",
     "parent": "Parent Layout Profile",
-    "navigation": "Navigation Menu",
-    "quickCreateList": "Quick Create List"
+    "navigation": "Navigation Menu"
   },
   "labels": {
     "Create LayoutProfile": "Create Layout Profile",
