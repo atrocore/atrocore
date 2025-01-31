@@ -60,7 +60,7 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                                     if (callback) {
                                         callback({
                                             ...item,
-                                            name: data.name,
+                                            name: item.id,
                                             label: data.name,
                                             color: data.color,
                                             iconClass: data.iconClass,
