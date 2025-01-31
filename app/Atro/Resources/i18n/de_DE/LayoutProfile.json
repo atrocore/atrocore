@@ -4,7 +4,8 @@
     "description": "Beschreibung",
     "hideShowFullList": "„Vollständige Liste anzeigen“ auf Beziehungsfeldern ausblenden",
     "layouts": "Layout",
-    "navigation": "Menü Navigation"
+    "navigation": "Menü Navigation",
+    "quickCreateList": "Liste schnell erstellen"
   },
   "labels": {
     "Create LayoutProfile": "Layoutprofil erstellen",

@@ -30,7 +30,9 @@
         {
           "name": "navigation"
         },
-        false
+        {
+          "name": "quickCreateList"
+        }
       ]
     ]
   }

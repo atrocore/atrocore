@@ -14,6 +14,8 @@ class SettingsController extends AbstractListener
 
         $result['layoutProfileNavigation'] = $this->prepareNavigation($defaultLayout->get('navigation') ?? []);
 
+        $result['layoutProfileQuickCreate'] = $this->prepareNavigation($defaultLayout->get('quickCreate') ?? []);
+
         $event->setArgument('result', $result);
     }
 
