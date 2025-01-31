@@ -33,6 +33,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         className: 'full-page-modal',
 
+        fullHeight: true,
+
         setup: function () {
             this.model = this.options.model;
             this.scope = this.options.scope ?? this.model.urlRoot;

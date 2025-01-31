@@ -128,7 +128,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.listenTo(this, 'after:render', () => {
                 $('.full-page-modal  .modal-body').css('overflow', 'auto');
                 this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
-                $('[data-action="openOverviewFilter"]').css('color', this.isOverviewFilterApply() ? 'red' : 'black');
+                let filterButton = $('[data-action="openOverviewFilter"]');
+                if(this.isOverviewFilterApply()) {
+                    filterButton.css('color', 'white');
+                    filterButton.addClass('btn-danger')
+                    filterButton.removeClass('btn-default')
+                }else{
+                    filterButton.css('color', 'white');
+                    filterButton.addClass('btn-default')
+                    filterButton.removeClass('btn-danger')
+                }
+
                 this.notify('Loading...');
                 this.renderedPanels = [];
                 this.setupFieldsData();
