@@ -16,6 +16,8 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
 
         fullHeight: true,
 
+        mode: 'edit',
+
         events: {
             'click button[data-action="selectTab"]': function (e) {
                 var tab = parseInt($(e.currentTarget).data('tab'));
@@ -263,9 +265,8 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
         },
 
         afterRender: function () {
-            debugger
-            if (this.currentTabLayout && this.$el.find('> .grid-stack').length) {
-                var $gridstack = this.$gridstack = this.$el.find('> .grid-stack');
+            if (this.currentTabLayout) {
+                var $gridstack = this.$gridstack = this.$el.find('.modal-body .grid-stack');
                 $gridstack.gridstack({
                     minWidth: 4,
                     cellHeight: 60,
