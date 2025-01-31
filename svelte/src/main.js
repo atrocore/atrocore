@@ -17,7 +17,6 @@ import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
 import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
-import QuickCreate from "./components/layout-profile/navigation/QuickCreate.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -28,4 +27,4 @@ window.SvelteModelFactory = ModelFactory;
 window.SvelteConfig = Config;
 window.driver = driver;
 
-export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent, Script, Navigation, QuickCreate};
+export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent, Script, Navigation};

@@ -64,7 +64,7 @@
     },
     "dashboardLayout": {
       "type": "jsonObject",
-      "view": "views/layout-profile/fields/dashboard",
+      "view": "views/layout-profile/fields/dashboard-layout",
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,

@@ -11,62 +11,20 @@
 Espo.define('views/layout-profile/modals/dashboard-layout', 'views/layout-profile/modals/navigation',
     (Dep) => Dep.extend({
         className: 'full-page-modal',
-        afterRender() {
-            if (window.layoutSvelteDashboardLayout) {
-                try {
-                    window.layoutSvelteDashboardLayout.$destroy()
-                } catch (e) {
+        fullHeight: true,
+        setup() {
+            Dep.prototype.setup.call(this);
+            this.buttonList = [
+                {
+                    name: "Save",
+                    label: "Save",
+                    style: "primary"
+                },
+                {
+                    name: "Cancel",
+                    label: "Cancel",
                 }
-            }
-
-            this.$el.find('.modal-body').css('paddingTop', 0);
-
-            if(!this.$el.find('.navigation').length) {
-                return;
-            }
-
-            var dashletList = Object.keys(this.getMetadata().get('dashlets') || {}).sort(function (v1, v2) {
-                return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
-            }.bind(this));
-
-            this.dashletList = [];
-
-            dashletList.forEach(function (item) {
-                var aclScope = this.getMetadata().get('dashlets.' + item + '.aclScope') || null;
-                if (aclScope) {
-                    if (!this.getAcl().check(aclScope)) {
-                        return;
-                    }
-                }
-                var accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
-                if (accessDataList) {
-                    if (!Espo.Utils.checkAccessDataList(accessDataList, this.getAcl(), this.getUser())) {
-                        return false;
-                    }
-                }
-                this.dashletList.push(item);
-            }, this);
-
-            window.layoutSvelteDashboardLayout = new Svelte.DashboardLayout({
-                target: this.$el.find('.navigation').get(0),
-                props: {
-                    params: {
-                        list: dashletList,
-                        layout: this.model.get(this.field),
-                        onSaved: (layout) => {
-                            let attributes = {};
-                            attributes[this.field] = layout;
-                            this.close();
-                            this.notify('Loading...');
-                            this.model.save(attributes, {
-                                patch: true
-                            }).then(() => {
-                                this.notify('Done', 'success')
-                            });
-                        }
-                    }
-                }
-            })
+            ]
         }
     })
 );
