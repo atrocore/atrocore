@@ -17,7 +17,7 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
             this.buttonList = [];
             this.model = this.options.model;
             this.field = this.options.field;
-            this.header = this.getLanguage().translate('navigation', 'fields', 'LayoutProfile');
+            this.header = this.getLanguage().translate(this.field, 'fields', 'LayoutProfile');
             Dep.prototype.setup.call(this);
         },
 
