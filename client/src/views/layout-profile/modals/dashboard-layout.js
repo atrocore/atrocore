@@ -43,6 +43,16 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
                     }, this);
                 }, this);
             },
+
+            'click [data-name="save"]': function () {
+                this.close();
+                this.notify('Loading...');
+                this.model.save(this.fetch(), {
+                    patch: true
+                }).then(() => {
+                    this.notify('Done', 'success');
+                });
+            },
         },
 
         data: function () {
@@ -79,12 +89,12 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
             }
             this.buttonList = [
                 {
-                    name: "Save",
+                    name: "save",
                     label: "Save",
                     style: "primary"
                 },
                 {
-                    name: "Cancel",
+                    name: "cancel",
                     label: "Cancel",
                 }
             ]
@@ -265,7 +275,7 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
         },
 
         afterRender: function () {
-            if (this.currentTabLayout) {
+            if (this.currentTabLayout && this.$el.find('.modal-body .grid-stack').length) {
                 var $gridstack = this.$gridstack = this.$el.find('.modal-body .grid-stack');
                 $gridstack.gridstack({
                     minWidth: 4,
@@ -336,9 +346,9 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
         fetch: function () {
             var data = {};
             if (!this.dashboardLayout || !this.dashboardLayout.length) {
-                data[this.name] = null;
+                data[this.field] = null;
             } else {
-                data[this.name] = Espo.Utils.cloneDeep(this.dashboardLayout);
+                data[this.field] = Espo.Utils.cloneDeep(this.dashboardLayout);
             }
 
             data['dashletsOptions'] = Espo.Utils.cloneDeep(this.dashletsOptions);

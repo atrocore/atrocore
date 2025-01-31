@@ -17833,6 +17833,9 @@ table.table {
     background-color: #fff
 }
 
+.field .grid-stack-item-content {
+    border: 1px solid #e8eced
+}
 
 #login.panel > .panel-heading {
     margin: 0 !important
