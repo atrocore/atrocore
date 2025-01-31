@@ -31,7 +31,7 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
 
             this.$el.find('.modal-body').css('paddingTop', 0);
 
-            if(!this.$el.find('.navigation').length) {
+            if (!this.$el.find('.navigation').length) {
                 return;
             }
 
