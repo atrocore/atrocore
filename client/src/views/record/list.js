@@ -2336,15 +2336,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         createLayoutConfigurator(){
-            this.createView('layoutConfigurator', "views/record/layout-configurator", {
-                scope: this.scope,
-                viewType: this.layoutName,
-                relatedScope: this.getParentModel()?.urlRoot,
-                layoutData: this.layoutData,
-                el: this.getSelector() + ' .layout-editor-container',
-            }, (view) => {
-                view.on("refresh", () => this.refreshLayout())
-                view.render()
+            $(this.getSelector() + ' .layout-editor-container').each((idx,el) => {
+                this.createView('layoutConfigurator'+idx, "views/record/layout-configurator", {
+                    scope: this.scope,
+                    viewType: this.layoutName,
+                    relatedScope: this.getParentModel()?.urlRoot,
+                    layoutData: this.layoutData,
+                    el: el,
+                }, (view) => {
+                    view.on("refresh", () => this.refreshLayout())
+                    view.render()
+                })
             })
         },
 
