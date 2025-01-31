@@ -82,7 +82,7 @@
                     canRemove: true,
                     isGroup: true,
                     canDisabled: false,
-                    name: item.id,
+                    name: item.name,
                     label: item.name,
                     sortOrder
                 });
