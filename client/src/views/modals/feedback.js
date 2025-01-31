@@ -21,13 +21,13 @@ Espo.define('views/modals/feedback', 'views/modal', function (Modal) {
         },
         data(){
           return {
-              formLink: 'https://forms.office.com/e/Gtk2rd2b1w?embed=true'
+              formLink: 'https://www.atrocore.com/provide-feedback'
           }
         },
         afterRender(){
             Modal.prototype.setup.call(this);
             this.$el.find('.modal-dialog').css('width','740px')
-            this.$el.find('.modal-body').css('paddingTop', '0px')
+            this.$el.find('.modal-body').css({'paddingTop': '0px', 'height': '100vh'})
         }
     })
 });
