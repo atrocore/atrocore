@@ -111,6 +111,12 @@
 
     .compare-panel .panel-body div.list {
         overflow-x: auto;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .compare-panel .panel-body div.list-container {
+        padding: 0;
     }
 
     .compare-panel .table {
@@ -171,7 +177,7 @@
         display: flex;
         flex-direction: column;
         right: 20px;
-        left: 15px;
+        left: 12px;
     }
 
     .detail  > .detail-button-container  > .panel-navigation {

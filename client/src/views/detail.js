@@ -126,7 +126,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }
 
             if (this.model && !this.model.isNew() && this.getMetadata().get(['scopes', this.scope, 'object'])
-                && this.getMetadata().get(['scopes', this.scope, 'overviewFilters']) === true
+                && this.getMetadata().get(['scopes', this.scope, 'overviewFilters']) !== false
                 && this.getMetadata().get(['scopes', this.scope, 'hideFieldTypeFilters']) !== true
             ) {
                this.handleFilterButton();
@@ -609,7 +609,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         isOverviewFilterApply() {
             for (const filter of this.getOverviewFiltersList()) {
                 let selected = this.getStorage().get(filter.name, this.scope) ?? [];
-                if(!Array.isArray(selected)) {
+                if(!Array.isArray(selected) || !selected.length) {
                     continue;
                 }
                 if(selected && selected.join('') !== filter.defaultValue ) {

@@ -14912,6 +14912,10 @@ blockquote {
     display: none !important
 }
 
+.hidden-cell .status-icons, .hidden-cell .inline-actions {
+    display: none !important;
+}
+
 .panel-group .panel + .panel {
     margin-top: 4px
 }
@@ -16533,7 +16537,8 @@ label.attach-file-label > input.file {
 }
 
 body > footer {
-    background-color: #eee
+    background-color: #eee;
+    min-width: 100%;
 }
 
 body > footer > p {
@@ -19606,14 +19611,7 @@ body > .content {
     width: 100%;
 }
 
-#content > #main:has(> main) {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-}
-
 #main > main {
-    flex: 1;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -20289,7 +20287,6 @@ button.category:focus {
 @media screen and (min-width: 768px) and (max-width: 1199px) {
     #main .catalog-tree-panel {
         padding: 0 10px 10px 10px;
-        float: none;
         min-height: 53px;
     }
 
@@ -21030,6 +21027,7 @@ button.category:focus {
         z-index: 1000;
         bottom: 0;
         left: 0;
+        width: 100% !important;
     }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
