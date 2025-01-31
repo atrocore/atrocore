@@ -61,7 +61,10 @@ class LayoutProfile extends Base
         parent::afterSave($entity, $options);
 
         if ((empty($options['cascadeChange']) && $entity->isAttributeChanged('isDefault') && $entity->get('isDefault') === true) ||
-            $entity->isAttributeChanged('hideShowFullList') || $entity->isAttributeChanged('navigation')) {
+            $entity->isAttributeChanged('hideShowFullList')
+            || $entity->isAttributeChanged('navigation')
+            || $entity->isAttributeChanged('quickCreateList')
+        ) {
             $this->getInjection('dataManager')->clearCache();
         }
     }

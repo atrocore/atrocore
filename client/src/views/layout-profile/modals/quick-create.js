@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/layout-profile/modals/navigation', 'views/layout-profile/modals/navigation',
+Espo.define('views/layout-profile/modals/quick-create', 'views/layout-profile/modals/navigation',
     (Dep) => Dep.extend({
 
         afterRender() {
@@ -29,10 +29,10 @@ Espo.define('views/layout-profile/modals/navigation', 'views/layout-profile/moda
                 target: this.$el.find('.navigation').get(0),
                 props: {
                     params: {
-                        navigation: this.model.get(this.field),
-                        onSaved: (navigation) => {
+                        list: this.model.get(this.field),
+                        onSaved: (list) => {
                             let attributes = {};
-                            attributes[this.field] = navigation;
+                            attributes[this.field] = list;
                             this.close();
                             this.notify('Loading...');
                             this.model.save(attributes, {
@@ -41,8 +41,7 @@ Espo.define('views/layout-profile/modals/navigation', 'views/layout-profile/moda
                                 this.notify('Done', 'success')
                             });
                         }
-                    },
-                    inModal: true
+                    }
                 }
             })
         }

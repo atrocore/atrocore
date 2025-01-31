@@ -46,7 +46,6 @@
 
     function editItem(item): void {
         params.onEditItem(item, (newItem) => {
-            console.log('new Item', newItem);
             let index = enabledItems.findIndex(i => i.id === newItem.id);
             enabledItems[index] = newItem;
             refresh();
@@ -63,7 +62,7 @@
     loadData()
 
     function loadData(): void {
-        let navigation = params.navigation ?? [];
+        let navigation = params.list ?? [];
         let sortOrder = 0;
         for (let i = 0; i < navigation.length; i++) {
             let item = navigation[i];

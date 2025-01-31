@@ -1,5 +1,5 @@
 export interface Params {
-    navigation: Array<string | object>,
+    list: Array<string | object>,
     onSaved: Function,
     onEditItem?: Function
 }

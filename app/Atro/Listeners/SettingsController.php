@@ -12,9 +12,9 @@ class SettingsController extends AbstractListener
 
         $defaultLayout = $this->getEntityManager()->getRepository('LayoutProfile')->where(['isDefault' => true])->findOne();
 
-        $result['layoutProfileNavigation'] = $this->prepareNavigation($defaultLayout->get('navigation') ?? []);
+        $result['lpNavigation'] = $this->prepareNavigation($defaultLayout->get('navigation') ?? []);
 
-        $result['layoutProfileQuickCreate'] = $this->prepareNavigation($defaultLayout->get('quickCreate') ?? []);
+        $result['lpQuickCreateList'] = $this->prepareNavigation($defaultLayout->get('quickCreateList') ?? []);
 
         $event->setArgument('result', $result);
     }

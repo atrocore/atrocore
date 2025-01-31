@@ -22,9 +22,9 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
         },
 
         afterRender() {
-            if (window.layoutSvelteComponent) {
+            if (window.layoutSvelteNavigation) {
                 try {
-                    window.layoutSvelteComponent.$destroy()
+                    window.layoutSvelteNavigation.$destroy()
                 } catch (e) {
                 }
             }
@@ -35,7 +35,7 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                 return;
             }
 
-            window.layoutSvelteComponent = new Svelte.Navigation({
+            window.layoutSvelteNavigation = new Svelte.Navigation({
                 target: this.$el.find('.navigation').get(0),
                 props: {
                     params: {
