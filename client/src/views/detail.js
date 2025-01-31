@@ -418,7 +418,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 html: '<span class="fas fa-bell"></span>',
                 title: 'Your are following, Click to unfollow',
                 action: 'unfollow',
-                cssStyle: 'margin: 0 10px 0 0px;color:var(--secondary-color);'
+                cssStyle: 'margin: 0 10px 0 0px;color:white;',
+                style: 'primary'
             }, true, false, true);
         },
 
@@ -514,10 +515,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                     data =  {
                         name: 'bookmarking',
                         title: 'Bookmarked, Click to unbookmark',
-                        style: 'default',
+                        style: 'primary',
                         html: '<span class="fas fa-bookmark"></span>',
                         action: 'unbookmark',
-                        cssStyle: 'margin: 0 10px 0 0px;color:gold;'
+                        cssStyle: 'margin: 0 10px 0 0px;color:white;'
                     }
                 }
 
@@ -539,13 +540,15 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         handleFilterButton() {
             let cssStyle = 'margin: 0 10px 0 0px'
+            let style = 'default';
             if(this.isOverviewFilterApply()) {
-                cssStyle += ';color:red;'
+                cssStyle += ';color:white;'
+                style = 'danger';
             }
             this.addMenuItem('buttons',  {
                 name: 'filtering',
                 title: 'Open Filter',
-                style: 'default',
+                style: style,
                 html: '<span class="fas fa-filter"></span>',
                 action: 'openOverviewFilter',
                 cssStyle: cssStyle
