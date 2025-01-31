@@ -22,20 +22,25 @@
         {name: 'cancel', label: Language.translate('Cancel', 'labels')},
         {
             name: 'addGroup',
-            label: Language.translate('addGroup', 'labels', 'LayoutProfile'),
+            label: Language.translate('addGroup', 'labels'),
             action: () => {
-                enabledItems.push({
+                params.onEditItem({
                     id: defaultDelimiter + getRandomHash(),
-                    isGroup: true,
-                    canEdit: true,
-                    canRemove: true,
-                    isGroup: true,
-                    canDisabled: false,
-                    name: '',
-                    label: '',
-                    sortOrder: enabledItems[enabledItems.length - 1].sortOrder + 10
-                });
-                key += 1;
+                    groupEnd: false
+                }, (newItem) => {
+                    enabledItems.push({
+                        isGroup: true,
+                        canEdit: true,
+                        canRemove: true,
+                        isGroup: true,
+                        canDisabled: false,
+                        name: '',
+                        label: '',
+                        sortOrder: enabledItems[enabledItems.length - 1].sortOrder + 10,
+                        ...newItem
+                    });
+                    refresh();
+                })
             }
         },
     ];
@@ -82,6 +87,7 @@
                     canRemove: true,
                     isGroup: true,
                     canDisabled: false,
+                    groupEnd: item.name === '',
                     name: item.name,
                     label: item.name,
                     sortOrder
@@ -104,6 +110,7 @@
                         canRemove: true,
                         canDisabled: false,
                         isGroup: true,
+                        groupEnd: true,
                         name: '',
                         label: '',
                         sortOrder

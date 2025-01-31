@@ -342,7 +342,9 @@
     "Visit Community": "Gemeinschaft besuchen",
     "fieldStatus": "Feld Wert",
     "language": "Sprache",
-    "scopeFilter": "Kanal"
+    "scopeFilter": "Kanal",
+    "editGroup": "Gruppe bearbeiten",
+    "addGroup": "Gruppen beginnen / beenden"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -589,7 +591,12 @@
     "dropdown": "Auswahlliste",
     "isActive": "Aktiv",
     "roles": "Rollen",
-    "users": "Benutzer"
+    "users": "Benutzer",
+    "groupEnd": "Gruppenende",
+    "iconClass": "Icon"
+  },
+  "tooltips": {
+    "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
   },
   "dashlets": {
     "Stream": "Aktivitäten",

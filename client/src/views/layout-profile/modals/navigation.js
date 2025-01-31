@@ -13,6 +13,8 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
 
         template: 'layout-profile/modals/navigation',
 
+        fullHeight: true,
+
         setup() {
             this.buttonList = [];
             this.model = this.options.model;
@@ -60,10 +62,10 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                                     if (callback) {
                                         callback({
                                             ...item,
-                                            name: data.name,
-                                            label: data.name,
-                                            color: data.color,
+                                            name: data.name ?? '',
+                                            label: data.name ?? '',
                                             iconClass: data.iconClass,
+                                            groupEnd: data.groupEnd,
                                         });
                                     }
                                     view.close();
