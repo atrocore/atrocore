@@ -46,7 +46,6 @@
 
     function editItem(item): void {
         params.onEditItem(item, (newItem) => {
-            console.log('new Item', newItem);
             let index = enabledItems.findIndex(i => i.id === newItem.id);
             enabledItems[index] = newItem;
             refresh();

@@ -44,7 +44,6 @@
     }
 
     onMount(() => {
-        console.log('On mounted call')
         initializeSortable();
     });
 
