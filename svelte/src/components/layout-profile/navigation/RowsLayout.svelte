@@ -287,7 +287,7 @@
     }
 
     .group.end div.left {
-        border-top: 1px solid black;
+        border-top: 1px solid #ccc;
     }
 
     .group .right {
@@ -303,6 +303,6 @@
     .group .right a .fa-pencil-alt {
         position: absolute;
         top: 2px;
-        right: 2px;
+        right: 5px;
     }
 </style>
