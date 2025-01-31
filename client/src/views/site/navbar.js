@@ -146,7 +146,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         getTabList: function () {
-            return this.getConfig().get('layoutProfileNavigation') || [];
+            return this.getConfig().get('lpNavigation') || [];
         },
 
         getQuickCreateList: function () {
