@@ -14912,6 +14912,10 @@ blockquote {
     display: none !important
 }
 
+.hidden-cell .status-icons, .hidden-cell .inline-actions {
+    display: none !important;
+}
+
 .panel-group .panel + .panel {
     margin-top: 4px
 }
