@@ -39,7 +39,7 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                 target: this.$el.find('.navigation').get(0),
                 props: {
                     params: {
-                        navigation: this.model.get(this.field),
+                        list: this.model.get(this.field),
                         onSaved: (navigation) => {
                             let attributes = {};
                             attributes[this.field] = navigation;
