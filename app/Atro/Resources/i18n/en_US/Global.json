@@ -1015,11 +1015,6 @@
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
     "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked."
   },
-  "themes": {
-    "TreoDarkTheme": "Atro Dark Theme",
-    "TreoClassicTheme": "Atro Classic Theme",
-    "TreoLightTheme": "Atro Light Theme"
-  },
   "queryBuilderFilter": {
     "add_rule": "Add rule",
     "add_group": "Add group",

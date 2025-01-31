@@ -864,11 +864,6 @@
     "editedByAnotherUser": "The data set [%s] был тем временем изменен. Вы можете <a href=\"javascript:\" onclick=\"location.reload();\">перегрузить страницу</a> чтобы увидеть новые значения, возвратитесь к редактированию, нажав \"Cancel\" или перезапишите данные нажав \"Apply\". Вы хотите перезаписать данные?",
     "dontMatchToPattern": "Значение поля \"{field}\" не соответствует паттерну \"{pattern}\"."
   },
-  "themes": {
-    "TreoDarkTheme": "Atro Dark Theme",
-    "TreoClassicTheme": "Atro Classic Theme",
-    "TreoLightTheme": "Atro Light Theme"
-  },
   "queryBuilderFilter": {
     "add_rule": "Добавить",
     "add_group": "Добавить группу",

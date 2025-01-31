@@ -979,11 +979,6 @@
     "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити.",
     "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки."
   },
-  "themes": {
-    "TreoDarkTheme": "Atro Dark Theme",
-    "TreoClassicTheme": "Atro Classic Theme",
-    "TreoLightTheme": "Atro Light Theme"
-  },
   "queryBuilderFilter": {
     "add_rule": "Додати",
     "add_group": "Додати групу",

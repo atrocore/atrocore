@@ -8,8 +8,6 @@
     "receiveMentionEmailNotifications": "Notifications about mentions in posts",
     "receiveStreamEmailNotifications": "Notifications about updates in Stream",
     "dashboardTabList": "Tab List",
-    "useCustomTabList": "Custom Tab List",
-    "tabList": "Navigation menu",
     "dashboardLayout": "Dashboard Layout",
     "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
     "followCreatedEntities": "Auto-follow created records",

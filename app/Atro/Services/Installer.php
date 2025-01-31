@@ -779,9 +779,20 @@ class Installer extends HasContainer
                     'name'       => ':name',
                     'is_active'  => ':true',
                     'is_default' => ':true',
+                    'data'       => ':data'
                 ])->setParameters([
                     'id'   => $defaultId,
-                    'name' => 'Standard'
+                    'name' => 'Standard',
+                    'data' => [
+                        'field' => [
+                            "navigation" => ['File', 'Folder'],
+                            "quickCreateList" => ['File', 'Folder'],
+                            "dashboardLayout" => [
+                                'name'   => 'My AtroPIM',
+                                'layout' => []
+                            ]
+                        ]
+                    ]
                 ])
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->executeStatement();

@@ -49,10 +49,6 @@
       "required": true,
       "tooltip": true
     },
-    "tabList": {
-      "type": "jsonObject",
-      "view": "views/settings/fields/tab-list"
-    },
     "quickCreateList": {
       "type": "array",
       "translation": "Global.scopeNames",
@@ -99,11 +95,6 @@
     "userThemesDisabled": {
       "type": "bool",
       "tooltip": true
-    },
-    "theme": {
-      "type": "enum",
-      "view": "views/settings/fields/theme",
-      "translation": "Global.themes"
     },
     "authTokenLifetime": {
       "type": "float",
