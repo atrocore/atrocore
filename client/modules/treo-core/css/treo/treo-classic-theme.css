@@ -24104,3 +24104,7 @@ span[data-img-src]::after {
     position: relative;
     text-align: center;
 }
+
+.panel .layout-editor-container{
+    text-align: right;
+}
