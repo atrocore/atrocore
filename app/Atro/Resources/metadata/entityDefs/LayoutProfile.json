@@ -63,8 +63,15 @@
       "massUpdateDisabled": true
     },
     "dashboardLayout": {
-      "type": "jsonObject",
+      "type": "jsonArray",
       "view": "views/layout-profile/fields/dashboard-layout",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "dashletsOptions": {
+      "type": "jsonObject",
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
