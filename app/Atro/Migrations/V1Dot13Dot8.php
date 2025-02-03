@@ -19,38 +19,24 @@ class V1Dot13Dot8 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-01-31 09:00:00');
+        return new \DateTime('2025-02-03 12:00:00');
     }
 
     public function up(): void
     {
-        if($this->isPgSQL()) {
-            $this->exec('ALTER TABLE layout_profile ADD data TEXT DEFAULT NULL;');
-            $this->exec("COMMENT ON COLUMN layout_profile.data IS '(DC2Type:jsonObject)';");
-        }else{
-            $this->exec("ALTER TABLE layout_profile ADD data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD parent_id VARCHAR(36) DEFAULT NULL;");
-        }
-
-        // migrate menu
-        $this->getConnection()->createQueryBuilder()
-            ->update('layout_profile')
-            ->set('data', ':data')
-            ->setParameter('data', json_encode([
-                "field" => [
-                    "navigation" => $this->getConfig()->get('twoLevelTabList') ?? $this->getConfig()->get('tabList'),
-                    "dashboardLayout" => $this->getConfig()->get('dashboardLayout'),
-                    "dashletsOptions" => $this->getConfig()->get('dashletsOptions')
-                ]
-            ]))
-        ->executeStatement();
-
-    }
-
-    protected function exec(string $query): void
-    {
-        try {
-            $this->getPDO()->exec($query);
-        } catch (\Throwable $e) {
+        $dir = "data/metadata/scopes";
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (in_array($item, ['.', '..'])) {
+                    continue;
+                }
+                $fileName = "$dir/$item";
+                if (file_exists($fileName)) {
+                    $data = json_decode(file_get_contents($fileName), true);
+                    $data['customizable'] = true;
+                    file_put_contents($fileName, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                }
+            }
         }
     }
 }
