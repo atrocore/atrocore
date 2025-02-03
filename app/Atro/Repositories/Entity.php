@@ -226,6 +226,7 @@ class Entity extends ReferenceData
 
         $entity->id = $entity->get('code');
         $entity->set('isCustom', true);
+        $entity->set('customizable', true);
 
         // update metadata
         $this->updateScope($entity, [], true);
