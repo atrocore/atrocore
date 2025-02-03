@@ -23,7 +23,9 @@ Espo.define('views/layout/record/list', 'views/record/list', function (Dep) {
             this.createView('dialog', 'views/admin/layouts/modals/edit', {
                 scope: model.get('entity'),
                 type: model.get('viewType'),
-                layoutProfileId: this.getLayoutProfileId(),
+                layoutProfileId: model.get('layoutProfileId'),
+                layoutProfileName: model.get('layoutProfileName'),
+                relatedScope: model.get('relatedEntity'),
                 allowSwitch: false,
                 el: '[data-view="dialog"]',
             }, view => {
@@ -44,8 +46,8 @@ Espo.define('views/layout/record/list', 'views/record/list', function (Dep) {
             this.collection.remove(model);
             this.notify('removing');
 
-            this._helper.layoutManager.resetToDefault(model.get('entity'), model.get('viewType'),
-                this.getLayoutProfileId(), () => {
+            this._helper.layoutManager.resetToDefault(model.get('entity'), model.get('viewType'), model.get('relatedEntity'),
+                model.get('layoutProfileId'), () => {
                     this.notify('Removed', 'success');
                     this.removeRecordFromList(data.id);
                 })

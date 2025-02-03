@@ -116,13 +116,6 @@
                     {{/each}}
                 </ul>
             </li>
-            {{#unless hideFeedbackIcon}}
-            <li class="openFeedbackDialog hidden-xs">
-                <a href="javascript:" class="action notifications-button" data-action="openFeedbackModal" title="{{translate 'Provide Feedback'}}">
-                    <i class="fas fa-comment"></i>
-                </a>
-            </li>
-            {{/unless}}
             {{#if lastViewed}}
             <li class="dropdown hidden-xs last-viewed-badge-container">
                 {{{lastViewedBadge}}}

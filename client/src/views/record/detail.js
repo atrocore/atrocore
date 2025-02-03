@@ -171,7 +171,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         refreshLayout() {
             this.detailLayout = null
             this.gridLayout = null
+            this.notify('Loading...')
             this.getGridLayout((layout) => {
+                this.notify(false)
                 const middle = this.getView('middle')
                 if (middle) {
                     middle._layout = layout
@@ -2012,29 +2014,31 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.listenTo(this, 'after:set-detail-mode', () => {
                     view.reRender();
                 });
-                view.render();
 
-                if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
-                    this.getAcl().check('LayoutProfile', 'read')
-                    && this.mode !== 'edit'
-                ) {
-                    var bottomView = this.getView('bottom');
-                    this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
-                        scope: this.scope,
-                        viewType: 'relationships',
-                        layoutData: bottomView.layoutData,
-                        linkClass: 'btn',
-                        el: el + ' .detail-button-container .layout-editor-container',
-                    }, (view) => {
-                        view.on("refresh", () => {
-                            this.createBottomView(view => {
-                                view.render()
+                this.listenTo(view, 'after:render', () => {
+                    if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
+                        this.getAcl().check('LayoutProfile', 'read')
+                        && this.mode !== 'edit'
+                    ) {
+                        var bottomView = this.getView('bottom');
+                        this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
+                            scope: this.scope,
+                            viewType: 'relationships',
+                            layoutData: bottomView.layoutData,
+                            linkClass: 'btn',
+                            el: el + ' .panel-navigation.panel-left .layout-editor-container',
+                        }, (view) => {
+                            view.on("refresh", () => {
+                                this.createBottomView(view => {
+                                    view.render()
+                                })
                             })
+                            view.render()
                         })
-                        view.render()
-                    })
-                }
+                    }
+                })
 
+                view.render();
 
             });
 

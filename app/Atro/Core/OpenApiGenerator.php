@@ -142,7 +142,6 @@ class OpenApiGenerator
             $schema = null;
             if (isset($schemas[$scopeName])) {
                 $schema = $schemas[$scopeName];
-                unset($schema['properties']['id']);
                 unset($schema['properties']['deleted']);
 
                 foreach ($schema['properties'] as $k => $v) {
@@ -309,6 +308,9 @@ class OpenApiGenerator
                 "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
             ];
 
+            $putSchema = $schema;
+            unset($putSchema['properties']['id']);
+
             $result['paths']["/{$scopeName}/{id}"]['put'] = [
                 'tags'        => [$scopeName],
                 "summary"     => "Update a record of the $scopeName",
@@ -329,7 +331,7 @@ class OpenApiGenerator
                     'required' => true,
                     'content'  => [
                         'application/json' => [
-                            'schema' => $schema
+                            'schema' => $putSchema
                         ]
                     ],
                 ],
