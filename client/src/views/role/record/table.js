@@ -138,7 +138,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
 
             this.scopeList
                 .filter(scope => {
-                    return !this.getMetadata().get('scopes.' + scope).emHidden
+                    return !!this.getMetadata().get('scopes.' + scope).acl
                 })
                 .forEach(function (scope) {
                     var o = {};
