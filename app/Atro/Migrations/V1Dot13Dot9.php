@@ -25,24 +25,26 @@ class V1Dot13Dot9 extends Base
     public function up(): void
     {
         if($this->isPgSQL()) {
-            $this->exec('ALTER TABLE layout_profile ADD data TEXT DEFAULT NULL;');
-            $this->exec("COMMENT ON COLUMN layout_profile.data IS '(DC2Type:jsonObject)';");
+            $this->exec('ALTER TABLE layout_profile ADD navigation TEXT DEFAULT NULL');
+            $this->exec('ALTER TABLE layout_profile ADD dashboard_layout TEXT DEFAULT NULL');
+            $this->exec('ALTER TABLE layout_profile ADD dashlets_options TEXT DEFAULT NULL');
+            $this->exec("COMMENT ON COLUMN layout_profile.navigation IS '(DC2Type:jsonObject)'");
+            $this->exec("COMMENT ON COLUMN layout_profile.dashboard_layout IS '(DC2Type:jsonObject)'");
+            $this->exec("COMMENT ON COLUMN layout_profile.dashlets_options IS '(DC2Type:jsonObject)'");
         }else{
-            $this->exec("ALTER TABLE layout_profile ADD data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD parent_id VARCHAR(36) DEFAULT NULL;");
+            $this->exec("ALTER TABLE layout_profile ADD navigation LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD dashboard_layout LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD dashlets_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
         }
 
         // migrate menu
         $this->getConnection()->createQueryBuilder()
             ->update('layout_profile')
-            ->set('data', ':data')
-            ->setParameter('data', json_encode([
-                "field" => [
-                    "navigation" => $this->getConfig()->get('twoLevelTabList') ?? $this->getConfig()->get('tabList'),
-                    "dashboardLayout" => $this->getConfig()->get('dashboardLayout'),
-                    "dashletsOptions" => $this->getConfig()->get('dashletsOptions')
-                ]
-            ]))
-        ->executeStatement();
+            ->set('navigation', ':navigation')
+            ->set('dashboard_layout', ':dashboardLayout')
+            ->set('dashlets_options', ':dashletsOptions')
+            ->setParameter("navigation", json_encode($this->getConfig()->get('twoLevelTabList') ?? $this->getConfig()->get('tabList') ?? []))
+            ->setParameter("dashboardLayout", json_encode($this->getConfig()->get('dashboardLayout') ?? []))
+            ->setParameter('dashletsOptions', json_encode($this->getConfig()->get('dashletsOptions') ?? []))
+            ->executeStatement();
 
     }
 
