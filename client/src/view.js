@@ -286,18 +286,19 @@ Espo.define('view', [], function () {
         setupTourButton() {
             let type = this.mode ?? this.type;
 
-            if (this.$el.parent()?.hasClass('panel-body') || ['listSmall', 'detailSmall','editSmall'].includes(this.layoutName) || (this.mainScope && this.mainScope !== this.scope)) {
+            let urlHashes = window.location.hash.split('/')
+
+            if (this.$el.parent()?.hasClass('panel-body') || !urlHashes.length || urlHashes[0] !== `#${this.scope}`) {
                 return;
             }
 
-            this.mainScope = this.scope;
             this.$el.parent().find('[data-action="showTour"]').remove();
 
             if (!this.getMetadata().get(['tourData', this.scope, type])) {
                 return;
             }
 
-            if (!this.getPreparedTourData(this.mode ?? this.type).length) {
+            if (!this.getPreparedTourData(type).length) {
                 return;
             }
 
