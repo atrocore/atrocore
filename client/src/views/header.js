@@ -74,6 +74,7 @@ Espo.define('views/header', 'view', function (Dep) {
         },
 
         afterRender: function () {
+
         },
 
         getItems: function () {
