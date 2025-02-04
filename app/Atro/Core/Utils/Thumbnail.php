@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Core\Utils;
 
-use Atro\Composer\PostUpdate;
 use Atro\Core\Container;
+use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Entities\File as FileEntity;
-use Composer\Composer;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
@@ -79,6 +78,11 @@ class Thumbnail
             if($this->isSvg($file)) {
                 $this->getFileManager()->putContents($thumbnailPath, $file->getContents());
             }
+
+            if ($this->isPdf($originFilePath)) {
+                $originFilePath = $this->createImageFromPdf($file, $originFilePath);
+            }
+
             // create thumbnail if not exist
             if (!$this->create($originFilePath, $size, $thumbnailPath)) {
                 return null;
@@ -97,10 +101,6 @@ class Thumbnail
         $imageSizes = $this->getMetadata()->get(['app', 'file', 'image', 'thumbnailSize'], []);
         if (!$imageSizes[$size]) {
             return false;
-        }
-
-        if ($this->isPdf($originFilePath)) {
-            $originFilePath = $this->createImageFromPdf($originFilePath);
         }
 
         try {
@@ -138,9 +138,12 @@ class Thumbnail
         return strtolower(array_pop($parts)) === 'pdf';
     }
 
-    protected function createImageFromPdf(string $pdfPath): string
+    protected function createImageFromPdf(FileEntity $file, string $pdfPath): string
     {
-        $dirPath = $this->getFolderPathOfPdfImage($pdfPath);
+        /** @var FileStorageInterface $storage */
+        $storage = $this->getEntityManager()->getRepository('File')->getStorage($file);
+
+        $dirPath = $storage->getThumbnailPdfImageCachePath($file);
         if (!is_dir($dirPath)){
             $this->getFileManager()->mkdir($dirPath, 0777, true);
         }
@@ -157,11 +160,6 @@ class Thumbnail
         }
 
         return $original;
-    }
-
-    protected function getFolderPathOfPdfImage(string $name): string
-    {
-        return PostUpdate::PDF_IMAGE_DIR . DIRECTORY_SEPARATOR . md5($name);
     }
 
     protected function getEntityManager(): EntityManager

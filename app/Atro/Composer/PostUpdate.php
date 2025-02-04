@@ -21,7 +21,6 @@ use Espo\ORM\EntityManager;
 
 class PostUpdate
 {
-    public const PDF_IMAGE_DIR = 'data/img-from-pdf';
     private const CONFIG_PATH = 'data/config.php';
     private const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
     private const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
@@ -938,7 +937,6 @@ class PostUpdate
             foreach ($em->getRepository('Storage')->find() as $storage) {
                 self::$container->get($storage->get('type') . 'Storage')->deleteCache($storage);
             }
-            self::$container->get('fileManager')->removeAllInDir(self::PDF_IMAGE_DIR);
         } catch (\Throwable $e) {
         }
 

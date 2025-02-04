@@ -37,6 +37,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     public const CHUNKS_DIR = '.chunks';
     public const TMP_DIR = '.tmp';
     public const TRASH_DIR = '.trash';
+    public const PDF_IMAGE_DIR = '.img-from-pdf';
 
     protected Container $container;
 
@@ -231,6 +232,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     public function deleteCache(Storage $storage): void
     {
         $this->getFileManager()->removeAllInDir($this->getChunksDir($storage));
+        $this->getFileManager()->removeAllInDir($this->getPdfImagesDir($storage));
     }
 
     public function renameFile(File $file): bool
@@ -446,7 +448,16 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
             return $thumbnailCreator->preparePath($file, $size);
         }
 
-        return $thumbnailCreator->getPath($file, $size);
+        $result = $thumbnailCreator->getPath($file, $size);
+
+        $this->getFileManager()->removeAllInDir($this->getThumbnailPdfImageCachePath($file));
+
+        return $result;
+    }
+
+    public function getThumbnailPdfImageCachePath(File $file): string
+    {
+        return $this->getPdfImagesDir($file->getStorage()) . DIRECTORY_SEPARATOR . $file->get('id');
     }
 
     protected static function buildFullPath(Storage $storage, ?string $path): string
@@ -486,6 +497,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
     protected function getChunksDir(Storage $storage): string
     {
         return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::CHUNKS_DIR;
+    }
+
+    protected function getPdfImagesDir(Storage $storage): string
+    {
+        return trim($storage->get('path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::PDF_IMAGE_DIR;
     }
 
     protected function scanFolders(Storage $storage, EntityCollection $otherStorages, Xattr $xattr): void
