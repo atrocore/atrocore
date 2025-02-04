@@ -1,10 +1,12 @@
 <script lang="ts">
     import {onDestroy, onMount} from 'svelte';
-    import BaseLayout from './BaseLayout.svelte';
-    import type {Button} from '../../admin/layouts/Interfaces';
-    import type {Item, KeyValue, Params} from './Interfaces';
-    import {Language} from "../../../utils/Language";
     import Sortable from 'sortablejs'
+    import BaseLayout from './BaseLayout.svelte';
+    import type Button from '../../admin/layouts/interfaces/Button';
+    import type Params from "./interfaces/Params";
+    import type KeyValue from "./interfaces/KeyValue";
+    import type Item from "./interfaces/Item";
+    import {Language} from "../../../utils/Language";
     import {Notifier} from "../../../utils/Notifier";
 
     let layoutElement: HTMLElement

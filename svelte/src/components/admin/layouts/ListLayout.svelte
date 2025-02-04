@@ -1,11 +1,12 @@
 <script lang="ts">
     import RowsLayout from './RowsLayout.svelte';
-    import type {Field, LayoutItem, Params} from './Interfaces';
+    import Field from "./interfaces/Field"
+    import Params from "./interfaces/Params"
+    import LayoutItem from "./interfaces/LayoutItem"
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
     import {ModelFactory} from "../../../utils/ModelFactory";
     import {LayoutManager} from "../../../utils/LayoutManager";
-    import {Notifier} from "../../../utils/Notifier";
 
     export let params: Params;
 

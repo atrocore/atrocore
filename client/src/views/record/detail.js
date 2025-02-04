@@ -1265,8 +1265,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
 
-            this.once('after:render', () => this.setupTourButton());
-
             this.listenTo(this.model, 'after:change-mode', (type) => {
                 this.setupTourButton(type)
             });
