@@ -3,10 +3,10 @@
         "label": "Configuration",
         "rows": [
             [{"name": "companyLogo"}, {"name": "favicon"}],
-            [{"name": "applicationName"}, {"name": "userThemesDisabled"}],
+            [{"name": "applicationName"}, false],
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
             [{"name": "recordsPerPageSmall"}, {"name": "avatarsDisabled"}],
-            [{"name": "tabList"},{"name": "quickCreateList"}],
+            [{"name": "quickCreateList"}, false],
             [{"name": "tabIconsDisabled"}, false],
             [{"name": "dashboardLayout", "fullWidth": true}]
         ]

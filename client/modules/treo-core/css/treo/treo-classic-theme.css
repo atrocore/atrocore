@@ -14929,6 +14929,11 @@ label {
     margin-right: 0;
 }
 
+.dashboard-header > .row {
+    margin-left: -9px;
+    margin-right: -9px;
+}
+
 #main .page-header .search-container {
     flex-basis: 100%;
 }
@@ -16212,8 +16217,9 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .dashlets.row {
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-bottom: 10px;
 }
 
 .dashlets.grid-stack .panel.dashlet {
@@ -20004,8 +20010,8 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .dashlets.grid-stack > .grid-stack-item > .grid-stack-item-content {
-    right: 5px;
-    left: 5px;
+    right: 10px;
+    left: 10px;
 }
 
 .home-content > .row.dashlets {
@@ -21346,8 +21352,8 @@ button.category:focus {
 .dashlets.grid-stack > .grid-stack-item > .ui-resizable-se, .dashlets.grid-stack > .grid-stack-item > .ui-resizable-sw {
     background-color: #fff;
     padding: 5px;
-    bottom: 0px;
-    right: 5px;
+    bottom: 0;
+    right: 10px;
     display: block;
     width: auto;
     height: auto;
@@ -24128,7 +24134,6 @@ span[data-img-src]::after {
     display: block;
     min-height: 100%;
 }
-
 
 .dashlet.panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
     padding-right: 0 !important;

@@ -5,8 +5,6 @@
     "defaultCurrency": "Standardwährung",
     "emailAddress": "E-Mail",
     "dashboardTabList": "Navigationsmenü",
-    "tabList": "Navigationsmenü",
-    "useCustomTabList": "Benutzerdefiniertes Navigationsmenü",
     "receiveAssignmentEmailNotifications": "Nachrichten bei Zuweisungen erhalten",
     "receiveMentionEmailNotifications": "Benachrichtigungen über Erwähnungen in Beiträgen",
     "receiveStreamEmailNotifications": "Benachrichtigungen über Änderungen im Aktivitätenpanel",

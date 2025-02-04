@@ -1,7 +1,8 @@
 <script lang="ts">
 
     import RowsLayout from './RowsLayout.svelte';
-    import type {Field, Params} from './Interfaces';
+    import Field from "./interfaces/Field"
+    import Params from "./interfaces/Params"
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
     import {LayoutManager} from "../../../utils/LayoutManager";

@@ -66,10 +66,6 @@
             "type": "bool",
             "default": false
         },
-        "tabList": {
-            "type": "array",
-            "view": "views/preferences/fields/tab-list"
-        },
         "followEntityOnStreamPost": {
             "type": "bool",
             "default": true
