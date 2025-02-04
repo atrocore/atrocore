@@ -11,6 +11,12 @@
 Espo.define('views/user-followed-record/fields/entity-id', 'views/fields/link',
     Dep => Dep.extend({
 
+        searchTemplate: 'fields/varchar/search',
+
+        searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains', 'notEquals', 'notLike', 'isEmpty', 'isNotEmpty'],
+
+        createDisabled: true,
+
         setup() {
             this.idName = 'entityId';
             this.nameName = 'entityName';
