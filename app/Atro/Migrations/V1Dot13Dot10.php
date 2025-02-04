@@ -38,13 +38,22 @@ class V1Dot13Dot10 extends Base
             $this->exec("ALTER TABLE layout_profile ADD dashlets_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
         }
 
+        $navigation = $this->getConfig()->get('tabList') ?? [];
+
+        if(file_exists('data/modules.json')) {
+            $modules = @json_decode(file_get_contents('data/modules.json'), true);
+            if(in_array('NavMenu', $modules)) {
+                $navigation = $this->getConfig()->get('twoLevelTabList') ?? [];
+            }
+        }
+
         // migrate menu
         $this->getConnection()->createQueryBuilder()
             ->update('layout_profile')
             ->set('navigation', ':navigation')
             ->set('dashboard_layout', ':dashboardLayout')
             ->set('dashlets_options', ':dashletsOptions')
-            ->setParameter("navigation", json_encode($this->getConfig()->get('twoLevelTabList') ?? $this->getConfig()->get('tabList') ?? []))
+            ->setParameter("navigation", json_encode($navigation))
             ->setParameter("dashboardLayout", json_encode($this->getConfig()->get('dashboardLayout') ?? []))
             ->setParameter('dashletsOptions', json_encode($this->getConfig()->get('dashletsOptions') ?? []))
             ->executeStatement();

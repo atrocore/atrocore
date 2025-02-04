@@ -55,21 +55,6 @@
       "view": "views/layout-profile/fields/navigation",
       "filterDisabled": true,
       "massUpdateDisabled": true
-    },
-    "dashboardLayout": {
-      "type": "jsonArray",
-      "view": "views/layout-profile/fields/dashboard-layout",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true,
-      "massUpdateDisabled": true
-    },
-    "dashletsOptions": {
-      "type": "jsonObject",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true,
-      "massUpdateDisabled": true
     }
   },
   "links": {

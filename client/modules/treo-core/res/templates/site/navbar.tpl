@@ -70,9 +70,9 @@
                             </span>
                             <span class="full-label">{{label}}</span>
                         </a>
-                        <span data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create">
-                    <i class="fas fa-plus"></i>
-                </span>
+                        <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                    <i class="fas fa-plus fa-sm"></i>
+                </button>
                     </li>
                     {{/each}}
                 </ul>
@@ -92,9 +92,9 @@
                         {{/if}}
                     </span>
                 </a>
-                <span data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create">
-                    <i class="fas fa-plus"></i>
-                </span>
+                <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                    <i class="fas fa-plus fa-sm"></i>
+                </button>
             </li>
             {{/if}}
             {{/each}}
