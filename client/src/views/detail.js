@@ -258,6 +258,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 model: this.model,
                 el: '#main > main > .header',
                 scope: this.scope
+            }, view => {
+                this.listenTo(view, 'after:render', () => {
+                    this.setupTourButton();
+                });
             });
 
             this.listenTo(this.model, 'sync', function (model) {
