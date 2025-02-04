@@ -21,6 +21,7 @@ use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata\Helper;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\DataUtil;
 
 class Metadata
 {
@@ -29,12 +30,11 @@ class Metadata
     private ModuleManager $moduleManager;
     private EventManager $eventManager;
     private DataManager $dataManager;
+    private Unifier $objUnifier;
+    private Helper $helper;
 
     private $data = null;
     private $objData = null;
-    private ?Unifier $unifier;
-    private ?Unifier $objUnifier;
-    private ?Helper $metadataHelper;
     private string $customPath = 'data/metadata';
     private array $deletedData = [];
     private array $changedData = [];
@@ -46,6 +46,8 @@ class Metadata
         $this->dataManager = $container->get('dataManager');
         $this->moduleManager = $container->get('moduleManager');
         $this->eventManager = $container->get('eventManager');
+        $this->objUnifier = new Unifier($this->fileManager, $this, true);
+        $this->helper = new Helper($this);
     }
 
     public function isCached(): bool
@@ -70,9 +72,7 @@ class Metadata
             // prepare result
             $result[$field] = $fieldData;
 
-            $additionalFields = $this
-                ->getMetadataHelper()
-                ->getAdditionalFieldList($field, $fieldData, $this->get("fields"));
+            $additionalFields = $this->helper->getAdditionalFieldList($field, $fieldData, $this->get("fields"));
             if (!empty($additionalFields)) {
                 // prepare result
                 $result = $result + $additionalFields;
@@ -98,12 +98,12 @@ class Metadata
     /**
      * Get All Metadata context
      *
-     * @param      $isJSON
+     * @param bool $isJSON
      * @param bool $reload
      *
      * @return string|array
      */
-    public function getAll($isJSON = false, $reload = false)
+    public function getAll(bool $isJSON = false, bool $reload = false)
     {
         if ($reload) {
             $this->init($reload);
@@ -112,38 +112,13 @@ class Metadata
         if ($isJSON) {
             return Json::encode($this->data);
         }
+
         return $this->data;
-    }
-
-    /**
-     * Get Object Metadata
-     *
-     * @param mixed string|array $key
-     * @param mixed $default
-     *
-     * @return object
-     */
-    public function getObjects($key = null, $default = null)
-    {
-        $objData = $this->getObjData();
-
-        return Util::getValueByKey($objData, $key, $default);
-    }
-
-    public function getAllObjects($isJSON = false, $reload = false)
-    {
-        $objData = $this->getObjData($reload);
-
-        if ($isJSON) {
-            return Json::encode($objData);
-        }
-
-        return $objData;
     }
 
     public function getAllForFrontend()
     {
-        $data = $this->getAllObjects();
+        $data = $this->getObjData();
 
         $frontendHiddenPathList = $data->app->frontendHiddenPathList;
         $frontendHiddenPathList[] = ['app', 'frontendHiddenPathList'];
@@ -365,7 +340,7 @@ class Metadata
         }
 
         if (!$ignoreCustom) {
-            $content = \Espo\Core\Utils\DataUtil::merge($content, $this->unify('data/metadata'));
+            $content = DataUtil::merge($content, $this->unify('data/metadata'));
         }
 
         return $this->addAdditionalFieldsObj($content);
@@ -386,7 +361,7 @@ class Metadata
 
     protected function unify(string $path): \stdClass
     {
-        return $this->getObjUnifier()->unify('metadata', $path, true);
+        return $this->objUnifier->unify('metadata', $path, true);
     }
 
     /**
@@ -419,15 +394,14 @@ class Metadata
                 continue;
             }
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
-                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field,
+                $additionalFields = $this->helper->getAdditionalFieldList($field,
                     Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
                 if (!$additionalFields) {
                     continue;
                 }
                 foreach ($additionalFields as $subFieldName => $subFieldParams) {
                     if (isset($entityDefsItem->fields->$subFieldName)) {
-                        $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(Util::arrayToObject($subFieldParams),
-                            $entityDefsItem->fields->$subFieldName);
+                        $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(Util::arrayToObject($subFieldParams), $entityDefsItem->fields->$subFieldName);
                     } else {
                         $data->entityDefs->$entityType->fields->$subFieldName = Util::arrayToObject($subFieldParams);
                     }
@@ -449,7 +423,7 @@ class Metadata
     public function getCustom($key1, $key2, $default = null)
     {
         $filePath = [$this->customPath, $key1, $key2 . '.json'];
-        $fileContent = $this->getFileManager()->getContents($filePath);
+        $fileContent = $this->fileManager->getContents($filePath);
 
         if ($fileContent) {
             return Json::decode($fileContent, true);
@@ -480,7 +454,7 @@ class Metadata
         $filePath = [$this->customPath, $key1, $key2 . '.json'];
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $result = $this->getFileManager()->putContents($filePath, $changedData);
+        $result = $this->fileManager->putContents($filePath, $changedData);
 
         $this->init(true);
 
@@ -545,7 +519,7 @@ class Metadata
                         $fieldName = $matches[1];
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 
-                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName,
+                        $additionalFields = $this->helper->getAdditionalFieldList($fieldName,
                             $this->get($fieldPath, []), $fieldDefinitionList);
                         if (is_array($additionalFields)) {
                             foreach ($additionalFields as $additionalFieldName => $additionalFieldParams) {
@@ -625,8 +599,7 @@ class Metadata
             foreach ($this->changedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $data) {
                     if (!empty($data)) {
-                        $result &= $this->getFileManager()->mergeContents(array($path, $key1, $key2 . '.json'), $data,
-                            true);
+                        $result &= $this->fileManager->mergeContents(array($path, $key1, $key2 . '.json'), $data, true);
                     }
                 }
             }
@@ -636,7 +609,7 @@ class Metadata
             foreach ($this->deletedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $unsetData) {
                     if (!empty($unsetData)) {
-                        $rowResult = $this->getFileManager()->unsetContents(array($path, $key1, $key2 . '.json'),
+                        $rowResult = $this->fileManager->unsetContents(array($path, $key1, $key2 . '.json'),
                             $unsetData, true);
                         if ($rowResult == false) {
                             $GLOBALS['log']->warning('Metadata items [' . $key1 . '.' . $key2 . '] can be deleted for custom code only.');
@@ -702,7 +675,7 @@ class Metadata
 
     public function getScopeModuleName(string $scopeName): ?string
     {
-        return $this->get('scopes.' . $scopeName . '.module', 'Espo');
+        return $this->get("scopes.$scopeName.module");
     }
 
     public function getModules(): array
@@ -777,47 +750,5 @@ class Metadata
                 }
             }
         }
-    }
-
-    /**
-     * Clear metadata variables when reload meta
-     *
-     * @return void
-     */
-    protected function clearVars()
-    {
-        $this->data = null;
-    }
-
-    protected function getFileManager(): FileManager
-    {
-        return $this->fileManager;
-    }
-
-    protected function getUnifier(): Unifier
-    {
-        if (!isset($this->unifier)) {
-            $this->unifier = new Unifier($this->fileManager, $this, false);
-        }
-
-        return $this->unifier;
-    }
-
-    protected function getObjUnifier(): Unifier
-    {
-        if (!isset($this->objUnifier)) {
-            $this->objUnifier = new Unifier($this->fileManager, $this, true);
-        }
-
-        return $this->objUnifier;
-    }
-
-    protected function getMetadataHelper(): Helper
-    {
-        if (!isset($this->metadataHelper)) {
-            $this->metadataHelper = new Helper($this);
-        }
-
-        return $this->metadataHelper;
     }
 }
