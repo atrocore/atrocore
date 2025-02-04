@@ -32,7 +32,10 @@ class V1Dot13Dot10 extends Base
             $this->exec("COMMENT ON COLUMN layout_profile.dashboard_layout IS '(DC2Type:jsonObject)'");
             $this->exec("COMMENT ON COLUMN layout_profile.dashlets_options IS '(DC2Type:jsonObject)'");
         }else{
-            $this->exec("ALTER TABLE layout_profile ADD navigation LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD dashboard_layout LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD dashlets_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
+            $this->exec("COMMENT ON COLUMN layout_profile.dashlets_options IS '(DC2Type:jsonObject)'");
+            $this->exec("ALTER TABLE layout_profile ADD navigation LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
+            $this->exec("ALTER TABLE layout_profile ADD dashboard_layout LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
+            $this->exec("ALTER TABLE layout_profile ADD dashlets_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)'");
         }
 
         // migrate menu
