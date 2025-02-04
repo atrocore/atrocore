@@ -18,6 +18,8 @@ Espo.define('views/user-followed-record/fields/entity-id', 'views/fields/link',
             this.foreignScope = this.getForeignScope();
             this.listenTo(this.model, 'change:entityType', () => {
                 this.foreignScope = this.getForeignScope();
+                this.model.set('entityId', null);
+                this.model.set('entityName', null);
                 this.reRender();
             });
 

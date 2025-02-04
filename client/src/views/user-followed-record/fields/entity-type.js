@@ -11,8 +11,6 @@
 Espo.define('views/user-followed-record/fields/entity-type', 'views/fields/enum',
     Dep => Dep.extend({
 
-        prohibitedEmptyValue: true,
-
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -20,7 +18,7 @@ Espo.define('views/user-followed-record/fields/entity-type', 'views/fields/enum'
         },
 
         prepareOptionsList() {
-            this.params.options = [];
+            this.params.options = [''];
             this.translatedOptions = {};
 
             $.each(this.getMetadata().get('scopes') || {}, (scope, scopeDefs) => {

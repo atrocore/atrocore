@@ -1,17 +1,31 @@
 {
   "fields": {
     "user": {
-      "type": "link"
+      "type": "link",
+      "required": true
     },
     "entityType": {
       "type": "varchar",
       "view": "views/user-followed-record/fields/entity-type",
-      "len": 100
+      "len": 100,
+      "required": true
     },
     "entityId": {
       "type": "varchar",
       "view": "views/user-followed-record/fields/entity-id",
-      "len": 36
+      "len": 36,
+      "required": true
+    },
+    "entityName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {

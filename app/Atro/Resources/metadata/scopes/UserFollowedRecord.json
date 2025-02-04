@@ -9,5 +9,6 @@
   "object": true,
   "streamDisabled": true,
   "notificationDisabled": true,
-  "disableActionHistory": true
+  "disableActionHistory": true,
+  "bookmarkDisabled": true
 }
