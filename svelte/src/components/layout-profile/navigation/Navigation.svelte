@@ -105,6 +105,11 @@
                         sortOrder++;
                     }
                 }
+
+                if(i < navigation.length - 1 && navigation[i + 1].name === '') {
+                    continue;
+                }
+
                 if (item.name !=='' && (i === navigation.length - 1 || (typeof navigation[i + i] === 'string') || item.items.length === 0)) {
                     enabledItems.push({
                         id: defaultDelimiter + getRandomHash(),
