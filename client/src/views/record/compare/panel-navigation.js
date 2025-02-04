@@ -19,8 +19,12 @@ Espo.define('views/record/compare/panel-navigation', 'views/record/panel-navigat
             element.scrollIntoView({behavior: 'smooth', block: 'start'});
         },
 
+        setPanelList() {
+            this.panelList = this.options.panelList;
+        },
+
         isPanelClosed(name) {
-            return true;
+            return false;
         },
 
         afterRender() {

@@ -123,7 +123,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         "layout": []
                     }
                 ];
-                this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
+                this.dashboardLayout = this.getPreferences().get('dashboardLayout') || this.getConfig().get('lpDashboardLayout') || defaultLayout;
 
                 if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
                     this.dashboardLayout = defaultLayout;
@@ -203,10 +203,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             $gridstack.gridstack({
                 minWidth: 4,
                 cellHeight: this.getThemeManager().getParam('dashboardCellHeight'),
-                verticalMargin: 10,
-                horizontalMargin: 10,
+                verticalMargin: 20,
                 width: 4,
-                margin: 10,
                 minWidth: this.getThemeManager().getParam('screenWidthXs'),
                 handle: '.dashlet-container .panel-heading',
                 disableDrag: disableDrag,

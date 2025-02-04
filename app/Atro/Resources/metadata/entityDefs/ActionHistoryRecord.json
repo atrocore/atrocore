@@ -6,6 +6,7 @@
         },
         "targetType": {
             "type": "enum",
+            "len": 60,
             "view": "views/action-history-record/fields/target-type",
             "translation": "Global.scopeNames"
         },

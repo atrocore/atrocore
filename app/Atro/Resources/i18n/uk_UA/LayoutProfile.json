@@ -2,9 +2,12 @@
   "fields": {
     "isActive": "активний",
     "description": "вид",
-    "hideShowFullList": "Приховати \"Показати повний список\" на панелях зв'язків"
+    "hideShowFullList": "Приховати \"Показати повний список\" на панелях зв'язків",
+    "navigation": "Меню навігації",
+    "dashboardLayout": "Макет інформаційної панелі"
   },
   "labels": {
-    "Create LayoutProfile": "Створити профіль макета"
+    "Create LayoutProfile": "Створити профіль макета",
+    "addGroup": "Додати групу"
   }
 }

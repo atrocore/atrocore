@@ -96,6 +96,8 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
             if (this.dashboardLayout.length) {
                 this.selectTab(0);
             }
+
+
         },
 
         selectTab: function (tab) {
@@ -270,42 +272,6 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
             this.dashboardLayout[this.currentTab].layout = layout;
 
             this.setupCurrentTabLayout();
-        },
-
-        afterRender: function () {
-            if (this.currentTabLayout) {
-                var $gridstack = this.$gridstack = this.$el.find('> .grid-stack');
-                $gridstack.gridstack({
-                    minWidth: 4,
-                    cellHeight: 60,
-                    verticalMargin: 10,
-                    width: 4,
-                    minWidth: this.getThemeManager().getParam('screenWidthXs'),
-                    resizable: {
-                        handles: 'se',
-                        helper: false
-                    },
-                    staticGrid: this.mode !== 'edit',
-                    disableResize: this.mode !== 'edit',
-                    disableDrag: this.mode !== 'edit'
-                });
-
-
-                var grid = $gridstack.data('gridstack');
-                grid.removeAll();
-
-                this.currentTabLayout.forEach(function (o) {
-                    var $item = this.prepareGridstackItem(o.id, o.name);
-                    grid.addWidget($item, o.x, o.y, o.width, o.height);
-                }, this);
-
-                $gridstack.find(' .grid-stack-item').css('position', 'absolute');
-
-                $gridstack.on('change', function (e, itemList) {
-                    this.fetchLayout();
-                    this.trigger('change');
-                }.bind(this));
-            }
         },
 
         prepareGridstackItem: function (id, name) {

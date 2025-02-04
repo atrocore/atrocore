@@ -1,7 +1,9 @@
 <script lang="ts">
     import {onDestroy, onMount} from 'svelte';
     import BaseLayout from './BaseLayout.svelte';
-    import type {Field, LayoutItem, Params} from './Interfaces';
+    import Field from "./interfaces/Field"
+    import Params from "./interfaces/Params"
+    import LayoutItem from "./interfaces/LayoutItem"
     import {Language} from "../../../utils/Language";
     import Sortable from 'sortablejs'
     import {Notifier} from "../../../utils/Notifier";

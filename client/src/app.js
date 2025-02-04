@@ -417,6 +417,7 @@ Espo.define(
                 window.SvelteLayoutManager.setLayoutManager(helper.layoutManager)
                 window.SvelteMetadata.setMetadata(helper.metadata)
                 window.SvelteModelFactory.setModelFactory(helper.modelFactory)
+                window.SvelteConfig.setConfig(helper.settings)
 
                 this.viewLoader = function (viewName, callback) {
                     Espo.require(Espo.Utils.composeViewClassName(viewName), callback);

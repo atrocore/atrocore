@@ -58,7 +58,7 @@ class Converter
     {
         $ormMetadata = array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata());
 
-        $ormMetadata['ActionHistoryRecord']['fields']['targetType']['len'] = 30;
+        $ormMetadata['ActionHistoryRecord']['fields']['targetType']['len'] = 60;
         $ormMetadata['ActionHistoryRecord']['fields']['targetId']['len'] = 62;
 
         $indexList = $this->getIndexList($ormMetadata);

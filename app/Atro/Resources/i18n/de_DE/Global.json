@@ -50,7 +50,11 @@
     "NotificationRule": "Meldevorschrift",
     "Country": "Land",
     "HtmlSanitizer": "HTML Sanitizer",
-    "Bookmark": "Lesezeichen"
+    "Bookmark": "Lesezeichen",
+    "scopeFilter": "Kanal",
+    "editGroup": "Gruppe bearbeiten",
+    "addGroup": "Gruppen beginnen / beenden"
+
   },
   "scopeNamesPlural": {
     "Entity": "Entitäten",
@@ -589,8 +593,14 @@
     "dropdown": "Auswahlliste",
     "isActive": "Aktiv",
     "roles": "Rollen",
-    "users": "Benutzer"
+    "users": "Benutzer",
+    "groupEnd": "Gruppenende",
+    "iconClass": "Icon"
   },
+  "tooltips": {
+    "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
+  },
+
   "dashlets": {
     "Stream": "Aktivitäten",
     "Records": "Datensatzliste"
@@ -905,11 +915,6 @@
   "streamMessagesFemale": {
     "composerUpdateThis": "{user}",
     "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
-  },
-  "themes": {
-    "TreoClassicTheme": "Atro Classic Theme",
-    "TreoDarkTheme": "Atro Dark Theme",
-    "TreoLightTheme": "Atro Light Theme"
   },
   "durationUnits": {
     "d": "T",

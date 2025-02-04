@@ -37,6 +37,39 @@
     },
     "parent": {
       "type": "link"
+    },
+    "navigation": {
+      "type": "jsonObject",
+      "view": "views/layout-profile/fields/navigation",
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "dashboardLayout": {
+      "type": "jsonObject",
+      "view": "views/layout-profile/fields/dashboard-layout",
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "dashletsOptions": {
+      "type": "jsonObject",
+      "view": "views/layout-profile/fields/navigation",
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "dashboardLayout": {
+      "type": "jsonArray",
+      "view": "views/layout-profile/fields/dashboard-layout",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "dashletsOptions": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
     }
   },
   "links": {

@@ -3,9 +3,12 @@
     "isActive": "Aktiv",
     "description": "Beschreibung",
     "hideShowFullList": "„Vollständige Liste anzeigen“ auf Beziehungsfeldern ausblenden",
-    "layouts": "Layout"
+    "layouts": "Layout",
+    "navigation": "Menü Navigation",
+    "dashboardLayout": "Dashboard-Layout"
   },
   "labels": {
-    "Create LayoutProfile": "Layoutprofil erstellen"
+    "Create LayoutProfile": "Layoutprofil erstellen",
+    "addGroup": "Gruppe hinzufügen"
   }
 }

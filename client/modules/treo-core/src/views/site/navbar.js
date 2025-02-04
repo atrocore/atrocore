@@ -59,26 +59,32 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             }.bind(this));
 
             var tabList = this.getTabList();
-            this.isMoreFields = tabList.some(tab => tab === '_delimiter_');
 
             var scopes = this.getMetadata().get('scopes') || {};
 
-            this.tabList = tabList.filter(function (scope) {
-                if (typeof scopes[scope] === 'undefined' && scope !== '_delimiter_') return;
-                if ((scopes[scope] || {}).disabled) return;
-                if ((scopes[scope] || {}).acl) {
-                    return this.getAcl().check(scope);
+            let checkScope = function (item) {
+                if (typeof scopes[item] === 'undefined' && typeof item !== 'object') {
+                    return false;
+                }
+                if ((scopes[item] || {}).disabled) {
+                    return false;
+                }
+                if ((scopes[item] || {}).acl) {
+                    return this.getAcl().check(item, 'read');
                 }
                 return true;
+            };
+
+            this.tabList = tabList.filter(function (scope) {
+                if (typeof scope === 'object') {
+                    scope.items = scope.items.filter(checkScope, this);
+                    if (!scope.items.length) {
+                        return false
+                    }
+                }
+                return checkScope.call(this, scope);
             }, this);
 
-            this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
-                if ((scopes[scope] || {}).disabled) return;
-                if ((scopes[scope] || {}).acl) {
-                    return this.getAcl().check(scope, 'create');
-                }
-                return true;
-            }, this);
 
             this.createView('notificationsBadge', 'views/notification/badge', {
                 el: this.options.el + ' .notifications-badge-container',
@@ -89,6 +95,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 ]
             });
 
+            this.createView('footer', 'views/site/navbar-footer', {
+                el: `${this.options.el} footer`
+            })
+
             this.createView('notificationsBadgeRight', 'views/notification/badge', {
                 el: `${this.options.el} .navbar-right .notifications-badge-container`,
                 intervalConditions: [
@@ -97,10 +107,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 ]
             });
-
-            this.createView('footer', 'views/site/navbar-footer', {
-                el: `${this.options.el} footer`
-            })
 
             if (!this.getConfig().get('actionHistoryDisabled')) {
                 this.createView('lastViewedBadge', 'views/last-viewed/badge', {
@@ -116,15 +122,30 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.setupTabDefsList();
 
+            this.setupBookmark();
+
             this.once('remove', function () {
                 $(window).off('resize.navbar');
                 $(window).off('scroll.navbar');
             });
 
+            this.events = _.extend({
+                'click .more-group-name': function (e) {
+                    let a = $(e.currentTarget);
+                    let moreGroup = a.parent();
+                    if (!moreGroup.hasClass('keep-open')) {
+                        this.$el.find('ul.tabs .keep-open').removeClass('keep-open');
+                        moreGroup.addClass('keep-open');
+                    } else {
+                        if(!moreGroup.hasClass('open')) {
+                            moreGroup.addClass('open');
+                        }
+                        this.$el.find('ul.tabs .keep-open').removeClass('keep-open');
+                    }
+                }
+            }, this.events);
+
             this.openMenu();
-
-            this.setupBookmark();
-
         },
 
         adjust: function () {
@@ -137,8 +158,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             if (!navbarIsVertical) {
                 var $tabs = this.$el.find('ul.tabs');
-                var $moreDropdown = $tabs.find('li.more');
-                var $more = $tabs.find('li.more > ul');
+                var $moreDropdown = $tabs.find('li.more').last();
+                var $more = $tabs.find('li.more > ul').last();
 
                 $window.on('resize.navbar', function() {
                     updateWidth();
@@ -146,36 +167,49 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
                 var hideOneTab = function () {
                     var count = $tabs.children().size();
-                    if (count <= 1) return;
                     var $one = $tabs.children().eq(count - 2);
                     $one.prependTo($more);
+
+                    if ($one.hasClass('more-group')) {
+                        $one.children('a').hide();
+                        $one.children('ul').addClass('nested-dropdown');
+                    }
                 };
                 var unhideOneTab = function () {
                     var $one = $more.children().eq(0);
                     if ($one.size()) {
                         $one.insertBefore($moreDropdown);
+
+                        if ($one.hasClass('more-group')) {
+                            $one.children('a').show();
+                            $one.children('ul').removeClass('nested-dropdown');
+                        }
                     }
                 };
 
                 var tabCount = this.tabList.length;
                 var $navbar = $('#navbar .navbar');
-                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 43) + 1;
+                var navbarNeededHeight = (this.getThemeManager().getParam('navbarHeight') || 44) + 1;
 
                 $moreDd = $('#nav-more-tabs-dropdown');
-                $moreLi = $moreDd.closest('li');
 
-                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 516;
+                var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 546;
 
                 var updateWidth = function () {
                     var windowWidth = $(window.document).width();
                     var windowWidth = window.innerWidth;
-                    var moreWidth = $moreLi.width();
+                    var moreWidth = $moreDd.width();
 
                     $more.children('li.not-in-more').each(function (i, li) {
                         unhideOneTab();
                     });
 
                     if (windowWidth < smallScreenWidth) {
+                        if ($more.children().size()) {
+                            $moreDropdown.removeClass('hidden');
+                        } else {
+                            $moreDropdown.addClass('hidden');
+                        }
                         return;
                     }
 
@@ -204,20 +238,15 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     }
                 }.bind(this);
 
-                var processUpdateWidth = function (isRecursive) {
+                var processUpdateWidth = function () {
                     if ($navbar.height() > navbarNeededHeight) {
                         updateWidth();
                         setTimeout(function () {
-                            processUpdateWidth(true);
+                            processUpdateWidth();
                         }, 200);
                     } else {
-                        if (!isRecursive) {
-                            setTimeout(function () {
-                                processUpdateWidth(true);
-                            }, 10);
-                        }
                         setTimeout(function () {
-                            processUpdateWidth(true);
+                            processUpdateWidth();
                         }, 1000);
                     }
                 };
@@ -231,11 +260,17 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             } else {
                 var $tabs = this.$el.find('ul.tabs');
 
+                var minHeight = $tabs.height() + navbarStaticItemsHeight;
+
                 var $more = $tabs.find('li.more > ul');
 
-                if ($more.children().size() === 0) {
-                    $more.parent().addClass('hidden');
-                }
+                $more.each((index, elem) => {
+                    if ($(elem).children().size() === 0) {
+                        $(elem).parent().addClass('hidden');
+                    }
+                });
+
+                $('body').css('minHeight', minHeight + 'px');
 
                 var updateSizeForVertical = function () {
                     var windowHeight = window.innerHeight;
@@ -246,12 +281,14 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         $more.css('max-height', '');
                     } else {
                         let tabsHeight = windowHeight - navbarStaticItemsHeight;
-                        $tabs.css('height', tabsHeight + 'px');
+                        if (!$('body').hasClass('minimized')) {
+                            tabsHeight += 28;
+                        }
+
+                        $tabs.css('height', tabsHeight - 28 + 'px');
                         $more.css('max-height', windowHeight + 'px');
                     }
 
-                    var minHeight = $tabs.height() + navbarStaticItemsHeight;
-                    $('body').css('minHeight', minHeight + 'px');
                 }.bind(this);
 
                 $(window).on('resize.navbar', function() {

@@ -44,7 +44,7 @@
         },
         "dashboardLayout": {
             "type": "jsonArray",
-            "view": "views/settings/fields/dashboard-layout"
+            "view": "views/layout-profile/fields/dashboard-layout"
         },
         "dashletsOptions": {
             "type": "jsonObject"
@@ -65,10 +65,6 @@
         "useCustomTabList": {
             "type": "bool",
             "default": false
-        },
-        "tabList": {
-            "type": "array",
-            "view": "views/preferences/fields/tab-list"
         },
         "followEntityOnStreamPost": {
             "type": "bool",

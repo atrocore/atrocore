@@ -14,8 +14,14 @@
         {
           "name": "disabled"
         },
+        false
+      ],
+      [
         {
           "name": "streamDisabled"
+        },
+        {
+          "name": "disableActionHistory"
         }
       ],
       [

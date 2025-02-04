@@ -29,23 +29,15 @@
       ],
       [
         {
-          "name": "useCustomTabList"
-        },
-        {
-          "name": "tabList"
-        }
-      ],
-      [
-        {
           "name": "hideFeedbackIcon"
         },
         false
       ],
       [
         {
-          "name": "dashboardLayout",
-          "fullWidth": true
-        }
+          "name": "dashboardLayout"
+        },
+        false
       ]
     ]
   },

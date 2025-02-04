@@ -994,11 +994,7 @@
     "A": "A",
     "W": "W"
   },
-  "themes": {
-    "TreoClassicTheme": "Thème classique Atro",
-    "TreoLightTheme": "Thème Atro Light",
-    "TreoDarkTheme": "Thème sombre Atro"
-  },
+
   "unit Long intervals of time": {
     "week": "Semaine",
     "day": "jour",

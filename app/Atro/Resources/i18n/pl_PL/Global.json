@@ -903,11 +903,6 @@
     "notUniqueValue": "Rekord nie może zostać utworzony/zaktualizowany z powodu ograniczeń bazy danych.",
     "optionIsDisabled": "Element '%s' jest wyłączony dla pola '%s'."
   },
-  "themes": {
-    "TreoDarkTheme": "Motyw Treo Dark",
-    "TreoClassicTheme": "Motyw Treo Classic",
-    "TreoLightTheme": "Motyw Treo Light"
-  },
   "queryBuilderFilter": {
     "add_rule": "Dodaj regułę",
     "add_group": "Dodaj grupę",

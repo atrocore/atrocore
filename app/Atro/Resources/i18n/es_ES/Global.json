@@ -776,11 +776,6 @@
     "notUnique": "'%s' should have unique value.",
     "optionIsDisabled": "El elemento '%s' está deshabilitado para el campo '%s'."
   },
-  "themes": {
-    "TreoDarkTheme": "Atro Dark Theme",
-    "TreoClassicTheme": "Atro Classic Theme",
-    "TreoLightTheme": "Atro Light Theme"
-  },
   "queryBuilderFilter": {
     "add_rule": "Añadir regla",
     "add_group": "Añadir grupo",

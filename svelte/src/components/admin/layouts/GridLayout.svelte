@@ -1,7 +1,7 @@
 <script lang="ts">
     import {createEventDispatcher, tick} from 'svelte';
     import Sortable from 'sortablejs';
-    import {Params} from "./Interfaces";
+    import Params from "./interfaces/Params"
     import {Notifier} from "../../../utils/Notifier";
     import BaseLayout from "./BaseLayout.svelte";
     import {Language} from "../../../utils/Language";

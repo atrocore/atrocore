@@ -33,13 +33,13 @@ class LayoutProfile extends Base
         $j = $mapper->getQueryConverter()->getMainTableAlias();
         $qb->leftJoin($j, 'layout', 'ly', "$j.id=ly.layout_profile_id");
         if (empty($boolParams)) {
-            $qb->andWhere('ly.layout_profile_id is not null');
+            $qb->andWhere('ly.layout_profile_id is not null and ly.deleted=:false');
         } else {
             $qb->andWhere("ly.entity=:entity and ly.view_type=:viewType and ly.deleted=:false and " . (empty($boolParams['relatedScope']) ? "ly.related_entity is null" : "ly.related_entity = :relatedEntity"));
             $qb->setParameter('entity', $boolParams['scope'])
                 ->setParameter('viewType', $boolParams['viewType'])
-                ->setParameter('relatedEntity', $boolParams['relatedScope'])
-                ->setParameter('false', false, ParameterType::BOOLEAN);
+                ->setParameter('relatedEntity', $boolParams['relatedScope']);
         }
+        $qb->setParameter('false', false, ParameterType::BOOLEAN);
     }
 }
