@@ -13,7 +13,6 @@
     "notificationSmtpConnection": "Verbindung für E-Mail Benachrichtigungenphp",
     "recordsPerPage": "Datensätze pro Seite",
     "recordsPerPageSmall": "Datensätze pro Seite (Klein)",
-    "quickCreateList": "Liste Schnellerstellung",
     "globalSearchEntityList": "Entitäten für globale Suche",
     "b2cMode": "B2C Modus",
     "avatarsDisabled": "Avatare deaktivieren",

@@ -49,11 +49,6 @@
       "required": true,
       "tooltip": true
     },
-    "quickCreateList": {
-      "type": "array",
-      "translation": "Global.scopeNames",
-      "view": "views/settings/fields/quick-create-list"
-    },
     "locale": {
       "type": "varchar",
       "required": true,

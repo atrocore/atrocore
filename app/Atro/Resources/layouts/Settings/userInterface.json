@@ -6,7 +6,6 @@
             [{"name": "applicationName"}, false],
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
             [{"name": "recordsPerPageSmall"}, {"name": "avatarsDisabled"}],
-            [{"name": "quickCreateList"}, false],
             [{"name": "tabIconsDisabled"}, false],
             [{"name": "dashboardLayout", "fullWidth": true}]
         ]
