@@ -24134,7 +24134,8 @@ span[data-img-src]::after {
     text-overflow: ellipsis;
     overflow: hidden;
     display: block;
-    padding-right: 30px;
+    margin-left: 28px;
+    position:absolute;
 }
 /* Vertical Mobile*/
 @media (max-width: 767px) {
