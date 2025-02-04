@@ -395,12 +395,13 @@ class Metadata
             if (!isset($entityDefsItem->fields) || !is_object($entityDefsItem->fields)) {
                 continue;
             }
+
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
-                $additionalFields = $this->helper->getAdditionalFieldList($field,
-                    Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
+                $additionalFields = $this->helper->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
                 if (!$additionalFields) {
                     continue;
                 }
+
                 foreach ($additionalFields as $subFieldName => $subFieldParams) {
                     if (isset($entityDefsItem->fields->$subFieldName)) {
                         $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(Util::arrayToObject($subFieldParams), $entityDefsItem->fields->$subFieldName);
@@ -409,6 +410,15 @@ class Metadata
                     }
                 }
             }
+
+//            if (empty($data->scopes->$entityType->streamDisabled)) {
+//                $data->entityDefs->$entityType->fields->followers = Util::arrayToObject([
+//                    'type' => 'jsonObject'
+//                ]);
+//                echo '<pre>';
+//                print_r($data->entityDefs->$entityType->fields);
+//                die();
+//            }
         }
 
         return $data;

@@ -439,9 +439,7 @@ class Metadata extends AbstractListener
                         "mainField"                 => $field,
                         "required"                  => false,
                         "layoutListDisabled"        => true,
-                        "layoutListSmallDisabled"   => true,
                         "layoutDetailDisabled"      => true,
-                        "layoutDetailSmallDisabled" => true,
                         "massUpdateDisabled"        => true,
                         "filterDisabled"            => true,
                         "exportDisabled"            => true,
@@ -459,9 +457,7 @@ class Metadata extends AbstractListener
                         "mainField"                 => $field,
                         "required"                  => false,
                         "layoutListDisabled"        => true,
-                        "layoutListSmallDisabled"   => true,
                         "layoutDetailDisabled"      => true,
-                        "layoutDetailSmallDisabled" => true,
                         "massUpdateDisabled"        => true,
                         "filterDisabled"            => true,
                         "exportDisabled"            => true,
@@ -826,9 +822,7 @@ class Metadata extends AbstractListener
                 "type"                      => "bool",
                 "notStorable"               => true,
                 "layoutListDisabled"        => true,
-                "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
-                "layoutDetailSmallDisabled" => true,
                 "massUpdateDisabled"        => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
@@ -840,9 +834,7 @@ class Metadata extends AbstractListener
                 "type"                      => "bool",
                 "notStorable"               => true,
                 "layoutListDisabled"        => true,
-                "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
-                "layoutDetailSmallDisabled" => true,
                 "massUpdateDisabled"        => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
@@ -854,9 +846,7 @@ class Metadata extends AbstractListener
                 "type"                      => "jsonObject",
                 "notStorable"               => true,
                 "layoutListDisabled"        => true,
-                "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
-                "layoutDetailSmallDisabled" => true,
                 "massUpdateDisabled"        => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
@@ -868,9 +858,7 @@ class Metadata extends AbstractListener
                 "type"                      => "array",
                 "notStorable"               => true,
                 "layoutListDisabled"        => true,
-                "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
-                "layoutDetailSmallDisabled" => true,
                 "massUpdateDisabled"        => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
@@ -907,9 +895,7 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'],
                     [
                         "layoutListDisabled"        => true,
-                        "layoutListSmallDisabled"   => true,
                         "layoutDetailDisabled"      => true,
-                        "layoutDetailSmallDisabled" => true,
                         "massUpdateDisabled"        => true,
                         "filterDisabled"            => true,
                         "importDisabled"            => true,
@@ -1181,10 +1167,8 @@ class Metadata extends AbstractListener
                 if (!isset($data['entityDefs'][$scope]['fields'][$field]['type'])) {
                     $data['entityDefs'][$scope]['fields'][$field]['type'] = 'linkMultiple';
                     $data['entityDefs'][$scope]['fields'][$field]['layoutDetailDisabled'] = true;
-                    $data['entityDefs'][$scope]['fields'][$field]['layoutDetailSmallDisabled'] = true;
                     $data['entityDefs']['Account']['fields'][$foreign]['type'] = 'linkMultiple';
                     $data['entityDefs']['Account']['fields'][$foreign]['layoutDetailDisabled'] = true;
-                    $data['entityDefs']['Account']['fields'][$foreign]['layoutDetailSmallDisabled'] = true;
                 }
 
                 if (!isset($data['entityDefs'][$scope]['links'][$field]['type'])) {
@@ -1411,9 +1395,7 @@ class Metadata extends AbstractListener
                     "type"                      => "varchar",
                     "notStorable"               => true,
                     "layoutListDisabled"        => true,
-                    "layoutListSmallDisabled"   => true,
                     "layoutDetailDisabled"      => true,
-                    "layoutDetailSmallDisabled" => true,
                     "massUpdateDisabled"        => true,
                     "filterDisabled"            => true,
                     "exportDisabled"            => true,
