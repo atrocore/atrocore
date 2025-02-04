@@ -5,10 +5,12 @@
     "description": "Description",
     "hideShowFullList": "Hide \"Show Full List\" on Relation Panels",
     "layouts": "Layouts",
-    "parent": "Parent Layout Profile"
+    "parent": "Parent Layout Profile",
+    "navigation": "Navigation Menu"
   },
   "labels": {
-    "Create LayoutProfile": "Create Layout Profile"
+    "Create LayoutProfile": "Create Layout Profile",
+    "addGroup": "Add group"
   },
   "exceptions": {
     "defaultIsRequired": "A default layout profile should exist in the system"

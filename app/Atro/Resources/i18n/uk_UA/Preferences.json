@@ -4,8 +4,6 @@
     "defaultCurrency": "Валюта за замовчуванням",
     "emailAddress": "Адреса ел. пошти",
     "dashboardTabList": "Список вкладок",
-    "tabList": "Меню навігації",
-    "useCustomTabList": "Настроюваний список вкладок",
     "receiveAssignmentEmailNotifications": "Отримувати сповіщення по ел. пошті при призначенні",
     "receiveMentionEmailNotifications": "Сповіщення електронною поштою про згадки в повідомленнях",
     "receiveStreamEmailNotifications": "Повідомлення електронною поштою про повідомлення та оновлення статусу",

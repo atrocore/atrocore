@@ -8,9 +8,6 @@
     "receiveMentionEmailNotifications": "Powiadomienia o wspomnieniach w postach",
     "receiveStreamEmailNotifications": "Powiadomienia o aktualizacjach w Strumieniu",
     "dashboardTabList": "Lista zakładek",
-    "theme": "Motyw",
-    "useCustomTabList": "Użyj niestandardowej listy zakładek",
-    "tabList": "Menu nawigacyjne",
     "dashboardLayout": "Układ pulpitu",
     "followEntityOnStreamPost": "Automatyczne śledzenie rekordu po opublikowaniu w Strumieniu",
     "followCreatedEntities": "Automatyczne śledzenie utworzonych rekordów"

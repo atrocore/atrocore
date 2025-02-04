@@ -25,6 +25,12 @@
         {
           "name": "description"
         }
+      ],
+      [
+        {
+          "name": "navigation"
+        },
+        false
       ]
     ]
   }
