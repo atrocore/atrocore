@@ -529,6 +529,7 @@
     "compare": "Vergleichen Sie"
   },
   "fields": {
+    "followers": "Abonnenten",
     "path": "Ordner Pfad",
     "connection": "Verbindung",
     "tags": "Tags",

@@ -436,6 +436,7 @@
     "download": "Pobierać"
   },
   "fields": {
+    "followers": "Obserwujący",
     "connection": "Połączenie",
     "tags": "Tagi",
     "hidden": "Ukryty",

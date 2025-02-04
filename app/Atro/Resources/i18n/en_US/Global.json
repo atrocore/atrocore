@@ -514,6 +514,7 @@
     "compare": "Compare"
   },
   "fields": {
+    "followers": "Followers",
     "folderPath": "Folder Path",
     "connection": "Connection",
     "tags": "Tags",
