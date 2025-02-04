@@ -291,31 +291,6 @@ class Converter
                     ]
                 ]
             ],
-            'UserFollowedRecord' => [
-                'fields' => [
-                    'id'         => [
-                        'type'          => 'id',
-                        'dbType'        => 'int',
-                        'autoincrement' => true,
-                        'unique'        => true,
-                    ],
-                    'entityId'   => [
-                        'type'  => 'varchar',
-                        'len'   => 36,
-                        'index' => 'entity',
-                    ],
-                    'entityType' => [
-                        'type'  => 'varchar',
-                        'len'   => 100,
-                        'index' => 'entity',
-                    ],
-                    'userId'     => [
-                        'type'  => 'varchar',
-                        'len'   => 36,
-                        'index' => true,
-                    ]
-                ]
-            ],
         ];
     }
 }

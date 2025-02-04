@@ -1,0 +1,15 @@
+{
+  "type": "Base",
+  "entity": true,
+  "layouts": false,
+  "tab": true,
+  "acl": false,
+  "customizable": false,
+  "importable": true,
+  "object": true,
+  "streamDisabled": true,
+  "notificationDisabled": true,
+  "disableActionHistory": true,
+  "isActiveUnavailable": true,
+  "hideFieldTypeFilters": true
+}

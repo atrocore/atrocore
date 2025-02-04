@@ -1,4 +1,23 @@
 {
+  "fields": {
+    "entityId": {
+      "type": "varchar",
+      "len": 36
+    },
+    "entityType": {
+      "type": "varchar",
+      "len": 100
+    },
+    "user": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "user": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
   "uniqueIndexes": {
     "unique": [
       "entity_id",
