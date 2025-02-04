@@ -190,16 +190,24 @@ class Metadata
         $this->objData = $this->dataManager->getCacheData('metadata');
         if ($this->objData === null || $reload) {
             $this->objData = Json::decode(Json::encode($this->loadData()), true);
+
+            $this->objData = $this
+                ->getEventManager()
+                ->dispatch('Metadata', 'loadData', new Event(['data' => $this->objData]))
+                ->getArgument('data');
+
             $this->dataManager->setCacheData('metadata', $this->objData);
         }
 
         $data = $this
             ->getEventManager()
-            ->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]))->getArgument('data');
+            ->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]))
+            ->getArgument('data');
 
         $data = $this
             ->getEventManager()
-            ->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))->getArgument('data');
+            ->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))
+            ->getArgument('data');
 
         $this->loadUiHandlers($data);
         $this->clearMetadata($data);
@@ -410,15 +418,6 @@ class Metadata
                     }
                 }
             }
-
-//            if (empty($data->scopes->$entityType->streamDisabled)) {
-//                $data->entityDefs->$entityType->fields->followers = Util::arrayToObject([
-//                    'type' => 'jsonObject'
-//                ]);
-//                echo '<pre>';
-//                print_r($data->entityDefs->$entityType->fields);
-//                die();
-//            }
         }
 
         return $data;

@@ -25,6 +25,15 @@ use Atro\Core\Utils\Util;
 
 class Metadata extends AbstractListener
 {
+    public function loadData(Event $event): void
+    {
+        $data = $event->getArgument('data');
+
+        $this->addFollowersField($data);
+
+        $event->setArgument('data', $data);
+    }
+
     public function modify(Event $event): void
     {
         $data = $event->getArgument('data');
@@ -87,6 +96,26 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    protected function addFollowersField(array &$data): void
+    {
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['streamDisabled']) || !empty($scopeDefs['notStorable'])) {
+                continue;
+            }
+
+            $data['entityDefs'][$scope]['fields']['followers'] = [
+                'type'               => 'jsonObject',
+                'notStorable'        => true,
+                "layoutListDisabled" => true,
+                "massUpdateDisabled" => true,
+                "filterDisabled"     => true,
+                "exportDisabled"     => true,
+                "importDisabled"     => true,
+                "emHidden"           => true
+            ];
+        }
     }
 
     protected function prepareEntityFields(array &$data): void
@@ -434,17 +463,17 @@ class Metadata extends AbstractListener
                     $field . 'To'
                 ] as $v) {
                     $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
-                        "type"                      => "jsonObject",
-                        "notStorable"               => true,
-                        "mainField"                 => $field,
-                        "required"                  => false,
-                        "layoutListDisabled"        => true,
-                        "layoutDetailDisabled"      => true,
-                        "massUpdateDisabled"        => true,
-                        "filterDisabled"            => true,
-                        "exportDisabled"            => true,
-                        "importDisabled"            => true,
-                        "emHidden"                  => true
+                        "type"                 => "jsonObject",
+                        "notStorable"          => true,
+                        "mainField"            => $field,
+                        "required"             => false,
+                        "layoutListDisabled"   => true,
+                        "layoutDetailDisabled" => true,
+                        "massUpdateDisabled"   => true,
+                        "filterDisabled"       => true,
+                        "exportDisabled"       => true,
+                        "importDisabled"       => true,
+                        "emHidden"             => true
                     ];
 
                     if (isset($fieldDefs['multilangLocale'])) {
@@ -452,17 +481,17 @@ class Metadata extends AbstractListener
                     }
 
                     $data['entityDefs'][$entityType]['fields'][$v . 'UnitData'] = [
-                        "type"                      => "jsonObject",
-                        "notStorable"               => true,
-                        "mainField"                 => $field,
-                        "required"                  => false,
-                        "layoutListDisabled"        => true,
-                        "layoutDetailDisabled"      => true,
-                        "massUpdateDisabled"        => true,
-                        "filterDisabled"            => true,
-                        "exportDisabled"            => true,
-                        "importDisabled"            => true,
-                        "emHidden"                  => true
+                        "type"                 => "jsonObject",
+                        "notStorable"          => true,
+                        "mainField"            => $field,
+                        "required"             => false,
+                        "layoutListDisabled"   => true,
+                        "layoutDetailDisabled" => true,
+                        "massUpdateDisabled"   => true,
+                        "filterDisabled"       => true,
+                        "exportDisabled"       => true,
+                        "importDisabled"       => true,
+                        "emHidden"             => true
                     ];
 
                     if (isset($fieldDefs['multilangLocale'])) {
@@ -819,51 +848,51 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields']['parents']['layoutDetailDisabled'] = false;
 
             $data['entityDefs'][$scope]['fields']['isRoot'] = [
-                "type"                      => "bool",
-                "notStorable"               => true,
-                "layoutListDisabled"        => true,
-                "layoutDetailDisabled"      => true,
-                "massUpdateDisabled"        => true,
-                "filterDisabled"            => true,
-                "importDisabled"            => true,
-                "exportDisabled"            => true,
-                "emHidden"                  => true
+                "type"                 => "bool",
+                "notStorable"          => true,
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "exportDisabled"       => true,
+                "emHidden"             => true
             ];
 
             $data['entityDefs'][$scope]['fields']['hasChildren'] = [
-                "type"                      => "bool",
-                "notStorable"               => true,
-                "layoutListDisabled"        => true,
-                "layoutDetailDisabled"      => true,
-                "massUpdateDisabled"        => true,
-                "filterDisabled"            => true,
-                "importDisabled"            => true,
-                "exportDisabled"            => true,
-                "emHidden"                  => true
+                "type"                 => "bool",
+                "notStorable"          => true,
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "exportDisabled"       => true,
+                "emHidden"             => true
             ];
 
             $data['entityDefs'][$scope]['fields']['hierarchyRoute'] = [
-                "type"                      => "jsonObject",
-                "notStorable"               => true,
-                "layoutListDisabled"        => true,
-                "layoutDetailDisabled"      => true,
-                "massUpdateDisabled"        => true,
-                "filterDisabled"            => true,
-                "importDisabled"            => true,
-                "exportDisabled"            => true,
-                "emHidden"                  => true
+                "type"                 => "jsonObject",
+                "notStorable"          => true,
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "exportDisabled"       => true,
+                "emHidden"             => true
             ];
 
             $data['entityDefs'][$scope]['fields']['inheritedFields'] = [
-                "type"                      => "array",
-                "notStorable"               => true,
-                "layoutListDisabled"        => true,
-                "layoutDetailDisabled"      => true,
-                "massUpdateDisabled"        => true,
-                "filterDisabled"            => true,
-                "importDisabled"            => true,
-                "exportDisabled"            => true,
-                "emHidden"                  => true
+                "type"                 => "array",
+                "notStorable"          => true,
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "exportDisabled"       => true,
+                "emHidden"             => true
             ];
 
             foreach ($scopeData['fields'] as $fieldName => $fieldData) {
@@ -894,12 +923,12 @@ class Metadata extends AbstractListener
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'],
                     [
-                        "layoutListDisabled"        => true,
-                        "layoutDetailDisabled"      => true,
-                        "massUpdateDisabled"        => true,
-                        "filterDisabled"            => true,
-                        "importDisabled"            => true,
-                        "emHidden"                  => true
+                        "layoutListDisabled"   => true,
+                        "layoutDetailDisabled" => true,
+                        "massUpdateDisabled"   => true,
+                        "filterDisabled"       => true,
+                        "importDisabled"       => true,
+                        "emHidden"             => true
                     ]);
                 $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
             }
@@ -909,12 +938,11 @@ class Metadata extends AbstractListener
     }
 
     private function addScopesToRelationShip(
-        array  &$metadata,
+        array &$metadata,
         string $scope,
         string $relationEntityName,
         string $relation
-    )
-    {
+    ) {
         if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
@@ -1204,7 +1232,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array  $indexes
+     * @param array $indexes
      * @param string $fieldName
      *
      * @return array
@@ -1392,15 +1420,15 @@ class Metadata extends AbstractListener
                 $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
                 $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
                 $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
-                    "type"                      => "varchar",
-                    "notStorable"               => true,
-                    "layoutListDisabled"        => true,
-                    "layoutDetailDisabled"      => true,
-                    "massUpdateDisabled"        => true,
-                    "filterDisabled"            => true,
-                    "exportDisabled"            => true,
-                    "importDisabled"            => true,
-                    "emHidden"                  => true
+                    "type"                 => "varchar",
+                    "notStorable"          => true,
+                    "layoutListDisabled"   => true,
+                    "layoutDetailDisabled" => true,
+                    "massUpdateDisabled"   => true,
+                    "filterDisabled"       => true,
+                    "exportDisabled"       => true,
+                    "importDisabled"       => true,
+                    "emHidden"             => true
                 ];
             }
         }
