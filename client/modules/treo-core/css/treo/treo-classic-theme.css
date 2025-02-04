@@ -14619,7 +14619,7 @@ body > #header ul.tabs > li > a > span.full-label {
 }
 
 body > #header ul.tabs > li > a > span.full-label span.fas {
-    padding-left: 15px;
+    padding-left: 10px;
 }
 
 body > #header .navbar-brand span.home-icon {
@@ -19759,7 +19759,7 @@ ul.dropdown-menu > li.checkbox {
 }
 
 #header .navbar-inverse.navbar[data-orientation="vertical"] .navbar-nav .active > a {
-    background: rgba(0, 0 , 0, 0.2) !important
+    background: rgba(0, 0 , 0, 0.15) !important
 }
 
 
@@ -24100,9 +24100,9 @@ span[data-img-src]::after {
     height: 25px;
     align-items: center;
     display:none;
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.1);
     color: var(--nav-font-color);
-    border-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.1);
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) .quick-create .fa-sm {
@@ -24126,7 +24126,7 @@ span[data-img-src]::after {
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more):not(.active):hover > a.nav-link{
-    background: rgba(0, 0 , 0, 0.15) !important
+    background: rgba(0, 0 , 0, 0.05) !important
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) > a.nav-link > span.full-label{
