@@ -50,25 +50,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             }
         ],
 
-        dependencyDefs: {
-            'useCustomTabList': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['tabList']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['tabList']
-                    }
-                ]
-            }
-        },
-
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -82,8 +63,8 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
             if (!~forbiddenEditFieldList.indexOf('dashboardLayout')) {
                 this.addDropdownItem({
-                    name: 'resetDashboard',
-                    html: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
+                    name: 'dashboard',
+                    html: this.getLanguage().translate('dashboards')
                 });
             }
 
@@ -95,19 +76,11 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 }, this);
             }
 
-            if (!this.getUser().isAdmin()) {
-                this.hideField('dashboardLayout');
-            }
-
-            if (this.getConfig().get('userThemesDisabled')) {
-                this.hideField('theme');
-            }
-
             this.listenTo(this.model, 'after:save', function () {
                 if (
                     this.model.get('localeId') !== this.attributes.language
                     ||
-                    this.model.get('theme') !== this.attributes.theme
+                    this.model.get('styleId') !== this.attributes.styleId
                 ) {
                     window.location.reload();
                 }

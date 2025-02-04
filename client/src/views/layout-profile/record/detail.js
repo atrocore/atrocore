@@ -23,8 +23,44 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
             Dep.prototype.setup.call(this);
         },
 
+        setupActionItems() {
+            this.additionalButtons.push(
+                ...[
+                    {
+                        name: "menu",
+                        label: this.translate("Menu", "labels", "LayoutProfile"),
+                        action: "editNavigation",
+                    },
+                    {
+                        name: "dashboard",
+                        label: this.translate("Dashboards", "labels","LayoutProfile"),
+                        action: "editDashboard",
+                        cssStyle: "margin-left: 10px"
+                    }
+                ]);
+            Dep.prototype.setupActionItems.call(this);
+        },
+
         actionLayouts: function () {
             this.getRouter().navigate('#Admin/layouts?layoutProfileId=' + this.model.get('id'), {trigger: true});
+        },
+
+        actionEditNavigation: function () {
+            this.createView('edit', 'views/layout-profile/modals/navigation', {
+                field: 'navigation',
+                model: this.model
+            }, view => {
+                view.render();
+            });
+        },
+
+        actionEditDashboard: function () {
+            this.createView('edit', 'views/layout-profile/modals/dashboard-layout', {
+                field: 'dashboardLayout',
+                model: this.model,
+            }, view => {
+                view.render();
+            });
         }
     });
 });

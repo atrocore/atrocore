@@ -8,6 +8,11 @@
   },
   "labels": {
     "Create LayoutProfile": "Створити профіль макета",
-    "addGroup": "Додати групу"
+    "addGroup": "Додати групу",
+    "Menu": "Меню",
+    "Dashboards": "Дашборди"
+  },
+  "messages": {
+    "navigationUpdate": "Навігаційне меню було доналаштоване"
   }
 }
