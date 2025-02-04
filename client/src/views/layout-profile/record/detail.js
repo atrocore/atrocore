@@ -51,6 +51,9 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
                 model: this.model
             }, view => {
                 view.render();
+                this.listenTo(this.model, 'sync', () => {
+                    this.notify('Done', 'success')
+                });
             });
         },
 

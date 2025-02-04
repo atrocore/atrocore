@@ -38,6 +38,12 @@
 
     <div class="menu not-collapsed">
         <ul class="nav navbar-nav tabs">
+            <li class="header">
+                <span>{{translate "Navigation Menu"}}</span>
+                {{#if canConfigureMenu}}
+                <span data-action="configureMenu" class="fas fa-cog cursor-pointer" style="font-size: 1em;"></span>
+                {{/if}}
+            </li>
             {{#each tabDefsList}}
             {{#if group}}
             <li class="dropdown more more-group tab">

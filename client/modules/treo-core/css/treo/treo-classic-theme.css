@@ -20306,7 +20306,7 @@ button.category:focus {
     width: 100%;
     padding: 0 10px;
     position: relative;
-    border-top: 1px solid #dcdcdc;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 #navbar footer > .copyright span:first-child {
@@ -20328,8 +20328,6 @@ button.category:focus {
 }
 
 #header .menu{
-    border-bottom: 1px solid var(--primary-border-color);
-    border-top: 1px solid var(--primary-border-color);
     margin-top: 3px;
 }
 
@@ -20360,12 +20358,17 @@ button.category:focus {
         cursor: pointer;
     }
 
-    #header .menu.not-collapsed footer{
-        display: none;
+    #header .menu.open-menu li.header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        color: var(--nav-font-color);
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 25px 10px 22px;
     }
 
-    #header .menu.open-menu footer {
-        display:block;
+    #header .menu.open-menu li.header .fas{
+        cursor: pointer;
     }
 
     #header .menu.not-collapsed:hover {
@@ -20407,7 +20410,7 @@ button.category:focus {
     }
 
     #navbar footer {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     #header .nav > li.more:not(.more-group) > .dropdown-menu {
@@ -20720,7 +20723,7 @@ button.category:focus {
     display: block;
     height: calc(100vh - 44px);
     overflow-x: visible !important;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .3);
+    box-shadow: 0 0px 4px 0 rgba(0, 0, 0, .3);
     border-right: 1px solid var(--primary-border-color);
 }
 

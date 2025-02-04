@@ -53,8 +53,6 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                             this.notify('Loading...');
                             this.model.save(attributes, {
                                 patch: true
-                            }).then(() => {
-                                this.notify('Done', 'success')
                             });
                         },
                         onEditItem: (item, callback) => {
