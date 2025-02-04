@@ -3,13 +3,11 @@
   "entity": true,
   "layouts": false,
   "tab": true,
-  "acl": false,
+  "acl": true,
   "customizable": false,
   "importable": true,
   "object": true,
   "streamDisabled": true,
   "notificationDisabled": true,
-  "disableActionHistory": true,
-  "isActiveUnavailable": true,
-  "hideFieldTypeFilters": true
+  "disableActionHistory": true
 }

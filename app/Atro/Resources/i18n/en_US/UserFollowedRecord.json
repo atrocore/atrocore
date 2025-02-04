@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "user": "User",
+    "entityType": "Entity Name",
+    "entityId": "Entity Record"
+  },
+  "labels": {
+    "Create UserFollowedRecord": "Create User Follow"
+  }
+}
