@@ -59,9 +59,10 @@ class Container
             'schema'                   => \Atro\Core\Utils\Database\Schema\Schema::class,
             'themeManager'             => \Atro\Core\Factories\ThemeManager::class,
             'clientManager'            => \Atro\Core\Factories\ClientManager::class,
+            'layoutManager'            => \Atro\Core\LayoutManager::class,
+            'metadata'                 => \Atro\Core\Utils\Metadata::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
-            'layoutManager'            => \Atro\Core\LayoutManager::class,
             'acl'                      => \Espo\Core\Factories\Acl::class,
             'aclManager'               => \Espo\Core\Factories\AclManager::class,
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
@@ -76,8 +77,6 @@ class Container
             'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
             'serviceFactory'           => \Espo\Core\ServiceFactory::class,
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
-            'metadata'                 => \Espo\Core\Factories\Metadata::class,
-            Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
         ];
 

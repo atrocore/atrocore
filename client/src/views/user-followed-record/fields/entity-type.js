@@ -22,7 +22,7 @@ Espo.define('views/user-followed-record/fields/entity-type', 'views/fields/enum'
             this.translatedOptions = {};
 
             $.each(this.getMetadata().get('scopes') || {}, (scope, scopeDefs) => {
-                if (!scopeDefs.notStorable && !scopeDefs.streamDisabled && scopeDefs.type && ['Base', 'Hierarchy'].includes(scopeDefs.type)) {
+                if (!scopeDefs.streamDisabled) {
                     this.params.options.push(scope);
                     this.translatedOptions[scope] = this.translate(scope, 'scopeNames', 'Global');
                 }
