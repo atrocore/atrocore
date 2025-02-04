@@ -193,13 +193,15 @@ class Metadata
             $this->dataManager->setCacheData('metadata', $this->objData);
         }
 
-        $data = $this->getEventManager()->dispatch('Metadata', 'modify',
-            new Event(['data' => $this->objData]))->getArgument('data');
-        $data = $this->getEventManager()->dispatch('Metadata', 'afterInit',
-            new Event(['data' => $data]))->getArgument('data');
+        $data = $this
+            ->getEventManager()
+            ->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]))->getArgument('data');
+
+        $data = $this
+            ->getEventManager()
+            ->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))->getArgument('data');
 
         $this->loadUiHandlers($data);
-
         $this->clearMetadata($data);
 
         // set object data
