@@ -43,9 +43,13 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                     params: {
                         list: this.model.get(this.field),
                         onSaved: (navigation) => {
+                            this.close();
+                            if(this.options.avoidSaving) {
+                                this.model.set(this.field, navigation);
+                                return;
+                            }
                             let attributes = {};
                             attributes[this.field] = navigation;
-                            this.close();
                             this.notify('Loading...');
                             this.model.save(attributes, {
                                 patch: true

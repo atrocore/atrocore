@@ -29,6 +29,9 @@
       [
         {
           "name": "navigation"
+        },
+        {
+          "name": "dashboardLayout"
         }
       ]
     ]

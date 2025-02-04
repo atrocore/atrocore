@@ -20,7 +20,6 @@
     "userThemesDisabled": "Benutzerdesigns deaktivieren",
     "authTokenLifetime": "Gültigkeitsdauer des Auth Token (Stunden)",
     "authTokenMaxIdleTime": "Automatische Abmeldung bei Untätigkeit (Stunden)",
-    "dashboardLayout": "Dashboard Übersicht (Standard)",
     "siteUrl": "Webadresse",
     "addressPreview": "Adressvorschau",
     "addressFormat": "AddressFormat",

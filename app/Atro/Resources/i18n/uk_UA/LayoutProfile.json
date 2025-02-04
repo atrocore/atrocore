@@ -3,7 +3,8 @@
     "isActive": "активний",
     "description": "вид",
     "hideShowFullList": "Приховати \"Показати повний список\" на панелях зв'язків",
-    "navigation": "Меню навігації"
+    "navigation": "Меню навігації",
+    "dashboardLayout": "Макет інформаційної панелі"
   },
   "labels": {
     "Create LayoutProfile": "Створити профіль макета",

@@ -21,7 +21,6 @@
     "userThemesDisabled": "Désactiver les thèmes utilisateur",
     "authTokenLifetime": "Durée de vie du jeton d'authentification (heures)",
     "authTokenMaxIdleTime": "Jeton d'authentification Temps d'inactivité maximal (heures)",
-    "dashboardLayout": "Présentation du tableau de bord (par défaut)",
     "siteUrl": "URL du site",
     "addressPreview": "Aperçu de l'adresse",
     "addressFormat": "Format de l'adresse",
