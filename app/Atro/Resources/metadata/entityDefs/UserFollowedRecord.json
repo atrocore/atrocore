@@ -1,16 +1,17 @@
 {
   "fields": {
+    "user": {
+      "type": "link"
+    },
+    "entityType": {
+      "type": "varchar",
+      "view": "views/user-followed-record/fields/entity-type",
+      "len": 100
+    },
     "entityId": {
       "type": "varchar",
       "view": "views/user-followed-record/fields/entity-id",
       "len": 36
-    },
-    "entityType": {
-      "type": "varchar",
-      "len": 100
-    },
-    "user": {
-      "type": "link"
     }
   },
   "links": {

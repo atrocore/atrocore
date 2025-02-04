@@ -8,16 +8,24 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/user-followed-record/fields/entity-id', 'views/fields/varchar',
+Espo.define('views/user-followed-record/fields/entity-id', 'views/fields/link',
     Dep => Dep.extend({
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
+        setup() {
+            this.idName = 'entityId';
+            this.nameName = 'entityName';
 
-            if (this.mode === 'list' || this.mode === 'detail') {
-                this.$el.html(`<a href="/#${this.model.get('entityType')}/view/${this.model.get('entityId')}">${this.model.get('entityId')}</a>`);
-            }
+            this.foreignScope = this.getForeignScope();
+            this.listenTo(this.model, 'change:entityType', () => {
+                this.foreignScope = this.getForeignScope();
+                this.reRender();
+            });
 
+            Dep.prototype.setup.call(this);
+        },
+
+        getForeignScope() {
+            return this.model.get('entityType');
         },
 
     })
