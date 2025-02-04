@@ -99,6 +99,9 @@
       "type": "bool",
       "tooltip": true
     },
+    "disableActionHistory": {
+      "type": "bool"
+    },
     "hasAccount": {
       "type": "bool",
       "tooltip": true

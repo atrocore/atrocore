@@ -355,4 +355,18 @@ class Record extends RecordService
             ->dispatchEvent('afterGetRequiredFields', new Event(['entity' => $entity, 'data' => $data, 'result' => $res]))
             ->getArgument('result');
     }
+
+    protected function processActionHistoryRecord($action, Entity $entity)
+    {
+        if (
+            $this->actionHistoryDisabled
+            || $this->getMetadata()->get("scopes.{$entity->getEntityName()}.disableActionHistory")
+            || $this->getConfig()->get('actionHistoryDisabled')
+            || $this->getMemoryStorage()->get('importJobId')
+        ) {
+            return;
+        }
+
+        parent::processActionHistoryRecord($action, $entity);
+    }
 }

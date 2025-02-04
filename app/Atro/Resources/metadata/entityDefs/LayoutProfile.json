@@ -38,19 +38,21 @@
     "parent": {
       "type": "link"
     },
-    "data": {
-      "type": "jsonObject",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "emHidden": true
-    },
     "navigation": {
       "type": "jsonObject",
       "view": "views/layout-profile/fields/navigation",
-      "notStorable": true,
-      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "dashboardLayout": {
+      "type": "jsonObject",
+      "view": "views/layout-profile/fields/dashboard-layout",
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "dashletsOptions": {
+      "type": "jsonObject",
+      "view": "views/layout-profile/fields/navigation",
       "filterDisabled": true,
       "massUpdateDisabled": true
     },

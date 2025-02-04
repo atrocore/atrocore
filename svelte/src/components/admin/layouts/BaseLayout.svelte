@@ -1,7 +1,8 @@
 <!-- BaseLayout.svelte -->
 <script lang="ts">
     import {onMount, createEventDispatcher, tick} from 'svelte';
-    import type {Button, Params} from './Interfaces';
+    import type Button from './interfaces/Button'
+    import type Params from './interfaces/Params'
     import {Notifier} from "../../../utils/Notifier";
     import {LayoutManager} from "../../../utils/LayoutManager";
     import {Language} from "../../../utils/Language";
