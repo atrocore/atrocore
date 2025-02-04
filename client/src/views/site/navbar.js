@@ -28,7 +28,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 hideFeedbackIcon: !!this.getPreferences().get('hideFeedbackIcon'),
                 navbarIsVertical: this.getThemeManager().getParam('navbarIsVertical'),
                 showBookmarked: true,
-                canConfigureMenu: this.getUser().isAdmin() || !this.getPreferences().get('layoutProfileId')
+                canConfigureMenu: this.getUser().isAdmin()  && this.getPreferences().get('layoutProfileId')
             };
         },
 
