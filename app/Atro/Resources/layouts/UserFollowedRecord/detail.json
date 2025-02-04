@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "user"
+        },
+        false
+      ],
+      [
+        {
+          "name": "entityType"
+        },
+        {
+          "name": "entityId"
+        }
+      ]
+    ]
+  }
+]

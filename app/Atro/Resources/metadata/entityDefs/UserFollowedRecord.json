@@ -2,6 +2,7 @@
   "fields": {
     "entityId": {
       "type": "varchar",
+      "view": "views/user-followed-record/fields/entity-id",
       "len": 36
     },
     "entityType": {
