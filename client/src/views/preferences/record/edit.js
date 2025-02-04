@@ -63,8 +63,8 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
             if (!~forbiddenEditFieldList.indexOf('dashboardLayout')) {
                 this.addDropdownItem({
-                    name: 'dashboard',
-                    html: this.getLanguage().translate('dashboards')
+                    name: 'resetDashboard',
+                    html: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
                 });
             }
 
