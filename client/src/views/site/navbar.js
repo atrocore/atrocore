@@ -114,15 +114,16 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             },
             'click .navbar-toggle': function (e) {
                 if (this.$el.find('.menu').hasClass('open-menu')) {
+                    if(this.menuShouldBeOpen) {
+                        return;
+                    }
                     this.$el.find('.menu').removeClass('open-menu');
                 }
 
                 if(this.$el.find('.menu').hasClass('not-collapsed')){
-                    if(this.menuShouldBeOpen) {
-                        return;
-                    }
                     this.$el.find('.menu').addClass('open-menu');
                     this.$el.find('.menu').removeClass('not-collapsed');
+                    this.menuShouldBeOpen = false;
                 }
             },
 
