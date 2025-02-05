@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
+Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/colored-enum'], function (Dep, ColoredEnum) {
 
     return Dep.extend({
 
@@ -74,6 +74,34 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         noCreateScopeList: ['User', 'Team', 'Role'],
 
+        events: _.extend({
+            'click [data-action="loadData"]': function (e) {
+                this.actionLoadData();
+            },
+        }, Dep.prototype.events),
+
+        actionLoadData() {
+            this.notify('Please wait...');
+
+            this.ajaxGetRequest(`${this.model.name}/${this.model.get('id')}/${this.name}`).success(res => {
+                let ids = [];
+                let names = {};
+                if (res.list) {
+                    res.list.forEach(item => {
+                        ids.push(item.id);
+                        names[item.id] = item.name;
+                    })
+                }
+
+                this.model.set(this.nameHashName, names);
+                this.model.set(this.idsName, ids);
+
+                this.notify('Done', 'success');
+            }).error(() => {
+                this.notify('Error occurred', 'error');
+            });
+        },
+
         getBoolFilterData() {
             let data = {};
             this.selectBoolFilterList.forEach(item => {
@@ -88,7 +116,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             let ids = this.model.get(this.idsName);
             let nameHash = this.model.get(this.nameHashName);
 
-            return _.extend({
+            let res = _.extend({
                 idValues: this.model.get(this.idsName),
                 idValuesString: ids ? ids.join(',') : '',
                 nameHash: nameHash,
@@ -98,6 +126,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 createDisabled: this.createDisabled,
                 uploadDisabled: this.uploadDisabled
             }, Dep.prototype.data.call(this));
+
+            res.isNull = ids === null || ids === undefined;
+
+            return res;
         },
 
         getSelectFilters: function () {},
