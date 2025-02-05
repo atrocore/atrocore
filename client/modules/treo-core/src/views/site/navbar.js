@@ -18,19 +18,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         openMenu: function () {
             this.events = _.extend({}, this.events || {}, {
-                'click .navbar-toggle': function (e) {
-                    if (window.innerWidth > 768) {
-                        return;
-                    }
-                    if (this.$el.find('.menu').hasClass('open-menu')) {
-                        this.$el.find('.menu').removeClass('open-menu');
-                        this.$el.find('.menu').addClass('not-collapsed');
-                    } else {
-                        this.$el.find('.menu').addClass('open-menu');
-                        this.$el.find('.menu').removeClass('not-collapsed');
-                    }
-                },
-
                 'click .search-toggle': function () {
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
                 }

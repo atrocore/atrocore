@@ -20345,6 +20345,19 @@ button.category:focus {
     border-bottom: 1px solid #dedede;
 }
 
+#header .menu.open-menu li.header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--nav-font-color);
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 25px 10px 22px;
+}
+
+#header .menu.open-menu li.header .fas{
+    cursor: pointer;
+}
+
 @media screen and (min-width: 768px) {
     #header .menu{
         margin-top: 3px;
@@ -20356,19 +20369,6 @@ button.category:focus {
         box-shadow:none;
         -webkit-transform: translate(-98.3%, 0);
         transform: translate(-98.3%, 0);
-        cursor: pointer;
-    }
-
-    #header .menu.open-menu li.header {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        color: var(--nav-font-color);
-        font-weight: 700;
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 25px 10px 22px;
-    }
-
-    #header .menu.open-menu li.header .fas{
         cursor: pointer;
     }
 
