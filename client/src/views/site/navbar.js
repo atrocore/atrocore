@@ -65,7 +65,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this.$el.find('.navbar-collapse.in').collapse('hide');
                 }
             },
-            'click span[data-action="quickCreate"]': function (e) {
+            'click [data-action="quickCreate"]': function (e) {
                 e.preventDefault();
                 var scope = $(e.currentTarget).data('name');
                 this.quickCreate(scope);
@@ -123,7 +123,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         getTabList: function () {
-            return this.getConfig().get('lpNavigation') || [];
+            return this.getPreferences().get('lpNavigation') || [];
         },
 
         setupGlobalSearch: function () {
