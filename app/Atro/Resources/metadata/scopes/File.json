@@ -8,5 +8,6 @@
   "disabled": false,
   "type": "Base",
   "object": true,
+  "streamDisabled": true,
   "hideFieldTypeFilters": true
 }

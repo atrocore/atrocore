@@ -100,22 +100,43 @@ class Metadata extends AbstractListener
 
     protected function addFollowersField(array &$data): void
     {
+        return;
+        $ff = [];
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['streamDisabled']) || !empty($scopeDefs['notStorable'])) {
                 continue;
             }
 
+            $ff[] = $scope;
+
             $data['entityDefs'][$scope]['fields']['followers'] = [
-                'type'               => 'jsonObject',
-                'notStorable'        => true,
-                "layoutListDisabled" => true,
-                "massUpdateDisabled" => true,
-                "filterDisabled"     => true,
-                "exportDisabled"     => true,
-                "importDisabled"     => true,
-                "emHidden"           => true
+                'type'   => 'linkMultiple',
+                'noLoad' => true
+            ];
+
+            $data['entityDefs'][$scope]['links']['followers'] = [
+                'type'         => 'hasMany',
+                'relationName' => 'UserFollowed' . $scope,
+                'foreign'      => 'followed' . Util::pluralize($scope),
+                'entity'       => 'User'
+            ];
+
+            $data['entityDefs']['User']['fields']['followed' . Util::pluralize($scope)] = [
+                'type'   => 'linkMultiple',
+                'noLoad' => true
+            ];
+
+            $data['entityDefs'][$scope]['links']['followed' . Util::pluralize($scope)] = [
+                'type'         => 'hasMany',
+                'relationName' => 'UserFollowed' . $scope,
+                'foreign'      => 'followers',
+                'entity'       => $scope
             ];
         }
+
+        echo '<pre>';
+        print_r($ff);
+        die();
     }
 
     protected function prepareEntityFields(array &$data): void
@@ -608,13 +629,6 @@ class Metadata extends AbstractListener
             }
         }
 
-        $pluralize = function ($word) {
-            if (substr($word, -1) === 'y' && !in_array(substr($word, -2, 1), ['a', 'e', 'i', 'o', 'u'])) {
-                return substr($word, 0, -1) . 'ies';
-            }
-            return substr($word, -1) === 's' ? $word : $word . 's';
-        };
-
         $res = [];
 
         foreach ($relations as $scope => $entityDefs) {
@@ -664,7 +678,7 @@ class Metadata extends AbstractListener
                         ];
 
                         if (!empty($additionalFields)) {
-                            $relFieldName = $left . ucfirst($pluralize($right));
+                            $relFieldName = $left . ucfirst(Util::pluralize($right));
                             if (empty($data['entityDefs'][$scope]['fields'][$relFieldName])
                                 && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
                                 $res[$entityName]['links'][$left]['foreign'] = $relFieldName;
@@ -696,7 +710,7 @@ class Metadata extends AbstractListener
                     ];
 
                     if (!empty($additionalFields)) {
-                        $relFieldName = $right . ucfirst($pluralize($left));
+                        $relFieldName = $right . ucfirst(Util::pluralize($left));
                         if (empty($data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName])
                             && empty($data['entityDefs'][$relationParams['entity']]['links'][$relFieldName])) {
                             $res[$entityName]['links'][$right]['foreign'] = $relFieldName;
