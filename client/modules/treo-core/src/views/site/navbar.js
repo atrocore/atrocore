@@ -18,23 +18,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         openMenu: function () {
             this.events = _.extend({}, this.events || {}, {
-                'click .navbar-toggle': function (e) {
-                    if (window.innerWidth > 768) {
-                        return;
-                    }
-                    if (this.$el.find('.menu').hasClass('open-menu')) {
-                        $(document).off('mouseup.menu');
-                        this.$el.find('.menu').removeClass('open-menu');
-                    } else {
-                        this.$el.find('.menu').addClass('open-menu');
-                        $(document).on('mouseup.menu', function (e) {
-                            if (!$(e.target).closest('.navbar .menu').length && !$(e.target).closest('.navbar-toggle').length) {
-                                this.$el.find('.menu').removeClass('open-menu');
-                            }
-                        }.bind(this));
-                    }
-                },
-
                 'click .search-toggle': function () {
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
                 }
