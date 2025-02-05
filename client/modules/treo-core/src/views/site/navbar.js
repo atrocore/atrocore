@@ -23,15 +23,11 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         return;
                     }
                     if (this.$el.find('.menu').hasClass('open-menu')) {
-                        $(document).off('mouseup.menu');
                         this.$el.find('.menu').removeClass('open-menu');
+                        this.$el.find('.menu').addClass('not-collapsed');
                     } else {
                         this.$el.find('.menu').addClass('open-menu');
-                        $(document).on('mouseup.menu', function (e) {
-                            if (!$(e.target).closest('.navbar .menu').length && !$(e.target).closest('.navbar-toggle').length) {
-                                this.$el.find('.menu').removeClass('open-menu');
-                            }
-                        }.bind(this));
+                        this.$el.find('.menu').removeClass('not-collapsed');
                     }
                 },
 

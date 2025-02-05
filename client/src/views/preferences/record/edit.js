@@ -59,14 +59,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 style: 'danger'
             });
 
-            var forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
-
-            if (!~forbiddenEditFieldList.indexOf('dashboardLayout')) {
-                this.addDropdownItem({
-                    name: 'dashboard',
-                    html: this.getLanguage().translate('dashboards')
-                });
-            }
 
             if (this.model.id == this.getUser().id) {
                 this.on('after:save', function () {
@@ -102,22 +94,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                     type: 'DELETE',
                 }).done(function (data) {
                     Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));
-                    this.model.set(data);
-                    for (var attribute in data) {
-                        this.setInitalAttributeValue(attribute, data[attribute]);
-                    }
-                    this.getPreferences().set(this.model.toJSON());
-                    this.getPreferences().trigger('update');
-                }.bind(this));
-            }, this);
-        },
-
-        actionResetDashboard: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
-                this.ajaxPostRequest('Preferences/action/resetDashboard', {
-                    id: this.model.id
-                }).done(function (data) {
-                    Espo.Ui.success(this.translate('Done'));
                     this.model.set(data);
                     for (var attribute in data) {
                         this.setInitalAttributeValue(attribute, data[attribute]);
