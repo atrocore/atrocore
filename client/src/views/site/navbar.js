@@ -126,7 +126,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this.menuShouldBeOpen = false;
                 }
             },
-
         },
 
         handleMenuVisibility(e) {
