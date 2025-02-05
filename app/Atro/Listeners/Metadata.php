@@ -130,7 +130,7 @@ class Metadata extends AbstractListener
                 'noLoad' => true
             ];
 
-            $data['entityDefs'][$scope]['links']['followed' . Util::pluralize($scope)] = [
+            $data['entityDefs']['User']['links']['followed' . Util::pluralize($scope)] = [
                 'type'         => 'hasMany',
                 'relationName' => 'UserFollowed' . $scope,
                 'foreign'      => 'followers',
