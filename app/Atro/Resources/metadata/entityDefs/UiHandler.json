@@ -23,6 +23,7 @@
     "triggerAction": {
       "type": "extensibleEnum",
       "extensibleEnumId": "ui_trigger",
+      "view": "views/ui-handler/fields/trigger-action",
       "required": true,
       "dropdown": true
     },
