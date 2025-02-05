@@ -14619,7 +14619,8 @@ body > #header ul.tabs > li > a > span.full-label {
 }
 
 body > #header ul.tabs > li > a > span.full-label span.fas {
-    padding-left: 10px;
+    padding-left: 7px;
+    color: var(--nav-font-color)
 }
 
 body > #header .navbar-brand span.home-icon {
@@ -20723,7 +20724,7 @@ button.category:focus {
     display: block;
     height: calc(100vh - 44px);
     overflow-x: visible !important;
-    box-shadow: 0 0px 4px 0 rgba(0, 0, 0, .3);
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .3);
     border-right: 1px solid var(--primary-border-color);
 }
 
@@ -24106,6 +24107,10 @@ span[data-img-src]::after {
     background-color: rgba(0, 0, 0, 0.1);
     color: var(--nav-font-color);
     border-color: rgba(0, 0, 0, 0.1);
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) .quick-create:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) .quick-create .fa-sm {

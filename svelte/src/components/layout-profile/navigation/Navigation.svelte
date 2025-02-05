@@ -25,12 +25,26 @@
         {
             name: 'addGroup',
             label: Language.translate('addGroup', 'labels'),
+            cssStyle: 'margin-left: 30px',
             action: () => {
                 params.onEditItem({
                     id: defaultDelimiter + getRandomHash(),
                     groupEnd: false
                 }, (newItem) => {
-                    enabledItems.push({
+                    let sortOrder = 10;
+                    if(enabledItems.length) {
+                        sortOrder = enabledItems[enabledItems.length - 1].sortOrder + 10;
+                    }
+
+                    let hasOpenGroup = false;
+
+                    enabledItems.forEach((item) => {
+                        if(item.isGroup) {
+                            hasOpenGroup = !item.groupEnd;
+                        }
+                    });
+
+                    let item  = {
                         isGroup: true,
                         canEdit: true,
                         canRemove: true,
@@ -38,9 +52,31 @@
                         canDisabled: false,
                         name: '',
                         label: '',
-                        sortOrder: enabledItems[enabledItems.length - 1].sortOrder + 10,
+                        sortOrder: sortOrder,
                         ...newItem
-                    });
+                    };
+
+
+                    if(item.name !== '')  {
+                        enabledItems.push({
+                            isGroup: true,
+                            canEdit: true,
+                            canRemove: true,
+                            isGroup: true,
+                            canDisabled: false,
+                            groupEnd: true,
+                            name: '',
+                            label: '',
+                            sortOrder: item.sortOrder -1
+                        });
+                    }
+
+                    if(hasOpenGroup) {
+                        enabledItems.push(item);
+                    }else{
+                        item.sortOrder = item.sortOrder - 2;
+                        enabledItems.splice(enabledItems.length - 1, 0, item);
+                    }
                     refresh();
                 })
             }
@@ -84,7 +120,7 @@
                 sortOrder++;
             } else if (typeof item === 'object') {
                 enabledItems.push({
-                    id: item.id,
+                    id: item.id ?? (defaultDelimiter + getRandomHash()),
                     canEdit: true,
                     canRemove: true,
                     isGroup: true,

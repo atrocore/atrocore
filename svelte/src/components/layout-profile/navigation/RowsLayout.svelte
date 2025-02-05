@@ -128,6 +128,30 @@
                 data.push(item.name)
             }
         }
+        let groupBegan = false;
+        data = data.filter(item => {
+            if(typeof item === 'object') {
+                if(item.name !== '' && !item.items.length) {
+                    return false;
+                }
+
+                if(item.name !== '' && item.items.length) {
+                    groupBegan = true;
+                    return true;
+                }
+
+                if(item.name === '' && groupBegan) {
+                    groupBegan = false
+                    return true;
+                }
+
+                if(item.name === '' && !groupBegan) {
+                    return false
+                }
+            }
+
+            return true;
+        })
 
         return data;
     }
@@ -271,7 +295,7 @@
         overflow: hidden;
     }
 
-    .enabled .in-group {
+    .enabled .in-group, .group.end {
         margin-left: 20px;
     }
 
