@@ -37,7 +37,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
                 'click .search-toggle': function () {
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
-                },
+                }
             });
         },
 

@@ -46,15 +46,17 @@
     },
     "dashboardLayout": {
       "type": "jsonObject",
-      "view": "views/layout-profile/fields/dashboard-layout",
       "filterDisabled": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true
     },
     "dashletsOptions": {
       "type": "jsonObject",
-      "view": "views/layout-profile/fields/navigation",
       "filterDisabled": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true
     }
   },
   "links": {
