@@ -100,14 +100,18 @@ class Metadata extends AbstractListener
 
     protected function addFollowersField(array &$data): void
     {
-        return;
-        $ff = [];
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['streamDisabled']) || !empty($scopeDefs['notStorable'])) {
+            if (empty($scopeDefs['type'])) {
                 continue;
             }
 
-            $ff[] = $scope;
+            if (array_key_exists('stream', $scopeDefs) && !array_key_exists('streamDisabled', $scopeDefs)) {
+                $data['scopes'][$scope]['streamDisabled'] = $scopeDefs['streamDisabled'] = empty($scopeDefs['stream']);
+            }
+
+            if (!empty($scopeDefs['streamDisabled']) || !empty($scopeDefs['notStorable'])) {
+                continue;
+            }
 
             $data['entityDefs'][$scope]['fields']['followers'] = [
                 'type'   => 'linkMultiple',
@@ -133,10 +137,6 @@ class Metadata extends AbstractListener
                 'entity'       => $scope
             ];
         }
-
-        echo '<pre>';
-        print_r($ff);
-        die();
     }
 
     protected function prepareEntityFields(array &$data): void
