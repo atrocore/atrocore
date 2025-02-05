@@ -28,7 +28,7 @@
             cssStyle: 'margin-left: 30px',
             action: () => {
                 params.onEditItem({
-                    id: defaultDelimiter + getRandomHash(),
+                    id: getGroupId(),
                     groupEnd: false
                 }, (newItem) => {
                     let sortOrder = 10;
@@ -36,15 +36,7 @@
                         sortOrder = enabledItems[enabledItems.length - 1].sortOrder + 10;
                     }
 
-                    let hasOpenGroup = false;
-
-                    enabledItems.forEach((item) => {
-                        if(item.isGroup) {
-                            hasOpenGroup = !item.groupEnd;
-                        }
-                    });
-
-                    let item  = {
+                    let item = {
                         isGroup: true,
                         canEdit: true,
                         canRemove: true,
@@ -56,9 +48,11 @@
                         ...newItem
                     };
 
+                    enabledItems.push(item);
 
                     if(item.name !== '')  {
                         enabledItems.push({
+                            id: getGroupId(),
                             isGroup: true,
                             canEdit: true,
                             canRemove: true,
@@ -67,21 +61,19 @@
                             groupEnd: true,
                             name: '',
                             label: '',
-                            sortOrder: item.sortOrder -1
+                            sortOrder: item.sortOrder + 1
                         });
                     }
 
-                    if(hasOpenGroup) {
-                        enabledItems.push(item);
-                    }else{
-                        item.sortOrder = item.sortOrder - 2;
-                        enabledItems.splice(enabledItems.length - 1, 0, item);
-                    }
                     refresh();
                 })
             }
         },
     ];
+
+    function getGroupId(): Item {
+        return defaultDelimiter + getRandomHash();
+    }
 
     function refresh(): void {
         key++;
@@ -120,7 +112,7 @@
                 sortOrder++;
             } else if (typeof item === 'object') {
                 enabledItems.push({
-                    id: item.id ?? (defaultDelimiter + getRandomHash()),
+                    id: item.id ?? getGroupId(),
                     canEdit: true,
                     canRemove: true,
                     isGroup: true,
@@ -148,7 +140,7 @@
 
                 if (item.name !=='' && (i === navigation.length - 1 || (typeof navigation[i + i] === 'string') || item.items.length === 0)) {
                     enabledItems.push({
-                        id: defaultDelimiter + getRandomHash(),
+                        id: getGroupId(),
                         canEdit: true,
                         canRemove: true,
                         canDisabled: false,
@@ -194,6 +186,7 @@
                 {fieldsInGroup}
                 {refresh}
                 {editItem}
+                {getGroupId}
         />
     {/key}
 </div>

@@ -104,7 +104,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                             view.render();
                             this.listenTo(model, 'sync', () => {
                                 this.getPreferences().set('ldNavigation', this.tabList =  model.get('navigation'));
-                                this.notify(this.translate('navigationUpdate', 'messages', 'LayoutProfile'), 'success')
                                 this.setup();
                                 this.reRender();
                             });

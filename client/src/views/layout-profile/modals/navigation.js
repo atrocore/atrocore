@@ -42,17 +42,23 @@ Espo.define('views/layout-profile/modals/navigation', 'views/modal',
                 props: {
                     params: {
                         list: this.model.get(this.field),
-                        onSaved: (navigation) => {
+                        onSaved: (data) => {
                             this.close();
                             if(this.options.avoidSaving) {
-                                this.model.set(this.field, navigation);
+                                this.model.set(this.field, data['navigation']);
                                 return;
                             }
                             let attributes = {};
-                            attributes[this.field] = navigation;
+                            attributes[this.field] = data['navigation'];
                             this.notify('Loading...');
                             this.model.save(attributes, {
                                 patch: true
+                            }).success(() => {
+                                if(data['adjusted']) {
+                                    this.notify(this.translate('navigationUpdate', 'messages', 'LayoutProfile'), 'success');
+                                }else{
+                                    this.notify('Done', 'success');
+                                }
                             });
                         },
                         onEditItem: (item, callback) => {
