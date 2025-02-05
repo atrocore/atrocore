@@ -27,7 +27,8 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 logoSrc: this.getLogoSrc(),
                 hideFeedbackIcon: !!this.getPreferences().get('hideFeedbackIcon'),
                 navbarIsVertical: this.getThemeManager().getParam('navbarIsVertical'),
-                showBookmarked: true
+                showBookmarked: true,
+                canConfigureMenu: this.getUser().isAdmin()  && this.getPreferences().get('layoutProfileId')
             };
         },
 
@@ -86,6 +87,30 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this.$el.find('.menu').addClass('not-collapsed');
                     this.$el.find('.menu').off('transitionend');
                 }
+            },
+            'click [data-action="configureMenu"]': function(e) {
+                if(!this.getUser().isAdmin()) {
+                    return;
+                }
+                this.notify('Loading');
+                this.getModelFactory().create('LayoutProfile', (model) => {
+                    model.id = this.getPreferences().get('layoutProfileId');
+                    model.fetch().success(() => {
+                        this.notify(false);
+                        this.createView('edit', 'views/layout-profile/modals/navigation', {
+                            field: 'navigation',
+                            model: model
+                        }, view => {
+                            view.render();
+                            this.listenTo(model, 'sync', () => {
+                                this.getPreferences().set('ldNavigation', this.tabList =  model.get('navigation'));
+                                this.setup();
+                                this.reRender();
+                            });
+                        });
+                    });
+                })
+
             }
         },
 
@@ -123,7 +148,10 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         getTabList: function () {
-            return this.getPreferences().get('lpNavigation') || [];
+            if(this.tabList) {
+                return this.tabList;
+            }
+            return this.tabList = this.getPreferences().get('lpNavigation') || [];
         },
 
         setupGlobalSearch: function () {
