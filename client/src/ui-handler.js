@@ -17,30 +17,6 @@ Espo.define('ui-handler', [], function () {
         this.init()
     }
 
-    UiHandler.extend = function (protoProps) {
-        var parent = this;
-        var child = function () {
-            return parent.apply(this, arguments);
-        };
-
-        // Create a new object with the parent's prototype
-        child.prototype = Object.create(parent.prototype);
-        child.prototype.constructor = child;
-
-        // Copy the static properties
-        Object.assign(child, parent);
-
-        // Add the new prototype properties
-        if (protoProps) {
-            _.extend(child.prototype, protoProps);
-        }
-
-        // Keep a reference to the parent
-        child.__super__ = parent.prototype;
-
-        return child;
-    };
-
     _.extend(UiHandler.prototype, {
 
         init: function () {
