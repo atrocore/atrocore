@@ -1,6 +1,5 @@
 {
   "scopeNames": {
-    "UserFollowedRecord": "User Follow",
     "Background": "Background",
     "Entity": "Entity",
     "EntityField": "Entity Field",
@@ -66,7 +65,6 @@
     "Bookmark": "Bookmark"
   },
   "scopeNamesPlural": {
-    "UserFollowedRecord": "User Follows",
     "Background": "Backgrounds",
     "Entity": "Entities",
     "EntityField": "Entity Fields",
