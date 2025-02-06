@@ -42,6 +42,8 @@ class Job extends AbstractConsole
             self::show('No such job!', self::ERROR, true);
         }
 
+        $job->_debug = array_shift($parts) === 'debug';
+
         $result = $this->getContainer()->get(JobManager::class)->executeJob($job);
 
         if ($result) {
