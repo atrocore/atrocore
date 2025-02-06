@@ -15,11 +15,11 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V1Dot13Dot11 extends Base
+class V1Dot13Dot12 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-02-04 16:00:00');
+        return new \DateTime('2025-02-06 13:00:00');
     }
 
     public function up(): void
