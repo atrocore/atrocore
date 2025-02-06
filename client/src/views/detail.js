@@ -716,7 +716,11 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 type: 'PUT',
                 success: function () {
                     $el.remove();
-                    this.model.fetch();
+                    let followersNames = this.model.get('followersNames') || {};
+                    followersNames[this.getUser().get('id')] = this.getUser().get('name');
+                    this.model.set('isFollowed', true);
+                    this.model.set('followersIds', Object.keys(followersNames));
+                    this.model.set('followersNames', followersNames);
                 }.bind(this),
                 error: function () {
                     $el.removeClass('disabled');
@@ -732,7 +736,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 type: 'DELETE',
                 success: function () {
                     $el.remove();
-                    this.model.fetch();
+                    let followersNames = Object.fromEntries(Object.entries(this.model.get('followersNames') || {}).filter(([key]) => key !== this.getUser().get('id')));
+                    this.model.set('isFollowed', false);
+                    this.model.set('followersIds', Object.keys(followersNames));
+                    this.model.set('followersNames', followersNames);
                 }.bind(this),
                 error: function () {
                     $el.removeClass('disabled');
