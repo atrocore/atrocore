@@ -372,7 +372,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.tabDefsList.forEach(tab => {
                 if (!tab.iconClass) {
-                    tab.colorIconClass = 'color-icon fas fa-stop';
+                    tab.iconSrc = this.getDefaultTabIcon(tab.name);
                 }
             });
         },

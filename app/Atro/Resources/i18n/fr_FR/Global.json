@@ -131,7 +131,8 @@
     "User": "Utilisateur",
     "AuthLogRecord": "Enregistrement du journal d'authentification",
     "AuthFailLogRecord": "Enregistrement du journal d'échec de l'authentification",
-    "HtmlSanitizer": "HTML Sanitizer"
+    "HtmlSanitizer": "HTML Sanitizer",
+    "SystemIcon": "Icône du système"
   },
   "labels": {
     "Preferences": "Préférences",
@@ -500,7 +501,8 @@
     "Job": "Emplois",
     "ScheduledJobLogRecord": "Enregistrements du journal des travaux programmés",
     "PasswordChangeRequest": "Demandes de changement de mot de passe",
-    "HtmlSanitizer": "HTML Sanitizers"
+    "HtmlSanitizer": "HTML Sanitizers",
+    "SystemIcon": "Icônes du système"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"

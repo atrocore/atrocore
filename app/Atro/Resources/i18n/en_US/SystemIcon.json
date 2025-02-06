@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "image": "Image",
+    "library": "Library"
+  },
+  "labels": {
+    "Create SystemIcon": "Create System Icon"
+  }
+}
