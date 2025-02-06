@@ -262,7 +262,7 @@ class Metadata
                     $triggerAction = 'onFocus';
                     break;
                 case 'ui_on_button_click':
-                    $triggerAction = 'onActionButtonClick';
+                    $triggerAction = 'onButtonClick';
                     break;
                 default:
                     continue 2;
@@ -285,32 +285,30 @@ class Metadata
             $row = [];
             $row['type'] = $mapper[$v['type']];
             $row['triggerAction'] = $triggerAction;
-            $row['triggerFields'] = @json_decode((string)$v['triggerFields'], true);
+            $row['triggerFields'] = is_array($v['triggerFields']) ? $v['triggerFields'] :  @json_decode((string)$v['triggerFields'], true);
             $row['conditions'] = $conditions;
 
             switch ($row['type']) {
                 case 'readOnly':
                 case 'visible':
                 case 'required':
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'],
-                        true);
+                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
                     $row['targetPanels'] = [];
                     if (!empty($v['relationships'])) {
-                        $row['targetPanels'] = is_array($v['relationships']) ? $v['relationships'] : @json_decode((string)$v['relationships'],
-                            true);
+                        $row['targetPanels'] = is_array($v['relationships']) ? $v['relationships'] : @json_decode((string)$v['relationships'], true);
                     }
                     break;
                 case 'disableOptions':
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'],
-                        true);
-                    $row['disabledOptions'] = is_array($v['disabledOptions']) ? $v['disabledOptions'] : @json_decode((string)$v['disabledOptions'],
-                        true);
+                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
+                    $row['disabledOptions'] = is_array($v['disabledOptions']) ? $v['disabledOptions'] : @json_decode((string)$v['disabledOptions'], true);
                     break;
                 case 'setValue':
                     $parsedData = is_array($v['data']) ? $v['data'] : @json_decode((string)$v['data'], true);
                     if (empty($parsedData['field']['updateType'])) {
                         continue 2;
                     }
+                    $row['id'] = $v['id'];
+                    $row['name'] = $v['name'];
                     $row['updateType'] = $parsedData['field']['updateType'];
                     $row['overwrite'] = !empty($parsedData['field']['overwrite']);
                     switch ($parsedData['field']['updateType']) {
@@ -327,12 +325,13 @@ class Metadata
                     if (empty($parsedData['field']['aiEngine'])) {
                         continue 2;
                     }
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'],
-                        true);
+                    $row['id'] = $v['id'];
+                    $row['name'] = $v['name'];
+                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
                     $row['aiEngine'] = $parsedData['field']['aiEngine'];
                     $row['confirmPromptByPopup'] = !empty($parsedData['field']['confirmPromptByPopup']);
                     $row['prompt'] = $parsedData['field']['prompt'];
-                    $row['buttonLabel'] = $parsedData['field']['buttonLabel'] ?? '';
+                    $row['buttonLabel'] = $parsedData['field']['buttonLabel'] ?? ($parsedData['name'] ?? '');
                     break;
             }
 
