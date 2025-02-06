@@ -25,8 +25,7 @@ class V1Dot13Dot11 extends Base
 
     public function up(): void
     {
-//        $vendorPath = 'vendor/atrocore';
-        $vendorPath = 'src';
+        $vendorPath = 'vendor/atrocore';
 
         $scopes = [];
 
@@ -102,7 +101,10 @@ class V1Dot13Dot11 extends Base
                 $this->exec("CREATE INDEX IDX_USER_FOLLOWED_{$uppercased}_MODIFIED_AT ON user_followed_{$table} (modified_at, deleted)");
             }
         } else {
-
+            foreach ($tables as $table) {
+                $uppercased = strtoupper($table);
+                $this->exec("CREATE TABLE user_followed_{$table} (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, {$table}_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_{$uppercased}_UNIQUE_RELATION (deleted, user_id, {$table}_id), INDEX IDX_USER_FOLLOWED_{$uppercased}_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_{$uppercased}_ID ({$table}_id, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            }
         }
     }
 
