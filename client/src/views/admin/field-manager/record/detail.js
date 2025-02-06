@@ -24,6 +24,10 @@ Espo.define('views/admin/field-manager/record/detail', 'views/record/detail', De
                 });
             }
 
+            if (!this.getMetadata().get(`entityDefs.${this.model.get('entityId')}.fields.${this.model.get('code')}.isCustom`)) {
+                this.removeButton('delete');
+            }
+
             Dep.prototype.setup.call(this);
         },
 
