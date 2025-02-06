@@ -26,17 +26,23 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
                 this.additionalButtons = [
                     {
                         action: "sendTestEmail",
-                        label:  this.translate('sendTestEmail', 'labels', 'Connection')
+                        label: this.translate('sendTestEmail', 'labels', 'Connection')
                     }
                 ]
+                if (this.model.get('smtpAuthType') === 'oauth') {
+                    this.additionalButtons.unshift({
+                        "action": "authenticateSmtp",
+                        "label": this.translate('authenticate', 'labels', 'Connection'),
+                    });
+                }
             }
         },
 
-        actionTestConnection() {
-            this.notify('Loading...');
-            this.ajaxPostRequest('Connection/action/testConnection', {id: this.model.get('id')}).then(() => {
-                this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
-            });
+        actionAuthenticateSmtp() {
+            if (!this.model.isNew() && this.model.get('smtpOauthAuthorizeUrl') && this.model.get('smtpClientId')) {
+                const redirectUri = this.getConfig().get('siteUrl') + '/?entryPoint=OauthSmtpCallback';
+                window.open(`${this.model.get('smtpOauthAuthorizeUrl')}?client_id=${this.model.get('smtpClientId')}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=${this.model.get('smtpOauthScope')}&state=${this.model.get('id')}`);
+            }
         },
 
         actionSendTestEmail() {

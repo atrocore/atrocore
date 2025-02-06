@@ -35,7 +35,13 @@
     "smtpUsername": "Username",
     "smtpPassword": "Password",
     "outboundEmailFromName": "From Name",
-    "outboundEmailFromAddress": "From Address"
+    "outboundEmailFromAddress": "From Address",
+    "smtpOauthScope": "Oauth Scope",
+    "smtpOauthAuthorizeUrl": "Oauth Authorize URL",
+    "smtpOauthTokenUrl": "Oauth Token URL",
+    "smtpClientId": "Client ID",
+    "smtpClientSecret": "Client Secret",
+    "smtpAuthType": "Auth Type"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
@@ -61,6 +67,12 @@
     "price-reduction": "Price reduction",
     "oauth1": "Oauth 1.0",
     "smtp": "SMTP"
+  },
+  "options": {
+    "smtpAuthType": {
+      "basic": "Basic",
+      "oauth": "Oauth"
+    }
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",

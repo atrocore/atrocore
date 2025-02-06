@@ -90,7 +90,7 @@ class Connection extends Base
         return openssl_encrypt($password, $this->getCypherMethod(), $this->getSecretKey(), 0, $this->getByteSecretIv());
     }
 
-    public function decryptPassword(string $hash): string
+    public function decryptPassword(string $hash): string|bool
     {
         return openssl_decrypt($hash, $this->getCypherMethod(), $this->getSecretKey(), 0, $this->getByteSecretIv());
     }
