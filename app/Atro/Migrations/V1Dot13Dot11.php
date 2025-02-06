@@ -25,13 +25,7 @@ class V1Dot13Dot11 extends Base
     public function up(): void
     {
         if($this->isPgSQL()) {
-            // DROP SEQUENCE user_followed_record_id_seq CASCADE;
-            //DROP INDEX idx_user_followed_record_entity;
-            //DROP INDEX IDX_USER_FOLLOWED_RECORD_USER_ID;
-            //ALTER TABLE user_followed_record ADD deleted BOOLEAN DEFAULT 'false';
-            //ALTER TABLE user_followed_record ALTER id TYPE VARCHAR(36);
-            //ALTER TABLE user_followed_record ALTER id DROP DEFAULT;
-            //CREATE INDEX IDX_USER_FOLLOWED_RECORD_USER_ID ON user_followed_record (user_id, deleted)
+
         }else{
 
         }
