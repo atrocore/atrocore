@@ -43,8 +43,7 @@
             "view": "views/preferences/fields/default-currency"
         },
         "dashboardLayout": {
-            "type": "jsonArray",
-            "view": "views/layout-profile/fields/dashboard-layout"
+            "type": "jsonArray"
         },
         "dashletsOptions": {
             "type": "jsonObject"

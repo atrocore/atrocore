@@ -24,6 +24,10 @@
 
     export let editItem: Function;
 
+    export let getGroupId: Function = () => {
+        return 'id'
+    }
+
     export let fieldsInGroup: KeyValue;
 
     let baseLayout: BaseLayout;
@@ -109,7 +113,9 @@
     export let fetch = () => {
         let data = [];
         let inGroup = false;
-        for (const item of enabledItems) {
+        let adjusted = false;
+        for (let i = 0; i < enabledItems.length; i++){
+            const item = enabledItems[i];
             if (item.isGroup) {
                 inGroup = !item.groupEnd;
                 data.push({
@@ -125,11 +131,59 @@
             if (inGroup) {
                 data[data.length - 1].items.push(item.name);
             } else {
-                data.push(item.name)
+                data.push(item.name);
+            }
+        }
+        let groupBegan = false;
+        let filteredData = data.filter(item => {
+            if(typeof item === 'object') {
+                if(item.name !== '' && !item.items.length) {
+                    return false;
+                }
+
+                if(item.name !== '' && item.items.length) {
+                    groupBegan = true;
+                    return true;
+                }
+
+                if(item.name === '' && groupBegan) {
+                    groupBegan = false
+                    return true;
+                }
+
+                if(item.name === '' && !groupBegan) {
+                    return false
+                }
+            }
+
+            return true;
+        });
+
+        adjusted = filteredData.length !== data.length;
+
+        data = filteredData;
+
+        let dataWithNormalizeGroupEnd = [];
+
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
+            dataWithNormalizeGroupEnd.push(item);
+            if(typeof  item === 'object' && item.name !== '') {
+                if(i === data.length -1 || !(typeof  data[i +1] === 'object' && data[i +1].name === '')) {
+                    adjusted= true;
+                    dataWithNormalizeGroupEnd.push({
+                        id: getGroupId(),
+                        name: '',
+                        items: []
+                    });
+                }
             }
         }
 
-        return data;
+        return {
+            adjusted,
+            navigation: dataWithNormalizeGroupEnd
+        };
     }
 
     function removeItem(item: Item): void {
@@ -271,7 +325,7 @@
         overflow: hidden;
     }
 
-    .enabled .in-group {
+    .enabled .in-group, .group.end {
         margin-left: 20px;
     }
 

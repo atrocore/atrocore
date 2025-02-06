@@ -32,12 +32,6 @@
           "name": "hideFeedbackIcon"
         },
         false
-      ],
-      [
-        {
-          "name": "dashboardLayout"
-        },
-        false
       ]
     ]
   },

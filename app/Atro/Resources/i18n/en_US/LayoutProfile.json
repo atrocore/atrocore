@@ -11,13 +11,16 @@
   },
   "labels": {
     "Create LayoutProfile": "Create Layout Profile",
-    "addGroup": "Add group"
+    "addGroup": "Add group",
+    "Menu": "Menu",
+    "Dashboards": "Dashboards"
   },
   "exceptions": {
     "defaultIsRequired": "A default layout profile should exist in the system"
   },
   "messages": {
-    "profileWillBeNewDefault": "This profile will be the new default, are you sure ?"
+    "profileWillBeNewDefault": "This profile will be the new default, are you sure ?",
+    "navigationUpdate": "The navigation menu has been adjusted by the system."
   },
   "boolFilters": {
     "withLayouts": "With Stored Layout"
