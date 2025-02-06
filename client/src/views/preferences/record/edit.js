@@ -59,6 +59,15 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 style: 'danger'
             });
 
+            var forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+
+            if (!~forbiddenEditFieldList.indexOf('dashboardLayout')) {
+                this.addDropdownItem({
+                    name: 'openDashboard',
+                    html: this.getLanguage().translate('Dashboards', 'labels', 'LayoutProfile')
+                });
+            }
+
 
             if (this.model.id == this.getUser().id) {
                 this.on('after:save', function () {
@@ -119,6 +128,14 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             }
         },
 
+        actionOpenDashboard: function() {
+            this.createView('dashboard', 'views/layout-profile/modals/dashboard-layout', {
+                field: 'dashboardLayout',
+                model: this.model,
+            }, view => {
+                view.render();
+            });
+        }
     });
 
 });
