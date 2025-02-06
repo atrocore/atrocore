@@ -1233,7 +1233,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this.additionalButtons = [];
-            this.dropdownItemList = [];
+            this.dropdownItemList = [{
+                name: 'delete',
+                label: 'Remove'
+            }];
 
             this.setupActionItems();
             this.setupBeforeFinal();
