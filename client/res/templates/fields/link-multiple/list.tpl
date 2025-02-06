@@ -1,6 +1,1 @@
-{{#if value}}
-    {{{value}}}
-{{else}}
-{{#if isNull}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}<span class="pre-label"> </span>{{/if}}
-{{/if}}
-
+{{#if value}}{{{value}}}{{else}}{{#if isNull}}<span data-action="loadData" class="text-gray" style="cursor: pointer" title="{{translate 'Load data'}}">...</span>{{else}}<span class="pre-label"> </span>{{/if}}{{/if}}

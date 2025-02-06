@@ -19,6 +19,15 @@ class Util
     protected static string $separator = DIRECTORY_SEPARATOR;
     protected static array $reservedWords = ['Case'];
 
+    public static function pluralize(string $word): string
+    {
+        if (substr($word, -1) === 'y' && !in_array(substr($word, -2, 1), ['a', 'e', 'i', 'o', 'u'])) {
+            return substr($word, 0, -1) . 'ies';
+        }
+
+        return substr($word, -1) === 's' ? $word : $word . 's';
+    }
+
     public static function unsetProperty(\stdClass $object, string $property): void
     {
         if (property_exists($object, $property)){

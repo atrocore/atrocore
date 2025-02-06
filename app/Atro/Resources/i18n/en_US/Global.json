@@ -120,6 +120,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "Load data": "Load data",
     "jobManager": "Job Manager",
     "massActionDelegatedToJm": "Your action has been successfully delegated to the Job Manager.",
     "massActionJobName": "%s on Entity '%s' (%s out of %s)",
@@ -512,6 +513,7 @@
     "compare": "Compare"
   },
   "fields": {
+    "followers": "Followers",
     "folderPath": "Folder Path",
     "connection": "Connection",
     "tags": "Tags",

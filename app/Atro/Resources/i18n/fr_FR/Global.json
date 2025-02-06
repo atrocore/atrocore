@@ -1,5 +1,6 @@
 {
   "fields": {
+    "followers": "Suiveurs",
     "name": "Nom",
     "emailAddress": "Courriel",
     "description": "Description",

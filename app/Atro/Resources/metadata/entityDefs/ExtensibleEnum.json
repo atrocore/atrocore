@@ -19,7 +19,6 @@
     "extensibleEnumOptions": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "noLoad": true
     },
     "createdAt": {

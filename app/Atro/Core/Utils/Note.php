@@ -58,10 +58,6 @@ class Note
     {
         $this->handleRelationEntity($entity, 'Unrelate');
 
-        if ($this->streamEnabled($entity->getEntityType())) {
-            $this->getStreamService()->unfollowAllUsersFromEntity($entity);
-        }
-
         $conn = $this->getEntityManager()->getConnection();
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier('note'))

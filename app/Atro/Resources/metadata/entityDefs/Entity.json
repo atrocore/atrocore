@@ -178,7 +178,6 @@
     "fields": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
     }

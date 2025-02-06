@@ -10,5 +10,6 @@
   "hasActive": true,
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
+  "streamDisabled": true,
   "emHidden": true
 }
