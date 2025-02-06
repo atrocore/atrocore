@@ -51,7 +51,25 @@ class AfterInstallAfterDelete
     {
     }
 
-    protected  function addMenuItems(array $menuItems): void
+    protected  function addMenuItems($menuItems): void
+    {
+        $this->updateLayoutProfileNavigation($menuItems);
+    }
+
+    protected  function removeMenuItems($menuItems): void
+    {
+        $this->updateLayoutProfileNavigation($menuItems, true);
+    }
+
+    /**
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
+    }
+
+    private  function updateLayoutProfileNavigation(array $menuItems, bool $shouldRemove = false): void
     {
         /** @var Connection $connection */
         $connection = $this->getContainer()->get('connection');
@@ -71,6 +89,19 @@ class AfterInstallAfterDelete
 
         $navigation = @json_decode($defaultLayout['navigation'], true) ?? [];
 
+        $navigation = $shouldRemove ? $this->removeItems($menuItems, $navigation): $this->addItems($menuItems, $navigation);
+
+        $connection->createQueryBuilder()
+            ->update('layout_profile')
+            ->set('navigation', ':navigation')
+            ->where('id =:id')
+            ->setParameter('navigation', json_encode($navigation))
+            ->setParameter('id', $defaultLayout['id'])
+            ->executeStatement();
+    }
+
+    private  function addItems(array $menuItems, array $navigation): array
+    {
         $tabList = [];
         foreach ($navigation as $item) {
             if(is_array($item) && !empty($item['items'])) {
@@ -83,35 +114,59 @@ class AfterInstallAfterDelete
         }
 
         foreach ($menuItems as $item) {
-            if(is_array($item) && !empty($item['items'])) {
+            if(is_array($item) && !empty($item['id']) && !empty($item['items'])) {
+
                 $subItems = [];
                 foreach ($item['items'] as $subItem) {
                     if(!in_array($subItem, $tabList)) {
                         $subItems[] = $subItem;
                     }
                 }
+
                 if(!empty($subItems)) {
                     $item['items'] = $subItems;
-                    $navigation[] = $item;
+                    foreach ($navigation as $key => $navigationItem) {
+                        if(!empty($navigationItem['id']) && $navigationItem['id'] === $item['id']) {
+                           $navigation[$key]['items'] = array_merge($navigationItem['items'], $subItems);
+                           $alreadyAdded = true;
+                            break;
+                        }
+                    }
+
+                    if(empty($alreadyAdded)) {
+                        $navigation[] = $item;
+                    }
                 }
+
             }else if(!in_array($item, $tabList)) {
                 $navigation[] = $item;
             }
         }
-
-        $connection->createQueryBuilder()
-            ->update('layout_profile')
-            ->set('navigation', ':navigation')
-            ->where('id =:id')
-            ->setParameter('navigation', json_encode($navigation))
-            ->setParameter('id', $defaultLayout['id'])
-            ->executeStatement();
+        return $navigation;
     }
-    /**
-     * @return Container
-     */
-    protected function getContainer(): Container
+
+    private  function removeItems(array $menuItems, array $navigation): array
     {
-        return $this->container;
+        foreach ($menuItems as $item) {
+            if(is_string($item)) {
+                if(in_array($item, $navigation)) {
+                    $navigation = array_filter($navigation, fn($i) => $i !== $item);
+                    continue;
+                }
+
+                foreach ($navigation as $key => $navigationItem) {
+                    if(is_array($navigationItem) && !empty($navigationItem['items'])) {
+                        if(in_array($item, $navigationItem['items'])) {
+                            $navigation[$key]['items'] = array_filter($navigationItem['items'], fn($i) => $i !== $item);
+                            if(empty($navigation[$key]['items'])) {
+                                unset($navigation[$key]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $navigation;
     }
 }
