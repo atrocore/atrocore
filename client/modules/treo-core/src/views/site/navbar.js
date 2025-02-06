@@ -154,40 +154,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.favoritesList = this.getFavoritesList().map(tab => this.getTabDefs(tab));
         },
 
-        processFavoritesWidth() {
-            function calcWidth() {
-                if ($(window).width() <= 576) return;
-                var navWidth = 0;
-                var moreWidth = $("hide-list").outerWidth(true);
-
-                $("nav-elements > nav-element").each(function (e) {
-                    navwidth += $(this).outerWidth(true);
-                });
-
-                var availableSpace = $("nav-elements").outerWidth(true) - morewidth;
-
-                if (navwidth > availablespace) {
-                    const list = $("nav-elements > nav-element");
-                    let lastItem = $(list[list.length - 1]);
-                    lastItem.attr("data-width", lastItem.outerWidth(true));
-                    $("hide-list").append(lastItem.clone());
-                    lastItem.remove();
-
-                    if (calcWidthIndex <= 10) {
-                        calcWidth();
-                    }
-                    calcWidthIndex += 1;
-                } else {
-                    var firstMoreElement = $("hide-list nav-element").last();
-                    if (navwidth + firstMoreElement.data("width") < availablespace) {
-                        $("nav-elements").append(firstMoreElement);
-                    }
-                }
-            }
-
-            calcWidth();
-        },
-
         adjust: function () {
             var $window = $(window);
 
