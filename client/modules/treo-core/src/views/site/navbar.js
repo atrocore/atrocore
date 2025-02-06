@@ -16,10 +16,22 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         isMoreFields: false,
 
+        favoritesList: [],
+
         openMenu: function () {
             this.events = _.extend({}, this.events || {}, {
                 'click .search-toggle': function () {
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
+                },
+
+                'click [data-action="configureFavorites"]': function (e) {
+                    this.createView('favoritesEdit', 'views/layout-profile/modals/favorites', {
+                        field: 'favoritesList',
+                        model: this.getPreferences()
+                    }, view => {
+                        this.notify(false)
+                        view.render();
+                    });
                 }
             });
         },
@@ -28,7 +40,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             return _.extend({
                 hasJM: this.getAcl().check('Job', 'read'),
                 isMoreFields: this.isMoreFields,
-                lastViewed: !this.getConfig().get('actionHistoryDisabled')
+                lastViewed: !this.getConfig().get('actionHistoryDisabled'),
+                favoritesList: this.favoritesList || [],
             }, Dep.prototype.data.call(this));
         },
 
@@ -105,6 +118,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.setupTabDefsList();
 
+            this.setupFavoritesList();
+
             this.setupBookmark();
 
             this.once('remove', function () {
@@ -129,6 +144,48 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             }, this.events);
 
             this.openMenu();
+        },
+
+        getFavoritesList: function () {
+            return this.getConfig().get('favoritesList') || [];
+        },
+
+        setupFavoritesList: function () {
+            this.favoritesList = this.getFavoritesList().map(tab => this.getTabDefs(tab));
+        },
+
+        processFavoritesWidth() {
+            function calcWidth() {
+                if ($(window).width() <= 576) return;
+                var navWidth = 0;
+                var moreWidth = $("hide-list").outerWidth(true);
+
+                $("nav-elements > nav-element").each(function (e) {
+                    navwidth += $(this).outerWidth(true);
+                });
+
+                var availableSpace = $("nav-elements").outerWidth(true) - morewidth;
+
+                if (navwidth > availablespace) {
+                    const list = $("nav-elements > nav-element");
+                    let lastItem = $(list[list.length - 1]);
+                    lastItem.attr("data-width", lastItem.outerWidth(true));
+                    $("hide-list").append(lastItem.clone());
+                    lastItem.remove();
+
+                    if (calcWidthIndex <= 10) {
+                        calcWidth();
+                    }
+                    calcWidthIndex += 1;
+                } else {
+                    var firstMoreElement = $("hide-list nav-element").last();
+                    if (navwidth + firstMoreElement.data("width") < availablespace) {
+                        $("nav-elements").append(firstMoreElement);
+                    }
+                }
+            }
+
+            calcWidth();
         },
 
         adjust: function () {

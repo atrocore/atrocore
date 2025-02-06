@@ -77,6 +77,11 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 }, this);
             }
 
+            this.addDropdownItem({
+                name: 'configureFavorites',
+                html: this.getLanguage().translate('Favorites', 'labels', 'LayoutProfile'),
+            });
+
             this.listenTo(this.model, 'after:save', function () {
                 if (
                     this.model.get('localeId') !== this.attributes.language
@@ -133,6 +138,16 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 field: 'dashboardLayout',
                 model: this.model,
             }, view => {
+                view.render();
+            });
+        },
+
+        actionConfigureFavorites: function () {
+            this.createView('favoritesEdit', 'views/layout-profile/modals/favorites', {
+                field: 'favoritesList',
+                model: this.model
+            }, view => {
+                this.notify(false);
                 view.render();
             });
         }

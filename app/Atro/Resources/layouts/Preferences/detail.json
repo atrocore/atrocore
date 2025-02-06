@@ -26,12 +26,6 @@
           "name": "style"
         },
        false
-      ],
-      [
-        {
-          "name": "hideFeedbackIcon"
-        },
-        false
       ]
     ]
   },

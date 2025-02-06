@@ -191,7 +191,7 @@
         refresh();
     }
 
-    function validate(itemToSaved: Array): boolean {
+    export let validate: Function = (itemToSaved: Array<any>): boolean => {
         if (itemToSaved.length === 0) {
             Notifier.notify('Menu cannot be empty', 'error');
             return false;

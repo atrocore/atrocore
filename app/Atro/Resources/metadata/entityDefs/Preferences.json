@@ -76,15 +76,16 @@
         "closedPanelOptions": {
             "type": "jsonObject"
         },
-        "hideFeedbackIcon": {
-            "type": "bool"
-        },
         "receiveNotifications": {
             "type": "bool"
         },
         "notificationProfile": {
             "type": "link",
             "view": "views/preferences/fields/notification-profile"
+        },
+        "favoritesList": {
+            "type": "array",
+            "view": "views/preferences/fields/favourites-list"
         }
     },
     "links": {

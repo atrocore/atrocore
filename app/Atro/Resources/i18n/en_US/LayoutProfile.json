@@ -7,13 +7,15 @@
     "layouts": "Layouts",
     "parent": "Parent Layout Profile",
     "navigation": "Navigation Menu",
+    "favoritesList": "Favorites",
     "dashboardLayout": "Dashboard Layout"
   },
   "labels": {
     "Create LayoutProfile": "Create Layout Profile",
     "addGroup": "Add group",
     "Menu": "Menu",
-    "Dashboards": "Dashboards"
+    "Dashboards": "Dashboards",
+    "Favorites": "Favorites"
   },
   "exceptions": {
     "defaultIsRequired": "A default layout profile should exist in the system"
