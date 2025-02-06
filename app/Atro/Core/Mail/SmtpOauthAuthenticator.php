@@ -28,7 +28,7 @@ class SmtpOauthAuthenticator implements AuthenticatorInterface
         return 'XOAUTH2';
     }
 
-    public function getToken()
+    public function getToken() : string
     {
         return ($this->tokenCallback)();
     }

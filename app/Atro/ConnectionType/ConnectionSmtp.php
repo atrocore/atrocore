@@ -91,7 +91,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
         return $data['access_token'];
     }
 
-    public function createAccessTokenFromAuthCode(Entity $connectionEntity, $authCode): array
+    public function createAccessTokenFromAuthCode(Entity $connectionEntity, string $authCode): array
     {
         $params = [
             'client_id'     => $connectionEntity->get('smtpClientId'),
