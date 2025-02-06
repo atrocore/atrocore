@@ -262,7 +262,7 @@ class Metadata
                     $triggerAction = 'onFocus';
                     break;
                 case 'ui_on_button_click':
-                    $triggerAction = 'onActionButtonClick';
+                    $triggerAction = 'onButtonClick';
                     break;
                 default:
                     continue 2;
@@ -285,7 +285,7 @@ class Metadata
             $row = [];
             $row['type'] = $mapper[$v['type']];
             $row['triggerAction'] = $triggerAction;
-            $row['triggerFields'] = @json_decode((string)$v['triggerFields'], true);
+            $row['triggerFields'] = is_array($v['triggerFields']) ? $v['triggerFields'] :  @json_decode((string)$v['triggerFields'], true);
             $row['conditions'] = $conditions;
 
             switch ($row['type']) {
@@ -307,6 +307,8 @@ class Metadata
                     if (empty($parsedData['field']['updateType'])) {
                         continue 2;
                     }
+                    $row['id'] = $v['id'];
+                    $row['name'] = $v['name'];
                     $row['updateType'] = $parsedData['field']['updateType'];
                     $row['overwrite'] = !empty($parsedData['field']['overwrite']);
                     switch ($parsedData['field']['updateType']) {
@@ -323,11 +325,13 @@ class Metadata
                     if (empty($parsedData['field']['aiEngine'])) {
                         continue 2;
                     }
+                    $row['id'] = $v['id'];
+                    $row['name'] = $v['name'];
                     $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
                     $row['aiEngine'] = $parsedData['field']['aiEngine'];
                     $row['confirmPromptByPopup'] = !empty($parsedData['field']['confirmPromptByPopup']);
                     $row['prompt'] = $parsedData['field']['prompt'];
-                    $row['buttonLabel'] = $parsedData['field']['buttonLabel'] ?? '';
+                    $row['buttonLabel'] = $parsedData['field']['buttonLabel'] ?? ($parsedData['name'] ?? '');
                     break;
             }
 
