@@ -129,7 +129,7 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
         },
 
         actionOpenDashboard: function() {
-            this.createView('edit', 'views/layout-profile/modals/dashboard-layout', {
+            this.createView('dashboard', 'views/layout-profile/modals/dashboard-layout', {
                 field: 'dashboardLayout',
                 model: this.model,
             }, view => {
