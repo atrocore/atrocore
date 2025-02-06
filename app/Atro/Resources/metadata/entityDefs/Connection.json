@@ -339,6 +339,46 @@
       "type": "varchar",
       "notStorable": true,
       "dataField": true
+    },
+    "smtpAuthType": {
+      "type": "enum",
+      "default": "basic",
+      "options": [
+        "basic",
+        "oauth"
+      ],
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpClientId": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpClientSecret": {
+      "type": "password",
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpOauthScope": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpOauthAuthorizeUrl": {
+      "type": "url",
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpOauthTokenUrl": {
+      "type": "url",
+      "notStorable": true,
+      "dataField": true
+    },
+    "smtpAccessData": {
+      "type": "text",
+      "notStorable": true,
+      "dataField": true
     }
   },
   "links": {

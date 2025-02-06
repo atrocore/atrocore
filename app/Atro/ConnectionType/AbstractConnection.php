@@ -38,9 +38,14 @@ abstract class AbstractConnection
         $this->connectionEntity = $connectionEntity;
     }
 
-    protected function decryptPassword(string $hash): string
+    protected function decryptPassword(string $hash): string|bool
     {
         return $this->container->get('serviceFactory')->create('Connection')->decryptPassword($hash);
+    }
+
+    public function encryptPassword(string $password): string
+    {
+        return $this->container->get('serviceFactory')->create('Connection')->encryptPassword($password);
     }
 
     protected function exception(string $name, string $scope = 'Connection'): string
