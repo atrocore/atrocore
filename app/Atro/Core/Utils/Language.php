@@ -346,7 +346,9 @@ class Language
 
                 $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
 
-                $data = Util::merge($data, $this->data[$language]);
+                if (array_key_exists($language, $this->data)) {
+                    $data = Util::merge($data, $this->data[$language]);
+                }
 
                 $this->getDataManager()->setCacheData($cacheName, $data);
             }

@@ -351,18 +351,7 @@ class NotificationManager
             return $this->subscribers[$key];
         }
 
-        $connection = $this->getEntityManager()->getConnection();
-
-        $userIds = $connection->createQueryBuilder()
-            ->select('s.user_id')
-            ->from($connection->quoteIdentifier('user_followed_record'), 's')
-            ->where('s.entity_id = :entityId')
-            ->setParameter('entityId', $entity->get('id'))
-            ->andWhere('s.entity_type = :entityType')
-            ->setParameter('entityType', $entity->getEntityType())
-            ->fetchAllAssociative();
-
-        return $this->subscribers[$key] = array_column($userIds, 'user_id');
+        return $this->subscribers[$key] = array_column($entity->get('followers')->toArray(), 'id');
     }
 
     protected function sendNotificationsRelationEntity(Entity $entity, string $occurrence): void

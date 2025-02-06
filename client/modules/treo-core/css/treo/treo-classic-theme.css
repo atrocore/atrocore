@@ -14619,7 +14619,8 @@ body > #header ul.tabs > li > a > span.full-label {
 }
 
 body > #header ul.tabs > li > a > span.full-label span.fas {
-    padding-left: 5px;
+    padding-left: 7px;
+    color: var(--nav-font-color)
 }
 
 body > #header .navbar-brand span.home-icon {
@@ -19361,16 +19362,6 @@ input#sn-checkbox-open-in-new-window {
     color: var(--nav-font-color);
 }
 
-.navbar-inverse .navbar-nav > .active > a {
-    color: #000;
-    background-color: #d9d9d9 !important
-}
-.navbar-inverse .navbar-nav > .active > a:hover,
-.navbar-inverse .navbar-nav > .active > a:focus {
-    color: #000;
-    background-color: inherit;
-}
-
 .navbar-nav.navbar-right > li > a {
     line-height: 38px;
     font-size: 16px
@@ -19769,13 +19760,9 @@ ul.dropdown-menu > li.checkbox {
 }
 
 #header .navbar-inverse.navbar[data-orientation="vertical"] .navbar-nav .active > a {
-    background: #ddd !important
+    background: rgba(0, 0 , 0, 0.15) !important
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li.active > a {
-    color: #000 !important;
-    background-color: #ddd !important;
-}
 
 #header .navbar-right .global-search-container a.global-searcy-button:hover {
     background: transparent;
@@ -20320,7 +20307,7 @@ button.category:focus {
     width: 100%;
     padding: 0 10px;
     position: relative;
-    border-top: 1px solid #dcdcdc;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 #navbar footer > .copyright span:first-child {
@@ -20342,8 +20329,6 @@ button.category:focus {
 }
 
 #header .menu{
-    border-bottom: 1px solid var(--primary-border-color);
-    border-top: 1px solid var(--primary-border-color);
     margin-top: 3px;
 }
 
@@ -20359,6 +20344,18 @@ button.category:focus {
     margin-right: -10px;
     border-bottom: 1px solid #dedede;
 }
+#header .menu.open-menu li.header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--nav-font-color);
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 25px 10px 22px;
+}
+
+#header .menu.open-menu li.header .fas{
+    cursor: pointer;
+}
 
 @media screen and (min-width: 768px) {
     #header .menu{
@@ -20367,8 +20364,7 @@ button.category:focus {
 
     #header .menu.not-collapsed {
         background-color: transparent;
-        border-right : 1px solid transparent;
-        border-top: 0;
+        border-right : 0;
         box-shadow:none;
         -webkit-transform: translate(-98.3%, 0);
         transform: translate(-98.3%, 0);
@@ -20414,7 +20410,7 @@ button.category:focus {
     }
 
     #navbar footer {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     #header .nav > li.more:not(.more-group) > .dropdown-menu {
@@ -20721,14 +20717,13 @@ button.category:focus {
     position: absolute;
     left: 0;
     right: 0;
-    top: 44px;
+    top: 45px;
     z-index: 2000;
     background: var(--nav-menu-background);
     display: block;
     height: calc(100vh - 44px);
     overflow-x: visible !important;
-    padding-right: 1px;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .3);
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .3);
     border-right: 1px solid var(--primary-border-color);
 }
 
@@ -24100,13 +24095,30 @@ span[data-img-src]::after {
     display: none;
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) span.quick-create {
-    display: none;
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) .quick-create {
     position: absolute;
-    right: 10px;
+    right: 20px;
+    border-radius: 3px;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    display:none;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--nav-font-color);
+    border-color: rgba(0, 0, 0, 0.1);
 }
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs  li:not(.more):hover  span.quick-create {
-    display: inline;
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) .quick-create:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) .quick-create .fa-sm {
+    top: 0;
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs  li:not(.more):hover  .quick-create {
+    display: flex;
+    flex-direction: column;
     cursor: pointer;
 }
 
@@ -24120,12 +24132,17 @@ span[data-img-src]::after {
     display: flex;
 }
 
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more):not(.active):hover > a.nav-link{
+    background: rgba(0, 0 , 0, 0.05) !important
+}
+
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) > a.nav-link > span.full-label{
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
     display: block;
-    padding-right: 30px;
+    margin-left: 28px;
+    position:absolute;
 }
 /* Vertical Mobile*/
 @media (max-width: 767px) {

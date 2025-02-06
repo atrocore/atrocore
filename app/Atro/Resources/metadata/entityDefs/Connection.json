@@ -265,9 +265,7 @@
     "data": {
       "type": "jsonObject",
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,

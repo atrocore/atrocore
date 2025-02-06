@@ -9,6 +9,11 @@
   },
   "labels": {
     "Create LayoutProfile": "Layoutprofil erstellen",
-    "addGroup": "Gruppe hinzufügen"
+    "addGroup": "Gruppe hinzufügen",
+    "Menu": "Menu",
+    "Dashboards": "Dashboards"
+  },
+  "messages": {
+    "navigationUpdate": "Das Navigationsmenü wurde vom System angepasst."
   }
 }

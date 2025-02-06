@@ -38,6 +38,12 @@
 
     <div class="menu not-collapsed">
         <ul class="nav navbar-nav tabs">
+            <li class="header">
+                <span>{{translate "Navigation Menu"}}</span>
+                {{#if canConfigureMenu}}
+                <span data-action="configureMenu" class="fas fa-cog cursor-pointer" style="font-size: 1em;"></span>
+                {{/if}}
+            </li>
             {{#each tabDefsList}}
             {{#if group}}
             <li class="dropdown more more-group tab">
@@ -70,9 +76,9 @@
                             </span>
                             <span class="full-label">{{label}}</span>
                         </a>
-                        <span data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create">
-                    <i class="fas fa-plus"></i>
-                </span>
+                        <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                    <i class="fas fa-plus fa-sm"></i>
+                </button>
                     </li>
                     {{/each}}
                 </ul>
@@ -92,9 +98,9 @@
                         {{/if}}
                     </span>
                 </a>
-                <span data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create">
-                    <i class="fas fa-plus"></i>
-                </span>
+                <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                    <i class="fas fa-plus fa-sm"></i>
+                </button>
             </li>
             {{/if}}
             {{/each}}

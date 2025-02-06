@@ -25,14 +25,6 @@
         {
           "name": "description"
         }
-      ],
-      [
-        {
-          "name": "navigation"
-        },
-        {
-          "name": "dashboardLayout"
-        }
       ]
     ]
   }

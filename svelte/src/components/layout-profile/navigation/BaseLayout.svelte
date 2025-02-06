@@ -56,6 +56,7 @@
                 data-action="{button.name}"
                 disabled={disabled}
                 type="button"
+                style="{button.cssStyle}"
                 class={`btn action btn-${button.style ?? 'default'}`}>
             {button.label}
         </button>

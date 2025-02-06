@@ -61,23 +61,19 @@
     "accounts": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
     },
     "contacts": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
     },
     "hash": {
       "type": "varchar",
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,

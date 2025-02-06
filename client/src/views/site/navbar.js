@@ -27,7 +27,8 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 logoSrc: this.getLogoSrc(),
                 hideFeedbackIcon: !!this.getPreferences().get('hideFeedbackIcon'),
                 navbarIsVertical: this.getThemeManager().getParam('navbarIsVertical'),
-                showBookmarked: true
+                showBookmarked: true,
+                canConfigureMenu: this.getUser().isAdmin()  && this.getPreferences().get('layoutProfileId')
             };
         },
 
@@ -65,7 +66,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this.$el.find('.navbar-collapse.in').collapse('hide');
                 }
             },
-            'click span[data-action="quickCreate"]': function (e) {
+            'click [data-action="quickCreate"]': function (e) {
                 e.preventDefault();
                 var scope = $(e.currentTarget).data('name');
                 this.quickCreate(scope);
@@ -86,7 +87,45 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this.$el.find('.menu').addClass('not-collapsed');
                     this.$el.find('.menu').off('transitionend');
                 }
-            }
+            },
+            'click [data-action="configureMenu"]': function(e) {
+                if(!this.getUser().isAdmin()) {
+                    return;
+                }
+                this.notify('Loading');
+                this.getModelFactory().create('LayoutProfile', (model) => {
+                    model.id = this.getPreferences().get('layoutProfileId');
+                    model.fetch().success(() => {
+                        this.notify(false);
+                        this.createView('edit', 'views/layout-profile/modals/navigation', {
+                            field: 'navigation',
+                            model: model
+                        }, view => {
+                            view.render();
+                            this.listenTo(model, 'sync', () => {
+                                this.getPreferences().set('ldNavigation', this.tabList =  model.get('navigation'));
+                                this.setup();
+                                this.reRender();
+                            });
+                        });
+                    });
+                })
+
+            },
+            'click .navbar-toggle': function (e) {
+                if (this.$el.find('.menu').hasClass('open-menu')) {
+                    if(this.menuShouldBeOpen) {
+                        return;
+                    }
+                    this.$el.find('.menu').removeClass('open-menu');
+                }
+
+                if(this.$el.find('.menu').hasClass('not-collapsed')){
+                    this.$el.find('.menu').addClass('open-menu');
+                    this.$el.find('.menu').removeClass('not-collapsed');
+                    this.menuShouldBeOpen = false;
+                }
+            },
         },
 
         handleMenuVisibility(e) {
@@ -99,6 +138,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                    if(this.menuShouldBeOpen) {
                        this.$el.find('.menu').addClass('open-menu');
                        this.$el.find('.menu').removeClass('not-collapsed');
+                       this.menuShouldBeOpen = false;
                    }
                }, 500)
             }
@@ -123,7 +163,10 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         getTabList: function () {
-            return this.getConfig().get('lpNavigation') || [];
+            if(this.tabList) {
+                return this.tabList;
+            }
+            return this.tabList = this.getPreferences().get('lpNavigation') || [];
         },
 
         setupGlobalSearch: function () {
