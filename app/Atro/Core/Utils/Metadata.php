@@ -292,19 +292,15 @@ class Metadata
                 case 'readOnly':
                 case 'visible':
                 case 'required':
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'],
-                        true);
+                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
                     $row['targetPanels'] = [];
                     if (!empty($v['relationships'])) {
-                        $row['targetPanels'] = is_array($v['relationships']) ? $v['relationships'] : @json_decode((string)$v['relationships'],
-                            true);
+                        $row['targetPanels'] = is_array($v['relationships']) ? $v['relationships'] : @json_decode((string)$v['relationships'], true);
                     }
                     break;
                 case 'disableOptions':
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'],
-                        true);
-                    $row['disabledOptions'] = is_array($v['disabledOptions']) ? $v['disabledOptions'] : @json_decode((string)$v['disabledOptions'],
-                        true);
+                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
+                    $row['disabledOptions'] = is_array($v['disabledOptions']) ? $v['disabledOptions'] : @json_decode((string)$v['disabledOptions'], true);
                     break;
                 case 'setValue':
                     $parsedData = is_array($v['data']) ? $v['data'] : @json_decode((string)$v['data'], true);
@@ -327,8 +323,7 @@ class Metadata
                     if (empty($parsedData['field']['aiEngine'])) {
                         continue 2;
                     }
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'],
-                        true);
+                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
                     $row['aiEngine'] = $parsedData['field']['aiEngine'];
                     $row['confirmPromptByPopup'] = !empty($parsedData['field']['confirmPromptByPopup']);
                     $row['prompt'] = $parsedData['field']['prompt'];
