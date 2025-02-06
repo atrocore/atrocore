@@ -51,12 +51,12 @@ class AfterInstallAfterDelete
     {
     }
 
-    protected  function addMenuItems($menuItems): void
+    protected  function addNavigationItems($menuItems): void
     {
         $this->updateLayoutProfileNavigation($menuItems);
     }
 
-    protected  function removeMenuItems($menuItems): void
+    protected  function removeNavigationItems($menuItems): void
     {
         $this->updateLayoutProfileNavigation($menuItems, true);
     }
