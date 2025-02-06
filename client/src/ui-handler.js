@@ -14,61 +14,65 @@ Espo.define('ui-handler', [], function () {
         this.defs = defs || {};
         this.recordView = recordView;
         this.twig = twig;
-        this.twigTemplateData = {
-            entity: this.recordView.model.attributes,
-            entityFrom: this.recordView.model.attributes._entityFrom || null,
-            isNew: function (entity) {
-                return !(entity.id)
-            },
-            getEntity: function (entityName, entityId) {
-                let res = null;
-                this.ajaxGetRequest(`${entityName}/${entityId}?silent=true`, null, {async: false}).success(entity => {
-                    res = entity;
-                }).error(response => {
-                    console.log('getEntity function failed', response);
-                });
-                return res;
-            }.bind(this.recordView),
-            findRecord: function (entityName, where) {
-                let res = null;
-                if (entityName && where) {
-                    this.ajaxGetRequest(entityName, {
-                        where: where,
-                        offset: 0,
-                        maxSize: 1,
-                        silent: "true"
-                    }, {async: false}).success(response => {
-                        if (response.list && response.list[0]) {
-                            res = response.list[0];
-                        }
-                    }).error(response => {
-                        console.log('findRecord function failed', response);
-                    });
-                }
-                return res;
-            }.bind(this.recordView),
-            findRecords: function (entityName, where, offset = 0, limit = 200) {
-                let res = null;
-                if (entityName && where) {
-                    this.ajaxGetRequest(entityName, {
-                        where: where,
-                        offset: offset,
-                        maxSize: limit,
-                        silent: "true"
-                    }, {async: false}).success(response => {
-                        if (response.list) {
-                            res = response.list;
-                        }
-                    }).error(response => {
-                        console.log('findRecords function failed', response);
-                    });
-                }
-                return res;
-            }.bind(this.recordView)
-        };
+        this.init()
     }
 
     _.extend(UiHandler.prototype, {
+
+        init: function () {
+            this.twigTemplateData = {
+                entity: this.recordView.model.attributes,
+                entityFrom: this.recordView.model.attributes._entityFrom || null,
+                isNew: function (entity) {
+                    return !(entity.id)
+                },
+                getEntity: function (entityName, entityId) {
+                    let res = null;
+                    this.ajaxGetRequest(`${entityName}/${entityId}?silent=true`, null, {async: false}).success(entity => {
+                        res = entity;
+                    }).error(response => {
+                        console.log('getEntity function failed', response);
+                    });
+                    return res;
+                }.bind(this.recordView),
+                findRecord: function (entityName, where) {
+                    let res = null;
+                    if (entityName && where) {
+                        this.ajaxGetRequest(entityName, {
+                            where: where,
+                            offset: 0,
+                            maxSize: 1,
+                            silent: "true"
+                        }, {async: false}).success(response => {
+                            if (response.list && response.list[0]) {
+                                res = response.list[0];
+                            }
+                        }).error(response => {
+                            console.log('findRecord function failed', response);
+                        });
+                    }
+                    return res;
+                }.bind(this.recordView),
+                findRecords: function (entityName, where, offset = 0, limit = 200) {
+                    let res = null;
+                    if (entityName && where) {
+                        this.ajaxGetRequest(entityName, {
+                            where: where,
+                            offset: offset,
+                            maxSize: limit,
+                            silent: "true"
+                        }, {async: false}).success(response => {
+                            if (response.list) {
+                                res = response.list;
+                            }
+                        }).error(response => {
+                            console.log('findRecords function failed', response);
+                        });
+                    }
+                    return res;
+                }.bind(this.recordView)
+            };
+        },
 
         process: function (type, field, additionalParams = {}) {
             let preparedTriggerType = type === 'onLoad' ? 'onChange' : type;
@@ -76,8 +80,8 @@ Espo.define('ui-handler', [], function () {
             this.twigTemplateData['triggerType'] = type;
             this.twigTemplateData['triggerField'] = field;
 
-            if('currentUserId' in additionalParams){
-                this.twigTemplateData['currentUserId'] =  additionalParams.currentUserId;
+            if ('currentUserId' in additionalParams) {
+                this.twigTemplateData['currentUserId'] = additionalParams.currentUserId;
             }
 
             this.defs.forEach(rule => {

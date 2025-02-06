@@ -59,6 +59,11 @@
                 {{/each}}
             </ul>
             {{/if}}
+            {{#if additionalEditButtons}}
+                {{#each additionalEditButtons}}
+                        <button type="button" class="btn btn-default additional-button action"{{#if tooltip}} title="{{tooltip}}"{{/if}} data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</button>
+                {{/each}}
+            {{/if}}
         </div>
         <div class="panel-navigation panel-right pull-left">{{{panelEditNavigation}}}</div>
     </div>
