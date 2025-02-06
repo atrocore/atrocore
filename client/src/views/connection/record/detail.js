@@ -38,6 +38,13 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
             }
         },
 
+        actionTestConnection() {
+            this.notify('Loading...');
+            this.ajaxPostRequest('Connection/action/testConnection', {id: this.model.get('id')}).then(() => {
+                this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
+            });
+        },
+
         actionAuthenticateSmtp() {
             if (!this.model.isNew() && this.model.get('smtpOauthAuthorizeUrl') && this.model.get('smtpClientId')) {
                 const redirectUri = this.getConfig().get('siteUrl') + '/?entryPoint=OauthSmtpCallback';

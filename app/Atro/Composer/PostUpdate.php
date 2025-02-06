@@ -41,7 +41,6 @@ class PostUpdate
      */
     public static function postUpdate()
     {
-        return;
         try {
             // get root path
             self::$rootPath = self::getRootPath();
