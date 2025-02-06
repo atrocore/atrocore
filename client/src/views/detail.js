@@ -716,7 +716,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 type: 'PUT',
                 success: function () {
                     $el.remove();
-                    this.model.set('isFollowed', true);
+                    this.model.fetch();
                 }.bind(this),
                 error: function () {
                     $el.removeClass('disabled');
@@ -732,7 +732,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 type: 'DELETE',
                 success: function () {
                     $el.remove();
-                    this.model.set('isFollowed', false);
+                    this.model.fetch();
                 }.bind(this),
                 error: function () {
                     $el.removeClass('disabled');
