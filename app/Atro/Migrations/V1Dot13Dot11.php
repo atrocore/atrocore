@@ -106,6 +106,32 @@ class V1Dot13Dot11 extends Base
                 $this->exec("CREATE TABLE user_followed_{$table} (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, {$table}_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_{$uppercased}_UNIQUE_RELATION (deleted, user_id, {$table}_id), INDEX IDX_USER_FOLLOWED_{$uppercased}_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_{$uppercased}_ID ({$table}_id, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_{$uppercased}_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
             }
         }
+
+        try {
+            $records = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('user_followed_record')
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $records = [];
+        }
+
+        foreach ($records as $record) {
+            $table = Util::toUnderScore(lcfirst($record['entity_type']));
+
+            try {
+                $this->getConnection()->createQueryBuilder()
+                    ->insert("user_followed_{$table}")
+                    ->setValue('id', ':id')
+                    ->setValue('user_id', ':userId')
+                    ->setValue("{$table}_id", ':entityId')
+                    ->setParameter('id', $record['id'])
+                    ->setParameter('userId', $record['user_id'])
+                    ->setParameter('entityId', $record['entity_id'])
+                    ->executeQuery();
+            } catch (\Throwable $e) {
+            }
+        }
     }
 
     protected function exec(string $query): void
