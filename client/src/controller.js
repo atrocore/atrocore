@@ -205,7 +205,27 @@ Espo.define('controller', [], function () {
             if (postMethod in this) {
                 this[postMethod].call(this, options || {});
             }
-        },/**
+
+            this.changeFavicon();
+        },
+
+        changeFavicon() {
+            let link = document.querySelector("link[rel='icon']");
+
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.head.appendChild(link);
+            }
+
+            link.href = this.getDefaultTabIcon();
+        },
+
+        getDefaultTabIcon() {
+            return 'client/modules/treo-core/img/favicon.svg';
+        },
+
+        /**
          * Create master view, render it if not rendered and return it.
          * @param {Function} callback Master view will be argument for this.
          */
