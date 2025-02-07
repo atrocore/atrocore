@@ -10,7 +10,7 @@
         </div>
     </div>
 </div>
-<div class="panel panel-default edit-container" data-name="panel-1">
+<div class="panel panel-default edit-container layout-customization" data-name="panel-1">
     <div class="panel-heading"><h4 class="panel-title">{{translate 'layoutCustomization' category='labels' scope='LayoutManager'}}</h4></div>
     <div class="panel-body panel-body-form">
         <div id="layout-content"></div>

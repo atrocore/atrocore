@@ -40,6 +40,9 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
                     defs: {
                         name: 'layoutProfile',
                     },
+                    params: {
+                        required: true
+                    },
                     readOnly: !allowSwitch,
                     mode: 'edit',
                     inlineEditDisabled: true,
@@ -60,6 +63,8 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
         },
 
         afterRender() {
+            Dep.prototype.afterRender.call(this);
+
             LayoutUtils.renderComponent.call(this, {
                 type: this.options.type,
                 scope: this.options.scope,
@@ -69,7 +74,13 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
                 onUpdate: this.layoutUpdated.bind(this),
                 getActiveLayoutProfileId: () => this.model.get('layoutProfileId'),
                 inModal: true
-            })
+            });
+
+            if (!this.model.get('layoutProfileId')) {
+                this.$el.find('.panel.layout-customization').hide();
+            } else {
+                this.$el.find('.panel.layout-customization').show();
+            }
         },
 
         layoutUpdated(reset) {
