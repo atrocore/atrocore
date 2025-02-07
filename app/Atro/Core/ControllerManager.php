@@ -72,6 +72,9 @@ class ControllerManager
         ?Response $response
     ): string {
         $controllerClassName = self::getControllerClassName($controllerName, $this->getMetadata());
+        if ($controllerName == 'Layout') {
+            $controllerClassName = '\\Atro\\Controllers\\Layout';
+        }
 
         if (empty($controllerClassName) || !class_exists($controllerClassName)) {
             throw new NotFound("Controller '$controllerName' is not found");
