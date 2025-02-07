@@ -40,6 +40,8 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
         template: 'modals/mass-update',
 
+        fullHeight: true,
+
         data: function () {
             return {
                 scope: this.scope,
