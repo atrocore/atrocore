@@ -103,6 +103,9 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                     }, this);
                 }.bind(this));
             },
+            'click button[data-action="reset"]': function() {
+                this.resetDashboard();
+            }
         },
 
         data: function () {
@@ -123,7 +126,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         "layout": []
                     }
                 ];
-                this.dashboardLayout = this.getPreferences().get('dashboardLayout') || this.getConfig().get('lpDashboardLayout') || defaultLayout;
+                this.dashboardLayout = this.getPreferences().get('dashboardLayout')  || defaultLayout;
 
                 if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
                     this.dashboardLayout = defaultLayout;
@@ -361,7 +364,25 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Dashboard', 'labels'));
-        }
+        },
+
+        resetDashboard: function () {
+            this.confirm(this.translate('confirmation', 'messages'), function () {
+                this.notify('Loading...');
+                this.ajaxPostRequest('Preferences/action/resetDashboard', {
+                    id: this.getUser().id
+                }).done(function (data) {
+                    Espo.Ui.success(this.translate('Done'));
+
+                    this.getPreferences().set('dashboardLayout', data.dashboardLayout);
+                    this.getPreferences().set('dashletsOptions', data.dashletsOptions);
+                    this.getPreferences().trigger('update');
+                    this.dashboardLayout = data.dashboardLayout;
+                    this.setup();
+                    this.reRender();
+                }.bind(this));
+            }, this);
+        },
     });
 });
 

@@ -23,6 +23,7 @@
     "triggerAction": {
       "type": "extensibleEnum",
       "extensibleEnumId": "ui_trigger",
+      "view": "views/ui-handler/fields/trigger-action",
       "required": true,
       "dropdown": true
     },
@@ -63,9 +64,7 @@
       "type": "bool",
       "readOnly": true,
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
@@ -80,9 +79,7 @@
     "data": {
       "type": "jsonObject",
       "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,

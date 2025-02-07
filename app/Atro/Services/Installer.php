@@ -777,23 +777,20 @@ class Installer extends HasContainer
             $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->insert('layout_profile')
                 ->values([
-                    'id'         => ':id',
-                    'name'       => ':name',
-                    'is_active'  => ':true',
-                    'is_default' => ':true',
-                    'data'       => ':data'
+                    'id'               => ':id',
+                    'name'             => ':name',
+                    'is_active'        => ':true',
+                    'is_default'       => ':true',
+                    'navigation'       => ':navigation',
+                    'dashboard_layout' => ':dashboardLayout',
                 ])->setParameters([
                     'id'   => $defaultId,
                     'name' => 'Standard',
-                    'data' => [
-                        'field' => [
-                            "navigation" => ['File', 'Folder'],
-                            "dashboardLayout" => [
-                                'name'   => 'My AtroPIM',
-                                'layout' => []
-                            ]
-                        ]
-                    ]
+                    'navigation' => json_encode( ['File', 'Folder']),
+                    'dashboardLayout' => json_encode( [
+                        'name'   => 'My AtroPIM',
+                        'layout' => []
+                    ]),
                 ])
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->executeStatement();

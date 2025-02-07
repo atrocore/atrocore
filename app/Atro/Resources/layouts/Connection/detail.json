@@ -139,9 +139,11 @@
       ],
       [
         {
-          "name": "smtpSecurity"
+          "name": "smtpAuthType"
         },
-        false
+        {
+          "name": "smtpSecurity"
+        }
       ],
       [
         {
@@ -149,6 +151,28 @@
         },
         {
           "name": "smtpPassword"
+        }
+      ],
+      [
+        {
+          "name": "smtpClientId"
+        },
+        {
+          "name": "smtpClientSecret"
+        }
+      ],
+      [
+        {
+          "name": "smtpOauthScope"
+        },
+        false
+      ],
+      [
+        {
+          "name": "smtpOauthAuthorizeUrl"
+        },
+        {
+          "name": "smtpOauthTokenUrl"
         }
       ],
       [

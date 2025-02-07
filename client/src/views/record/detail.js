@@ -60,6 +60,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         additionalButtons: [],
 
+        additionalEditButtons: [],
+
         route: [],
 
         buttonList: [
@@ -251,6 +253,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 actionId: data.id,
                 entityId: this.model.get('id')
             })
+        },
+
+        actionUiHandler: function (data) {
+            const handler = (this.getMetadata().get(['clientDefs', this.scope, 'uiHandler']) || []).find(el => el.id === data.id)
+            if (handler) {
+                let methodName = 'execute' + Espo.Utils.upperCaseFirst(handler.type);
+                if (typeof this.uiHandler[methodName] === "function") {
+                    this.uiHandler[methodName](handler);
+                }
+            }
         },
 
         executeActionRequest(payload, callback) {
@@ -579,7 +591,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         preloader: true
                     });
                 }
+
+                this.setupUiHandlerButtons()
             }
+
         },
 
         loadDynamicActions: function (display) {
@@ -660,6 +675,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         $(html).insertBefore($buttons.find('a.preloader'))
                     }
                 })
+        },
+
+        setupUiHandlerButtons() {
+            this.additionalEditButtons = [];
+            (this.getMetadata().get(['clientDefs', this.scope, 'uiHandler']) || []).forEach(handler => {
+                if (handler.type === 'setValue' && handler.triggerAction === 'onButtonClick') {
+                    this.additionalEditButtons.push({
+                        'action': 'uiHandler',
+                        'id': handler.id,
+                        'label': handler.name
+                    })
+
+                }
+            })
         },
 
         isHierarchical() {
@@ -1096,6 +1125,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             let data = {
                 additionalButtons: this.additionalButtons,
+                additionalEditButtons: this.additionalEditButtons,
                 scope: this.scope,
                 entityType: this.entityType,
                 buttonList: this.buttonList,
@@ -1231,6 +1261,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     return item.name !== 'saveAndCreate'
                 })
             }
+
+            this.additionalButtons = [];
+            this.dropdownItemList = [{
+                name: 'delete',
+                label: 'Remove'
+            }];
 
             this.setupActionItems();
             this.setupBeforeFinal();

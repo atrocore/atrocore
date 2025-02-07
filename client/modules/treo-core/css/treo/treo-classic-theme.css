@@ -14619,7 +14619,8 @@ body > #header ul.tabs > li > a > span.full-label {
 }
 
 body > #header ul.tabs > li > a > span.full-label span.fas {
-    padding-left: 10px;
+    padding-left: 7px;
+    color: var(--nav-font-color)
 }
 
 body > #header .navbar-brand span.home-icon {
@@ -20311,7 +20312,7 @@ button.category:focus {
     width: 100%;
     padding: 0 10px;
     position: relative;
-    border-top: 1px solid #dcdcdc;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 #navbar footer > .copyright span:first-child {
@@ -20333,8 +20334,6 @@ button.category:focus {
 }
 
 #header .menu{
-    border-bottom: 1px solid var(--primary-border-color);
-    border-top: 1px solid var(--primary-border-color);
     margin-top: 3px;
 }
 
@@ -20350,6 +20349,18 @@ button.category:focus {
     margin-right: -10px;
     border-bottom: 1px solid #dedede;
 }
+#header .menu.open-menu li.header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--nav-font-color);
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 25px 10px 22px;
+}
+
+#header .menu.open-menu li.header .fas{
+    cursor: pointer;
+}
 
 @media screen and (min-width: 768px) {
     #header .menu{
@@ -20363,14 +20374,6 @@ button.category:focus {
         -webkit-transform: translate(-98.3%, 0);
         transform: translate(-98.3%, 0);
         cursor: pointer;
-    }
-
-    #header .menu.not-collapsed footer{
-        display: none;
-    }
-
-    #header .menu.open-menu footer {
-        display:block;
     }
 
     #header .menu.not-collapsed:hover {
@@ -20412,7 +20415,7 @@ button.category:focus {
     }
 
     #navbar footer {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     #header .nav > li.more:not(.more-group) > .dropdown-menu {
@@ -20725,7 +20728,7 @@ button.category:focus {
     display: block;
     height: calc(100vh - 44px);
     overflow-x: visible !important;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .3);
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .3);
     border-right: 1px solid var(--primary-border-color);
 }
 
@@ -24108,6 +24111,10 @@ span[data-img-src]::after {
     background-color: rgba(0, 0, 0, 0.1);
     color: var(--nav-font-color);
     border-color: rgba(0, 0, 0, 0.1);
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) .quick-create:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs   li:not(.more) .quick-create .fa-sm {

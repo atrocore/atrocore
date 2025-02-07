@@ -58,7 +58,9 @@ class JobManager
         }
 
         $job->set('status', 'Running');
-        $this->getEntityManager()->saveEntity($job);
+        if (empty($job->_debug)) {
+            $this->getEntityManager()->saveEntity($job);
+        }
 
         try {
             $this->container->get($className)->run($job);
@@ -71,7 +73,9 @@ class JobManager
 
         $job->set('status', 'Success');
         $job->set('endedAt', (new \DateTime())->format('Y-m-d H:i:s'));
-        $this->getEntityManager()->saveEntity($job);
+        if (empty($job->_debug)) {
+            $this->getEntityManager()->saveEntity($job);
+        }
 
         return true;
     }

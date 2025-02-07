@@ -97,7 +97,7 @@ Espo.define('views/record/panels/default-side', 'views/record/panels/side', func
             }
 
             if (this.getMetadata().get(['scopes', this.model.name ,'stream'])) {
-                this.createField('followers', 'views/fields/followers', null, null, true);
+                this.createField('followers', 'views/fields/link-multiple', null, null, true);
                 this.controlFollowersField();
                 this.listenTo(this.model, 'change:followersIds', this.controlFollowersField, this);
             }

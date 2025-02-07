@@ -25,7 +25,7 @@
                     {{# if preloader }}
                             <a class="preloader" style="margin-left: 20px;display: none" href="javascript:"><img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg"></a>
                     {{else}}
-                        <button type="button" class="btn btn-default additional-button action"{{#if tooltip}} title="{{tooltip}}"{{/if}} data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</button>
+                        <button type="button" class="btn btn-default additional-button action" {{#if cssStyle }} style="{{cssStyle}}" {{/if}} {{#if tooltip}} title="{{tooltip}}"{{/if}} data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</button>
                     {{/if}}
                 {{/each}}
             {{/if}}
@@ -58,6 +58,11 @@
                 <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../../entityType}}{{/if}}</a></li>
                 {{/each}}
             </ul>
+            {{/if}}
+            {{#if additionalEditButtons}}
+                {{#each additionalEditButtons}}
+                        <button type="button" class="btn btn-default additional-button action"{{#if tooltip}} title="{{tooltip}}"{{/if}} data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</button>
+                {{/each}}
             {{/if}}
         </div>
         <div class="panel-navigation panel-right pull-left">{{{panelEditNavigation}}}</div>

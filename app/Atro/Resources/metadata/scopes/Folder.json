@@ -5,6 +5,7 @@
   "acl": true,
   "customizable": true,
   "disabled": false,
+  "streamDisabled": true,
   "type": "Hierarchy",
   "multiParents": false,
   "multiParentsDisabled": true,

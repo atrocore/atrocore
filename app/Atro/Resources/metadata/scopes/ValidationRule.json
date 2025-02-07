@@ -10,6 +10,7 @@
   "object": true,
   "isActiveUnavailable": true,
   "bookmarkDisabled": true,
+  "streamDisabled": true,
   "actionDisabled": true,
   "emHidden": true
 }

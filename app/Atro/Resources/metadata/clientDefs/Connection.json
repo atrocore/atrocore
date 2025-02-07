@@ -497,6 +497,30 @@
           ]
         }
       },
+      "smtpAuthType": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      },
       "smtpSecurity": {
         "visible": {
           "conditionGroup": [
@@ -505,6 +529,13 @@
               "attribute": "type",
               "value": [
                 "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "basic"
               ]
             }
           ]
@@ -542,6 +573,203 @@
               "attribute": "type",
               "value": [
                 "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpClientId": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpClientSecret": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpOauthScope": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpOauthAuthorizeUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      },
+      "smtpOauthTokenUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
               ]
             }
           ]
