@@ -31,8 +31,7 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
                 model.set('layoutProfileId', this.options.layoutProfileId)
                 model.set('layoutProfileName', this.options.layoutProfileName)
 
-                // create field views
-                this.createView('layoutProfile', 'views/layout/fields/layout-profile', {
+                const options = {
                     name: 'layoutProfile',
                     el: `${this.options.el} .field[data-name="layoutProfile"]`,
                     model: this.model,
@@ -40,16 +39,25 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
                     defs: {
                         name: 'layoutProfile',
                     },
+                    params: {
+                        required: true
+                    },
                     readOnly: !allowSwitch,
                     mode: 'edit',
                     inlineEditDisabled: true,
                     prohibitedEmptyValue: true,
-                    withLayoutsParams: {
+                };
+
+                if (this.model.get('layoutProfileId')) {
+                    options.withLayoutsParams = {
                         viewType: this.options.type,
                         scope: this.options.scope,
                         relatedScope: this.options.relatedScope
                     }
-                })
+                }
+
+                // create field views
+                this.createView('layoutProfile', 'views/layout/fields/layout-profile', options);
 
                 this.listenTo(this.model, 'change:layoutProfileId', () => {
                     if (this.model.get('layoutProfileId')) {
@@ -60,6 +68,8 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
         },
 
         afterRender() {
+            Dep.prototype.afterRender.call(this);
+
             LayoutUtils.renderComponent.call(this, {
                 type: this.options.type,
                 scope: this.options.scope,
@@ -69,7 +79,13 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
                 onUpdate: this.layoutUpdated.bind(this),
                 getActiveLayoutProfileId: () => this.model.get('layoutProfileId'),
                 inModal: true
-            })
+            });
+
+            if (!this.model.get('layoutProfileId')) {
+                this.$el.find('.panel.layout-customization').hide();
+            } else {
+                this.$el.find('.panel.layout-customization').show();
+            }
         },
 
         layoutUpdated(reset) {
