@@ -24336,9 +24336,10 @@ span[data-img-src]::after {
 }
 
 .favorites-dropdown > ul .favorite .favorite-icon {
-    width: 20px;
+    width: 18px;
     display: inline-block;
     text-align: center;
+    font-size: 14px;
 }
 
 .favorites-dropdown > ul .favorite.active:before {
