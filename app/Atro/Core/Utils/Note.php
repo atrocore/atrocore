@@ -392,7 +392,7 @@ class Note
 
     private function getPreferences(): ?Preferences
     {
-        return $this->getContainer()->get('Preferences');
+        return $this->getContainer()->get('preferences');
     }
 
     private function getEntityManager(): EntityManager
