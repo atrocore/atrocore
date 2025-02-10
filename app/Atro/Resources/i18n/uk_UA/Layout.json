@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "entity": "Сутність",
+    "viewType": "Тип представлення",
+    "relatedEntity": "Пов'язана сутність",
+    "layoutProfile": "Лейаут профіль"
+  },
+  "groupOptions": {
+    "viewType": {
+      "view": "Представлення",
+      "viewGroup": "Група представлень"
+    }
+  }
+}
