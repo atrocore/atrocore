@@ -11,13 +11,19 @@
 Espo.define('views/layout/fields/layout-profile', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
-        selectBoolFilterList: ['withLayouts'],
+        setup() {
+            Dep.prototype.setup.call(this);
 
-        boolFilterData: {
-            withLayouts() {
-                return this.options.withLayoutsParams
+            if (this.options.withLayoutsParams) {
+                this.selectBoolFilterList = ['withLayouts'];
+
+                this.boolFilterData = {
+                    withLayouts() {
+                        return this.options.withLayoutsParams
+                    }
+                }
             }
-        },
+        }
 
     });
 });

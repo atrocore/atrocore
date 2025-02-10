@@ -53,7 +53,7 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
         },
 
         showLayoutEditorModal() {
-            let layoutProfileId = this.layoutData?.selectedProfileId
+            let layoutProfileId = this.layoutData?.selectedProfileId || this.layoutData?.storedProfile?.id;
             let layoutProfileName = ''
             if (!layoutProfileId) {
                 layoutProfileId = this.getUser().get('layoutProfileId')

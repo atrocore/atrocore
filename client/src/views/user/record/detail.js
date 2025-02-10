@@ -175,6 +175,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
         getGridLayout: function (callback) {
             this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, null, function (data) {
+                this.layoutData = data;
                 var layout = Espo.Utils.cloneDeep(data.layout);
 
                 layout.push({
