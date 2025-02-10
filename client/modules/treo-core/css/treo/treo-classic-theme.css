@@ -6571,7 +6571,7 @@ button.close {
 }
 
 .modal-body > div:not(.record-container):not(.edit-container):not(.entity-manager-container) {
-    padding: 0 14px;
+    padding: 0 20px;
 }
 
 .modal-body > .button-container {

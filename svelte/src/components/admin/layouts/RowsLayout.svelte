@@ -143,6 +143,7 @@
                 </ul>
             </div>
         </div>
+        <div class="col-sm-2"></div>
         <div class="col-sm-5">
             <div class="well">
                 <header>{Language.translate('Available', 'labels', 'Admin')}</header>
@@ -176,7 +177,7 @@
     ul li {
         list-style: none;
         border: 1px solid #CCC;
-        margin: 5px;
+        margin: 5px 0;
         padding: 5px;
         height: 32px;
     }
@@ -208,5 +209,11 @@
 
     .enabled li:hover a.edit-field {
         display: block;
+    }
+
+    .well {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: -8px;
     }
 </style>
