@@ -14576,7 +14576,8 @@ li.ui-timepicker-selected .ui-timepicker-duration, .ui-timepicker-list li:hover 
 
 @media screen and (max-width: 767px) {
     #header .navbar ul.nav > li.global-search-container {
-        display: block
+        display: block;
+        width: 100%;
     }
 
     #global-search-input {
@@ -22380,6 +22381,23 @@ select {
         #header .navbar-collapse, #header .menu {
             padding-bottom: 80px;
         }
+    }
+
+    #header .navbar-collapse {
+        transition: .3s transform cubic-bezier(0.19, 1, .22, 1);
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 44px;
+        z-index: 100;
+        background: #424242;
+        display: block;
+        height: calc(100vh - 44px);
+        border: 0;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        overflow-x: visible !important;
+        overflow-y: auto;
+        padding: 0;
     }
 }
 
