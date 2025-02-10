@@ -371,6 +371,14 @@ class Folder extends Hierarchy
 
     public function deleteItemPermanently(string $folderId): void
     {
+        /** @var \Atro\Entities\Folder $folder */
+        $folder = $this
+            ->getMapper()
+            ->selectById($this->entityFactory->create($this->entityType), $folderId, ['withDeleted' => true]);
+        if (!empty($folder)) {
+            $this->getStorage($folder)->deleteFolderPermanently($folder);
+        }
+
         $this->getConnection()->createQueryBuilder()
             ->delete('file_folder_linker')
             ->where('folder_id = :folderId')
