@@ -6431,10 +6431,11 @@ button.close {
 .photo-link {
     position: absolute;
     clear: both;
-    right: 20px;
-    margin-top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 35px;
     color: #ffffff;
-    font-size: 10px
+    font-size: 10px;
 }
 
 .photo-link a {
