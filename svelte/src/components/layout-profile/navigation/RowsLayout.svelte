@@ -293,7 +293,7 @@
     ul li {
         list-style: none;
         border: 1px solid #CCC;
-        margin: 5px;
+        margin: 5px 0;
         padding: 5px;
         height: 32px;
     }
@@ -360,5 +360,11 @@
         position: absolute;
         top: 2px;
         right: 5px;
+    }
+
+    .well {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: -8px;
     }
 </style>

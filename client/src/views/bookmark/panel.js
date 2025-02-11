@@ -83,7 +83,13 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                         }
                     })
                 } else {
-                    this.groups = data.list
+                    this.groups = data.list;
+                }
+
+                if (!this.getConfig().get('tabIconsDisabled')) {
+                    this.groups.forEach((group, key) => {
+                        this.groups[key].icon = this.getMetadata().get(['clientDefs', group.key, 'iconClass']) || 'fas fa-stop';
+                    });
                 }
 
                 this.collection.total = data.total;

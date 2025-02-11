@@ -509,7 +509,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="well">
+            <div class="well available-fields">
                 <header>{Language.translate('Available Fields', 'Admin')}</header>
                 <ul class="disabled cells clearfix">
                     {#each disabledFields as field}
@@ -536,8 +536,8 @@
     }
 
     #layout ul.panels > li {
-        padding: 5px;
-        margin: 5px;
+        padding: 5px 10px;
+        margin: 5px 0;
         min-height: 80px;
         border: 1px solid #CCC;
         list-style: none;
@@ -550,7 +550,7 @@
     #layout ul.rows > li {
         list-style: none;
         border: 1px solid #CCC;
-        margin: 5px;
+        margin: 5px 0;
         padding: 5px;
         height: 72px;
     }
@@ -575,6 +575,12 @@
         margin: 5px;
         padding: 5px;
         height: 32px;
+    }
+
+    #layout .available-fields ul.cells {
+        margin-left: -5px;
+        margin-right: -5px;
+        width: auto;
     }
 
     #layout ul.rows > li > div {
@@ -610,7 +616,6 @@
     #layout ul.panels > li > div {
         width: auto;
         text-align: left;
-        margin-left: 5px;
     }
 
     ul.cells li.cell {
