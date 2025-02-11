@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "entity": "Entität",
+    "viewType": "Ansicht Typ",
+    "relatedEntity": "Verwandte Entität",
+    "layoutProfile": "Layout-Profil"
+  },
+  "groupOptions": {
+    "viewType": {
+      "view": "Ansicht",
+      "viewGroup": "Gruppe ansehen"
+    }
+  }
+}

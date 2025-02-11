@@ -2,8 +2,11 @@
   "fields": {
     "width": "Breite (%)",
     "widthPx": "Breite (px)",
+    "link": "Link",
     "notSortable": "Nicht sortierbar",
     "align": "Ausrichten",
+    "panelName": "Name des Panels",
+    "style": "Stil",
     "sticked": "Gepinnt",
     "isLarge": "Große Schriftgröße",
     "cssStyle": "CSS-Stile",
@@ -25,7 +28,13 @@
   },
   "labels": {
     "New panel": "Neues Panel",
+    "Layout": "Layout",
     "reset": "Layout zurücksetzen",
-    "fullEdit": "Vollständige Bearbeitung"
+    "fullEdit": "Vollständige Bearbeitung",
+    "resetToSystem": "Auf Systemlayout zurücksetzen",
+    "layoutManagement": "Layout-Verwaltung",
+    "layoutSelection": "Layout-Auswahl",
+    "layoutCustomization": "Layout-Anpassung",
+    "configure": "Konfigurieren"
   }
 }

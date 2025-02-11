@@ -1,18 +1,28 @@
 {
   "fields": {
-    "isActive": "активний",
-    "description": "вид",
-    "hideShowFullList": "Приховати \"Показати повний список\" на панелях зв'язків",
+    "isActive": "Активний",
+    "isDefault": "За замовчуванням",
+    "description": "Опис",
+    "hideShowFullList": "Приховати опцію \"Показати повний список\" на панелях зв'язків",
+    "layouts": "Макети",
+    "parent": "Батьківський лейаут профіль",
     "navigation": "Меню навігації",
-    "dashboardLayout": "Макет інформаційної панелі"
+    "dashboardLayout": "Макет дашборда"
   },
   "labels": {
-    "Create LayoutProfile": "Створити профіль макета",
+    "Create LayoutProfile": "Створити лейаут профіль",
     "addGroup": "Додати групу",
     "Menu": "Меню",
     "Dashboards": "Дашборди"
   },
+  "exceptions": {
+    "defaultIsRequired": "В системі має існувати лейаут профіль за замовчуванням"
+  },
   "messages": {
+    "profileWillBeNewDefault": "Поточний профіль стане новим профілем за замовчуванням, дійсно хочете продовжити?",
     "navigationUpdate": "Навігаційне меню було доналаштоване"
+  },
+  "boolFilters": {
+    "withLayouts": "With Stored Layout"
   }
 }
