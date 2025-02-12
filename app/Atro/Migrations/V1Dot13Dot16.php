@@ -12,6 +12,7 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\Connection;
 
 class V1Dot13Dot16 extends Base
 {
@@ -29,6 +30,11 @@ class V1Dot13Dot16 extends Base
             $this->getPDO()->exec("ALTER TABLE layout_profile ADD COLUMN favorites_list TEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
         }
 
+        self::setupDefaultFavorites($this->getConnection());
+    }
+
+    public static function setupDefaultFavorites(Connection $connection): void
+    {
         $favList = ['Product', 'File'];
 
         if (class_exists('\Pim\Module')) {
@@ -43,7 +49,7 @@ class V1Dot13Dot16 extends Base
             $favList[] = 'ExportFeed';
         }
 
-        $this->getConnection()->createQueryBuilder()
+        $connection->createQueryBuilder()
             ->update('layout_profile')
             ->set('favorites_list', ':favorites_list')
             ->setParameter('favorites_list', json_encode($favList))
