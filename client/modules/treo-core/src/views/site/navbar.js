@@ -151,7 +151,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         setupFavoritesList: function () {
-            this.favoritesList = this.getFavoritesList().map(tab => this.getTabDefs(tab));
+            this.favoritesList = this.getFavoritesList().filter(tab => this.getAcl().checkScope(tab, 'read')).map(tab => this.getTabDefs(tab));
         },
 
         adjust: function () {
