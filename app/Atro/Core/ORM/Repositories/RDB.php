@@ -12,6 +12,7 @@
 namespace Atro\Core\ORM\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\EventManager\Event;
 use Doctrine\DBAL\ParameterType;
@@ -896,7 +897,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                 if ($name === 'teams') {
                                     $data = ['entityType' => $entity->getEntityType()];
                                 }
-                                $this->relate($entity, $name, $id, $data, $options);
+                                try {
+                                    $this->relate($entity, $name, $id, $data, $options);
+                                } catch (NotUnique $e) {
+                                }
                             }
                         }
 
