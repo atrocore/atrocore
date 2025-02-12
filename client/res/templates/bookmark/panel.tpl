@@ -52,6 +52,10 @@
         padding-left: 20px;
     }
 
+    .bookmark-panel-container .group .group-name * {
+        color: #000;
+    }
+
     .bookmark-panel-container .group .group-name .icon {
         margin-right: 5px;
     }
@@ -67,6 +71,14 @@
     .bookmark-panel-container .group .list-group-item {
         border-left: 0;
         border-right: 0;
+    }
+
+    .bookmark-panel-container .group .list-row-buttons span {
+        color: var(--action-icon-color);
+    }
+
+    .bookmark-panel-container .group .cell[data-name="buttons"] {
+        margin-top: 3px;
     }
 
     .bookmark-panel-container .group .list-group-item .expanded-row {

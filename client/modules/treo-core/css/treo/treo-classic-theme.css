@@ -24317,6 +24317,12 @@ span[data-img-src]::after {
 
 .favorites-dropdown {
     padding: 7px 15px 15px;
+}
+
+.favorites-dropdown,
+.favorites-dropdown span,
+.favorites-dropdown .fas,
+.favorites-dropdown > ul .favorite .favorite-icon {
     color: #000;
 }
 
