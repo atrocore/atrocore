@@ -15920,10 +15920,6 @@ select[multiple].input-sm {
     border-bottom-width: 1px
 }
 
-.panel > .panel-body > .list-container > .list > .list-group > li.list-group-item:first-child {
-    border-top-width: 1px
-}
-
 .panel > .panel-body > .list-container > .list > .list-group > li.list-group-item:last-child {
     border-bottom-width: 0
 }
@@ -17098,8 +17094,20 @@ table.table td.cell .complex-text {
     position: absolute;
     width: 540px;
     z-index: 1001;
-    right: 0;
-    left: auto
+    left: 0;
+    top: calc(100% + 1px);
+    background-color: #fff;
+    border: 1px solid var(--primary-border-color);
+    border-top: 0;
+    box-shadow: 0 13px 13px rgba(0, 0, 0, 0.175);
+}
+
+#global-search-panel > .panel {
+    margin-bottom: 0;
+}
+
+#global-search-panel .panel-heading {
+    background-color: transparent;
 }
 
 h5 {
@@ -17294,12 +17302,6 @@ pre > code {
 .array-add-list-group > li {
     vertical-align: middle;
     line-height: 32px
-}
-
-@media screen and (min-width: 768px) {
-    #global-search-panel {
-        margin-top: 5px
-    }
 }
 
 @media screen and (min-width: 992px) {
@@ -20343,6 +20345,10 @@ button.category:focus {
     padding: 0 10px;
     position: relative;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#header .menu.not-collapsed footer > .copyright {
+    border-top: 0;
 }
 
 #navbar footer > .copyright span:first-child {
