@@ -17390,12 +17390,17 @@ pre > code {
     }
 
     .navbar-form.global-search-container {
-        padding-left: 8px;
-        padding-right: 8px
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        margin-right: 0;
     }
 
     .navbar-form.global-search-container > .input-group {
-        margin-left: 14px
+        width: 100%;
+        padding-left: 14px;
+        padding-right: 34px;
     }
 
     #global-search-input {
@@ -20940,8 +20945,8 @@ button.category:focus {
         left: auto;
     }
 
-    #navbar .navbar .navbar-body {
-        display: none !important;
+    #navbar .navbar .navbar-body.open-search {
+        align-items: flex-start;
     }
 
     #header .navbar-header .search-toggle {
