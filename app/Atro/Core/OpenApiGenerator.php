@@ -16,7 +16,6 @@ namespace Atro\Core;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Atro\Services\Composer;
-use function Symfony\Component\String\b;
 
 class OpenApiGenerator
 {
