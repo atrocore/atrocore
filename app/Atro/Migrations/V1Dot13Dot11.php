@@ -34,7 +34,7 @@ class V1Dot13Dot11 extends Base
                 continue;
             }
 
-            $scopesDir = $module === 'atrocore' ? "$vendorPath/$module/app/Atro/Resources/metadata/scopes" : "$vendorPath/$module/app/Resources/metadata/scopes";
+            $scopesDir = $module === 'core' ? "$vendorPath/$module/app/Atro/Resources/metadata/scopes" : "$vendorPath/$module/app/Resources/metadata/scopes";
             if (!is_dir($scopesDir)) {
                 continue;
             }
