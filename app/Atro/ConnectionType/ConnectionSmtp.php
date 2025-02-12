@@ -98,8 +98,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
             'client_secret' => $this->decryptPassword($connectionEntity->get('smtpClientSecret') ?? ''),
             'scope'         => $connectionEntity->get('smtpOauthScope'),
             'code'          => $authCode,
-//            'redirect_uri' => $this->getConfig()->get('siteUrl') . '/?entryPoint=OauthSmtpCallback',
-            'redirect_uri'  => 'https://atrocore.local/?entryPoint=OauthSmtpCallback',
+            'redirect_uri'  => $this->getConfig()->get('siteUrl') . '/?entryPoint=OauthSmtpCallback',
             'grant_type'    => 'authorization_code',
         ];
 
@@ -128,6 +127,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
         $result = json_decode($response, true);
 
         if (empty($result['access_token'])) {
+            file_put_contents('/tmp/test.json', $response);
             throw new BadRequest("Error when trying to get access token");
         }
 
