@@ -69,6 +69,17 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "scanId": {
+      "type": "varchar",
+      "len": 36,
+      "readOnly": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     }
   },
   "links": {
