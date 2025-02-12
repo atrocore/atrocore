@@ -127,7 +127,6 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
         $result = json_decode($response, true);
 
         if (empty($result['access_token'])) {
-            file_put_contents('/tmp/test.json', $response);
             throw new BadRequest("Error when trying to get access token");
         }
 
