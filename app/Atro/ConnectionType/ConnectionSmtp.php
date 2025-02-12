@@ -98,8 +98,7 @@ class ConnectionSmtp extends AbstractConnection implements ConnectionInterface
             'client_secret' => $this->decryptPassword($connectionEntity->get('smtpClientSecret') ?? ''),
             'scope'         => $connectionEntity->get('smtpOauthScope'),
             'code'          => $authCode,
-//            'redirect_uri' => $this->getConfig()->get('siteUrl') . '/?entryPoint=OauthSmtpCallback',
-            'redirect_uri'  => 'https://atrocore.local/?entryPoint=OauthSmtpCallback',
+            'redirect_uri'  => $this->getConfig()->get('siteUrl') . '/?entryPoint=OauthSmtpCallback',
             'grant_type'    => 'authorization_code',
         ];
 
