@@ -351,7 +351,9 @@ class NotificationManager
             return $this->subscribers[$key];
         }
 
-        return $this->subscribers[$key] = array_column($entity->get('followers')->toArray(), 'id');
+        $followers = $entity->get('followers');
+
+        return $this->subscribers[$key] = empty($followers) ? [] : array_column($followers->toArray(), 'id');
     }
 
     protected function sendNotificationsRelationEntity(Entity $entity, string $occurrence): void
