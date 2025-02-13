@@ -147,11 +147,11 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         getFavoritesList: function () {
-            return this.getConfig().get('favoritesList') || [];
+            return this.getPreferences().get('favoritesList') || [];
         },
 
         setupFavoritesList: function () {
-            this.favoritesList = this.getFavoritesList().filter(tab => this.getAcl().checkScope(tab, 'read')).map(tab => this.getTabDefs(tab));
+            this.favoritesList = (this.getFavoritesList() || []).filter(tab => this.getAcl().checkScope(tab, 'read')).map(tab => this.getTabDefs(tab));
         },
 
         adjust: function () {
