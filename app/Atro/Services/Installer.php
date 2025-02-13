@@ -785,7 +785,6 @@ class Installer extends HasContainer
                     'Category',
                     'Catalog',
                     'Channel',
-                    'Product',
                     'Classification'
                 ]);
             }
