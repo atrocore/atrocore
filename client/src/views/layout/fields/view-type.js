@@ -16,6 +16,9 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
             this.params.groupTranslation = 'Layout.groups.viewType'
 
             Dep.prototype.setup.call(this);
+            if (!this.model.get(this.name) && this.params.options.length) {
+                this.model.set(this.name, this.params.options[0])
+            }
 
             this.listenTo(this.model, 'change:entity', () => {
                 this.setupGroups()

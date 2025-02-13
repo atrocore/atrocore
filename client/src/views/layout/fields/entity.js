@@ -43,6 +43,9 @@ Espo.define('views/layout/fields/entity', 'views/fields/enum', function (Dep) {
             }
             this.setupOptions();
             Dep.prototype.setup.call(this);
+            if (!this.model.get(this.name) && this.params.options.length) {
+                this.model.set(this.name, this.params.options[0])
+            }
         },
     });
 });

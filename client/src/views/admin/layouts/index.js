@@ -57,16 +57,12 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
         },
 
         setup: function () {
-            this.scopeList = [];
 
             this.on('after:render', function () {
-                $("#layouts-menu button[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']").addClass('disabled');
                 this.renderLayoutHeader();
-                if (!this.options.scope) {
-                    this.renderDefaultPage();
-                }
-                if (this.scope) {
-                    this.openLayout(this.scope, this.type, this.relatedScope, this.layoutProfileId);
+
+                if (this.model.get('entity')) {
+                    this.openLayout(this.model.get('entity'), this.model.get('viewType'), this.model.get('relatedEntity') ?? null, this.model.get('layoutProfileId'));
                 }
                 this.listenTo(this.model, 'change:entity change:viewType change:layoutProfileId change:relatedEntity', () => {
                     if (this.model.get('entity') && this.model.get('viewType') && this.model.get('layoutProfileId')) {
@@ -83,8 +79,8 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                 })
             });
 
-            this.scope = this.options.scope || 'Account';
-            this.type = this.options.type || 'list';
+            this.scope = this.options.scope;
+            this.type = this.options.type;
             this.layoutProfileId = this.options.layoutProfileId;
             this.relatedScope = this.options.relatedScope ?? null;
 
@@ -171,11 +167,6 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     this.renderLayoutHeader();
                 },
             })
-        },
-
-        renderDefaultPage: function () {
-            $("#layout-header").html('').hide();
-            $("#layout-content").html(this.translate('selectLayout', 'messages', 'Admin'));
         },
 
         renderLayoutHeader: function () {
