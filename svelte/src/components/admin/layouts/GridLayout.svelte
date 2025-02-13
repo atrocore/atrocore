@@ -42,7 +42,6 @@
     let lastPanelNumber = -1;
     let lastRowNumber = -1;
     let sidePanelsLayout: any;
-    let detailPanelsWrapper: any;
 
     const dispatch = createEventDispatcher();
 
@@ -446,7 +445,7 @@
             <div class="well">
                 <header>{Language.translate('Layout', 'LayoutManager')}</header>
                 <a href="#" on:click|preventDefault={addPanel}>{Language.translate('Add Panel', 'Admin')}</a>
-                <div class="rows-wrapper" bind:this={detailPanelsWrapper}>
+                <div class="rows-wrapper">
                     <ul class="panels">
                         {#each panels as panel (panel.number)}
                             <li data-number={panel.number} class="panel-layout">
