@@ -32,6 +32,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         this.notify(false)
                         view.render();
                     });
+                },
+
+                'click #global-search-panel a': function () {
+                    this.$el.find('.navbar-collapse ').toggleClass('open-search');
                 }
             });
         },
