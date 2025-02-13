@@ -122,7 +122,17 @@
             <div class="favorites-wrapper">
                 <ul class="nav navbar-nav favorites-items">
                     {{#each favoritesList}}
-                        <li data-name="{{name}}"><a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}"><span class="label-wrapper"><span class="favorite-icon {{iconClass}}"></span><span class="full-label">{{label}}</span></span></a></li>
+                        <li data-name="{{name}}"><a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
+                                <span class="label-wrapper">
+                                    {{#if iconSrc}}
+                                        <img src="{{iconSrc}}" class="favorite-icon default-icon">
+                                    {{else}}
+                                        <span class="favorite-icon {{iconClass}}"></span>
+                                    {{/if}}
+                                    <span class="full-label">{{label}}</span>
+                                </span>
+                            </a>
+                        </li>
                     {{/each}}
                 </ul>
             </div>
@@ -168,7 +178,15 @@
                     <ul class="favorites-items">
                         {{#each favoritesList}}
                             <li data-name="{{name}}">
-                                <a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}"><span class="label-wrapper"><span class="favorite-icon {{iconClass}}"></span><span class="full-label">{{label}}</span></span>
+                                <a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
+                                    <span class="label-wrapper">
+                                        {{#if iconSrc}}
+                                            <img src="{{iconSrc}}" class="favorite-icon default-icon">
+                                        {{else}}
+                                            <span class="favorite-icon {{iconClass}}"></span>
+                                        {{/if}}
+                                        <span class="full-label">{{label}}</span>
+                                    </span>
                                     <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
                                         <i class="fas fa-plus fa-sm"></i>
                                     </button>
