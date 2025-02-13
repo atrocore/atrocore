@@ -11,15 +11,15 @@
             </button>
             {{/if}}
             <ul class="visible-xs header-right pull-left">
+                <li class="notifications-badge-container">
+                    {{{notificationsBadge}}}
+                </li>
                 {{#if lastViewed}}
                 <li class="last-viewed-badge-container">
                     {{{lastViewedBadgeRight}}}
                 </li>
                 {{/if}}
                 {{#if hasJM}}<li class="dropdown queue-badge-container"></li>{{/if}}
-                <li class="notifications-badge-container ">
-                    {{{notificationsBadge}}}
-                </li>
             </ul>
             <div class="dropdown menu-container visible-xs pull-left">
                 <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-user"></span></a>
@@ -112,7 +112,23 @@
     </div>
 
     <div class="collapse navbar-collapse navbar-body">
-        <ul class="nav navbar-nav navbar-right">
+        {{#if globalSearch}}
+            <div class="nav navbar-nav navbar-form global-search-container">
+                {{{globalSearch}}}
+            </div>
+        {{/if}}
+
+        <div class="nav navbar-nav navbar-left navbar-favorites">
+            <div class="favorites-wrapper">
+                <ul class="nav navbar-nav favorites-items">
+                    {{#each favoritesList}}
+                        <li data-name="{{name}}"><a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}"><span class="label-wrapper"><span class="favorite-icon {{iconClass}}"></span><span class="full-label">{{label}}</span></span></a></li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right navbar-dropdowns">
             <li class="dropdown menu-container hidden-xs">
                 <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-user"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
@@ -125,6 +141,10 @@
                     {{/each}}
                 </ul>
             </li>
+            <li class="dropdown notifications-badge-container hidden-xs">
+                {{{notificationsBadge}}}
+            </li>
+            {{#if hasJM}}<li id='qqq' class="dropdown queue-badge-container hidden-xs"></li>{{/if}}
             {{#if lastViewed}}
             <li class="dropdown hidden-xs last-viewed-badge-container">
                 {{{lastViewedBadge}}}
@@ -135,16 +155,29 @@
                 {{{bookmarkBadge}}}
             </li>
             {{/if}}
-            {{#if hasJM}}<li id='qqq' class="dropdown queue-badge-container hidden-xs"></li>{{/if}}
-            <li class="dropdown notifications-badge-container hidden-xs">
-                {{{notificationsBadge}}}
+            <li class="dropdown hidden-xs favorites">
+                <a href="javascript:" type="button" class="favorite show-more-button favorites-dropdown-btn dropdown-toggle" data-toggle="dropdown">
+                    <span class="fas fa-star"></span>
+                </a>
+                <div class="dropdown-menu favorites-dropdown">
+                    <div class="header">
+                        <span>Favorites</span>
+                        <span data-action="configureFavorites" class="fas fa-cog configure-btn" style="font-size: 1em;"></span>
+                    </div>
+                    <div role="separator" class="divider"></div>
+                    <ul class="favorites-items">
+                        {{#each favoritesList}}
+                            <li data-name="{{name}}">
+                                <a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}"><span class="label-wrapper"><span class="favorite-icon {{iconClass}}"></span><span class="full-label">{{label}}</span></span>
+                                    <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                                        <i class="fas fa-plus fa-sm"></i>
+                                    </button>
+                                </a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
             </li>
-
-            {{#if globalSearch}}
-            <li class="nav navbar-nav navbar-form global-search-container">
-                {{{globalSearch}}}
-            </li>
-            {{/if}}
         </ul>
 
     </div>

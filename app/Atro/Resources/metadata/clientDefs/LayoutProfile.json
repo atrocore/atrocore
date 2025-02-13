@@ -11,6 +11,8 @@
       "create": false,
       "select": false,
       "hideShowFullList": true,
+      "canClose": false,
+      "view": "views/layout-profile/record/panels/layouts",
       "rowActionsView": "views/record/row-actions/edit-and-remove"
     }
   },

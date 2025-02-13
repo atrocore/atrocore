@@ -17,7 +17,8 @@ use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
 use Atro\Migrations\V1Dot12Dot1;
-use Atro\Migrations\V1Dot13Dot18;
+use Atro\Migrations\V1Dot12Dot12;
+use Atro\Migrations\V1Dot13Dot16;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
@@ -761,6 +762,8 @@ class Installer extends HasContainer
 
         $this->createDefaultLayoutProfile();
 
+        V1Dot13Dot16::setupDefaultFavorites($this->getEntityManager()->getConnection());
+
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate lists >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate measures >/dev/null");
@@ -772,6 +775,29 @@ class Installer extends HasContainer
         $defaultId = 'default';
 
         try {
+            $menus = ['Product', 'File'];
+
+            if (class_exists('\Pim\Module')) {
+                $menus = array_merge($menus,  [
+                    'Association',
+                    'Attribute',
+                    'AttributeGroup',
+                    'Brand',
+                    'Category',
+                    'Catalog',
+                    'Channel',
+                    'Product',
+                    'Classification'
+                ]);
+            }
+
+            if (class_exists('\Export\Module')) {
+                $menus[] = 'ExportFeed';
+            }
+
+            if (class_exists('\Import\Module')) {
+                $menus[] = 'ImportFeed';
+            }
             // create default profile
             $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->insert('layout_profile')
@@ -785,7 +811,7 @@ class Installer extends HasContainer
                 ])->setParameters([
                     'id'   => $defaultId,
                     'name' => 'Standard',
-                    'navigation' => json_encode( ['File', 'Folder']),
+                    'navigation' => json_encode($menus),
                     'dashboardLayout' => json_encode( [
                         'name'   => 'My AtroPIM',
                         'layout' => []

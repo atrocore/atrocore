@@ -11,10 +11,10 @@
     "dashboardLayout": "Dashboard Layout",
     "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
     "followCreatedEntities": "Auto-follow created records",
-    "hideFeedbackIcon": "Hide feedback icon",
     "receiveNotifications": "Receive Notifications",
     "notificationProfile": "Notification Profile",
-    "style": "Style"
+    "style": "Style",
+    "favoritesList": "Favorites"
   },
   "labels": {
     "Notifications": "Notifications",

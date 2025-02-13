@@ -57,6 +57,13 @@
       "massUpdateDisabled": true,
       "layoutDetailDisabled": true,
       "layoutListDisabled": true
+    },
+    "favoritesList": {
+      "type": "jsonArray",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true
     }
   },
   "links": {

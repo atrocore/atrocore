@@ -14,13 +14,43 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Templates\Services\Base;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 
 class LayoutProfile extends Base
 {
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $navigation = $entity->get('navigation');
+        $preparedNavigation = [];
+
+        foreach ($navigation as $item) {
+            if (is_string($item)) {
+                if ($this->getMetadata()->get("scopes.$item.tab")) {
+                    $preparedNavigation[] = $item;
+                }
+            } else {
+                if (!empty($item->items)) {
+                    $newSubItems = [];
+                    foreach ($item->items as $subItem) {
+                        if ($this->getMetadata()->get("scopes.$subItem.tab")) {
+                            $newSubItems[] = $subItem;
+                        }
+                    }
+                    if (!empty($newSubItems)) {
+                        $item->items = $newSubItems;
+                        $preparedNavigation[] = $item;
+                    }
+                }
+            }
+        }
+
+        $entity->set('navigation', $preparedNavigation);
+    }
+
     protected function duplicateLayouts(IEntity $entity, IEntity $duplicatingEntity)
     {
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');

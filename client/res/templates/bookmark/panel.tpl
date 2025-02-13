@@ -7,7 +7,7 @@
     </div>
     <div class="panel-body">
         {{#if loadingGroups}}
-        <div style="padding: 8px 14px">{{translate 'Loading...'}}</div>
+        <div>{{translate 'Loading...'}}</div>
         {{else}}
         {{#if groups.length}}
 
@@ -16,16 +16,19 @@
             <div class="group" data-name="{{key}}">
                 <div class="entity">
                     <div class="group-name">
-                        <strong>{{key}}</strong>
+                        {{#if icon}}
+                            <span class="icon {{icon}} fa-sm"></span>
+                        {{/if}}
+                        <span>{{translate key category='scopeNamesPlural' scope='Global'}}</span>
                     </div>
                    <div class="action"></div>
                 </div>
-                <div class="list-container"><div style="padding: 8px 14px">{{translate 'Loading...'}}</div></div>
+                <div class="list-container"><div>{{translate 'Loading...'}}</div></div>
             </div>
             {{/each}}
         </div>
         {{else}}
-        <div class="list-container" style="padding: 8px 14px">{{translate 'No Data'}}</div>
+        <div class="list-container">{{translate 'No Data'}}</div>
         {{/if}}
         {{/if}}
     </div>
@@ -37,20 +40,48 @@
     </div>
 </div>
 <style>
-    .bookmark-panel-container .group .entity{
+    .bookmark-panel-container .group .entity {
         display: inline-flex;
         width: 100%;
         justify-content: space-between;
-        padding-right: 5px;
+        align-items: center;
+        padding-right: 8px;
     }
 
-    .bookmark-panel-container .group .group-name{
-        padding: 10px 5px 0 10px ;
+    .bookmark-panel-container .group .group-name {
+        padding-left: 20px;
     }
+
+    .bookmark-panel-container .group .group-name * {
+        color: #000;
+    }
+
+    .bookmark-panel-container .group .group-name .icon {
+        margin-right: 5px;
+    }
+
     .bookmark-panel-container .panel-body {
-        padding: 0;
+        padding: 10px 20px;
     }
-    .bookmark-panel-container li .list-row-buttons span {
-        color: #999;
+
+    .bookmark-panel-container .panel-body .group-container {
+        margin: -10px -20px;
+    }
+
+    .bookmark-panel-container .group .list-group-item {
+        border-left: 0;
+        border-right: 0;
+    }
+
+    .bookmark-panel-container .group .list-row-buttons span {
+        color: var(--action-icon-color);
+    }
+
+    .bookmark-panel-container .group .cell[data-name="buttons"] {
+        margin-top: 3px;
+    }
+
+    .bookmark-panel-container .group .list-group-item .expanded-row {
+        white-space: normal;
     }
 </style>

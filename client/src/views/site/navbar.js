@@ -25,7 +25,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 userName: this.getUser().get('name'),
                 userId: this.getUser().id,
                 logoSrc: this.getLogoSrc(),
-                hideFeedbackIcon: !!this.getPreferences().get('hideFeedbackIcon'),
                 navbarIsVertical: this.getThemeManager().getParam('navbarIsVertical'),
                 showBookmarked: true,
                 canConfigureMenu: this.getUser().isAdmin()  && this.getPreferences().get('layoutProfileId')
@@ -239,10 +238,12 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         selectTab: function (name) {
-            if (this.currentTab != name) {
+            if (this.currentTab !== name) {
                 this.$el.find('ul.tabs li.active').removeClass('active');
+                this.$el.find('ul.favorites-items li .favorite.active').removeClass('active');
                 if (name) {
-                    this.$el.find('ul.tabs  li[data-name="' + name + '"]').addClass('active');
+                    this.$el.find(`ul.tabs  li[data-name="${name}"]`).addClass('active');
+                    this.$el.find(`ul.favorites-items li[data-name="${name}"] .favorite`).addClass('active');
                 }
                 this.currentTab = name;
             }

@@ -77,7 +77,9 @@ Espo.define('views/login', 'view', function (Dep) {
                 success: data => {
                     const $body = $('body');
                     $body.children('.content').css({'height': 'calc(100% - 28px)'});
-                    $body.append('<span class="photo-link">Photo by <a href="' + data.authorLink + '" target="_blank">' + data.authorName + '</a></span>');
+                    if (data.authorName) {
+                        $body.append('<span class="photo-link">Image by <a href="' + data.authorLink + '" target="_blank">' + data.authorName + '</a></span>');
+                    }
                 }
             });
         },

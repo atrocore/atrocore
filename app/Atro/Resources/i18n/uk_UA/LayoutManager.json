@@ -7,16 +7,16 @@
     "align": "Вирівняти",
     "panelName": "Назва панелі",
     "style": "Стиль",
+    "sticked": "Закріплений",
     "isLarge": "Великий розмір шрифту",
-    "dynamicLogicVisible": "Умови, які роблять панель видимою",
-    "sticked": "Приліплений",
     "cssStyle": "CSS Styles",
-    "hiddenPerDefault": "приховано за замовчуванням"
+    "dynamicLogicVisible": "Умови, які роблять панель видимою",
+    "hiddenPerDefault": "Приховано за замовчуванням"
   },
   "options": {
     "align": {
-      "left": "по лівому краю",
-      "right": "по правому краю"
+      "left": "По лівому краю",
+      "right": "По правому краю"
     },
     "style": {
       "default": "За замовчуванням",
@@ -29,8 +29,13 @@
   },
   "labels": {
     "New panel": "Нова панель",
-    "Layout": "Макет",
+    "Layout": "Лейаут",
+    "reset": "Скинути лейаут",
     "fullEdit": "Повне редагування",
-    "reset": "Скинути лейаут"
+    "resetToSystem": "Скинути до системного лейаута",
+    "layoutManagement": "Керування лейаутом",
+    "layoutSelection": "Вибір лейаута",
+    "layoutCustomization": "Налаштування лейаута",
+    "configure": "Налаштувати"
   }
 }

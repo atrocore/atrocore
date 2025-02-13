@@ -81,15 +81,15 @@ class File extends Base
                 }
             }
         } else {
-            // assign the file type automatically
-            $this->assignTheFileTypeAutomatically($entity);
-
             $this->createItem($entity);
 
             // create origin file
             if (empty($options['scanning']) && !$this->getStorage($entity)->createFile($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
             }
+
+            // assign the file type automatically
+            $this->assignTheFileTypeAutomatically($entity);
 
             if($this->getConfig()->get('automaticFileExtensionCorrection')){
                 $this->automaticallyCorrectExtension($entity);

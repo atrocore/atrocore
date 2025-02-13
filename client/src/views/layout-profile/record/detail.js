@@ -12,17 +12,6 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
 
     return Dep.extend({
 
-        setup: function () {
-            if (this.getUser().isAdmin()) {
-                this.buttonList.push({
-                    name: 'layouts',
-                    label: 'Layouts',
-                    action: "layouts"
-                });
-            }
-            Dep.prototype.setup.call(this);
-        },
-
         setupActionItems() {
             if (this.getUser().isAdmin()) {
                 if (!this.additionalButtons.find(b => b.name === 'menu')) {
@@ -43,11 +32,16 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
                 }
             }
 
-            Dep.prototype.setupActionItems.call(this);
-        },
+            if (this.getAcl().check(this.scope, 'edit') && !this.additionalButtons.find(b => b.name === 'favorites')) {
+                this.additionalButtons.push({
+                    name: 'favorites',
+                    label: this.translate('Favorites', 'labels', 'LayoutProfile'),
+                    action: 'configureFavorites',
+                    cssStyle: "margin-left: 10px"
+                });
+            }
 
-        actionLayouts: function () {
-            this.getRouter().navigate('#Admin/layouts?layoutProfileId=' + this.model.get('id'), {trigger: true});
+            Dep.prototype.setupActionItems.call(this);
         },
 
         actionEditNavigation: function () {
@@ -64,6 +58,16 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
                 field: 'dashboardLayout',
                 model: this.model,
             }, view => {
+                view.render();
+            });
+        },
+
+        actionConfigureFavorites: function () {
+            this.createView('favoritesEdit', 'views/layout-profile/modals/favorites', {
+                field: 'favoritesList',
+                model: this.model
+            }, view => {
+                this.notify(false);
                 view.render();
             });
         }

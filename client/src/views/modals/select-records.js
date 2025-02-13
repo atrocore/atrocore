@@ -74,6 +74,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         maxSize: null,
 
+        fullHeight: true,
+
         data: function () {
             return {
                 hasTree: this.isHierarchical(),

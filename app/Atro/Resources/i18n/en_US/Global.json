@@ -122,6 +122,8 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "authenticate": "Authenticate",
+    "Download": "Download",
     "Load data": "Load data",
     "jobManager": "Job Manager",
     "massActionDelegatedToJm": "Your action has been successfully delegated to the Job Manager.",
