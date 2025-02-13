@@ -774,7 +774,7 @@ class Installer extends HasContainer
         $defaultId = 'default';
 
         try {
-            $menus = ['Folder', 'File'];
+            $menus = ['Product', 'File'];
 
             if (class_exists('\Pim\Module')) {
                 $menus = array_merge($menus,  [
