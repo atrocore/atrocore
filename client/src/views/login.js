@@ -202,6 +202,8 @@ Espo.define('views/login', 'view', function (Dep) {
                 },
                 success: function (data) {
                     this.notify(false);
+                    window.SvelteUserData.set(data);
+                    window.SvelteNotifier.setNotifier(Espo.Ui);
 
                     let localeId = $("#locale option:selected").val();
 
