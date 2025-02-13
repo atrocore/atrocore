@@ -703,6 +703,8 @@ class OpenApiGenerator
         $this->pushComposerActions($result, $schemas);
         $this->pushDashletActions($result, $schemas);
 
+        $this->pushUserActions($result, $schemas);
+
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
             $module->prepareApiDocs($result, $schemas);
         }
@@ -1011,6 +1013,52 @@ class OpenApiGenerator
                 ]
             ]),
         ];
+    }
+
+    protected function pushUserActions(array &$result, array $schemas): void
+    {
+        if (!isset($result['paths']['/User']['post']['parameters'])) {
+            $result['paths']['/User']['post']['parameters'] = [];
+        }
+
+        foreach ($schemas['User']['properties'] as $key => $schema) {
+            if (in_array($key, ['deleted', 'createdAt', 'modifiedAt', 'createdById']) || !empty($schema['forRead'])) {
+                continue;
+            }
+
+            switch ($schema['type']) {
+                case 'string':
+                    $schema['example'] = 'string';
+                    break;
+                case 'integer':
+                    $schema['example'] = '0';
+                    break;
+                case 'boolean':
+                    $schema['example'] = 'false';
+                    break;
+                case 'array':
+                    $schema['example'] = [];
+            }
+
+            $result['paths']['/User']['post']['parameters'][] = [
+                'name' => $key,
+                'in' => 'body',
+                'schema' => $schema,
+                'required' => !empty($result['components']['schemas']['User']['required']) && in_array($key, $result['components']['schemas']['User']['required'])
+            ];
+        }
+        $result['paths']['/User']['post']['parameters'][] = [
+            'name' => 'passwordConfirm',
+            'in' => 'body',
+            'required' => true,
+            'description' => 'Password confirmation. Note: this field in required when there in no "id" key in request body.',
+            'schema' => [
+                'type' => 'string',
+                'example' => 'string'
+            ]
+        ];
+
+        $result['paths']['/User']['post']['requestBody']['content']['application/json']['schema']['properties']['passwordConfirm'] = ['type' => 'string'];
     }
 
     protected function getBase(): array
