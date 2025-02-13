@@ -21,11 +21,11 @@ use Espo\Core\Utils\Config;
 use Doctrine\DBAL\Connection;
 use Espo\Core\Utils\Random;
 
-class V1Dot13Dot13 extends Base
+class V1Dot13Dot18 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-02-07 15:00:00');
+        return new \DateTime('2025-02-12 18:00:00');
     }
 
     public function up(): void

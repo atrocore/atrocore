@@ -17,8 +17,7 @@ use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
 use Atro\Migrations\V1Dot12Dot1;
-use Atro\Migrations\V1Dot12Dot12;
-use Atro\Migrations\V1Dot13Dot13;
+use Atro\Migrations\V1Dot13Dot18;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
@@ -732,7 +731,7 @@ class Installer extends HasContainer
 
         \Atro\Migrations\V1Dot10Dot0::createDefaultStorage($this->getEntityManager()->getConnection());
         \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
-        \Atro\Migrations\V1Dot13Dot13::createDefaultSystemIcons($this->getEntityManager()->getConnection(), $this->getConfig());
+        \Atro\Migrations\V1Dot13Dot18::createDefaultSystemIcons($this->getEntityManager()->getConnection(), $this->getConfig());
 
         \Atro\Migrations\V1Dot10Dot50::createNotificationDefaultNotificationProfile($this->getEntityManager()->getConnection(), $this->getConfig());
 
