@@ -124,38 +124,42 @@
         <div class="col-sm-5">
             <div class="well">
                 <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
-                <ul class="enabled connected">
-                    {#each enabledFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
-                        <li {...getDataAttributeProps(item)}>
-                            <div class="left">
-                                <label>{item.label}</label>
-                            </div>
-                            {#if params.editable}
-                                <div class="right">
-                                    <a href="javascript:" data-action="editField" class="edit-field"
-                                       on:click={()=>editField(item)}>
-                                        <i class="fas fa-pencil-alt fa-sm"></i>
-                                    </a>
+                <div class="rows-wrapper">
+                    <ul class="enabled connected">
+                        {#each enabledFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
+                            <li {...getDataAttributeProps(item)}>
+                                <div class="left">
+                                    <label>{item.label}</label>
                                 </div>
-                            {/if}
-                        </li>
-                    {/each}
-                </ul>
+                                {#if params.editable}
+                                    <div class="right">
+                                        <a href="javascript:" data-action="editField" class="edit-field"
+                                           on:click={()=>editField(item)}>
+                                            <i class="fas fa-pencil-alt fa-sm"></i>
+                                        </a>
+                                    </div>
+                                {/if}
+                            </li>
+                        {/each}
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="col-sm-2"></div>
+        <div class="col-sm-1" style="width: 35px"></div>
         <div class="col-sm-5">
             <div class="well">
                 <header>{Language.translate('Available', 'labels', 'Admin')}</header>
-                <ul class="disabled connected">
-                    {#each disabledFields as field (field.name)}
-                        <li {...getDataAttributeProps(field)}>
-                            <div class="left">
-                                <label>{field.label}</label>
-                            </div>
-                        </li>
-                    {/each}
-                </ul>
+                <div class="rows-wrapper">
+                    <ul class="disabled connected">
+                        {#each disabledFields as field (field.name)}
+                            <li {...getDataAttributeProps(field)}>
+                                <div class="left">
+                                    <label>{field.label}</label>
+                                </div>
+                            </li>
+                        {/each}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -212,8 +216,33 @@
     }
 
     .well {
-        padding-left: 0;
-        padding-right: 0;
-        margin-left: -8px;
+        height: 100%;
+        border: 1px solid #ededed;
+        border-radius: 3px;
+        display: flex;
+        flex-direction: column;
+        max-height: 70vh;
+    }
+
+    .well .rows-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow-x: clip;
+        overflow-y: auto;
+        padding-right: 5px;
+        margin-right: -5px;
+    }
+
+    .well .rows-wrapper ul {
+        flex: 1;
+    }
+
+    #layout {
+        height: 100%;
+    }
+
+    #layout > * {
+        height: 100%;
     }
 </style>
