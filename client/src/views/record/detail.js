@@ -983,6 +983,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.trigger('after:set-edit-mode');
             this.model.trigger('after:change-mode', 'edit');
             this.$el.find('.layout-editor-container').addClass('hidden');
+
+            clearInterval(this.realtimeInterval);
         },
 
         setDetailMode: function () {
@@ -1005,6 +1007,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.mode = 'detail';
             this.trigger('after:set-detail-mode');
             this.model.trigger('after:change-mode', 'detail');
+
+            this.initRealtimeListener();
         },
 
         cancelEdit: function () {
@@ -1321,12 +1325,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         initRealtimeListener() {
+            clearInterval(this.realtimeInterval);
+
             this.ajaxPostRequest('App/action/startEntityListening', {
                 entityName: this.model.name,
                 entityId: this.model.get('id')
             }).success(res => {
-                clearInterval(this.realtimeInterval);
-
                 let timestamp = res.timestamp;
 
                 this.realtimeInterval = setInterval(() => {
