@@ -12,6 +12,7 @@
 namespace Atro\Services;
 
 use Atro\Core\Utils\Util;
+use Espo\ORM\Entity;
 
 class App extends \Espo\Services\App
 {
@@ -35,5 +36,15 @@ class App extends \Espo\Services\App
             'timestamp' => $timestamp,
             'endpoint'  => $fileName
         ];
+    }
+
+    public function updateTimestampForListeningEntity(Entity $entity): void
+    {
+        $dir = self::LISTENING_DIR;
+        $fileName = "{$dir}/{$entity->getEntityName()}_{$entity->get('id')}.json";
+
+        if (file_exists($fileName)) {
+            file_put_contents($fileName, time());
+        }
     }
 }

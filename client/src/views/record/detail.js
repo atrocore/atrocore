@@ -1326,17 +1326,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 entityId: this.model.get('id')
             }).success(res => {
                 clearInterval(this.realtimeInterval);
+
+                let timestamp = res.timestamp;
+
                 this.realtimeInterval = setInterval(() => {
                     $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true})
                         .done(t => {
-                            if (t !== res.timestamp) {
+                            if (t !== timestamp) {
+                                timestamp = t;
                                 this.model.fetch();
                             }
                         })
                         .fail(() => {
                             clearInterval(this.realtimeInterval);
                         });
-                }, 1000)
+                }, 3000)
             });
         },
 
