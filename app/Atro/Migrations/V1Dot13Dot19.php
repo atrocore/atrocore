@@ -24,7 +24,7 @@ class V1Dot13Dot19 extends Base
     {
         copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
 
-        @mkdir('public/data');
-        @copy('data/publicData.json', 'public/data/publicData.json');
+        @mkdir('public/data', 0777, true);
+        copy('data/publicData.json', 'public/data/publicData.json');
     }
 }
