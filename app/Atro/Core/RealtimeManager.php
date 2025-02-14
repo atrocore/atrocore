@@ -55,9 +55,14 @@ class RealtimeManager
             return;
         }
 
-//        foreach (Util::scanDir($dir) as $fileName) {
-//
-//        }
-    }
+        foreach (Util::scanDir($dir) as $fileName) {
+            $filePath = $dir . DIRECTORY_SEPARATOR . $fileName;
+            $data = json_decode(file_get_contents($filePath), true);
 
+            $timestamp = $data['timestamp'] ?? null;
+            if (empty($timestamp) || ((time() - $timestamp) / 60) > 2) {
+                unlink($filePath);
+            }
+        }
+    }
 }
