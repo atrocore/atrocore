@@ -1308,6 +1308,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
             });
+
+
+            this.initRealtimeListener();
+        },
+
+        initRealtimeListener() {
+            console.log('11')
+            // this.ajaxPostRequest('App/action/startEntityListening', {
+            //     entityName: this.model.name,
+            //     entityId: this.model.get('id')
+            // }).success(res => {
+            //     console.log(res)
+            // });
         },
 
         hotKeyEdit: function (e) {
