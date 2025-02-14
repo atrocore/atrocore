@@ -23,5 +23,8 @@ class V1Dot13Dot19 extends Base
     public function up(): void
     {
         copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
+
+        @mkdir('public/data');
+        @copy('data/publicData.json', 'public/data/publicData.json');
     }
 }

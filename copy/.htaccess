@@ -18,10 +18,6 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA]
 
-<FilesMatch "(publicData\.json|composer\.log)$">
-  Allow from all
-</FilesMatch>
-
 <FilesMatch "((.*)\.sql|composer\.json)$">
   Deny from all
 </FilesMatch>
@@ -31,6 +27,10 @@ RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA]
 </Files>
 
 <Files index.php>
+	Allow from all
+</Files>
+
+<Files composer.log>
 	Allow from all
 </Files>
 

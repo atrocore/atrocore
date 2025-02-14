@@ -604,9 +604,6 @@ class Installer extends HasContainer
         // Generate application ID
         $this->generateAppId();
 
-        // create files in data dir
-        file_put_contents('data/publicData.json', '{}');
-
         /**
          * Run after install script if it needs
          */
