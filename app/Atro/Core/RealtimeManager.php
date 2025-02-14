@@ -63,7 +63,7 @@ class RealtimeManager
                     $data = json_decode(file_get_contents($filePath), true);
 
                     $timestamp = $data['timestamp'] ?? null;
-                    if (empty($timestamp) || ((time() - $timestamp) / 60) > 2) {
+                    if (empty($timestamp) || ((time() - $timestamp) / 60) > 480) {
                         unlink($filePath);
                     }
                 }
