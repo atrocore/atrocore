@@ -84,9 +84,6 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
             this.dropdownItemList = [];
         },
 
-        initRealtimeListener() {
-        },
-
         actionSave: function () {
             this.save();
         },
