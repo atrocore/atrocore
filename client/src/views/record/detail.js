@@ -1314,14 +1314,28 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         initRealtimeListener() {
-            console.log('11')
             // this.ajaxPostRequest('App/action/startEntityListening', {
             //     entityName: this.model.name,
             //     entityId: this.model.get('id')
             // }).success(res => {
-            //     console.log(res)
+            //     this.checkTime(res.timestamp);
             // });
         },
+
+        // checkTime(timestamp) {
+        //     setTimeout(() => {
+        //         $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(res => {
+        //             console.log(res, timestamp);
+        //             if (res === timestamp) {
+        //                 this.checkTime(timestamp);
+        //             } else {
+        //                 // this.model.fetch().then(() => {
+        //                 //     this.checkTime(res);
+        //                 // });
+        //             }
+        //         });
+        //     }, 1000);
+        // },
 
         hotKeyEdit: function (e) {
             e.preventDefault();
