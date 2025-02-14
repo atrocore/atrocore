@@ -2307,31 +2307,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         onTreePanelRendered(view) {
             this.listenTo(this.model, 'after:save', () => {
-                view.rebuildTree();
-            });
-            view.listenTo(view, 'select-node', data => {
-                this.selectNode(data);
-            });
-            view.listenTo(view, 'tree-load', treeData => {
-                this.treeLoad(view, treeData);
-            });
-            view.listenTo(view, 'tree-refresh', () => {
-                view.treeRefresh();
-            });
-            view.listenTo(view, 'tree-reset', () => {
-                this.treeReset(view);
+                window.treePanelComponent.rebuildTree();
             });
             this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                 if (['parents', 'children'].includes(link)) {
-                    view.rebuildTree();
+                    window.treePanelComponent.rebuildTree();
                 }
             });
-            this.listenTo(view, 'tree-width-changed', function (width) {
-                this.onTreeResize(width)
-            });
-            this.listenTo(view, 'tree-width-unset', function () {
-                this.onTreeUnset();
-            })
         },
 
         selectNode(data) {
@@ -2344,7 +2326,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        treeLoad(view, treeData) {
+        treeLoad( treeData) {
             view.clearStorage();
 
             if (view.model && view.model.get('id')) {

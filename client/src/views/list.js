@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, SearchManager) {
+Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -611,32 +611,39 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 props: {
                     scope: scope ? scope : this.scope,
                     model: this.model,
-                    collection: this.collection
+                    collection: this.collection,
+                    callbacks: {
+                        selectNode: data => {
+                            this.selectNode(data);
+                        },
+                        treeLoad: treeData => {
+                            this.treeLoad(view, treeData);
+                        },
+                        treeWidthChanged: (width) => {
+                            this.onTreeResize(width)
+                        }
+                    }
                 }
             });
 
-            // this.createView('treePanel', 'views/record/panels/tree-panel', {
-            //     el: `${this.options.el} .catalog-tree-panel`,
-            //
-            // }, view => {
-            //     view.listenTo(view, 'select-node', data => {
-            //         this.selectNode(data);
-            //     });
-            //     view.listenTo(view, 'tree-load', treeData => {
-            //         this.treeLoad(view, treeData);
-            //     });
-            //     view.listenTo(view, 'tree-refresh', () => {
-            //         view.treeRefresh();
-            //     });
-            //     view.listenTo(view, 'tree-reset', () => {
-            //         this.treeReset(view);
-            //     });
-            //     this.listenTo(view, 'tree-width-changed', function (width) {
-            //         this.onTreeResize(width)
-            //     });
-            //     this.listenTo(view, 'tree-width-unset', function () {
-            //     })
-            // });
+            this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
+                scope: this.scope,
+                viewType: 'leftSidebar',
+                layoutData: window.treePanelComponent.getLayoutData(),
+                el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
+            }, (view) => {
+                view.on("refresh", () => {
+                    window.treePanelComponent.refreshLayout()
+                })
+                view.render()
+            })
+
+            this.listenTo(Backbone, 'after:search', collection => {
+                if (this.collection.name === collection.name) {
+                    window.treePanelComponent.handleCollectionSearch(collection)
+                }
+            });
+
 
             this.listenTo(this, 'record-list-rendered', (recordView) => {
                 this.listenTo(recordView, `bookmarked-${this.scope}`, (_) => {
@@ -758,10 +765,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         reloadBookmarks() {
-            let treePanelView = this.getView('treePanel');
-            if (treePanelView && treePanelView.treeScope === 'Bookmark') {
-                treePanelView.rebuildTree();
-            }
+            window.treePanelComponent.reloadBookmarks()
         }
 
     });
