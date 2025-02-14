@@ -53,7 +53,8 @@
     "Preferences": "Preferencje",
     "AuthLogRecord": "Rekord dziennika autoryzacji",
     "AuthFailLogRecord": "Rekord dziennika nieudanych autoryzacji",
-    "HtmlSanitizer": "HTML Sanitizer"
+    "HtmlSanitizer": "HTML Sanitizer",
+    "SystemIcon": "Ikona systemu"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -94,7 +95,8 @@
     "ActionHistoryRecord": "Historia akcji",
     "AuthToken": "Tokeny autoryzacji",
     "LastViewed": "Ostatnio oglądane",
-    "HtmlSanitizer": "HTML Sanitizers"
+    "HtmlSanitizer": "HTML Sanitizers",
+    "SystemIcon": "Ikony systemowe"
   },
   "labels": {
     "customizeLayout": "Dostosuj układ",

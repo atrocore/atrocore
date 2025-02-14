@@ -38,7 +38,8 @@
     "Global": "Global",
     "AuthLogRecord": "Auth Log Record",
     "AuthFailLogRecord": "Auth Fail Log Record",
-    "HtmlSanitizer": "HTML Sanitizer"
+    "HtmlSanitizer": "HTML Sanitizer",
+    "SystemIcon": "Icono del sistema"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -64,7 +65,8 @@
     "Notification": "Notifications",
     "Preferences": "Preferences",
     "Role": "Roles",
-    "HtmlSanitizer": "HTML Sanitizers"
+    "HtmlSanitizer": "HTML Sanitizers",
+    "SystemIcon": "Iconos del sistema"
   },
   "labels": {
     "customizeLayout": "Personalizar diseño",

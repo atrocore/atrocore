@@ -407,7 +407,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
-            if (this.$el.parents('.panel[data-name="stream"]').size() > 0) {
+            if (this.$el.parents('.stream-head-container').size() > 0) {
                 return;
             }
 

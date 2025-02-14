@@ -980,14 +980,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
             this.model.trigger('after:change-mode', 'edit');
-            this.$el.find('.fa-cog.layout-editor').addClass('hidden');
+            this.$el.find('.layout-editor-container').addClass('hidden');
         },
 
         setDetailMode: function () {
             this.trigger('before:set-detail-mode');
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
-            this.$el.find('.fa-cog.layout-editor').removeClass('hidden')
+            this.$el.find('.layout-editor-container').removeClass('hidden')
 
             var fields = this.getFieldViews(true);
             for (var field in fields) {

@@ -231,47 +231,51 @@
         <div class="col-sm-5">
             <div class="well">
                 <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
-                <ul class="enabled connected">
-                    {#each enabledItems.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
-                        <li {...getDataAttributeProps(item)} class="{item.isGroup ? 'group': ''} {item.groupEnd ? 'end' : ''} { (fieldsInGroup[item.name] && !item.isGroup) ? 'in-group': ''}">
-                            <div class="left">
-                                <label title="{item.label}">{item.label}</label>
-                            </div>
-                            <div class="right">
-                                {#if item.canEdit}
-                                    <a href="javascript:" data-action="editField" class="edit-field"
-                                       on:click={()=>editItem(item)}>
-                                        <i class="fas fa-pencil-alt fa-sm"></i>
-                                    </a>
-                                {/if}
-                                {#if item.canRemove}
+                <div class="rows-wrapper">
+                    <ul class="enabled connected">
+                        {#each enabledItems.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
+                            <li {...getDataAttributeProps(item)} class="{item.isGroup ? 'group': ''} {item.groupEnd ? 'end' : ''} { (fieldsInGroup[item.name] && !item.isGroup) ? 'in-group': ''}">
+                                <div class="left">
+                                    <label title="{item.label}">{item.label}</label>
+                                </div>
+                                <div class="right">
+                                    {#if item.canEdit}
+                                        <a href="javascript:" data-action="editField" class="edit-field"
+                                           on:click={()=>editItem(item)}>
+                                            <i class="fas fa-pencil-alt fa-sm"></i>
+                                        </a>
+                                    {/if}
+                                    {#if item.canRemove}
 
-                                    <a href="javascript:" data-action="removeField" class="remove-field"
-                                       on:click={()=>removeItem(item)}
-                                    >
-                                        <i class="fas fa-times"></i>
-                                    </a>
-                                {/if}
-                            </div>
+                                        <a href="javascript:" data-action="removeField" class="remove-field"
+                                           on:click={()=>removeItem(item)}
+                                        >
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    {/if}
+                                </div>
 
-                        </li>
-                    {/each}
-                </ul>
+                            </li>
+                        {/each}
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="col-sm-2"></div>
         <div class="col-sm-5">
             <div class="well">
                 <header>{Language.translate('Available', 'labels', 'Admin')}</header>
-                <ul class="disabled connected">
-                    {#each disabledItems as item (item.name)}
-                        <li {...getDataAttributeProps(item)}>
-                            <div class="left">
-                                <label title="{item.label}">{item.label}</label>
-                            </div>
-                        </li>
-                    {/each}
-                </ul>
+                <div class="rows-wrapper">
+                    <ul class="disabled connected">
+                        {#each disabledItems as item (item.name)}
+                            <li {...getDataAttributeProps(item)}>
+                                <div class="left">
+                                    <label title="{item.label}">{item.label}</label>
+                                </div>
+                            </li>
+                        {/each}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -363,8 +367,34 @@
     }
 
     .well {
-        padding-left: 0;
-        padding-right: 0;
+        height: 100%;
+        border: 1px solid #ededed;
+        border-radius: 3px;
+        display: flex;
+        flex-direction: column;
+        max-height: 70vh;
         margin-left: -8px;
+    }
+
+    .well .rows-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow-x: clip;
+        overflow-y: auto;
+        padding-right: 5px;
+        margin-right: -5px;
+    }
+
+    .well .rows-wrapper ul {
+        flex: 1;
+    }
+
+    #layout {
+        height: 100%;
+    }
+
+    #layout > * {
+        height: 100%;
     }
 </style>

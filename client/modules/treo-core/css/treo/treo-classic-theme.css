@@ -14674,6 +14674,11 @@ body > #header .navbar-brand span.home-icon {
     border-color: transparent
 }
 
+#header .navbar .default-icon {
+    width: 20px;
+    height: auto;
+}
+
 #header .navbar li.tab > a > span.full-label {
     overflow-wrap: break-word;
     word-wrap: break-word
@@ -19633,6 +19638,7 @@ body > .content {
     position: relative;
     display: flex;
     flex-direction: column;
+    min-height: 100%;
 }
 
 table.table > thead th > a {
@@ -19707,6 +19713,7 @@ ul.dropdown-menu > li.checkbox {
 
 .page-header {
     padding-bottom: 0;
+    flex-shrink: 0;
 }
 
 #login {
@@ -20663,6 +20670,7 @@ button.category:focus {
 
     #main {
         padding-left: 20px;
+        height: calc(100% - 14px);
     }
 
     #main .catalog-tree-panel {
@@ -24405,4 +24413,16 @@ span[data-img-src]::after {
     .navbar-favorites {
         display: none;
     }
+}
+
+.modal .panel.layout-customization {
+    margin-bottom: 0;
+}
+
+.modal .panel.layout-customization #layout .well {
+    max-height: 80vh !important;
+}
+
+#layout .rows-wrapper {
+    margin-top: 10px;
 }

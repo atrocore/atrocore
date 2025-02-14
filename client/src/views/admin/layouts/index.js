@@ -59,8 +59,6 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
         setup: function () {
 
             this.on('after:render', function () {
-                this.renderLayoutHeader();
-
                 if (this.model.get('entity')) {
                     this.openLayout(this.model.get('entity'), this.model.get('viewType'), this.model.get('relatedEntity') ?? null, this.model.get('layoutProfileId'));
                 }
@@ -163,18 +161,8 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                 layoutProfileId: layoutProfileId,
                 editable: true,
                 layoutProfiles: this.getView('layoutProfile').params.linkOptions,
-                afterRender: () => {
-                    this.renderLayoutHeader();
-                },
+                replaceButtons: true
             })
-        },
-
-        renderLayoutHeader: function () {
-            if (!this.scope) {
-                $("#layout-header").html("");
-                return;
-            }
-            $("#layout-header").show().html(this.getLanguage().translate(this.scope, 'scopeNamesPlural') + " » " + this.getLanguage().translate(this.type, 'layouts', 'Admin'));
         },
 
         updatePageTitle: function () {

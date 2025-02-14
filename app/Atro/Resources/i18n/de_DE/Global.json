@@ -53,8 +53,8 @@
     "Bookmark": "Lesezeichen",
     "scopeFilter": "Kanal",
     "editGroup": "Gruppe bearbeiten",
-    "addGroup": "Gruppen beginnen / beenden"
-
+    "addGroup": "Gruppen beginnen / beenden",
+    "SystemIcon": "System-Symbol"
   },
   "scopeNamesPlural": {
     "Entity": "Entitäten",
@@ -100,7 +100,8 @@
     "NotificationRule": "Benachrichtigungsregeln",
     "Country": "Länder",
     "HtmlSanitizer": "HTML Sanitizers",
-    "Bookmark": "Lesezeichen"
+    "Bookmark": "Lesezeichen",
+    "SystemIcon": "System-Symbole"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"

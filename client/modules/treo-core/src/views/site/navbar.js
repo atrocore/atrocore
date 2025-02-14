@@ -32,6 +32,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         this.notify(false)
                         view.render();
                     });
+                },
+
+                'click #global-search-panel a': function () {
+                    this.$el.find('.navbar-collapse ').toggleClass('open-search');
                 }
             });
         },
@@ -147,11 +151,16 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         getFavoritesList: function () {
-            return this.getConfig().get('favoritesList') || [];
+            let list = this.getPreferences().get('favoritesList') || [];
+            if (typeof list === 'object') {
+                list = Object.values(list);
+            }
+
+            return list.filter(tab => this.getAcl().checkScope(tab, 'read') && !!this.getMetadata().get(['scopes', tab, 'tab']));
         },
 
         setupFavoritesList: function () {
-            this.favoritesList = this.getFavoritesList().filter(tab => this.getAcl().checkScope(tab, 'read')).map(tab => this.getTabDefs(tab));
+            this.favoritesList = this.getFavoritesList().map(tab => this.getTabDefs(tab));
         },
 
         adjust: function () {
@@ -378,7 +387,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.tabDefsList.forEach(tab => {
                 if (!tab.iconClass) {
-                    tab.colorIconClass = 'color-icon fas fa-stop';
+                    tab.iconSrc = this.getDefaultTabIcon(tab.name);
                 }
             });
         },
