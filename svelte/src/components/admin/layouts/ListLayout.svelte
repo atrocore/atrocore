@@ -110,6 +110,9 @@
     }
 
     function checkFieldType(type: string): boolean {
+        if (params.fieldTypes) {
+            return params.fieldTypes.includes(type)
+        }
         return true;
     }
 

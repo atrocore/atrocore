@@ -82,7 +82,8 @@
     "massUpdate": "Mass Update",
     "sidePanelsDetail": "Sidebar",
     "kanban": "Kanban",
-    "upload": "Upload"
+    "upload": "Upload",
+    "leftSidebar": "Left Sidebar"
   },
   "fieldTypes": {
     "color": "Color",

@@ -6,5 +6,6 @@ export default interface Params {
     layout: any;
     dataAttributeList: string[];
     dataAttributesDefs: any,
-    allowSwitch: boolean
+    allowSwitch: boolean,
+    fieldTypes: string[]
 }
