@@ -14674,6 +14674,11 @@ body > #header .navbar-brand span.home-icon {
     border-color: transparent
 }
 
+#header .navbar .default-icon {
+    width: 20px;
+    height: auto;
+}
+
 #header .navbar li.tab > a > span.full-label {
     overflow-wrap: break-word;
     word-wrap: break-word

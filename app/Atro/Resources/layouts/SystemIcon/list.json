@@ -1,0 +1,16 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "library"
+  },
+  {
+    "name": "image",
+    "widthPx": "150"
+  }
+]

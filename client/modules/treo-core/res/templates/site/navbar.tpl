@@ -50,12 +50,13 @@
                 <a id="nav-more-tabs-dropdown-{{id}}" class="dropdown-toggle more-group-name" data-toggle="dropdown" href="#" {{#if color}} style="border-color: {{color}}"{{/if}}>
                     <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
                         {{#if iconClass}}
-                        <span class="{{iconClass}}"></span>
+                            <span class="{{iconClass}}"></span>
                         {{else}}
-                        {{#if colorIconClass}}
-                        <span class="{{colorIconClass}}" style="color: {{color}}"></span>
-                        {{/if}}
-                        <span class="short-label-text">{{shortLabel}}</span>
+                            {{#if iconSrc}}
+                                <img src="{{iconSrc}}" class="default-icon">
+                            {{else}}
+                                <span class="short-label-text">{{shortLabel}}</span>
+                            {{/if}}
                         {{/if}}
                     </span>
                     <span class="full-label">{{label}} <span class="fas fa-angle-down"></span></span>
@@ -66,12 +67,13 @@
                         <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
                             <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
                                 {{#if iconClass}}
-                                <span class="{{iconClass}}"></span>
+                                    <span class="{{iconClass}}"></span>
                                 {{else}}
-                                {{#if colorIconClass}}
-                                <span class="{{colorIconClass}}" style="color: {{color}}"></span>
-                                {{/if}}
-                                <span class="short-label-text">{{shortLabel}}</span>
+                                    {{#if iconSrc}}
+                                        <img src="{{iconSrc}}" class="default-icon">
+                                    {{else}}
+                                        <span class="short-label-text">{{shortLabel}}</span>
+                                    {{/if}}
                                 {{/if}}
                             </span>
                             <span class="full-label">{{label}}</span>
@@ -90,12 +92,13 @@
                     <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
                     {{#if iconClass}}
                         <span class="{{iconClass}}"></span>
+                    {{else}}
+                        {{#if iconSrc}}
+                            <img src="{{iconSrc}}" class="default-icon">
                         {{else}}
-                        {{#if colorIconClass}}
-                        <span class="{{colorIconClass}}" style="color: {{color}}"></span>
+                            <span class="short-label-text">{{shortLabel}}</span>
                         {{/if}}
-                        <span class="short-label-text">{{shortLabel}}</span>
-                        {{/if}}
+                    {{/if}}
                     </span>
                 </a>
                 <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
@@ -119,7 +122,17 @@
             <div class="favorites-wrapper">
                 <ul class="nav navbar-nav favorites-items">
                     {{#each favoritesList}}
-                        <li data-name="{{name}}"><a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}"><span class="label-wrapper"><span class="favorite-icon {{iconClass}}"></span><span class="full-label">{{label}}</span></span></a></li>
+                        <li data-name="{{name}}"><a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
+                                <span class="label-wrapper">
+                                    {{#if iconSrc}}
+                                        <img src="{{iconSrc}}" class="favorite-icon default-icon">
+                                    {{else}}
+                                        <span class="favorite-icon {{iconClass}}"></span>
+                                    {{/if}}
+                                    <span class="full-label">{{label}}</span>
+                                </span>
+                            </a>
+                        </li>
                     {{/each}}
                 </ul>
             </div>
@@ -165,7 +178,15 @@
                     <ul class="favorites-items">
                         {{#each favoritesList}}
                             <li data-name="{{name}}">
-                                <a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}"><span class="label-wrapper"><span class="favorite-icon {{iconClass}}"></span><span class="full-label">{{label}}</span></span>
+                                <a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
+                                    <span class="label-wrapper">
+                                        {{#if iconSrc}}
+                                            <img src="{{iconSrc}}" class="favorite-icon default-icon">
+                                        {{else}}
+                                            <span class="favorite-icon {{iconClass}}"></span>
+                                        {{/if}}
+                                        <span class="full-label">{{label}}</span>
+                                    </span>
                                     <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
                                         <i class="fas fa-plus fa-sm"></i>
                                     </button>
