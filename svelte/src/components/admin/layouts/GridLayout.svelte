@@ -268,7 +268,8 @@
         panels = [...panels, newPanel];
         tick().then(() => {
             const el = document.querySelector(`.panel-layout[data-number="${newPanel.number}"] > .rows`);
-            initPanel(el)
+            initPanel(el);
+            el.scrollIntoView();
         })
     }
 
@@ -444,81 +445,85 @@
             <div class="well">
                 <header>{Language.translate('Layout', 'LayoutManager')}</header>
                 <a href="#" on:click|preventDefault={addPanel}>{Language.translate('Add Panel', 'Admin')}</a>
-                <ul class="panels">
-                    {#each panels as panel (panel.number)}
-                        <li data-number={panel.number} class="panel-layout">
-                            <header data-name={panel.name}>
-                                <label data-is-custom={panel.customLabel ? 'true' : undefined}>{panel.customLabel || panel.label || ''}</label>&nbsp;
-                                <a href="#" data-action="edit-panel-label" class="edit-panel-label"
-                                   on:click|preventDefault={() => editPanelLabel(panel)}>
-                                    <i class="fas fa-pencil-alt fa-sm"></i>
-                                </a>
-                                <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
-                                   data-number={panel.number} on:click|preventDefault={() => removePanel(panel.number)}>
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </header>
-                            <ul class="rows" on:mousedown|stopPropagation={()=>{}}>
-                                {#each panel.rows as row (row.number)}
-                                    <li class="row" data-number={row.number}>
-                                        <div>
-                                            <a href="#" data-action="removeRow" class="remove-row pull-right"
-                                               on:click|preventDefault={() => removeRow(panel.number, row.number)}>
-                                                <i class="fas fa-times"></i>
-                                            </a>
-                                        </div>
-                                        <ul class="cells" on:mousedown|stopPropagation={()=>{}}>
-                                            {#each row.cells as cell, cellIndex}
-                                                {#if cell}
-                                                    <li class="cell" draggable="true"
-                                                        on:dragstart|stopPropagation={event => {event.dataTransfer.setData('name', cell.name)}}
-                                                        data-id={cell.id}
-                                                        data-name={cell.name}
-                                                        data-full-width={cell.fullWidth ? 'true' : undefined}
-                                                        data-custom-label={cell.customLabel ? cell.customLabel : undefined}
-                                                        data-no-label={cell.noLabel}>
-                                                        {cell.label}
-                                                        <a href="#" data-action="removeField" class="remove-field"
-                                                           on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
-                                                            <i class="fas fa-times"></i>
-                                                        </a>
-                                                    </li>
-                                                {:else}
-                                                    <li class="empty cell"
-                                                        on:dragover|preventDefault={event => event.dataTransfer.dropEffect = 'move'}
-                                                        on:drop={e => handleDrop(e,panel.number,row.number,cellIndex)}>
-                                                        <a href="#" data-action="minusCell" class="remove-field"
-                                                           on:click|preventDefault={() => minusCell(panel.number, row.number, cellIndex)}>
-                                                            <i class="fas fa-minus"></i>
-                                                        </a>
-                                                    </li>
-                                                {/if}
-                                            {/each}
-                                        </ul>
-                                    </li>
-                                {/each}
-                            </ul>
-                            <div>
-                                <a href="#" data-action="addRow" on:click|preventDefault={() => addRow(panel.number)}>
-                                    <i class="fas fa-plus"></i>
-                                </a>
-                            </div>
-                        </li>
-                    {/each}
-                </ul>
+                <div class="rows-wrapper">
+                    <ul class="panels">
+                        {#each panels as panel (panel.number)}
+                            <li data-number={panel.number} class="panel-layout">
+                                <header data-name={panel.name}>
+                                    <label data-is-custom={panel.customLabel ? 'true' : undefined}>{panel.customLabel || panel.label || ''}</label>&nbsp;
+                                    <a href="#" data-action="edit-panel-label" class="edit-panel-label"
+                                       on:click|preventDefault={() => editPanelLabel(panel)}>
+                                        <i class="fas fa-pencil-alt fa-sm"></i>
+                                    </a>
+                                    <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
+                                       data-number={panel.number} on:click|preventDefault={() => removePanel(panel.number)}>
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </header>
+                                <ul class="rows" on:mousedown|stopPropagation={()=>{}}>
+                                    {#each panel.rows as row (row.number)}
+                                        <li class="row" data-number={row.number}>
+                                            <div>
+                                                <a href="#" data-action="removeRow" class="remove-row pull-right"
+                                                   on:click|preventDefault={() => removeRow(panel.number, row.number)}>
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            </div>
+                                            <ul class="cells" on:mousedown|stopPropagation={()=>{}}>
+                                                {#each row.cells as cell, cellIndex}
+                                                    {#if cell}
+                                                        <li class="cell" draggable="true"
+                                                            on:dragstart|stopPropagation={event => {event.dataTransfer.setData('name', cell.name)}}
+                                                            data-id={cell.id}
+                                                            data-name={cell.name}
+                                                            data-full-width={cell.fullWidth ? 'true' : undefined}
+                                                            data-custom-label={cell.customLabel ? cell.customLabel : undefined}
+                                                            data-no-label={cell.noLabel}>
+                                                            {cell.label}
+                                                            <a href="#" data-action="removeField" class="remove-field"
+                                                               on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
+                                                                <i class="fas fa-times"></i>
+                                                            </a>
+                                                        </li>
+                                                    {:else}
+                                                        <li class="empty cell"
+                                                            on:dragover|preventDefault={event => event.dataTransfer.dropEffect = 'move'}
+                                                            on:drop={e => handleDrop(e,panel.number,row.number,cellIndex)}>
+                                                            <a href="#" data-action="minusCell" class="remove-field"
+                                                               on:click|preventDefault={() => minusCell(panel.number, row.number, cellIndex)}>
+                                                                <i class="fas fa-minus"></i>
+                                                            </a>
+                                                        </li>
+                                                    {/if}
+                                                {/each}
+                                            </ul>
+                                        </li>
+                                    {/each}
+                                </ul>
+                                <div>
+                                    <a href="#" data-action="addRow" on:click|preventDefault={() => addRow(panel.number)}>
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {/each}
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="well available-fields">
                 <header>{Language.translate('Available Fields', 'Admin')}</header>
-                <ul class="disabled cells clearfix">
-                    {#each disabledFields as field}
-                        <li class="cell" data-name={field.name}
-                            on:dragstart={event => {event.dataTransfer.setData('name', field.name)}}>
-                            {field.label}
-                        </li>
-                    {/each}
-                </ul>
+                <div class="rows-wrapper">
+                    <ul class="disabled cells clearfix">
+                        {#each disabledFields as field}
+                            <li class="cell" data-name={field.name}
+                                on:dragstart={event => {event.dataTransfer.setData('name', field.name)}}>
+                                {field.label}
+                            </li>
+                        {/each}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -537,10 +542,14 @@
 
     #layout ul.panels > li {
         padding: 5px 10px;
-        margin: 5px 0;
+        margin: 0 0 5px 0;
         min-height: 80px;
         border: 1px solid #CCC;
         list-style: none;
+    }
+
+    #layout ul.panels > li:last-child {
+        margin-bottom: 0;
     }
 
     #layout ul.rows {
@@ -581,6 +590,11 @@
         margin-left: -5px;
         margin-right: -5px;
         width: auto;
+        margin-top: 0;
+    }
+
+    #layout .available-fields ul.cells > li:first-child {
+        margin-top: 0;
     }
 
     #layout ul.rows > li > div {
@@ -667,9 +681,38 @@
         min-height: 20px;
         padding: 19px;
         margin-bottom: 20px;
-        background-color: #f5f5f5;
-        border: 1px solid #e3e3e3;
-        border-radius: 4px;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+        background-color: #fff;
+        height: 100%;
+        border: 1px solid #ededed;
+        border-radius: 3px;
+        display: flex;
+        flex-direction: column;
+        max-height: 70vh;
+    }
+
+    .well .rows-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow-x: clip;
+        overflow-y: auto;
+        padding-right: 5px;
+        margin-right: -5px;
+    }
+
+    .well .rows-wrapper ul {
+        flex: 1;
+    }
+
+    #layout {
+        height: 100%;
+    }
+
+    #layout > * {
+        height: 100%;
+    }
+
+    #layout .available-fields .rows-wrapper {
+        margin-top: 29px;
     }
 </style>

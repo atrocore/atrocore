@@ -58,7 +58,7 @@
         await tick();
         const externalContainer = document.querySelector('#layout-buttons');
 
-        if (buttonContainer && externalContainer && params.inModal) {
+        if (buttonContainer && externalContainer && (params.inModal || params.replaceButtons)) {
             externalContainer.closest('.modal-body')?.classList.add('modal-layout-manager')
             externalContainer.appendChild(buttonContainer);
         }

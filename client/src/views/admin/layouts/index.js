@@ -61,10 +61,6 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
 
             this.on('after:render', function () {
                 $("#layouts-menu button[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']").addClass('disabled');
-                this.renderLayoutHeader();
-                if (!this.options.scope) {
-                    this.renderDefaultPage();
-                }
                 if (this.scope) {
                     this.openLayout(this.scope, this.type, this.relatedScope, this.layoutProfileId);
                 }
@@ -167,23 +163,8 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                 layoutProfileId: layoutProfileId,
                 editable: true,
                 layoutProfiles: this.getView('layoutProfile').params.linkOptions,
-                afterRender: () => {
-                    this.renderLayoutHeader();
-                },
+                replaceButtons: true
             })
-        },
-
-        renderDefaultPage: function () {
-            $("#layout-header").html('').hide();
-            $("#layout-content").html(this.translate('selectLayout', 'messages', 'Admin'));
-        },
-
-        renderLayoutHeader: function () {
-            if (!this.scope) {
-                $("#layout-header").html("");
-                return;
-            }
-            $("#layout-header").show().html(this.getLanguage().translate(this.scope, 'scopeNamesPlural') + " » " + this.getLanguage().translate(this.type, 'layouts', 'Admin'));
         },
 
         updatePageTitle: function () {
