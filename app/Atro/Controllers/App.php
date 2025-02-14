@@ -12,6 +12,7 @@
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\RealtimeManager;
 
 class App extends \Espo\Controllers\App
 {
@@ -21,6 +22,11 @@ class App extends \Espo\Controllers\App
             throw new BadRequest();
         }
 
-        return $this->getService('App')->startEntityListening($data->entityName, $data->entityId);
+        return $this->getRealtimeManager()->startEntityListening($data->entityName, $data->entityId);
+    }
+
+    protected function getRealtimeManager(): RealtimeManager
+    {
+        return $this->getContainer()->get('realtimeManager');
     }
 }

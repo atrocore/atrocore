@@ -9,12 +9,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Services;
+namespace Atro\Core;
 
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
-class App extends \Espo\Services\App
+class RealtimeManager
 {
     public const LISTENING_DIR = 'public/listening';
 
@@ -29,7 +29,7 @@ class App extends \Espo\Services\App
             $timestamp = time();
 
             Util::createDir($dir);
-            file_put_contents($fileName, $timestamp);
+            file_put_contents($fileName, json_encode(['timestamp' => $timestamp]));
         }
 
         return [
@@ -38,13 +38,26 @@ class App extends \Espo\Services\App
         ];
     }
 
-    public function updateTimestampForListeningEntity(Entity $entity): void
+    public function afterEntityChanged(Entity $entity): void
     {
         $dir = self::LISTENING_DIR;
         $fileName = "{$dir}/{$entity->getEntityName()}_{$entity->get('id')}.json";
 
         if (file_exists($fileName)) {
-            file_put_contents($fileName, time());
+            file_put_contents($fileName, json_encode(['timestamp' => time()]));
         }
     }
+
+    public function clear(): void
+    {
+        $dir = self::LISTENING_DIR;
+        if (!is_dir($dir)) {
+            return;
+        }
+
+//        foreach (Util::scanDir($dir) as $fileName) {
+//
+//        }
+    }
+
 }

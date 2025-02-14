@@ -1331,9 +1331,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.realtimeInterval = setInterval(() => {
                     $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true})
-                        .done(t => {
-                            if (t !== timestamp) {
-                                timestamp = t;
+                        .done(data => {
+                            if (data.timestamp !== timestamp) {
+                                timestamp = data.timestamp;
                                 this.model.fetch();
                             }
                         })

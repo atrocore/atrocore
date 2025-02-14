@@ -33,7 +33,7 @@ class Entity extends AbstractListener
 
         $this->getNotificationManager()->afterEntitySaved($event->getArgument('entity'));
 
-        $this->getService('App')->updateTimestampForListeningEntity($event->getArgument('entity'));
+        $this->getContainer()->get('realtimeManager')->afterEntityChanged($event->getArgument('entity'));
     }
 
     public function beforeRemove(Event $event): void

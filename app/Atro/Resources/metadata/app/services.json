@@ -1,5 +1,4 @@
 {
-  "App": "\\Atro\\Services\\App",
   "AdminNotifications": "\\Espo\\Services\\AdminNotifications",
   "Installer": "\\Atro\\Services\\Installer",
   "Person": "\\Espo\\Services\\Person",

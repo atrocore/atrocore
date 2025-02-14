@@ -99,6 +99,9 @@ class Cron extends AbstractConsole
         // send reports
         $this->sendReports();
 
+        // clear realtime cache
+        $this->getContainer()->get('realtimeManager')->clear();
+
         // run cron jobs
         $this->runCronManager();
     }
