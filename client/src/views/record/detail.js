@@ -64,6 +64,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         route: [],
 
+        realtimeInterval: null,
+
         buttonList: [
             {
                 name: 'edit',
@@ -1309,33 +1311,34 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.setupTourButton()
             });
 
-
             this.initRealtimeListener();
         },
 
-        initRealtimeListener() {
-            // this.ajaxPostRequest('App/action/startEntityListening', {
-            //     entityName: this.model.name,
-            //     entityId: this.model.get('id')
-            // }).success(res => {
-            //     this.checkTime(res.timestamp);
-            // });
+        remove() {
+            Dep.prototype.remove.call(this);
+
+            clearInterval(this.realtimeInterval);
         },
 
-        // checkTime(timestamp) {
-        //     setTimeout(() => {
-        //         $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(res => {
-        //             console.log(res, timestamp);
-        //             if (res === timestamp) {
-        //                 this.checkTime(timestamp);
-        //             } else {
-        //                 // this.model.fetch().then(() => {
-        //                 //     this.checkTime(res);
-        //                 // });
-        //             }
-        //         });
-        //     }, 1000);
-        // },
+        initRealtimeListener() {
+            this.ajaxPostRequest('App/action/startEntityListening', {
+                entityName: this.model.name,
+                entityId: this.model.get('id')
+            }).success(res => {
+                clearInterval(this.realtimeInterval);
+                this.realtimeInterval = setInterval(() => {
+                    $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true})
+                        .done(t => {
+                            if (t !== res.timestamp) {
+                                this.model.fetch();
+                            }
+                        })
+                        .fail(() => {
+                            clearInterval(this.realtimeInterval);
+                        });
+                }, 1000)
+            });
+        },
 
         hotKeyEdit: function (e) {
             e.preventDefault();
