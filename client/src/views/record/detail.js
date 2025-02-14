@@ -64,6 +64,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         route: [],
 
+        realtimeInterval: null,
+
         buttonList: [
             {
                 name: 'edit',
@@ -1307,6 +1309,38 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
+            });
+
+            this.initRealtimeListener();
+        },
+
+        remove() {
+            Dep.prototype.remove.call(this);
+
+            clearInterval(this.realtimeInterval);
+        },
+
+        initRealtimeListener() {
+            this.ajaxPostRequest('App/action/startEntityListening', {
+                entityName: this.model.name,
+                entityId: this.model.get('id')
+            }).success(res => {
+                clearInterval(this.realtimeInterval);
+
+                let timestamp = res.timestamp;
+
+                this.realtimeInterval = setInterval(() => {
+                    $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true})
+                        .done(data => {
+                            if (data.timestamp !== timestamp) {
+                                timestamp = data.timestamp;
+                                this.model.fetch();
+                            }
+                        })
+                        .fail(() => {
+                            clearInterval(this.realtimeInterval);
+                        });
+                }, 3000)
             });
         },
 

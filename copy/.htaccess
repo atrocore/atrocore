@@ -6,6 +6,10 @@ RewriteCond %{REQUEST_FILENAME} /client/
 RewriteRule ^ /client/ [R=404]
 
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} /public/
+RewriteRule ^ /public/ [R=404]
+
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} /apidocs/
 RewriteRule ^ apidocs/index.html [QSA,L]
 
