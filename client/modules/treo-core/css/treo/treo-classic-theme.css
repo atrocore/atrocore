@@ -14874,7 +14874,7 @@ blockquote {
 
 .modal-footer {
     margin-top: 10px;
-    padding: 14px 14px 14px
+    padding: 14px 20px;
 }
 
 .modal-dialog > .modal-content {
@@ -16157,7 +16157,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > * {
-    color: #999;
+    color: #6c757d;
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > *:not(:last-child) {
@@ -17457,9 +17457,7 @@ pre > code {
 }
 
 a.field-info > span.fa-info-circle {
-    font-size: 12px;
-    position: relative;
-    top: -1px
+    font-size: inherit;
 }
 
 .dropdown-menu-with-icons li a {
@@ -17941,7 +17939,7 @@ table.table {
 }
 
 .modal-body > .icons-container > * {
-    color: #999;
+    color: var(--label-color);
 }
 
 .dialog-confirm .modal-footer > .main-btn-group {
@@ -19448,7 +19446,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading {
-    padding: 5px 15px 6px 20px;
+    padding: 5px 20px 6px 20px;
     color: rgba(0, 0, 0, 0.87);
     background-color: #ececec;
     border-top: 1px solid var(--primary-border-color);
@@ -22490,18 +22488,20 @@ select {
     float: right;
 }
 
-.cell .status-icons > * ,
-.field .status-icons > * {
-    color: #ddd !important;
+.cell .status-icons > *,
+.cell .status-icons > * > span,
+.field .status-icons > *,
+.field .status-icons > * > span {
+    color: var(--label-color) !important;
+    font-size: 9px;
 }
 
 .cell:not(.hidden-cell) .status-icons,
 .field > .status-icons,
 .cell:not(.hidden-cell) .inline-actions {
-    display: flex;
+    display: inline-flex;
     flex-wrap: nowrap;
     align-items: center;
-    min-height: 20px;
 }
 
 .cell .status-icons > *,
@@ -24413,6 +24413,16 @@ span[data-img-src]::after {
     .navbar-favorites {
         display: none;
     }
+}
+
+table .cell .icons-container > * {
+    color: var(--label-color);
+    padding-left: 5px;
+    font-size: 9px !important;
+}
+
+table .cell .icons-container > *:first-child {
+    padding-left: 5px;
 }
 
 .modal .panel.layout-customization {
