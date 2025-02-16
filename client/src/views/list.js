@@ -270,6 +270,26 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             }
         },
 
+        getMenu() {
+            const menu = Dep.prototype.getMenu.call(this) || {};
+
+            if (!this.getMetadata().get(['scopes', this.scope, 'tab'])) {
+                return menu;
+            }
+
+            const isFavorite = (this.getPreferences().get('favoritesList') || []).includes(this.scope);
+
+            menu.buttons = [{
+                name: 'favorite',
+                action: isFavorite ? 'removeFavorite' : 'addFavorite',
+                style: isFavorite ? 'primary' : 'default',
+                iconHtml: '<span class="fa fa-thumb-tack"></span>',
+                cssStyle: 'margin-right: 15px',
+            }, ...(menu.buttons || [])];
+
+            return menu;
+        },
+
         setupSearchPanel: function () {
             this.createView('search', this.searchView, {
                 collection: this.collection,
@@ -568,6 +588,32 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             router.navigate(url, {trigger: false});
             router.dispatch(this.scope, 'create', options);
+        },
+
+        actionAddFavorite: function (data, event) {
+            this.notify('Saving');
+            event.target.setAttribute('disabled', true);
+            const favorites = this.getPreferences().get('favoritesList') || [];
+            this.getPreferences().save({
+                favoritesList: [...favorites, this.scope],
+            }, {patch: true}).then(() => {
+                this.notify('Saved', 'success');
+                this.getView('header').reRender();
+                this.setupSearchPanel();
+            });
+        },
+
+        actionRemoveFavorite: function (data, event) {
+            this.notify('Saving');
+            event.target.setAttribute('disabled', true);
+            const favorites = this.getPreferences().get('favoritesList') || [];
+            this.getPreferences().save({
+                favoritesList: favorites.filter(item => item !== this.scope)
+            }, {patch: true}).then(() => {
+                this.notify('Saved', 'success');
+                this.getView('header').reRender();
+                this.setupSearchPanel();
+            });
         },
 
         isTreeAllowed() {

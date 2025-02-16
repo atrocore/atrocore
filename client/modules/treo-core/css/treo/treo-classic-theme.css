@@ -2777,7 +2777,6 @@ th {
     padding: 8px;
     line-height: 1.36;
     vertical-align: top;
-    border-top: 1px solid #e8eced
 }
 
 .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]) {
@@ -16583,6 +16582,10 @@ body > footer > p, body > footer > p a, body > footer > p a:hover, body > footer
     align-items: center;
 }
 
+.navbar-form.global-search-container .input-group:has(input:focus) {
+    outline: 1px solid #1a75d1;
+}
+
 .navbar-form.global-search-container .input-group .global-searcy-button {
     color: var(--nav-font-color);
 }
@@ -20100,7 +20103,7 @@ ul.dropdown-menu > li.checkbox {
         min-height: 100%;
     }
 
-    .table > tbody > tr {
+    .table > tbody > tr:not(:first-child) {
         border-top: 1px solid #e8eced;
     }
 
@@ -24133,8 +24136,7 @@ span[data-img-src]::after {
     display: block;
 }
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li.active > a {
-    color: #fff;
-    background-color: #3f535c;
+    background-color: rgba(0, 0 , 0, 0.15) !important;
 }
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs > li.open:not(.more-group-name) > a {
     background-color: transparent;
@@ -24244,7 +24246,7 @@ span[data-img-src]::after {
     display: flex;
     height: 100%;
     align-items: stretch;
-    margin-left: 20px;
+    margin-left: 30px;
     position: relative;
     flex: 1;
 }
