@@ -311,48 +311,15 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
                 const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipLink']);
                 const tooltipTextValue = this.getTooltipText();
-                const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>' : '';
 
                 this.once('after:render', function () {
-                    $a = $('<a href="javascript:" class="text-muted field-info" style="order: 1;"><span class="fas fa-info-circle"></span></a>');
-
-                    if (!tooltipTextValue && tooltipLinkValue) {
-                        $a = $('<a href=' + tooltipLinkValue + ' target="_blank" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
-                    }
-
-                    this.getStatusIconsContainer().append($a);
-
+                    const label = this.getLabelElement().find('.label-text');
                     if (tooltipTextValue) {
-                        $a.popover({
-                            placement: 'bottom',
-                            container: 'body',
-                            html: true,
-                            content: (tooltipTextValue).replace(/\n/g, "<br />") + tooltipLinkElement,
-                            trigger: 'click',
-                        }).on('shown.bs.popover', function () {
-                            const attachBodyEvent = () => {
-                                $('body').one('click', function (e) {
-                                    if ($(e.target).data('toggle') !== 'popover'
-                                        && $(e.target).parents('.popover.in').length === 0) {
-                                        $('.popover').popover('hide');
-                                    } else {
-                                        attachBodyEvent()
-                                    }
-                                });
-                            }
-                            attachBodyEvent()
-                            $('.fas.fa-info-circle').one('click', function (e) {
-                                $('body').click();
-                            });
-
-                        }).on('hidden.bs.popover', function (e) {
-                            $(e.target).data('bs.popover').inState.click = false;
-                        });
+                        label.attr('title', tooltipTextValue);
                     }
-                }, this);
-                this.on('remove', function () {
-                    if ($a) {
-                        $a.popover('destroy')
+
+                    if (tooltipLinkValue) {
+                        label.attr('data-title-link', tooltipLinkValue);
                     }
                 }, this);
             }

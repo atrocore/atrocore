@@ -1,7 +1,10 @@
 import 'driver.js/dist/driver.css'
 import './styles/style.css';
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/dist/border.css';
 
 import {driver} from 'driver.js'
+import tippy from 'tippy.js';
 
 import {Language} from './utils/Language';
 import {UserData} from './utils/UserData';
@@ -27,5 +30,6 @@ window.SvelteMetadata = Metadata;
 window.SvelteModelFactory = ModelFactory;
 window.SvelteConfig = Config;
 window.driver = driver;
+window.tippy = tippy;
 
 export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent, Script, Navigation, Favorites};

@@ -4,14 +4,11 @@
     </div>
     <div class="buttons-panel margin hide floated-row clearfix">
         <div>
-            <button class="btn btn-primary post">{{translate 'Post'}}</button>
+            <button class="btn btn-primary post" title="{{ translate 'streamPostInfo' category='messages' }}">{{translate 'Post'}}</button>
         </div>
         <div class="attachments-container field">
             {{{attachments}}}
         </div>
-        <a href="javascript:" class="text-muted pull-right stream-post-info">
-        <span class="fas fa-info-circle"></span>
-        </a>
     </div>
 </div>
 

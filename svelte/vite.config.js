@@ -22,5 +22,8 @@ export default defineConfig({
             formats: ['umd'],
             fileName: (format) => 'atro.min.js',
         }
+    },
+    define: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
     }
 });
