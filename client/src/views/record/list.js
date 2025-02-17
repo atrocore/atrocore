@@ -2133,6 +2133,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
             }
 
+            let hasLink = false;
+
             for (var i in listLayout) {
                 var col = listLayout[i];
                 var type = col.type || model.getFieldType(col.name) || 'base';
@@ -2160,16 +2162,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
 
                 if (col.link) {
+                    hasLink = true;
                     item.options.mode = 'listLink';
+                    item.options.statusIconsCallback = this.getStatusIcons;
                 }
                 if (col.align) {
                     item.options.defs.align = col.align;
                 }
                 layout.push(item);
             }
+
+            if (!hasLink && layout[this.checkboxes ? 1 : 0]) {
+                layout[this.checkboxes ? 1 : 0].options.statusIconsCallback = this.getStatusIcons;
+            }
+
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 layout.push(this.getRowActionsDefs());
             }
+
             return layout;
         },
 
@@ -2372,7 +2382,23 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var count = modelList.length;
                 var built = 0;
                 modelList.forEach(function (model) {
-                    this.buildRow(i, model, function () {
+                    this.buildRow(i, model, function (view) {
+                        this.listenToOnce(view, 'after:render', () => {
+                            if (!view.$el) {
+                                return;
+                            }
+
+                            let el = view.$el.find('a.link[data-id]');
+                            if (el.size() === 0) {
+                                el = view.$el.find('td:not([data-name=draggableIcon]):not([data-name=r-checkbox]):first-child > *');
+                            }
+
+                            el?.find('.icons-container').remove();
+                            const icons = $('<sup class="status-icons icons-container"></sup>');
+                            (this.getStatusIcons(view.model) || []).forEach(el => icons.append(el));
+                            el?.append(icons);
+                        })
+
                         built++;
                         if (built == count) {
                             func();

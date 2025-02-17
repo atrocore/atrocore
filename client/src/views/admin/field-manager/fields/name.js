@@ -21,16 +21,15 @@ Espo.define('views/admin/field-manager/fields/name', 'views/fields/varchar', Dep
         initInlineLabelEdit() {
             let $cell = this.getCellElement();
 
-            $cell.find('.fa-globe').parent().remove();
-
-            let $link = $('<a href="javascript:" class="pull-right inline-label-edit-link hidden" style="margin-left: 7px"><span class="fas fa-globe fa-sm"></span></a>');
+            this.getInlineActionsContainer().find('.fa-globe').parent().remove();
+            let $link = $('<a href="javascript:" class="pull-right inline-label-edit-link hidden"><span class="fas fa-globe fa-sm"></span></a>');
 
             if ($cell.size() === 0) {
                 this.listenToOnce(this, 'after:render', this.initInlineLabelEdit, this);
                 return;
             }
 
-            $cell.prepend($link);
+            this.getInlineActionsContainer().append($link);
 
             $link.on('click', () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
