@@ -235,6 +235,10 @@
     "automaticFileExtensionCorrection": {
       "type": "bool"
     },
+    "favoritesIconsDisabled": {
+      "type": "bool",
+      "default": false
+    },
     "backgrounds": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,

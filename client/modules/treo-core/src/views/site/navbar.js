@@ -46,6 +46,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled'),
                 favoritesList: this.favoritesList || [],
+                favoritesHasIcons: !this.getConfig().get('favoritesIconsDisabled'),
             }, Dep.prototype.data.call(this));
         },
 

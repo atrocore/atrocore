@@ -124,10 +124,12 @@
                     {{#each favoritesList}}
                         <li data-name="{{name}}"><a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
                                 <span class="label-wrapper">
-                                    {{#if iconSrc}}
-                                        <img src="{{iconSrc}}" class="favorite-icon default-icon">
-                                    {{else}}
-                                        <span class="favorite-icon {{iconClass}}"></span>
+                                    {{#if ../favoritesHasIcons}}
+                                        {{#if iconSrc}}
+                                            <img src="{{iconSrc}}" class="favorite-icon default-icon">
+                                        {{else}}
+                                            <span class="favorite-icon {{iconClass}}"></span>
+                                        {{/if}}
                                     {{/if}}
                                     <span class="full-label">{{label}}</span>
                                 </span>
@@ -180,10 +182,12 @@
                             <li data-name="{{name}}">
                                 <a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
                                     <span class="label-wrapper">
-                                        {{#if iconSrc}}
-                                            <img src="{{iconSrc}}" class="favorite-icon default-icon">
-                                        {{else}}
-                                            <span class="favorite-icon {{iconClass}}"></span>
+                                        {{#if ../favoritesHasIcons}}
+                                            {{#if iconSrc}}
+                                                <img src="{{iconSrc}}" class="favorite-icon default-icon">
+                                            {{else}}
+                                                <span class="favorite-icon {{iconClass}}"></span>
+                                            {{/if}}
                                         {{/if}}
                                         <span class="full-label">{{label}}</span>
                                     </span>
