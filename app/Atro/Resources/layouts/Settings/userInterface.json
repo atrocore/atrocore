@@ -6,7 +6,7 @@
             [{"name": "applicationName"}, false],
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
             [{"name": "recordsPerPageSmall"}, {"name": "avatarsDisabled"}],
-            [{"name": "tabIconsDisabled"}, false]
+            [{"name": "tabIconsDisabled"}, {"name": "favoritesIconsDisabled"}]
         ]
     },
     {

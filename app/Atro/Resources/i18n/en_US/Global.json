@@ -62,7 +62,8 @@
     "NotificationProfile": "Notification Profile",
     "NotificationRule": "Notification Rule",
     "HtmlSanitizer": "HTML Sanitizer",
-    "Bookmark": "Bookmark"
+    "Bookmark": "Bookmark",
+    "SystemIcon": "System Icon"
   },
   "scopeNamesPlural": {
     "Background": "Backgrounds",
@@ -114,7 +115,8 @@
     "NotificationRule": "Notification Rules",
     "Country": "Countries",
     "HtmlSanitizer": "HTML Sanitizers",
-    "Bookmark": "Bookmarks"
+    "Bookmark": "Bookmarks",
+    "SystemIcon": "System Icons"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"

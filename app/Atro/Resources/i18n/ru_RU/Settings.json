@@ -41,7 +41,7 @@
     "followCreatedEntities": "Подписываться на создаваемые объекты",
     "adminNotifications": "Системные уведомления на панели администрирования",
     "authTokenPreventConcurrent": "Только один токен аутентификации для каждого пользователя",
-    "tabIconsDisabled": "Отключить значки вкладок",
+    "tabIconsDisabled": "Отключить значки меню навигации",
     "textFilterUseContainsForVarchar": "Использовать оператор 'содержит' при фильтрации полей varchar",
     "emailAddressIsOptedOutByDefault": "Отметить новые адреса эл. почты как те, которые не принимают участия в эл. рассылке",
     "adminNotificationsNewExtensionVersion": "Показывать уведомления, когда доступны новые версии расширений",

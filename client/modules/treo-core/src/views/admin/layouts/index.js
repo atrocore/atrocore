@@ -28,15 +28,6 @@ Espo.define('treo-core:views/admin/layouts/index', 'class-replace!treo-core:view
                 this.notify('Done', 'success');
             });
         },
-
-        renderLayoutHeader: function () {
-            if (!this.scope) {
-                $("#layout-header").html("");
-                return;
-            }
-            $("#layout-header").show().html(this.getLanguage().translate(this.scope, 'scopeNamesPlural') + " &raquo; " + this.getLanguage().translate(this.type, 'layouts', 'Admin'));
-        }
-
     })
 );
 

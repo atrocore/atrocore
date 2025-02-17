@@ -315,10 +315,31 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 color: color,
                 iconClass: iconClass
             };
-            if (color && !iconClass) {
-                result.colorIconClass = 'color-icon fas fa-stop';
+            if (!iconClass && result.name) {
+                result.iconSrc = this.getDefaultTabIcon(result.name);
             }
             return result;
+        },
+
+        getDefaultTabIcon(name) {
+            let firstLetter = name.match(/\p{L}/u)?.[0] || "A",
+                referenceData = this.getConfig().get('referenceData');
+
+            if (referenceData['SystemIcon']) {
+                let key = 'letter_' + firstLetter.toLowerCase();
+
+                if (key in referenceData['SystemIcon']) {
+                    let item = referenceData['SystemIcon'][key];
+
+                    if ('imagePathsData' in item && 'thumbnails' in item['imagePathsData']) {
+                        for (let size in item['imagePathsData']['thumbnails']) {
+                            return item['imagePathsData']['thumbnails'][size];
+                        }
+                    }
+                }
+            }
+
+            return null;
         },
 
         getMenuDataList: function () {

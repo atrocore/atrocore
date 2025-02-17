@@ -921,7 +921,7 @@ class PostUpdate
             unlink($checkUpdatesLog);
         }
 
-        $publicDataFile = 'data/publicData.json';
+        $publicDataFile = 'public/data/publicData.json';
         if (file_exists($publicDataFile)) {
             $publicData = json_decode(file_get_contents($publicDataFile), true);
         }

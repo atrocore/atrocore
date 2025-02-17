@@ -64,6 +64,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         route: [],
 
+        realtimeInterval: null,
+
         buttonList: [
             {
                 name: 'edit',
@@ -797,6 +799,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         afterRender: function () {
+            this.initRealtimeListener();
+
             this.loadDynamicActions('single')
 
             this.listenTo(this.model, 'after:save', () => {
@@ -980,14 +984,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
             this.model.trigger('after:change-mode', 'edit');
-            this.$el.find('.fa-cog.layout-editor').addClass('hidden');
+            this.$el.find('.layout-editor-container').addClass('hidden');
         },
 
         setDetailMode: function () {
             this.trigger('before:set-detail-mode');
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
-            this.$el.find('.fa-cog.layout-editor').removeClass('hidden')
+            this.$el.find('.layout-editor-container').removeClass('hidden')
 
             var fields = this.getFieldViews(true);
             for (var field in fields) {
@@ -1307,6 +1311,41 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
+            });
+        },
+
+        remove() {
+            Dep.prototype.remove.call(this);
+
+            clearInterval(this.realtimeInterval);
+        },
+
+        initRealtimeListener() {
+            if (!this.model.get('id')) {
+                return;
+            }
+
+            clearInterval(this.realtimeInterval);
+            this.ajaxPostRequest('App/action/startEntityListening', {
+                entityName: this.model.name,
+                entityId: this.model.get('id')
+            }).success(res => {
+                let timestamp = res.timestamp;
+
+                this.realtimeInterval = setInterval(() => {
+                    if (this.mode !== 'edit') {
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true})
+                            .done(data => {
+                                if (data.timestamp !== timestamp) {
+                                    timestamp = data.timestamp;
+                                    this.model.fetch();
+                                }
+                            })
+                            .fail(() => {
+                                clearInterval(this.realtimeInterval);
+                            });
+                    }
+                }, 3000)
             });
         },
 

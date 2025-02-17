@@ -32,6 +32,8 @@ class Entity extends AbstractListener
         $this->getNoteUtil()->afterEntitySaved($event->getArgument('entity'));
 
         $this->getNotificationManager()->afterEntitySaved($event->getArgument('entity'));
+
+        $this->getContainer()->get('realtimeManager')->afterEntityChanged($event->getArgument('entity'));
     }
 
     public function beforeRemove(Event $event): void

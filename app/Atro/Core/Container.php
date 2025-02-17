@@ -61,6 +61,7 @@ class Container
             'clientManager'            => \Atro\Core\Factories\ClientManager::class,
             'layoutManager'            => \Atro\Core\LayoutManager::class,
             'metadata'                 => \Atro\Core\Utils\Metadata::class,
+            'realtimeManager'          => \Atro\Core\RealtimeManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
             'acl'                      => \Espo\Core\Factories\Acl::class,

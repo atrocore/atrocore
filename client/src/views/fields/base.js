@@ -93,7 +93,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getStatusIconsContainer: function () {
-            return this.getCellElement().find('.status-icons');
+            return this.getLabelElement().find('.status-icons');
         },
 
         getInlineActionsContainer: function () {
@@ -303,21 +303,25 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             }, this);
 
+            if (this.mode === 'detail') {
+                this.initInlineActions();
+                this.initInheritanceActions();
+            }
+
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
                 const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipLink']);
                 const tooltipTextValue = this.getTooltipText();
                 const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>' : '';
 
                 this.once('after:render', function () {
-                    $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
+                    $a = $('<a href="javascript:" class="text-muted field-info" style="order: 1;"><span class="fas fa-info-circle"></span></a>');
 
                     if (!tooltipTextValue && tooltipLinkValue) {
                         $a = $('<a href=' + tooltipLinkValue + ' target="_blank" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
                     }
 
-                    var $label = this.getLabelElement();
-                    $label.append(' ');
-                    this.getLabelElement().append($a);
+                    this.getStatusIconsContainer().append($a);
+
                     if (tooltipTextValue) {
                         $a.popover({
                             placement: 'bottom',
@@ -351,11 +355,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         $a.popover('destroy')
                     }
                 }, this);
-            }
-
-            if (this.mode === 'detail') {
-                this.initInlineActions();
-                this.initInheritanceActions();
             }
 
             if (this.fieldActions) {
@@ -407,22 +406,17 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
-            if (this.$el.parents('.panel[data-name="stream"]').size() > 0) {
+            if (this.$el.parents('.stream-head-container').size() > 0) {
                 return;
             }
 
-            let container = this.getCellElement().find('.status-container');
-            if (container.size() === 0) {
-                this.getCellElement().prepend('<div class="status-container"></div>');
-                container = this.getCellElement().find('.status-container');
+            const label = this.getLabelElement();
+            if (label.find('.status-icons').size() === 0) {
+                label.append('<sup class="status-icons"></sup>');
             }
 
-            if (container.find('.inline-actions').size() === 0) {
-                container.prepend('<div class="inline-actions"></div>');
-            }
-
-            if (container.find('.status-icons').size() === 0) {
-                container.append('<div class="status-icons"></div>');
+            if (this.getCellElement().find('.inline-actions').size() === 0) {
+                this.getCellElement().prepend('<div class="pull-right inline-actions"></div>');
             }
         },
 
@@ -449,7 +443,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             let $sign = statusIcons.find('span.required-sign');
 
             if (statusIcons.size() && !$sign.size()) {
-                statusIcons.prepend(`<span class="pull-right fas fa-sm fa-exclamation required-sign" title="${this.translate('Required')}"></span>`);
+                statusIcons.prepend(`<span class="fas fa-sm fa-asterisk required-sign" title="${this.translate('Required')}"></span>`);
                 $sign = statusIcons.find('span.required-sign');
             }
 
@@ -560,12 +554,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             if (this.getInheritedIconEl().length === 0 && this.isInheritedField()) {
-                this.getStatusIconsContainer().prepend(this.getInheritedIconHtml());
+                this.getStatusIconsContainer().append(this.getInheritedIconHtml());
                 return;
             }
 
             if (this.getNonInheritedIconEl().length === 0 && !this.isInheritedField()) {
-                this.getStatusIconsContainer().prepend(this.getNonInheritedIconHtml());
+                this.getStatusIconsContainer().append(this.getNonInheritedIconHtml());
                 this.getInlineActionsContainer().append(`<a href="javascript:" data-name="${this.name}" data-action="setAsInherited" class="action lock-link hidden" title="${this.translate('setAsInherited')}"><span class="fas fa-link fa-sm"></span></a>`);
             }
 

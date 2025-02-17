@@ -23,7 +23,7 @@ class DataManager
 {
     public const CACHE_DIR_PATH = 'data/cache';
 
-    public const PUBLIC_DATA_FILE_PATH = 'data/publicData.json';
+    public const PUBLIC_DATA_FILE_PATH = 'public/data/publicData.json';
 
     private Container $container;
 

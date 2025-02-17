@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "image": "Зображення",
+    "library": "Бібліотека"
+  },
+  "labels": {
+    "Create SystemIcon": "Створити системну іконку"
+  }
+}

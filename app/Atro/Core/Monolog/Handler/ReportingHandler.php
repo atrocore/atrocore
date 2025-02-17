@@ -17,6 +17,7 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Espo\Core\Utils\File\Manager as FileManager;
+use Monolog\LogRecord;
 
 class ReportingHandler extends AbstractProcessingHandler
 {
@@ -35,9 +36,9 @@ class ReportingHandler extends AbstractProcessingHandler
         $this->fileManager = new FileManager();
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        $fileName = self::REPORTING_PATH . DIRECTORY_SEPARATOR . $record['datetime']->format('Y-m-d H:i:00') . '.log';
+        $fileName = self::REPORTING_PATH . DIRECTORY_SEPARATOR . $record->datetime->format('Y-m-d H:i:00') . '.log';
 
         if (!is_writable($fileName)) {
             $this->fileManager->checkCreateFile($fileName);
@@ -45,7 +46,7 @@ class ReportingHandler extends AbstractProcessingHandler
 
         if (is_writable($fileName)) {
             set_error_handler([$this, 'customErrorHandler']);
-            $this->fileManager->appendContents($fileName, $this->jsonMessage($record) . "\n");
+            $this->fileManager->appendContents($fileName, $this->jsonMessage($record->toArray()) . "\n");
             restore_error_handler();
         }
 
@@ -56,18 +57,11 @@ class ReportingHandler extends AbstractProcessingHandler
 
     private function jsonMessage(array $record): string
     {
-        if (strlen($record['message']) > $this->maxErrorMessageLength) {
-            $record['message'] = substr($record['message'], 0, $this->maxErrorMessageLength) . '...';
-            $record['formatted'] = $this->getFormatter()->format($record);
-        }
-
-        return json_encode(
-            [
-                'level'    => $record['level'],
-                'message'  => $record['formatted']['message'],
-                'datetime' => $record['datetime']->format('Y-m-d H:i:s T')
-            ]
-        );
+        return json_encode([
+            'level'    => $record['level'],
+            'message'  => $record['formatted']['message'],
+            'datetime' => $record['datetime']->format('Y-m-d H:i:s T')
+        ]);
     }
 
     private function customErrorHandler($code, $msg)

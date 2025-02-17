@@ -604,9 +604,6 @@ class Installer extends HasContainer
         // Generate application ID
         $this->generateAppId();
 
-        // create files in data dir
-        file_put_contents('data/publicData.json', '{}');
-
         /**
          * Run after install script if it needs
          */
@@ -732,6 +729,7 @@ class Installer extends HasContainer
 
         \Atro\Migrations\V1Dot10Dot0::createDefaultStorage($this->getEntityManager()->getConnection());
         \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
+        \Atro\Migrations\V1Dot13Dot18::createDefaultSystemIcons($this->getEntityManager()->getConnection(), $this->getConfig());
 
         \Atro\Migrations\V1Dot10Dot50::createNotificationDefaultNotificationProfile($this->getEntityManager()->getConnection(), $this->getConfig());
 
@@ -785,7 +783,6 @@ class Installer extends HasContainer
                     'Category',
                     'Catalog',
                     'Channel',
-                    'Product',
                     'Classification'
                 ]);
             }
