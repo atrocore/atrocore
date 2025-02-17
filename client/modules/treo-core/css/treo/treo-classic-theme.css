@@ -20668,7 +20668,7 @@ button.category:focus {
 
     #main {
         padding-left: 20px;
-        height: calc(100% - 14px);
+        min-height: calc(100% - 14px);
     }
 
     #main .catalog-tree-panel {
