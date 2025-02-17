@@ -1464,35 +1464,25 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     update: function (e, ui) {
                         this.saveListItemOrder(e, ui);
                     }.bind(this),
-                    helper: (e, ui) => {
-                        this.fitCellWidth(ui);
-                        return ui;
+                    helper: "clone",
+                    start: (e, ui) => {
+                        const widthData = {};
+
+                        ui.placeholder.children().each(function (i, cell) {
+                            widthData[i] = $(this).outerWidth();
+                        });
+                        ui.helper.children().each(function (i, cell) {
+                            let width = widthData[i] ?? $(this).outerWidth();
+                            $(this).css('width', width);
+                        });
                     },
-                    stop: (e, ui) => this.fitCellWidth(ui.item, true)
-                });
-            }
-        },
-
-        fitCellWidth(row, clearValue = false) {
-            const widthData = {};
-            if (!clearValue) {
-                row.children().each(function (i, cell) {
-                    widthData[i] = $(this).outerWidth();
-                });
-            }
-
-            row.children().each(function (i, cell) {
-                if (!clearValue) {
-                    let width = widthData[i] ?? $(this).outerWidth();
-                    if (cell.width) {
-                        width = cell.width;
+                    stop: (e, ui) => {
+                        ui.item.children().each(function (i, cell) {
+                            $(this).css('width', '');
+                        });
                     }
-
-                    $(this).css('width', width);
-                } else {
-                    $(this).css('width', '');
-                }
-            });
+                });
+            }
         },
 
         saveListItemOrder(e, ui) {
