@@ -1321,6 +1321,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         initRealtimeListener() {
+            if (!this.model.get('id')) {
+                return;
+            }
+
             clearInterval(this.realtimeInterval);
             this.ajaxPostRequest('App/action/startEntityListening', {
                 entityName: this.model.name,
