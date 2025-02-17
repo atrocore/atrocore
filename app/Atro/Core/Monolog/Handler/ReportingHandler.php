@@ -46,7 +46,7 @@ class ReportingHandler extends AbstractProcessingHandler
 
         if (is_writable($fileName)) {
             set_error_handler([$this, 'customErrorHandler']);
-            $this->fileManager->appendContents($fileName, $this->jsonMessage($record->toArray()) . "\n");
+            $this->fileManager->appendContents($fileName, $this->jsonMessage($record) . "\n");
             restore_error_handler();
         }
 
@@ -55,12 +55,12 @@ class ReportingHandler extends AbstractProcessingHandler
         }
     }
 
-    private function jsonMessage(array $record): string
+    private function jsonMessage(LogRecord $record): string
     {
         return json_encode([
-            'level'    => $record['level'],
-            'message'  => $record['formatted']['message'],
-            'datetime' => $record['datetime']->format('Y-m-d H:i:s T')
+            'level'    => $record->level,
+            'message'  => $record->message,
+            'datetime' => $record->datetime->format('Y-m-d H:i:s T')
         ]);
     }
 
