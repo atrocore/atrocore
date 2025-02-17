@@ -202,53 +202,30 @@ class Record extends RecordService
         }
 
         $repository = $this->getRepository();
+
+        $params['where'][] = [
+            'type'      => 'isLinked',
+            'attribute' => $foreignLink,
+        ];
+
+        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+
+        $selectParams['select'] = ['id', 'name'];
+        $collection = $repository->find($selectParams);
+        $total = $repository->count($selectParams);
+        $offset = $params['offset'];
         $result = [];
 
-        if ($this->getMetadata()->get(['scopes', $scope, 'type']) === 'ReferenceData') {
-
-//            $collection = $this->getReferenceDataBookmarkedEntities($scope);
-//            $index = 0;
-//
-//            foreach ($collection as $item) {
-//                $result[] = [
-//                    'id' => $item->get('id'),
-//                    'name' => $item->get('name') ?? $item->get('id'),
-//                    'offset' => $index,
-//                    'total' => $collection->count(),
-//                    'disabled' => false,
-//                    'load_on_demand' => false
-//                ];
-//                $index++;
-//            }
-//
-//            $total = $collection->count();
-
-        } else {
-            $params['where'][] = [
-                'type'      => 'isLinked',
-                'attribute' => $foreignLink,
+        foreach ($collection as $key => $item) {
+            $result[] = [
+                'id'             => $item->get('id'),
+                'name'           => $item->get('name') ?? $item->get('id'),
+                'offset'         => $offset + $key,
+                'total'          => $total,
+                'disabled'       => false,
+                'load_on_demand' => false
             ];
-
-            $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
-
-            $selectParams['select'] = ['id', 'name'];
-            $collection = $repository->find($selectParams);
-            $total = $repository->count($selectParams);
-            $offset = $params['offset'];
-            $result = [];
-
-            foreach ($collection as $key => $item) {
-                $result[] = [
-                    'id'             => $item->get('id'),
-                    'name'           => $item->get('name') ?? $item->get('id'),
-                    'offset'         => $offset + $key,
-                    'total'          => $total,
-                    'disabled'       => false,
-                    'load_on_demand' => false
-                ];
-            }
         }
-
 
         return [
             'list'  => $result,

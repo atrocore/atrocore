@@ -2344,7 +2344,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         treeLoad(treeData) {
-            view.clearStorage();
+            // view.clearStorage();
 
             if (view.model && view.model.get('id')) {
                 let route = [];

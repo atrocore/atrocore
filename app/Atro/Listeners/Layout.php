@@ -29,7 +29,7 @@ class Layout extends AbstractListener
             if (empty($event->getArgument('params')['isCustom'])) {
                 $scope = $event->getArgument('params')['scope'];
 
-                // add self is entity is hierarchy type
+                // add _self if entity is hierarchy type
                 if ($this->getMetadata()->get(['scopes', $scope, 'type']) === 'Hierarchy'
                     && empty($this->getMetadata()->get(['scopes', $scope, 'disableHierarchy'], false))) {
                     $result = $event->getArgument('result');
@@ -45,7 +45,7 @@ class Layout extends AbstractListener
                     $event->setArgument('result', $result);
                 }
 
-                // add bookmark if  activated
+                // add _bookmark if  activated
                 if (empty($this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled']))) {
                     $result = $event->getArgument('result');
                     $result[] = ['name' => '_bookmark'];
