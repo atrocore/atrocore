@@ -17,6 +17,7 @@ import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
 import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
+import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
 import Favorites from "./components/layout-profile/navigation/Favorites.svelte";
 import TreePanel from "./components/record/TreePanel.svelte";
@@ -31,4 +32,4 @@ window.SvelteConfig = Config;
 window.SvelteStorage = Storage;
 window.driver = driver;
 
-export {UpdatePanel, JobManagerIcon, LayoutComponent,TreePanel, ApiRequestComponent, Navigation, Favorites};
+export {UpdatePanel, JobManagerIcon, LayoutComponent, TreePanel, ApiRequestComponent, Script, Navigation, Favorites};
