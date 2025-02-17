@@ -20,7 +20,7 @@ use Atro\Core\Templates\Controllers\Base;
 
 class Bookmark extends Base
 {
-    public function actionTree($params, $data, $request)
+    public function actionTree($params, $data, $request): array
     {
         if (!$request->isGet() || empty($request->get('scope'))) {
             throw new BadRequest();
@@ -35,7 +35,6 @@ class Bookmark extends Base
         ];
 
         return $this->getRecordService()->getBookmarkTree($request->get('scope'), $params);
-
     }
 
     public function actionTreeData($params, $data, $request)

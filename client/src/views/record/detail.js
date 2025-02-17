@@ -2279,31 +2279,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         isTreeAllowed() {
-            let result = false;
-
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
-
-            if (!treeScopes.includes(this.scope)
-                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
-            ) {
-                treeScopes.unshift(this.scope);
-            }
-
-            treeScopes.forEach(scope => {
-                if (this.getAcl().check(scope, 'read')) {
-                    result = true;
-                    if (!this.getStorage().get('treeScope', this.scope)) {
-                        this.getStorage().set('treeScope', this.scope, scope);
-                    }
-                }
-            })
-
-            return result;
+            return true;
         },
 
-        setupTreePanel() {
-        },
 
         onTreePanelRendered(view) {
             this.listenTo(this.model, 'after:save', () => {
@@ -2317,7 +2295,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         selectNode(data) {
-            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
+            if (['_self', '_bookmark'].includes(this.getStorage().get('treeItem', this.scope))) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
             } else {
                 this.getStorage().set('selectedNodeId', this.scope, data.id);
@@ -2326,7 +2304,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        treeLoad( treeData) {
+        treeLoad(treeData) {
             view.clearStorage();
 
             if (view.model && view.model.get('id')) {

@@ -17,7 +17,11 @@ class LoggingConnection extends \Doctrine\DBAL\Connection
     {
         if (isset($GLOBALS['debugSQL'])) {
             $start = microtime(true);
-            $result = parent::executeQuery($sql, $params, $types);
+            try{
+                $result = parent::executeQuery($sql, $params, $types);
+            }catch (\Exception $e){
+                throw $e;
+            }
             $executionTime = number_format((microtime(true) - $start) * 1000, 2);
 
             $GLOBALS['debugSQL'][] = "[{$executionTime}ms] " . $sql .

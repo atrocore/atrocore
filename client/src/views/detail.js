@@ -280,17 +280,19 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     }
                 });
 
-                this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
-                    scope: this.scope,
-                    viewType: 'leftSidebar',
-                    layoutData: window.treePanelComponent.getLayoutData(),
-                    el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
-                }, (view) => {
-                    view.on("refresh", () => {
-                        window.treePanelComponent.refreshLayout()
+                if (this.getUser().isAdmin()) {
+                    this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
+                        scope: this.scope,
+                        viewType: 'leftSidebar',
+                        layoutData: window.treePanelComponent.getLayoutData(),
+                        el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
+                    }, (view) => {
+                        view.on("refresh", () => {
+                            window.treePanelComponent.refreshLayout()
+                        })
+                        view.render()
                     })
-                    view.render()
-                })
+                }
 
                 view.onTreePanelRendered();
             }
@@ -482,27 +484,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         isTreeAllowed() {
-            let result = false;
-
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
-
-            if (!treeScopes.includes(this.scope)
-                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
-            ) {
-                treeScopes.unshift(this.scope);
-            }
-
-            treeScopes.forEach(scope => {
-                if (this.getAcl().check(scope, 'read')) {
-                    result = true;
-                    if (!this.getStorage().get('treeScope', this.scope)) {
-                        this.getStorage().set('treeScope', this.scope, scope);
-                    }
-                }
-            })
-
-            return result;
+            return true
         },
 
         setupRecord: function () {

@@ -35,6 +35,7 @@
     let searchValue = '';
     let treeScope;
     let layoutData;
+    let selectNodeId;
 
     $: if (currentWidth) {
         if (callbacks?.treeWidthChanged) {
@@ -56,11 +57,19 @@
 
     function handleCollapsePanel() {
         isCollapsed = !isCollapsed;
-        dispatch('collapse-panel', {isCollapsed});
+
+        if (isCollapsed) {
+            window.$('.page-header').addClass('collapsed').removeClass('not-collapsed');
+            window.$('#tree-list-table').addClass('collapsed');
+        } else {
+            window.$('.page-header').removeClass('collapsed').addClass('not-collapsed');
+            window.$('#tree-list-table').removeClass('collapsed');
+        }
+        // dispatch('collapse-panel', {isCollapsed});
         Storage.set('catalog-tree-panel', scope, isCollapsed ? 'collapsed' : '');
 
         if (!isCollapsed) {
-            dispatch('rebuild-tree');
+            rebuildTree()
         }
     }
 
@@ -123,12 +132,15 @@
         let $tree = window.$(treeElement);
         let whereData = Storage.get('treeWhereData', treeScope) || [];
 
-        if (data === null && searchValue) {
-            whereData.push({"type": "textFilter", "value": searchValue})
+        if (data === null && searchValue &&
+            Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
+            !Metadata.get(['scopes', treeScope, 'hierarchyDisabled'])) {
             treeLoading = true
+            whereData.push({"type": "textFilter", "value": searchValue})
             Espo.ajax.getRequest(`${treeScope}/action/TreeData`, {
                 "where": whereData,
-                "scope": scope
+                "scope": scope,
+                "link": activeItem.name
             }).then(response => {
                 buildTree(response.tree);
             });
@@ -209,7 +221,11 @@
             Notifier.notify(false)
         })
         $tree.on('tree.refresh', e => {
-            // this.trigger('tree-refresh', e)
+            if (Storage.get('selectedNodeId', scope)) {
+                const id = Storage.get('selectedNodeId', scope);
+                const route = Storage.get('selectedNodeRoute', scope);
+                selectTreeNode(id, route);
+            }
         })
         $tree.on('tree.move', e => {
             e.preventDefault();
@@ -309,7 +325,7 @@
     }
 
     function generateUrl(node) {
-        let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}`;
+        let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}`;
         if (node && node.showMoreDirection) {
             let offset = node.offset;
             let maxSize1 = maxSize;
@@ -336,6 +352,9 @@
         }
 
         let whereData = Storage.get('treeWhereData', treeScope) || [];
+        if (searchValue) {
+            whereData = [...whereData, {"type": "textFilter", "value": searchValue}]
+        }
         if (whereData.length > 0) {
             url += "&";
             url += window.$.param({"where": whereData});
@@ -343,29 +362,50 @@
         return url;
     }
 
-    function selectTreeNode(id, ids) {
+    export function selectTreeNode(id, ids) {
         const $tree = window.$(treeElement);
         const onFinished = () => {
             let node = $tree.tree('getNodeById', id);
             if (node) {
                 $tree.tree('addToSelection', node);
+                selectNodeId = id
             }
 
             $tree.find(`.jqtree-title`).each((k, el) => {
                 el = window.$(el);
-                let $li = el.parent().parent();
+                let li = el.parent().parent();
 
                 if (el.data('id') !== id && $tree.tree('getNodeById', el.data('id'))) {
                     $tree.tree('removeFromSelection', $tree.tree('getNodeById', el.data('id')));
-                    $li.removeClass('jqtree-selected');
-                } else if (!$li.hasClass('jqtree-selected')) {
-                    $li.addClass('jqtree-selected');
+                    li.removeClass('jqtree-selected');
+                } else if (!li.hasClass('jqtree-selected')) {
+                    li.addClass('jqtree-selected');
                 }
             });
         }
 
         openNodes($tree, ids, onFinished)
 
+    }
+
+    function callUnselectNode() {
+        if (callbacks?.selectNode) {
+            callbacks.selectNode({id: selectNodeId})
+        }
+    }
+
+    export function unSelectTreeNode(id) {
+        const $tree = getTreeEl();
+        const node = $tree.tree('getNodeById', id);
+        selectNodeId = null;
+
+        if (node) {
+            $tree.tree('removeFromSelection', node);
+        }
+    }
+
+    function getTreeEl() {
+        return window.$(treeElement)
     }
 
     function filterResponse(response, direction = null) {
@@ -425,7 +465,7 @@
     }
 
     function openNodes($tree, ids, onFinished) {
-        if (ids.length === 0) {
+        if (!Array.isArray(ids) || ids.length === 0) {
             onFinished()
             return
         }
@@ -448,6 +488,12 @@
     //endregion Tree methods
 
     function getLinkScope(link): string | null {
+        if (link === '_self') {
+            return scope
+        }
+        if (link === '_bookmark') {
+            return 'Bookmark'
+        }
         return Metadata.get(['entityDefs', scope, 'links', link, 'entity']) ||
             Metadata.get(['entityDefs', scope, 'fields', link, 'entity'])
     }
@@ -457,6 +503,7 @@
             return
         }
         activeItem = treeItem
+        Storage.set('treeItem', scope, treeItem.name)
         searchValue = ''
         Notifier.notify('Loading...')
         tick().then(() => {
@@ -491,14 +538,21 @@
             treeItems = data.layout.map(item => {
                 const type = Metadata.get(['entityDefs', scope, 'fields', item.name, 'type'])
                 let label = ''
-                if (type == 'link') {
-                    const itemScope = getLinkScope(item.name)
-                    label = Language.get('Global', 'scopeNamePlural', itemScope)
+                if (item.name === '_self') {
+                    label = Language.get('Global', 'scopeNamesPlural', scope)
+                } else if (item.name === '_bookmark') {
+                    label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
+                } else {
+                    if (type == 'link') {
+                        const itemScope = getLinkScope(item.name)
+                        label = Language.get('Global', 'scopeNamesPlural', itemScope)
+                    }
+
+                    if (!label) {
+                        label = Language.get(scope, 'links', item.name) || Language.get(scope, 'fields', item.name) || Language.get('Global', 'fields', item.name)
+                    }
                 }
 
-                if (!label) {
-                    label = Language.get(scope, 'links', item.name) || Language.get(scope, 'fields', item.name)
-                }
 
                 return {
                     name: item.name,
@@ -510,7 +564,7 @@
                 Storage.set('treeItem', scope, treeItems[0]);
                 activeItem = treeItems[0]
             } else {
-                activeItem = treeItems.find(ti.name === treeItem);
+                activeItem = treeItems.find(ti => ti.name === treeItem);
             }
 
             searchValue = Storage.get('treeSearchValue', treeScope) || null;
@@ -525,7 +579,7 @@
     export function refreshLayout() {
         loadLayout(() => {
             tick().then(() => {
-                buildTree()
+                rebuildTree()
             })
         })
     }
@@ -542,7 +596,9 @@
 
         loadLayout(() => {
             tick().then(() => {
-                buildTree()
+                if (!isCollapsed) {
+                    buildTree()
+                }
             })
             if (renderLayoutEditor) {
                 renderLayoutEditor(layoutEditorElement)
@@ -558,7 +614,8 @@
     });
 </script>
 
-<aside class="catalog-tree-panel" class:collapsed={isCollapsed} transition:fade
+<aside class="catalog-tree-panel" class:collapsed={isCollapsed} class:catalog-tree-panel-hidden={isCollapsed}
+       transition:fade
        style="width: {treePanelWidth}">
     <button type="button"
             class="btn btn-default collapse-panel"
@@ -580,7 +637,7 @@
             <div class="panel-group" style="margin-bottom: 10px">
                 <div class="btn-group">
                     {#each treeItems as treeItem}
-                        <a href="javascript:void" on:click={()=>setActiveItem(treeItem)}
+                        <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
                            class="btn btn-default tree-item" class:active={treeItem.name===activeItem.name}>
                             {treeItem.label}
                         </a>
@@ -590,7 +647,7 @@
             <hr style="margin: 0 -10px">
             {#if activeItem}
                 <div class="panel-group category-search">
-                    <h5 style="margin-top: 20px;font-weight: bold; font-size: 16px">{activeItem.label}</h5>
+                    <h5 style="margin: 20px 0;font-weight: bold; font-size: 16px;">{activeItem.label}</h5>
                     <div class="field" data-name="category-search">
                         <input type="text" bind:this={searchInputElement}
                                on:keydown={(e) => e.key === 'Enter' && applySearch()}
@@ -598,6 +655,14 @@
                                placeholder="Type and press Enter...">
                         <button class="fas fa-times reset-search-in-tree-button" style="display: none"></button>
                         <button on:click={applySearch} class="fas fa-search search-in-tree-button"></button>
+                    </div>
+                    <div style="min-height: 22px;margin-top: 20px">
+                        {#if selectNodeId}
+                            <button class="unset-selection" on:click={callUnselectNode}>
+                                <i class="fas fa-times"></i>
+                                <span>Unset selection</span>
+                            </button>
+                        {/if}
                     </div>
                 </div>
 
@@ -635,7 +700,7 @@
         padding: 6px 20px 6px 0;
     }
 
-    .tree-item, .tree-item:hover {
+    .tree-item, .tree-item:hover, .tree-item:focus {
         background: none;
         text-decoration: underline;
         border: 0;
@@ -643,5 +708,16 @@
 
     .tree-item.active {
         color: #2895ea;
+    }
+
+    .unset-selection {
+        background: #dae8fc;
+        border: 1px solid;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .unset-selection i {
+        font-size: 14px;
     }
 </style>
