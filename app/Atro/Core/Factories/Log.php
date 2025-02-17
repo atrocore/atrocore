@@ -17,10 +17,11 @@ use Atro\Core\Container;
 use Atro\Core\Factories\FactoryInterface as Factory;
 use Atro\Core\Monolog\Handler\ReportingHandler;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler;
-use Espo\Core\Utils\Log\Monolog\Handler\StreamHandler;
 use Monolog\ErrorHandler;
 use Monolog\Logger;
+use Monolog\Level;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 
 class Log implements Factory
 {
@@ -31,31 +32,31 @@ class Log implements Factory
 
         switch ($config->get('logger.level', 'WARNING')) {
             case 'DEBUG':
-                $levelCode = Logger::DEBUG;
+                $levelCode = Level::Debug;
                 break;
             case 'INFO':
-                $levelCode = Logger::INFO;
+                $levelCode = Level::Info;
                 break;
             case 'NOTICE':
-                $levelCode = Logger::NOTICE;
+                $levelCode = Level::Notice;
                 break;
             case 'WARNING':
-                $levelCode = Logger::WARNING;
+                $levelCode = Level::Warning;
                 break;
             case 'ERROR':
-                $levelCode = Logger::ERROR;
+                $levelCode = Level::Error;
                 break;
             case 'CRITICAL':
-                $levelCode = Logger::CRITICAL;
+                $levelCode = Level::Critical;
                 break;
             case 'ALERT':
-                $levelCode = Logger::ALERT;
+                $levelCode = Level::Alert;
                 break;
             case 'EMERGENCY':
-                $levelCode = Logger::EMERGENCY;
+                $levelCode = Level::Emergency;
                 break;
             default:
-                $levelCode = Logger::WARNING;
+                $levelCode = Level::Warning;
         }
 
         $log = new Logger('Log');
