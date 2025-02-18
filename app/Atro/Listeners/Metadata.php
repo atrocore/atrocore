@@ -214,6 +214,7 @@ class Metadata extends AbstractListener
                         }
 
                         $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/$viewType-dropdown";
+                        $data['entityDefs'][$entityType]['fields'][$field]['ignoreViewForSearch'] = true;
                     }
                 }
             }
@@ -952,11 +953,12 @@ class Metadata extends AbstractListener
     }
 
     private function addScopesToRelationShip(
-        array &$metadata,
+        array  &$metadata,
         string $scope,
         string $relationEntityName,
         string $relation
-    ) {
+    )
+    {
         if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
@@ -1246,7 +1248,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array $indexes
+     * @param array  $indexes
      * @param string $fieldName
      *
      * @return array
