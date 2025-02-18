@@ -30,6 +30,7 @@ class Layout extends Base
         $reelType = $this->getEntityManager()->getEspoMetadata()->get("clientDefs.{$this->get('entity')}.additionalLayouts.{$this->get('viewType')}", $this->get('viewType'));
         switch ($reelType) {
             case 'list';
+            case 'leftSidebar':
             case 'kanban':
                 /* @var $listItems EntityCollection */
                 $listItems = $this->get('listItems');

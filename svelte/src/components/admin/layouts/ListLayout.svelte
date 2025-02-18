@@ -62,19 +62,45 @@
         });
     }
 
+    function getTranslation(field) {
+        if (field === '_self') {
+            return Language.translate(params.scope, 'scopeNamesPlural', 'Global')
+        }
+        if (field === '_bookmark') {
+            return Language.translate('Bookmark', 'scopeNamesPlural', 'Global')
+        }
+        return Language.translate(field, 'fields', params.scope)
+    }
+
+    function getAdditionalFields() {
+        const fields = []
+        if (params.type === 'leftSidebar') {
+            if (!Metadata.get(['scopes', params.scope, 'bookmarkDisabled'])) {
+                fields.push('_bookmark')
+            }
+            if (Metadata.get(['scopes', params.scope, 'type']) === 'Hierarchy' && !Metadata.get(['scopes', params.scope, 'disableHierarchy'])) {
+                fields.push('_self')
+            }
+        }
+
+        return fields;
+    }
+
     function readDataFromLayout(model: any, layout: LayoutItem[]): void {
-        const allFields = Object.keys(model.defs.fields).filter(field =>
+        let allFields = Object.keys(model.defs.fields).filter(field =>
             checkFieldType(model.getFieldParam(field, 'type')) && isFieldEnabled(model, field)
-        ).sort((v1, v2) =>
-            Language.translate(v1, 'fields', params.scope).localeCompare(Language.translate(v2, 'fields', params.scope))
         );
+        allFields.push(...getAdditionalFields())
+        allFields = allFields.sort((v1, v2) =>
+            getTranslation(v1).localeCompare(getTranslation(v2))
+        )
 
         const enabledFieldsList: string[] = [];
         const labelList: string[] = [];
         const duplicateLabelList: string[] = [];
 
         enabledFields = layout.map(item => {
-            const label = Language.translate(item.name, 'fields', params.scope);
+            const label = getTranslation(item.name);
             if (labelList.includes(label)) {
                 duplicateLabelList.push(label);
             }
@@ -87,7 +113,7 @@
         });
 
         disabledFields = allFields.filter(field => !enabledFieldsList.includes(field)).map(field => {
-            const label = Language.translate(field, 'fields', params.scope);
+            const label = getTranslation(field);
             if (labelList.includes(label)) {
                 duplicateLabelList.push(label);
             }
@@ -110,6 +136,9 @@
     }
 
     function checkFieldType(type: string): boolean {
+        if (params.fieldTypes) {
+            return params.fieldTypes.includes(type)
+        }
         return true;
     }
 

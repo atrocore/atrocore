@@ -79,7 +79,8 @@
     "list": "Liste",
     "detail": "Details",
     "massUpdate": "Massenänderung",
-    "sidePanelsDetail": "Seitenpanel (Detail)"
+    "sidePanelsDetail": "Seitenpanel (Detail)",
+    "leftSidebar": "Linke Seitenleiste"
   },
   "fieldTypes": {
     "color": "Farbe",

@@ -102,7 +102,8 @@
     "detail": "Деталі",
     "massUpdate": "Масове оновлення",
     "relationships": "Панелі зв'язків",
-    "sidePanelsDetail": "Бічні панелі (Деталі)"
+    "sidePanelsDetail": "Бічні панелі (Деталі)",
+    "leftSidebar": "Лівий сайдбар"
   },
   "fields": {
     "request": "Запит",
