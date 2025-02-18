@@ -604,7 +604,7 @@
             if (treeItems.length === 0) {
                 isCollapsed = true
                 if (!UserData.get()?.user?.isAdmin) {
-                    // hide panel is user cannot configure
+                    // hide panel if user cannot configure
                     isHidden = true
                 }
             }
