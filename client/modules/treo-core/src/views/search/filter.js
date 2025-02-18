@@ -37,7 +37,7 @@ Espo.define('treo-core:views/search/filter', 'views/search/filter', function (De
             let isPinEnabled = false;
 
             if (this.getParentView() && this.getParentView().getParentView()) {
-                const parent =  this.getParentView().getParentView();
+                const parent = this.getParentView().getParentView();
 
                 if (('$el' in parent) && parent.$el.is('div#main')) {
                     isPinEnabled = true;
@@ -62,7 +62,8 @@ Espo.define('treo-core:views/search/filter', 'views/search/filter', function (De
             this.pinned = this.options.pinned;
 
             if (type) {
-                var viewName = this.model.getFieldParam(this.generalName, 'view') || this.getFieldManager().getViewName(type);
+                var viewName = (this.model.getFieldParam(this.generalName, 'ignoreViewForSearch') ? null : this.model.getFieldParam(this.generalName, 'view'))
+                    || this.getFieldManager().getViewName(type);
 
                 this.createView('field', viewName, {
                     mode: 'search',
