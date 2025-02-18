@@ -7,6 +7,7 @@
     import {Metadata} from "../../utils/Metadata";
     import {Config} from "../../utils/Config.js";
     import {Notifier} from "../../utils/Notifier";
+    import {UserData} from "../../utils/UserData";
 
     export let scope: string;
     export let model;
@@ -36,6 +37,7 @@
     let treeScope;
     let layoutData;
     let selectNodeId;
+    let isHidden = false;
 
     $: if (currentWidth) {
         if (callbacks?.treeWidthChanged) {
@@ -129,6 +131,10 @@
     }
 
     function buildTree(data = null): void {
+        if(!activeItem){
+            return;
+        }
+
         let $tree = window.$(treeElement);
         let whereData = Storage.get('treeWhereData', treeScope) || [];
 
@@ -595,6 +601,13 @@
         }
 
         loadLayout(() => {
+            if (treeItems.length === 0) {
+                isCollapsed = true
+                if (!UserData.get()?.user?.isAdmin) {
+                    // hide panel is user cannot configure
+                    isHidden = true
+                }
+            }
             tick().then(() => {
                 if (!isCollapsed) {
                     buildTree()
@@ -615,7 +628,7 @@
 </script>
 
 <aside class="catalog-tree-panel" class:collapsed={isCollapsed} class:catalog-tree-panel-hidden={isCollapsed}
-       transition:fade
+       transition:fade class:hidden={isHidden}
        style="width: {treePanelWidth}">
     <button type="button"
             class="btn btn-default collapse-panel"
