@@ -22491,12 +22491,16 @@ select {
     float: right;
 }
 
+.cell:not(.hidden-cell) .status-icons {
+    color: inherit;
+}
+
 .cell .status-icons > *,
 .cell .status-icons > * > span,
 .field .status-icons > *,
 .field .status-icons > * > span {
-    color: var(--label-color) !important;
-    font-size: 9px;
+    color: inherit !important;
+    font-size: 9px !important;
 }
 
 .cell:not(.hidden-cell) .status-icons,
