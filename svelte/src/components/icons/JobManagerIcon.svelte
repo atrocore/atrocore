@@ -1,5 +1,6 @@
 <script lang="ts">
     import QueuePanelContainer from "../panels/QueuePanelContainer.svelte";
+    import {Language} from "../../utils/Language";
 
     export let renderTable = (): void => {
         // should render table
@@ -26,7 +27,7 @@
     }
 </script>
 
-<a href="/" class="notifications-button" bind:this={icon} on:click={event=>{event.preventDefault();openPanel();}}>
+<a href="/" class="notifications-button" bind:this={icon} on:click={event=>{event.preventDefault();openPanel();}} title={Language.translate('jobManager')}>
     <span class="fas fa-tasks"></span>
     {#if qmPaused}
     <span class="fas fa-pause-circle pause-icon"></span>

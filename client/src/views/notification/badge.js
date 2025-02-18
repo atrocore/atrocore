@@ -54,13 +54,11 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             let savedCount = null;
 
             this.listenTo(Backbone.Events, 'publicData', data => {
-                this.hideNotRead();
                 if (data.notReadCount) {
                     let unreadCount = JSON.parse(data.notReadCount);
                     if (unreadCount && unreadCount[this.getUser().id]) {
                         let count = unreadCount[this.getUser().id];
                         if (count) {
-                            this.showNotRead(count);
                             if (savedCount && count > savedCount && $('#nofitication.alert-danger').length === 0) {
                                 if ((count - savedCount) > 1) {
                                     Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
@@ -82,22 +80,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.$number = this.$el.find('.number-badge');
 
             $('body').attr({'style': ''});
-        },
-
-        showNotRead: function (count) {
-            if (this.$badge && this.$badge.length > 0) {
-                this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
-                this.$number?.removeClass('hidden').html(count.toString());
-            }
-        },
-
-        hideNotRead: function () {
-            if (this.$badge) {
-                this.$badge.attr('title', this.translate('Notifications'));
-            }
-            if (this.$number) {
-                this.$number.addClass('hidden').html('');
-            }
         },
 
         refreshList: function () {

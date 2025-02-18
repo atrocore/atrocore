@@ -44,6 +44,47 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     });
                 }
             }
+
+            const initializeTooltips = () => {
+                document.querySelectorAll('[title]').forEach(el => {
+                    if (!el.dataset.tippy) {
+                        window.tippy(el, {
+                            appendTo: () => document.body,
+                            maxWidth: 350,
+                            content: ref => {
+                                let html = `<div>${ref.getAttribute('title')}</div>`;
+
+                                if (ref.getAttribute('data-title-link')) {
+                                    html += `<div class="tippy-footer"><a href="${ref.getAttribute('data-title-link')}" target="_blank"><u>${this.translate('Read more')}</u></a></div>`;
+                                }
+
+                                return html;
+                            },
+                            allowHTML: true,
+                            trigger: el.tagName.toLowerCase() === 'a' ? 'mouseenter' : 'mouseenter click',
+                            delay: [500, 0],
+                            touch: ['hold', 500],
+                            hideOnClick: true,
+                            interactive: true,
+                            onShow(instance) {
+                                document.querySelectorAll('[data-tippy-root]').forEach(tip => {
+                                    if (tip !== instance.popper) {
+                                        tip._tippy.hide();
+                                    }
+                                });
+                            }
+                        });
+                        el.setAttribute('data-tippy', 'true');
+                        el.removeAttribute('title');
+                        el.removeAttribute('data-title-link');
+                    }
+                });
+            };
+
+            initializeTooltips();
+
+            const observer = new MutationObserver(initializeTooltips);
+            observer.observe(document.body, { childList: true, subtree: true });
         }
 
     })
