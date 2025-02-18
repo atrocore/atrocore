@@ -623,7 +623,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         isTreeAllowed() {
-            return true
+            return !this.getMetadata().get(['scopes', this.scope, 'leftSidebarDisabled'])
         },
 
         createTreePanel(scope) {
@@ -668,7 +668,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
             this.listenTo(Backbone, 'after:search', collection => {
                 if (this.collection.name === collection.name) {
-                    window.treePanelComponent.handleCollectionSearch(collection)
+                    if (window.treePanelComponent) {
+                        window.treePanelComponent.handleCollectionSearch(collection)
+                    }
                 }
             });
 
@@ -715,7 +717,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             const id = this.getStorage().get('selectedNodeId', this.scope);
             const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
 
-            window.treePanelComponent.selectTreeNode(id, route);
+            if (window.treePanelComponent) {
+                window.treePanelComponent.selectTreeNode(id, route);
+            }
 
             this.notify('Please wait...');
             this.modifyCollectionForSelectedNode()
@@ -724,7 +728,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         unSelectTreeNode(id) {
-            window.treePanelComponent.unSelectTreeNode(id);
+            if (window.treePanelComponent) {
+                window.treePanelComponent.unSelectTreeNode(id);
+            }
 
             this.notify('Please wait...');
 
@@ -788,7 +794,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         reloadBookmarks() {
-            window.treePanelComponent.reloadBookmarks()
+            if (window.treePanelComponent) {
+                window.treePanelComponent.reloadBookmarks()
+            }
         }
 
     });
