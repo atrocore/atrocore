@@ -29,7 +29,8 @@ class Layout extends Base
             $reelType = $this->getMetadata()->get("clientDefs.{$entity->get('entity')}.additionalLayouts.{$entity->get('viewType')}", $entity->get('viewType'));
 
             switch ($reelType) {
-                case 'list';
+                case 'list':
+                case 'leftSidebar':
                 case 'kanban':
                     $repository = $this->getEntityManager()->getRepository('LayoutListItem');
                     $listItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];

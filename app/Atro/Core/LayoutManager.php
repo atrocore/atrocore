@@ -339,12 +339,6 @@ class LayoutManager
             if ($name == 'list') {
                 $data = $this->getLayoutFromFiles($scope, "listIn$relatedEntity");
             }
-
-            if (empty($data)) {
-                // for backward compatibility : use small layout files
-                // Todo: Remove this later
-                $data = $this->getLayoutFromFiles($scope, $name . 'Small');
-            }
         }
 
         if (empty($data)) {

@@ -22,6 +22,10 @@
             case 'list':
                 LayoutComponent = ListLayout;
                 break
+            case 'leftSidebar':
+                LayoutComponent = ListLayout;
+                params.fieldTypes = ['link', 'linkMultiple']
+                break
             case 'kanban':
                 LayoutComponent = ListLayout;
                 params.dataAttributeList = ['id', 'name', 'link', 'align', 'view', 'isLarge', 'cssStyle']

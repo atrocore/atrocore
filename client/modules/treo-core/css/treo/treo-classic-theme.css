@@ -20055,7 +20055,7 @@ ul.dropdown-menu > li.checkbox {
     position: relative;
     border-right: 1px solid #e8eced;
     margin: 0 20px -10px -20px;
-    padding: 0 10px;
+    padding: 0 10px 0 20px;
     float: left;
     min-height: 35px;
 }
@@ -22491,12 +22491,16 @@ select {
     float: right;
 }
 
+.cell:not(.hidden-cell) .status-icons {
+    color: inherit;
+}
+
 .cell .status-icons > *,
 .cell .status-icons > * > span,
 .field .status-icons > *,
 .field .status-icons > * > span {
-    color: var(--label-color) !important;
-    font-size: 9px;
+    color: inherit !important;
+    font-size: 9px !important;
 }
 
 .cell:not(.hidden-cell) .status-icons,

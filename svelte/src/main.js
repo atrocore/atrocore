@@ -13,6 +13,8 @@ import {LayoutManager} from "./utils/LayoutManager";
 import {Metadata} from "./utils/Metadata";
 import {ModelFactory} from "./utils/ModelFactory";
 import {Config} from "./utils/Config";
+import {Storage} from "./utils/Storage.ts";
+
 
 import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
@@ -21,6 +23,7 @@ import ApiRequestComponent from "./components/admin/api-request/ApiRequestCompon
 import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
 import Favorites from "./components/layout-profile/navigation/Favorites.svelte";
+import TreePanel from "./components/record/TreePanel.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -29,7 +32,8 @@ window.SvelteLayoutManager = LayoutManager;
 window.SvelteMetadata = Metadata;
 window.SvelteModelFactory = ModelFactory;
 window.SvelteConfig = Config;
+window.SvelteStorage = Storage;
 window.driver = driver;
 window.tippy = tippy;
 
-export {UpdatePanel, JobManagerIcon, LayoutComponent, ApiRequestComponent, Script, Navigation, Favorites};
+export {UpdatePanel, JobManagerIcon, LayoutComponent, TreePanel, ApiRequestComponent, Script, Navigation, Favorites};

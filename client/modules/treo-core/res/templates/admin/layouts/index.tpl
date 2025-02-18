@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div id="layouts-panel" class="col-sm-9">
+        <div id="layouts-panel" style="padding: 0 20px" class="col-sm-9">
             <div id="layout-content"></div>
         </div>
     </div>

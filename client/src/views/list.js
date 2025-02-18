@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, SearchManager) {
+Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -77,6 +77,12 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             if (this.options.params.viewMode) {
                 this.viewMode = this.options.params.viewMode;
+            }
+        },
+
+        data: function () {
+            return {
+                isTreeAllowed: this.isTreeAllowed()
             }
         },
 
@@ -189,7 +195,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             this.getStorage().set('list-view', this.scope, this.viewMode);
 
-            this.setupTreePanel();
         },
 
         actionDynamicEntityAction(data) {
@@ -217,7 +222,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.viewModeList = ['list'];
             }
 
-            if(this.options.params.viewMode){
+            if (this.options.params.viewMode) {
                 // do not search in cache if view mode is in params
                 return
             }
@@ -404,6 +409,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         afterRender: function () {
+            this.createTreePanel()
             let treePanelView = this.getView('treePanel');
 
             this.collection.isFetched = false;
@@ -617,58 +623,55 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         isTreeAllowed() {
-            let result = false;
-
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
-
-            if(!treeScopes.includes(this.scope)
-                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
-            ) {
-                treeScopes.unshift(this.scope);
-            }
-
-            treeScopes.forEach(scope => {
-                if (this.getAcl().check(scope, 'read')) {
-                    result = true;
-                    if (!this.getStorage().get('treeScope', this.scope)) {
-                        this.getStorage().set('treeScope', this.scope, scope);
-                    }
-                }
-            });
-
-            return result;
+            return true
         },
 
-        setupTreePanel(scope) {
+        createTreePanel(scope) {
             if (!this.isTreeAllowed()) {
                 return;
             }
 
-            this.createView('treePanel', 'views/record/panels/tree-panel', {
-                el: `${this.options.el} .catalog-tree-panel`,
-                scope: scope ? scope : this.scope,
-                model: this.model,
-                collection: this.collection
-            }, view => {
-                view.listenTo(view, 'select-node', data => {
-                    this.selectNode(data);
-                });
-                view.listenTo(view, 'tree-load', treeData => {
-                    this.treeLoad(view, treeData);
-                });
-                view.listenTo(view, 'tree-refresh', () => {
-                    view.treeRefresh();
-                });
-                view.listenTo(view, 'tree-reset', () => {
-                    this.treeReset(view);
-                });
-                this.listenTo(view, 'tree-width-changed', function (width) {
-                    this.onTreeResize(width)
-                });
-                this.listenTo(view, 'tree-width-unset', function () {
-                })
+            window.treePanelComponent = new Svelte.TreePanel({
+                target: $(`${this.options.el}`).get(0),
+                anchor: $(`${this.options.el} .tree-panel-anchor`).get(0),
+                props: {
+                    scope: scope ? scope : this.scope,
+                    model: this.model,
+                    collection: this.collection,
+                    callbacks: {
+                        selectNode: data => {
+                            this.selectNode(data);
+                        },
+                        treeLoad: treeData => {
+                            this.treeLoad(view, treeData);
+                        },
+                        treeWidthChanged: (width) => {
+                            this.onTreeResize(width)
+                        }
+                    }
+                }
             });
+
+            if (this.getUser().isAdmin()) {
+                this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
+                    scope: this.scope,
+                    viewType: 'leftSidebar',
+                    layoutData: window.treePanelComponent.getLayoutData(),
+                    el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
+                }, (view) => {
+                    view.on("refresh", () => {
+                        window.treePanelComponent.refreshLayout()
+                    })
+                    view.render()
+                })
+            }
+
+            this.listenTo(Backbone, 'after:search', collection => {
+                if (this.collection.name === collection.name) {
+                    window.treePanelComponent.handleCollectionSearch(collection)
+                }
+            });
+
 
             this.listenTo(this, 'record-list-rendered', (recordView) => {
                 this.listenTo(recordView, `bookmarked-${this.scope}`, (_) => {
@@ -696,28 +699,23 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.collection.whereAdditional = []
                 return
             }
-            const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
 
             this.collection.whereAdditional = [
                 {
-                    "type": "bool",
-                    "value": [
-                        filterName
-                    ],
-                    "data": {
-                        [filterName]: id
-                    }
+                    "type": "linkedWith",
+                    "attribute": this.getStorage().get('treeItem', this.scope),
+                    "value": [id]
                 }
             ]
 
-            this.collection.where = this.collection.where.filter(item => !item['value'] || item['value'][0] !== filterName)
+            this.collection.where = this.collection.where.filter(item => item['value']?.[0] !== "linkedWith" && item['attribute'] !== this.getStorage().get('treeItem', this.scope))
         },
 
         selectTreeNode() {
             const id = this.getStorage().get('selectedNodeId', this.scope);
             const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
 
-            this.getView('treePanel').selectTreeNode(id, route);
+            window.treePanelComponent.selectTreeNode(id, route);
 
             this.notify('Please wait...');
             this.modifyCollectionForSelectedNode()
@@ -726,7 +724,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         unSelectTreeNode(id) {
-            this.getView('treePanel').unSelectTreeNode(id);
+            window.treePanelComponent.unSelectTreeNode(id);
 
             this.notify('Please wait...');
 
@@ -748,14 +746,14 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             this.modifyCollectionForSelectedNode()
 
-            if(![this.scope, 'Bookmark'].includes(view.treeScope)) {
+            if (![this.scope, 'Bookmark'].includes(view.treeScope)) {
                 this.notify('Please wait...');
                 this.collection.fetch().then(() => this.notify(false));
             }
         },
 
         selectNode(data) {
-            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
+            if (['_self', '_bookmark'].includes(this.getStorage().get('treeItem', this.scope))) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
                 return;
             }
@@ -790,10 +788,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         reloadBookmarks() {
-            let treePanelView = this.getView('treePanel');
-            if(treePanelView && treePanelView.treeScope === 'Bookmark') {
-                treePanelView.rebuildTree();
-            }
+            window.treePanelComponent.reloadBookmarks()
         }
 
     });
