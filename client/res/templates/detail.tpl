@@ -1,7 +1,5 @@
 {{#if treeAllowed}}
-    <aside class="catalog-tree-panel">
-        {{{treePanel}}}
-    </aside>
+    <aside class="tree-panel-anchor"></aside>
 {{/if}}
 <main>
     <div class="header page-header">{{{header}}}</div>

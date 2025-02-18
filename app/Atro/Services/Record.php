@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
@@ -188,6 +189,50 @@ class Record extends RecordService
         return [$total, $errors, $sync];
     }
 
+    public function getTreeItems(string $link, string $scope, array $params): array
+    {
+        $foreignLink = '';
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
+            if ($linkData['foreign'] === $link && $linkData['entity'] === $scope) {
+                $foreignLink = $linkName;
+            }
+        }
+        if (empty($foreignLink)) {
+            throw new BadRequest("Foreign link not found for ($scope: $link) on " . $this->entityName);
+        }
+
+        $repository = $this->getRepository();
+
+        $params['where'][] = [
+            'type'      => 'isLinked',
+            'attribute' => $foreignLink,
+        ];
+
+        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+
+        $selectParams['select'] = ['id', 'name'];
+        $collection = $repository->find($selectParams);
+        $total = $repository->count($selectParams);
+        $offset = $params['offset'];
+        $result = [];
+
+        foreach ($collection as $key => $item) {
+            $result[] = [
+                'id'             => $item->get('id'),
+                'name'           => $item->get('name') ?? $item->get('id'),
+                'offset'         => $offset + $key,
+                'total'          => $total,
+                'disabled'       => false,
+                'load_on_demand' => false
+            ];
+        }
+
+        return [
+            'list'  => $result,
+            'total' => $total
+        ];
+    }
+
     public function merge($id, array $sourceIdList, \stdClass $attributes)
     {
         if (empty($id)) {
@@ -315,12 +360,12 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
-       try{
-           $attributes->input->_skipCheckForConflicts = true;
-           $this->updateEntity($id, $attributes->input);
-       }catch (NotModified $e) {
+        try {
+            $attributes->input->_skipCheckForConflicts = true;
+            $this->updateEntity($id, $attributes->input);
+        } catch (NotModified $e) {
 
-       }
+        }
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
@@ -336,11 +381,12 @@ class Record extends RecordService
         return [];
     }
 
-    protected  function getForbiddenLinksToMerge(): array {
+    protected function getForbiddenLinksToMerge(): array
+    {
         $links = [];
         $scopeDefs = $this->getMetadata()->get(['scopes', $this->entityName]);
-        if(!empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['multiParents'])) {
-          $links[] = 'parents';
+        if (!empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['multiParents'])) {
+            $links[] = 'parents';
         }
         return $links;
     }

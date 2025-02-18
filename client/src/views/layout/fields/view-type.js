@@ -32,11 +32,11 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
             this.params.groupOptions = [
                 {
                     name: "view",
-                    options: this.params.options.filter(o => !(["relationships", "sidePanelsDetail"].includes(o)))
+                    options: this.params.options.filter(o => !(["relationships","leftSidebar", "sidePanelsDetail"].includes(o)))
                 },
                 {
                     name: "viewGroup",
-                    options: ["relationships", "sidePanelsDetail"]
+                    options: ["relationships", "leftSidebar", "sidePanelsDetail"]
                 }
             ]
         },
@@ -46,6 +46,7 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
                 "list",
                 "detail",
                 "relationships",
+                "leftSidebar",
                 "sidePanelsDetail",
             ]
             if (this.getMetadata().get(['clientDefs', this.model.get('entity'), 'kanbanViewMode'])) {

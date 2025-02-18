@@ -416,6 +416,7 @@ Espo.define(
 
                 window.SvelteLayoutManager.setLayoutManager(helper.layoutManager)
                 window.SvelteMetadata.setMetadata(helper.metadata)
+                window.SvelteStorage.setStorage(helper.storage)
                 window.SvelteModelFactory.setModelFactory(helper.modelFactory)
                 window.SvelteConfig.setConfig(helper.settings)
 

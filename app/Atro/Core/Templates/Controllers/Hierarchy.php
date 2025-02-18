@@ -55,6 +55,10 @@ class Hierarchy extends AbstractRecordController
             throw new Forbidden();
         }
 
+        if ($this->getRecordService()->isHierarchyDisabled()) {
+            return parent::actionTree($params, $data, $request);
+        }
+
         if (empty($request->get('node')) && !empty($request->get('selectedId'))) {
             return $this->getRecordService()->getTreeDataForSelectedNode((string)$request->get('selectedId'));
         }

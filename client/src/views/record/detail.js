@@ -2318,63 +2318,23 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         isTreeAllowed() {
-            let result = false;
-
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
-
-            if (!treeScopes.includes(this.scope)
-                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
-            ) {
-                treeScopes.unshift(this.scope);
-            }
-
-            treeScopes.forEach(scope => {
-                if (this.getAcl().check(scope, 'read')) {
-                    result = true;
-                    if (!this.getStorage().get('treeScope', this.scope)) {
-                        this.getStorage().set('treeScope', this.scope, scope);
-                    }
-                }
-            })
-
-            return result;
+            return true;
         },
 
-        setupTreePanel() {
-        },
 
         onTreePanelRendered(view) {
             this.listenTo(this.model, 'after:save', () => {
-                view.rebuildTree();
-            });
-            view.listenTo(view, 'select-node', data => {
-                this.selectNode(data);
-            });
-            view.listenTo(view, 'tree-load', treeData => {
-                this.treeLoad(view, treeData);
-            });
-            view.listenTo(view, 'tree-refresh', () => {
-                view.treeRefresh();
-            });
-            view.listenTo(view, 'tree-reset', () => {
-                this.treeReset(view);
+                window.treePanelComponent.rebuildTree();
             });
             this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                 if (['parents', 'children'].includes(link)) {
-                    view.rebuildTree();
+                    window.treePanelComponent.rebuildTree();
                 }
             });
-            this.listenTo(view, 'tree-width-changed', function (width) {
-                this.onTreeResize(width)
-            });
-            this.listenTo(view, 'tree-width-unset', function () {
-                this.onTreeUnset();
-            })
         },
 
         selectNode(data) {
-            if ([this.scope, 'Bookmark'].includes(this.getStorage().get('treeScope', this.scope))) {
+            if (['_self', '_bookmark'].includes(this.getStorage().get('treeItem', this.scope))) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
             } else {
                 this.getStorage().set('selectedNodeId', this.scope, data.id);
@@ -2383,8 +2343,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        treeLoad(view, treeData) {
-            view.clearStorage();
+        treeLoad(treeData) {
+            // view.clearStorage();
 
             if (view.model && view.model.get('id')) {
                 let route = [];

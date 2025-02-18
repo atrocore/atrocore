@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/detail', 'views/main', function (Dep) {
+Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
     return Dep.extend({
 
@@ -129,7 +129,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 && this.getMetadata().get(['scopes', this.scope, 'overviewFilters']) !== false
                 && this.getMetadata().get(['scopes', this.scope, 'hideFieldTypeFilters']) !== true
             ) {
-               this.handleFilterButton();
+                this.handleFilterButton();
             }
 
             var collection = this.collection = this.model.collection;
@@ -251,6 +251,51 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             $('.page-header').addClass('detail-page-header');
 
             Dep.prototype.afterRender.call(this);
+
+            if (this.treeAllowed) {
+                const view = this.getView('record')
+                window.treePanelComponent = new Svelte.TreePanel({
+                    target: $(`${this.options.el}`).get(0),
+                    anchor: $(`${this.options.el} .tree-panel-anchor`).get(0),
+                    props: {
+                        scope: this.scope,
+                        model: this.model,
+                        callbacks: {
+                            selectNode: data => {
+                                view.selectNode(data);
+                            },
+                            treeLoad: treeData => {
+                                view.treeLoad(treeData);
+                            },
+                            treeReset: () => {
+                                view.treeReset()
+                            },
+                            treeWidthChanged: (width) => {
+                                view.onTreeResize(width)
+                            },
+                            treeWidthUnset: (width) => {
+                                view.onTreeUnset(width)
+                            }
+                        }
+                    }
+                });
+
+                if (this.getUser().isAdmin()) {
+                    this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
+                        scope: this.scope,
+                        viewType: 'leftSidebar',
+                        layoutData: window.treePanelComponent.getLayoutData(),
+                        el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
+                    }, (view) => {
+                        view.on("refresh", () => {
+                            window.treePanelComponent.refreshLayout()
+                        })
+                        view.render()
+                    })
+                }
+
+                view.onTreePanelRendered();
+            }
         },
 
         setupHeader: function () {
@@ -439,27 +484,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         isTreeAllowed() {
-            let result = false;
-
-            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [];
-
-            if (!treeScopes.includes(this.scope)
-                && this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && !this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)
-            ) {
-                treeScopes.unshift(this.scope);
-            }
-
-            treeScopes.forEach(scope => {
-                if (this.getAcl().check(scope, 'read')) {
-                    result = true;
-                    if (!this.getStorage().get('treeScope', this.scope)) {
-                        this.getStorage().set('treeScope', this.scope, scope);
-                    }
-                }
-            })
-
-            return result;
+            return true
         },
 
         setupRecord: function () {
@@ -481,15 +506,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.treeAllowed = !o.isWide && this.isTreeAllowed();
 
             this.createView('record', this.getRecordViewName(), o, view => {
-                if (this.treeAllowed) {
-                    this.createView('treePanel', 'views/record/panels/tree-panel', {
-                        el: `${this.options.el} aside.catalog-tree-panel`,
-                        scope: this.scope,
-                        model: this.model
-                    }, panel => {
-                        view.onTreePanelRendered(panel);
-                    });
-                }
+
             });
         },
 
@@ -498,12 +515,12 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         handleFollowButton: function (shouldBeHidden = false) {
-            if(shouldBeHidden) {
+            if (shouldBeHidden) {
                 this.addMenuItem('buttons', {
                     name: 'following',
                     style: 'hidden',
                 }, true, false, true);
-            }else if (this.model.get('isFollowed')) {
+            } else if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
             } else {
                 if (this.getAcl().checkModel(this.model, 'stream')) {
@@ -516,7 +533,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             let data = {};
             if (this.model.get('bookmarkId')) {
                 if (this.getAcl().check('Bookmark', 'delete')) {
-                    data =  {
+                    data = {
                         name: 'bookmarking',
                         title: 'Bookmarked, Click to unbookmark',
                         style: 'primary',
@@ -528,7 +545,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
             } else {
                 if (this.getAcl().check('Bookmark', 'create')) {
-                    data =  {
+                    data = {
                         name: 'bookmarking',
                         title: 'Click to bookmark',
                         style: 'default',
@@ -545,11 +562,11 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         handleFilterButton() {
             let cssStyle = 'margin: 0 10px 0 0px'
             let style = 'default';
-            if(this.isOverviewFilterApply()) {
+            if (this.isOverviewFilterApply()) {
                 cssStyle += ';color:white;'
                 style = 'danger';
             }
-            this.addMenuItem('buttons',  {
+            this.addMenuItem('buttons', {
                 name: 'filtering',
                 title: 'Open Filter',
                 style: style,
@@ -560,7 +577,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         },
 
         getOverviewFiltersList: function () {
-            if(this.overviewFilterList) {
+            if (this.overviewFilterList) {
                 return this.overviewFilterList;
             }
             let result = [
@@ -616,10 +633,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         isOverviewFilterApply() {
             for (const filter of this.getOverviewFiltersList()) {
                 let selected = this.getStorage().get(filter.name, this.scope) ?? [];
-                if(!Array.isArray(selected) || !selected.length) {
+                if (!Array.isArray(selected) || !selected.length) {
                     continue;
                 }
-                if(selected && selected.join('') !== filter.defaultValue ) {
+                if (selected && selected.join('') !== filter.defaultValue) {
                     return true;
                 }
             }
@@ -627,7 +644,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             return false;
         },
 
-        actionOpenOverviewFilter: function(e) {
+        actionOpenOverviewFilter: function (e) {
             this.notify('Loading...')
             let overviewFilterList = this.getOverviewFiltersList();
             let currentValues = {};
@@ -639,9 +656,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 model: this.model,
                 overviewFilters: overviewFilterList,
                 currentValues: currentValues
-            }, view  => {
+            }, view => {
                 view.render()
-                if(view.isRendered()) {
+                if (view.isRendered()) {
                     this.notify(false)
                 }
                 this.listenTo(view, 'after:render', () => {
@@ -651,13 +668,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 this.listenTo(view, 'save', (filterModel) => {
                     let filterChanged = false;
                     this.getOverviewFiltersList().forEach((filter) => {
-                        if(filterModel.get(filter.name)) {
+                        if (filterModel.get(filter.name)) {
                             filterChanged = true;
                             this.getStorage().set(filter.name, this.scope, filterModel.get(filter.name));
                         }
                     });
 
-                    if(filterChanged) {
+                    if (filterChanged) {
                         this.model.trigger('overview-filters-changed');
                         this.handleFilterButton();
                     }
@@ -665,7 +682,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             });
         },
 
-        actionBookmark: function() {
+        actionBookmark: function () {
             $el = this.$el.find('[data-action="bookmark"]');
             $el.addClass('disabled');
             this.notify(this.translate('Bookmarking') + '...');
@@ -687,7 +704,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             });
         },
 
-        actionUnbookmark: function() {
+        actionUnbookmark: function () {
             $el = this.$el.find('[data-action="unbookmark"]');
             $el.addClass('disabled');
             this.notify(this.translate('Unbookmarking') + '...');
