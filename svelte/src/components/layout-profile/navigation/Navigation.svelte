@@ -120,6 +120,7 @@
                     groupEnd: item.name === '',
                     name: item.name,
                     label: item.name,
+                    iconClass: item.iconClass || null,
                     sortOrder
                 });
                 sortOrder++;
@@ -148,6 +149,7 @@
                         groupEnd: true,
                         name: '',
                         label: '',
+                        iconClass: item.iconClass || null,
                         sortOrder
                     });
                     sortOrder++;
