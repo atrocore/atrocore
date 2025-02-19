@@ -24218,6 +24218,10 @@ span[data-img-src]::after {
     text-align: center;
 }
 
+.layout-editor-container .btn-link{
+    color: #333;
+}
+
 .panel .layout-editor-container{
     text-align: right;
 }
