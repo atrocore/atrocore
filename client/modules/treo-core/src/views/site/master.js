@@ -61,7 +61,7 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                                 return html;
                             },
                             allowHTML: true,
-                            trigger: el.tagName.toLowerCase() === 'a' ? 'mouseenter' : 'mouseenter click',
+                            trigger: 'mouseenter',
                             delay: [500, 0],
                             touch: ['hold', 500],
                             hideOnClick: true,
