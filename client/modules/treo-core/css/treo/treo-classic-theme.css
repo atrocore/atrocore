@@ -24523,7 +24523,6 @@ table .cell .icons-container > *:first-child {
 }
 
 .cell label .label-text[data-tippy=true] {
-    cursor: pointer;
     border-bottom: 1px dotted var(--primary-border-color);
 }
 
