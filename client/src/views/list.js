@@ -638,15 +638,16 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                     scope: scope ? scope : this.scope,
                     model: this.model,
                     collection: this.collection,
+                    mode: 'list',
                     callbacks: {
-                        selectNode: data => {
-                            this.selectNode(data);
-                        },
-                        treeLoad: treeData => {
-                            this.treeLoad(view, treeData);
+                        selectNode: (data, force) => {
+                            this.selectNode(data, force);
                         },
                         treeWidthChanged: (width) => {
                             this.onTreeResize(width)
+                        },
+                        treeReset: (treeScope) => {
+                            this.treeReset(treeScope)
                         }
                     }
                 }
@@ -686,18 +687,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             });
         },
 
-        treeLoad(view, treeData) {
-            view.clearStorage();
-
-            if (view.model && view.model.get('id')) {
-                let route = [];
-                view.prepareTreeRoute(treeData, route);
-            }
-        },
-
         modifyCollectionForSelectedNode() {
             const id = this.getStorage().get('selectedNodeId', this.scope);
-            if (!id) {
+            if (!id || ['_self', '_bookmark'].includes(this.getStorage().get('treeItem', this.scope))) {
                 this.collection.whereAdditional = []
                 return
             }
@@ -724,6 +716,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             this.notify('Please wait...');
             this.modifyCollectionForSelectedNode()
 
+            this.collection.reset();
             this.collection.fetch().then(() => this.notify(false));
         },
 
@@ -736,35 +729,30 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
             this.modifyCollectionForSelectedNode()
 
+            this.collection.reset();
             this.collection.fetch().then(() => this.notify(false));
         },
 
-        treeReset(view) {
+        treeReset(treeScope) {
             this.notify('Please wait...');
-
-            this.getStorage().clear('selectedNodeId', this.scope);
-            this.getStorage().clear('selectedNodeRoute', this.scope);
-
-            this.getStorage().clear('treeSearchValue', view.treeScope);
-            view.toggleVisibilityForResetButton();
-
-            this.getView('search').silentResetFilters();
-
             this.modifyCollectionForSelectedNode()
 
-            if (![this.scope, 'Bookmark'].includes(view.treeScope)) {
+            if (![this.scope, 'Bookmark'].includes(treeScope)) {
                 this.notify('Please wait...');
+                this.collection.reset();
                 this.collection.fetch().then(() => this.notify(false));
             }
         },
 
-        selectNode(data) {
+        selectNode(data, force = false) {
             if (['_self', '_bookmark'].includes(this.getStorage().get('treeItem', this.scope))) {
-                window.location.href = `/#${this.scope}/view/${data.id}`;
+                if(data.click){
+                    window.location.href = `/#${this.scope}/view/${data.id}`;
+                }
                 return;
             }
 
-            if (data.id === this.getStorage().get('selectedNodeId', this.scope)) {
+            if (!force && data.id === this.getStorage().get('selectedNodeId', this.scope)) {
                 this.getStorage().clear('selectedNodeId', this.scope);
                 this.getStorage().clear('selectedNodeRoute', this.scope);
                 this.unSelectTreeNode(data.id);
@@ -773,7 +761,11 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }
 
             this.getStorage().set('selectedNodeId', this.scope, data.id);
-            this.getStorage().set('selectedNodeRoute', this.scope, data.route);
+            if (data.route) {
+                this.getStorage().set('selectedNodeRoute', this.scope, data.route);
+            } else {
+                this.getStorage().clear('selectedNodeRoute', this.scope);
+            }
 
             this.selectTreeNode();
         },

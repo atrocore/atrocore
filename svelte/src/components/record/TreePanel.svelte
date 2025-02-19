@@ -17,6 +17,7 @@
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let isCollapsed: boolean = false;
+    export let mode;
     export let maxSize: number = Config.get('recordsPerPageSmall') || 20;
 
     export let renderLayoutEditor;
@@ -47,9 +48,10 @@
 
     $: treePanelWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
+    $: isSelectionEnabled = activeItem && (!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list'
 
     export function handleCollectionSearch(searchedCollection) {
-        if (collection && searchedCollection.name === getLinkScope(activeItem.name)) {
+        if (collection && searchedCollection.name === scope) {
             Storage.set('treeWhereData', scope, searchedCollection.where)
         }
         if (!isCollapsed) {
@@ -73,12 +75,6 @@
         if (!isCollapsed) {
             rebuildTree()
         }
-    }
-
-
-    function handleResetFilter(e: Event) {
-        e.preventDefault();
-        dispatch('tree-reset');
     }
 
     function handleResize(e: MouseEvent) {
@@ -130,13 +126,21 @@
         }
     }
 
+    function getWhereData(): [] {
+        let whereData = Storage.get('treeWhereData', scope) || [];
+        if (!['_self', '_bookmark'].includes(activeItem.name)) {
+            whereData = []
+        }
+        return whereData
+    }
+
     function buildTree(data = null): void {
         if (!activeItem) {
             return;
         }
 
         let $tree = window.$(treeElement);
-        let whereData = Storage.get('treeWhereData', treeScope) || [];
+        let whereData = getWhereData()
 
         if (data === null && searchValue &&
             Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
@@ -194,7 +198,11 @@
                     }
                 }
 
-                if (data && [scope, 'Bookmark'].includes(treeScope) && model && model.get('id') === node.id) {
+                if (['_self', '_bookmark'].includes(activeItem.name) && model && model.get('id') === node.id) {
+                    $tree.tree('addToSelection', node);
+                    $li.addClass('jqtree-selected');
+                }
+                if (!['_self', '_bookmark'].includes(activeItem.name) && selectNodeId === node.id) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
@@ -227,11 +235,21 @@
             Notifier.notify(false)
         })
         $tree.on('tree.refresh', e => {
-            if (Storage.get('selectedNodeId', scope)) {
+            if (Storage.get('selectedNodeId', scope) && mode === 'list') {
                 const id = Storage.get('selectedNodeId', scope);
                 const route = Storage.get('selectedNodeRoute', scope);
-                selectTreeNode(id, route);
+                if (callbacks?.selectNode) {
+                    callbacks.selectNode({id, route}, true);
+                }
             }
+            if (mode === 'detail') {
+                if (model && ['_self', '_bookmark'].includes(activeItem.name)) {
+                    selectTreeNode(model.get('id'), Object.keys(model.get('hierarchyRoute')).reverse())
+                } else if (Storage.get('selectedNodeId', scope)) {
+                    selectTreeNode(Storage.get('selectedNodeId', scope), parseRoute(Storage.get('selectedNodeRoute', scope)))
+                }
+            }
+
         })
         $tree.on('tree.move', e => {
             e.preventDefault();
@@ -279,7 +297,7 @@
                     node = node.parent;
                 }
 
-                let data = {id: e.node.id, route: ''};
+                let data = {id: e.node.id, route: '', click: true};
                 if (route.length > 0) {
                     data['route'] = "|" + route.reverse().join('|') + "|";
                 }
@@ -289,6 +307,17 @@
                 }
             }
         });
+    }
+
+    function parseRoute(routeStr) {
+        let route = [];
+        (routeStr || '').split('|').forEach(item => {
+            if (item) {
+                route.push(item);
+            }
+        });
+
+        return route;
     }
 
     function loadMore(node) {
@@ -357,7 +386,7 @@
             url += '&selectedId=' + model.id;
         }
 
-        let whereData = Storage.get('treeWhereData', treeScope) || [];
+        let whereData = getWhereData();
         if (searchValue) {
             whereData = [...whereData, {"type": "textFilter", "value": searchValue}]
         }
@@ -456,20 +485,6 @@
         });
     }
 
-    function prepareTreeRoute(list, route) {
-        list.forEach(item => {
-            if (item.children) {
-                route.push(item.id);
-                prepareTreeRoute(item.children, route);
-            }
-        });
-
-        if (scope && model.get('id')) {
-            Storage.set('selectedNodeId', scope, model.get('id'));
-            Storage.set('selectedNodeRoute', scope, route);
-        }
-    }
-
     function openNodes($tree, ids, onFinished) {
         if (!Array.isArray(ids) || ids.length === 0) {
             onFinished()
@@ -483,9 +498,10 @@
                 el = window.$(el);
                 let $li = el.parent().parent();
                 if ($li.hasClass('jqtree-closed')) {
-                    result = true;
                     let node = $tree.tree('getNodeByHtmlElement', el);
                     $tree.tree('openNode', node, false, () => openNodes($tree, ids.slice(1), onFinished));
+                } else {
+                    openNodes($tree, ids.slice(1), onFinished)
                 }
             });
         }
@@ -509,12 +525,20 @@
             return
         }
         searchValue = ''
-        if (selectNodeId) {
-            if (callbacks?.selectNode) {
-                callbacks.selectNode({id: selectNodeId});
+        searchInputElement.value = ''
+        Storage.clear('treeSearchValue', treeScope)
+
+        if (mode === 'list') {
+            if (selectNodeId) {
+                if (callbacks?.selectNode) {
+                    callbacks.selectNode({id: selectNodeId});
+                }
+                selectNodeId = null
             }
+        } else {
             selectNodeId = null
         }
+
         activeItem = treeItem
         Storage.set('treeItem', scope, treeItem.name)
         Notifier.notify('Loading...')
@@ -523,12 +547,20 @@
         })
     }
 
+    function treeReset() {
+        searchInputElement.value = ''
+        if (mode === 'detail') {
+            Storage.clear('treeWhereData', scope)
+        }
+        applySearch()
+    }
+
     function applySearch() {
         searchValue = searchInputElement.value
         if (searchValue) {
-            Storage.set('treeSearchValue', treeScope, searchValue)
+            Storage.set('treeSearchValue', scope, searchValue)
         } else {
-            Storage.clear('treeSearchValue', treeScope)
+            Storage.clear('treeSearchValue', scope)
         }
         Notifier.notify('Loading...')
         rebuildTree()
@@ -581,11 +613,6 @@
                 }
             }
 
-            searchValue = Storage.get('treeSearchValue', treeScope) || null;
-            if (searchValue) {
-                searchInputElement.value = searchValue
-            }
-
             callback()
         })
     }
@@ -617,6 +644,11 @@
                 }
             }
             tick().then(() => {
+                searchValue = Storage.get('treeSearchValue', scope) || null;
+                if (searchValue) {
+                    searchInputElement.value = searchValue
+                }
+
                 if (!isCollapsed) {
                     buildTree()
                 }
@@ -639,7 +671,7 @@
        transition:fade class:hidden={isHidden}
        style="width: {treePanelWidth}">
     <button type="button"
-            class="btn btn-default collapse-panel"
+            class="btn btn-link collapse-panel"
             class:collapsed={isCollapsed}
             on:click={handleCollapsePanel}>
         <span class="toggle-icon-left fas fa-angle-left" class:hidden={isCollapsed}></span>
@@ -659,7 +691,7 @@
                 <div class="btn-group">
                     {#each treeItems as treeItem}
                         <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="btn btn-default tree-item" class:active={treeItem.name===activeItem.name}>
+                           class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
                             {treeItem.label}
                         </a>
                     {/each}
@@ -674,10 +706,13 @@
                                on:keydown={(e) => e.key === 'Enter' && applySearch()}
                                class="form-control category-search search-in-tree-input" tabindex="1"
                                placeholder="Type and press Enter...">
+                        <button on:click={treeReset} class="fas fa-times reset-search-in-tree-button"
+                                class:hidden={!searchValue}></button>
                         <button on:click={applySearch} class="fas fa-search search-in-tree-button"></button>
                     </div>
                     <div style="margin-top: 20px">
-                        <button on:click={callUnselectNode} type="button" disabled="{!selectNodeId}"
+                        <button on:click={callUnselectNode} type="button"
+                                disabled="{!selectNodeId || !isSelectionEnabled}"
                                 class="btn btn-default">
                             Unset selection
                         </button>
@@ -716,12 +751,8 @@
 
     .tree-item {
         padding: 6px 20px 6px 0;
-    }
-
-    .tree-item, .tree-item:hover, .tree-item:focus, .tree-item:active {
-        background: none;
+        color: #333;
         text-decoration: underline;
-        border: 0;
     }
 
     .tree-item.active {
