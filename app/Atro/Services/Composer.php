@@ -168,7 +168,7 @@ class Composer extends HasContainer
             ->getEntityManager()
             ->getRepository('Job')
             ->select(['id'])
-            ->where(['status' => 'Running'])
+            ->where(['status' => 'Running', 'type!=' => 'ComposerAutoUpdate'])
             ->findOne();
 
         return !empty($job);
