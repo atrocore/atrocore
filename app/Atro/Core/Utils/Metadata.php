@@ -275,7 +275,7 @@ class Metadata
                     $conditions = array_merge($conditions, $val);
                 }
             } else {
-                $conditions['script'] = (string)$v['conditions'];
+                $conditions['script'] = (string)$v['conditions'] ?? '';
             }
 
             if (!array_key_exists('triggerFields', $v)) {
