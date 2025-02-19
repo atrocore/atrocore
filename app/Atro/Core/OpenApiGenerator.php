@@ -110,6 +110,23 @@ class OpenApiGenerator
                             'forRead' => true
                         ];
                         break;
+                    case "extensibleEnum":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
+                            'type'    => 'string',
+                            'forRead' => true
+                        ];
+                        break;
+                    case 'extensibleMultiEnum':
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                            'type'  => 'array',
+                            'items' => ['type' => 'string']
+                        ];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
+                            'type'    => 'object',
+                            'forRead' => true
+                        ];
+                        break;
                     case "linkMultiple":
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = [
                             'type'  => 'array',
@@ -1041,19 +1058,19 @@ class OpenApiGenerator
             }
 
             $result['paths']['/User']['post']['parameters'][] = [
-                'name' => $key,
-                'in' => 'body',
-                'schema' => $schema,
+                'name'     => $key,
+                'in'       => 'body',
+                'schema'   => $schema,
                 'required' => !empty($result['components']['schemas']['User']['required']) && in_array($key, $result['components']['schemas']['User']['required'])
             ];
         }
         $result['paths']['/User']['post']['parameters'][] = [
-            'name' => 'passwordConfirm',
-            'in' => 'body',
-            'required' => true,
+            'name'        => 'passwordConfirm',
+            'in'          => 'body',
+            'required'    => true,
             'description' => 'Password confirmation. Note: this field in required when there in no "id" key in request body.',
-            'schema' => [
-                'type' => 'string',
+            'schema'      => [
+                'type'    => 'string',
                 'example' => 'string'
             ]
         ];

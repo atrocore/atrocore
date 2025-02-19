@@ -275,7 +275,7 @@ class Metadata
                     $conditions = array_merge($conditions, $val);
                 }
             } else {
-                $conditions['script'] = (string)$v['conditions'];
+                $conditions['script'] = (string)($v['conditions'] ?? '');
             }
 
             if (!array_key_exists('triggerFields', $v)) {
@@ -285,7 +285,7 @@ class Metadata
             $row = [];
             $row['type'] = $mapper[$v['type']];
             $row['triggerAction'] = $triggerAction;
-            $row['triggerFields'] = is_array($v['triggerFields']) ? $v['triggerFields'] :  @json_decode((string)$v['triggerFields'], true);
+            $row['triggerFields'] = is_array($v['triggerFields']) ? $v['triggerFields'] : @json_decode((string)$v['triggerFields'], true);
             $row['conditions'] = $conditions;
 
             switch ($row['type']) {
@@ -426,7 +426,7 @@ class Metadata
      * Get metadata definition in custom directory
      *
      * @param string|array $key
-     * @param mixed $default
+     * @param mixed        $default
      *
      * @return object|mixed
      */
@@ -447,7 +447,7 @@ class Metadata
      *
      * @param string $key1
      * @param string $key2
-     * @param array $data
+     * @param array  $data
      *
      * @return boolean
      */
@@ -506,8 +506,8 @@ class Metadata
     /**
      * Unset some fields and other stuff in metadat
      *
-     * @param string $key1
-     * @param string $key2
+     * @param string         $key1
+     * @param string         $key2
      * @param array | string $unsets Ex. 'fields.name'
      *
      * @return bool
@@ -567,7 +567,7 @@ class Metadata
      *
      * @param string $key1
      * @param string $key2
-     * @param array $data
+     * @param array  $data
      *
      * @return void
      */
