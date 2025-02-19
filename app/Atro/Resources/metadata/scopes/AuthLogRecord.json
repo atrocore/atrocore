@@ -10,5 +10,6 @@
   "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35,
   "actionDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "openApiHidden": true
 }

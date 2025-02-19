@@ -8,5 +8,6 @@
   "object": true,
   "streamDisabled": true,
   "disabled": true,
-  "type": "Base"
+  "type": "Base",
+  "emHidden": true
 }
