@@ -52,6 +52,10 @@ Espo.define('views/layout-profile/modals/favorites', 'views/modal',
                             }).then(() => {
                                 this.close();
                                 this.notify('Done', 'success');
+
+                                if (this.options.afterSave) {
+                                    this.options.afterSave();
+                                }
                             });
                         },
                     },
