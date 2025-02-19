@@ -13,5 +13,6 @@
   "object": true,
   "isActiveUnavailable": true,
   "bookmarkDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "openApiHidden": true
 }
