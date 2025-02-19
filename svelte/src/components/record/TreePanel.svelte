@@ -131,7 +131,7 @@
     }
 
     function buildTree(data = null): void {
-        if(!activeItem){
+        if (!activeItem) {
             return;
         }
 
@@ -508,9 +508,15 @@
         if (activeItem && activeItem.name === treeItem.name) {
             return
         }
+        searchValue = ''
+        if (selectNodeId) {
+            if (callbacks?.selectNode) {
+                callbacks.selectNode({id: selectNodeId});
+            }
+            selectNodeId = null
+        }
         activeItem = treeItem
         Storage.set('treeItem', scope, treeItem.name)
-        searchValue = ''
         Notifier.notify('Loading...')
         tick().then(() => {
             rebuildTree()
@@ -566,11 +572,13 @@
                 }
             })
             const treeItem = Storage.get('treeItem', scope);
-            if (!treeItem || !treeItems.find(ti => ti.name === treeItem)) {
-                Storage.set('treeItem', scope, treeItems[0]);
-                activeItem = treeItems[0]
-            } else {
-                activeItem = treeItems.find(ti => ti.name === treeItem);
+            if (treeItems.length > 0) {
+                if (!treeItem || !treeItems.find(ti => ti.name === treeItem)) {
+                    Storage.set('treeItem', scope, treeItems[0].name);
+                    activeItem = treeItems[0]
+                } else {
+                    activeItem = treeItems.find(ti => ti.name === treeItem);
+                }
             }
 
             searchValue = Storage.get('treeSearchValue', treeScope) || null;
@@ -647,7 +655,7 @@
                 <img class="preloader" style="height:12px;" src="client/img/atro-loader.svg">
             </div>
         {:else if treeItems.length > 0 }
-            <div class="panel-group" style="margin-bottom: 10px">
+            <div class="panel-group" style="margin-bottom: 10px; margin-top: -10px;">
                 <div class="btn-group">
                     {#each treeItems as treeItem}
                         <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
@@ -659,23 +667,20 @@
             </div>
             <hr style="margin: 0 -10px">
             {#if activeItem}
-                <div class="panel-group category-search">
+                <div class="panel-group category-search" style="margin-bottom: 20px">
                     <h5 style="margin: 20px 0;font-weight: bold; font-size: 16px;">{activeItem.label}</h5>
                     <div class="field" data-name="category-search">
                         <input type="text" bind:this={searchInputElement}
                                on:keydown={(e) => e.key === 'Enter' && applySearch()}
                                class="form-control category-search search-in-tree-input" tabindex="1"
                                placeholder="Type and press Enter...">
-                        <button class="fas fa-times reset-search-in-tree-button" style="display: none"></button>
                         <button on:click={applySearch} class="fas fa-search search-in-tree-button"></button>
                     </div>
-                    <div style="min-height: 22px;margin-top: 20px">
-                        {#if selectNodeId}
-                            <button class="unset-selection" on:click={callUnselectNode}>
-                                <i class="fas fa-times"></i>
-                                <span>Unset selection</span>
-                            </button>
-                        {/if}
+                    <div style="margin-top: 20px">
+                        <button on:click={callUnselectNode} type="button" disabled="{!selectNodeId}"
+                                class="btn btn-default">
+                            Unset selection
+                        </button>
                     </div>
                 </div>
 
@@ -713,7 +718,7 @@
         padding: 6px 20px 6px 0;
     }
 
-    .tree-item, .tree-item:hover, .tree-item:focus {
+    .tree-item, .tree-item:hover, .tree-item:focus, .tree-item:active {
         background: none;
         text-decoration: underline;
         border: 0;
@@ -721,6 +726,10 @@
 
     .tree-item.active {
         color: #2895ea;
+    }
+
+    .tree-item:hover:not(.active) {
+        color: #2895ea85;
     }
 
     .unset-selection {
