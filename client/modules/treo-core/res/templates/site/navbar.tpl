@@ -120,23 +120,7 @@
 
         <div class="nav navbar-nav navbar-left navbar-favorites">
             <div class="favorites-wrapper">
-                <ul class="nav navbar-nav favorites-items">
-                    {{#each favoritesList}}
-                        <li data-name="{{name}}"><a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
-                                <span class="label-wrapper">
-                                    {{#if ../favoritesHasIcons}}
-                                        {{#if iconSrc}}
-                                            <img src="{{iconSrc}}" class="favorite-icon default-icon">
-                                        {{else}}
-                                            <span class="favorite-icon {{iconClass}}"></span>
-                                        {{/if}}
-                                    {{/if}}
-                                    <span class="full-label">{{label}}</span>
-                                </span>
-                            </a>
-                        </li>
-                    {{/each}}
-                </ul>
+                {{{favoritesToolbar}}}
             </div>
         </div>
 
@@ -177,27 +161,9 @@
                         <span data-action="configureFavorites" class="fas fa-cog configure-btn" style="font-size: 1em;"></span>
                     </div>
                     <div role="separator" class="divider"></div>
-                    <ul class="favorites-items">
-                        {{#each favoritesList}}
-                            <li data-name="{{name}}">
-                                <a href="{{link}}" class="favorite nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
-                                    <span class="label-wrapper">
-                                        {{#if ../favoritesHasIcons}}
-                                            {{#if iconSrc}}
-                                                <img src="{{iconSrc}}" class="favorite-icon default-icon">
-                                            {{else}}
-                                                <span class="favorite-icon {{iconClass}}"></span>
-                                            {{/if}}
-                                        {{/if}}
-                                        <span class="full-label">{{label}}</span>
-                                    </span>
-                                    <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                                        <i class="fas fa-plus fa-sm"></i>
-                                    </button>
-                                </a>
-                            </li>
-                        {{/each}}
-                    </ul>
+                    <div class="wrapper">
+                        {{{favoritesListDropdown}}}
+                    </div>
                 </div>
             </li>
         </ul>

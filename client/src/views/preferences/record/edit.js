@@ -146,7 +146,10 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
         actionConfigureFavorites: function () {
             this.createView('favoritesEdit', 'views/layout-profile/modals/favorites', {
                 field: 'favoritesList',
-                model: this.model
+                model: this.model,
+                afterSave: () => {
+                    this.getPreferences().trigger('favorites:update');
+                }
             }, view => {
                 this.notify(false);
                 view.render();

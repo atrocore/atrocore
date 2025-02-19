@@ -605,6 +605,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }, {patch: true}).then(() => {
                 this.notify('Saved', 'success');
                 this.getView('header').reRender();
+                this.getPreferences().trigger('favorites:update');
                 this.setupSearchPanel();
             });
         },
@@ -618,6 +619,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }, {patch: true}).then(() => {
                 this.notify('Saved', 'success');
                 this.getView('header').reRender();
+                this.getPreferences().trigger('favorites:update');
                 this.setupSearchPanel();
             });
         },

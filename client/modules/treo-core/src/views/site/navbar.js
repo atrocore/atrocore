@@ -16,8 +16,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         isMoreFields: false,
 
-        favoritesList: [],
-
         openMenu: function () {
             this.events = _.extend({}, this.events || {}, {
                 'click .search-toggle': function () {
@@ -27,7 +25,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 'click [data-action="configureFavorites"]': function (e) {
                     this.createView('favoritesEdit', 'views/layout-profile/modals/favorites', {
                         field: 'favoritesList',
-                        model: this.getPreferences()
+                        model: this.getPreferences(),
+                        afterSave: () => {
+                            this.getPreferences().trigger('favorites:update');
+                        },
                     }, view => {
                         this.notify(false)
                         view.render();
@@ -45,8 +46,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 hasJM: this.getAcl().check('Job', 'read'),
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled'),
-                favoritesList: this.favoritesList || [],
-                favoritesHasIcons: !this.getConfig().get('favoritesIconsDisabled'),
             }, Dep.prototype.data.call(this));
         },
 
@@ -86,6 +85,18 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 return checkScope.call(this, scope);
             }, this);
 
+            this.createView('favoritesToolbar', 'views/favorites/list', {
+                model: this.getPreferences(),
+                class: 'nav navbar-nav favorites-items',
+                el: this.options.el + ' .navbar-favorites .favorites-wrapper'
+            });
+
+            this.createView('favoritesListDropdown', 'views/favorites/list', {
+                model: this.getPreferences(),
+                class: 'favorites-items',
+                showEmptyPlaceholder: true,
+                el: this.options.el + ' .dropdown-menu.favorites-dropdown > .wrapper'
+            });
 
             this.createView('notificationsBadge', 'views/notification/badge', {
                 el: this.options.el + ' .notifications-badge-container',
@@ -123,8 +134,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.setupTabDefsList();
 
-            this.setupFavoritesList();
-
             this.setupBookmark();
 
             this.once('remove', function () {
@@ -149,19 +158,6 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             }, this.events);
 
             this.openMenu();
-        },
-
-        getFavoritesList: function () {
-            let list = this.getPreferences().get('favoritesList') || [];
-            if (typeof list === 'object') {
-                list = Object.values(list);
-            }
-
-            return list.filter(tab => this.getAcl().checkScope(tab, 'read') && !!this.getMetadata().get(['scopes', tab, 'tab']));
-        },
-
-        setupFavoritesList: function () {
-            this.favoritesList = this.getFavoritesList().map(tab => this.getTabDefs(tab));
         },
 
         adjust: function () {

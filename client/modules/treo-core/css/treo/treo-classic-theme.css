@@ -24392,32 +24392,32 @@ span[data-img-src]::after {
 .favorites-dropdown,
 .favorites-dropdown span,
 .favorites-dropdown .fas,
-.favorites-dropdown > ul .favorite .favorite-icon {
+.favorites-dropdown ul .favorite .favorite-icon {
     color: #000;
 }
 
-.favorites-dropdown > ul {
+.favorites-dropdown ul {
     margin: 0 -15px;
     list-style: none;
     padding: 0;
 }
 
-.favorites-dropdown > ul li {
+.favorites-dropdown ul li {
     display: flex;
     max-width: 300px;
     justify-content: space-between;
 }
 
-.favorites-dropdown > ul .favorite {
+.favorites-dropdown ul .favorite {
     padding: 6px 12px 6px 15px;
     width: 100%;
 }
 
-.favorites-dropdown > ul .favorite .full-label {
+.favorites-dropdown ul .favorite .full-label {
     margin-right: 10px;
 }
 
-.favorites-dropdown > ul .quick-create {
+.favorites-dropdown ul .quick-create {
     padding: 0;
     width: 20px;
     height: 20px;
@@ -24432,23 +24432,23 @@ span[data-img-src]::after {
     pointer-events: none;
 }
 
-.favorites-dropdown > ul .quick-create:hover {
+.favorites-dropdown ul .quick-create:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-.favorites-dropdown > ul li:hover .quick-create {
+.favorites-dropdown ul li:hover .quick-create {
     visibility: visible;
     pointer-events: all;
 }
 
-.favorites-dropdown > ul .favorite .favorite-icon {
+.favorites-dropdown ul .favorite .favorite-icon {
     width: 18px;
     display: inline-block;
     text-align: center;
     font-size: 14px;
 }
 
-.favorites-dropdown > ul .favorite.active:before {
+.favorites-dropdown ul .favorite.active:before {
     width: 3px;
     height: 100%;
     left: 0;
