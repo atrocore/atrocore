@@ -22499,7 +22499,7 @@ select {
 .cell .status-icons > * > span,
 .field .status-icons > *,
 .field .status-icons > * > span {
-    color: inherit !important;
+    color: var(--label-color) !important;
     font-size: 9px !important;
 }
 

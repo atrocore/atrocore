@@ -484,7 +484,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         isTreeAllowed() {
-            return true
+            return !this.getMetadata().get(['scopes', this.scope, 'leftSidebarDisabled'])
         },
 
         setupRecord: function () {
