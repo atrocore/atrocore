@@ -2383,10 +2383,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                                 el = view.$el.find('td:not([data-name=draggableIcon]):not([data-name=r-checkbox]):first-child > *');
                             }
 
-                            el?.find('.icons-container').remove();
+                            el?.parent().find('.icons-container').remove();
                             const icons = $('<sup class="status-icons icons-container"></sup>');
                             (this.getStatusIcons(view.model) || []).forEach(el => icons.append(el));
-                            el?.append(icons);
+                            el?.parent().append('&nbsp;');
+                            el?.parent().append(icons);
                         })
 
                         built++;
