@@ -20234,6 +20234,7 @@ ul.dropdown-menu > li.checkbox {
 
 #main .catalog-tree-panel .field[data-name="category-search"] > .reset-search-in-tree-button {
     right: 30px;
+    top: 8.5px;
 }
 
 #main .catalog-tree-panel .field[data-name="category-search"] > input.category-search,
