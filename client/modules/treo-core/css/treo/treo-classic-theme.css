@@ -16570,7 +16570,7 @@ body > footer > p, body > footer > p a, body > footer > p a:hover, body > footer
 .navbar-form.global-search-container {
     padding-left: 0;
     padding-right: 0;
-    margin-left: 8px;
+    margin-left: 18px;
     display: flex;
     align-items: center;
 }
@@ -22543,7 +22543,7 @@ select {
 .cell .status-icons > *,
 .field > .status-icons > *,
 .cell .inline-actions > * {
-    padding-left: 5px;
+    padding-left: 4px;
     text-align: center;
 }
 
@@ -24479,12 +24479,16 @@ span[data-img-src]::after {
 
 table .cell .icons-container > * {
     color: var(--label-color);
-    padding-left: 5px;
+    padding-left: 4px;
     font-size: 9px !important;
 }
 
 table .cell .icons-container > *:first-child {
-    padding-left: 5px;
+    padding-left: 0;
+}
+
+table .cell > .file-link .icons-container > *:first-child {
+    padding-left: 2px;
 }
 
 .modal .panel.layout-customization {
