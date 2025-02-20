@@ -12,6 +12,8 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 
 class V1Dot13Dot22 extends Base
 {
@@ -48,6 +50,51 @@ class V1Dot13Dot22 extends Base
             $this->exec("CREATE INDEX IDX_USER_LOCALE_ID ON user (locale_id, deleted)");
             $this->exec("CREATE INDEX IDX_USER_STYLE_ID ON user (style_id, deleted)");
             $this->exec("CREATE INDEX IDX_USER_NOTIFICATION_PROFILE_ID ON user (notification_profile_id, deleted)");
+        }
+
+        try {
+            $preferences = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('preferences')
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $preferences = [];
+        }
+
+        foreach ($preferences as $record) {
+            if ($record['id'] === 'system') {
+                continue;
+            }
+            $data = @json_decode($record['data'], true);
+            if (empty($data)) {
+                continue;
+            }
+
+            foreach ($data as $field => $value) {
+                if ($field === 'id' || empty($value)) {
+                    continue;
+                }
+
+                $column = Util::toUnderScore($field);
+                if ($column === 'locale') {
+                    $column = 'locale_id';
+                }
+
+                if (is_array($value)) {
+                    $value = json_encode($value);
+                }
+
+                try {
+                    $this->getConnection()->createQueryBuilder()
+                        ->update($this->getConnection()->quoteIdentifier('user'))
+                        ->set($this->getConnection()->quoteIdentifier($column), ':value')
+                        ->where('id=:id')
+                        ->setParameter('id', $record['id'])
+                        ->setParameter('value', $value, Mapper::getParameterType($value))
+                        ->executeQuery();
+                } catch (\Throwable $e) {
+                }
+            }
         }
     }
 
