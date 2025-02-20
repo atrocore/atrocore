@@ -2347,43 +2347,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        treeLoad(treeData) {
-            // view.clearStorage();
-
-            if (view.model && view.model.get('id')) {
-                let route = [];
-                view.prepareTreeRoute(treeData, route);
-            }
-        },
-
-        treeReset(view) {
-            let previousSelectNodeId = this.getStorage().get('selectedNodeId', this.scope);
-            if (!previousSelectNodeId) {
-                return;
-            }
-            this.getStorage().clear('selectedNodeId', this.scope);
-            this.getStorage().clear('selectedNodeRoute', this.scope);
-
-            this.getStorage().clear('treeSearchValue', view.treeScope);
-            this.getStorage().clear('treeWhereData', view.treeScope);
-
-            this.getStorage().clear('listSearch', view.treeScope);
-            this.getStorage().set('reSetupSearchManager', view.treeScope, true);
-
-            view.toggleVisibilityForResetButton();
-
-            if ([this.scope, 'Bookmark'].includes(view.treeScope) && this.model.id === previousSelectNodeId) {
-                window.location.href = `/#${this.scope}`;
-                return;
-            }
-
-            view.rebuildTree();
-        },
-
         onTreeResize(width) {
-        },
-
-        onTreeUnset() {
         }
     });
 });

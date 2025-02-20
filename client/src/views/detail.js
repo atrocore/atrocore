@@ -260,6 +260,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     props: {
                         scope: this.scope,
                         model: this.model,
+                        mode: 'detail',
                         callbacks: {
                             selectNode: data => {
                                 view.selectNode(data);
@@ -272,9 +273,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             },
                             treeWidthChanged: (width) => {
                                 view.onTreeResize(width)
-                            },
-                            treeWidthUnset: (width) => {
-                                view.onTreeUnset(width)
                             }
                         }
                     }
