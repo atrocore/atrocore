@@ -61,7 +61,8 @@ Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/ba
                     collection: this.model.collection || null,
                     params: params,
                     mode: this.mode,
-                    inlineEditDisabled: true
+                    inlineEditDisabled: true,
+                    inheritanceActionDisabled: true
                 };
 
                 this.createView('valueField', fieldView, options, view => {
