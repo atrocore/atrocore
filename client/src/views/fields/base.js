@@ -66,6 +66,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditDisabled: false,
 
+        inheritanceActionDisabled: false,
+
         disabled: false,
 
         readOnly: false,
@@ -260,6 +262,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.readOnly = this.readOnly || this.name === 'id' || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.model.getFieldParam(this.name, 'inlineEditDisabled') || this.inlineEditDisabled;
+            this.inheritanceActionDisabled = this.options.inheritanceActionDisabled || this.params.inheritanceActionDisabled || this.model.getFieldParam(this.name, 'inheritanceActionDisabled') || this.inheritanceActionDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
             this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip') || (this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']));
@@ -397,10 +400,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initInheritanceActions: function () {
-            this.listenTo(this, 'after:render', () => {
-                this.initStatusContainer();
-                this.initInheritedFieldMarker();
-            }, this);
+            if (!this.inheritanceActionDisabled) {
+                this.listenTo(this, 'after:render', () => {
+                    this.initStatusContainer();
+                    this.initInheritedFieldMarker();
+                }, this);
+            }
         },
 
         showRequiredSign: function () {
