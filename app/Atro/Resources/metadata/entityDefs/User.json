@@ -170,9 +170,63 @@
     "layoutProfile": {
       "type": "link",
       "view": "views/user/fields/layout-profile"
+    },
+    "locale": {
+      "type": "link"
+    },
+    "dashboardLayout": {
+      "type": "jsonArray"
+    },
+    "dashletsOptions": {
+      "type": "jsonObject"
+    },
+    "presetFilters": {
+      "type": "jsonObject"
+    },
+    "style": {
+      "type": "link",
+      "view": "views/preferences/fields/style"
+    },
+    "useCustomTabList": {
+      "type": "bool",
+      "default": false
+    },
+    "followEntityOnStreamPost": {
+      "type": "bool",
+      "default": true
+    },
+    "followCreatedEntities": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "closedPanelOptions": {
+      "type": "jsonObject"
+    },
+    "receiveNotifications": {
+      "type": "bool"
+    },
+    "notificationProfile": {
+      "type": "link",
+      "view": "views/preferences/fields/notification-profile"
+    },
+    "favoritesList": {
+      "type": "array",
+      "view": "views/preferences/fields/favourites-list"
     }
   },
   "links": {
+    "notificationProfile": {
+      "type": "belongsTo",
+      "entity": "NotificationProfile"
+    },
+    "style": {
+      "type": "belongsTo",
+      "entity": "Style"
+    },
+    "locale": {
+      "type": "belongsTo",
+      "entity": "Locale"
+    },
     "defaultTeam": {
       "type": "belongsTo",
       "entity": "Team"
