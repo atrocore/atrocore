@@ -28,7 +28,6 @@ class ThemeManager
 
     public function getCustomStylesheet(): ?string
     {
-
         if(!empty($style = $this->getStyle()) && !empty($style['customStylesheetPath']) && file_exists($style['customStylesheetPath'])) {
             return $style['customStylesheetPath'];
         }
