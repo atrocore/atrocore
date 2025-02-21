@@ -2,10 +2,6 @@
   "controller": "controllers/user",
   "model": "models/user",
   "acl": "acl/user",
-  "views": {
-    "detail": "views/user/detail",
-    "list": "views/user/list"
-  },
   "recordViews": {
     "detail": "views/user/record/detail",
     "detailSmall": "views/user/record/detail-quick",
