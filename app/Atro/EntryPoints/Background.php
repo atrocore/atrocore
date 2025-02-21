@@ -56,25 +56,28 @@ class Background extends AbstractEntryPoint
         if ($this->getConfig()->get('isInstalled')) {
             $backgrounds = $this->getConfig()->get('referenceData.Background', []);
             if (!empty($backgrounds)) {
-                $files = $this->getEntityManager()->getRepository('File')
+                $collection = $this->getEntityManager()->getRepository('File')
                     ->where(['id' => array_column($backgrounds, 'imageId')])
                     ->find();
 
-                while (!empty($files[0])) {
-                    $index = rand(0, count($files) - 1);
-                    $file = $files[$index];
-                    array_splice($files, $index, 1);
+                if (!empty($collection)) {
+                    $files = iterator_to_array($collection, false);
+                    while (!empty($files[0])) {
+                        $index = rand(0, count($files) - 1);
+                        $file = $files[$index];
+                        array_splice($files, $index, 1);
 
-                    try {
-                        $imagePath = $file->findOrCreateLocalFilePath('data/.backgrounds');
-                        return [
-                            'imageName'  => $file->get('name'),
-                            'imagePath'  => $imagePath,
-                            'authorName' => '',
-                            'authorLink' => '',
-                        ];
-                    } catch (\Throwable $exception) {
-                        $GLOBALS['log']->error('Background error for file ' . $file->get('id') . ': ' . $exception->getMessage());
+                        try {
+                            $imagePath = $file->findOrCreateLocalFilePath('data/.backgrounds');
+                            return [
+                                'imageName'  => $file->get('name'),
+                                'imagePath'  => $imagePath,
+                                'authorName' => '',
+                                'authorLink' => '',
+                            ];
+                        } catch (\Throwable $exception) {
+                            $GLOBALS['log']->error('Background error for file ' . $file->get('id') . ': ' . $exception->getMessage());
+                        }
                     }
                 }
             }
