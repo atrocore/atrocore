@@ -42,13 +42,9 @@ class V1Dot13Dot22 extends Base
             $this->exec("COMMENT ON COLUMN \"user\".preset_filters IS '(DC2Type:jsonObject)'");
             $this->exec("COMMENT ON COLUMN \"user\".closed_panel_options IS '(DC2Type:jsonObject)'");
             $this->exec("COMMENT ON COLUMN \"user\".favorites_list IS '(DC2Type:jsonArray)'");
-            $this->exec("CREATE INDEX IDX_USER_LOCALE_ID ON \"user\" (locale_id, deleted)");
-            $this->exec("CREATE INDEX IDX_USER_STYLE_ID ON \"user\" (style_id, deleted)");
             $this->exec("CREATE INDEX IDX_USER_NOTIFICATION_PROFILE_ID ON \"user\" (notification_profile_id, deleted)");
         } else {
             $this->exec("ALTER TABLE user ADD dashboard_layout LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', ADD dashlets_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD preset_filters LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD use_custom_tab_list TINYINT(1) DEFAULT '0' NOT NULL, ADD follow_entity_on_stream_post TINYINT(1) DEFAULT '1' NOT NULL, ADD follow_created_entities TINYINT(1) DEFAULT '0' NOT NULL, ADD closed_panel_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD receive_notifications TINYINT(1) DEFAULT '0' NOT NULL, ADD favorites_list LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', ADD locale_id VARCHAR(36) DEFAULT NULL, ADD style_id VARCHAR(36) DEFAULT NULL, ADD notification_profile_id VARCHAR(36) DEFAULT NULL");
-            $this->exec("CREATE INDEX IDX_USER_LOCALE_ID ON user (locale_id, deleted)");
-            $this->exec("CREATE INDEX IDX_USER_STYLE_ID ON user (style_id, deleted)");
             $this->exec("CREATE INDEX IDX_USER_NOTIFICATION_PROFILE_ID ON user (notification_profile_id, deleted)");
         }
 
