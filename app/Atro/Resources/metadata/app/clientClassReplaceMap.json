@@ -62,9 +62,6 @@
   "views/fields/wysiwyg": [
     "treo-core"
   ],
-  "views/preferences/record/edit": [
-    "treo-core"
-  ],
   "views/site/header": [
     "treo-core"
   ],
@@ -108,9 +105,6 @@
     "treo-core"
   ],
   "views/admin/integrations/index": [
-    "treo-core"
-  ],
-  "views/preferences/edit": [
     "treo-core"
   ],
   "views/edit": [
