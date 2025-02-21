@@ -12,19 +12,18 @@
 namespace Atro\Core\Utils;
 
 use Espo\Core\Utils\Config;
-use Espo\Entities\Preferences;
+use Espo\Entities\User;
 
 class ThemeManager
 {
     protected Config $config;
 
-    protected ?Preferences $preferences;
+    protected ?User $user;
 
-
-    public function __construct(Config $config, ?Preferences $preferences)
+    public function __construct(Config $config, ?User $user)
     {
         $this->config = $config;
-        $this->preferences = $preferences;
+        $this->user = $user;
     }
 
     public function getCustomStylesheet(): ?string
@@ -65,7 +64,7 @@ class ThemeManager
 
     public function getStyle(): ?array
     {
-        $styleId = $this->preferences?->get('styleId') ?? $this->config->get('defaultStyleId');;
+        $styleId = $this->user?->get('styleId') ?? $this->config->get('defaultStyleId');;
         if(!empty($styleId)) {
             $data = $this->config->get('referenceData.Style');
             if(!empty($data[$styleId])) {
