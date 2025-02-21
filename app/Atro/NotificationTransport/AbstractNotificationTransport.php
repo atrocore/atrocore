@@ -17,9 +17,9 @@ use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Twig\Twig;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Language;
+use Atro\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 
@@ -38,8 +38,7 @@ abstract class AbstractNotificationTransport
 
     protected function getUserLanguage(User $user): string
     {
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->get('id'));
-        return Language::detectLanguage($this->getConfig(), $preferences);
+        return Language::detectLanguage($this->getConfig(), $user);
     }
 
     protected function addEntitiesAdditionalData(array &$params, string $language, bool $shouldCleanEntities = false): void

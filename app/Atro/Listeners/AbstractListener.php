@@ -19,7 +19,6 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\Preferences;
 use Espo\Entities\User;
 
 abstract class AbstractListener
@@ -61,10 +60,6 @@ abstract class AbstractListener
 
     protected function getLanguage(): Language
     {
-        if (is_null($this->getContainer()->get('preferences'))) {
-            throw new Error('No preferences defined');
-        }
-
         return $this->getContainer()->get('language');
     }
 
@@ -76,10 +71,5 @@ abstract class AbstractListener
     protected function getUser(): User
     {
         return $this->getContainer()->get('user');
-    }
-
-    protected function getPreferences(): ?Preferences
-    {
-        return $this->getContainer()->get('Preferences');
     }
 }
