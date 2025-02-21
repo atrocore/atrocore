@@ -253,10 +253,6 @@
       "foreign": "users",
       "layoutRelationshipsDisabled": true
     },
-    "preferences": {
-      "type": "hasOne",
-      "entity": "Preferences"
-    },
     "notes": {
       "type": "hasMany",
       "entity": "Note",
