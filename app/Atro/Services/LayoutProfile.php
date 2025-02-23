@@ -23,13 +23,11 @@ class LayoutProfile extends Base
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
-
-        $navigation = $entity->get('navigation');
-
-        if(empty($navigation)) {
+        
+        if(empty($navigation = $entity->get('navigation'))) {
             return;
         }
-        
+
         $preparedNavigation = [];
 
         foreach ($navigation as $item) {
