@@ -67,7 +67,8 @@
       "readOnly": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "openApiEnabled": true
     },
     "smallThumbnailUrl": {
       "type": "varchar",
@@ -75,7 +76,8 @@
       "readOnly": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "openApiEnabled": true
     },
     "mediumThumbnailUrl": {
       "type": "varchar",
@@ -83,7 +85,8 @@
       "readOnly": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "openApiEnabled": true
     },
     "largeThumbnailUrl": {
       "type": "varchar",
@@ -91,7 +94,8 @@
       "readOnly": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "openApiEnabled": true
     },
     "mimeType": {
       "type": "varchar",
@@ -170,6 +174,17 @@
       "importDisabled": true,
       "exportDisabled": true,
       "filterDisabled": true
+    },
+    "remoteUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "filterDisabled": true,
+      "openApiEnabled": true
     },
     "files": {
       "type": "varchar",

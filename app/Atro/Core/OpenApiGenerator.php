@@ -71,8 +71,10 @@ class OpenApiGenerator
             ];
 
             foreach ($data['fields'] as $fieldName => $fieldData) {
-                if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
-                    continue;
+                if (empty($fieldData['openApiEnabled'])) {
+                    if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
+                        continue;
+                    }
                 }
 
                 if (!empty($fieldData['required'])) {
