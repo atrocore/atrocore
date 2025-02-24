@@ -16,7 +16,8 @@
   "options": {
     "align": {
       "left": "Left",
-      "right": "Right"
+      "right": "Right",
+      "center": "Center"
     },
     "style": {
       "default": "Default",
