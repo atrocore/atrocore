@@ -35,6 +35,20 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
                 style: 'default'
             });
 
+            this.additionalButtons.push({
+                name: "dashboard",
+                label: this.translate("Dashboards", "labels", "LayoutProfile"),
+                action: "editDashboard",
+                cssStyle: "margin-left: 10px"
+            });
+
+            this.additionalButtons.push({
+                name: 'favorites',
+                label: this.translate('Favorites', 'labels', 'LayoutProfile'),
+                action: 'configureFavorites',
+                cssStyle: "margin-left: 10px"
+            });
+
             this.dropdownItemList = [];
 
             if (!this.getConfig().get('resetPasswordViaEmailOnly', false)) {
@@ -49,6 +63,25 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
                 name: 'resetPassword',
                 label: this.translate('Reset Password', 'labels', 'User'),
                 style: 'default'
+            });
+        },
+
+        actionEditDashboard() {
+            this.createView('dashboard', 'views/layout-profile/modals/dashboard-layout', {
+                field: 'dashboardLayout',
+                model: this.model,
+            }, view => {
+                view.render();
+            });
+        },
+
+        actionConfigureFavorites() {
+            this.createView('favoritesEdit', 'views/layout-profile/modals/favorites', {
+                field: 'favoritesList',
+                model: this.model
+            }, view => {
+                this.notify(false);
+                view.render();
             });
         },
 
