@@ -1,0 +1,37 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "title"
+        }
+      ],
+      [
+        {
+          "name": "firstName"
+        },
+        {
+          "name": "lastName"
+        }
+      ],
+      [
+        {
+          "name": "department"
+        },
+        false
+      ],
+      [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "phoneNumber"
+        }
+      ]
+    ]
+  }
+]

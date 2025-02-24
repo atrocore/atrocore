@@ -5,6 +5,35 @@
       "trim": true,
       "required": true
     },
+    "department": {
+      "type": "varchar",
+      "trim": true
+    },
+    "firstName": {
+      "type": "varchar",
+      "maxLength": 100,
+      "default": "",
+      "trim": true
+    },
+    "lastName": {
+      "type": "varchar",
+      "maxLength": 100,
+      "required": false,
+      "default": "",
+      "trim": true
+    },
+    "title": {
+      "type": "varchar",
+      "maxLength": 100,
+      "trim": true
+    },
+    "phoneNumber": {
+      "type": "varchar"
+    },
+    "gender": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "gender"
+    },
     "avatar": {
       "type": "file",
       "fileTypeId": "a_image",
