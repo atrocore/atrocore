@@ -684,11 +684,12 @@ class Metadata extends AbstractListener
                                 && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
                                 $res[$entityName]['links'][$left]['foreign'] = $relFieldName;
                                 $data['entityDefs'][$scope]['fields'][$relFieldName] = [
-                                    'type'                 => 'linkMultiple',
-                                    'linkToRelationEntity' => $relationParams['entity'],
-                                    'layoutDetailDisabled' => true,
-                                    'massUpdateDisabled'   => true,
-                                    'noLoad'               => true
+                                    'type'                      => 'linkMultiple',
+                                    'linkToRelationEntity'      => $relationParams['entity'],
+                                    'layoutDetailDisabled'      => true,
+                                    'layoutLeftSidebarDisabled' => true,
+                                    'massUpdateDisabled'        => true,
+                                    'noLoad'                    => true
                                 ];
                                 $data['entityDefs'][$scope]['links'][$relFieldName] = [
                                     'type'    => 'hasMany',
@@ -716,11 +717,12 @@ class Metadata extends AbstractListener
                             && empty($data['entityDefs'][$relationParams['entity']]['links'][$relFieldName])) {
                             $res[$entityName]['links'][$right]['foreign'] = $relFieldName;
                             $data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName] = [
-                                'type'                 => 'linkMultiple',
-                                'linkToRelationEntity' => $scope,
-                                'layoutDetailDisabled' => true,
-                                'massUpdateDisabled'   => true,
-                                'noLoad'               => true
+                                'type'                      => 'linkMultiple',
+                                'linkToRelationEntity'      => $scope,
+                                'layoutLeftSidebarDisabled' => true,
+                                'layoutDetailDisabled'      => true,
+                                'massUpdateDisabled'        => true,
+                                'noLoad'                    => true
                             ];
                             $data['entityDefs'][$relationParams['entity']]['links'][$relFieldName] = [
                                 'type'    => 'hasMany',
@@ -861,6 +863,8 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope]['fields']['parents']['view'] = 'views/fields/hierarchy-parents';
             }
             $data['entityDefs'][$scope]['fields']['parents']['layoutDetailDisabled'] = false;
+            $data['entityDefs'][$scope]['fields']['parents']['layoutLeftSidebarDisabled'] = true;
+            $data['entityDefs'][$scope]['fields']['children']['layoutLeftSidebarDisabled'] = true;
 
             $data['entityDefs'][$scope]['fields']['isRoot'] = [
                 "type"                 => "bool",
@@ -928,22 +932,24 @@ class Metadata extends AbstractListener
 
             if (empty($data['scopes'][$scope]['multiParents'])) {
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"           => "link",
-                    "notStorable"    => true,
-                    "entity"         => $scope,
-                    "emHidden"       => true,
-                    "exportDisabled" => false,
-                    "importDisabled" => false
+                    "type"                      => "link",
+                    "notStorable"               => true,
+                    "entity"                    => $scope,
+                    "emHidden"                  => true,
+                    "layoutLeftSidebarDisabled" => true,
+                    "exportDisabled"            => false,
+                    "importDisabled"            => false
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'],
                     [
-                        "layoutListDisabled"   => true,
-                        "layoutDetailDisabled" => true,
-                        "massUpdateDisabled"   => true,
-                        "filterDisabled"       => true,
-                        "importDisabled"       => true,
-                        "emHidden"             => true
+                        "layoutListDisabled"        => true,
+                        "layoutDetailDisabled"      => true,
+                        "layoutLeftSidebarDisabled" => true,
+                        "massUpdateDisabled"        => true,
+                        "filterDisabled"            => true,
+                        "importDisabled"            => true,
+                        "emHidden"                  => true
                     ]);
                 $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
             }

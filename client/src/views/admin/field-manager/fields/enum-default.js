@@ -26,11 +26,9 @@ Espo.define('views/admin/field-manager/fields/enum-default', 'views/fields/enum'
             this.params.options = [''];
             this.translatedOptions = {'': ''};
 
-            let ids = this.model.get('optionsIds') || [];
-            let options = this.model.get('options') || [];
-            ids.forEach((id, k) => {
-                this.params.options.push(id);
-                this.translatedOptions[id] = options[k] ? options[k] : id;
+            (this.model.get('options') || []).forEach((option, k) => {
+                this.params.options.push(option);
+                this.translatedOptions[option] = option;
             });
         },
 

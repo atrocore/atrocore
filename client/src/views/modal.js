@@ -178,6 +178,10 @@ Espo.define('views/modal', 'view', function (Dep) {
                 }
                 $(containerSelector).remove();
             });
+
+            this.listenToOnce(this.getRouter(), 'routed', () => {
+                this.close()
+            }, this);
         },
 
         onDialogClose: function () {
