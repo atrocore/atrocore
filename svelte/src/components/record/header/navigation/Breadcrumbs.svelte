@@ -32,7 +32,6 @@
     .breadcrumbs-item {
         display: inline;
         color: #000;
-        font-size: 20px;
     }
 
     .breadcrumbs-item.full-width {
@@ -47,5 +46,9 @@
 
     .breadcrumbs-item > a {
         color: inherit;
+    }
+
+    .breadcrumbs-item > h3 {
+        font-size: 20px;
     }
 </style>
