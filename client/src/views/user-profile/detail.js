@@ -14,11 +14,11 @@ Espo.define('views/user-profile/detail', 'views/detail', Dep => {
 
         scope: 'UserProfile',
 
-        // recordView: 'views/user/record/user-profile-detail',
+        recordView: 'views/user-profile/record/detail',
 
-        // getRecordViewName() {
-        //     return this.recordView;
-        // },
+        getRecordViewName() {
+            return this.recordView;
+        },
 
     });
 });

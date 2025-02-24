@@ -16,7 +16,7 @@ Espo.define('controllers/user-profile', ['controller', 'view'], (Dep, View) => {
             this.modelFactory.create('UserProfile', model => {
                 model.id = this.getUser().get('id');
                 model.once('sync', function () {
-                    this.main('views/detail', {
+                    this.main('views/user-profile/detail', {
                         model: model
                     });
                 }, this);
