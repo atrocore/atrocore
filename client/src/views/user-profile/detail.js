@@ -16,6 +16,8 @@ Espo.define('views/user-profile/detail', 'views/detail', Dep => {
 
         recordView: 'views/user-profile/record/detail',
 
+        navigateButtonsDisabled: true,
+
         getRecordViewName() {
             return this.recordView;
         },
