@@ -24,7 +24,10 @@ class LayoutProfile extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        $navigation = $entity->get('navigation');
+        if(empty($navigation = $entity->get('navigation'))) {
+            return;
+        }
+
         $preparedNavigation = [];
 
         foreach ($navigation as $item) {
