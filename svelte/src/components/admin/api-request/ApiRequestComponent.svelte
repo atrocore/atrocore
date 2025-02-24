@@ -2,6 +2,7 @@
     import {Language} from "../../../utils/Language";
     import {onMount} from "svelte";
     import {ModelFactory} from "../../../utils/ModelFactory";
+    import BaseHeader from "../../record/header/BaseHeader.svelte";
     export let  afterOnMount = () => null;
     export let  sendRequest = () => null;
 
@@ -18,17 +19,22 @@
         })
     })
 
+    const breadcrumbs = [
+        {
+            url: '#Admin',
+            label: Language.translate('Administration')
+        },
+        {
+            url: '#',
+            label: Language.translate('apiRequest', 'labels', 'Admin'),
+            className: 'header-title'
+        }
+    ];
+
 </script>
 
 <div class="page-header">
-    <h3>
-        <div class="header-breadcrumbs fixed-header-breadcrumbs">
-            <div class="breadcrumbs-wrapper">
-                <a href="#Admin">{ Language.translate('Administration')}</a>{Language.translate('apiRequest', 'labels', 'Admin')}
-            </div>
-        </div>
-        <div class="header-title">{Language.translate('apiRequest', 'labels', 'Admin')}</div>
-    </h3>
+    <BaseHeader breadcrumbs={breadcrumbs} />
 
     <button on:click={sendRequest(model)} style="margin: 10px 7px 10px 5px" class="btn btn-primary action" data-action="execute"
             type="button">{Language.translate('execute', 'labels', 'Admin')}</button>

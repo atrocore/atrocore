@@ -110,8 +110,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             this.recordView = this.options.recordView || this.recordView;
             this.searchView = this.options.searchView || this.searchView;
 
-            this.setupHeader();
-
             if (this.searchPanel) {
                 this.setupSearchManager();
             }
@@ -243,12 +241,31 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }
         },
 
+        getBreadcrumbsItems() {
+            return [
+                {
+                    url: '#' + this.scope,
+                    label: this.getLanguage().translate(this.scope, 'scopeNamesPlural'),
+                    className: 'header-title'
+                }
+            ];
+        },
+
         setupHeader: function () {
-            this.createView('header', this.headerView, {
-                collection: this.collection,
-                el: '#main .page-header',
-                scope: this.scope,
-                isXsSingleRow: true
+            // this.createView('header', this.headerView, {
+            //     collection: this.collection,
+            //     el: '#main .page-header',
+            //     scope: this.scope,
+            //     isXsSingleRow: true
+            // });
+
+            new Svelte.ListHeader({
+                target: document.querySelector('#main .page-header'),
+                props: {
+                    params: {
+                        breadcrumbs: this.getBreadcrumbsItems()
+                    }
+                }
             });
         },
 
@@ -409,7 +426,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         afterRender: function () {
-            this.createTreePanel()
+            this.createTreePanel();
+            this.setupHeader();
+
             let treePanelView = this.getView('treePanel');
 
             this.collection.isFetched = false;
@@ -604,7 +623,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 favoritesList: [...favorites, this.scope],
             }, {patch: true}).then(() => {
                 this.notify('Saved', 'success');
-                this.getView('header').reRender();
+                this.getView('header').reloadButtons();
                 this.getPreferences().trigger('favorites:update');
                 this.setupSearchPanel();
             });
@@ -618,7 +637,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 favoritesList: favorites.filter(item => item !== this.scope)
             }, {patch: true}).then(() => {
                 this.notify('Saved', 'success');
-                this.getView('header').reRender();
+                this.getView('header').reloadButtons();
                 this.getPreferences().trigger('favorites:update');
                 this.setupSearchPanel();
             });

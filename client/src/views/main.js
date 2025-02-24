@@ -110,6 +110,31 @@ Espo.define('views/main', 'view', function (Dep) {
             return menu;
         },
 
+        getBreadcrumbsItems: function (isAdmin = false) {
+            const result = [];
+
+            if (!isAdmin && this.entityType) {
+                const tab = this.getMetadata().get(`scopes.${this.entityType}.tab`);
+                if (tab === false) {
+                    isAdmin = true;
+                }
+            }
+
+            if (isAdmin) {
+                result.push({
+                    url: '#Admin',
+                    label: this.getLanguage().translate('Administration', 'labels')
+                });
+            }
+
+            return result;
+        },
+
+        isHierarchical() {
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+        },
+
         getHeader: function () {},
 
         buildHeaderHtml: function (arr, isAdmin) {

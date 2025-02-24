@@ -95,7 +95,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             this.recordView = this.options.recordView || this.recordView;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
 
-            this.setupHeader();
             this.setupRecord();
 
             this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link, callback) => {
@@ -336,24 +335,39 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         setupHeader: function () {
-            this.createView('header', this.headerView, {
-                model: this.model,
-                el: '#main > main > .header',
-                scope: this.scope
-            }, view => {
-                this.listenTo(view, 'after:render', () => {
-                    this.setupTourButton();
-                });
-            });
-
-            this.listenTo(this.model, 'sync', function (model) {
-                if (model.hasChanged('name')) {
-                    if (this.getView('header')) {
-                        this.getView('header').reRender();
+            new Svelte.DetailHeader({
+                target: document.querySelector('#main main > .header'),
+                props: {
+                    params: {
+                        breadcrumbs: this.getBreadcrumbsItems(),
+                        afterOnMount: () => {
+                            this.setupTourButton()
+                        }
                     }
-                    this.updatePageTitle();
                 }
             }, this);
+            });
+
+            //
+            // this.createView('header', this.headerView, {
+            //     mode: this.mode,
+            //     model: this.model,
+            //     el: '#main main > .header',
+            //     scope: this.scope
+            // }, view => {
+            //     this.listenTo(view, 'after:render', () => {
+            //         this.setupTourButton();
+            //     });
+            // });
+
+            // this.listenTo(this.model, 'sync', function (model) {
+            //     if (model.hasChanged('name')) {
+            //         if (this.getView('header')) {
+            //             this.getView('header').reRender();
+            //         }
+            //         this.updatePageTitle();
+            //     }
+            // }, this);
         },
 
         getBoolFilterData(link) {
@@ -802,29 +816,32 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         },
 
-        getHeader: function () {
-            let name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
-            if (name === '') {
-                name = this.model.id;
-            }
+        getBreadcrumbsItems: function (isAdmin = false) {
+            const result = Dep.prototype.getBreadcrumbsItems.call(this, isAdmin) || [];
+            const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
-            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-
-            let headerIconHtml = this.getHeaderIconHtml();
-
-            let path = [];
-            path.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
+            result.push({
+                url: rootUrl,
+                label: this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+            });
 
             if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true && this.model.get('hierarchyRoute')) {
                 $.each(this.model.get('hierarchyRoute'), (id, name) => {
-                    path.push('<a href="' + rootUrl + '/view/' + id + '" class="action">' + name + '</a>');
+                    result.push({
+                        url: `${rootUrl}/view/${id}`,
+                        label: name
+                    });
                 });
             }
 
-            path.push(name);
+            result.push({
+                url: `${rootUrl}/view/${this.model.id}`,
+                label: this.model.get('name') || this.model.id,
+                className: 'header-title'
+            })
 
-            return this.buildHeaderHtml(path);
+            return result;
         },
 
         isHierarchical() {
