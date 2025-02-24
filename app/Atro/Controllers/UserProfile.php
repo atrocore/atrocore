@@ -28,6 +28,7 @@ class UserProfile extends AbstractController
             throw new Forbidden();
         }
 
+        $GLOBALS['readUserProfile'] = true;
         $entity = $this->getServiceFactory()->create('User')->readEntity($id);
         if (empty($entity)) {
             throw new NotFound();
@@ -66,6 +67,7 @@ class UserProfile extends AbstractController
             }
         }
 
+        $GLOBALS['updateUserProfile'] = true;
         if ($entity = $this->getServiceFactory()->create('User')->updateEntity($id, $data)) {
             return $entity->getValueMap();
         }
