@@ -28,11 +28,13 @@
       "prohibitedEmptyValue": false,
       "options": [
         "left",
-        "right"
+        "right",
+        "center"
       ],
       "optionsIds": [
         "left",
-        "right"
+        "right",
+        "center"
       ]
     },
     "width": {

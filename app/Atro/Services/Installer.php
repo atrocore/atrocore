@@ -808,10 +808,11 @@ class Installer extends HasContainer
                     'id'   => $defaultId,
                     'name' => 'Standard',
                     'navigation' => json_encode($menus),
-                    'dashboardLayout' => json_encode( [
+                    'dashboardLayout' => json_encode([
+                        [
                         'name'   => 'My AtroPIM',
                         'layout' => []
-                    ]),
+                    ]]),
                 ])
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->executeStatement();

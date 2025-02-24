@@ -16,7 +16,8 @@
   "options": {
     "align": {
       "left": "Links",
-      "right": "Rechts"
+      "right": "Rechts",
+      "center": "Mitte"
     },
     "style": {
       "default": "Standard",

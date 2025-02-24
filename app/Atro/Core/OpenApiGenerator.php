@@ -71,75 +71,7 @@ class OpenApiGenerator
             ];
 
             foreach ($data['fields'] as $fieldName => $fieldData) {
-                if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
-                    continue;
-                }
-
-                if (!empty($fieldData['required'])) {
-                    if (empty($result['components']['schemas'][$entityName]['required'])) {
-                        $result['components']['schemas'][$entityName]['required'] = [];
-                    }
-                    $result['components']['schemas'][$entityName]['required'][] = $fieldName;
-                }
-
-                switch ($fieldData['type']) {
-                    case "autoincrement":
-                    case "int":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'integer'];
-                        break;
-                    case "bool":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'boolean'];
-                        break;
-                    case "jsonArray":
-                    case "jsonObject":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'object'];
-                        break;
-                    case "array":
-                    case "multiEnum":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
-                            'type'  => 'array',
-                            'items' => ['type' => 'string']
-                        ];
-                        break;
-                    case "file":
-                    case "link":
-                    case "linkParent":
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
-                            'type'    => 'string',
-                            'forRead' => true
-                        ];
-                        break;
-                    case "extensibleEnum":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
-                            'type'    => 'string',
-                            'forRead' => true
-                        ];
-                        break;
-                    case 'extensibleMultiEnum':
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
-                            'type'  => 'array',
-                            'items' => ['type' => 'string']
-                        ];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
-                            'type'    => 'object',
-                            'forRead' => true
-                        ];
-                        break;
-                    case "linkMultiple":
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = [
-                            'type'  => 'array',
-                            'items' => ['type' => 'string']
-                        ];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
-                            'type'    => 'object',
-                            'forRead' => true
-                        ];
-                        break;
-                    default:
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
-                }
+                $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
             }
             $schemas[$entityName] = $result['components']['schemas'][$entityName];
         }
@@ -721,6 +653,7 @@ class OpenApiGenerator
         $this->pushDashletActions($result, $schemas);
 
         $this->pushUserActions($result, $schemas);
+        $this->pushSettingsActions($result, $schemas);
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
             $module->prepareApiDocs($result, $schemas);
@@ -1076,6 +1009,116 @@ class OpenApiGenerator
         ];
 
         $result['paths']['/User']['post']['requestBody']['content']['application/json']['schema']['properties']['passwordConfirm'] = ['type' => 'string'];
+    }
+
+    protected function pushSettingsActions(array &$result, array $schemas): void
+    {
+        $result['tags'][] = ['name' => 'Settings'];
+
+        /** @var Metadata $metadata */
+        $metadata = $this->container->get('metadata');
+        foreach ($metadata->get(['entityDefs', 'Settings', 'fields']) as $fieldName => $fieldData) {
+            $this->getFieldSchema($result, 'Settings', $fieldName, $fieldData);
+        }
+
+        $result['paths']['/Settings']['get'] = [
+            'tags'          => ['Settings'],
+            'in'            => 'body',
+            'required'      => true,
+            'summary'       => 'Returns a record of Settings',
+            'description'   => 'Returns a record of Settings',
+            'responses'     => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
+        ];
+
+        $result['paths']['/Settings']['patch'] = [
+            'tags'          => ['Settings'],
+            'in'            => 'body',
+            'required'      => true,
+            'summary'       => 'Update a record of Settings',
+            'description'   => 'Update a record of Settings',
+            'requestBody'   => [
+                'required' => true,
+                'content'  => [
+                    'application/json' => [
+                        'schema' => $result['components']['schemas']['Settings']
+                    ]
+                ],
+            ],
+            'responses'   => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
+        ];
+    }
+
+    protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
+    {
+        if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
+            return;
+        }
+
+        if (!empty($fieldData['required'])) {
+            if (empty($result['components']['schemas'][$entityName]['required'])) {
+                $result['components']['schemas'][$entityName]['required'] = [];
+            }
+            $result['components']['schemas'][$entityName]['required'][] = $fieldName;
+        }
+
+        switch ($fieldData['type']) {
+            case "autoincrement":
+            case "int":
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'integer'];
+                break;
+            case "bool":
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'boolean'];
+                break;
+            case "jsonArray":
+            case "jsonObject":
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'object'];
+                break;
+            case "array":
+            case "multiEnum":
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                    'type'  => 'array',
+                    'items' => ['type' => 'string']
+                ];
+                break;
+            case "file":
+            case "link":
+            case "linkParent":
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
+                    'type'    => 'string',
+                    'forRead' => true
+                ];
+                break;
+            case "extensibleEnum":
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
+                    'type'    => 'string',
+                    'forRead' => true
+                ];
+                break;
+            case 'extensibleMultiEnum':
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                    'type'  => 'array',
+                    'items' => ['type' => 'string']
+                ];
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
+                    'type'    => 'object',
+                    'forRead' => true
+                ];
+                break;
+            case "linkMultiple":
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = [
+                    'type'  => 'array',
+                    'items' => ['type' => 'string']
+                ];
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
+                    'type'    => 'object',
+                    'forRead' => true
+                ];
+                break;
+            default:
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+        }
     }
 
     protected function getBase(): array
