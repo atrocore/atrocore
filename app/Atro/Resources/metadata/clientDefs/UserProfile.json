@@ -1,3 +1,15 @@
 {
-  "controller": "controllers/user-profile"
+  "controller": "controllers/user-profile",
+  "iconClass": "fas fa-user-circle",
+  "defaultSidePanelFieldLists": {
+    "detail": [
+      "avatar",
+      "createdAt",
+      "lastAccess",
+      "passwordUpdatedAt"
+    ],
+    "edit": [
+      "avatar"
+    ]
+  }
 }

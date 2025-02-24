@@ -29,13 +29,11 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
                 }
             ];
 
-            this.buttonList = [
-                {
-                    name: 'access',
-                    label: 'Access',
-                    style: 'default'
-                }
-            ];
+            this.buttonList.push({
+                name: 'access',
+                label: 'Access',
+                style: 'default'
+            });
 
             this.dropdownItemList = [];
 

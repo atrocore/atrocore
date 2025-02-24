@@ -348,7 +348,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             var list = [
                 {
-                    link: '#User/view/' + this.getUser().id,
+                    link: '#UserProfile',
                     html: avatarHtml + this.getUser().get('name')
                 },
                 {
