@@ -1514,7 +1514,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         controlFieldVisibility(field, hide) {
-            if (hide) {
+            if (hide && !field.$el.hasClass('hidden')) {
                 field.hide();
                 field.overviewFiltersHidden = true;
             } else if (field.overviewFiltersHidden) {
