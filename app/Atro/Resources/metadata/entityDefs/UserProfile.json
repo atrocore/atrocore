@@ -4,6 +4,25 @@
       "type": "varchar",
       "trim": true,
       "required": true
+    },
+    "avatar": {
+      "type": "file",
+      "fileTypeId": "a_image",
+      "view": "views/user/fields/avatar",
+      "previewSize": "small"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "lastAccess": {
+      "type": "datetime",
+      "readOnly": true
     }
   }
 }
