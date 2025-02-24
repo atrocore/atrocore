@@ -8,12 +8,20 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('controllers/user-profile', 'controller', Dep => {
+Espo.define('controllers/user-profile', ['controller', 'view'], (Dep, View) => {
 
     return Dep.extend({
 
         index() {
-            this.main('views/user/user-profile', {model: this.getUser()});
+            this.modelFactory.create('UserProfile', model => {
+                model.id = this.getUser().get('id');
+                model.once('sync', function () {
+                    this.main('views/detail', {
+                        model: model
+                    });
+                }, this);
+                model.fetch();
+            });
         },
 
     });

@@ -1,0 +1,16 @@
+{
+  "type": "Base",
+  "entity": true,
+  "object": true,
+  "layouts": true,
+  "tab": false,
+  "acl": false,
+  "customizable": false,
+  "importable": false,
+  "streamDisabled": true,
+  "notificationDisabled": true,
+  "bookmarkDisabled": true,
+  "leftSidebarDisabled": true,
+  "notStorable": true,
+  "emHidden": true
+}

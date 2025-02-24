@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    }
+  }
+}

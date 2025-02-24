@@ -8,17 +8,17 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/user/user-profile', 'views/detail', Dep => {
+Espo.define('views/user-profile/detail', 'views/detail', Dep => {
 
     return Dep.extend({
 
-        scope: 'User',
+        scope: 'UserProfile',
 
-        recordView: 'views/user/record/user-profile-detail',
+        // recordView: 'views/user/record/user-profile-detail',
 
-        getRecordViewName() {
-            return this.recordView;
-        },
+        // getRecordViewName() {
+        //     return this.recordView;
+        // },
 
     });
 });
