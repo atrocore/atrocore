@@ -4526,18 +4526,19 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .nav-pills > li {
     float: left;
+}
+
+.nav-pills > li:not(:first-child) {
     margin-left: 4px;
 }
 
 .nav-pills > li > a {
-    border-radius: 2px;
-    border: 1px solid #eee;
-    background-color: var(--anchor-nav-background);
+    border-bottom: 2px solid #eee;
+    padding: 5px 10px;
 }
 
-.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-    color: #fff;
-    background-color: #537898
+.nav-pills > li > a, .nav-pills > li > a:hover, .nav-pills > li > a:focus {
+    background-color: transparent;
 }
 
 .nav-stacked > li {
@@ -6604,8 +6605,8 @@ button.close {
     padding: 0;
 }
 
-.modal-body .row > .overview .cell,
-.modal-body .row > .side .cell {
+.modal-body .overview .cell,
+.modal-body .side .cell {
     padding: 0;
 }
 
@@ -6677,11 +6678,11 @@ button.close {
         width: 300px
     }
 
-    .modal-body .row > .overview .cell:not(.hidden-cell):not(.col-sm-12) {
+    .modal-body .overview .cell:not(.hidden-cell):not(.col-sm-12) {
         padding-right: 16px;
     }
 
-    .modal-body .row > .overview .cell:not(.hidden-cell) + .cell {
+    .modal-body .overview .cell:not(.hidden-cell) + .cell {
         padding-right: 0;
     }
 }
@@ -14972,9 +14973,10 @@ label {
     display: none;
 }
 
-.page-header .header-buttons-container:not(.full-row) {
+.page-header .header-buttons-container {
     margin-left: auto !important;
     width: auto !important;
+    float: right;
 }
 
 .header .header-buttons-container.full-row {
@@ -15241,7 +15243,7 @@ table.table > thead th > div > a {
     color: var(--label-color)
 }
 
-#main > main > .list-container > .list {
+#main main > .list-container > .list {
     overflow: hidden;
     overflow-x: auto;
     scrollbar-width: none;
@@ -15250,36 +15252,36 @@ table.table > thead th > div > a {
     display: grid;
 }
 
-#main > main > .list-container > .list::-webkit-scrollbar {
+#main main > .list-container > .list::-webkit-scrollbar {
     display: none;
 }
 
-#main > main > .list-container > .list > .table thead th > .layout-editor-container {
+#main main > .list-container > .list > .table thead th > .layout-editor-container {
     padding-right: 2px;
     min-width: auto;
     width: 100%;
 }
 
-#main > main > .list-container > .list > table td:first-child, #main > main > .list-container > .list > table th:first-child {
+#main main > .list-container > .list > table td:first-child, #main main > .list-container > .list > table th:first-child {
     padding-left: 10px;
 }
 
 @media screen and (min-width: 768px) {
     div.list-kanban,
-    #main > main > .list-container > .list {
+    #main main > .list-container > .list {
         margin-left: -20px;
         margin-right: -20px;
     }
 
-    #main > main > .list-container > .list > .table thead th {
+    #main main > .list-container > .list > .table thead th {
         vertical-align: middle;
     }
 
-    #main > main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
+    #main main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
         margin-top: 2px;
     }
 
-    #main > main > .list-container > .list > table td:first-child, #main > main > .list-container > .list > table th:first-child {
+    #main main > .list-container > .list > table td:first-child, #main main > .list-container > .list > table th:first-child {
         padding-left: 20px;
     }
 
@@ -15287,7 +15289,7 @@ table.table > thead th > div > a {
         z-index: 3;
     }
 
-    #main > main > .list-container > .list > table tr {
+    #main main > .list-container > .list > table tr {
         position: relative;
     }
 
@@ -15310,7 +15312,7 @@ table.table > thead th > div > a {
         padding-right: 10px;
     }
 
-    #main > main > .list-container > .list > .table thead th > .layout-editor-container {
+    #main main > .list-container > .list > .table thead th > .layout-editor-container {
         padding-right: 9px;
     }
 
@@ -17912,7 +17914,7 @@ table.table {
 
 .record .button-container .nav-pills > li {
     margin-left: 0;
-    margin-right: 4px;
+    margin-right: 5px;
 }
 
 .list-nested-categories {
@@ -19336,7 +19338,7 @@ a:hover, a:focus {
     color: #000
 }
 
-#main > main > .page-header > h3 {
+#main main > .page-header > h3 {
     margin-left: 0;
 }
 
@@ -19430,7 +19432,7 @@ input#sn-checkbox-open-in-new-window {
     border-bottom: 1px solid #dedede
 }
 
-.header-breadcrumbs a, .page-header .breadcrumb-separator {
+.header-breadcrumbs .subsection a, .page-header .breadcrumb-separator {
     color: #000000
 }
 
@@ -19438,25 +19440,10 @@ input#sn-checkbox-open-in-new-window {
     color: var(--label-color);
 }
 
-
 .header-title {
     font-size: 20px;
     line-height: 1.5;
     color: var(--header-title-color);
-}
-
-@media screen and (min-width: 768px) {
-    #main .page-header .header-breadcrumbs {
-        position: relative;
-        width: auto !important;
-        height: 47px;
-        text-overflow: ellipsis;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        white-space: normal;
-        top: -20px;
-    }
 }
 
 .panel-default > .panel-heading {
@@ -19500,7 +19487,6 @@ input#sn-checkbox-open-in-new-window {
     margin-right: 8px;
 }
 
-.panel-extensibleEnumOptions > .panel-heading:not(.note-toolbar) > .btn-group > .btn.dropdown-toggle,
 .panel-variables > .panel-heading:not(.note-toolbar) > .btn-group > .btn.dropdown-toggle,
 .panel-translationsRules > .panel-heading:not(.note-toolbar) > .btn-group > .btn.dropdown-toggle,
 .panel-ldapMappingFields > .panel-heading:not(.note-toolbar) > .btn-group > .btn.dropdown-toggle {
@@ -19600,7 +19586,7 @@ input#sn-checkbox-open-in-new-window {
     font-weight: normal;
 }
 
-#main > main > .list-container {
+#main main > .list-container {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -19640,17 +19626,25 @@ input#sn-checkbox-open-in-new-window {
 }
 
 body > .content {
-    overflow-y: auto;
     flex: 1;
     position: relative;
     width: 100%;
+    overflow: hidden;
 }
 
-#main > main {
+#main {
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 0 20px;
+}
+
+#main main {
     position: relative;
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    padding: 0 20px;
 }
 
 table.table > thead th > a {
@@ -19720,7 +19714,7 @@ ul.dropdown-menu > li.checkbox {
 
 .side > .panel.panel-default.panel-default,
 .side > .panel.panel-default.panel-default .list {
-    background: #fafafa;
+    background: inherit;
     margin-bottom: 0;
     border-top: 0;
 }
@@ -19843,8 +19837,8 @@ ul.dropdown-menu > li.checkbox {
     position: relative;
 }
 
-#main .page-header h3 .header-breadcrumbs div > a::after,
-#main .page-header h3 .header-breadcrumbs div > span.subsection::after,
+#main .page-header .header-breadcrumbs div > a::after,
+#main .page-header .header-breadcrumbs div > span.subsection::after,
 .full-page-modal .header-container .header-breadcrumbs div > a::after,
 .full-page-modal .header-container .header-breadcrumbs div > span.subsection::after {
     content: '/';
@@ -19855,7 +19849,14 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .page-header.detail-page-header {
-    margin: 14px 0 10px 0
+    margin: 0 -20px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #fff;
+    padding: 14px 20px;
+    border-bottom: 1px solid #dedede;
 }
 
 .page-header.detail-page-header > .row {
@@ -19875,7 +19876,6 @@ ul.dropdown-menu > li.checkbox {
     display: flex;
     flex-direction: row;
     float: right;
-    margin: 8px 0 8px 15px;
     white-space: nowrap;
 }
 
@@ -20064,18 +20064,17 @@ ul.dropdown-menu > li.checkbox {
     margin-right: -15px;
 }
 
+#main .side {
+    background-color: #fafafa;
+    height: 100%;
+}
+
 #main .catalog-tree-panel {
     position: relative;
     border-right: 1px solid #e8eced;
-    margin: 0 20px -10px -20px;
     padding: 0 10px 0 20px;
     float: left;
     min-height: 35px;
-}
-
-#main .detail .catalog-tree-panel {
-    margin: 0;
-    z-index: 2;
 }
 
 #main .catalog-tree-panel,
@@ -20157,8 +20156,8 @@ ul.dropdown-menu > li.checkbox {
 }
 
 @media screen and (min-width: 768px) {
-    #main .detail .side > button.collapse-panel,
-    #main .edit .side > button.collapse-panel {
+    #main .side > button.collapse-panel,
+    #main .side > button.collapse-panel {
         position: absolute;
         z-index: 100;
         display: block;
@@ -20170,19 +20169,19 @@ ul.dropdown-menu > li.checkbox {
         color: #ccc;
     }
 
-    #main .detail .side > button.collapse-panel,
-    #main .edit .side > button.collapse-panel {
+    #main .side > button.collapse-panel,
+    #main .side > button.collapse-panel {
         top: 6px;
     }
 
-    #main .detail .side.collapsed,
-    #main .edit .side.collapsed {
+    #main .side.collapsed,
+    #main .side.collapsed {
         width: 0 !important;
         padding: 0 8px 0 17px !important;
     }
 
-    #main .detail .side.collapsed > .panel,
-    #main .edit .side.collapsed > .panel {
+    #main .side.collapsed > .panel,
+    #main .side.collapsed > .panel {
         display: none;
     }
 }
@@ -20320,6 +20319,20 @@ button.category:focus {
     color: inherit;
 }
 
+#main > .content-wrapper {
+    height: 100%;
+    display: flex;
+    margin: 0 -20px;
+}
+
+#main > .content-wrapper > aside {
+    flex-shrink: 0;
+}
+
+#main > .content-wrapper > main {
+    flex: 1;
+    overflow-y: auto;
+}
 
 @media screen and (max-width: 768px) {
     #main .catalog-tree-panel {
@@ -20400,17 +20413,22 @@ button.category:focus {
     margin-top: 3px;
 }
 
-#main > main > .record > .detail > .detail-button-container,
-#main > main > .record > .edit > .detail-button-container {
-    position: static;
-    top: 0;
-    left: 0;
+#main main > .record > .detail > .overview,
+#main main > .record > .edit > .overview {
+    margin: 0 -10px;
+}
+
+#main main .detail-button-container {
+    position: relative;
     z-index: 101;
     background-color: #fff;
     padding: 8px 10px 0;
     margin-left: -10px;
     margin-right: -10px;
-    border-bottom: 1px solid #dedede;
+}
+
+#main main .detail-button-container .panel-navigation {
+    margin-top: 5px;
 }
 
 #header .menu.open-menu li.header {
@@ -20559,30 +20577,20 @@ button.category:focus {
     }
 
     body > .content {
-        padding-left: 0
+        padding-left: 0;
+        padding-right: 0;
     }
 
     #main .header .header-buttons-container.full-row {
         margin-left: 26px;
     }
 
-    .edit > .row > .overview,
-    .detail > .row > .overview {
+    .edit > .overview,
+    .detail > .overview {
         padding-right: 0;
         padding-left: 0;
         min-height: 79.6vh;
         background-color: #ffffff;
-    }
-
-    .record > .edit > .row > .overview.bordered,
-    .record > .detail > .row > .overview.bordered {
-        border-right: 1px solid var(--primary-border-color);
-    }
-
-    .record > .edit > .row > .side.bordered,
-    .record > .detail > .row > .side.bordered {
-        border-left: 1px solid var(--primary-border-color);
-        margin-left: -1px;
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,
@@ -20600,78 +20608,32 @@ button.category:focus {
         display: flex;
     }
 
-    #main > main > .record > .detail > .detail-button-container,
-    #main > main > .record > .edit > .detail-button-container {
-        position: sticky;
-        margin-left: -20px;
-        margin-right: -20px;
-        padding: 8px 20px 0;
-    }
-
-    #main .edit > .row > .overview-filters-container,
-    #main .detail > .row > .overview-filters-container {
-        width: 100%;
-    }
-
-    #main > main > .record > .edit > .row > .side,
-    #main > main > .record > .detail > .row > .side {
+    #main .side {
         padding: 0;
         position: relative;
-        border-top: 1px solid var(--primary-border-color);
         border-left: 1px solid var(--primary-border-color);
-        float: left;
+        overflow-y: auto;
     }
 
-    #main > main > .record > .detail > .detail-button-container .panel-navigation,
-    #main > main > .record > .edit > .detail-button-container .panel-navigation {
+    #main main .detail-button-container .panel-navigation {
         width: 100%;
     }
 
-    #main > main > .record > .detail > .row > .overview,
-    #main > main > .record > .edit > .row > .overview {
-        float: left;
+    #main main > .record > .detail > .overview,
+    #main main > .record > .edit > .overview {
         display: flex;
         flex-direction: column;
         flex: 1;
+        margin: 0 -20px;
     }
 
-    #main > main > .record > .detail > .row > .overview > .bottom,
-    #main > main > .record > .edit > .row > .overview > .bottom {
+    #main main > .record > .detail > .overview > .bottom,
+    #main main > .record > .edit > .overview > .bottom {
         flex: 1;
-    }
-
-    #main > main > .record > .edit > .row > .side.fixed-top,
-    #main > main > .record > .detail > .row > .side.fixed-top,
-    #main > main > .record > .edit > .row > .side.fixed-bottom,
-    #main > main > .record > .detail > .row > .side.fixed-bottom {
-        position: fixed;
-        right: 0;
-    }
-
-    #main > main > .record > .edit > .row > .side.fixed-top,
-    #main > main > .record > .detail > .row > .side.fixed-top {
-        top: 91px;
-    }
-
-    #main > main > .record > .edit > .row > .side.fixed-bottom,
-    #main > main > .record > .detail > .row > .side.fixed-bottom {
-        bottom: 0;
-    }
-
-    #main > main > .record > .edit > .row > .side.scrolled,
-    #main > main > .record > .detail > .row > .side.scrolled {
-        position: absolute;
-        right: 0;
     }
 
     .nav > li > a {
         padding: 6px 15px;
-    }
-
-    .stick-sub.button-container {
-        margin-top: 44px;
-        padding-top: 9px !important;
-        padding-bottom: 0 !important
     }
 
     .home-content > .row.dashlets {
@@ -20689,15 +20651,8 @@ button.category:focus {
         height: 100%;
     }
 
-    #main {
-        padding-left: 20px;
-        min-height: calc(100% - 14px);
-    }
-
     #main .catalog-tree-panel {
-        position: sticky;
-        top: 0;
-        height: calc(100vh - 49px);
+        height: 100%;
     }
 
     #main .catalog-tree-panel .category-panel-resizer {
@@ -20709,11 +20664,7 @@ button.category:focus {
         cursor: col-resize;
     }
 
-    #main > main > .record > .detail > .row > .side {
-        float: right;
-    }
-
-    #main > main > .record > .detail > .row > .side > .side-panel-resizer {
+    #main .side > .side-panel-resizer {
         width: 2px;
         height: 100%;
         position: absolute;
@@ -20735,18 +20686,14 @@ button.category:focus {
         bottom: 0;
     }
 
-    #main .detail .row .catalog-tree-panel {
-        top: 48px;
-    }
-
-    #main > main > .record > .detail > .detail-button-container.detail-tree-button-container:not(.stick-sub) {
+    #main main > .record > .detail > .detail-button-container.detail-tree-button-container:not(.stick-sub) {
         position: relative;
         padding-right: 15px;
         padding-left: 15px;
         left: -15px;
     }
 
-    #main > main > .record > .detail > .detail-button-container.collapsed.detail-tree-button-container.stick-sub {
+    #main main > .record > .detail > .detail-button-container.collapsed.detail-tree-button-container.stick-sub {
         left: 0;
     }
 
@@ -20840,16 +20787,16 @@ button.category:focus {
 
     .detail .overview,
     .edit .overview,
-    #main > main > .list-container,
-    #main > main > .page-header {
+    #main main > .list-container,
+    #main main > .page-header {
         width: 100% !important;
         margin-left: 0 !important;
     }
 
     .detail .overview,
     .edit .overview,
-    .detail .side,
-    .edit .side {
+    #main .side,
+    #main .side {
         min-height: auto !important;
     }
 
@@ -20859,17 +20806,17 @@ button.category:focus {
         padding-left: 5px;
     }
 
-    #main .detail .side {
+    #main .side {
         margin: 0;
         padding: 0;
         width: 100% !important;
     }
 
-    .detail .side > .panel-default > .panel-heading {
+    .side > .panel-default > .panel-heading {
         margin: 0;
     }
 
-    .detail .panel-navigation .nav > li > a {
+    main .panel-navigation .nav > li > a {
         padding: 5px 10px;
     }
 

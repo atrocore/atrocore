@@ -1,6 +1,6 @@
 <div class="row">
     <div>
-        <h3>{{{header}}}</h3>
+        {{{header}}}
     </div>
     <div class="header-buttons-container">
         <div class="header-buttons btn-group pull-right">

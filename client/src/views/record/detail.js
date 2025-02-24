@@ -203,7 +203,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionEdit: function () {
             if (!this.editModeDisabled) {
                 this.setEditMode();
-                this.resetSidebar();
             } else {
                 var options = {
                     id: this.model.id,
@@ -326,7 +325,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionCancelEdit: function () {
             this.cancelEdit();
-            this.resetSidebar();
         },
 
         actionSelfAssign: function () {
@@ -924,14 +922,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 observer.unobserve($('#content').get(0));
             });
             observer.observe($('#content').get(0));
-        },
-
-        resetSidebar() {
-            let side = $('#main > main > .record .row > .side');
-
-            if (side) {
-                side.removeClass('scrolled fixed-bottom fixed-top');
-            }
         },
 
         fetch: function () {
@@ -1666,10 +1656,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 bottomView.setReadOnly();
             }
 
-            var sideView = this.getView('side');
-            if (sideView && 'setReadOnly' in sideView) {
-                sideView.setReadOnly();
-            }
+            // var sideView = this.getView('side');
+            // if (sideView && 'setReadOnly' in sideView) {
+            //     sideView.setReadOnly();
+            // }
 
             this.getFieldList().forEach(function (field) {
                 this.setFieldReadOnly(field);
@@ -1685,11 +1675,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (bottomView && 'setNotReadOnly' in bottomView) {
                 bottomView.setNotReadOnly();
             }
-
-            var sideView = this.getView('side');
-            if (sideView && 'setNotReadOnly' in sideView) {
-                sideView.setNotReadOnly();
-            }
+            //
+            // var sideView = this.getView('side');
+            // if (sideView && 'setNotReadOnly' in sideView) {
+            //     sideView.setNotReadOnly();
+            // }
 
             this.getFieldList().forEach(function (field) {
                 if (onlyNotSetAsReadOnly) {

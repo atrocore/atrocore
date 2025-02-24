@@ -56,13 +56,13 @@ Espo.define('views/merge', 'views/main', function (Dep) {
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
-                el: '#main > main > .page-header'
+                el: '#main main > .page-header'
             });
         },
 
         setupRecord: function () {
             this.createView('body', this.recordView, {
-                el: '#main > main > .body',
+                el: '#main main > .body',
                 models: this.models,
                 collection: this.collection
             });

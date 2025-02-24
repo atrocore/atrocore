@@ -25,7 +25,7 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
 
             this.createView('search', searchView, {
                 collection: this.collection,
-                el: '#main > main > .page-header .row .search-container',
+                el: '#main main > .page-header .row .search-container',
                 searchManager: this.searchManager,
                 scope: this.scope,
                 viewMode: this.viewMode,

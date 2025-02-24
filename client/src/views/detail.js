@@ -64,6 +64,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         treeAllowed: false,
 
+        sideAllowed: true,
+
         navigationButtons: {
             previous: {
                 html: '<span class="fas fa-chevron-left"></span>',
@@ -82,6 +84,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         data: function () {
             return {
                 treeAllowed: this.treeAllowed,
+                sideAllowed: this.sideAllowed,
             };
         },
 
@@ -249,13 +252,14 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         afterRender() {
             $('.page-header').addClass('detail-page-header');
-
             Dep.prototype.afterRender.call(this);
 
+            this.setupHeader();
+
+            const view = this.getView('record');
             if (this.treeAllowed) {
-                const view = this.getView('record')
                 window.treePanelComponent = new Svelte.TreePanel({
-                    target: $(`${this.options.el}`).get(0),
+                    target: $(`${this.options.el} .content-wrapper`).get(0),
                     anchor: $(`${this.options.el} .tree-panel-anchor`).get(0),
                     props: {
                         scope: this.scope,
@@ -294,6 +298,41 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
                 view.onTreePanelRendered();
             }
+
+            if (this.sideAllowed) {
+                this.createView('side', view.sideView, {
+                    model: this.model,
+                    scope: this.scope,
+                    el: '#main .side',
+                    type: view.type,
+                    isSmall: view.isSmall,
+                    readOnly: view.readOnly,
+                    inlineEditDisabled: view.inlineEditDisabled,
+                    recordHelper: view.recordHelper,
+                    recordViewObject: view
+                }, view => view.render());
+            }
+
+            function replaceTag(element, newTag) {
+                if (element.tagName.toLowerCase() === newTag) return;
+
+                const newElement = document.createElement(newTag);
+                newElement.className = element.className;
+                newElement.innerHTML = element.innerHTML;
+                element.replaceWith(newElement);
+
+                return newElement;
+            }
+
+            // const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');
+            // let headerTitle = breadcrumbs.querySelector('.header-title');
+            // $('#main main').on('scroll', function () {
+            //     if (this.scrollTop > breadcrumbs.offsetHeight) {
+            //         headerTitle = replaceTag(headerTitle, 'span');
+            //     } else {
+            //         headerTitle = replaceTag(headerTitle, 'h3');
+            //     }
+            // });
         },
 
         setupHeader: function () {
@@ -488,7 +527,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         setupRecord: function () {
             const o = {
                 model: this.model,
-                el: '#main > main > .record',
+                el: '#main main > .record',
                 scope: this.scope
             };
             this.optionsToPass.forEach(function (option) {
