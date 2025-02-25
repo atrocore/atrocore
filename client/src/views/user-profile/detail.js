@@ -28,6 +28,12 @@ Espo.define('views/user-profile/detail', 'views/detail', Dep => {
             return Dep.prototype.buildHeaderHtml.call(this, path);
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.$el.find('.header-items').hide();
+        },
+
     });
 });
 
