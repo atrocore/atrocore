@@ -29,12 +29,6 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
                 }
             ];
 
-            this.buttonList.push({
-                name: 'access',
-                label: 'Access',
-                style: 'default'
-            });
-
             this.additionalButtons.push({
                 name: "dashboard",
                 label: this.translate("Dashboards", "labels", "LayoutProfile"),
@@ -119,26 +113,6 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
                         this.getBaseController().logout();
                     }
                 }, 2000);
-            });
-        },
-
-        actionAccess() {
-            this.notify('Loading...');
-
-            $.ajax({
-                url: 'User/action/acl',
-                type: 'GET',
-                data: {
-                    id: this.model.id,
-                }
-            }).done(aclData => {
-                this.createView('access', 'views/user/modals/access', {
-                    aclData: aclData,
-                    model: this.model,
-                }, view => {
-                    this.notify(false);
-                    view.render();
-                });
             });
         },
 
