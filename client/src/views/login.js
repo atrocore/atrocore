@@ -216,7 +216,7 @@ Espo.define('views/login', 'view', function (Dep) {
                     }
 
                     const response = $.ajax({
-                        url: 'Preferences/' + data.user.id,
+                        url: 'UserProfile/' + data.user.id,
                         method: 'PUT',
                         headers: {
                             'Authorization-Token': Base64.encode(userName + ':' + data.token)
@@ -224,6 +224,7 @@ Espo.define('views/login', 'view', function (Dep) {
                         data: JSON.stringify(requestData),
                         async: false
                     });
+
                     if (response && response.responseJSON) {
                         data.preferences = response.responseJSON
                     }
