@@ -21,6 +21,8 @@ class OpenApiGenerator
 {
     private const HEADER_LANGUAGE_DESCRIPTION = "Set this parameter for data to be returned for a specified language";
 
+    private const TIMEZONE_DESCRIPTION = "Specify if you need to get dates in a certain time zone. By default, dates are returned in the UTC time zone.";
+
     private Container $container;
 
     public function __construct(Container $container)
@@ -121,6 +123,16 @@ class OpenApiGenerator
                         "schema"      => [
                             "type" => "string",
                             "enum" => $languages,
+                        ]
+                    ],
+                    [
+                        "name"        => "timezone",
+                        "in"          => "query",
+                        "required"    => false,
+                        "description" => self::TIMEZONE_DESCRIPTION,
+                        "schema"      => [
+                            "type"    => "string",
+                            "example" => "Europe/Berlin"
                         ]
                     ],
                     [
@@ -229,6 +241,16 @@ class OpenApiGenerator
                         ]
                     ],
                     [
+                        "name"        => "timezone",
+                        "in"          => "query",
+                        "required"    => false,
+                        "description" => self::TIMEZONE_DESCRIPTION,
+                        "schema"      => [
+                            "type"    => "string",
+                            "example" => "Europe/Berlin"
+                        ]
+                    ],
+                    [
                         "name"     => "id",
                         "in"       => "path",
                         "required" => true,
@@ -332,6 +354,16 @@ class OpenApiGenerator
                             "schema"      => [
                                 "type" => "string",
                                 "enum" => $languages,
+                            ]
+                        ],
+                        [
+                            "name"        => "timezone",
+                            "in"          => "query",
+                            "required"    => false,
+                            "description" => self::TIMEZONE_DESCRIPTION,
+                            "schema"      => [
+                                "type"    => "string",
+                                "example" => "Europe/Berlin"
                             ]
                         ],
                         [
