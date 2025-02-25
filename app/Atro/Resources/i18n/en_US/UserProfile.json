@@ -1,5 +1,7 @@
 {
   "fields": {
+    "emailAddress": "Email",
+    "userName": "User Name",
     "department": "Department",
     "name": "Display Name",
     "title": "Title",

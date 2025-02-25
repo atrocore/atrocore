@@ -62,7 +62,7 @@ class UserProfile extends AbstractController
         $fields = $this->getUserProfileFields();
 
         foreach ($data as $field => $val) {
-            if (!in_array($field, $fields)) {
+            if (!in_array($field, $fields) || in_array($field, ['userName', 'emailAddress'])) {
                 unset($data->$field);
             }
         }

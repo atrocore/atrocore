@@ -4,6 +4,14 @@
     "rows": [
       [
         {
+          "name": "emailAddress"
+        },
+        {
+          "name": "userName"
+        }
+      ],
+      [
+        {
           "name": "name"
         },
         {

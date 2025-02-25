@@ -1,5 +1,13 @@
 {
   "fields": {
+    "userName": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "emailAddress": {
+      "type": "email",
+      "readOnly": true
+    },
     "name": {
       "type": "varchar",
       "trim": true,
