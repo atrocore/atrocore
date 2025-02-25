@@ -48,7 +48,8 @@
     },
     "style": {
       "type": "link",
-      "entity": "Style"
+      "entity": "Style",
+      "view": "views/user-profile/fields/style"
     },
     "followEntityOnStreamPost": {
       "type": "bool"
@@ -63,7 +64,7 @@
     "notificationProfile": {
       "type": "link",
       "entity": "NotificationProfile",
-      "view": "views/preferences/fields/notification-profile"
+      "view": "views/user-profile/fields/notification-profile"
     },
     "avatar": {
       "type": "file",
