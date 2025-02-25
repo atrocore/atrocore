@@ -8,6 +8,19 @@
     "phoneNumber": "Phone",
     "avatar": "Avatar",
     "gender": "Gender",
-    "lastAccess": "Last Access"
+    "lastAccess": "Last Access",
+    "locale": "Locale",
+    "style": "User Interface Style",
+    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+    "followCreatedEntities": "Auto-follow created records",
+    "receiveNotifications": "Receive Notifications",
+    "notificationProfile": "Notification Profile"
+  },
+  "labels": {
+    "Preferences": "Preferences",
+    "Notifications": "Notifications"
+  },
+  "tooltips": {
+    "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user."
   }
 }

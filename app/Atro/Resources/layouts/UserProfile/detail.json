@@ -41,5 +41,39 @@
         }
       ]
     ]
+  },
+  {
+    "label": "Preferences",
+    "rows": [
+      [
+        {
+          "name": "locale"
+        },
+        {
+          "name": "style"
+        }
+      ],
+      [
+        {
+          "name": "followCreatedEntities"
+        },
+        {
+          "name": "followEntityOnStreamPost"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Notifications",
+    "rows": [
+      [
+        {
+          "name": "receiveNotifications"
+        },
+        {
+          "name": "notificationProfile"
+        }
+      ]
+    ]
   }
 ]

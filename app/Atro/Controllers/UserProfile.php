@@ -39,6 +39,22 @@ class UserProfile extends AbstractController
             $res[$field] = $entity->get($field);
         }
 
+        if (!empty($entity->get('localeId'))) {
+            $locale = $this->getEntityManager()->getRepository('Locale')->get($entity->get('localeId'));
+            if (!empty($locale)) {
+                $res['localeId'] = $locale->get('id');
+                $res['localeName'] = $locale->get('name');
+            }
+        }
+
+        if (!empty($entity->get('styleId'))) {
+            $style = $this->getEntityManager()->getRepository('Style')->get($entity->get('styleId'));
+            if (!empty($style)) {
+                $res['styleId'] = $style->get('id');
+                $res['styleName'] = $style->get('name');
+            }
+        }
+
         return $res;
     }
 
