@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "UserProfile": "User Profile",
     "Entity": "Entität",
     "EntityField": "Entitätsfeld",
     "Language": "Sprache",
@@ -56,6 +57,7 @@
     "SystemIcon": "System-Symbol"
   },
   "scopeNamesPlural": {
+    "UserProfile": "User Profiles",
     "Entity": "Entitäten",
     "EntityField": "Entitätsfelder",
     "Language": "Sprachen",
