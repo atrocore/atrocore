@@ -34,7 +34,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         hideButtonPanel: false,
 
-        hidePanelNavigation: true,
+        hidePanelNavigation: false,
 
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
