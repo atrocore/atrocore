@@ -207,12 +207,10 @@
       "type": "bool"
     },
     "notificationProfile": {
-      "type": "link",
-      "view": "views/preferences/fields/notification-profile"
+      "type": "link"
     },
     "favoritesList": {
-      "type": "array",
-      "view": "views/preferences/fields/favourites-list"
+      "type": "array"
     }
   },
   "links": {

@@ -72,6 +72,21 @@
       "view": "views/user/fields/avatar",
       "previewSize": "small"
     },
+    "dashboardLayout": {
+      "type": "jsonArray",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true
+    },
+    "dashletsOptions": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true
+    },
+    "favoritesList": {
+      "type": "array",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
