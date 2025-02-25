@@ -32,6 +32,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         selectedFilters: {},
 
+        hideButtonPanel: false,
+
+        hidePanelNavigation: false,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -121,6 +125,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
             this.merging = this.options.merging;
             this.renderedPanels = [];
+            this.hideButtonPanel = false;
+            this.hidePanelNavigation = false;
         },
 
         setup() {
@@ -348,7 +354,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 columnLength: column.length,
                 scope: this.scope,
                 id: this.getId(),
-                merging: this.merging
+                merging: this.merging,
+                hideButtonPanel: this.hideButtonPanel
             };
         },
 
@@ -575,6 +582,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         createPanelNavigationView() {
+            if(this.hidePanelNavigation) {
+                return;
+            }
             let panelList = this.getRelationshipPanels().map(m => {
                 m.title = m.label;
                 return m;
