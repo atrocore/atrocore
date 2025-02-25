@@ -78,7 +78,7 @@ Espo.define('views/modals/edit-dashboard', ['views/modal', 'model'], function (D
             model.name = 'Preferences';
 
             model.set('dashboardTabList', dashboardTabList);
-            this.createView('dashboardTabList', 'views/preferences/fields/dashboard-tab-list', {
+            this.createView('dashboardTabList', 'views/user-profile/fields/dashboard-tab-list', {
                 el: this.options.el + ' .field[data-name="dashboardTabList"]',
                 defs: {
                     name: 'dashboardTabList',

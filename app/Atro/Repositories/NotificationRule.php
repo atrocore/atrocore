@@ -101,23 +101,18 @@ class NotificationRule extends Base
     {
         $connection = $this->getConnection();
 
-        if (Converter::isPgSQL($connection)) {
-            $subquery = "SELECT id FROM preferences WHERE (CAST(data::json->>'receiveNotifications' AS boolean) = :true) AND (data::json->>'notificationProfileId' = :notificationProfileId)";
-        } else {
-            $subquery = "SELECT id FROM preferences WHERE CAST(JSON_EXTRACT(data, '$.receiveNotifications') as UNSIGNED)= :true AND JSON_EXTRACT(data, '$.notificationProfileId') = :notificationProfileId";
-        }
-
         $profileParam = $this->getConfig()->get('defaultNotificationProfileId') === $notificationProfileId
             ? 'default'
             : $notificationProfileId;
 
         $users = $connection->createQueryBuilder()
-            ->select('u.id, u.name, u.user_name, u.first_name, u.last_name, u.email_address, u.phone_number')
-            ->from($connection->quoteIdentifier('user'), 'u')
-            ->where("u.id IN ($subquery)")
-            ->andWhere('u.is_active = :true')
-            ->andWhere('u.deleted = :false')
-            ->andWhere('u.id <> :system')
+            ->select('id, name, user_name, first_name, last_name, email_address, phone_number')
+            ->from($connection->quoteIdentifier('user'))
+            ->where('is_active = :true')
+            ->andWhere('deleted = :false')
+            ->andWhere('id <> :system')
+            ->andWhere('notification_profile_id = :notificationProfileId')
+            ->andWhere('receive_notifications = :true')
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('system', 'system')

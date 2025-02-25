@@ -348,10 +348,12 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
             var list = [
                 {
-                    link: '#User/view/' + this.getUser().id,
+                    link: '#UserProfile',
                     html: avatarHtml + this.getUser().get('name')
                 },
-                {divider: true}
+                {
+                    divider: true
+                }
             ];
 
             if (this.getUser().isAdmin()) {
@@ -360,11 +362,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     label: this.getLanguage().translate('Administration')
                 });
             }
-
-            list.push({
-                link: '#Preferences',
-                label: this.getLanguage().translate('Preferences')
-            });
 
             if (this.getUser().isAdmin()) {
                 list.push({

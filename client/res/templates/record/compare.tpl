@@ -1,5 +1,6 @@
 <div class="detail" id="{{id}}">
     <div class="detail-button-container button-container record-buttons clearfix">
+        {{#unless hideButtonPanel }}
         <div class="buttons">
             <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
             <button class="btn btn-default {{#unless merging }} hidden {{/unless}}#" data-action="cancel" style="margin-right: 15px">{{translate 'Cancel'}}</button>
@@ -7,9 +8,8 @@
                 <span class="fas fa-filter"></span>
             </a>
         </div>
-        <div class="panel-navigation panel-left pull-left">
-
-        </div>
+        {{/unless}}
+        <div class="panel-navigation panel-left pull-left"></div>
     </div>
 
     <div class="row">

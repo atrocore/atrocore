@@ -8,14 +8,17 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/preferences/edit', 'class-replace!treo-core:views/preferences/edit', function (Dep) {
+Espo.define('views/user-profile/fields/style', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
-        getHeader: function () {
-            return this.buildHeaderHtml([this.getLanguage().translate('Preferences')]);
-        },
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.getAcl().get('styleControlPermission') === 'no') {
+                this.hide();
+            }
+        }
 
     });
 });
-

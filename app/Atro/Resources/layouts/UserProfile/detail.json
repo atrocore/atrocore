@@ -1,0 +1,79 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "emailAddress"
+        },
+        {
+          "name": "userName"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "title"
+        }
+      ],
+      [
+        {
+          "name": "firstName"
+        },
+        {
+          "name": "lastName"
+        }
+      ],
+      [
+        {
+          "name": "department"
+        },
+        false
+      ],
+      [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "phoneNumber"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Preferences",
+    "rows": [
+      [
+        {
+          "name": "locale"
+        },
+        {
+          "name": "style"
+        }
+      ],
+      [
+        {
+          "name": "followCreatedEntities"
+        },
+        {
+          "name": "followEntityOnStreamPost"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Notifications",
+    "rows": [
+      [
+        {
+          "name": "receiveNotifications"
+        },
+        {
+          "name": "notificationProfile"
+        }
+      ]
+    ]
+  }
+]

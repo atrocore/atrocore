@@ -74,7 +74,6 @@ class Container
             'number'                   => \Espo\Core\Factories\Number::class,
             'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,
             'output'                   => \Espo\Core\Factories\Output::class,
-            'preferences'              => \Espo\Core\Factories\Preferences::class,
             'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
             'serviceFactory'           => \Espo\Core\ServiceFactory::class,
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
