@@ -180,13 +180,31 @@
       "len": 36
     },
     "dashboardLayout": {
-      "type": "jsonArray"
+      "type": "jsonArray",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "dashletsOptions": {
-      "type": "jsonObject"
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "presetFilters": {
-      "type": "jsonObject"
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "useCustomTabList": {
       "type": "bool",
@@ -201,7 +219,13 @@
       "tooltip": true
     },
     "closedPanelOptions": {
-      "type": "jsonObject"
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "receiveNotifications": {
       "type": "bool"
@@ -210,7 +234,13 @@
       "type": "link"
     },
     "favoritesList": {
-      "type": "array"
+      "type": "array",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     }
   },
   "links": {
