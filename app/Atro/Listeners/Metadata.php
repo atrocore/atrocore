@@ -113,6 +113,8 @@ class Metadata extends AbstractListener
                 continue;
             }
 
+            $relationshipEntity = 'UserFollowed' . $scope;
+
             $data['entityDefs'][$scope]['fields']['followers'] = [
                 'type'   => 'linkMultiple',
                 'noLoad' => true
@@ -120,7 +122,7 @@ class Metadata extends AbstractListener
 
             $data['entityDefs'][$scope]['links']['followers'] = [
                 'type'         => 'hasMany',
-                'relationName' => 'UserFollowed' . $scope,
+                'relationName' => $relationshipEntity,
                 'foreign'      => 'followed' . Util::pluralize($scope),
                 'entity'       => 'User'
             ];
@@ -132,10 +134,13 @@ class Metadata extends AbstractListener
 
             $data['entityDefs']['User']['links']['followed' . Util::pluralize($scope)] = [
                 'type'         => 'hasMany',
-                'relationName' => 'UserFollowed' . $scope,
+                'relationName' => $relationshipEntity,
                 'foreign'      => 'followers',
                 'entity'       => $scope
             ];
+
+            $data['scopes'][$relationshipEntity]['acl'] = false;
+            $data['scopes'][$relationshipEntity]['streamDisabled'] = true;
         }
     }
 
