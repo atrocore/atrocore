@@ -1022,21 +1022,21 @@ class OpenApiGenerator
         }
 
         $result['paths']['/Settings']['get'] = [
-            'tags'          => ['Settings'],
-            'in'            => 'body',
-            'required'      => true,
-            'summary'       => 'Returns a record of Settings',
-            'description'   => 'Returns a record of Settings',
-            'responses'     => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
+            'tags'        => ['Settings'],
+            'in'          => 'body',
+            'required'    => true,
+            'summary'     => 'Returns a record of Settings',
+            'description' => 'Returns a record of Settings',
+            'responses'   => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
         ];
 
         $result['paths']['/Settings']['patch'] = [
-            'tags'          => ['Settings'],
-            'in'            => 'body',
-            'required'      => true,
-            'summary'       => 'Update a record of Settings',
-            'description'   => 'Update a record of Settings',
-            'requestBody'   => [
+            'tags'        => ['Settings'],
+            'in'          => 'body',
+            'required'    => true,
+            'summary'     => 'Update a record of Settings',
+            'description' => 'Update a record of Settings',
+            'requestBody' => [
                 'required' => true,
                 'content'  => [
                     'application/json' => [
@@ -1050,8 +1050,10 @@ class OpenApiGenerator
 
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
     {
-        if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
-            return;
+        if (empty($fieldData['openApiEnabled'])) {
+            if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
+                return;
+            }
         }
 
         if (!empty($fieldData['required'])) {
