@@ -1,13 +1,16 @@
 {
+  "type": "Base",
   "entity": true,
-  "layouts": false,
+  "object": true,
+  "layouts": true,
   "tab": false,
   "acl": false,
   "customizable": false,
+  "importable": false,
   "streamDisabled": true,
   "notificationDisabled": true,
   "bookmarkDisabled": true,
-  "actionDisabled": true,
-  "emHidden": true,
-  "openApiHidden": true
+  "leftSidebarDisabled": true,
+  "notStorable": true,
+  "emHidden": true
 }

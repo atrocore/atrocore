@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "userName": "Benutzername",
+    "department": "Abteilung",
+    "name": "Anzeigename",
+    "title": "Funktion",
+    "phoneNumber": "Telefon",
+    "avatar": "Avatar",
+    "gender": "Geschlecht",
+    "lastAccess": "Letzter Zugriff",
+    "locale": "Gebietsschema",
+    "style": "Design",
+    "followEntityOnStreamPost": "Der Benutzer abonniert die Einträge nach dem Posten in dessen Aktivitäten",
+    "followCreatedEntities": "Eigene Einträge abonnieren",
+    "receiveNotifications": "Erhalten Sie Benachrichtigungen",
+    "notificationProfile": "Benachrichtigungsprofil"
+  },
+  "labels": {
+    "Preferences": "Preferences",
+    "Notifications": "Notifications"
+  },
+  "tooltips": {
+    "followCreatedEntities": "Wenn neue Datensätze erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind."
+  }
+}

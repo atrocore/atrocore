@@ -13,12 +13,6 @@
                 "delete": "own",
                 "create": "yes"
             },
-            "Preferences": {
-                "read": "own",
-                "edit": "own",
-                "delete": "no",
-                "create": "no"
-            },
             "Notification": {
                 "read": "own",
                 "edit": "no",

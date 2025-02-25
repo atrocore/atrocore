@@ -17,10 +17,8 @@ use Atro\Core\Container;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\Preferences;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
-use Atro\Core\Utils\FieldManager;
 use Espo\Entities\User;
 
 class Note
@@ -359,7 +357,7 @@ class Note
             if ($this->getUser()->isSystem()) {
                 $this->followCreatedEntities = false;
             } else {
-                $this->followCreatedEntities = !empty($this->getPreferences()) && !empty($this->getPreferences()->get('followCreatedEntities'));
+                $this->followCreatedEntities = !empty($this->getUser()->get('followCreatedEntities'));
             }
         }
 
@@ -388,11 +386,6 @@ class Note
     private function getUser(): User
     {
         return $this->getContainer()->get('user');
-    }
-
-    private function getPreferences(): ?Preferences
-    {
-        return $this->getContainer()->get('preferences');
     }
 
     private function getEntityManager(): EntityManager

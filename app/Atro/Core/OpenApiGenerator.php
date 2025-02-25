@@ -652,6 +652,8 @@ class OpenApiGenerator
         $this->pushComposerActions($result, $schemas);
         $this->pushDashletActions($result, $schemas);
 
+        $this->prepareUserProfileDocs($result, $schemas);
+
         $this->pushUserActions($result, $schemas);
         $this->pushSettingsActions($result, $schemas);
 
@@ -963,6 +965,22 @@ class OpenApiGenerator
                 ]
             ]),
         ];
+    }
+
+    protected function prepareUserProfileDocs(array &$result, array $schemas): void
+    {
+        unset($result['paths']["/UserProfile"]['get']);
+        unset($result['paths']["/UserProfile"]['post']);
+        unset($result['paths']["/UserProfile/{id}"]['delete']);
+        unset($result['paths']["/UserProfile/{id}/{link}"]['get']);
+        unset($result['paths']["/UserProfile/{id}/{link}"]['post']);
+        unset($result['paths']["/UserProfile/{id}/{link}"]['delete']);
+        unset($result['paths']["/UserProfile/action/massUpdate"]['put']);
+        unset($result['paths']["/UserProfile/action/massDelete"]['post']);
+        unset($result['paths']["/UserProfile/{link}/relation"]['post']);
+        unset($result['paths']["/UserProfile/{link}/relation"]['delete']);
+        unset($result['paths']["/UserProfile/{id}/subscription"]['put']);
+        unset($result['paths']["/UserProfile/{id}/subscription"]['delete']);
     }
 
     protected function pushUserActions(array &$result, array $schemas): void

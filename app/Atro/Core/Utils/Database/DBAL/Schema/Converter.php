@@ -56,8 +56,7 @@ class Converter
 
     public function createSchema(): Schema
     {
-        $ormMetadata = array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata());
-
+        $ormMetadata = $this->ormMetadata->getData();
         $ormMetadata['ActionHistoryRecord']['fields']['targetType']['len'] = 60;
         $ormMetadata['ActionHistoryRecord']['fields']['targetId']['len'] = 62;
 
@@ -274,23 +273,5 @@ class Converter
         }
 
         return $indexList;
-    }
-
-    protected function getSystemOrmMetadata(): array
-    {
-        return [
-            'Preferences'        => [
-                'fields' => [
-                    'id'   => [
-                        'dbType' => 'varchar',
-                        'len'    => 36,
-                        'type'   => 'id'
-                    ],
-                    'data' => [
-                        'type' => 'text'
-                    ]
-                ]
-            ],
-        ];
     }
 }

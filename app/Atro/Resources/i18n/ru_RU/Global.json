@@ -31,7 +31,6 @@
     "DashletOptions": "Настройки панели",
     "Admin": "Админ",
     "Global": "Глобальный",
-    "Preferences": "Персональные Настройки",
     "AuthLogRecord": "Запись Лога Аутентификации",
     "AuthFailLogRecord": "Запись Сбоя Лога Аутентификации",
     "Account": "Контрагент",
@@ -81,8 +80,7 @@
     "KnowledgeBaseCategory": "Категории базы знаний",
     "MeasuringUnit": "Единицы измерения",
     "Note": "Примечания",
-    "Notification": "Уведомления",
-    "Preferences": "Настройки"
+    "Notification": "Уведомления"
   },
   "labels": {
     "jobManager": "Менеджер задач",
@@ -174,7 +172,6 @@
     "Password": "Пароль",
     "Login": "Войти",
     "Log Out": "Выйти",
-    "Preferences": "Персональные Настройки",
     "State": "Регион",
     "Street": "Улица",
     "Country": "Страна",
@@ -312,12 +309,10 @@
     "fieldShouldBefore": "{field} должно быть до {otherField}",
     "fieldShouldBeBetween": "{field} должно быть между {min} и {max}",
     "fieldBadPasswordConfirm": "{field} подтверждено неверно",
-    "resetPreferencesDone": "Были восстановлены значения по умолчанию",
     "confirmation": "Вы уверены?",
     "inheritAllConfirmation": "Вы уверены, что хотите унаследовать все записи?",
     "unlinkAllConfirmation": "Вы действительно хотите убрать все связанные записи?",
     "deleteAllConfirmation": "Вы действительно хотите удалить все записи?",
-    "resetPreferencesConfirmation": "Вы действительно хотите восстановить значения по умолчанию?",
     "removeRecordConfirmation": "Вы действительно хотите удалить запись?",
     "unlinkRecordConfirmation": "Вы действительно хотите убрать связанную запись?",
     "removeRecordConfirmationHierarchically": "Вы действительно хотите удалить записи иерархично?",

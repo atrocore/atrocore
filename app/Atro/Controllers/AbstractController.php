@@ -73,11 +73,6 @@ abstract class AbstractController
         return $this->container->get('config');
     }
 
-    protected function getPreferences(): \Espo\Entities\Preferences
-    {
-        return $this->container->get('preferences');
-    }
-
     protected function getMetadata(): \Espo\Core\Utils\Metadata
     {
         return $this->container->get('metadata');
