@@ -353,9 +353,7 @@ class EntityField extends ReferenceData
             }
 
             $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
-            if ($fieldType === 'bool') {
-                $loadedVal = !empty($loadedVal);
-            }
+
             if ($loadedVal === $entity->get($field)) {
                 $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
                     "fields.{$entity->get('code')}.{$field}"
