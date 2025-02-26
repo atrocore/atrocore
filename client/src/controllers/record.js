@@ -62,10 +62,16 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         getDefaultTabIcon() {
-            let firstLetter = this.name.match(/\p{L}/u)?.[0] || "A",
-                key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
+            let icon = this.getMetadata().get(['clientDefs', this.name, 'iconClass']) || null;
 
-            return 'client/img/icons/default/' + key;
+            if (!icon) {
+                let firstLetter = this.name.match(/\p{L}/u)?.[0] || "A",
+                    key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
+
+                return 'client/img/icons/default/' + key;
+            }
+
+            return Dep.prototype.getDefaultTabIcon.call(this);
         },
 
         beforeKanban: function () {
