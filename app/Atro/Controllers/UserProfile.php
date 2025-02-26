@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\NotModified;
 
 class UserProfile extends AbstractController
 {
@@ -88,6 +89,8 @@ class UserProfile extends AbstractController
                 unset($data->$field);
             }
         }
+
+        $data->_skipIsEntityUpdated = true;
 
         $GLOBALS['updatingUserProfile'] = true;
         if ($entity = $this->getServiceFactory()->create('User')->updateEntity($id, $data)) {
