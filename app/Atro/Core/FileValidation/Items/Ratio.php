@@ -23,6 +23,10 @@ class Ratio extends Base
     {
         list ($width, $height) = getimagesizefromstring($file->getContents());
 
+        if (empty($height)) {
+            return false;
+        }
+
         return ($width / $height) == $this->rule->get('ratio');
     }
 
