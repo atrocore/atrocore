@@ -75,11 +75,7 @@ class UserProfile extends AbstractController
             throw new BadRequest();
         }
 
-        if (!$this->getUser()->isAdmin()) {
-            if ($this->getUser()->id != $id) {
-                throw new Forbidden();
-            }
-        }
+        $this->handleUserAccess($id);
 
         $fields = $this->getUserProfileFields();
 
@@ -99,6 +95,39 @@ class UserProfile extends AbstractController
         throw new Error();
     }
 
+    public function postActionResetDashboard($params, $data, $request)
+    {
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        $this->handleUserAccess($data->id);
+
+        $user = $this->getEntityManager()->getEntity('User', $data->id);
+        if (empty($user)) {
+            throw new NotFound();
+        }
+
+        $user->set([
+            'dashboardLayout' => null,
+            'dashletsOptions' => null
+        ]);
+
+        $this->getEntityManager()->saveEntity($user);
+
+        if (empty($defaultLayout = $this->getUser()->get('layoutProfile'))) {
+            $defaultLayout = $this->getEntityManager()
+                ->getRepository('LayoutProfile')
+                ->where(['isDefault' => true])
+                ->findOne();
+        }
+
+        return (object)[
+            'dashboardLayout' => !empty($defaultLayout) ? $defaultLayout->get('dashboardLayout') : null,
+            'dashletsOptions' => !empty($defaultLayout) ? $defaultLayout->get('dashletsOptions') : null,
+        ];
+    }
+
     public function getUserProfileFields(): array
     {
         $fields = ['id'];
@@ -113,4 +142,14 @@ class UserProfile extends AbstractController
 
         return $fields;
     }
+
+    protected function handleUserAccess(string $userId): void
+    {
+        if (!$this->getUser()->isAdmin()) {
+            if ($this->getUser()->id != $userId) {
+                throw new Forbidden();
+            }
+        }
+    }
+
 }
