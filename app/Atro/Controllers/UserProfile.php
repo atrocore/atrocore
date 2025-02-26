@@ -70,12 +70,15 @@ class UserProfile extends AbstractController
         }
 
         $id = $params['id'] ?? $this->getUser()?->get('id');
+
         if (empty($id)) {
-            throw new Forbidden();
+            throw new BadRequest();
         }
 
-        if (!empty($this->getUser()) && $id !== $this->getUser()->get('id') && !$this->getUser()->isAdmin()) {
-            throw new Forbidden();
+        if (!$this->getUser()->isAdmin()) {
+            if ($this->getUser()->id != $id) {
+                throw new Forbidden();
+            }
         }
 
         $fields = $this->getUserProfileFields();

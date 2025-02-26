@@ -35,7 +35,7 @@ Espo.define('models/preferences', 'model', function (Dep) {
 
     return Dep.extend({
 
-        name: "Preferences",
+        name: "UserProfile",
 
         settings: null,
 
