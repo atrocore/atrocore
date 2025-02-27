@@ -729,7 +729,6 @@ class Installer extends HasContainer
 
         \Atro\Migrations\V1Dot10Dot0::createDefaultStorage($this->getEntityManager()->getConnection());
         \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
-        \Atro\Migrations\V1Dot13Dot18::createDefaultSystemIcons($this->getEntityManager()->getConnection(), $this->getConfig());
 
         \Atro\Migrations\V1Dot10Dot50::createNotificationDefaultNotificationProfile($this->getEntityManager()->getConnection(), $this->getConfig());
 

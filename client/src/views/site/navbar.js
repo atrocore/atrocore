@@ -323,23 +323,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
         getDefaultTabIcon(name) {
             let firstLetter = name.match(/\p{L}/u)?.[0] || "A",
-                referenceData = this.getConfig().get('referenceData');
+                key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
 
-            if (referenceData['SystemIcon']) {
-                let key = 'letter_' + firstLetter.toLowerCase();
-
-                if (key in referenceData['SystemIcon']) {
-                    let item = referenceData['SystemIcon'][key];
-
-                    if ('imagePathsData' in item && 'thumbnails' in item['imagePathsData']) {
-                        for (let size in item['imagePathsData']['thumbnails']) {
-                            return item['imagePathsData']['thumbnails'][size];
-                        }
-                    }
-                }
-            }
-
-            return null;
+            return 'client/img/icons/default/' + key;
         },
 
         getMenuDataList: function () {
