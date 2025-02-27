@@ -23,7 +23,7 @@
     $: {
         actions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
         dropdownActions = (mode === 'edit' ? recordButtons?.dropdownEditButtons : recordButtons?.dropdownButtons) ?? [];
-        uiHandlerActions = (mode === 'edit' ? getUiHandlerButtons() : [])
+        uiHandlerActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...getUiHandlerButtons()] : [])
     }
 
     async function loadDynamicActions(): Promise<ActionButton[]> {
@@ -53,7 +53,7 @@
 
     function getUiHandlerButtons(): ActionButton[] {
         const result = [];
-        (this.getMetadata().get(['clientDefs', this.scope, 'uiHandler']) || []).forEach(handler => {
+        (Metadata.get(['clientDefs', scope, 'uiHandler']) || []).forEach(handler => {
             if (handler.type === 'setValue' && handler.triggerAction === 'onButtonClick') {
                 result.push({
                     'action': 'uiHandler',
@@ -74,11 +74,11 @@
 
         actionsLoading = true;
         loadDynamicActions().then((list) => {
-            console.log(list);
             list = list.map((item) => ({...item, id: item.data.action_id ?? null}));
             dynamicActions = [...(recordButtons?.additionalButtons ?? []), ...list.filter(item => item.display === 'single')]
             dynamicActionsDropdown = list.filter(item => item.display === 'dropdown');
         }).catch(error => {
+            dynamicActions = recordButtons?.additionalButtons ?? [];
             console.error(error);
         }).finally(() => actionsLoading = false);
     }
@@ -154,7 +154,7 @@
                 </button>
             {/if}
         {:else if mode === 'edit'}
-            {#each recordButtons?.additionalEditButtons ?? [] as item}
+            {#each uiHandlerActions as item}
                 <button type="button" class="btn btn-default additional-button action" data-action={item.action}
                         data-id={item.id}
                         title={item.tooltip} on:click={runAction}>
