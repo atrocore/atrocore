@@ -173,7 +173,6 @@ class Translation extends ReferenceData
 
         $this->getConfig()->set('cacheTimestamp', time());
         $this->getConfig()->save();
-        DataManager::pushPublicData('dataTimestamp', time());
     }
 
     protected function init()
