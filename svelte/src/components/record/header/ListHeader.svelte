@@ -4,14 +4,18 @@
     import {onMount} from "svelte";
 
     export let params: Params;
+    export let renderSearch = (): void => {
+    }
 
     onMount(() => {
         if (params.afterOnMount) {
             params.afterOnMount();
         }
+
+        renderSearch();
     });
 </script>
 
 <BaseHeader breadcrumbs={params.breadcrumbs}></BaseHeader>
 
-<h1>This is list header content</h1>
+<div class="search-container"></div>

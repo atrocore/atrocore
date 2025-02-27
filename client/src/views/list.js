@@ -264,6 +264,11 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 props: {
                     params: {
                         breadcrumbs: this.getBreadcrumbsItems()
+                    },
+                    renderSearch: () => {
+                        if (this.searchPanel) {
+                            this.setupSearchPanel();
+                        }
                     }
                 }
             });
@@ -313,13 +318,17 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         setupSearchPanel: function () {
-            this.createView('search', this.searchView, {
+            let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
+            let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;
+
+            this.createView('search', searchView, {
                 collection: this.collection,
-                el: '#main .page-header .row .search-container',
+                el: '#main .page-header .search-container',
                 searchManager: this.searchManager,
                 scope: this.scope,
                 viewMode: this.viewMode,
-                viewModeList: this.viewModeList
+                viewModeList: this.viewModeList,
+                hiddenBoolFilterList: hiddenBoolFilterList,
             }, function (view) {
                 view.render();
                 this.listenTo(view, 'reset', function () {
@@ -441,10 +450,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
             if (!this.hasView('list')) {
                 this.loadList();
-            }
-
-            if (this.searchPanel) {
-                this.setupSearchPanel();
             }
 
             let mode = this.getStorage().get('list-view', this.scope);

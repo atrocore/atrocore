@@ -19,30 +19,6 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
             options.enabledFixedHeader = this.enabledFixedHeader;
         },
 
-        setupSearchPanel() {
-            let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
-            let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;
-
-            this.createView('search', searchView, {
-                collection: this.collection,
-                el: '#main main > .page-header .row .search-container',
-                searchManager: this.searchManager,
-                scope: this.scope,
-                viewMode: this.viewMode,
-                viewModeList: this.viewModeList,
-                hiddenBoolFilterList: hiddenBoolFilterList,
-            }, function (view) {
-                view.render();
-                this.listenTo(view, 'reset', function () {
-                    this.resetSorting();
-                }, this);
-
-                if (this.viewModeList.length > 1) {
-                    this.listenTo(view, 'change-view-mode', this.switchViewMode, this);
-                }
-            }.bind(this));
-        },
-
         setupSearchManager: function () {
             var collection = this.collection;
 
