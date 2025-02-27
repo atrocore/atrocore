@@ -67,7 +67,7 @@ class V1Dot13Dot25 extends Base
             }
 
             foreach ($data as $field => $value) {
-                if ($field === 'id' || empty($value)) {
+                if ($field === 'id' || $field === 'name' || empty($value)) {
                     continue;
                 }
 

@@ -22,6 +22,11 @@ class Style extends Base
         return true;
     }
 
+    public function checkEntityRead(User $user, Entity $entity, $data)
+    {
+        return true;
+    }
+
     public function checkEntityCreate(User $user, Entity $entity, $data)
     {
         return $user->isAdmin();
