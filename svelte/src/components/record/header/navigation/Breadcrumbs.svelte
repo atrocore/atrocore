@@ -9,10 +9,14 @@
     {#each items as item, index}
         <li class="breadcrumbs-item" class:full-width={index === items.length - 1 && currentIsHeading}>
             {#if index !== items.length - 1}
-                <a href="{item.url}" class={item.className}>{#if item.html}{@html item.html}{:else}{item.label}{/if}</a>
+                <a href="{item.url}" class={item.className}>
+                    {#if item.html}{@html item.html}{:else}{item.label}{/if}
+                </a>
             {:else}
                 {#if currentIsHeading}
-                    <h3 class={item.className}>{#if item.html}{@html item.html}{:else}{item.label}{/if}</h3>
+                    <h3 class={item.className}>
+                        {#if item.html}{@html item.html}{:else}{item.label}{/if}
+                    </h3>
                 {:else}
                     <span class={item.className}>{#if item.html}{@html item.html}{:else}{item.label}{/if}</span>
                 {/if}
@@ -36,6 +40,7 @@
 
     .breadcrumbs-item.full-width {
         display: block;
+        margin: 5px 0 10px;
     }
 
     .breadcrumbs-item:not(:last-child):after {

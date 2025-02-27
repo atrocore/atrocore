@@ -3,13 +3,12 @@
     import BreadcrumbsItem from "./interfaces/BreadcrumbsItem";
 
     export let breadcrumbs: BreadcrumbsItem[] = [];
-
-
+    export let currentIsHeading: boolean = true;
 </script>
 
 {#if breadcrumbs.length > 0}
     <div class="header-breadcrumbs">
-        <Breadcrumbs items={breadcrumbs} />
+        <Breadcrumbs items={breadcrumbs} {currentIsHeading} />
     </div>
 {/if}
 

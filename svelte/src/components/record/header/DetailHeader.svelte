@@ -14,6 +14,7 @@
     export let anchorScrollCallback = (panelName: string, event: Event) => {}
 
     let mode;
+    let currentIsHeading = params?.currentIsHeading ?? true;
 
     $: {
         mode = params?.mode ?? 'detail';
@@ -25,9 +26,13 @@
 
     window.addEventListener('record-mode:changed', (event: CustomEvent) => {
         params.mode = event.detail;
-        console.log('Mode is changed: ', params.mode);
-        console.log(event);
     });
+
+    if (currentIsHeading === true) {
+        window.addEventListener('breadcrumbs:header-updated', (event: CustomEvent) => {
+            currentIsHeading = !!event.detail;
+        });
+    }
 
     onMount(() => {
         if (params.afterOnMount) {
@@ -36,7 +41,7 @@
     });
 </script>
 
-<BaseHeader breadcrumbs={params.breadcrumbs}>
+<BaseHeader breadcrumbs={params.breadcrumbs} {currentIsHeading}>
     <div class="detail-button-container">
         <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions} {recordButtons} />
     </div>

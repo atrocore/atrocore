@@ -19414,8 +19414,6 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .header-title {
-    font-size: 20px;
-    line-height: 1.5;
     color: var(--header-title-color);
 }
 
@@ -19827,8 +19825,8 @@ ul.dropdown-menu > li.checkbox {
     top: 0;
     left: 0;
     z-index: 101;
-    background-color: #fff;
-    padding: 14px 20px;
+    background-color: #fafafa;
+    padding: 10px 20px 0;
     border-bottom: 1px solid #dedede;
 }
 
@@ -20394,10 +20392,7 @@ button.category:focus {
 #main main .detail-button-container {
     position: relative;
     z-index: 101;
-    background-color: #fff;
-    padding: 8px 10px 0;
-    margin-left: -10px;
-    margin-right: -10px;
+    padding: 10px 0 25px;
 }
 
 #main main .detail-button-container .panel-navigation {

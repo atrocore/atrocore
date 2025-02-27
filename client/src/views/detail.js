@@ -317,26 +317,21 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 }, view => view.render());
             }
 
-            function replaceTag(element, newTag) {
-                if (element.tagName.toLowerCase() === newTag) return;
+            let isScrolledMore = false;
+            const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');
 
-                const newElement = document.createElement(newTag);
-                newElement.className = element.className;
-                newElement.innerHTML = element.innerHTML;
-                element.replaceWith(newElement);
+            $('#main main').on('scroll', function () {
+                const scrolled = this.scrollTop > breadcrumbs.offsetHeight;
 
-                return newElement;
-            }
-
-            // const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');
-            // let headerTitle = breadcrumbs.querySelector('.header-title');
-            // $('#main main').on('scroll', function () {
-            //     if (this.scrollTop > breadcrumbs.offsetHeight) {
-            //         headerTitle = replaceTag(headerTitle, 'span');
-            //     } else {
-            //         headerTitle = replaceTag(headerTitle, 'h3');
-            //     }
-            // });
+                if (scrolled !== isScrolledMore) {
+                    isScrolledMore = scrolled;
+                    if (isScrolledMore) {
+                        window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: false}));
+                    } else {
+                        window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: true}));
+                    }
+                }
+            });
         },
 
         setupHeader: function () {

@@ -16,6 +16,7 @@ export default interface Params {
     scope: string;
     id: string;
     breadcrumbs: BreadcrumbsItem[],
+    currentIsHeading: boolean;
     afterOnMount?: Function,
     scopePermissions?: Permissions
 }
