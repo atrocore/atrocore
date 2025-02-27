@@ -79,7 +79,7 @@
     },
     "emailAddress": {
       "type": "email",
-      "required": true
+      "required": false
     },
     "phoneNumber": {
       "type": "varchar"
