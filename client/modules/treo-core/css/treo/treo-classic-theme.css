@@ -4524,23 +4524,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     }
 }
 
-.nav-pills > li {
-    float: left;
-}
-
-.nav-pills > li:not(:first-child) {
-    margin-left: 4px;
-}
-
-.nav-pills > li > a {
-    border-bottom: 2px solid #eee;
-    padding: 5px 10px;
-}
-
-.nav-pills > li > a, .nav-pills > li > a:hover, .nav-pills > li > a:focus {
-    background-color: transparent;
-}
-
 .nav-stacked > li {
     float: none
 }
@@ -17902,19 +17885,9 @@ table.table {
     z-index: 101;
 }
 
-.record .button-container > .btn-group,
-.record .button-container .nav-pills > li {
-    margin-bottom: 5px;
-}
-
 .record .button-container > .btn-group {
     margin-right: 20px;
     margin-bottom: 8px;
-}
-
-.record .button-container .nav-pills > li {
-    margin-left: 0;
-    margin-right: 5px;
 }
 
 .list-nested-categories {

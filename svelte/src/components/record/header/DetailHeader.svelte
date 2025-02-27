@@ -11,6 +11,7 @@
     export let params: Params;
     export let anchorNavItems: AnchorNavItem[] = [];
     export let recordButtons: RecordActionButtons | null = null;
+    export let anchorScrollCallback = (panelName: string, event: Event) => {}
 
     let mode;
 
@@ -18,9 +19,8 @@
         mode = params?.mode ?? 'detail';
     }
 
-    window.addEventListener('detailPanelsLoaded', (event: any) => {
-        console.log('Received detail panels:', event);
-        anchorNavItems = event.list;
+    window.addEventListener('detail:panels-loaded', (event: CustomEvent) => {
+        anchorNavItems = event.detail;
     });
 
     window.addEventListener('record-mode:changed', (event: CustomEvent) => {
@@ -40,5 +40,5 @@
     <div class="detail-button-container">
         <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions} {recordButtons} />
     </div>
-    <AnchorNavigation items={anchorNavItems}/>
+    <AnchorNavigation items={anchorNavItems} scrollCallback={anchorScrollCallback} />
 </BaseHeader>

@@ -87,26 +87,26 @@ Espo.define('views/record/panel-navigation', 'view',
         },
 
         actionScrollToPanel(name) {
-            if (!name) {
-                return;
-            }
+            // if (!name) {
+            //     return;
+            // }
 
-            let panel = $('#main').find(`.panel[data-name="${name}"]`);
-            if (panel.size() > 0) {
-                const header = document.querySelector('.page-header');
-                const content = document.querySelector("main") || document.querySelector('#main');
-                const recordButtons = document.querySelector(".detail-button-container.button-container:not(.hidden)");
-                panel = panel.get(0);
-
-                if (!content || !panel || !recordButtons) return;
-
-                const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
-                const stickyOffset = header.offsetHeight;
-                content.scrollTo({
-                    top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
-                    behavior: "smooth"
-                });
-            }
+            // let panel = $('#main').find(`.panel[data-name="${name}"]`);
+            // if (panel.size() > 0) {
+            //     const header = document.querySelector('.page-header');
+            //     const content = document.querySelector("main") || document.querySelector('#main');
+            //     const recordButtons = document.querySelector(".detail-button-container.button-container:not(.hidden)");
+            //     panel = panel.get(0);
+            //
+            //     if (!content || !panel || !recordButtons) return;
+            //
+            //     const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+            //     const stickyOffset = header.offsetHeight;
+            //     content.scrollTo({
+            //         top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
+            //         behavior: "smooth"
+            //     });
+            // }
         },
 
         isPanelClosed(name){

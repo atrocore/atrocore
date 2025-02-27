@@ -1942,7 +1942,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 recordViewObject: this
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
-                    this.trigger('detailPanelsLoaded', { list: view.panelList })
+                    this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(view.panelList) })
                 });
 
                 if (callback) {

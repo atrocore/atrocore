@@ -370,7 +370,24 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         additionalEditButtons: record.additionalEditButtons,
                         executeAction: (action, data, event) => {record.executeAction(action, data, event)},
                     },
-                    anchorNavItems: this.panelsList
+                    anchorNavItems: this.panelsList,
+                    anchorScrollCallback: (name, event) => {
+                        let panel = $('#main').find(`.panel[data-name="${name}"]`);
+                        if (panel.size() > 0) {
+                            const header = document.querySelector('.page-header');
+                            const content = document.querySelector("main") || document.querySelector('#main');
+                            panel = panel.get(0);
+
+                            if (!content || !panel) return;
+
+                            const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                            const stickyOffset = header.offsetHeight;
+                            content.scrollTo({
+                                top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
+                                behavior: "smooth"
+                            });
+                        }
+                    }
                 }
             });
 
@@ -584,7 +601,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             this.createView('record', this.getRecordViewName(), o, view => {
                 this.listenTo(view, 'detailPanelsLoaded', data => {
-                    window.dispatchEvent(new CustomEvent('detailPanelsLoaded', { list: data.list }));
+                    this.panelsList = data.list;
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { list: data.list }));
                 });
             });
         },
