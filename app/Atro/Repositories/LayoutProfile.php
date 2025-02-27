@@ -15,7 +15,6 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 class LayoutProfile extends Base
@@ -46,59 +45,6 @@ class LayoutProfile extends Base
         parent::beforeSave($entity, $options);
     }
 
-    public function prepareLayoutProfileData(\stdClass $preferenceData): void
-    {
-        $layoutProfile = $this->getEntityManager()->getUser()->get('layoutProfile') ?? $this->where(['isDefault' => true])->findOne();
-        if (empty($layoutProfile)) {
-            return;
-        }
-
-        $navigation = [];
-        if (!empty($layoutProfile->get('navigation'))) {
-            $navigation = $layoutProfile->get('navigation');
-        }
-
-        $preparedNavigation = [];
-        if (!empty($navigation)) {
-            /** @var Metadata $metadata */
-            $metadata = $this->getInjection('container')->get('metadata');
-
-            foreach ($navigation as $item) {
-                if (is_string($item)) {
-                    if ($metadata->get("scopes.$item.tab")) {
-                        $preparedNavigation[] = $item;
-                    }
-                } else {
-                    if (!empty($item->items)) {
-                        $newSubItems = [];
-                        foreach ($item->items as $subItem) {
-                            if ($metadata->get("scopes.$subItem.tab")) {
-                                $newSubItems[] = $subItem;
-                            }
-                        }
-                        if (!empty($newSubItems)) {
-                            $item->items = $newSubItems;
-                            $preparedNavigation[] = $item;
-                        }
-                    }
-                }
-            }
-        }
-
-        $preferenceData->lpNavigation = $preparedNavigation;
-        $preferenceData->hideShowFullList = $layoutProfile->get('hideShowFullList') ?? false;
-        $preferenceData->layoutProfileId = $layoutProfile->get('id');
-
-        if (empty($preferenceData->dashboardLayout)) {
-            $preferenceData->dashboardLayout = $layoutProfile->get('dashboardLayout');
-            $preferenceData->dashletsOptions = $layoutProfile->get('dashletsOptions');
-        }
-
-        if (empty($preferenceData->favoritesList)) {
-            $preferenceData->favoritesList = array_values(array_filter($layoutProfile->get('favoritesList') ?? [], fn($item) => !!$metadata->get("scopes.$item.tab")));
-        }
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if (!empty($entity->get('isDefault'))) {
@@ -124,6 +70,5 @@ class LayoutProfile extends Base
 
         $this->addDependency('language');
         $this->addDependency('dataManager');
-        $this->addDependency('container');
     }
 }

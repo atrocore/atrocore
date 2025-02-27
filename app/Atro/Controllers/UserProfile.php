@@ -157,7 +157,7 @@ class UserProfile extends AbstractController
         if (is_array($data)) {
             $data = json_decode(json_encode($data));
         }
-        $this->getEntityManager()->getRepository('LayoutProfile')->prepareLayoutProfileData($data);
+        $this->getService('App')->prepareLayoutProfileData($data);
 
         return $data;
     }
