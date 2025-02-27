@@ -86,7 +86,7 @@ class Style extends ReferenceData
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        if ($this->getEntityManager()->getRepository('Preferences')->hasStyle((string)$entity->get('id'))) {
+        if ($this->getEntityManager()->getRepository('User')->where(['styleId' => $entity->get('id')])->findOne()) {
             throw new BadRequest($this->getInjection('language')->translate('styleIsUsed', 'exceptions', 'Style'));
         }
 

@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "UserProfile": "User Profile",
     "Entity": "Entität",
     "EntityField": "Entitätsfeld",
     "Language": "Sprache",
@@ -41,7 +42,6 @@
     "Export": "Export",
     "DynamicLogic": "Dynamische Logik",
     "DashletOptions": "Dashlet Optionen",
-    "Preferences": "Benutzereinstellungen",
     "AuthLogRecord": "Auth Log-Datensatz",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
     "PreviewTemplate": "Vorschau Vorlage",
@@ -57,6 +57,7 @@
     "SystemIcon": "System-Symbol"
   },
   "scopeNamesPlural": {
+    "UserProfile": "User Profiles",
     "Entity": "Entitäten",
     "EntityField": "Entitätsfelder",
     "Language": "Sprachen",
@@ -82,7 +83,6 @@
     "KnowledgeBaseCategory": "Knowledge Base Kategorien",
     "Note": "Notizen",
     "Notification": "Meldungen",
-    "Preferences": "Präferenzen",
     "Store": "Shop",
     "User": "Benutzer",
     "Role": "Rollen",
@@ -239,7 +239,6 @@
     "Password": "Passwort",
     "Login": "Anmelden",
     "Log Out": "Abmelden",
-    "Preferences": "Benutzereinstellungen",
     "State": "Bundesland/Kanton",
     "Street": "Straße",
     "Country": "Land",
@@ -406,12 +405,10 @@
     "fieldShouldBefore": "{field} muss vor {otherField} sein",
     "fieldShouldBeforeOrEqual": "{field} sollte vor oder gleich {otherField} sein",
     "fieldShouldBeBetween": "{field} muss zwischen {min} und {max} sein",
-    "resetPreferencesDone": "Die Einstellungen wurden auf Standardwerte zurückgesetzt",
     "confirmation": "Sind Sie sicher?",
     "inheritAllConfirmation": "Möchten Sie wirklich alle Datensätze erben?",
     "unlinkAllConfirmation": "Möchten Sie wirklich die Verknüpfung aller Datensätze aufheben?",
     "deleteAllConfirmation": "Möchten Sie wirklich alle Datensätze löschen?",
-    "resetPreferencesConfirmation": "Sind Sie sicher, dass Sie die Einstellungen auf Standardwerte zurücksetzen wollen?",
     "removeRecordConfirmation": "Sind Sie sicher, dass Sie den Datensatz löschen wollen?",
     "deletePermanentlyRecordConfirmation": "Sind Sie sicher, dass Sie den Datensatz permanent löschen wollen?",
     "deletePermanentlyRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Datensätze permanent löschen wollen?",

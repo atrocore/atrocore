@@ -114,6 +114,7 @@ class Layout extends AbstractRecordController
         return $layoutManager->saveUserPreference((string)$data->scope, (string)$data->viewType, $relatedScope, $layoutProfileId);
     }
 
+
     public function getLayoutManager(): LayoutManager
     {
         return $this->getContainer()->get('layoutManager');

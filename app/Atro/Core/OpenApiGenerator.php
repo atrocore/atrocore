@@ -21,6 +21,8 @@ class OpenApiGenerator
 {
     private const HEADER_LANGUAGE_DESCRIPTION = "Set this parameter for data to be returned for a specified language";
 
+    private const TIMEZONE_DESCRIPTION = "Specify if you need to get dates in a certain time zone. By default, dates are returned in the UTC time zone.";
+
     private Container $container;
 
     public function __construct(Container $container)
@@ -121,6 +123,16 @@ class OpenApiGenerator
                         "schema"      => [
                             "type" => "string",
                             "enum" => $languages,
+                        ]
+                    ],
+                    [
+                        "name"        => "timezone",
+                        "in"          => "query",
+                        "required"    => false,
+                        "description" => self::TIMEZONE_DESCRIPTION,
+                        "schema"      => [
+                            "type"    => "string",
+                            "example" => "Europe/Berlin"
                         ]
                     ],
                     [
@@ -229,6 +241,16 @@ class OpenApiGenerator
                         ]
                     ],
                     [
+                        "name"        => "timezone",
+                        "in"          => "query",
+                        "required"    => false,
+                        "description" => self::TIMEZONE_DESCRIPTION,
+                        "schema"      => [
+                            "type"    => "string",
+                            "example" => "Europe/Berlin"
+                        ]
+                    ],
+                    [
                         "name"     => "id",
                         "in"       => "path",
                         "required" => true,
@@ -332,6 +354,16 @@ class OpenApiGenerator
                             "schema"      => [
                                 "type" => "string",
                                 "enum" => $languages,
+                            ]
+                        ],
+                        [
+                            "name"        => "timezone",
+                            "in"          => "query",
+                            "required"    => false,
+                            "description" => self::TIMEZONE_DESCRIPTION,
+                            "schema"      => [
+                                "type"    => "string",
+                                "example" => "Europe/Berlin"
                             ]
                         ],
                         [
@@ -652,6 +684,8 @@ class OpenApiGenerator
         $this->pushComposerActions($result, $schemas);
         $this->pushDashletActions($result, $schemas);
 
+        $this->prepareUserProfileDocs($result, $schemas);
+
         $this->pushUserActions($result, $schemas);
         $this->pushSettingsActions($result, $schemas);
 
@@ -965,6 +999,22 @@ class OpenApiGenerator
         ];
     }
 
+    protected function prepareUserProfileDocs(array &$result, array $schemas): void
+    {
+        unset($result['paths']["/UserProfile"]['get']);
+        unset($result['paths']["/UserProfile"]['post']);
+        unset($result['paths']["/UserProfile/{id}"]['delete']);
+        unset($result['paths']["/UserProfile/{id}/{link}"]['get']);
+        unset($result['paths']["/UserProfile/{id}/{link}"]['post']);
+        unset($result['paths']["/UserProfile/{id}/{link}"]['delete']);
+        unset($result['paths']["/UserProfile/action/massUpdate"]['put']);
+        unset($result['paths']["/UserProfile/action/massDelete"]['post']);
+        unset($result['paths']["/UserProfile/{link}/relation"]['post']);
+        unset($result['paths']["/UserProfile/{link}/relation"]['delete']);
+        unset($result['paths']["/UserProfile/{id}/subscription"]['put']);
+        unset($result['paths']["/UserProfile/{id}/subscription"]['delete']);
+    }
+
     protected function pushUserActions(array &$result, array $schemas): void
     {
         if (!isset($result['paths']['/User']['post']['parameters'])) {
@@ -1022,21 +1072,21 @@ class OpenApiGenerator
         }
 
         $result['paths']['/Settings']['get'] = [
-            'tags'          => ['Settings'],
-            'in'            => 'body',
-            'required'      => true,
-            'summary'       => 'Returns a record of Settings',
-            'description'   => 'Returns a record of Settings',
-            'responses'     => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
+            'tags'        => ['Settings'],
+            'in'          => 'body',
+            'required'    => true,
+            'summary'     => 'Returns a record of Settings',
+            'description' => 'Returns a record of Settings',
+            'responses'   => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
         ];
 
         $result['paths']['/Settings']['patch'] = [
-            'tags'          => ['Settings'],
-            'in'            => 'body',
-            'required'      => true,
-            'summary'       => 'Update a record of Settings',
-            'description'   => 'Update a record of Settings',
-            'requestBody'   => [
+            'tags'        => ['Settings'],
+            'in'          => 'body',
+            'required'    => true,
+            'summary'     => 'Update a record of Settings',
+            'description' => 'Update a record of Settings',
+            'requestBody' => [
                 'required' => true,
                 'content'  => [
                     'application/json' => [
@@ -1050,8 +1100,10 @@ class OpenApiGenerator
 
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
     {
-        if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
-            return;
+        if (empty($fieldData['openApiEnabled'])) {
+            if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
+                return;
+            }
         }
 
         if (!empty($fieldData['required'])) {

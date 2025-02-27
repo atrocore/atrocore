@@ -49,7 +49,7 @@ class Locale extends ReferenceData
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if (
-            $this->getEntityManager()->getRepository('Preferences')->hasLocale((string)$entity->get('id'))
+            $this->getEntityManager()->getRepository('User')->where(['localeId' => $entity->get('id')])->findOne()
             || $this->getConfig()->get('localeId') === $entity->get('id')
         ) {
             throw new BadRequest($this->getInjection('language')->translate('localeIsUsed', 'exceptions', 'Locale'));

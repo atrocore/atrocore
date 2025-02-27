@@ -20,6 +20,6 @@ class ThemeManager implements Factory
 {
     public function create(Container $container)
     {
-        return new \Atro\Core\Utils\ThemeManager($container->get('config'), $container->get('preferences'));
+        return new \Atro\Core\Utils\ThemeManager($container->get('config'), $container->get('user'));
     }
 }

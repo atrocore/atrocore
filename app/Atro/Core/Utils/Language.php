@@ -15,7 +15,7 @@ use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
 use Atro\Repositories\Translation as TranslationRepository;
 use Espo\Core\Utils\File\Unifier;
-use Espo\Entities\Preferences;
+use Espo\Entities\User;
 
 class Language
 {
@@ -33,8 +33,8 @@ class Language
     public function __construct(Container $container, ?string $localeId = null)
     {
         if ($localeId === null) {
-            $preferences = $container->get('config')->get('isInstalled', false) ? $container->get('preferences') : null;
-            $localeId = self::detectLocale($container->get('config'), $preferences);
+            $user = $container->get('config')->get('isInstalled', false) ? $container->get('user') : null;
+            $localeId = self::detectLocale($container->get('config'), $user);
         }
 
         $this->container = $container;
@@ -42,10 +42,10 @@ class Language
         $this->unifier = new Unifier($this->container->get('fileManager'), $this->getMetadata());
     }
 
-    public static function detectLocale(Config $config, Preferences $preferences = null): ?string
+    public static function detectLocale(Config $config, User $user = null): ?string
     {
-        if ($preferences) {
-            $localeId = $preferences->get('locale');
+        if ($user) {
+            $localeId = $user->get('localeId');
         } else {
             $localeId = $config->get('localeId');
         }
@@ -53,9 +53,9 @@ class Language
         return $localeId ?? null;
     }
 
-    public static function detectLanguage(Config $config, Preferences $preferences = null): ?string
+    public static function detectLanguage(Config $config, User $user = null): ?string
     {
-        $localeId = self::detectLocale($config, $preferences);
+        $localeId = self::detectLocale($config, $user);
         if (!empty($localeId)) {
             return $config->get('locales')[$localeId]['language'] ?? self::DEFAULT_LANGUAGE;
         }

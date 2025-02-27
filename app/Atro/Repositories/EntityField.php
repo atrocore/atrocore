@@ -229,7 +229,7 @@ class EntityField extends ReferenceData
             throw new BadRequest("Middle Table Name cannot be changed.");
         }
 
-        $loadedData = json_decode(json_encode($this->getMetadata()->loadData(true)), true);
+        $loadedData = json_decode(json_encode($this->getMetadata()->loadData()), true);
 
         $entity->set('isCustom', true);
         $this->updateField($entity, $loadedData);
@@ -352,10 +352,8 @@ class EntityField extends ReferenceData
                 continue;
             }
 
-            $loadedVal = $loadedData['entityDefs'][$entity->get('code')][$field] ?? null;
-            if ($fieldType === 'bool') {
-                $loadedVal = !empty($loadedVal);
-            }
+            $loadedVal = $loadedData['entityDefs'][$entity->get('entityId')]['fields'][$entity->get('code')][$field] ?? null;
+
             if ($loadedVal === $entity->get($field)) {
                 $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
                     "fields.{$entity->get('code')}.{$field}"

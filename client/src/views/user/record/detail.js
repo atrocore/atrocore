@@ -149,10 +149,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             }.bind(this));
         },
 
-        actionPreferences: function () {
-            this.getRouter().navigate('#Preferences/edit/' + this.model.id, {trigger: true});
-        },
-
         actionAccess: function () {
             this.notify('Loading...');
 

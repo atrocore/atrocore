@@ -1,0 +1,29 @@
+{
+  "controller": "controllers/user-profile",
+  "iconClass": "fas fa-user-circle",
+  "defaultSidePanelFieldLists": {
+    "detail": [
+      "avatar",
+      "createdAt",
+      "lastAccess",
+      "passwordUpdatedAt"
+    ],
+    "edit": [
+      "avatar"
+    ]
+  },
+  "dynamicLogic": {
+    "fields": {
+      "notificationProfileId": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "receiveNotifications"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -158,7 +158,7 @@ class DataManager
         return $result;
     }
 
-    public function clearCache(): bool
+    public function clearCache(bool $silent = false): bool
     {
         try {
             Util::removeDir(self::CACHE_DIR_PATH);
@@ -167,7 +167,9 @@ class DataManager
             $this->getConfig()->remove('cacheTimestamp');
             $this->getConfig()->save();
 
-            self::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
+            if (!$silent) {
+                self::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
+            }
         } catch (\Throwable $e) {
             $GLOBALS['log']->error('Cache clearing failed: ' . $e->getMessage());
         }

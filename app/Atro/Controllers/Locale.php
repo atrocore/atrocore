@@ -1,3 +1,4 @@
+<?php
 /**
  * AtroCore Software
  *
@@ -8,16 +9,16 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/preferences/record/edit', 'class-replace!treo-core:views/preferences/record/edit', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Atro\Controllers;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Templates\Controllers\ReferenceData;
 
-            this.showField('dashboardLayout');
-            this.showPanel('notifications');
-        }
-    });
-});
-
+class Locale extends ReferenceData
+{
+    protected function checkControllerAccess()
+    {
+    }
+}

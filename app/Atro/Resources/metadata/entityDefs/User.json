@@ -1,222 +1,296 @@
 {
-    "fields": {
-        "type": {
-            "type": "enum",
-            "default": "Token",
-            "options": [
-                "Token"
-            ],
-            "optionsIds": [
-                "Token"
-            ]
-        },
-        "isAdmin": {
-            "type": "bool",
-            "tooltip": true
-        },
-        "userName": {
-            "type": "varchar",
-            "maxLength": 50,
-            "required": true,
-            "view": "views/user/fields/user-name",
-            "tooltip": true
-        },
-        "name": {
-            "type": "varchar",
-            "view": "treo-core:views/user/fields/name",
-            "trim": true,
-            "required": true
-        },
-        "department": {
-            "type": "varchar",
-            "trim": true
-        },
-        "password": {
-          "type": "password",
-          "maxLength": 150,
-          "internal": true,
-          "layoutListDisabled": true,
-          "layoutDetailDisabled": true,
-          "massUpdateDisabled": true,
-          "filterDisabled": true,
-          "exportDisabled": true,
-          "importDisabled": false
-        },
-        "passwordConfirm": {
-          "type": "password",
-          "maxLength": 150,
-          "internal": true,
-          "layoutListDisabled": true,
-          "layoutDetailDisabled": true,
-          "massUpdateDisabled": true,
-          "filterDisabled": true,
-          "exportDisabled": true,
-          "importDisabled": false,
-          "notStorable": true
-        },
-        "firstName": {
-            "type": "varchar",
-            "maxLength": 100,
-            "default":"",
-            "trim": true
-        },
-        "lastName": {
-            "type": "varchar",
-            "maxLength": 100,
-            "required": false,
-            "default":"",
-            "trim": true
-        },
-        "isActive": {
-            "type": "bool",
-            "tooltip": true,
-            "default": true
-        },
-        "title": {
-            "type": "varchar",
-            "maxLength": 100,
-            "trim": true
-        },
-        "emailAddress": {
-            "type": "email",
-            "required": true
-        },
-        "phoneNumber": {
-            "type": "varchar"
-        },
-        "token": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true
-        },
-        "authTokenId": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true
-        },
-        "authLogRecordId": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true
-        },
-        "ipAddress": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true
-        },
-        "defaultTeam": {
-            "type": "link",
-            "tooltip": true
-        },
-        "acceptanceStatus": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true
-        },
-        "teams": {
-            "type": "linkMultiple",
-            "tooltip": true,
-            "view": "views/user/fields/teams",
-            "default": "javascript: return {teamsIds: []}"
-        },
-        "roles": {
-            "type": "linkMultiple",
-            "tooltip": true
-        },
-        "avatar": {
-            "type": "file",
-            "fileTypeId": "a_image",
-            "view": "views/user/fields/avatar",
-            "previewSize": "small"
-        },
-        "sendAccessInfo": {
-            "type": "bool",
-            "notStorable": true,
-            "disabled": true
-        },
-        "gender": {
-            "type": "extensibleEnum",
-            "extensibleEnumId": "gender"
-        },
-        "createdAt": {
-            "type": "datetime",
-            "readOnly": true
-        },
-        "createdBy": {
-            "type": "link",
-            "readOnly": true,
-            "view": "views/fields/user"
-        },
-        "lastAccess": {
-            "type": "datetime",
-            "notStorable": true,
-            "readOnly": true,
-            "layoutListDisabled": true,
-            "filterDisabled": true,
-            "massUpdateDisabled": true,
-            "layoutDetailDisabled": true,
-            "directAccessDisabled": true
-        },
-        "passwordUpdatedAt": {
-            "type": "datetime",
-            "readOnly": true,
-            "view": "views/user/fields/password-updated-at"
-        },
-        "passwordUpdatedBy": {
-            "type": "link",
-            "readOnly": true,
-            "view": "views/fields/user"
-        },
-        "layoutProfile": {
-            "type": "link",
-            "view": "views/user/fields/layout-profile"
-        }
+  "fields": {
+    "type": {
+      "type": "enum",
+      "default": "Token",
+      "options": [
+        "Token"
+      ],
+      "optionsIds": [
+        "Token"
+      ]
     },
-    "links": {
-        "defaultTeam": {
-            "type": "belongsTo",
-            "entity": "Team"
-        },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
-            "relationName": "TeamUser",
-            "foreign": "users",
-            "layoutRelationshipsDisabled": true
-        },
-        "createdBy": {
-            "type": "belongsTo",
-            "entity": "User"
-        },
-        "passwordUpdatedBy": {
-            "type": "belongsTo",
-            "entity": "User"
-        },
-        "roles": {
-            "type": "hasMany",
-            "entity": "Role",
-            "relationName": "RoleUser",
-            "foreign": "users",
-            "layoutRelationshipsDisabled": true
-        },
-        "preferences": {
-            "type": "hasOne",
-            "entity": "Preferences"
-        },
-        "notes": {
-            "type": "hasMany",
-            "entity": "Note",
-            "foreign": "users",
-            "layoutRelationshipsDisabled": true
-        },
-        "layoutProfile": {
-            "type": "belongsTo",
-            "entity": "LayoutProfile"
-        }
+    "isAdmin": {
+      "type": "bool",
+      "tooltip": true
     },
-    "collection": {
-        "sortBy": "userName",
-        "asc": true,
-        "textFilterFields": ["name", "userName"]
+    "userName": {
+      "type": "varchar",
+      "maxLength": 50,
+      "required": true,
+      "view": "views/user/fields/user-name",
+      "tooltip": true
+    },
+    "name": {
+      "type": "varchar",
+      "view": "treo-core:views/user/fields/name",
+      "trim": true,
+      "required": true
+    },
+    "department": {
+      "type": "varchar",
+      "trim": true
+    },
+    "password": {
+      "type": "password",
+      "maxLength": 150,
+      "internal": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": false
+    },
+    "passwordConfirm": {
+      "type": "password",
+      "maxLength": 150,
+      "internal": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": false,
+      "notStorable": true
+    },
+    "firstName": {
+      "type": "varchar",
+      "maxLength": 100,
+      "default": "",
+      "trim": true
+    },
+    "lastName": {
+      "type": "varchar",
+      "maxLength": 100,
+      "required": false,
+      "default": "",
+      "trim": true
+    },
+    "isActive": {
+      "type": "bool",
+      "tooltip": true,
+      "default": true
+    },
+    "title": {
+      "type": "varchar",
+      "maxLength": 100,
+      "trim": true
+    },
+    "emailAddress": {
+      "type": "email",
+      "required": false
+    },
+    "phoneNumber": {
+      "type": "varchar"
+    },
+    "token": {
+      "type": "varchar",
+      "notStorable": true,
+      "disabled": true
+    },
+    "authTokenId": {
+      "type": "varchar",
+      "notStorable": true,
+      "disabled": true
+    },
+    "authLogRecordId": {
+      "type": "varchar",
+      "notStorable": true,
+      "disabled": true
+    },
+    "ipAddress": {
+      "type": "varchar",
+      "notStorable": true,
+      "disabled": true
+    },
+    "defaultTeam": {
+      "type": "link",
+      "tooltip": true
+    },
+    "acceptanceStatus": {
+      "type": "varchar",
+      "notStorable": true,
+      "disabled": true
+    },
+    "teams": {
+      "type": "linkMultiple",
+      "tooltip": true,
+      "view": "views/user/fields/teams",
+      "default": "javascript: return {teamsIds: []}"
+    },
+    "roles": {
+      "type": "linkMultiple",
+      "tooltip": true
+    },
+    "avatar": {
+      "type": "file",
+      "fileTypeId": "a_image",
+      "view": "views/user/fields/avatar",
+      "previewSize": "small"
+    },
+    "sendAccessInfo": {
+      "type": "bool",
+      "notStorable": true,
+      "disabled": true
+    },
+    "gender": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "gender"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "lastAccess": {
+      "type": "datetime",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "layoutDetailDisabled": true,
+      "directAccessDisabled": true
+    },
+    "passwordUpdatedAt": {
+      "type": "datetime",
+      "readOnly": true,
+      "view": "views/user/fields/password-updated-at"
+    },
+    "passwordUpdatedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "layoutProfile": {
+      "type": "link",
+      "view": "views/user/fields/layout-profile"
+    },
+    "localeId": {
+      "type": "varchar",
+      "len": 36
+    },
+    "styleId": {
+      "type": "varchar",
+      "len": 36
+    },
+    "dashboardLayout": {
+      "type": "jsonArray",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
+    "dashletsOptions": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
+    "presetFilters": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
+    "useCustomTabList": {
+      "type": "bool",
+      "default": false
+    },
+    "followEntityOnStreamPost": {
+      "type": "bool",
+      "default": true
+    },
+    "followCreatedEntities": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "closedPanelOptions": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
+    "receiveNotifications": {
+      "type": "bool"
+    },
+    "notificationProfile": {
+      "type": "link"
+    },
+    "favoritesList": {
+      "type": "array",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     }
+  },
+  "links": {
+    "notificationProfile": {
+      "type": "belongsTo",
+      "entity": "NotificationProfile"
+    },
+    "defaultTeam": {
+      "type": "belongsTo",
+      "entity": "Team"
+    },
+    "teams": {
+      "type": "hasMany",
+      "entity": "Team",
+      "relationName": "TeamUser",
+      "foreign": "users",
+      "layoutRelationshipsDisabled": true
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "passwordUpdatedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "roles": {
+      "type": "hasMany",
+      "entity": "Role",
+      "relationName": "RoleUser",
+      "foreign": "users",
+      "layoutRelationshipsDisabled": true
+    },
+    "notes": {
+      "type": "hasMany",
+      "entity": "Note",
+      "foreign": "users",
+      "layoutRelationshipsDisabled": true
+    },
+    "layoutProfile": {
+      "type": "belongsTo",
+      "entity": "LayoutProfile"
+    }
+  },
+  "collection": {
+    "sortBy": "userName",
+    "asc": true,
+    "textFilterFields": [
+      "name",
+      "userName"
+    ]
+  }
 }
