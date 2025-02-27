@@ -91,16 +91,17 @@ Espo.define('views/record/panel-navigation', 'view',
                 return;
             }
 
-            let panel = this.getParentView().$el.find(`.panel[data-name="${name}"]`);
+            let panel = $('#main').find(`.panel[data-name="${name}"]`);
             if (panel.size() > 0) {
-                const content = document.querySelector("#content");
+                const header = document.querySelector('.page-header');
+                const content = document.querySelector("main") || document.querySelector('#main');
                 const recordButtons = document.querySelector(".detail-button-container.button-container:not(.hidden)");
                 panel = panel.get(0);
 
                 if (!content || !panel || !recordButtons) return;
 
                 const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
-                const stickyOffset = recordButtons.offsetHeight;
+                const stickyOffset = header.offsetHeight;
                 content.scrollTo({
                     top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
                     behavior: "smooth"
