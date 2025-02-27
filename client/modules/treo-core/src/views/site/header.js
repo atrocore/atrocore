@@ -53,7 +53,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
             const key = 'pd_dataTimestamp';
             if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key)) {
                 setTimeout(() => {
-                    Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
+                    Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
                 }, 5000);
             }
             this.dataTimestamp = localStorage.getItem(key);

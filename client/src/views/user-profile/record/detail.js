@@ -58,6 +58,12 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
                 label: this.translate('Reset Password', 'labels', 'User'),
                 style: 'default'
             });
+
+            this.listenTo(this.model, 'after:save', () => {
+                setTimeout(() => {
+                    this.showReloadPageMessage()
+                }, 2000);
+            });
         },
 
         actionEditDashboard() {
