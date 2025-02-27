@@ -25,6 +25,37 @@ use Espo\Services\RecordService;
 
 class Record extends RecordService
 {
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        // prepare dates according to provided timezone
+        if (!empty($_GET['timezone'])) {
+            $this->modifyEntityFieldsByTimezone($entity, $_GET['timezone']);
+        }
+    }
+
+    public function modifyEntityFieldsByTimezone(Entity $entity, string $timezone): void
+    {
+        $fields = $this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.fields", []);
+        foreach ($fields as $field => $fieldDefs) {
+            if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['date', 'datetime'])) {
+                continue;
+            }
+            if (empty($entity->get($field))) {
+                continue;
+            }
+
+            try {
+                $date = new \DateTime($entity->get($field));
+                $date->setTimezone(new \DateTimeZone($timezone));
+                $entity->set($field, $date->format('Y-m-d H:i:s'));
+            } catch (\Throwable $e) {
+                throw new BadRequest($e->getMessage());
+            }
+        }
+    }
+
     /**
      * @param array $params
      *
