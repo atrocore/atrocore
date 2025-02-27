@@ -1,6 +1,6 @@
 <script lang="ts">
     import Breadcrumbs from "./navigation/Breadcrumbs.svelte";
-    import {BreadcrumbsItem} from "./interfaces/BreadcrumbsItem";
+    import BreadcrumbsItem from "./interfaces/BreadcrumbsItem";
 
     export let breadcrumbs: BreadcrumbsItem[] = [];
 

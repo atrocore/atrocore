@@ -8,14 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-import BreadcrumbsItem from "./BreadcrumbsItem";
-import Permissions from "./Permissions";
-
-export default interface Params {
-    mode: string;
-    scope: string;
-    id: string;
-    breadcrumbs: BreadcrumbsItem[],
-    afterOnMount?: Function,
-    scopePermissions?: Permissions
+export default interface Permissions {
+    canRead?: boolean;
+    canCreate?: boolean;
+    canEdit?: boolean;
+    canDelete?: boolean;
+    canReadStream?: boolean;
 }

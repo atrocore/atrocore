@@ -8,9 +8,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-export type BreadcrumbsItem = {
+export default interface BreadcrumbsItem {
     url: string;
-    label: string | null;
-    html: string | null;
-    className: string | null;
+    label?: string;
+    html?: string;
+    className?: string;
 }

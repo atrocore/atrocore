@@ -8,14 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-import BreadcrumbsItem from "./BreadcrumbsItem";
-import Permissions from "./Permissions";
-
-export default interface Params {
-    mode: string;
-    scope: string;
-    id: string;
-    breadcrumbs: BreadcrumbsItem[],
-    afterOnMount?: Function,
-    scopePermissions?: Permissions
+interface RecordActionButtons {
+    buttons: ActionButton[];
+    editButtons: ActionButton[];
+    dropdownButtons: ActionButton[];
+    dropdownEditButtons: ActionButton[];
+    additionalButtons: ActionButton[];
+    additionalEditButtons: ActionButton[];
+    executeAction: (action: string, data?: Map<string, any>, event?: Event) => void;
 }

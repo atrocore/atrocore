@@ -189,7 +189,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             }
 
-            this.listenTo(this.model, 'after:change-mode', (mode) => this.mode = mode)
+            this.listenTo(this.model, 'after:change-mode', (mode) => {
+                this.mode = mode;
+                window.dispatchEvent(new CustomEvent('record-mode:changed', { detail: mode }));
+            });
         },
 
         switchToModelByIndex: function (indexOfRecord) {
@@ -335,17 +338,38 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         setupHeader: function () {
+            const record = this.getView('record');
+
             new Svelte.DetailHeader({
                 target: document.querySelector('#main main > .header'),
                 props: {
                     params: {
+                        mode: this.mode,
+                        scope: this.scope,
+                        id: this.model.id,
+                        permissions: {
+                            canRead: this.getAcl().check(this.scope, 'read'),
+                            canEdit: this.getAcl().check(this.scope, 'edit'),
+                            canCreate: this.getAcl().check(this.scope, 'create'),
+                            canDelete: this.getAcl().check(this.scope, 'delete'),
+                            canReadStream: this.getAcl().check(this.scope, 'stream'),
+                        },
                         breadcrumbs: this.getBreadcrumbsItems(),
                         afterOnMount: () => {
-                            this.setupTourButton()
+                            this.setupTourButton();
                         }
-                    }
+                    },
+                    recordButtons: {
+                        buttons: record.buttonList,
+                        editButtons: record.buttonEditList,
+                        dropdownButtons: record.dropdownItemList,
+                        dropdownEditButtons: record.dropdownEditItemList,
+                        additionalButtons: record.additionalButtons,
+                        additionalEditButtons: record.additionalEditButtons,
+                        executeAction: (action, data, event) => {record.executeAction(action, data, event)},
+                    },
+                    anchorNavItems: this.panelsList
                 }
-            }, this);
             });
 
             //

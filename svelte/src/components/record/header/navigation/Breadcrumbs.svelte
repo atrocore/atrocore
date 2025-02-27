@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {BreadcrumbsItem} from "../interfaces/BreadcrumbsItem";
+    import BreadcrumbsItem from "../interfaces/BreadcrumbsItem";
 
     export let items: BreadcrumbsItem[] = [];
     export let currentIsHeading: boolean = true;

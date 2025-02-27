@@ -8,14 +8,17 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-import BreadcrumbsItem from "./BreadcrumbsItem";
-import Permissions from "./Permissions";
-
-export default interface Params {
-    mode: string;
-    scope: string;
-    id: string;
-    breadcrumbs: BreadcrumbsItem[],
-    afterOnMount?: Function,
-    scopePermissions?: Permissions
+interface ActionButton {
+    id?: string;
+    name?: string;
+    action: string;
+    data?: object;
+    display?: string;
+    html?: string;
+    label?: string;
+    type?: string;
+    style?: string;
+    tooltip?: string;
+    callback?: (e: Event) => void;
+    hidden?: boolean;
 }
