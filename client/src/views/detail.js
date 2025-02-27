@@ -42,7 +42,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         optionsToPass: ['attributes', 'returnUrl', 'returnDispatchParams', 'rootUrl'],
 
-        headerView: 'views/header',
+        headerView: 'views/detail-header',
 
         recordView: 'views/record/detail',
 
@@ -65,6 +65,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         treeAllowed: false,
 
         sideAllowed: true,
+
+        panelsList: [],
 
         navigationButtons: {
             previous: {
@@ -581,7 +583,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             this.treeAllowed = !o.isWide && this.isTreeAllowed();
 
             this.createView('record', this.getRecordViewName(), o, view => {
-
+                this.listenTo(view, 'detailPanelsLoaded', data => {
+                    window.dispatchEvent(new CustomEvent('detailPanelsLoaded', { list: data.list }));
+                });
             });
         },
 

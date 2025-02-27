@@ -149,19 +149,15 @@ Espo.define('views/main', 'view', function (Dep) {
 
             if (isAdmin) {
                 a.unshift(`<a href='#Admin' class="action">${this.getLanguage().translate('Administration', 'labels')}</a>`);
-            } else {
-                a.unshift(`<a href='#' class="action">${this.getLanguage().translate('Dashboard', 'labels')}</a>`);
             }
 
             arr.forEach(function (item, index) {
                 if (index !== arr.length - 1) {
                     a.push('<span class="subsection">' + item + '</span>');
-                } else {
-                    a.push('<span>' + item + '</span>');
                 }
             }, this);
 
-            return '<div class="header-breadcrumbs fixed-header-breadcrumbs"><div class="breadcrumbs-wrapper">' + a.join('') + '</div></div><div class="header-title">' + arr.pop() + '</div>';
+            return '<div class="header-breadcrumbs fixed-header-breadcrumbs"><div class="breadcrumbs-wrapper">' + a.join('') + '<h3 class="header-title">' + arr.pop() + '</h3></div></div>';
         },
 
         getHeaderIconHtml: function () {
@@ -215,7 +211,7 @@ Espo.define('views/main', 'view', function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header').reRender();
+                this.getView('header')?.reRender();
             }
         },
 

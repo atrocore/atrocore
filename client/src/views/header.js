@@ -52,12 +52,7 @@ Espo.define('views/header', 'view', function (Dep) {
                 data.header = this.getParentView().getHeader();
             }
             data.scope = this.scope || this.getParentView().scope;
-            data.items = this.getItems();
             data.isXsSingleRow = this.options.isXsSingleRow;
-
-            if ((data.items.buttons || []).length < 2) {
-                data.isHeaderAdditionalSpace = true;
-            }
 
             return data;
         },
@@ -74,13 +69,19 @@ Espo.define('views/header', 'view', function (Dep) {
         },
 
         afterRender: function () {
-
+            this.createView('headerButtons', 'views/record/header-buttons', {
+                el: this.options.el + ' .header-buttons-container',
+                model: this.model,
+                items: this.getItems()
+            }, view => view.render());
         },
 
         getItems: function () {
-            var items = this.getParentView().getMenu() || {};
+            return this.getParentView().getMenu() || {};
+        },
 
-            return items;
+        reloadButtons: function () {
+            this.getView('headerButtons').setItems(this.getItems());
         },
 
     });

@@ -1962,55 +1962,57 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         createPanelNavigationView(panelList) {
-            let el = this.options.el || '#' + (this.id);
-            this.createView('panelDetailNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .panel-navigation.panel-left',
-            }, (view) => {
-                this.listenTo(this, 'after:set-detail-mode', () => {
-                    view.reRender();
-                });
+            // window.dispatchEvent(new CustomEvent('detailPanelsLoaded', { list: panelList }));
 
-                this.listenTo(view, 'after:render', () => {
-                    if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
-                        this.getAcl().check('LayoutProfile', 'read')
-                        && this.mode !== 'edit'
-                    ) {
-                        var bottomView = this.getView('bottom');
-                        this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
-                            scope: this.scope,
-                            viewType: 'relationships',
-                            layoutData: bottomView.layoutData,
-                            linkClass: 'btn',
-                            el: el + ' .panel-navigation.panel-left .layout-editor-container',
-                        }, (view) => {
-                            view.on("refresh", () => {
-                                this.createBottomView(view => {
-                                    view.render()
-                                })
-                            })
-                            view.render()
-                        })
-                    }
-                })
-
-                view.render();
-
-            });
-
-            this.createView('panelEditNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .panel-navigation.panel-right',
-            }, function (view) {
-                this.listenTo(this, 'after:set-edit-mode', () => {
-                    view.reRender();
-                });
-                view.render();
-            });
+            // let el = '#main .detail-page-header';
+            // this.createView('panelDetailNavigation', this.panelNavigationView, {
+            //     panelList: panelList,
+            //     model: this.model,
+            //     scope: this.scope,
+            //     el: el + ' .panel-navigation.panel-left',
+            // }, (view) => {
+            //     this.listenTo(this, 'after:set-detail-mode', () => {
+            //         view.reRender();
+            //     });
+            //
+            //     this.listenTo(view, 'after:render', () => {
+            //         if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
+            //             this.getAcl().check('LayoutProfile', 'read')
+            //             && this.mode !== 'edit'
+            //         ) {
+            //             var bottomView = this.getView('bottom');
+            //             this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
+            //                 scope: this.scope,
+            //                 viewType: 'relationships',
+            //                 layoutData: bottomView.layoutData,
+            //                 linkClass: 'btn',
+            //                 el: el + ' .panel-navigation.panel-left .layout-editor-container',
+            //             }, (view) => {
+            //                 view.on("refresh", () => {
+            //                     this.createBottomView(view => {
+            //                         view.render()
+            //                     })
+            //                 })
+            //                 view.render()
+            //             })
+            //         }
+            //     })
+            //
+            //     view.render();
+            //
+            // });
+            //
+            // this.createView('panelEditNavigation', this.panelNavigationView, {
+            //     panelList: panelList,
+            //     model: this.model,
+            //     scope: this.scope,
+            //     el: el + ' .panel-navigation.panel-right',
+            // }, function (view) {
+            //     this.listenTo(this, 'after:set-edit-mode', () => {
+            //         view.reRender();
+            //     });
+            //     view.render();
+            // });
 
 
         },
