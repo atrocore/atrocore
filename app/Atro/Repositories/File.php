@@ -168,7 +168,7 @@ class File extends Base
         $this->removeItem($entity);
 
         $storage = $this->getStorage($entity);
-        if ($storage instanceof HasBasketInterface) {
+        if (empty($entity->get('hidden')) && $storage instanceof HasBasketInterface) {
             if (!$storage->deleteFile($entity)) {
                 throw new BadRequest($this->getInjection('language')->translate('fileDeleteFailed', 'exceptions', 'File'));
             }
