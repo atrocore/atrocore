@@ -22,8 +22,6 @@ use Espo\ORM\Entity;
 
 class User extends Record
 {
-    const PASSWORD_CHANGE_REQUEST_LIFETIME = 360; // minutes
-
     protected $internalAttributeList = ['password'];
 
     protected $mandatorySelectAttributeList = [
