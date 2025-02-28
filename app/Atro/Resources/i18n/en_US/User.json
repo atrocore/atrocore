@@ -49,7 +49,9 @@
     "Password Change Request": "Password Change Request",
     "Email Address": "Email Address",
     "External Accounts": "External Accounts",
-    "Email Accounts": "Email Accounts"
+    "Email Accounts": "Email Accounts",
+    "Preferences": "Preferences",
+    "Notifications": "Notifications"
   },
   "tooltips": {
     "defaultTeam": "All records created by this user will be related to this team by default.",
@@ -57,7 +59,8 @@
     "isAdmin": "Admin user can access everything.",
     "isActive": "If unchecked then user won't be able to login.",
     "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
-    "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user."
+    "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
+    "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user."
   },
   "messages": {
     "accountInfoEmailSubject": "AtroCore User Access Info",
