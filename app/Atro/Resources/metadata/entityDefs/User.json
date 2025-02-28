@@ -231,7 +231,8 @@
       "type": "bool"
     },
     "notificationProfile": {
-      "type": "link"
+      "type": "link",
+      "view": "views/user-profile/fields/notification-profile"
     },
     "favoritesList": {
       "type": "array",
