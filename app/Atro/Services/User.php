@@ -26,19 +26,6 @@ class User extends Record
 
     protected $internalAttributeList = ['password'];
 
-    protected $nonAdminReadOnlyAttributeList = [
-        'userName',
-        'isActive',
-        'isAdmin',
-        'teamsIds',
-        'teamsColumns',
-        'teamsNames',
-        'rolesIds',
-        'rolesNames',
-        'password',
-        'accountId'
-    ];
-
     protected $mandatorySelectAttributeList = [
         'isActive',
         'userName',
@@ -65,16 +52,15 @@ class User extends Record
     public function findEntities($params)
     {
         if (empty($params['where'])) {
-            $params['where'] = array();
+            $params['where'] = [];
         }
-        $params['where'][] = array(
+        $params['where'][] = [
             'type'  => 'notEquals',
             'field' => 'id',
             'value' => 'system'
-        );
+        ];
 
-        $result = parent::findEntities($params);
-        return $result;
+        return parent::findEntities($params);
     }
 
     private function isValidPassword(string $password): bool
@@ -110,8 +96,7 @@ class User extends Record
             throw new NotFound();
         }
 
-        if ($this->getUser()->id != $userId && !$this->getAcl()->check($user,
-                'edit') && $this->getUser()->id != 'system') {
+        if ($this->getUser()->id != $userId && !$this->getAcl()->check($user, 'edit')) {
             throw new Forbidden();
         }
 
@@ -151,10 +136,12 @@ class User extends Record
 
     public function passwordChangeRequest($userName, $emailAddress, $url = null, $isResetAction = false)
     {
-        $user = $this->getEntityManager()->getRepository('User')->where(array(
-            'userName'     => $userName,
-            'emailAddress' => $emailAddress
-        ))->findOne();
+        $user = $this->getEntityManager()->getRepository('User')
+            ->where([
+                'userName'     => $userName,
+                'emailAddress' => $emailAddress
+            ])
+            ->findOne();
 
         if (empty($user)) {
             throw new NotFound();
@@ -166,9 +153,10 @@ class User extends Record
 
         $userId = $user->id;
 
-        $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
-            'userId' => $userId
-        ))->findOne();
+        $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')
+            ->where(['userId' => $userId])
+            ->findOne();
+
         if ($passwordChangeRequest) {
             throw new Forbidden();
         }
@@ -176,11 +164,11 @@ class User extends Record
         $requestId = Util::generateId();
 
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
-        $passwordChangeRequest->set(array(
+        $passwordChangeRequest->set([
             'userId'    => $userId,
             'requestId' => $requestId,
             'url'       => $url
-        ));
+        ]);
 
         $this->sendChangePasswordLink($requestId, $emailAddress, null, $isResetAction);
 
@@ -190,36 +178,6 @@ class User extends Record
             throw new Error();
         }
 
-        $dt = new \DateTime();
-        $dt->add(new \DateInterval('PT' . self::PASSWORD_CHANGE_REQUEST_LIFETIME . 'M'));
-
-        $job = $this->getEntityManager()->getEntity('Job');
-
-        $job->set(array(
-            'serviceName' => 'User',
-            'methodName'  => 'removeChangePasswordRequestJob',
-            'data'        => [
-                'id' => $passwordChangeRequest->id
-            ],
-            'executeTime' => $dt->format('Y-m-d H:i:s')
-        ));
-
-        $this->getEntityManager()->saveEntity($job);
-
-        return true;
-    }
-
-    public function removeChangePasswordRequestJob($data)
-    {
-        if (empty($data->id)) {
-            return;
-        }
-        $id = $data->id;
-
-        $p = $this->getEntityManager()->getEntity('PasswordChangeRequest', $id);
-        if ($p) {
-            $this->getEntityManager()->removeEntity($p);
-        }
         return true;
     }
 
@@ -229,20 +187,6 @@ class User extends Record
         $passwordHash = new \Espo\Core\Utils\PasswordHash($config);
 
         return $passwordHash->hash($password);
-    }
-
-    protected function filterInput($data, string $id = null)
-    {
-        parent::filterInput($data);
-
-        if (!$this->getUser()->isAdmin()) {
-            foreach ($this->nonAdminReadOnlyAttributeList as $attribute) {
-                unset($data->$attribute);
-            }
-            if (!$this->getAcl()->checkScope('Team')) {
-                unset($data->defaultTeamId);
-            }
-        }
     }
 
     public function createEntity($attachment)
@@ -280,14 +224,6 @@ class User extends Record
         }
 
         return parent::updateEntity($id, $data);
-    }
-
-    protected function getInternalUserCount()
-    {
-        return $this->getEntityManager()->getRepository('User')->where(array(
-            'isActive' => true,
-            'id!='     => 'system'
-        ))->count();
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
@@ -440,9 +376,13 @@ class User extends Record
             return;
         }
 
-        $authToken = $this->getEntityManager()->getRepository('AuthToken')->select(['id', 'lastAccess'])->where([
-            'userId' => $entity->id
-        ])->order('lastAccess', true)->findOne();
+        $authToken = $this->getEntityManager()->getRepository('AuthToken')
+            ->select(['id', 'lastAccess'])
+            ->where([
+                'userId' => $entity->id
+            ])
+            ->order('lastAccess', true)
+            ->findOne();
 
         $lastAccess = null;
 
@@ -469,7 +409,10 @@ class User extends Record
         }
 
         $authLogRecord = $this->getEntityManager()->getRepository('AuthLogRecord')
-            ->select(['id', 'createdAt'])->where($where)->order('requestTime', true)->findOne();
+            ->select(['id', 'createdAt'])
+            ->where($where)
+            ->order('requestTime', true)
+            ->findOne();
 
         if ($authLogRecord) {
             $lastAccess = $authLogRecord->get('createdAt');
