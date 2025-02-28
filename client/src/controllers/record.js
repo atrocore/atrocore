@@ -62,22 +62,13 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
         },
 
         getDefaultTabIcon() {
-            let firstLetter = this.name.match(/\p{L}/u)?.[0] || "A",
-                referenceData = this.getConfig().get('referenceData'),
-                icon = this.getMetadata().get(['clientDefs', this.name, 'iconClass']) || null;
+            let icon = this.getMetadata().get(['clientDefs', this.name, 'iconClass']) || null;
 
-            if (!icon && referenceData['SystemIcon']) {
-                let key = 'letter_' + firstLetter.toLowerCase();
+            if (!icon) {
+                let firstLetter = this.name.match(/\p{L}/u)?.[0] || "A",
+                    key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
 
-                if (key in referenceData['SystemIcon']) {
-                    let item = referenceData['SystemIcon'][key];
-
-                    if ('imagePathsData' in item && 'thumbnails' in item['imagePathsData']) {
-                        for (let size in item['imagePathsData']['thumbnails']) {
-                            return item['imagePathsData']['thumbnails'][size];
-                        }
-                    }
-                }
+                return 'client/img/icons/default/' + key;
             }
 
             return Dep.prototype.getDefaultTabIcon.call(this);

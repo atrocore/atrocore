@@ -23,7 +23,7 @@ class Background extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        $this->getDataManager()->clearCache();
+        $this->getDataManager()->clearCache(true);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

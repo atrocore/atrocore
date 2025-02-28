@@ -162,7 +162,7 @@ class V1Dot13Dot18 extends Base
         return implode(DIRECTORY_SEPARATOR, $path);
     }
 
-    protected static function getDefaultIcons(): array
+    public static function getDefaultIcons(): array
     {
         return [
             [

@@ -55,7 +55,7 @@ class UserProfile extends AbstractController
             }
         }
 
-        return $res;
+        return $this->prepareUserProfileData($res);
     }
 
     public function actionPatch($params, $data, $request)
@@ -89,7 +89,7 @@ class UserProfile extends AbstractController
 
         $GLOBALS['updatingUserProfile'] = true;
         if ($entity = $this->getServiceFactory()->create('User')->updateEntity($id, $data)) {
-            return $entity->getValueMap();
+            return $this->prepareUserProfileData($entity->getValueMap());
         }
 
         throw new Error();
@@ -152,4 +152,13 @@ class UserProfile extends AbstractController
         }
     }
 
+    protected function prepareUserProfileData($data)
+    {
+        if (is_array($data)) {
+            $data = json_decode(json_encode($data));
+        }
+        $this->getService('App')->prepareLayoutProfileData($data);
+
+        return $data;
+    }
 }

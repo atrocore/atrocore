@@ -24159,6 +24159,7 @@ span[data-img-src]::after {
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) > a.nav-link {
     width: 100%;
     display: flex;
+    align-items: center;
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more):not(.active):hover > a.nav-link {
@@ -24254,6 +24255,7 @@ span[data-img-src]::after {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 20px;
 }
 
 .favorites-wrapper > ul.favorites-items .favorite {
