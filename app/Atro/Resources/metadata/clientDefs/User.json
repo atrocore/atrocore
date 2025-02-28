@@ -56,15 +56,6 @@
       "avatar"
     ]
   },
-  "filterList": [
-    "active"
-  ],
-  "boolFilterList": [
-    "onlyMyTeam"
-  ],
-  "selectDefaultFilters": {
-    "filter": "active"
-  },
   "iconClass": "fas fa-user-circle",
   "dynamicLogic": {
     "fields": {
