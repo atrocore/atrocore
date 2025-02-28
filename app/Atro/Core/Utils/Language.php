@@ -307,12 +307,14 @@ class Language
         }
 
         foreach ($fullData as $i18nName => $i18nData) {
+            $i18nData['UserProfile'] = $i18nData['User'];
             $this->data[$i18nName] = $i18nData;
         }
 
         if ($installed) {
-            $this->data = $this->getEventManager()->dispatch('Language', 'modify',
-                new Event(['data' => $this->data]))->getArgument('data');
+            $this->data = $this->getEventManager()
+                ->dispatch('Language', 'modify', new Event(['data' => $this->data]))
+                ->getArgument('data');
         }
     }
 

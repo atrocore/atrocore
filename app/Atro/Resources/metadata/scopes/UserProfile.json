@@ -4,7 +4,21 @@
   "object": true,
   "layouts": true,
   "tab": false,
-  "acl": false,
+  "acl": true,
+  "aclActionList": [
+    "read",
+    "edit"
+  ],
+  "aclActionLevelListMap": {
+    "read": [
+      "own",
+      "no"
+    ],
+    "edit": [
+      "own",
+      "no"
+    ]
+  },
   "customizable": false,
   "importable": false,
   "streamDisabled": true,

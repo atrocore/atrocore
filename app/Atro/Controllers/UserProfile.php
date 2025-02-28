@@ -65,6 +65,10 @@ class UserProfile extends AbstractController
 
     public function actionUpdate($params, $data, $request)
     {
+        echo '<pre>';
+        print_r('actionUpdate');
+        die();
+
         if (!$request->isPut() && !$request->isPatch()) {
             throw new BadRequest();
         }

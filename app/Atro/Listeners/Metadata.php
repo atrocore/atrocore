@@ -30,6 +30,7 @@ class Metadata extends AbstractListener
         $data = $event->getArgument('data');
 
         $this->addFollowersField($data);
+        $this->prepareUserProfile($data);
 
         $event->setArgument('data', $data);
     }
@@ -96,6 +97,53 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareUserProfile(array &$data): void
+    {
+        $data['entityDefs']['UserProfile'] = $data['entityDefs']['User'];
+
+        foreach ($data['entityDefs']['UserProfile']['fields'] as $field => $defs) {
+            if (in_array($defs['type'], ['link', 'linkMultiple'])) {
+                $data['entityDefs']['UserProfile']['fields'][$field]['entity'] = $data['entityDefs']['UserProfile']['links'][$field]['entity'];
+            }
+            if (strpos($field, 'followed') !== false && $defs['type'] === 'linkMultiple') {
+                unset($data['entityDefs']['UserProfile']['fields'][$field]);
+            }
+        }
+
+        $systemFields = [
+            'type',
+            'password',
+            'passwordConfirm',
+            'token',
+            'authTokenId',
+            'authLogRecordId',
+            'ipAddress',
+            'defaultTeam',
+            'acceptanceStatus',
+            'sendAccessInfo',
+            'localeId',
+            'styleId'
+        ];
+
+        foreach ($systemFields as $field) {
+            unset($data['entityDefs']['UserProfile']['fields'][$field]);
+        }
+
+        unset($data['entityDefs']['UserProfile']['links']);
+        unset($data['entityDefs']['UserProfile']['collection']);
+
+        $data['entityDefs']['UserProfile']['fields']['locale'] = [
+            'type'   => 'link',
+            'entity' => 'Locale'
+        ];
+
+        $data['entityDefs']['UserProfile']['fields']['style'] = [
+            'type'   => 'link',
+            'entity' => 'Style',
+            'view'   => 'views/user-profile/fields/style'
+        ];
     }
 
     protected function addFollowersField(array &$data): void
