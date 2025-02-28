@@ -56,16 +56,18 @@ class Note
     {
         $this->handleRelationEntity($entity, 'Unrelate');
 
-        $conn = $this->getEntityManager()->getConnection();
-        $conn->createQueryBuilder()
-            ->update($conn->quoteIdentifier('note'))
-            ->set('deleted', ':deleted')
-            ->where("parent_type = :entityType")
-            ->andWhere("parent_id = :entityId")
-            ->setParameter('entityId', $entity->id)
-            ->setParameter('entityType', $entity->getEntityType())
-            ->setParameter('deleted', true, ParameterType::BOOLEAN)
-            ->executeQuery();
+        if ($this->streamEnabled($entity->getEntityType())) {
+            $conn = $this->getEntityManager()->getConnection();
+            $conn->createQueryBuilder()
+                ->update($conn->quoteIdentifier('note'))
+                ->set('deleted', ':deleted')
+                ->where("parent_type = :entityType")
+                ->andWhere("parent_id = :entityId")
+                ->setParameter('entityId', $entity->id)
+                ->setParameter('entityType', $entity->getEntityType())
+                ->setParameter('deleted', true, ParameterType::BOOLEAN)
+                ->executeQuery();
+        }
     }
 
     public function streamEnabled(string $entityType): bool
@@ -334,21 +336,26 @@ class Note
             return;
         }
 
-        $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
-            'entityId'    => $entity->id,
-            'entityType'  => $entity->getEntityType(),
-            'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
-            'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2'],
-            'link'        => $this->relationEntityData[$entity->getEntityType()]['link1']
-        ]);
+        if ($this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity1'])) {
+            $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
+                'entityId'    => $entity->id,
+                'entityType'  => $entity->getEntityType(),
+                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2'],
+                'link'        => $this->relationEntityData[$entity->getEntityType()]['link1']
+            ]);
+        }
 
-        $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
-            'entityId'    => $entity->id,
-            'entityType'  => $entity->getEntityType(),
-            'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
-            'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1'],
-            'link'        => $this->relationEntityData[$entity->getEntityType()]['link2']
-        ]);
+        if ($this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity2'])) {
+            $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
+                'entityId'    => $entity->id,
+                'entityType'  => $entity->getEntityType(),
+                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1'],
+                'link'        => $this->relationEntityData[$entity->getEntityType()]['link2']
+            ]);
+        }
+
     }
 
     protected function isFollowCreatedEntities(): bool
