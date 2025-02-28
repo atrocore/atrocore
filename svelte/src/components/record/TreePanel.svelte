@@ -244,7 +244,7 @@
             }
             if (mode === 'detail') {
                 if (model && ['_self', '_bookmark'].includes(activeItem.name)) {
-                    selectTreeNode(model.get('id'), Object.keys(model.get('hierarchyRoute')).reverse())
+                    selectTreeNode(model.get('id'), Object.keys(model.get('hierarchyRoute') ?? []).reverse())
                 } else if (Storage.get('selectedNodeId', scope)) {
                     selectTreeNode(Storage.get('selectedNodeId', scope), parseRoute(Storage.get('selectedNodeRoute', scope)))
                 }
