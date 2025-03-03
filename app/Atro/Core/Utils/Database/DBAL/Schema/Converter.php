@@ -60,6 +60,9 @@ class Converter
         $ormMetadata['ActionHistoryRecord']['fields']['targetType']['len'] = 60;
         $ormMetadata['ActionHistoryRecord']['fields']['targetId']['len'] = 62;
 
+        // UserProfile is the virtual entity and should not have the db table
+        unset($ormMetadata['UserProfile']);
+
         $indexList = $this->getIndexList($ormMetadata);
 
         $schema = new Schema();

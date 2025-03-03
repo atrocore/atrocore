@@ -11,16 +11,44 @@
 
 namespace Atro\Repositories;
 
-use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityManager;
+use Atro\Core\Exceptions\Forbidden;
+use Espo\ORM\Entity;
 
 class UserProfile extends User
 {
-    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
+    protected function getEntityById($id)
     {
-        parent::__construct($entityType, $entityManager, $entityFactory);
+        $params = [];
+        $this->handleSelectParams($params);
 
-        $this->entityType = 'User';
-        $this->entityName = 'User';
+        $user = $this->getMapper()->selectById($this->entityFactory->create('User'), $id, $params);
+
+        $entity = $this->entityFactory->create($this->entityType);
+        $entity->set($user->toArray());
+
+        return $entity;
+    }
+
+    protected function insertEntity(Entity $entity, bool $ignoreDuplicate): bool
+    {
+        throw new Forbidden();
+    }
+
+    protected function updateEntity(Entity $entity): bool
+    {
+        $user = $this->entityFactory->create('User');
+        $user->set($entity->toArray());
+
+        return $this->getMapper()->update($user);
+    }
+
+    protected function deleteEntity(Entity $entity): bool
+    {
+        throw new Forbidden();
+    }
+
+    public function deleteFromDb(string $id): bool
+    {
+        throw new Forbidden();
     }
 }

@@ -25,6 +25,5 @@
   "notificationDisabled": true,
   "bookmarkDisabled": true,
   "leftSidebarDisabled": true,
-  "notStorable": true,
   "emHidden": true
 }
