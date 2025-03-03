@@ -14,55 +14,22 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 
-class UserProfile extends AbstractController
+class UserProfile extends AbstractRecordController
 {
-    public function actionRead($params, $data, $request)
-    {
-        $id = $params['id'] ?? $this->getUser()->get('id');
-        $entity = $this->getRecordService()->readEntity($id);
-
-        if (empty($entity)) {
-            throw new NotFound();
-        }
-
-        return $entity->getValueMap();
-    }
-
-    public function actionPatch($params, $data, $request)
-    {
-        return $this->actionUpdate($params, $data, $request);
-    }
-
-    public function actionUpdate($params, $data, $request)
-    {
-        if (!$request->isPut() && !$request->isPatch()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $id = $params['id'] ?? $this->getUser()->get('id');
-
-        if ($entity = $this->getRecordService()->updateEntity($id, $data)) {
-            return $entity->getValueMap();
-        }
-
-        throw new Error();
-    }
-
     public function postActionResetDashboard($params, $data, $request)
     {
         if (empty($data->id)) {
             throw new BadRequest();
         }
 
-        $this->handleUserAccess($data->id);
+        if (!$this->getUser()->isAdmin()) {
+            if ($this->getUser()->id != $data->id) {
+                throw new Forbidden();
+            }
+        }
 
         $user = $this->getEntityManager()->getEntity('User', $data->id);
         if (empty($user)) {
@@ -89,42 +56,83 @@ class UserProfile extends AbstractController
         ];
     }
 
-    public function getUserProfileFields(): array
+    public function actionCreate($params, $data, $request)
     {
-        $fields = ['id'];
-        foreach ($this->getMetadata()->get('entityDefs.UserProfile.fields', []) as $field => $fieldDefs) {
-            if ($fieldDefs['type'] === 'link' || $fieldDefs['type'] === 'file') {
-                $fields[] = "{$field}Id";
-                $fields[] = "{$field}Name";
-            } else {
-                $fields[] = $field;
-            }
-        }
-
-        return $fields;
+        throw new NotFound();
     }
 
-    protected function handleUserAccess(string $userId): void
+    public function actionList($params, $data, $request)
     {
-        if (!$this->getUser()->isAdmin()) {
-            if ($this->getUser()->id != $userId) {
-                throw new Forbidden();
-            }
-        }
+        throw new NotFound();
     }
 
-    protected function prepareUserProfileData($data)
+    public function getActionListKanban($params, $data, $request)
     {
-        if (is_array($data)) {
-            $data = json_decode(json_encode($data));
-        }
-        $this->getService('App')->prepareLayoutProfileData($data);
-
-        return $data;
+        throw new NotFound();
     }
 
-    protected function getRecordService()
+    public function actionDelete($params, $data, $request)
     {
-        return $this->getServiceFactory()->create('UserProfile');
+        throw new NotFound();
+    }
+
+    public function actionMassUpdate($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function actionMassDelete($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function actionRestore($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function actionMassRestore($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function actionCreateLink($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function actionRemoveLink($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function actionUnlinkAll($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function actionFollow($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function postActionMassFollow($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function postActionMassUnfollow($params, $data, $request)
+    {
+        throw new NotFound();
+    }
+
+    public function actionTree($params, $data, $request): array
+    {
+        throw new NotFound();
+    }
+
+    public function actionSeed($params, $data, $request)
+    {
+        throw new NotFound();
     }
 }

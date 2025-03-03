@@ -29,6 +29,22 @@ class UserProfile extends User
         return $entity;
     }
 
+    public function findRelated(Entity $entity, $relationName, array $params = [])
+    {
+        $user = $this->entityFactory->create('User');
+        $user->set($entity->toArray());
+
+        return parent::findRelated($user, $relationName, $params);
+    }
+
+    public function countRelated(Entity $entity, $relationName, array $params = [])
+    {
+        $user = $this->entityFactory->create('User');
+        $user->set($entity->toArray());
+
+        return parent::countRelated($user, $relationName, $params);
+    }
+
     protected function insertEntity(Entity $entity, bool $ignoreDuplicate): bool
     {
         throw new Forbidden();
