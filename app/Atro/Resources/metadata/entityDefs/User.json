@@ -175,9 +175,29 @@
       "type": "varchar",
       "len": 36
     },
+    "localeName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
     "styleId": {
       "type": "varchar",
       "len": 36
+    },
+    "styleName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "dashboardLayout": {
       "type": "jsonArray",
@@ -233,6 +253,26 @@
     "notificationProfile": {
       "type": "link",
       "view": "views/user-profile/fields/notification-profile"
+    },
+    "lpNavigation": {
+      "type": "array",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
+    "hideShowFullList": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "favoritesList": {
       "type": "array",

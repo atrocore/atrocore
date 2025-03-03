@@ -124,7 +124,9 @@ class Metadata extends AbstractListener
             'acceptanceStatus',
             'sendAccessInfo',
             'localeId',
-            'styleId'
+            'localeName',
+            'styleId',
+            'styleName'
         ];
 
         foreach ($systemFields as $field) {
