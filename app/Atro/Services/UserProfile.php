@@ -19,20 +19,6 @@ class UserProfile extends User
     {
         parent::prepareEntityForOutput($entity);
 
-        if (!empty($entity->get('localeId'))) {
-            $locale = $this->getEntityManager()->getRepository('Locale')->get($entity->get('localeId'));
-            if (!empty($locale)) {
-                $entity->set('localeName', $locale->get('name'));
-            }
-        }
-
-        if (!empty($entity->get('styleId'))) {
-            $style = $this->getEntityManager()->getRepository('Style')->get($entity->get('styleId'));
-            if (!empty($style)) {
-                $entity->set('styleName', $style->get('name'));
-            }
-        }
-
         $this->prepareLayoutProfileData($entity);
     }
 

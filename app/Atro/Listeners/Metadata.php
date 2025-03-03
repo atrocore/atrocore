@@ -104,7 +104,7 @@ class Metadata extends AbstractListener
         $data['entityDefs']['UserProfile'] = $data['entityDefs']['User'];
 
         foreach ($data['entityDefs']['UserProfile']['fields'] as $field => $defs) {
-            if (in_array($defs['type'], ['link', 'linkMultiple'])) {
+            if (in_array($defs['type'], ['link', 'linkMultiple']) && !empty($data['entityDefs']['UserProfile']['links'][$field]['entity'])) {
                 $data['entityDefs']['UserProfile']['fields'][$field]['entity'] = $data['entityDefs']['UserProfile']['links'][$field]['entity'];
             }
             if (strpos($field, 'followed') !== false && $defs['type'] === 'linkMultiple') {
@@ -122,11 +122,7 @@ class Metadata extends AbstractListener
             'ipAddress',
             'defaultTeam',
             'acceptanceStatus',
-            'sendAccessInfo',
-            'localeId',
-            'localeName',
-            'styleId',
-            'styleName'
+            'sendAccessInfo'
         ];
 
         foreach ($systemFields as $field) {
@@ -135,17 +131,6 @@ class Metadata extends AbstractListener
 
         unset($data['entityDefs']['UserProfile']['links']);
         unset($data['entityDefs']['UserProfile']['collection']);
-
-        $data['entityDefs']['UserProfile']['fields']['locale'] = [
-            'type'   => 'link',
-            'entity' => 'Locale'
-        ];
-
-        $data['entityDefs']['UserProfile']['fields']['style'] = [
-            'type'   => 'link',
-            'entity' => 'Style',
-            'view'   => 'views/user-profile/fields/style'
-        ];
     }
 
     protected function addFollowersField(array &$data): void

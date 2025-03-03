@@ -38,6 +38,25 @@ class User extends Record
         )
     );
 
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if (!empty($entity->get('localeId'))) {
+            $locale = $this->getEntityManager()->getRepository('Locale')->get($entity->get('localeId'));
+            if (!empty($locale)) {
+                $entity->set('localeName', $locale->get('name'));
+            }
+        }
+
+        if (!empty($entity->get('styleId'))) {
+            $style = $this->getEntityManager()->getRepository('Style')->get($entity->get('styleId'));
+            if (!empty($style)) {
+                $entity->set('styleName', $style->get('name'));
+            }
+        }
+    }
+
     public function getEntity($id = null)
     {
         if (isset($id) && $id == 'system') {

@@ -171,33 +171,14 @@
       "type": "link",
       "view": "views/user/fields/layout-profile"
     },
-    "localeId": {
-      "type": "varchar",
-      "len": 36
+    "locale": {
+      "type": "link",
+      "entity": "Locale"
     },
-    "localeName": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true
-    },
-    "styleId": {
-      "type": "varchar",
-      "len": 36
-    },
-    "styleName": {
-      "type": "varchar",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true
+    "style": {
+      "type": "link",
+      "entity": "Style",
+      "view": "views/user-profile/fields/style"
     },
     "dashboardLayout": {
       "type": "jsonArray",
