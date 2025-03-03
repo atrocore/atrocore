@@ -57,10 +57,12 @@ class User extends RDB
                     throw new Error();
                 }
 
-                $user = $this->where(array(
-                    'userName' => $userName,
-                    'id!='     => $entity->id
-                ))->findOne();
+                $user = $this->getEntityManager()->getRepository('User')
+                    ->where([
+                        'userName' => $userName,
+                        'id!='     => $entity->id
+                    ])
+                    ->findOne();
                 if ($user) {
                     throw new BadRequest($this->getLanguage()->translate('userNameExists', 'messages', 'User'));
                 }
