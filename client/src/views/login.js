@@ -109,8 +109,6 @@ Espo.define('views/login', 'view', function (Dep) {
 
         data: function () {
             return {
-                locales: this.getLocales(),
-                themes: this.getThemes(),
                 logoSrc: this.getLogoSrc()
             };
         },
@@ -121,43 +119,6 @@ Espo.define('views/login', 'view', function (Dep) {
                 return this.getBasePath() + 'client/modules/treo-core/img/core_logo_dark.svg';
             }
             return this.getBasePath() + '?entryPoint=LogoImage&id=' + companyLogoId + '&t=' + companyLogoId;
-        },
-
-        getLocales() {
-            let result = [];
-            $.each((this.getConfig().get('locales') || {}), (id, locale) => {
-                result.push({
-                    value: id,
-                    label: locale.name,
-                    language: locale.language,
-                    selected: id === this.localeId
-                });
-            });
-
-            result.unshift({
-                value: 'default',
-                label: this.translate('Default', 'labels', 'Global'),
-                language: this.getConfig().get('language'),
-                selected: 'default' === this.localeId,
-            });
-
-            return result;
-        },
-
-        getThemes() {
-            let themes = Object.keys(this.getConfig().get('themes') || {}).map(theme => {
-                return {
-                    name: theme,
-                    label: this.translate(theme, 'themes', 'Global')
-                }
-            });
-
-            themes.unshift({
-                name: this.theme,
-                label: this.translate('Default', 'labels', 'Global')
-            });
-
-            return themes;
         },
 
         login: function () {
@@ -205,30 +166,6 @@ Espo.define('views/login', 'view', function (Dep) {
                     window.SvelteUserData.set(data);
                     window.SvelteNotifier.setNotifier(Espo.Ui);
 
-                    let localeId = $("#locale option:selected").val();
-
-                    let requestData = {};
-                    requestData['locale'] = localeId === 'default' ? (data.preferences?.locale ?? null) : localeId;
-                    requestData['localeId'] = requestData['locale'];
-
-                    if (this.theme !== 'default' && data.preferences.theme !== this.theme) {
-                        requestData['theme'] = this.theme;
-                    }
-
-                    const response = $.ajax({
-                        url: 'UserProfile/' + data.user.id,
-                        method: 'PUT',
-                        headers: {
-                            'Authorization-Token': Base64.encode(userName + ':' + data.token)
-                        },
-                        data: JSON.stringify(requestData),
-                        async: false
-                    });
-
-                    if (response && response.responseJSON) {
-                        data.preferences = response.responseJSON
-                    }
-
                     this.trigger('login', {
                         auth: {
                             userName: userName,
@@ -245,12 +182,6 @@ Espo.define('views/login', 'view', function (Dep) {
                     $submit.removeClass('disabled').removeAttr('disabled');
                     if (xhr.status == 401) {
                         this.onWrong();
-                    }
-                    if (xhr.status === 304) {
-                        // do nothing
-                    }
-                    if (xhr.status === 403) {
-                        // do nothing
                     }
                 }.bind(this),
                 login: true,
