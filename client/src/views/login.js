@@ -246,6 +246,12 @@ Espo.define('views/login', 'view', function (Dep) {
                     if (xhr.status == 401) {
                         this.onWrong();
                     }
+                    if (xhr.status === 304) {
+                        // do nothing
+                    }
+                    if (xhr.status === 403) {
+                        // do nothing
+                    }
                 }.bind(this),
                 login: true,
             });
