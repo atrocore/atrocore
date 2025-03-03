@@ -45,9 +45,6 @@
         "read": "all",
         "edit": "no"
       },
-      "UserProfile": {
-        "edit": "own"
-      },
       "Locale": {
         "read": "all",
         "edit": "no"
@@ -66,9 +63,6 @@
       "User": {
         "read": "own",
         "edit": "no"
-      },
-      "UserProfile": {
-        "edit": "own"
       }
     },
     "fieldLevel": {
