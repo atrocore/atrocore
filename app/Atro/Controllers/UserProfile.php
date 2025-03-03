@@ -96,20 +96,20 @@ class UserProfile extends AbstractRecordController
         throw new NotFound();
     }
 
-    public function actionCreateLink($params, $data, $request)
-    {
-        throw new NotFound();
-    }
-
-    public function actionRemoveLink($params, $data, $request)
-    {
-        throw new NotFound();
-    }
-
-    public function actionUnlinkAll($params, $data, $request)
-    {
-        throw new NotFound();
-    }
+//    public function actionCreateLink($params, $data, $request)
+//    {
+//        throw new NotFound();
+//    }
+//
+//    public function actionRemoveLink($params, $data, $request)
+//    {
+//        throw new NotFound();
+//    }
+//
+//    public function actionUnlinkAll($params, $data, $request)
+//    {
+//        throw new NotFound();
+//    }
 
     public function actionFollow($params, $data, $request)
     {
