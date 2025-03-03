@@ -6,14 +6,9 @@
   "tab": false,
   "acl": true,
   "aclActionList": [
-    "read",
     "edit"
   ],
   "aclActionLevelListMap": {
-    "read": [
-      "own",
-      "no"
-    ],
     "edit": [
       "own",
       "no"

@@ -17,6 +17,16 @@ use Espo\ORM\Entity;
 
 class UserProfile extends Base
 {
+    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = [])
+    {
+        return true;
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, $data)
+    {
+        return $user->id === $entity->id;
+    }
+
     public function checkIsOwner(User $user, Entity $entity)
     {
         return $user->id === $entity->id;

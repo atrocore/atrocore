@@ -103,15 +103,6 @@ class Metadata extends AbstractListener
     {
         $data['entityDefs']['UserProfile'] = $data['entityDefs']['User'];
 
-//        foreach ($data['entityDefs']['UserProfile']['fields'] as $field => $defs) {
-//            if (in_array($defs['type'], ['link', 'linkMultiple']) && !empty($data['entityDefs']['UserProfile']['links'][$field]['entity'])) {
-//                $data['entityDefs']['UserProfile']['fields'][$field]['entity'] = $data['entityDefs']['UserProfile']['links'][$field]['entity'];
-//            }
-//            if (strpos($field, 'followed') !== false && $defs['type'] === 'linkMultiple') {
-//                unset($data['entityDefs']['UserProfile']['fields'][$field]);
-//            }
-//        }
-
         $systemFields = [
             'type',
             'password',
@@ -128,9 +119,6 @@ class Metadata extends AbstractListener
         foreach ($systemFields as $field) {
             unset($data['entityDefs']['UserProfile']['fields'][$field]);
         }
-
-//        unset($data['entityDefs']['UserProfile']['links']);
-//        unset($data['entityDefs']['UserProfile']['collection']);
     }
 
     protected function addFollowersField(array &$data): void

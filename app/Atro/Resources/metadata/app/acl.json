@@ -1,110 +1,116 @@
 {
-    "mandatory": {
-        "scopeLevel": {
-            "Note": {
-                "read": "own",
-                "edit": "own",
-                "delete": "own",
-                "create": "yes"
-            },
-            "Attachment": {
-                "read": "own",
-                "edit": "own",
-                "delete": "own",
-                "create": "yes"
-            },
-            "Notification": {
-                "read": "own",
-                "edit": "no",
-                "delete": "own",
-                "create": "no"
-            },
-            "ActionHistoryRecord": {
-                "read": "no",
-                "edit": "no",
-                "delete": "no",
-                "create": "no"
-            },
-            "Role": false
-        },
-        "fieldLevel": {
-        },
-        "scopeFieldLevel": {
-            "Attachment": {
-                "parent": false
-            },
-            "User": {
-                "password": false,
-                "passwordConfirm": false
-            }
-        }
+  "mandatory": {
+    "scopeLevel": {
+      "Note": {
+        "read": "own",
+        "edit": "own",
+        "delete": "own",
+        "create": "yes"
+      },
+      "Attachment": {
+        "read": "own",
+        "edit": "own",
+        "delete": "own",
+        "create": "yes"
+      },
+      "Notification": {
+        "read": "own",
+        "edit": "no",
+        "delete": "own",
+        "create": "no"
+      },
+      "ActionHistoryRecord": {
+        "read": "no",
+        "edit": "no",
+        "delete": "no",
+        "create": "no"
+      },
+      "Role": false
     },
-    "default": {
-        "scopeLevel": {
-            "User": {
-                "read": "all",
-                "edit": "no"
-            },
-            "Locale": {
-                "read": "all",
-                "edit": "no"
-            }
-        },
-        "fieldLevel": {
-        },
-        "scopeFieldLevel": {
-            "User": {
-                "gender": false
-            }
-        }
+    "fieldLevel": {
     },
-    "strictDefault": {
-        "scopeLevel": {
-            "User": {
-                "read": "own",
-                "edit": "no"
-            }
-        },
-        "fieldLevel": {
-        },
-        "scopeFieldLevel": {
-            "User": {
-                "gender": false
-            }
-        }
-    },
-    "valuePermissionList": [
-        "assignmentPermission",
-        "dataPrivacyPermission",
-        "styleControlPermission"
-    ],
-    "valuePermissionHighestLevels": {
-        "assignmentPermission": "all",
-        "dataPrivacyPermission": "yes",
-        "styleControlPermission": "yes"
-    },
-    "permissionsDefaults": {
-        "assignmentPermission": "all",
-        "dataPrivacyPermission": "no",
-        "styleControlPermission": "yes"
-    },
-    "permissionsStrictDefaults": {
-        "assignmentPermission": "all",
-        "dataPrivacyPermission": "no",
-        "styleControlPermission": "yes"
-    },
-    "scopeLevelTypesDefaults": {
-        "boolean": true,
-        "record": {
-            "read": "all",
-            "stream": "all",
-            "edit": "all",
-            "delete": "no",
-            "create": "yes"
-        }
-    },
-    "scopeLevelTypesStrictDefaults": {
-        "boolean": false,
-        "record": false
+    "scopeFieldLevel": {
+      "Attachment": {
+        "parent": false
+      },
+      "User": {
+        "password": false,
+        "passwordConfirm": false
+      }
     }
+  },
+  "default": {
+    "scopeLevel": {
+      "User": {
+        "read": "all",
+        "edit": "no"
+      },
+      "UserProfile": {
+        "edit": "own"
+      },
+      "Locale": {
+        "read": "all",
+        "edit": "no"
+      }
+    },
+    "fieldLevel": {
+    },
+    "scopeFieldLevel": {
+      "User": {
+        "gender": false
+      }
+    }
+  },
+  "strictDefault": {
+    "scopeLevel": {
+      "User": {
+        "read": "own",
+        "edit": "no"
+      },
+      "UserProfile": {
+        "edit": "own"
+      }
+    },
+    "fieldLevel": {
+    },
+    "scopeFieldLevel": {
+      "User": {
+        "gender": false
+      }
+    }
+  },
+  "valuePermissionList": [
+    "assignmentPermission",
+    "dataPrivacyPermission",
+    "styleControlPermission"
+  ],
+  "valuePermissionHighestLevels": {
+    "assignmentPermission": "all",
+    "dataPrivacyPermission": "yes",
+    "styleControlPermission": "yes"
+  },
+  "permissionsDefaults": {
+    "assignmentPermission": "all",
+    "dataPrivacyPermission": "no",
+    "styleControlPermission": "yes"
+  },
+  "permissionsStrictDefaults": {
+    "assignmentPermission": "all",
+    "dataPrivacyPermission": "no",
+    "styleControlPermission": "yes"
+  },
+  "scopeLevelTypesDefaults": {
+    "boolean": true,
+    "record": {
+      "read": "all",
+      "stream": "all",
+      "edit": "all",
+      "delete": "no",
+      "create": "yes"
+    }
+  },
+  "scopeLevelTypesStrictDefaults": {
+    "boolean": false,
+    "record": false
+  }
 }
