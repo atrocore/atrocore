@@ -29,20 +29,29 @@ class UserProfile extends User
         return $entity;
     }
 
+    public function find(array $params = [])
+    {
+        throw new Forbidden();
+    }
+
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
-        $user = $this->entityFactory->create('User');
-        $user->set($entity->toArray());
-
-        return parent::findRelated($user, $relationName, $params);
+        return parent::findRelated($this->user($entity), $relationName, $params);
     }
 
     public function countRelated(Entity $entity, $relationName, array $params = [])
     {
-        $user = $this->entityFactory->create('User');
-        $user->set($entity->toArray());
+        return parent::countRelated($this->user($entity), $relationName, $params);
+    }
 
-        return parent::countRelated($user, $relationName, $params);
+    public function relate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        return parent::relate($this->user($entity), $relationName, $foreign, $data, $options);
+    }
+
+    public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        return parent::unrelate($this->user($entity), $relationName, $foreign, $options);
     }
 
     protected function insertEntity(Entity $entity, bool $ignoreDuplicate): bool
@@ -52,10 +61,7 @@ class UserProfile extends User
 
     protected function updateEntity(Entity $entity): bool
     {
-        $user = $this->entityFactory->create('User');
-        $user->set($entity->toArray());
-
-        return $this->getMapper()->update($user);
+        return $this->getMapper()->update($this->user($entity));
     }
 
     protected function deleteEntity(Entity $entity): bool
@@ -66,5 +72,13 @@ class UserProfile extends User
     public function deleteFromDb(string $id): bool
     {
         throw new Forbidden();
+    }
+
+    private function user(Entity $entity): Entity
+    {
+        $user = $this->entityFactory->create('User');
+        $user->set($entity->toArray());
+
+        return $user;
     }
 }
