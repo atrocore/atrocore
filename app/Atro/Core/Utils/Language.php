@@ -307,7 +307,9 @@ class Language
         }
 
         foreach ($fullData as $i18nName => $i18nData) {
-            $i18nData['UserProfile'] = $i18nData['User'];
+            if (!empty($i18nData['User'])) {
+                $i18nData['UserProfile'] = $i18nData['User'];
+            }
             $this->data[$i18nName] = $i18nData;
         }
 
