@@ -17,14 +17,6 @@
                             <label for="login">{{translate 'Password'}}</label>
                             <input type="password" name="password" id="field-password" class="form-control" tabindex="2">
                         </div>
-                        <div class="form-group">
-                            <label for="locale">{{translate 'locale' category='fields' scope='Settings'}}</label>
-                            <select class="form-control" name="locale" id="locale">
-                                {{#each locales}}
-                                <option data-language="{{language}}" value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
                         <div>
                             <a href="javascript:" class="btn btn-link pull-right" data-action="passwordChangeRequest" tabindex="4">{{translate 'Forgot Password?' scope='User'}}</a>
                             <button type="submit" class="btn btn-primary" id="btn-login" tabindex="3">{{translate 'Login' scope='User'}}</button>

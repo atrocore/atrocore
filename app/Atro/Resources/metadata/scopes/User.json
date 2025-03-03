@@ -4,13 +4,17 @@
   "layouts": true,
   "tab": true,
   "acl": true,
-  "aclActionList": [
-    "read",
-    "edit"
-  ],
   "aclActionLevelListMap": {
+    "read": [
+      "all",
+      "no"
+    ],
     "edit": [
-      "own",
+      "all",
+      "no"
+    ],
+    "delete": [
+      "all",
       "no"
     ]
   },
