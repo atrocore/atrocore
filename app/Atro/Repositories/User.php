@@ -13,10 +13,10 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\ORM\Repositories\RDB;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
-use Espo\Core\ORM\Repositories\RDB;
 
 class User extends RDB
 {

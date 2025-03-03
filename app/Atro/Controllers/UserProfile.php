@@ -23,39 +23,13 @@ class UserProfile extends AbstractController
     public function actionRead($params, $data, $request)
     {
         $id = $params['id'] ?? $this->getUser()->get('id');
+        $entity = $this->getRecordService()->readEntity($id);
 
-        if ($id !== $this->getUser()->get('id') && !$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $GLOBALS['readingUserProfile'] = true;
-        $entity = $this->getServiceFactory()->create('User')->readEntity($id);
         if (empty($entity)) {
             throw new NotFound();
         }
 
-        $res = [];
-        foreach ($this->getUserProfileFields() as $field) {
-            $res[$field] = $entity->get($field);
-        }
-
-        if (!empty($entity->get('localeId'))) {
-            $locale = $this->getEntityManager()->getRepository('Locale')->get($entity->get('localeId'));
-            if (!empty($locale)) {
-                $res['localeId'] = $locale->get('id');
-                $res['localeName'] = $locale->get('name');
-            }
-        }
-
-        if (!empty($entity->get('styleId'))) {
-            $style = $this->getEntityManager()->getRepository('Style')->get($entity->get('styleId'));
-            if (!empty($style)) {
-                $res['styleId'] = $style->get('id');
-                $res['styleName'] = $style->get('name');
-            }
-        }
-
-        return $this->prepareUserProfileData($res);
+        return $entity->getValueMap();
     }
 
     public function actionPatch($params, $data, $request)
@@ -65,35 +39,18 @@ class UserProfile extends AbstractController
 
     public function actionUpdate($params, $data, $request)
     {
-        echo '<pre>';
-        print_r('actionUpdate');
-        die();
-
         if (!$request->isPut() && !$request->isPatch()) {
             throw new BadRequest();
         }
 
-        $id = $params['id'] ?? $this->getUser()?->get('id');
-
-        if (empty($id)) {
-            throw new BadRequest();
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
         }
 
-        $this->handleUserAccess($id);
+        $id = $params['id'] ?? $this->getUser()->get('id');
 
-        $fields = $this->getUserProfileFields();
-
-        foreach ($data as $field => $val) {
-            if (!in_array($field, $fields) || in_array($field, ['userName', 'emailAddress'])) {
-                unset($data->$field);
-            }
-        }
-
-        $data->_skipIsEntityUpdated = true;
-
-        $GLOBALS['updatingUserProfile'] = true;
-        if ($entity = $this->getServiceFactory()->create('User')->updateEntity($id, $data)) {
-            return $this->prepareUserProfileData($entity->getValueMap());
+        if ($entity = $this->getRecordService()->updateEntity($id, $data)) {
+            return $entity->getValueMap();
         }
 
         throw new Error();
@@ -164,5 +121,10 @@ class UserProfile extends AbstractController
         $this->getService('App')->prepareLayoutProfileData($data);
 
         return $data;
+    }
+
+    protected function getRecordService()
+    {
+        return $this->getServiceFactory()->create('UserProfile');
     }
 }
