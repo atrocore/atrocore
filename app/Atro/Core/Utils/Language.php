@@ -307,7 +307,12 @@ class Language
         }
 
         foreach ($fullData as $i18nName => $i18nData) {
-            if (!empty($i18nData['User'])) {
+            if (!empty($i18nData['User']) && !empty($i18nData['Global']['labels']['Followed'])) {
+                foreach ($this->getMetadata()->get("entityDefs.User.links") as $link => $defs) {
+                    if (!empty($defs['foreign']) && $defs['foreign'] === 'followers' && !empty($i18nData['Global']['scopeNamesPlural'][$defs['entity']])) {
+                        $i18nData['User']['fields'][$link] = $i18nData['Global']['scopeNamesPlural'][$defs['entity']] . ' (' . $i18nData['Global']['labels']['Followed'] . ')';
+                    }
+                }
                 $i18nData['UserProfile'] = $i18nData['User'];
             }
             $this->data[$i18nName] = $i18nData;
