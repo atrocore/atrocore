@@ -845,7 +845,11 @@ class Installer extends HasContainer
         $this->getConfig()->save();
 
         // for statistics
-        @file_get_contents("https://packagist.atrocore.com/packages.json?id=$appId");
+        $url = "https://packagist.atrocore.com/packages.json?id=$appId";
+        if (getenv('ENVIRONMENT') === 'development') {
+            $url .= "&development=1";
+        }
+        @file_get_contents($url);
     }
 
     /**
