@@ -74,8 +74,7 @@ class UserProfile extends User
         }
 
         if (empty($entity->get('favoritesList'))) {
-            $entity->set('favoritesList', array_values(array_filter($layoutProfile->get('favoritesList') ?? [],
-                fn($item) => !!$this->getMetadata()->get("scopes.$item.tab"))));
+            $entity->set('favoritesList', array_values(array_filter($layoutProfile->get('favoritesList') ?? [], fn($item) => !!$this->getMetadata()->get("scopes.$item.tab"))));
         }
     }
 }
