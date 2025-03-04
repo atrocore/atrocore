@@ -13,7 +13,7 @@
     "fromMeasure",
     "notConverted"
   ],
-  "iconClass": "fas fa-ruler",
+  "iconClass": "design_services",
   "dynamicLogic": {
     "fields": {
       "multiplier": {

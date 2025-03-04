@@ -14674,7 +14674,8 @@ body > #header .navbar-brand span.home-icon {
     border-color: transparent
 }
 
-#header .navbar .default-icon {
+#header .navbar .default-icon,
+#header .navbar .icon {
     width: 20px;
     height: auto;
 }

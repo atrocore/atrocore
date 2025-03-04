@@ -1,6 +1,6 @@
 {
   "controller": "controllers/user-profile",
-  "iconClass": "fas fa-user-circle",
+  "iconClass": "manage_accounts",
   "defaultSidePanelFieldLists": {
     "detail": [
       "avatar",

@@ -35,11 +35,22 @@
     "image": {
       "type": "file",
       "required": true,
-      "fileTypeId": "a_image",
+      "fileTypeId": "a_favicon",
       "previewSize": "small"
     },
     "description": {
       "type": "text"
+    },
+    "path": {
+      "type": "varchar",
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {

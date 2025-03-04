@@ -1,4 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-clipboard-list"
+  "iconClass": "tile_small"
 }

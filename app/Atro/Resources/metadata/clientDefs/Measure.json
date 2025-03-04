@@ -13,7 +13,7 @@
     "notEntity",
     "notLinkedWithLocale"
   ],
-  "iconClass": "fas fa-ruler",
+  "iconClass": "square_foot",
   "relationshipPanels": {
     "units": {
       "select": false,

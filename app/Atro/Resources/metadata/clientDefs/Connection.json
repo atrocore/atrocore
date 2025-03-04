@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-database",
+  "iconClass": "conversion_path",
   "boolFilterList": [
     "notEntity",
     "connectionType",

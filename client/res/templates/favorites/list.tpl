@@ -5,10 +5,10 @@
                 <a href="{{link}}" class="favorite nav-link{{#ifEqual ../activeTab name}} active{{/ifEqual}}"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
                     <span class="label-wrapper">
                         {{#if ../hasIcons}}
-                            {{#if iconSrc}}
-                                <img src="{{iconSrc}}" class="favorite-icon default-icon">
+                            {{#if defaultIconSrc}}
+                                <img src="{{defaultIconSrc}}" class="favorite-icon default-icon">
                             {{else}}
-                                <span class="favorite-icon {{iconClass}}"></span>
+                                 <img src="{{iconSrc}}" class="favorite-icon icon">
                             {{/if}}
                         {{/if}}
                         <span class="full-label">{{label}}</span>

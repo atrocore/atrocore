@@ -49,11 +49,11 @@
             <li class="dropdown more more-group tab">
                 <a id="nav-more-tabs-dropdown-{{id}}" class="dropdown-toggle more-group-name" data-toggle="dropdown" href="#" {{#if color}} style="border-color: {{color}}"{{/if}}>
                     <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
-                        {{#if iconClass}}
-                            <span class="{{iconClass}}"></span>
+                        {{#if iconSrc}}
+                            <img src="{{iconSrc}}" class="icon">
                         {{else}}
-                            {{#if iconSrc}}
-                                <img src="{{iconSrc}}" class="default-icon">
+                            {{#if defaultIconSrc}}
+                                <img src="{{defaultIconSrc}}" class="default-icon">
                             {{else}}
                                 <span class="short-label-text">{{shortLabel}}</span>
                             {{/if}}
@@ -66,11 +66,11 @@
                     <li data-name="{{name}}" class="in-more tab">
                         <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
                             <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
-                                {{#if iconClass}}
-                                    <span class="{{iconClass}}"></span>
+                                {{#if iconSrc}}
+                                    <img src="{{iconSrc}}" class="icon">
                                 {{else}}
-                                    {{#if iconSrc}}
-                                        <img src="{{iconSrc}}" class="default-icon">
+                                    {{#if defaultIconSrc}}
+                                        <img src="{{defaultIconSrc}}" class="default-icon">
                                     {{else}}
                                         <span class="short-label-text">{{shortLabel}}</span>
                                     {{/if}}
@@ -90,11 +90,11 @@
                 <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
                     <span class="full-label">{{label}}</span>
                     <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
-                    {{#if iconClass}}
-                        <span class="{{iconClass}}"></span>
+                    {{#if iconSrc}}
+                        <img src="{{iconSrc}}" class="icon">
                     {{else}}
-                        {{#if iconSrc}}
-                            <img src="{{iconSrc}}" class="default-icon">
+                        {{#if defaultIconSrc}}
+                            <img src="{{defaultIconSrc}}" class="default-icon">
                         {{else}}
                             <span class="short-label-text">{{shortLabel}}</span>
                         {{/if}}

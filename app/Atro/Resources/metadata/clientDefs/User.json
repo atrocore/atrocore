@@ -65,7 +65,7 @@
   "selectDefaultFilters": {
     "filter": "active"
   },
-  "iconClass": "fas fa-user-circle",
+  "iconClass": "person",
   "dynamicLogic": {
     "fields": {
       "password": {

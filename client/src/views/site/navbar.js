@@ -312,11 +312,22 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 name: name,
                 items: items,
                 group: group,
-                color: color,
-                iconClass: iconClass
+                color: color
             };
-            if (!iconClass && result.name) {
-                result.iconSrc = this.getDefaultTabIcon(result.name);
+            if (iconClass) {
+                const referenceData = this.getConfig().get('referenceData');
+
+                if (referenceData && referenceData['SystemIcon'] && iconClass in referenceData['SystemIcon']) {
+                    const path = referenceData['SystemIcon'][iconClass].path || null;
+
+                    if (path) {
+                        result.iconSrc = referenceData['SystemIcon'][iconClass].path;
+                    }
+                }
+            }
+
+            if (!result.iconSrc && result.name) {
+                result.defaultIconSrc = this.getDefaultTabIcon(result.name);
             }
             return result;
         },

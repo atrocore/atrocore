@@ -1,6 +1,6 @@
 {
   "createDisabled": true,
-  "iconClass": "fas fa-tasks",
+  "iconClass": "task",
   "controller": "controllers/record",
   "boolFilterList": [
     "onlyMy",

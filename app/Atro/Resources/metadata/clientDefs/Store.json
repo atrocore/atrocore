@@ -4,7 +4,7 @@
   "boolFilterList": [
     "onlyMy"
   ],
-  "iconClass": "fas fa-hospital-alt",
+  "iconClass": "storefront",
   "kanbanViewMode": false,
   "color": null
 }

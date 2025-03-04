@@ -1,7 +1,7 @@
 {
   "controller": "controllers/file",
   "createDisabled": true,
-  "iconClass": "fas fa-file",
+  "iconClass": "file_present",
   "boolFilterList": [
     "onlyMy",
     "onlyType",
