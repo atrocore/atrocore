@@ -39,7 +39,7 @@
         if (params.inModal) {
             let data = UserData.get();
             if (data && data.user && data.user.isAdmin) {
-                buttonList.push({name: 'fullEdit', label: Language.translate('Full Edit', 'labels', "LayoutManager")})
+                buttonList.unshift({name: 'fullEdit', label: Language.translate('Full Edit', 'labels', "LayoutManager")})
             }
         }
 
