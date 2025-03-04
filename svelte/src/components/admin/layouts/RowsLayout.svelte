@@ -88,8 +88,6 @@
                         selectedFields.splice(evt.newIndex, 0, movedItem)
                         selectedFields = [...selectedFields]
                     }
-
-                    console.log(availableGroups, selectedFields);
                 }
             });
             sortableDisabled.push(sortable)

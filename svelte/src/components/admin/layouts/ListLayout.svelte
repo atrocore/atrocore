@@ -83,12 +83,8 @@
         return fields;
     }
 
-    function getAllFields(model: any) {
-
-    }
-
     function getFieldType(scope: string, field: string) {
-        return Metadata.get(['entityDefs', scope, field, 'type']) ?? ''
+        return Metadata.get(['entityDefs', scope, 'fields', field, 'type']) ?? ''
     }
 
     function getRelationScope(leftScope: string, rightScope: string) {
@@ -108,7 +104,7 @@
             checkFieldType(getFieldType(params.scope, field)) && isFieldEnabled(params.scope, field)
         );
 
-        if (params.relatedScope) {
+        if (params.relatedScope && params.type === 'list') {
             relationScope = getRelationScope(params.scope, params.relatedScope)
             // load related scope field
             const group = {
@@ -141,7 +137,6 @@
             fields: allFields
         })
 
-        const enabledFieldsList: string[] = [];
         const labelList: string[] = [];
         const duplicateLabelList: string[] = [];
 
