@@ -1,5 +1,6 @@
 {
   "controller": "controllers/user-profile",
+  "acl": "acl/user-profile",
   "iconClass": "fas fa-user-circle",
   "defaultSidePanelFieldLists": {
     "detail": [

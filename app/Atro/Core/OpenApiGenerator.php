@@ -1004,9 +1004,6 @@ class OpenApiGenerator
         unset($result['paths']["/UserProfile"]['get']);
         unset($result['paths']["/UserProfile"]['post']);
         unset($result['paths']["/UserProfile/{id}"]['delete']);
-        unset($result['paths']["/UserProfile/{id}/{link}"]['get']);
-        unset($result['paths']["/UserProfile/{id}/{link}"]['post']);
-        unset($result['paths']["/UserProfile/{id}/{link}"]['delete']);
         unset($result['paths']["/UserProfile/action/massUpdate"]['put']);
         unset($result['paths']["/UserProfile/action/massDelete"]['post']);
         unset($result['paths']["/UserProfile/{link}/relation"]['post']);
