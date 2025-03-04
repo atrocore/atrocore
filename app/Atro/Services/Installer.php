@@ -837,10 +837,6 @@ class Installer extends HasContainer
         // generate id
         $appId = substr(md5(md5(Util::generateUniqueHash() . "-atro-salt-") . Util::generateUniqueHash()), 0, 21);
 
-        if (!empty($_SERVER['ATRO_APP_ID'])) {
-            $appId = $_SERVER['ATRO_APP_ID'];
-        }
-
         // set to config
         $this->getConfig()->set('appId', $appId);
         $this->getConfig()->save();

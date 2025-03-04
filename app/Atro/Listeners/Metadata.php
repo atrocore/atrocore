@@ -30,6 +30,7 @@ class Metadata extends AbstractListener
         $data = $event->getArgument('data');
 
         $this->addFollowersField($data);
+        $this->prepareUserProfile($data);
 
         $event->setArgument('data', $data);
     }
@@ -96,6 +97,28 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareUserProfile(array &$data): void
+    {
+        $data['entityDefs']['UserProfile'] = $data['entityDefs']['User'];
+
+        $systemFields = [
+            'type',
+            'password',
+            'passwordConfirm',
+            'token',
+            'authTokenId',
+            'authLogRecordId',
+            'ipAddress',
+            'defaultTeam',
+            'acceptanceStatus',
+            'sendAccessInfo'
+        ];
+
+        foreach ($systemFields as $field) {
+            unset($data['entityDefs']['UserProfile']['fields'][$field]);
+        }
     }
 
     protected function addFollowersField(array &$data): void

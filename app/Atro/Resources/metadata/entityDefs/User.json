@@ -171,13 +171,14 @@
       "type": "link",
       "view": "views/user/fields/layout-profile"
     },
-    "localeId": {
-      "type": "varchar",
-      "len": 36
+    "locale": {
+      "type": "link",
+      "entity": "Locale"
     },
-    "styleId": {
-      "type": "varchar",
-      "len": 36
+    "style": {
+      "type": "link",
+      "entity": "Style",
+      "view": "views/user-profile/fields/style"
     },
     "dashboardLayout": {
       "type": "jsonArray",
@@ -231,7 +232,28 @@
       "type": "bool"
     },
     "notificationProfile": {
-      "type": "link"
+      "type": "link",
+      "view": "views/user-profile/fields/notification-profile"
+    },
+    "lpNavigation": {
+      "type": "array",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
+    "hideShowFullList": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
     },
     "favoritesList": {
       "type": "array",
