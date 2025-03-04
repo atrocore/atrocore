@@ -2,7 +2,8 @@
   "fields": {
     "entity": {
       "type": "varchar",
-      "view": "views/layout/fields/entity"
+      "view": "views/layout/fields/entity",
+      "tooltip": true
     },
     "viewType": {
       "type": "enum",
@@ -12,7 +13,8 @@
     },
     "relatedEntity": {
       "type": "varchar",
-      "view": "views/layout/fields/related-entity"
+      "view": "views/layout/fields/related-entity",
+      "tooltip": true
     },
     "createdAt": {
       "type": "datetime",

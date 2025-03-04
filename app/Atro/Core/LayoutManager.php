@@ -40,7 +40,7 @@ class LayoutManager
      * Get a full path of the file
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string         $filePath   - File path, Ex. file.json
+     * @param string $filePath - File path, Ex. file.json
      *
      * @return string
      */
@@ -77,10 +77,10 @@ class LayoutManager
                 . (empty($relatedEntity) ? "uel.related_entity is null" : "uel.related_entity=:relatedEntity")
                 . ' and deleted=:false')
             ->setParameters([
-                'entity'        => $scope,
-                'viewType'      => $viewType,
+                'entity' => $scope,
+                'viewType' => $viewType,
                 'relatedEntity' => $relatedEntity,
-                'userId'        => $this->getUser()->id,
+                'userId' => $this->getUser()->id,
             ])
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchOne();
@@ -101,7 +101,9 @@ class LayoutManager
         list($layout, $storedProfile) = $this->compose($scope, $viewType, $relatedEntity, $layoutProfileId);
 
         // remove fields from layout if this fields not exist in metadata
-        $layout = $this->disableNotExistingFields($scope, $viewType, $layout);
+        if (empty($relatedEntity)) {
+            $layout = $this->disableNotExistingFields($scope, $viewType, $layout);
+        }
 
         if ($viewType === 'list') {
             foreach ($layout as $k => $row) {
@@ -114,12 +116,12 @@ class LayoutManager
         $event = new Event([
             'target' => $scope . 'Layout',
             'params' => [
-                'scope'           => $scope,
-                'viewType'        => $viewType,
-                'relatedEntity'   => $relatedEntity,
+                'scope' => $scope,
+                'viewType' => $viewType,
+                'relatedEntity' => $relatedEntity,
                 'layoutProfileId' => $layoutProfileId,
-                'isAdminPage'     => $isAdminPage,
-                'isCustom'        => !empty($storedProfile),
+                'isAdminPage' => $isAdminPage,
+                'isCustom' => !empty($storedProfile),
             ],
             'result' => $layout]);
 
@@ -135,18 +137,18 @@ class LayoutManager
                 . (empty($relatedEntity) ? "l.related_entity is null" : "l.related_entity=:relatedEntity")
                 . " and l.deleted=:false and lp.deleted=:false")
             ->setParameters([
-                'entity'        => $scope,
-                'viewType'      => $viewType,
+                'entity' => $scope,
+                'viewType' => $viewType,
                 'relatedEntity' => $relatedEntity
             ])->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
         return [
-            'layout'            => $layout,
-            'storedProfile'     => empty($storedProfile) ? [] : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
-            'storedProfiles'    => $storedProfiles,
+            'layout' => $layout,
+            'storedProfile' => empty($storedProfile) ? [] : ['id' => $storedProfile->get('id'), 'name' => $storedProfile->get('name')],
+            'storedProfiles' => $storedProfiles,
             'selectedProfileId' => empty($selectedProfileId) ? null : $selectedProfileId,
-            'canEdit'           => empty($layoutProfile) ? false : $this->getAcl()->check($layoutProfile, 'edit')
+            'canEdit' => empty($layoutProfile) ? false : $this->getAcl()->check($layoutProfile, 'edit')
         ];
     }
 
@@ -157,9 +159,9 @@ class LayoutManager
         $repository = $this->getEntityManager()->getRepository('UserEntityLayout');
         $record = $repository
             ->where([
-                'userId'        => $this->getUser()->id,
-                'entity'        => $scope,
-                'viewType'      => $viewType,
+                'userId' => $this->getUser()->id,
+                'entity' => $scope,
+                'viewType' => $viewType,
                 'relatedEntity' => empty($relatedScope) ? null : $relatedScope
             ])
             ->findOne();
@@ -419,7 +421,7 @@ class LayoutManager
                 $data = [
                     [
                         "label" => "Relationship",
-                        "rows"  => [
+                        "rows" => [
                             [
                                 [
                                     "name" => $relationFields[0]
@@ -571,7 +573,7 @@ class LayoutManager
      *
      * @param string $scope
      * @param string $name
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */

@@ -8,6 +8,7 @@
     import {Language} from "../../../utils/Language";
     import {UserData} from "../../../utils/UserData";
 
+    const dispatch = createEventDispatcher();
     export let params: Params;
     export let fetch: any
 
@@ -53,9 +54,10 @@
     }
 
     onMount(async () => {
-        loadData()
-
+        await loadData()
         await tick();
+        dispatch('ready')
+
         const externalContainer = document.querySelector('#layout-buttons');
 
         if (buttonContainer && externalContainer && (params.inModal || params.replaceButtons)) {
@@ -64,13 +66,16 @@
         }
     });
 
-    function loadData() {
+    async function loadData() {
         Notifier.notify('Loading...')
-        loadLayout((data) => {
-            layoutData = data
-            Notifier.notify(false)
-            if (params.afterRender) params.afterRender()
-        });
+        return new Promise((resolve, reject) => {
+            loadLayout((data) => {
+                layoutData = data
+                Notifier.notify(false)
+                resolve()
+                if (params.afterRender) params.afterRender()
+            });
+        })
     }
 
     export function save(): void {

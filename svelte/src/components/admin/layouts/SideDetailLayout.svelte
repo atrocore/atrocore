@@ -6,6 +6,7 @@
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
     import {LayoutManager} from "../../../utils/LayoutManager";
+    import Group from "./interfaces/Group";
 
     export let params: Params;
     export let viewType: string = 'detail';
@@ -30,15 +31,15 @@
     }
 
     let rowsLayout: RowsLayout;
-    let enabledFields: Field[] = [];
-    let disabledFields: Field[] = [];
+    let selectedFields: Field[] = [];
+    let availableGroups: Group[] = [];
 
     let fetch = () => {
         let res = {}
-        enabledFields.forEach(f => {
+        selectedFields.forEach(f => {
             res[f.name] = f
         })
-        disabledFields.forEach(f => {
+        availableGroups[0].fields.forEach(f => {
             res[f.name] = {...f, disabled: true}
         })
         return res
@@ -73,11 +74,14 @@
             panelsMap[item.name] = item;
         });
 
-        disabledFields = [];
+        const group = {
+            name: params.scope,
+            fields: []
+        };
 
         layout = layout || {};
 
-        enabledFields = [];
+        selectedFields = [];
 
         panelListAll.forEach((item, index) => {
             let disabled = false;
@@ -93,7 +97,7 @@
             }
 
             if (disabled) {
-                disabledFields.push({
+                group.fields.push({
                     name: item,
                     label: labelText
                 });
@@ -115,10 +119,12 @@
                     o[i] = itemData[i];
                 }
                 o.index = ('index' in itemData) ? itemData.index : index;
-                enabledFields.push(o);
+                selectedFields.push(o);
             }
         });
-        enabledFields.sort((v1, v2) => v1.index - v2.index);
+
+        selectedFields.sort((v1, v2) => v1.index - v2.index);
+        availableGroups = [group]
     }
 
 </script>
@@ -126,8 +132,8 @@
 <RowsLayout
         bind:this={rowsLayout}
         {params}
-        {enabledFields}
-        {disabledFields}
+        {selectedFields}
+        {availableGroups}
         {loadLayout}
         {fetch}
 />

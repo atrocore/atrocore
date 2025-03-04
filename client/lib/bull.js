@@ -581,9 +581,13 @@ var Bull = Bull || {};
                     if ('options' in nestedViewDefs[i]) {
                         options = _.extend(options, nestedViewDefs[i].options);
                     }
-                    if (this.model) {
+
+                    if ('useRelationModel' in options && this.options.relationModel) {
+                        options.model = this.options.relationModel;
+                    } else if (this.model) {
                         options.model = this.model;
                     }
+
                     if (this.collection) {
                         options.collection = this.collection;
                     }

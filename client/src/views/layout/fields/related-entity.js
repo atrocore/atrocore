@@ -24,6 +24,7 @@ Espo.define('views/layout/fields/related-entity', 'views/layout/fields/entity', 
                 .find(link => links[link]?.entity === entity)
 
             return !!link && this.getMetadata().get('scopes.' + scope + '.entity') &&
+                this.getMetadata().get('scopes.' + scope + '.type') !== 'Relation' &&
                 this.getMetadata().get('scopes.' + scope + '.layouts');
         },
 
@@ -48,17 +49,18 @@ Espo.define('views/layout/fields/related-entity', 'views/layout/fields/entity', 
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this)
-            if(this.mode!=='list'){
-                if (this.model.get('viewType') !== 'list') {
-                    this.hide()
-                } else {
+            const show = ['list', 'detail'].includes(this.model.get('viewType')) && this.getMetadata().get(['scopes', this.model.get('entity'), 'type']) !== 'Relation'
+            if (this.mode !== 'list') {
+                if (show) {
                     this.show()
-                }
-            }else{
-                if (this.model.get('viewType') !== 'list') {
-                    this.$el.children().addClass('invisible');
                 } else {
+                    this.hide()
+                }
+            } else {
+                if (show) {
                     this.$el.children().removeClass('invisible');
+                } else {
+                    this.$el.children().addClass('invisible');
                 }
             }
         }

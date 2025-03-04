@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {onDestroy, onMount} from 'svelte';
+    import {onDestroy, onMount, tick} from 'svelte';
     import BaseLayout from './BaseLayout.svelte';
     import Field from "./interfaces/Field"
     import Params from "./interfaces/Params"
@@ -7,26 +7,23 @@
     import {Language} from "../../../utils/Language";
     import Sortable from 'sortablejs'
     import {Notifier} from "../../../utils/Notifier";
+    import Group from "./interfaces/Group";
 
     let layoutElement: HTMLElement
 
     let sortableEnabled: Sortable;
-    let sortableDisabled: Sortable;
+    let sortableDisabled: Sortable[];
 
     export let params: Params;
-    export let enabledFields: Field[] = [];
-    export let disabledFields: Field[] = [];
+    export let selectedFields: Field[] = [];
+    export let availableGroups: Group[] = [];
     export let loadLayout: Function;
 
     let baseLayout: BaseLayout;
 
-    onMount(() => {
-        initializeSortable();
-    });
-
     onDestroy(() => {
         if (sortableEnabled) sortableEnabled.destroy();
-        if (sortableDisabled) sortableDisabled.destroy();
+        if (sortableDisabled) sortableDisabled.forEach(sortable => sortable.destroy());
     });
 
     function initializeSortable(): void {
@@ -39,38 +36,70 @@
         sortableEnabled = Sortable.create(layoutElement.querySelector('ul.enabled'), {
             ...options,
             onEnd: function (evt) {
-                if (evt.to.closest('.connected').classList.contains('enabled')) {
-                    const [movedItem] = enabledFields.splice(evt.oldIndex, 1);
-                    enabledFields.splice(evt.newIndex, 0, movedItem);
+                const ul = evt.to.closest('.connected')
+                if (ul.classList.contains('enabled')) {
+                    const [movedItem] = selectedFields.splice(evt.oldIndex, 1);
+                    selectedFields.splice(evt.newIndex, 0, movedItem);
                 } else {
-                    const movedItem = enabledFields[evt.oldIndex]
-                    enabledFields.splice(evt.oldIndex, 1)
-                    disabledFields.splice(evt.newIndex, 0, movedItem)
-                    disabledFields = [...disabledFields]
+                    const movedItem = selectedFields[evt.oldIndex]
+                    selectedFields.splice(evt.oldIndex, 1)
+
+                    availableGroups = availableGroups.map(group => {
+                        if (group.name === ul.attributes['data-name'].value) {
+                            group.fields.splice(evt.newIndex, 0, movedItem)
+                        }
+                        return group
+                    })
                 }
-                enabledFields = [...enabledFields];
+                selectedFields = [...selectedFields];
             }
         });
-        sortableDisabled = Sortable.create(layoutElement.querySelector('ul.disabled'), {
-            ...options,
-            onEnd: function (evt) {
-                if (evt.to.closest('.connected').classList.contains('disabled')) {
-                    const [movedItem] = disabledFields.splice(evt.oldIndex, 1);
-                    disabledFields.splice(evt.newIndex, 0, movedItem);
-                } else {
-                    const movedItem = disabledFields[evt.oldIndex]
-                    disabledFields.splice(evt.oldIndex, 1)
-                    enabledFields.splice(evt.newIndex, 0, movedItem)
-                    enabledFields = [...enabledFields]
+
+        sortableDisabled = []
+        for (let ul of layoutElement.querySelectorAll('ul.disabled')) {
+            const sortable = Sortable.create(ul, {
+                ...options,
+                onEnd: function (evt) {
+                    const toUl = evt.to.closest('.connected')
+                    let movedItem = null
+                    if (toUl.classList.contains('disabled')) {
+                        // remove from old Group
+                        for (let group of availableGroups) {
+                            if (group.name === ul.attributes['data-name'].value) {
+                                [movedItem] = group.fields.splice(evt.oldIndex, 1);
+                                break
+                            }
+                        }
+                        if (movedItem) {
+                            for (let group of availableGroups) {
+                                if (group.name === toUl.attributes['data-name'].value) {
+                                    group.fields.splice(evt.newIndex, 0, movedItem)
+                                    break
+                                }
+                            }
+                        }
+                    } else {
+                        availableGroups = availableGroups.map(group => {
+                            if (group.name === evt.from.closest('ul').attributes['data-name'].value) {
+                                [movedItem] = group.fields.splice(evt.oldIndex, 1)
+                            }
+                            return group
+                        })
+                        selectedFields.splice(evt.newIndex, 0, movedItem)
+                        selectedFields = [...selectedFields]
+                    }
+
+                    console.log(availableGroups, selectedFields);
                 }
-                disabledFields = [...disabledFields];
-            }
-        });
+            });
+            sortableDisabled.push(sortable)
+        }
+
     }
 
     function editField(field): void {
         params.openEditDialog(field, params.scope, params.dataAttributeList, params.dataAttributesDefs, (attributes) => {
-            enabledFields = enabledFields.map(item => {
+            selectedFields = selectedFields.map(item => {
                 if (item.name === field.name) {
                     for (let key in attributes) {
                         item[key] = attributes[key]
@@ -82,7 +111,7 @@
     }
 
     export let fetch = () => {
-        return enabledFields;
+        return selectedFields;
     }
 
     function validate(layout: LayoutItem[]): boolean {
@@ -118,6 +147,7 @@
         {validate}
         {fetch}
         {loadLayout}
+        on:ready={initializeSortable}
 >
 
     <div id="layout" class="row" bind:this={layoutElement}>
@@ -126,7 +156,7 @@
                 <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
                 <div class="rows-wrapper">
                     <ul class="enabled connected">
-                        {#each enabledFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
+                        {#each selectedFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
                             <li {...getDataAttributeProps(item)}>
                                 <div class="left">
                                     <label>{item.label}</label>
@@ -150,15 +180,22 @@
             <div class="well">
                 <header>{Language.translate('Available', 'labels', 'Admin')}</header>
                 <div class="rows-wrapper">
-                    <ul class="disabled connected">
-                        {#each disabledFields as field (field.name)}
-                            <li {...getDataAttributeProps(field)}>
-                                <div class="left">
-                                    <label>{field.label}</label>
-                                </div>
-                            </li>
-                        {/each}
-                    </ul>
+                    {#each availableGroups as group (group.name)}
+                        <div class:group={availableGroups.length>1}>
+                            {#if availableGroups.length > 1 }
+                                <span class="title">{Language.translate(group.name, 'scopeNames')}</span>
+                            {/if}
+                            <ul class="disabled connected" data-name="{group.name}">
+                                {#each group.fields as field (field.name)}
+                                    <li {...getDataAttributeProps(field)}>
+                                        <div class="left">
+                                            <label>{field.label}</label>
+                                        </div>
+                                    </li>
+                                {/each}
+                            </ul>
+                        </div>
+                    {/each}
                 </div>
             </div>
         </div>
@@ -219,23 +256,25 @@
         height: 100%;
         border: 1px solid #ededed;
         border-radius: 3px;
-        display: flex;
-        flex-direction: column;
-        max-height: 70vh;
     }
 
     .well .rows-wrapper {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
         overflow-x: clip;
         overflow-y: auto;
         padding-right: 5px;
         margin-right: -5px;
+        max-height: 70vh;
     }
 
-    .well .rows-wrapper ul {
-        flex: 1;
+    .group {
+        border: 1px solid #ededed;
+        border-radius: 2px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .group .title {
+        font-weight: bold;
     }
 
     #layout {
