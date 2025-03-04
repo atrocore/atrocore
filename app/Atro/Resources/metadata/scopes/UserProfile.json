@@ -4,13 +4,21 @@
   "object": true,
   "layouts": true,
   "tab": false,
-  "acl": false,
+  "acl": true,
+  "aclActionList": [
+    "edit"
+  ],
+  "aclActionLevelListMap": {
+    "edit": [
+      "own",
+      "no"
+    ]
+  },
   "customizable": false,
   "importable": false,
   "streamDisabled": true,
   "notificationDisabled": true,
   "bookmarkDisabled": true,
   "leftSidebarDisabled": true,
-  "notStorable": true,
   "emHidden": true
 }
