@@ -61,30 +61,19 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
             Dep.prototype.doAction.call(this, action, options);
         },
 
-        getDefaultTabIcon() {
-            let icon = this.getMetadata().get(['clientDefs', this.name, 'iconClass']) || null;
+        getTabIcon() {
+            let icon = View.prototype.getTabIcon.call(this, this.name),
+                defaultIcon = View.prototype.getDefaultTabIcon.call(this, this.name);
 
             if (icon) {
-                const referenceData = this.getConfig().get('referenceData');
-
-                if (referenceData && referenceData['SystemIcon'] && icon in referenceData['SystemIcon']) {
-                    const path = referenceData['SystemIcon'][icon].path || null;
-
-                    if (path) {
-                        return referenceData['SystemIcon'][icon].path;
-                    }
-                }
+                return icon;
             }
 
-            let firstLetter = this.name.match(/\p{L}/u)?.[0] || null;
-
-            if (firstLetter) {
-                let key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
-
-                return 'client/img/icons/default/' + key;
+            if (defaultIcon) {
+                return defaultIcon;
             }
 
-            return Dep.prototype.getDefaultTabIcon.call(this);
+            return Dep.prototype.getTabIcon.call(this);
         },
 
         beforeKanban: function () {

@@ -88,7 +88,13 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
 
                 if (!this.getConfig().get('tabIconsDisabled')) {
                     this.groups.forEach((group, key) => {
-                        this.groups[key].icon = this.getMetadata().get(['clientDefs', group.key, 'iconClass']) || 'fas fa-stop';
+                        let icon = this.getTabIcon(this.groups[key].key);
+
+                        if (!icon) {
+                            icon = this.getDefaultTabIcon(this.groups[key].key);
+                        }
+
+                        this.groups[key].icon = icon;
                     });
                 }
 

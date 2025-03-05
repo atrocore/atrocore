@@ -332,13 +332,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             return result;
         },
 
-        getDefaultTabIcon(name) {
-            let firstLetter = name.match(/\p{L}/u)?.[0] || "A",
-                key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
-
-            return 'client/img/icons/default/' + key;
-        },
-
         getMenuDataList: function () {
             var avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
             if (avatarHtml) avatarHtml += ' ';

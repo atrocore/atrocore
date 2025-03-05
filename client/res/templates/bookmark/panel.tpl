@@ -17,7 +17,7 @@
                 <div class="entity">
                     <div class="group-name">
                         {{#if icon}}
-                            <span class="icon {{icon}} fa-sm"></span>
+                            <img class="icon" src="{{icon}}">
                         {{/if}}
                         <span>{{translate key category='scopeNamesPlural' scope='Global'}}</span>
                     </div>

@@ -218,10 +218,10 @@ Espo.define('controller', [], function () {
                 document.head.appendChild(link);
             }
 
-            link.href = this.getDefaultTabIcon();
+            link.href = this.getTabIcon();
         },
 
-        getDefaultTabIcon() {
+        getTabIcon() {
             return 'client/modules/treo-core/img/favicon.svg';
         },
 

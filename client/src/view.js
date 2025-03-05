@@ -369,6 +369,36 @@ Espo.define('view', [], function () {
                 hash = (hash * 33) ^ str.charCodeAt(i);
             }
             return hash >>> 0; // Ensure it's a 32-bit unsigned integer
+        },
+
+        getTabIcon(scope) {
+            let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null;
+
+            if (iconClass) {
+                const referenceData = this.getConfig().get('referenceData');
+
+                if (referenceData && referenceData['SystemIcon'] && iconClass in referenceData['SystemIcon']) {
+                    const path = referenceData['SystemIcon'][iconClass].path || null;
+
+                    if (path) {
+                        return referenceData['SystemIcon'][iconClass].path;
+                    }
+                }
+            }
+
+            return null;
+        },
+
+        getDefaultTabIcon(scope) {
+            let firstLetter = scope.match(/\p{L}/u)?.[0] || null;
+
+            if (firstLetter) {
+                let key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
+
+                return 'client/img/icons/default/' + key;
+            }
+
+            return null;
         }
     });
 
