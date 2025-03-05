@@ -42,8 +42,7 @@
   "default": {
     "scopeLevel": {
       "User": {
-        "read": "all",
-        "edit": "no"
+        "read": "all"
       },
       "Locale": {
         "read": "all",
