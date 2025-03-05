@@ -6,21 +6,16 @@
     import BaseLayout from "./BaseLayout.svelte";
     import {Language} from "../../../utils/Language";
     import {LayoutManager} from "../../../utils/LayoutManager";
-    import {ModelFactory} from "../../../utils/ModelFactory";
     import {Metadata} from "../../../utils/Metadata";
+    import Group from "./interfaces/Group";
+    import {Utils} from "../../../utils/Utils.js";
+    import Field from "./interfaces/Field";
 
     export let params: Params;
     export let columnCount: number = 2;
 
-    let dataAttributeList = ['id', 'name', 'fullWidth', 'customLabel', 'noLabel'];
     let panelDataAttributeList = ['id', 'label', 'style'];
 
-    let dataAttributesDefs = {
-        fullWidth: {type: 'bool'},
-        name: {readOnly: true},
-        customLabel: {type: 'varchar', readOnly: true},
-        noLabel: {type: 'bool', readOnly: true}
-    };
 
     let panelDataAttributesDefs = {
         label: {type: 'varchar'},
@@ -35,10 +30,10 @@
         }
     };
 
-    let defaultPanelFieldList = ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'ownerUser', 'teams'];
+    let defaultPanelFieldList = [];
 
     let panels: [] = [];
-    let disabledFields: Cell[] = [];
+    let availableGroups: Group[] = [];
     let lastPanelNumber = -1;
     let lastRowNumber = -1;
     let sidePanelsLayout: any;
@@ -47,26 +42,22 @@
 
     function loadLayout(callback) {
         let layoutData;
-        let model;
 
         const promiseList = [];
 
         promiseList.push(
             new Promise(resolve => {
-                ModelFactory.create(params.scope, m => {
-                    LayoutManager.get(params.scope, params.type,params.relatedScope, params.layoutProfileId, layoutLoaded => {
-                        layoutData = layoutLoaded;
-                        model = m;
-                        resolve();
-                    }, false);
-                });
+                LayoutManager.get(params.scope, params.type, params.relatedScope, params.layoutProfileId, layoutLoaded => {
+                    layoutData = layoutLoaded;
+                    resolve();
+                }, false);
             })
         );
 
         if (params.type === "detail") {
             promiseList.push(
                 new Promise(resolve => {
-                    LayoutManager.get(params.scope, 'sidePanelsDetail',null, params.layoutProfileId, layoutLoaded => {
+                    LayoutManager.get(params.scope, 'sidePanelsDetail', null, params.layoutProfileId, layoutLoaded => {
                         sidePanelsLayout = layoutLoaded.layout;
                         resolve();
                     }, false);
@@ -76,7 +67,7 @@
 
         Promise.all(promiseList).then(() => {
             if (callback) {
-                readDataFromLayout(model, layoutData.layout);
+                readDataFromLayout(layoutData.layout);
                 setupPanels();
                 tick().then(() => {
                     initializeSortable();
@@ -86,21 +77,96 @@
         });
     }
 
-    function readDataFromLayout(model, layout) {
+    function getRelationScope(leftScope: string, rightScope: string) {
+        const links = Metadata.get(['entityDefs', leftScope, 'links']) ?? {}
+        for (const link of Object.keys(links)) {
+            if (links[link]?.entity === rightScope && !!links[link].relationName) {
+                return Espo.utils.upperCaseFirst(links[link].relationName)
+            }
+        }
+        return ''
+    }
+
+    function getTranslation(scope: string, field: string) {
+        return Language.translate(field, 'fields', scope)
+    }
+
+    function getFieldType(scope: string, field: string) {
+        return Metadata.get(['entityDefs', scope, 'fields', field, 'type']) ?? ''
+    }
+
+    function checkFieldType(type: string): boolean {
+        if (params.fieldTypes) {
+            return params.fieldTypes.includes(type)
+        }
+        return true;
+    }
+
+    function readDataFromLayout(layout) {
+        const groups = []
+        let relationScope = ''
+
+        if (params.relatedScope) {
+            relationScope = getRelationScope(params.scope, params.relatedScope)
+            if (relationScope) {
+                // load related scope field
+                const group = {
+                    name: relationScope,
+                    scope: relationScope,
+                    prefix: relationScope + '__'
+                }
+                let allFields = Object.keys(Metadata.get(['entityDefs', relationScope, 'fields']) || {}).filter(field =>
+                    checkFieldType(getFieldType(relationScope, field)) && isFieldEnabled(relationScope, field)
+                );
+
+                // remove links
+                allFields = allFields.filter(field => !(Metadata.get(['entityDefs', relationScope, 'fields', field, 'relationField']) ?? false))
+
+                allFields = allFields.sort((v1, v2) =>
+                    getTranslation(relationScope, v1).localeCompare(getTranslation(relationScope, v2))
+                ).map(f => group.prefix + f)
+
+                group.fields = allFields
+                groups.push(group)
+            }
+        }
+
         let allFields = [];
         const labels = [];
-        for (const field in model.defs.fields) {
-            if (isFieldEnabled(model, field)) {
+        for (const field in Metadata.get(['entityDefs', params.scope, 'fields']) || {}) {
+            if (isFieldEnabled(params.scope, field)) {
                 labels.push(Language.translate(field, 'fields', params.scope));
                 allFields.push(field);
             }
         }
 
-        const duplicatedLabels = labels.filter((label, index) => labels.indexOf(label) !== index);
-        let enabledFields = [];
-        disabledFields = [];
+        groups.unshift({
+            name: params.scope,
+            scope: params.scope,
+            fields: allFields
+        })
+
+        const labelList: string[] = [];
+        const duplicateLabelList: string[] = [];
+
+        for (const group of groups) {
+            group.fields = group.fields
+                .map(field => {
+                    const label = getTranslation(group.scope, group.prefix ? field.replace(group.prefix, '') : field);
+                    if (!group.prefix) {
+                        if (labelList.includes(label)) {
+                            duplicateLabelList.push(label);
+                        }
+                        labelList.push(label);
+                    }
+
+                    return {name: field, label};
+                });
+        }
 
         panels = layout;
+
+        let enabledFields = [];
 
         layout.forEach((panel, panelNum) => {
             panel.rows.forEach((row, rowNum) => {
@@ -109,47 +175,62 @@
                         if (i == columnCount || !cell) {
                             return;
                         }
-                        let label = Language.translate(cell.name, 'fields', params.scope);
-                        if (duplicatedLabels.includes(label)) {
-                            label += ` (${cell.name})`;
-                        }
-                        enabledFields.push({name: cell.name, label: label});
-                        panels[panelNum].rows[rowNum][i].label = label;
+                        enabledFields.push(cell.name);
                     });
                 }
             });
         });
 
-        allFields.sort((v1, v2) => Language.translate(v1, 'fields', params.scope).localeCompare(Language.translate(v2, 'fields', params.scope)));
+        groups[0].fields.forEach(item => {
+            if (duplicateLabelList.includes(item.label)) {
+                item.label += ` (${item.name})`;
+            }
+            const selectedItem = getCell(item.name)
+            if (selectedItem) {
+                selectedItem.label = item.label
+            }
+        });
 
-        for (const i in allFields) {
-            if (!hasField(allFields[i], enabledFields)) {
-                const field = allFields[i];
-                let label = Language.translate(field, 'fields', params.scope);
-                if (duplicatedLabels.includes(label)) {
-                    label += ` (${field})`;
+        if (groups[1]) {
+            groups[1].fields.forEach(item => {
+                item.label += ` (Relation)`
+                const selectedItem = getCell(item.name)
+                if (selectedItem) {
+                    selectedItem.label = item.label
                 }
-                disabledFields.push({name: field, label: label});
+            })
+        }
+
+        for (const group of groups) {
+            group.fields = group.fields.filter(item => !enabledFields.find(name => name === item.name))
+        }
+
+        availableGroups = groups.reverse()
+    }
+
+    function getCell(name) {
+        for (const panel of panels) {
+            for (const row of panel.rows) {
+                for (const cell of row) {
+                    if (cell && cell.name === name) return cell
+                }
             }
         }
+        return null
     }
 
-    function hasField(name, list) {
-        return list.some(field => field.name === name);
-    }
-
-    function isFieldEnabled(model, name) {
+    function isFieldEnabled(scope: string, name: string) {
         if (hasDefaultPanel()) {
             if (defaultPanelFieldList.includes(name)) {
                 return false;
             }
         }
-        const disabledParameters = ['disabled', `layout${Espo.utils.upperCaseFirst(params.type)}Disabled`];
+        const disabledParameters = ['disabled', `layout${Utils.upperCaseFirst(params.type)}Disabled`];
         if (params.reelType) {
-            disabledParameters.push(`layout${Espo.utils.upperCaseFirst(params.reelType)}Disabled`)
+            disabledParameters.push(`layout${Utils.upperCaseFirst(params.reelType)}Disabled`)
         }
         for (let param of disabledParameters) {
-            if (model.getFieldParam(name, param)) {
+            if (Metadata.get(['entityDefs', scope, 'fields', name, param])) {
                 return false
             }
         }
@@ -284,7 +365,25 @@
                 }
             })
         })
-        disabledFields = [...disabledFields, ...fields]
+
+        addToGroups(fields)
+    }
+
+    function checkGroup(field: string, group: Group): boolean {
+        if (group.prefix) {
+            return field.startsWith(group.prefix)
+        }
+        return !field.includes('__')
+    }
+
+    function addToGroups(fields: []): void {
+        availableGroups = availableGroups.map(group => {
+            group.fields = [
+                ...fields.filter(field => !!field && checkGroup(field.name, group)),
+                ...group.fields
+            ]
+            return group
+        })
     }
 
     function addRow(panelNumber: number) {
@@ -301,7 +400,8 @@
             if (panel.number === panelNumber) {
                 const row = panel.rows.find(r => r.number === rowNumber)
                 panel.rows = panel.rows.filter(r => r != row);
-                disabledFields = [...disabledFields, ...row.cells.filter(r => !!r)]
+
+                addToGroups(row.cells.filter(r => !!r))
             }
             return panel;
         });
@@ -314,7 +414,7 @@
                     if (row.number === rowNumber) {
                         const removedCell = row.cells[cellIndex];
                         if (removedCell) {
-                            disabledFields = [...disabledFields, removedCell];
+                            addToGroups([removedCell])
                         }
                         row.cells[cellIndex] = false;
                     }
@@ -328,7 +428,12 @@
     function handleDrop(event, panelNumber, rowNumber, cellIndex) {
         // get properties of dragged object
         const name = event.dataTransfer.getData('name')
-        let field = disabledFields.find(f => f.name === name)
+        let field = null
+        for (const group of availableGroups) {
+            field = group.fields.find(f => f.name === name)
+            if (field) break
+        }
+
         let oldRowNumber = null
         let oldPanelNumber = null
         if (!field) {
@@ -363,7 +468,10 @@
                 return panel;
             });
         } else {
-            disabledFields = disabledFields.filter(f => f !== field)
+            availableGroups = availableGroups.map(group => {
+                group.fields = group.fields.filter(f => f !== field)
+                return group
+            })
         }
 
 
@@ -456,7 +564,8 @@
                                         <i class="fas fa-pencil-alt fa-sm"></i>
                                     </a>
                                     <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
-                                       data-number={panel.number} on:click|preventDefault={() => removePanel(panel.number)}>
+                                       data-number={panel.number}
+                                       on:click|preventDefault={() => removePanel(panel.number)}>
                                         <i class="fas fa-times"></i>
                                     </a>
                                 </header>
@@ -501,7 +610,8 @@
                                     {/each}
                                 </ul>
                                 <div>
-                                    <a href="#" data-action="addRow" on:click|preventDefault={() => addRow(panel.number)}>
+                                    <a href="#" data-action="addRow"
+                                       on:click|preventDefault={() => addRow(panel.number)}>
                                         <i class="fas fa-plus"></i>
                                     </a>
                                 </div>
@@ -515,14 +625,21 @@
             <div class="well available-fields">
                 <header>{Language.translate('Available Fields', 'Admin')}</header>
                 <div class="rows-wrapper">
-                    <ul class="disabled cells clearfix">
-                        {#each disabledFields as field}
-                            <li class="cell" data-name={field.name}
-                                on:dragstart={event => {event.dataTransfer.setData('name', field.name)}}>
-                                {field.label}
-                            </li>
-                        {/each}
-                    </ul>
+                    {#each availableGroups as group (group.name)}
+                        <div class:group={availableGroups.length>1}>
+                            {#if availableGroups.length > 1 }
+                                <span class="title">{Language.translate(group.name, 'scopeNames')}</span>
+                            {/if}
+                            <ul class="disabled cells clearfix" data-name="{group.name}">
+                                {#each group.fields as field (field.name)}
+                                    <li class="cell" data-name={field.name}
+                                        on:dragstart={event => {event.dataTransfer.setData('name', field.name)}}>
+                                        {field.label}
+                                    </li>
+                                {/each}
+                            </ul>
+                        </div>
+                    {/each}
                 </div>
             </div>
         </div>
@@ -611,6 +728,10 @@
         width: 100%;
     }
 
+    #layout .group ul.disabled {
+        min-height: 40px;
+    }
+
     #layout ul.disabled > li a {
         display: none;
     }
@@ -678,30 +799,29 @@
     }
 
     .well {
-        min-height: 20px;
-        padding: 19px;
-        margin-bottom: 20px;
-        background-color: #fff;
         height: 100%;
         border: 1px solid #ededed;
         border-radius: 3px;
-        display: flex;
-        flex-direction: column;
-        max-height: 70vh;
     }
 
     .well .rows-wrapper {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
         overflow-x: clip;
         overflow-y: auto;
         padding-right: 5px;
         margin-right: -5px;
+        max-height: 70vh;
     }
 
-    .well .rows-wrapper ul {
-        flex: 1;
+
+    .group {
+        border: 1px solid #ededed;
+        border-radius: 2px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .group .title {
+        font-weight: bold;
     }
 
     #layout {
