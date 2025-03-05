@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-interface ActionButton {
+interface ActionParams {
     id?: string;
     name?: string;
     action: string;

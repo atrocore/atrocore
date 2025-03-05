@@ -320,8 +320,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             let isScrolledMore = false;
             const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');
 
-            $('#main main').on('scroll', function () {
-                const scrolled = this.scrollTop > breadcrumbs.offsetHeight;
+            $('#main main').on('scroll', (e) => {
+                const scrolled = e.target.scrollTop > breadcrumbs.offsetHeight;
 
                 if (scrolled !== isScrolledMore) {
                     isScrolledMore = scrolled;
@@ -332,6 +332,17 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     }
                 }
             });
+        },
+
+        executeAction(action, data, event) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, event);
+                return;
+            }
+
+            const record = this.getView('record');
+            record.executeAction(action, data, event);
         },
 
         setupHeader: function () {
@@ -363,7 +374,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         dropdownEditButtons: record.dropdownEditItemList,
                         additionalButtons: record.additionalButtons,
                         additionalEditButtons: record.additionalEditButtons,
-                        executeAction: (action, data, event) => {record.executeAction(action, data, event)},
+                        headerButtons: this.getMenu(),
+                        executeAction: (action, data, event) => {
+                            this.executeAction(action, data, event);
+                        },
                     },
                     anchorNavItems: this.panelsList,
                     anchorScrollCallback: (name, event) => {
@@ -385,18 +399,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     }
                 }
             });
-
-            //
-            // this.createView('header', this.headerView, {
-            //     mode: this.mode,
-            //     model: this.model,
-            //     el: '#main main > .header',
-            //     scope: this.scope
-            // }, view => {
-            //     this.listenTo(view, 'after:render', () => {
-            //         this.setupTourButton();
-            //     });
-            // });
 
             // this.listenTo(this.model, 'sync', function (model) {
             //     if (model.hasChanged('name')) {

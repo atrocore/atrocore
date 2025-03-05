@@ -1,7 +1,7 @@
 {
   "edit": {},
   "list": {
-    ".header-buttons-container .header-items": {
+    ".page-header .view-mode-switch": {
       "description": {
         "en_US": "Here you can set a visualization of products. You can switch it off at any moment."
       }
@@ -23,12 +23,12 @@
         "en_US": "Here is the root to the product. It includes parent products."
       }
     },
-    ".detail-button-container:not(\".hidden\") .btn-group .dropdown-item-list-button": {
+    ".detail-button-container:not(.hidden) .btn-group .dropdown-item-list-button": {
       "description": {
         "en_US": "Here you can execute actions for current product."
       }
     },
-    ".detail-button-container:not(\".hidden\") .panel-navigation": {
+    ".header .panel-navigation": {
       "description": {
         "en_US": "In the navigation tab you can click any element to fast switch to it. You can add any tabs or modify any existing ones. Tabs consist of tabs for product fields and simple (usually one-to one) links and linked relationships such as attributes or files that can have their own values."
       }

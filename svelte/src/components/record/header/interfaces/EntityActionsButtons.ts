@@ -8,13 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-export default interface RecordActionButtons {
+export default interface EntityActionButtons {
     buttons: ActionParams[];
-    editButtons: ActionParams[];
     dropdownButtons: ActionParams[];
-    dropdownEditButtons: ActionParams[];
-    additionalButtons: ActionParams[];
-    additionalEditButtons: ActionParams[];
-    headerButtons: Record<string, ActionParams[]>;
     executeAction: (action: string, data?: Map<string, any>, event?: Event) => void;
 }

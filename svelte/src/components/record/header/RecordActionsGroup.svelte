@@ -5,7 +5,8 @@
 
     import {onMount} from "svelte";
     import Preloader from "../../icons/loading/Preloader.svelte";
-    import {Language} from "../../../utils/Language";
+    import ActionGroup from "./buttons/ActionGroup.svelte";
+    import ActionButton from "./buttons/ActionButton.svelte";
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
@@ -13,12 +14,12 @@
     export let scope: string;
     export let id: string | null;
 
-    let actions: ActionButton[] = [];
-    let dropdownActions: ActionButton[] = [];
-    let dynamicActions: ActionButton[] = [];
-    let dynamicActionsDropdown: ActionButton[] = [];
-    let uiHandlerActions: ActionButton[] = [];
-    let actionsLoading: boolean = false;
+    let actions: ActionParams[] = [];
+    let dropdownActions: ActionParams[] = [];
+    let dynamicActions: ActionParams[] = [];
+    let dynamicActionsDropdown: ActionParams[] = [];
+    let uiHandlerActions: ActionParams[] = [];
+    let loadingActions: boolean = false;
 
     $: {
         actions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
@@ -26,7 +27,7 @@
         uiHandlerActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...getUiHandlerButtons()] : [])
     }
 
-    async function loadDynamicActions(): Promise<ActionButton[]> {
+    async function loadDynamicActions(): Promise<ActionParams[]> {
         let userData = UserData.get();
         if (!userData || !id) {
             return;
@@ -51,7 +52,7 @@
         }
     }
 
-    function getUiHandlerButtons(): ActionButton[] {
+    function getUiHandlerButtons(): ActionParams[] {
         const result = [];
         (Metadata.get(['clientDefs', scope, 'uiHandler']) || []).forEach(handler => {
             if (handler.type === 'setValue' && handler.triggerAction === 'onButtonClick') {
@@ -72,7 +73,7 @@
             return;
         }
 
-        actionsLoading = true;
+        loadingActions = true;
         loadDynamicActions().then((list) => {
             list = list.map((item) => ({...item, id: item.data.action_id ?? null}));
             dynamicActions = [...(recordButtons?.additionalButtons ?? []), ...list.filter(item => item.display === 'single')]
@@ -80,12 +81,11 @@
         }).catch(error => {
             dynamicActions = recordButtons?.additionalButtons ?? [];
             console.error(error);
-        }).finally(() => actionsLoading = false);
+        }).finally(() => loadingActions = false);
     }
 
-    function runAction(event: Event): void {
-        const el = event.target as HTMLElement;
-        recordButtons?.executeAction(el.dataset.action as string, el.dataset as Map<string, any>, event);
+    function executeAction(event: CustomEvent): void {
+        recordButtons?.executeAction(event.detail.action, event.detail.data, event);
     }
 
     onMount(() => {
@@ -94,75 +94,32 @@
 </script>
 
 <div class="button-row">
-    <div class="btn-group">
-        {#each actions as item}
-            <button class="btn btn-{item.style ?? 'default'} action" data-action="{item.name}" type="button" on:click={runAction}>
-                {#if item.html}{@html item.html}{:else}{Language.translate(item.label)}{/if}
-            </button>
-        {/each}
-        {#if dropdownActions.length > 0 || dynamicActionsDropdown.length > 0 || actionsLoading}
-            <button type="button" class="btn btn-primary dropdown-toggle dropdown-item-list-button"
-                    data-toggle="dropdown">
-                <span class="caret"></span>
-            </button>
-        {/if}
-
-        {#if dropdownActions.length > 0 || dynamicActionsDropdown.length > 0}
-            <ul class="dropdown-menu pull-left">
-                {#each dropdownActions as item}
-                    <li>
-                        <a href="javascript:" class="action" data-action={item.name} title={item.tooltip}
-                           on:click={runAction}>
-                            {#if item.html}{@html item.html}{:else}{Language.translate(item.label)}{/if}
-                        </a>
-                    </li>
-                {/each}
-
-                {#if dropdownActions && (dynamicActionsDropdown || actionsLoading)}
-                    <li class="divider"></li>
-                {/if}
-
-                {#if actionsLoading}
-                    <li class="preloader"><a href="javascript:">
-                        <Preloader heightPx="12"/>
-                    </a></li>
-                {/if}
-
-                {#each dynamicActionsDropdown as item}
-                    <li class="dynamic-action">
-                        <a href="javascript:" class="action" data-action={item.action} data-id={item.id}
-                           on:click={runAction}
-                           title={item.tooltip}>
-                            {#if item.html}{@html item.html}{:else}{item.label}{/if}
-                        </a>
-                    </li>
-                {/each}
-            </ul>
-        {/if}
-
+    <ActionGroup {actions} {dropdownActions} dynamicActionsDropdown={mode !== 'edit' ? dynamicActionsDropdown : []}
+                 {executeAction} {loadingActions} className="record-actions">
         {#if mode === 'detail'}
-            {#each dynamicActions as item}
-                <button type="button" class="btn btn-default additional-button action" data-action={item.action}
-                        data-id={item.id} title={item.tooltip} on:click={runAction}>
-                    {#if item.html}{@html item.html}{:else}{item.label}{/if}
-                </button>
+            {#each dynamicActions as action}
+                <ActionButton params={action} on:execute={executeAction} className="additional-button dynamic-action"/>
             {/each}
 
-            {#if actionsLoading}
-                <button class="btn preloader" style="margin-left: 20px" href="javascript:">
+            {#if loadingActions}
+                <button class="btn preloader additional-button">
                     <Preloader heightPx="12"/>
                 </button>
             {/if}
         {:else if mode === 'edit'}
-            {#each uiHandlerActions as item}
-                <button type="button" class="btn btn-default additional-button action" data-action={item.action}
-                        data-id={item.id}
-                        title={item.tooltip} on:click={runAction}>
-                    {#if item.html}{@html item.html}{:else}{item.label}{/if}
-                </button>
+            {#each uiHandlerActions as action}
+                <ActionButton params={action} on:execute={executeAction} className="additional-button"/>
             {/each}
         {/if}
-    </div>
+    </ActionGroup>
+
+    {#if mode === 'detail' && recordButtons?.headerButtons}
+        <div class="header-buttons-container">
+            <div class="header-buttons">
+                <ActionGroup actions={recordButtons?.headerButtons?.buttons} {executeAction} className="header-items"/>
+            </div>
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -170,6 +127,14 @@
         display: flex;
         align-items: center;
         flex-wrap: wrap;
+    }
+
+    .button-row :global(.btn-group > .additional-button:first-of-type) {
+        margin-left: 20px;
+    }
+
+    .button-row .header-buttons :global(.header-items) {
+        gap: 10px
     }
 
     .preloader {

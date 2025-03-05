@@ -45,5 +45,7 @@
     <div class="detail-button-container">
         <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions} {recordButtons} />
     </div>
-    <AnchorNavigation items={anchorNavItems} scrollCallback={anchorScrollCallback} />
+    <div class="panel-navigation">
+        <AnchorNavigation items={anchorNavItems} scrollCallback={anchorScrollCallback} />
+    </div>
 </BaseHeader>

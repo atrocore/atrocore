@@ -7,9 +7,9 @@
 </script>
 
 {#if breadcrumbs.length > 0}
-    <div class="header-breadcrumbs">
+    <nav class="header-breadcrumbs">
         <Breadcrumbs items={breadcrumbs} {currentIsHeading} />
-    </div>
+    </nav>
 {/if}
 
 <slot></slot>

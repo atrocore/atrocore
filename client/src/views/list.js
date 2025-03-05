@@ -123,74 +123,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 this.setupCreateButton();
             }
 
-            if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
-                let buttonKanban = {
-                    link: '#' + this.scope + '/kanban',
-                    name: 'kanban',
-                    title: 'Kanban',
-                    acl: 'read',
-                    iconHtml: '<span class="fa fa-grip-horizontal"></span>'
-                };
-
-                let listIndex = this.menu.buttons.findIndex(button => button.name === 'list');
-                if (listIndex > -1) {
-                    this.menu.buttons.splice(listIndex, 0, buttonKanban);
-                } else {
-                    this.menu.buttons.unshift({
-                        link: '#' + this.scope + '/list',
-                        name: 'list',
-                        title: 'List',
-                        acl: 'read',
-                        iconHtml: '<span class=\"fa fa-list\"></span>'
-                    });
-                    this.menu.buttons.unshift(buttonKanban);
-                }
-            }
-
-            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).forEach(dynamicAction => {
-                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
-                    if (dynamicAction.display === 'dropdown') {
-                        let skip = false;
-                        (this.menu.dropdown || []).forEach(item => {
-                            if (item.data && item.data.id && item.data.id === dynamicAction.id) {
-                                skip = true;
-                            }
-                        });
-
-                        if (!skip) {
-                            (this.menu.dropdown || []).push({
-                                label: dynamicAction.name,
-                                action: "dynamicEntityAction",
-                                iconHtml: '',
-                                data: {
-                                    id: dynamicAction.id
-                                }
-                            });
-                        }
-                    }
-
-                    if (dynamicAction.display === 'single') {
-                        let skip = false;
-                        (this.menu.buttons || []).forEach(item => {
-                            if (item.data && item.data.id && item.data.id === dynamicAction.id) {
-                                skip = true;
-                            }
-                        });
-
-                        if (!skip) {
-                            (this.menu.buttons || []).unshift({
-                                label: dynamicAction.name,
-                                action: "dynamicEntityAction",
-                                iconHtml: '',
-                                data: {
-                                    id: dynamicAction.id
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-
             this.getStorage().set('list-view', this.scope, this.viewMode);
 
         },
@@ -252,18 +184,20 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         setupHeader: function () {
-            // this.createView('header', this.headerView, {
-            //     collection: this.collection,
-            //     el: '#main .page-header',
-            //     scope: this.scope,
-            //     isXsSingleRow: true
-            // });
-
             new Svelte.ListHeader({
                 target: document.querySelector('#main .page-header'),
                 props: {
                     params: {
-                        breadcrumbs: this.getBreadcrumbsItems()
+                        breadcrumbs: this.getBreadcrumbsItems(),
+                        scope: this.scope
+                    },
+                    entityActions: {
+                        buttons: this.getMenu().buttons ?? [],
+                        dropdownButtons: this.getMenu().dropdownButtons ?? [],
+                    },
+                    viewMode: this.viewMode,
+                    onViewModeChange: (mode) => {
+                        this.switchViewMode(mode);
                     },
                     renderSearch: () => {
                         if (this.searchPanel) {
@@ -297,6 +231,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }
         },
 
+/*
         getMenu() {
             const menu = Dep.prototype.getMenu.call(this) || {};
 
@@ -310,12 +245,13 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 name: 'favorite',
                 action: isFavorite ? 'removeFavorite' : 'addFavorite',
                 style: isFavorite ? 'primary' : 'default',
-                iconHtml: '<span class="fa fa-thumb-tack"></span>',
+                html: '<span class="fa fa-thumb-tack"></span>',
                 cssStyle: 'margin-right: 15px',
             }, ...(menu.buttons || [])];
 
             return menu;
         },
+*/
 
         setupSearchPanel: function () {
             let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
@@ -450,15 +386,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
             if (!this.hasView('list')) {
                 this.loadList();
-            }
-
-            let mode = this.getStorage().get('list-view', this.scope);
-            let button = $('a[data-name="' + mode + '"]');
-            if (button.length) {
-                if (button.hasClass('btn-default')) {
-                    button.removeClass('btn-default');
-                }
-                button.addClass('btn-primary');
             }
 
             let observer = new ResizeObserver(() => {

@@ -14970,11 +14970,6 @@ label {
     justify-content: space-between;
 }
 
-.page-header .header-buttons-container > .btn-group {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
 @media (max-width: 767px) {
     .page-header .row .col-lg-3,
     .page-header .row .col-lg-4 {
@@ -16659,7 +16654,7 @@ h4.panel-title span.color-icon {
     overflow-y: visible !important
 }
 
-.record .middle > .panel:first-child {
+.record .middle > .panel:first-child > .panel-heading {
     border-top-width: 0
 }
 

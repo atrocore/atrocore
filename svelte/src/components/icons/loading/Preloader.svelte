@@ -3,3 +3,9 @@
 </script>
 
 <img class="preloader" style:height={`${heightPx}px`} src="client/img/atro-loader.svg" alt="Loading">
+
+<style>
+    .preloader {
+        user-select: none;
+    }
+</style>
