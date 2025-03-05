@@ -102,10 +102,6 @@
     "disableActionHistory": {
       "type": "bool"
     },
-    "hasAccount": {
-      "type": "bool",
-      "tooltip": true
-    },
     "multiParents": {
       "type": "bool"
     },
