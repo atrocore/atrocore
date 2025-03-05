@@ -5,8 +5,8 @@
     import LayoutItem from "./interfaces/LayoutItem"
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
-    import {ModelFactory} from "../../../utils/ModelFactory";
     import {LayoutManager} from "../../../utils/LayoutManager";
+    import Group from "./interfaces/Group";
 
     export let params: Params;
 
@@ -44,32 +44,29 @@
     }
 
     let rowsLayout: RowsLayout;
-    let enabledFields: Field[] = [];
-    let disabledFields: Field[] = [];
-    let rowLayout: LayoutItem[] = [];
+    let selectedFields: Field[] = [];
+    let availableGroups: Group[] = []
     let editable: boolean = true;
     const ignoreList: string[] = [];
     const ignoreTypeList: string[] = [];
 
     function loadLayout(callback): void {
-        ModelFactory.create(params.scope, (model) => {
-            LayoutManager.get(params.scope, params.type, params.relatedScope, params.layoutProfileId, (layout) => {
-                if (callback) {
-                    readDataFromLayout(model, layout.layout);
-                    callback(layout);
-                }
-            }, false);
-        });
+        LayoutManager.get(params.scope, params.type, params.relatedScope, params.layoutProfileId, (layout) => {
+            if (callback) {
+                readDataFromLayout(layout.layout);
+                callback(layout);
+            }
+        }, false);
     }
 
-    function getTranslation(field) {
+    function getTranslation(scope: string, field: string) {
         if (field === '_self') {
-            return Language.translate(params.scope, 'scopeNamesPlural', 'Global')
+            return Language.translate(scope, 'scopeNamesPlural', 'Global')
         }
         if (field === '_bookmark') {
             return Language.translate('Bookmark', 'scopeNamesPlural', 'Global')
         }
-        return Language.translate(field, 'fields', params.scope)
+        return Language.translate(field, 'fields', scope)
     }
 
     function getAdditionalFields() {
@@ -86,53 +83,113 @@
         return fields;
     }
 
-    function readDataFromLayout(model: any, layout: LayoutItem[]): void {
-        let allFields = Object.keys(model.defs.fields).filter(field =>
-            checkFieldType(model.getFieldParam(field, 'type')) && isFieldEnabled(model, field)
+    function getFieldType(scope: string, field: string) {
+        return Metadata.get(['entityDefs', scope, 'fields', field, 'type']) ?? ''
+    }
+
+    function getRelationScope(leftScope: string, rightScope: string) {
+        const links = Metadata.get(['entityDefs', leftScope, 'links']) ?? {}
+        for (const link of Object.keys(links)) {
+            if (links[link]?.entity === rightScope && !!links[link].relationName) {
+                return Espo.utils.upperCaseFirst(links[link].relationName)
+            }
+        }
+        return ''
+    }
+
+    function readDataFromLayout(layout: LayoutItem[]): void {
+        const groups = []
+        let relationScope = ''
+        let allFields = Object.keys(Metadata.get(['entityDefs', params.scope, 'fields']) || {}).filter(field =>
+            checkFieldType(getFieldType(params.scope, field)) && isFieldEnabled(params.scope, field)
         );
+
+        if (params.relatedScope && params.type === 'list') {
+            relationScope = getRelationScope(params.scope, params.relatedScope)
+            // load related scope field
+            const group = {
+                name: relationScope,
+                scope: relationScope,
+                prefix: relationScope + '__'
+            }
+            let allFields = Object.keys(Metadata.get(['entityDefs', relationScope, 'fields']) || {}).filter(field =>
+                checkFieldType(getFieldType(relationScope, field)) && isFieldEnabled(relationScope, field)
+            );
+
+            // remove links
+            allFields = allFields.filter(field => !(Metadata.get(['entityDefs', relationScope, 'fields', field, 'relationField']) ?? false))
+
+            allFields = allFields.sort((v1, v2) =>
+                getTranslation(relationScope, v1).localeCompare(getTranslation(relationScope, v2))
+            ).map(f => group.prefix + f)
+
+            group.fields = allFields
+            groups.push(group)
+        }
+
         allFields.push(...getAdditionalFields())
         allFields = allFields.sort((v1, v2) =>
-            getTranslation(v1).localeCompare(getTranslation(v2))
+            getTranslation(params.scope, v1).localeCompare(getTranslation(params.scope, v2))
         )
+        groups.unshift({
+            name: params.scope,
+            scope: params.scope,
+            fields: allFields
+        })
 
-        const enabledFieldsList: string[] = [];
         const labelList: string[] = [];
         const duplicateLabelList: string[] = [];
 
-        enabledFields = layout.map(item => {
-            const label = getTranslation(item.name);
-            if (labelList.includes(label)) {
-                duplicateLabelList.push(label);
+        for (const group of groups) {
+            group.fields = group.fields
+                .map(field => {
+                    const label = getTranslation(group.scope, group.prefix ? field.replace(group.prefix, '') : field);
+                    if (!group.prefix) {
+                        if (labelList.includes(label)) {
+                            duplicateLabelList.push(label);
+                        }
+                        labelList.push(label);
+                    }
+
+                    const o: Field = {name: field, label};
+                    const fieldType = Metadata.get(['entityDefs', group.scope, 'fields', field, 'type']);
+                    if (fieldType && Metadata.get(['fields', fieldType, 'notSortable'])) {
+                        o.notSortable = true;
+                    }
+                    return o;
+                });
+        }
+
+        selectedFields = layout
+
+        groups[0].fields.forEach(item => {
+            if (duplicateLabelList.includes(item.label)) {
+                item.label += ` (${item.name})`;
             }
-            labelList.push(label);
-            enabledFieldsList.push(item.name);
-            return {
-                ...item,
-                label: item.label || label
-            };
+            const selectedItem = selectedFields.find(i => !i.label && i.name === item.name)
+            if (selectedItem) {
+                selectedItem.label = item.label
+            }
         });
 
-        disabledFields = allFields.filter(field => !enabledFieldsList.includes(field)).map(field => {
-            const label = getTranslation(field);
-            if (labelList.includes(label)) {
-                duplicateLabelList.push(label);
-            }
-            labelList.push(label);
-            const o: Field = {name: field, label};
-            const fieldType = Metadata.get(['entityDefs', params.scope, 'fields', field, 'type']);
-            if (fieldType && Metadata.get(['fields', fieldType, 'notSortable'])) {
-                o.notSortable = true;
-            }
-            return o;
-        });
-
-        [enabledFields, disabledFields].forEach(fieldList => {
-            fieldList.forEach(item => {
-                if (duplicateLabelList.includes(item.label)) {
-                    item.label += ` (${item.name})`;
+        if (groups[1]) {
+            groups[1].fields.forEach(item => {
+                if (labelList.includes(item.label)) {
+                    item.label += ` (Relation)`
                 }
-            });
-        });
+                const selectedItem = selectedFields.find(i => !i.label && i.name === item.name)
+                if (selectedItem) {
+                    selectedItem.label = item.label
+                }
+            })
+        }
+
+
+        for (const group of groups) {
+            group.fields = group.fields.filter(item => !selectedFields.find(sf => sf.name === item.name))
+        }
+
+        availableGroups = groups.reverse()
     }
 
     function checkFieldType(type: string): boolean {
@@ -142,11 +199,11 @@
         return true;
     }
 
-    function isFieldEnabled(model: any, name: string): boolean {
+    function isFieldEnabled(scope: string, name: string): boolean {
         if (ignoreList.includes(name)) {
             return false;
         }
-        if (ignoreTypeList.includes(model.getFieldParam(name, 'type'))) {
+        if (ignoreTypeList.includes(getFieldType(scope, name))) {
             return false;
         }
 
@@ -155,7 +212,7 @@
             disabledParameters.push(`layout${Espo.utils.upperCaseFirst(params.reelType)}Disabled`)
         }
         for (let param of disabledParameters) {
-            if (model.getFieldParam(name, param)) {
+            if (Metadata.get(['entityDefs', scope, 'fields', name, param])) {
                 return false
             }
         }
@@ -166,8 +223,8 @@
 <RowsLayout
         bind:this={rowsLayout}
         {params}
-        {enabledFields}
-        {disabledFields}
+        {selectedFields}
+        {availableGroups}
         {editable}
         {loadLayout}
 />

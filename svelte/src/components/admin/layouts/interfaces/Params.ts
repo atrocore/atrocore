@@ -1,5 +1,6 @@
 export default interface Params {
     scope: string;
+    relatedScope: string;
     type: string;
     layoutProfileId: string;
     editable: boolean;

@@ -10,5 +10,9 @@
       "view": "Ansicht",
       "viewGroup": "Gruppe ansehen"
     }
+  },
+  "tooltips": {
+    "entity": "Dies ist die Entität, für die das Layout konfiguriert ist.",
+    "relatedEntity": "Dies ist die Hauptentität, von deren Seite aus das Layout für die oben ausgewählte Entität angezeigt wird."
   }
 }

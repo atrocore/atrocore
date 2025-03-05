@@ -40,7 +40,7 @@ class LayoutManager
      * Get a full path of the file
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string         $filePath   - File path, Ex. file.json
+     * @param string         $filePath - File path, Ex. file.json
      *
      * @return string
      */
@@ -101,7 +101,9 @@ class LayoutManager
         list($layout, $storedProfile) = $this->compose($scope, $viewType, $relatedEntity, $layoutProfileId);
 
         // remove fields from layout if this fields not exist in metadata
-        $layout = $this->disableNotExistingFields($scope, $viewType, $layout);
+        if (empty($relatedEntity)) {
+            $layout = $this->disableNotExistingFields($scope, $viewType, $layout);
+        }
 
         if ($viewType === 'list') {
             foreach ($layout as $k => $row) {

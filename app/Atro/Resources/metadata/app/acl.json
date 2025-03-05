@@ -60,10 +60,6 @@
   },
   "strictDefault": {
     "scopeLevel": {
-      "User": {
-        "read": "own",
-        "edit": "no"
-      }
     },
     "fieldLevel": {
     },
