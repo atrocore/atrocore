@@ -14,11 +14,35 @@ class V1Dot13Dot32 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-03-05 12:00:00');
+        return new \DateTime('2025-03-05 16:00:00');
     }
 
     public function up(): void
     {
+        $dirPath = 'data/metadata/clientDefs';
+
+        if (is_dir($dirPath)) {
+            foreach (scandir($dirPath) as $file) {
+                if (in_array($file, array(".", ".."))) {
+                    continue;
+                }
+
+                $data = @json_decode(file_get_contents($dirPath . '/' . $file), true);
+
+                if (!empty($data) && is_array($data)) {
+                    if (isset($data['iconClass'])) {
+                        unset($data['iconClass']);
+
+                        if (!empty($data)) {
+                            file_put_contents($dirPath . '/' . $file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                        } else {
+                            @unlink($dirPath . '/' . $file);
+                        }
+                    }
+                }
+            }
+        }
+
         self::createSystemIcons($this->getConnection(), $this->getConfig());
     }
 
@@ -166,7 +190,7 @@ class V1Dot13Dot32 extends Base
             if (file_exists($path) && $extension == 'svg') {
                 $result[$file] = [
                     'id'        => $filename,
-                    'name'      => $filename,
+                    'name'      => ucwords(str_replace('_', ' ', $filename)),
                     'code'      => $filename,
                     'library'   => 'Google',
                     'content'   => file_get_contents($path)
