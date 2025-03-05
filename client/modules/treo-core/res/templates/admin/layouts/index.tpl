@@ -19,23 +19,27 @@
         <div id="layouts-menu" class="col-sm-3">
             <div class="well row">
                 <div class="col-xs-12 cell form-group">
-                    <label class="control-label"
-                           data-name="layoutProfile">{{translate 'layoutProfile' scope='Layout' category='fields'}}</label>
+                    <label class="control-label" data-name="layoutProfile">
+                        <span class="label-text">{{translate 'layoutProfile' scope='Layout' category='fields'}}</span>
+                    </label>
                     <div class="field" data-name="layoutProfile">{{{layoutProfile}}}</div>
                 </div>
                 <div class="col-xs-12 cell form-group">
-                    <label class="control-label"
-                           data-name="entity">{{translate 'entity' scope='Layout' category='fields'}}</label>
+                    <label class="control-label" data-name="entity">
+                        <span class="label-text">{{translate 'entity' scope='Layout' category='fields'}}</span>
+                    </label>
                     <div class="field" data-name="entity">{{{entity}}}</div>
                 </div>
                 <div class="col-xs-12 cell form-group">
-                    <label class="control-label"
-                           data-name="viewType">{{translate 'viewType' scope='Layout' category='fields'}}</label>
+                    <label class="control-label" data-name="viewType">
+                        <span class="label-text">{{translate 'viewType' scope='Layout' category='fields'}}</span>
+                    </label>
                     <div class="field" data-name="viewType">{{{viewType}}}</div>
                 </div>
                 <div class="col-xs-12 cell form-group">
-                    <label class="control-label"
-                           data-name="relatedEntity">{{translate 'relatedEntity' scope='Layout' category='fields'}}</label>
+                    <label class="control-label" data-name="relatedEntity">
+                        <span class="label-text">{{translate 'relatedEntity' scope='Layout' category='fields'}}</span>
+                    </label>
                     <div class="field" data-name="relatedEntity">{{{relatedEntity}}}</div>
                 </div>
             </div>

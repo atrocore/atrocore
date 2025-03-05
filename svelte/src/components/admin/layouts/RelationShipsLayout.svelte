@@ -6,6 +6,7 @@
     import {Metadata} from "../../../utils/Metadata";
     import {LayoutManager} from "../../../utils/LayoutManager";
     import {ModelFactory} from "../../../utils/ModelFactory";
+    import Group from "./interfaces/Group";
 
     export let params: Params;
 
@@ -29,8 +30,8 @@
     }
 
 
-    let enabledFields: Field[] = [];
-    let disabledFields: Field[] = [];
+    let selectedFields: Field[] = [];
+    let availableGroups: Group[] = [];
     let editable: boolean = true;
 
     function loadLayout(callback): void {
@@ -86,8 +87,11 @@
         });
 
         let enabledFieldsList = [];
-        enabledFields = [];
-        disabledFields = [];
+        selectedFields = [];
+        const group = {
+            name: params.scope,
+            fields: []
+        }
 
         for (let i in layout) {
             let item = layout[i];
@@ -114,26 +118,29 @@
                 o[attribute] = value;
             });
 
-            enabledFields.push(o);
+            selectedFields.push(o);
             enabledFieldsList.push(o.name);
         }
 
         for (let field of allFields) {
             if (!enabledFieldsList.includes(field)) {
                 let options = bottomPanels.find(panel => panel.name === field);
-                disabledFields.push({
+                group.fields.push({
                     name: field,
-                    label: options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(field, 'links', params.scope)
+                    label: options ? Language.translate(options.label, 'labels', params.scope) :
+                        (Language.translate(field, 'fields', params.scope) || Language.translate(field, 'links', params.scope))
                 });
             }
         }
+
+        availableGroups = [group]
     }
 
 </script>
 
 <RowsLayout
         {params}
-        {enabledFields}
-        {disabledFields}
+        {selectedFields}
+        {availableGroups}
         {loadLayout}
 />

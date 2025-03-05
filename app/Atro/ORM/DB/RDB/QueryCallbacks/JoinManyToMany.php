@@ -101,6 +101,7 @@ class JoinManyToMany
             foreach ($additionalSelect as $sql) {
                 $qb->addSelect($sql);
             }
+            $qb->addSelect("$relAlias.id as relation__id");
         }
 
         $qb->innerJoin($alias, $queryConverter->quoteIdentifier($relTable), $relAlias, $condition);
