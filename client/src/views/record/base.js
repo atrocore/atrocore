@@ -408,7 +408,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
         },
 
         processUiHandler: function (type, field) {
-            let additionalParams ={
+            let additionalParams = {
                 currentUserId: this.getPreferences().get('id')
             }
 
@@ -579,19 +579,14 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }
 
             let hashParts = window.location.hash.split('/view/');
-            if (typeof hashParts[1] !== 'undefined' && this.model.defs._relationName) {
+            if (this.model.relationModel) {
                 attrs._relationName = this.model.defs._relationName;
                 attrs._relationEntity = hashParts[0].replace('#', '');
                 attrs._relationEntityId = hashParts[1];
 
-                $.each(this.model.defs.fields, (field, fieldDefs) => {
-                    if (fieldDefs.relId && model.get(field)) {
-                        attrs._relationId = model.get(field);
-                    }
-                });
+                attrs._relationId = this.model.relationModel.id
+                attrs._relationData = this.fetch(true)
 
-                // @todo remove it soon
-                attrs._mainEntityId = hashParts[1];
             }
 
             let _prev = {};
@@ -688,12 +683,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             });
         },
 
-        fetch: function () {
+        fetch: function (onlyRelation = false) {
             var data = {};
             var fieldViews = this.getFieldViews();
             for (var i in fieldViews) {
                 var view = fieldViews[i];
-                if (view.mode == 'edit') {
+                if (view.mode === 'edit' && (onlyRelation ? view.options.useRelationModel : !view.options.useRelationModel)) {
                     if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
                         _.extend(data, view.fetch());
                     }

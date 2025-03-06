@@ -582,8 +582,12 @@ var Bull = Bull || {};
                         options = _.extend(options, nestedViewDefs[i].options);
                     }
 
-                    if ('useRelationModel' in options && this.options.relationModel) {
-                        options.model = this.options.relationModel;
+                    if ('useRelationModel' in options) {
+                        if(this.options.relationModel){
+                            options.model = this.options.relationModel;
+                        }else{
+                            options.model = this.model.relationModel
+                        }
                     } else if (this.model) {
                         options.model = this.model;
                     }

@@ -139,13 +139,7 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
         },
 
         getFieldViews: function () {
-            var nestedViews = this.nestedViews;
-            var fieldViews = {};
-            for (var viewKey in this.nestedViews) {
-                var name = this.nestedViews[viewKey].name;
-                fieldViews[name] = this.nestedViews[viewKey];
-            }
-            return fieldViews;
+            return this.nestedViews
         },
 
         getFieldView: function (name) {
