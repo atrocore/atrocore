@@ -21,7 +21,6 @@
     "duplicatableRelations": "Duplizierbare Beziehungen",
     "hasAssignedUser": "Zugewiesenen Benutzer ermöglichen",
     "hasTeam": "Teams ermöglichen",
-    "hasAccount": "Accounts ermöglichen",
     "hasOwner": "Eigentümer ermöglichen",
     "multiParents": "Mehrere Eltern",
     "dragAndDrop": "Ziehen und ablegen",
@@ -65,7 +64,6 @@
     "unInheritedRelations": "Die Beziehungen zu diesen Entitäten werden nicht vom übergeordneten Element vererbt.",
     "hasAssignedUser": "Zugewiesene Benutzer für die Zugriffsverwaltung aktivieren.",
     "hasTeam": "Teams für die Zugriffsverwaltung aktivieren.",
-    "hasAccount": "Accounts für die Zugriffsverwaltung aktivieren.",
     "hasOwner": "Eigentümer für die Zugriffsverwaltung aktivieren."
   }
 }

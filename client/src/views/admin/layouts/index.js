@@ -97,7 +97,7 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     model: this.model,
                     scope: 'Layout',
                     defs: {
-                        name: 'entity',
+                        name: 'entity'
                     },
                     mode: 'edit',
                     inlineEditDisabled: true,
@@ -123,7 +123,7 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     model: this.model,
                     scope: 'Layout',
                     defs: {
-                        name: 'relatedEntity',
+                        name: 'relatedEntity'
                     },
                     mode: 'edit',
                     inlineEditDisabled: true

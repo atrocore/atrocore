@@ -10,5 +10,9 @@
       "view": "View",
       "viewGroup": "View Group"
     }
+  },
+  "tooltips": {
+    "entity": "This is the entity for which the layout is configured.",
+    "relatedEntity": "This is the main entity from whose page the layout for the entity selected above is displayed."
   }
 }

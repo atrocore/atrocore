@@ -101,7 +101,7 @@
     },
     "contacts": {
       "type": "hasMany",
-      "relationName": "contactAccount",
+      "relationName": "ContactAccount",
       "foreign": "accounts",
       "entity": "Contact"
     },

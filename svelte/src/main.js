@@ -36,4 +36,4 @@ window.SvelteStorage = Storage;
 window.driver = driver;
 window.tippy = tippy;
 
-export {UpdatePanel, JobManagerIcon, LayoutComponent, TreePanel, ApiRequestComponent, Script, Navigation, Favorites};
+export {Script, UpdatePanel, JobManagerIcon, LayoutComponent, TreePanel, ApiRequestComponent, Navigation, Favorites};

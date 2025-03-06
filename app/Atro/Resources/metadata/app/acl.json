@@ -42,8 +42,7 @@
   "default": {
     "scopeLevel": {
       "User": {
-        "read": "all",
-        "edit": "no"
+        "read": "all"
       },
       "Locale": {
         "read": "all",
@@ -60,10 +59,6 @@
   },
   "strictDefault": {
     "scopeLevel": {
-      "User": {
-        "read": "own",
-        "edit": "no"
-      }
     },
     "fieldLevel": {
     },

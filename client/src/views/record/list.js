@@ -983,7 +983,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         setup: function () {
             this.setupDraggableParams();
-
             if (typeof this.collection === 'undefined') {
                 throw new Error('Collection has not been injected into Record.List view.');
             }
@@ -995,6 +994,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.events = Espo.Utils.clone(this.events);
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
+            this.relationScope = this.getRelationScope()
+
 
             if (this.getMetadata().get(['scopes', this.getModelScope(), 'disabled'])) {
                 this.checkboxes = false;
@@ -2081,6 +2082,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     item.customLabel = this.listLayout[i].customLabel;
                     item.hasCustomLabel = true;
                 }
+
+                if (this.isRelationField(item.name)) {
+                    const name = item.name.split('__')[1]
+                    item.label = this.translate(name, 'fields', this.relationScope) + ' (Relation)'
+                } else {
+                    item.label = this.translate(item.name, 'fields', this.collection.name)
+                }
+
+
                 if (item.sortable) {
                     item.sorted = this.collection.sortBy === this.listLayout[i].name;
                     if (item.sorted) {
@@ -2127,23 +2137,45 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             for (var i in listLayout) {
                 var col = listLayout[i];
-                var type = col.type || model.getFieldType(col.name) || 'base';
+
                 if (!col.name) {
                     continue;
                 }
+                let item;
 
-                var item = {
-                    columnName: col.name,
-                    name: col.name + 'Field',
-                    view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),
-                    options: {
-                        defs: {
-                            name: col.name,
-                            params: col.params || {}
-                        },
-                        mode: 'list'
+
+                if (this.isRelationField(col.name)) {
+                    const name = col.name.split('__')[1]
+                    const type = col.type || this.getMetadata().get(['entityDefs', this.relationScope, 'fields', name, 'type']) || 'base';
+                    item = {
+                        columnName: col.name,
+                        name: col.name + 'Field',
+                        view: col.view || this.getMetadata().get(['entityDefs', this.relationScope, 'fields', name, 'view']) || this.getFieldManager().getViewName(type),
+                        options: {
+                            useRelationModel: true,
+                            defs: {
+                                name: name,
+                                params: col.params || {}
+                            },
+                            mode: 'list'
+                        }
                     }
-                };
+                } else {
+                    const type = col.type || model.getFieldType(col.name) || 'base';
+                    item = {
+                        columnName: col.name,
+                        name: col.name + 'Field',
+                        view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),
+                        options: {
+                            defs: {
+                                name: col.name,
+                                params: col.params || {}
+                            },
+                            mode: 'list'
+                        }
+                    };
+                }
+
                 if (col.width) {
                     item.options.defs.width = col.width;
                 }
@@ -2303,10 +2335,30 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
         },
 
+        getRelationScope() {
+            const entityType = this.options.layoutRelatedScope
+            if (entityType) {
+                return Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', entityType, 'links', this.relationName, 'relationName']))
+            }
+            return null
+        },
+
+        hasRelationFields() {
+            if (this.listLayout.find(item => this.isRelationField(item.name))) {
+                return true
+            }
+            return false
+        },
+
+        isRelationField(name) {
+            return name.split('__').length === 2
+        },
+
         buildRow: function (i, model, callback) {
             var key = model.id;
 
             this.rowList.push(key);
+
             this.getInternalLayout(function (internalLayout) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);
@@ -2318,26 +2370,42 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     unlink: this.options.canUnlink
                 };
 
-                this.createView(key, 'views/base', {
-                    model: model,
-                    acl: acl,
-                    el: this.options.el + ' .list-row[data-id="' + key + '"]',
-                    optionsToPass: ['acl', 'scope'],
-                    scope: this.scope,
-                    noCache: true,
-                    _layout: {
-                        type: this._internalLayoutType,
-                        layout: internalLayout
-                    },
-                    name: this.type + '-' + model.name,
-                    setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
-                }, callback);
+                let getRelationModel = (callback) => {
+                    if (this.hasRelationFields()) {
+                        this.getModelFactory().create(this.relationScope, relModel => {
+                            relModel.set(model.get('__relationEntity'));
+                            callback(relModel)
+                        })
+                    } else {
+                        callback()
+                    }
+                }
+
+                getRelationModel((relModel) => {
+                    this.createView(key, 'views/base', {
+                        model: model,
+                        relationModel: relModel,
+                        acl: acl,
+                        el: this.options.el + ' .list-row[data-id="' + key + '"]',
+                        optionsToPass: ['acl', 'scope'],
+                        scope: this.scope,
+                        noCache: true,
+                        _layout: {
+                            type: this._internalLayoutType,
+                            layout: internalLayout
+                        },
+                        name: this.type + '-' + model.name,
+                        setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
+                    }, callback);
+                })
+
+
             }.bind(this), model);
         },
 
-        createLayoutConfigurator(){
-            $(this.getSelector() + ' .layout-editor-container').each((idx,el) => {
-                this.createView('layoutConfigurator'+idx, "views/record/layout-configurator", {
+        createLayoutConfigurator() {
+            $(this.getSelector() + ' .layout-editor-container').each((idx, el) => {
+                this.createView('layoutConfigurator' + idx, "views/record/layout-configurator", {
                     scope: this.scope,
                     viewType: this.layoutName,
                     relatedScope: this.getParentModel()?.urlRoot,
