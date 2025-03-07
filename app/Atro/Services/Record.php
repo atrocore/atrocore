@@ -435,15 +435,15 @@ class Record extends RecordService
 
     protected function processActionHistoryRecord($action, Entity $entity)
     {
-        if (
-            $this->actionHistoryDisabled
-            || $this->getMetadata()->get("scopes.{$entity->getEntityName()}.disableActionHistory")
-            || $this->getConfig()->get('actionHistoryDisabled')
-            || $this->getMemoryStorage()->get('importJobId')
-        ) {
-            return;
-        }
-
-        parent::processActionHistoryRecord($action, $entity);
+//        if (
+//            $this->actionHistoryDisabled
+//            || $this->getMetadata()->get("scopes.{$entity->getEntityName()}.disableActionHistory")
+//            || $this->getConfig()->get('actionHistoryDisabled')
+//            || $this->getMemoryStorage()->get('importJobId')
+//        ) {
+//            return;
+//        }
+//
+//        parent::processActionHistoryRecord($action, $entity);
     }
 }

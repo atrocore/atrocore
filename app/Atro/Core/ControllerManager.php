@@ -14,12 +14,13 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Core\EventManager\Manager;
-use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\Entities\User;
+use Espo\ORM\EntityManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -125,6 +126,40 @@ class ControllerManager
             $request
         );
 
+
+//        if ($request->isPost()) {
+//            $action = 'create';
+//        } elseif ($request->isPatch() || $request->isPut()) {
+//            $action = 'update';
+//        } elseif ($request->isDelete()) {
+//            $action = 'delete';
+//        } else {
+//            $action = 'read';
+//        }
+//
+//        $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
+//        $historyRecord->set('action', $action);
+//        $historyRecord->set('userId', $this->getUser()->id);
+//        $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
+//        $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
+//        $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
+//        $historyRecord->set('data', [
+//            'params' => $params,
+//            'data' => $data,
+//            'params' => $params
+//        ]);
+//
+////        if ($entity) {
+////            $historyRecord->set(array(
+////                'targetType' => $entity->getEntityType(),
+////                'targetId'   => $entity->id
+////            ));
+////        }
+//
+//        echo '<pre>';
+//        print_r($request->get);
+//        die();
+
         $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
 
         $this->dispatch(
@@ -199,5 +234,15 @@ class ControllerManager
     protected function getEventManager(): Manager
     {
         return $this->getContainer()->get('eventManager');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->getContainer()->get('entityManager');
+    }
+
+    protected function getUser(): User
+    {
+        return $this->getContainer()->get('user');
     }
 }
