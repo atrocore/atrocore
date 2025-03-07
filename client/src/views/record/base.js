@@ -563,6 +563,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
 
             var attrs = this.getChangedAttributes();
 
+            if (!attrs && Object.keys(this.model.relationModel?.changed || {}).length > 0) {
+                attrs = {}
+            }
+
             if (!attrs) {
                 this.trigger('cancel:save');
                 this.afterNotModified();

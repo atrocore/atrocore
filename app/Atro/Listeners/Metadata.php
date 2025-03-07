@@ -860,7 +860,9 @@ class Metadata extends AbstractListener
             }
 
             $data['scopes'][$entityName]['tab'] = false;
-            $data['scopes'][$entityName]['layouts'] = false;
+            if (!isset($data['scopes'][$entityName]['layouts'])) {
+                $data['scopes'][$entityName]['layouts'] = true;
+            }
             $data['scopes'][$entityName]['customizable'] = false;
         }
     }
