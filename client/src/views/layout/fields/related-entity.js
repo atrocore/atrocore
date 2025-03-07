@@ -18,10 +18,15 @@ Espo.define('views/layout/fields/related-entity', 'views/layout/fields/entity', 
                 return false
             }
 
+            if (['ProductAttributeValue', 'ClassificationAttribute', 'ComponentAttributeValue'].includes(scope)) {
+                return false
+            }
+
             const links = this.getMetadata().get(`entityDefs.${scope}.links`) || {}
 
             const link = Object.keys(links)
                 .find(link => links[link]?.entity === entity)
+
 
             return !!link && this.getMetadata().get('scopes.' + scope + '.entity') &&
                 this.getMetadata().get('scopes.' + scope + '.type') !== 'Relation' &&
