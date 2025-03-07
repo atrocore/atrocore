@@ -9,7 +9,6 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
-  "hasAccount": false,
   "multiParents": false,
   "dragAndDrop": true,
   "fieldValueInheritance": true,

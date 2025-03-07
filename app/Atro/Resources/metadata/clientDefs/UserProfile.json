@@ -4,10 +4,7 @@
   "iconClass": "fas fa-user-circle",
   "defaultSidePanelFieldLists": {
     "detail": [
-      "avatar",
-      "createdAt",
-      "lastAccess",
-      "passwordUpdatedAt"
+      "avatar"
     ],
     "edit": [
       "avatar"

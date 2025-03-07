@@ -175,9 +175,7 @@
         {
           "name": "hasTeam"
         },
-        {
-          "name": "hasAccount"
-        }
+        false
       ]
     ]
   }

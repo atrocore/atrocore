@@ -860,7 +860,9 @@ class Metadata extends AbstractListener
             }
 
             $data['scopes'][$entityName]['tab'] = false;
-            $data['scopes'][$entityName]['layouts'] = false;
+            if (!isset($data['scopes'][$entityName]['layouts'])) {
+                $data['scopes'][$entityName]['layouts'] = true;
+            }
             $data['scopes'][$entityName]['customizable'] = false;
         }
     }
@@ -1233,45 +1235,6 @@ class Metadata extends AbstractListener
 
                 if (!isset($data['entityDefs'][$scope]['links']['teams']['layoutRelationshipsDisabled'])) {
                     $data['entityDefs'][$scope]['links']['teams']['layoutRelationshipsDisabled'] = true;
-                }
-            }
-
-            // for accounts
-            if (!empty($row['hasAccount'])) {
-                $field = 'assignedAccounts';
-                $foreign = "assigned{$scope}s";
-                $relationName = lcfirst($scope) . 'AssignedAccount';
-
-                if (!isset($data['entityDefs'][$scope]['fields'][$field]['type'])) {
-                    $data['entityDefs'][$scope]['fields'][$field]['type'] = 'linkMultiple';
-                    $data['entityDefs'][$scope]['fields'][$field]['layoutDetailDisabled'] = true;
-                    $data['entityDefs']['Account']['fields'][$foreign]['type'] = 'linkMultiple';
-                    $data['entityDefs']['Account']['fields'][$foreign]['layoutDetailDisabled'] = true;
-                }
-
-                if (!isset($data['entityDefs'][$scope]['links'][$field]['type'])) {
-                    $data['entityDefs'][$scope]['links'][$field]['type'] = 'hasMany';
-                    $data['entityDefs']['Account']['links'][$foreign]['type'] = 'hasMany';
-                }
-
-                if (!isset($data['entityDefs'][$scope]['links'][$field]['entity'])) {
-                    $data['entityDefs'][$scope]['links'][$field]['entity'] = 'Account';
-                    $data['entityDefs']['Account']['links'][$foreign]['entity'] = $scope;
-                }
-
-                if (!isset($data['entityDefs'][$scope]['links'][$field]['relationName'])) {
-                    $data['entityDefs'][$scope]['links'][$field]['relationName'] = $relationName;
-                    $data['entityDefs']['Account']['links'][$foreign]['relationName'] = $relationName;
-                }
-
-                if (!isset($data['entityDefs'][$scope]['links'][$field]['foreign'])) {
-                    $data['entityDefs'][$scope]['links'][$field]['foreign'] = $foreign;
-                    $data['entityDefs']['Account']['links'][$foreign]['foreign'] = $field;
-                }
-
-                if (!isset($data['entityDefs'][$scope]['links'][$field]['layoutRelationshipsDisabled'])) {
-                    $data['entityDefs'][$scope]['links'][$field]['layoutRelationshipsDisabled'] = true;
-                    $data['entityDefs']['Account']['links'][$foreign]['layoutRelationshipsDisabled'] = true;
                 }
             }
         }

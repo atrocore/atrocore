@@ -35,7 +35,7 @@
         }
     };
 
-    let defaultPanelFieldList = ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'ownerUser', 'teams'];
+    let defaultPanelFieldList = [];
 
     let panels: [] = [];
     let disabledFields: Cell[] = [];
