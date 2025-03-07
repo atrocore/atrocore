@@ -7,10 +7,8 @@
     "targetType": "Target Type",
     "authToken": "Auth Token",
     "ipAddress": "IP Address",
-    "authLogRecord": "Auth Log Record"
-  },
-  "presetFilters": {
-    "onlyMy": "Only My"
+    "authLogRecord": "Auth Log Record",
+    "data": "Data"
   },
   "options": {
     "action": {

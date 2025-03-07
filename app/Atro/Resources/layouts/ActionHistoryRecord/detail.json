@@ -1,26 +1,41 @@
 [
-    {
-        "label":"",
-        "rows": [
-            [
-                {"name": "user"},
-                {"name": "ipAddress"}
-            ],
-            [
-                {"name": "action"},
-                false
-            ],
-            [
-                {"name": "targetType"},
-                {"name": "createdAt"}
-            ],
-            [
-                {"name": "target", "fullWidth": true}
-            ],
-            [
-                {"name": "authLogRecord"},
-                {"name": "authToken"}
-            ]
-        ]
-    }
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "ipAddress"
+        }
+      ],
+      [
+        {
+          "name": "action"
+        },
+        false
+      ],
+      [
+        {
+          "name": "targetType"
+        },
+        {
+          "name": "createdAt"
+        }
+      ],
+      [
+        {
+          "name": "target",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "data",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
 ]
