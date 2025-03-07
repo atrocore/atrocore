@@ -1,6 +1,30 @@
 {
+  "entity": true,
+  "importable": false,
   "layouts": false,
+  "tab": false,
+  "acl": true,
+  "aclActionList": [
+    "read",
+    "delete"
+  ],
+  "aclActionLevelListMap": {
+    "read": [
+      "all",
+      "no"
+    ],
+    "delete": [
+      "all",
+      "no"
+    ]
+  },
+  "customizable": false,
+  "disabled": false,
+  "type": "Base",
+  "object": true,
+  "hasActive": false,
   "streamDisabled": true,
+  "enabledCopyConfigurations": true,
   "notificationDisabled": true,
   "bookmarkDisabled": true,
   "autoDeleteAfterDays": 21,
