@@ -138,6 +138,8 @@ Espo.define('ui-handler', [], function () {
                     this.processPanel(panel);
                 });
             }
+
+            this.recordView.model.trigger('after:process-ui-handler')
         },
 
         processPanel: function (panel) {

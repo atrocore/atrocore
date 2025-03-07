@@ -92,9 +92,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-
+                let $field
                 if (fieldView) {
-                    var $field = fieldView.$el;
+                    $field = fieldView.$el;
                     var $cell = $field.closest('.cell[data-name="' + name + '"]');
                     var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
@@ -102,9 +102,18 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                     $label.addClass('hidden');
                     $cell.addClass('hidden-cell');
                 } else {
+                    $field = this.$el.find('.field[data-name="' + name + '"]')
+                    $field.addClass('hidden');
                     this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
+                }
+
+                const $panel = $field.closest('.panel')
+                if ($panel.find('.cell').length === $panel.find('.cell.hidden-cell').length) {
+                    const name = $panel.attr('data-name')
+                    if (name) {
+                        this.hidePanel(name)
+                    }
                 }
             }.bind(this);
             if (this.isRendered()) {
@@ -129,9 +138,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-
+                let $field
                 if (fieldView) {
-                    var $field = fieldView.$el;
+                    $field = fieldView.$el;
                     var $cell = $field.closest('.cell[data-name="' + name + '"]');
                     var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
@@ -139,9 +148,15 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                     $label.removeClass('hidden');
                     $cell.removeClass('hidden-cell');
                 } else {
+                    $field = this.$el.find('.field[data-name="' + name + '"]')
+                    $field.removeClass('hidden');
                     this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
+                }
+
+                const panelName = $field.closest('.panel').attr('data-name')
+                if (panelName) {
+                    this.showPanel(panelName)
                 }
             }.bind(this);
 
