@@ -4,16 +4,11 @@
   "layouts": true,
   "tab": true,
   "acl": true,
+  "aclActionList": [
+    "read"
+  ],
   "aclActionLevelListMap": {
     "read": [
-      "all",
-      "no"
-    ],
-    "edit": [
-      "all",
-      "no"
-    ],
-    "delete": [
       "all",
       "no"
     ]

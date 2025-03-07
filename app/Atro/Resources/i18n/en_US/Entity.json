@@ -23,7 +23,6 @@
     "duplicatableRelations": "Duplicatable relations",
     "hasAssignedUser": "Enable Assigned User",
     "hasTeam": "Enable Teams",
-    "hasAccount": "Enable Accounts",
     "hasOwner": "Enable Owner",
     "multiParents": "Multiple parents",
     "dragAndDrop": "Drag & Drop",
@@ -69,7 +68,6 @@
     "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",
     "hasAssignedUser": "Enable Assigned User for Access Management.",
     "hasTeam": "Enable Teams for Access Management.",
-    "hasAccount": "Enable Accounts for Access Management.",
     "hasOwner": "Enable Owner for Access Management."
   },
   "exceptions": {
