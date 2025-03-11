@@ -9,6 +9,7 @@
     import ActionButton from "./buttons/ActionButton.svelte";
     import ActionGroup from "./buttons/ActionGroup.svelte";
     import ActionParams from "./interfaces/ActionParams";
+    import OverviewFilterButton from "./buttons/OverviewFilterButton.svelte";
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
@@ -29,7 +30,17 @@
         uiHandlerActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...getUiHandlerButtons()] : [])
     }
 
-    async function loadDynamicActions(): Promise<ActionParams[]|undefined> {
+    window.addEventListener('detail:overview-filters-changed', (e: CustomEvent) => {
+        const data = e.detail;
+
+        if (!data || !recordButtons) {
+            return;
+        }
+
+        recordButtons.isOverviewFilterActive = data.isOverviewFilterActive;
+    });
+
+    async function loadDynamicActions(): Promise<Record<string, any>[] | undefined> {
         let userData = UserData.get();
         if (!userData || !id) {
             return;
@@ -122,7 +133,17 @@
     {#if mode === 'detail' && recordButtons?.headerButtons}
         <div class="header-buttons-container">
             <div class="header-buttons">
-                <ActionGroup actions={recordButtons?.headerButtons?.buttons} {executeAction} className="header-items"/>
+                <div class="header-items">
+                    {#each recordButtons?.headerButtons?.buttons ?? [] as button}
+                        {#if button.action === 'openOverviewFilter'}
+                            <OverviewFilterButton filterApplied={recordButtons?.isOverviewFilterActive ?? false}
+                                                  onExecute={executeAction}/>
+                            {:else if }
+                        {:else}
+<!--                            <ActionButton params={button} on:execute={executeAction}/>-->
+                        {/if}
+                    {/each}
+                </div>
             </div>
         </div>
     {/if}

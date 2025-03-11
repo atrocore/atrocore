@@ -133,7 +133,11 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 && this.getMetadata().get(['scopes', this.scope, 'overviewFilters']) !== false
                 && this.getMetadata().get(['scopes', this.scope, 'hideFieldTypeFilters']) !== true
             ) {
-                this.handleFilterButton();
+                this.addMenuItem('buttons', {
+                    name: 'filtering',
+                    title: 'Open Filter',
+                    action: 'openOverviewFilter'
+                }, true, false, true);
             }
 
             var collection = this.collection = this.model.collection;
@@ -375,6 +379,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         additionalButtons: record.additionalButtons,
                         additionalEditButtons: record.additionalEditButtons,
                         headerButtons: this.getMenu(),
+                        isOverviewFilterActive: this.isOverviewFilterApply(),
                         executeAction: (action, data, event) => {
                             this.executeAction(action, data, event);
                         },
@@ -653,23 +658,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             this.addMenuItem('buttons', data, true, false, true);
         },
 
-        handleFilterButton() {
-            let cssStyle = 'margin: 0 10px 0 0px'
-            let style = 'default';
-            if (this.isOverviewFilterApply()) {
-                cssStyle += ';color:white;'
-                style = 'danger';
-            }
-            this.addMenuItem('buttons', {
-                name: 'filtering',
-                title: 'Open Filter',
-                style: style,
-                html: '<span class="fas fa-filter"></span>',
-                action: 'openOverviewFilter',
-                cssStyle: cssStyle
-            }, true, false, true)
-        },
-
         getOverviewFiltersList: function () {
             if (this.overviewFilterList) {
                 return this.overviewFilterList;
@@ -770,7 +758,11 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
                     if (filterChanged) {
                         this.model.trigger('overview-filters-changed');
-                        this.handleFilterButton();
+                        window.dispatchEvent(new CustomEvent('detail:overview-filters-changed', {
+                            detail: {
+                                isOverviewFilterActive: this.isOverviewFilterApply()
+                            }
+                        }));
                     }
                 });
             });

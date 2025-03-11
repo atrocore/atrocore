@@ -18,5 +18,6 @@ export default interface RecordActionButtons {
     additionalButtons: ActionParams[];
     additionalEditButtons: ActionParams[];
     headerButtons: Record<string, ActionParams[]>;
+    isOverviewFilterActive: boolean;
     executeAction: (action: string, data?: Map<string, any>, event?: Event) => void;
 }
