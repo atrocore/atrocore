@@ -1332,7 +1332,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             }
                         }.bind(this));
                     } else if (this.$el.parent().prop('id') === 'main' || (this.$el.parent().prop("tagName") || '').toLowerCase() === 'main') {
-                        const content = $('#content')
+                        const content = this.$el.parent();
 
                         content.off('scroll', this.$el);
                         content.on('scroll', this.$el, function () {
@@ -1584,7 +1584,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         fixedTableHead() {
             let $window = $(window),
-                content = $('#content'),
+                content = $('#main main'),
                 fixedTable = this.$el.find('.fixed-header-table'),
                 fullTable = this.$el.find('.full-table'),
                 navBarRight = $('.navbar-right'),
