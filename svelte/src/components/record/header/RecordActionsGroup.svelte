@@ -1,12 +1,14 @@
 <script lang="ts">
+    import RecordActionButtons from "./interfaces/RecordActionsButtons";
     import Permissions from "./interfaces/Permissions";
     import {UserData} from "../../../utils/UserData";
     import {Metadata} from "../../../utils/Metadata";
 
     import {onMount} from "svelte";
     import Preloader from "../../icons/loading/Preloader.svelte";
-    import ActionGroup from "./buttons/ActionGroup.svelte";
     import ActionButton from "./buttons/ActionButton.svelte";
+    import ActionGroup from "./buttons/ActionGroup.svelte";
+    import ActionParams from "./interfaces/ActionParams";
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
@@ -27,7 +29,7 @@
         uiHandlerActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...getUiHandlerButtons()] : [])
     }
 
-    async function loadDynamicActions(): Promise<ActionParams[]> {
+    async function loadDynamicActions(): Promise<ActionParams[]|undefined> {
         let userData = UserData.get();
         if (!userData || !id) {
             return;
@@ -53,8 +55,8 @@
     }
 
     function getUiHandlerButtons(): ActionParams[] {
-        const result = [];
-        (Metadata.get(['clientDefs', scope, 'uiHandler']) || []).forEach(handler => {
+        const result: ActionParams[] = [];
+        (Metadata.get(['clientDefs', scope, 'uiHandler']) || []).forEach((handler: Record<string, any>) => {
             if (handler.type === 'setValue' && handler.triggerAction === 'onButtonClick') {
                 result.push({
                     'action': 'uiHandler',
@@ -74,10 +76,14 @@
         }
 
         loadingActions = true;
-        loadDynamicActions().then((list) => {
-            list = list.map((item) => ({...item, id: item.data.action_id ?? null}));
-            dynamicActions = [...(recordButtons?.additionalButtons ?? []), ...list.filter(item => item.display === 'single')]
-            dynamicActionsDropdown = list.filter(item => item.display === 'dropdown');
+        loadDynamicActions().then((list: Record<string, any>[]) => {
+            const preparedList: ActionParams[] = list.map((item: Record<string, any>) => ({
+                ...item,
+                id: item.data.action_id ?? null
+            } as ActionParams));
+
+            dynamicActions = [...(recordButtons?.additionalButtons ?? []), ...preparedList.filter(item => item.display === 'single')]
+            dynamicActionsDropdown = preparedList.filter(item => item.display === 'dropdown');
         }).catch(error => {
             dynamicActions = recordButtons?.additionalButtons ?? [];
             console.error(error);
@@ -95,7 +101,7 @@
 
 <div class="button-row">
     <ActionGroup {actions} {dropdownActions} dynamicActionsDropdown={mode !== 'edit' ? dynamicActionsDropdown : []}
-                 {executeAction} {loadingActions} className="record-actions">
+                 {executeAction} {loadingActions} hasMoreButton={true} className="record-actions">
         {#if mode === 'detail'}
             {#each dynamicActions as action}
                 <ActionButton params={action} on:execute={executeAction} className="additional-button dynamic-action"/>
@@ -103,7 +109,7 @@
 
             {#if loadingActions}
                 <button class="btn preloader additional-button">
-                    <Preloader heightPx="12"/>
+                    <Preloader heightPx={12}/>
                 </button>
             {/if}
         {:else if mode === 'edit'}
@@ -129,8 +135,18 @@
         flex-wrap: wrap;
     }
 
+    .button-row :global(.record-actions) {
+        gap: 10px;
+    }
+
+    .button-row :global(.record-actions .btn) {
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+
     .button-row :global(.btn-group > .additional-button:first-of-type) {
-        margin-left: 20px;
+        margin-left: 10px;
     }
 
     .button-row .header-buttons :global(.header-items) {

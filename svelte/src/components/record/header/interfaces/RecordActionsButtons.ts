@@ -8,6 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+import ActionParams from "./ActionParams";
+
 export default interface RecordActionButtons {
     buttons: ActionParams[];
     editButtons: ActionParams[];

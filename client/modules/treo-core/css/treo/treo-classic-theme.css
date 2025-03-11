@@ -19252,13 +19252,13 @@ a:hover, a:focus {
     border: 1px solid #eaeaea
 }
 
-.btn-primary, .show-more > .btn-block, .btn-group > .btn[data-action="edit"] + .dropdown-toggle, .search-row .open > .dropdown-toggle.btn-default:hover, .search-row .open > .dropdown-toggle.filters-button:focus, .search-row .open > .dropdown-toggle.filters-button.focus, .search-row .open > .dropdown-toggle.filters-button {
+.btn-primary, .show-more > .btn-block, .search-row .open > .dropdown-toggle.btn-default:hover, .search-row .open > .dropdown-toggle.filters-button:focus, .search-row .open > .dropdown-toggle.filters-button.focus, .search-row .open > .dropdown-toggle.filters-button {
     background-color: #06c;
     border-color: #06c;
     color: #fff
 }
 
-.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .show-more > .btn-block:hover, .btn-group > .btn[data-action="edit"] + .dropdown-toggle:hover {
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .show-more > .btn-block:hover {
     background-color: #1a75d1;
     border-color: #1a75d1;
     color: #fff
@@ -19266,10 +19266,6 @@ a:hover, a:focus {
 
 .list-expanded > .show-more {
     margin: 15px;
-}
-
-.btn-group > .btn[data-action="edit"] + .dropdown-toggle {
-    border-left: 1px solid #2381ca
 }
 
 .btn-default {
@@ -21195,11 +21191,6 @@ button.category:focus {
 .header-buttons > .header-items > .btn:not([data-view]) {
     border-radius: 3px;
 }
-
-.btn[data-name="kanban"], .btn[data-name="list"], .btn[data-name="plate"] {
-    border-radius: 0px !important;
-}
-
 
 @media screen and (max-width: 399px) {
     .navbar-brand {
