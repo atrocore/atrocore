@@ -43,7 +43,7 @@ class Image extends AbstractEntryPoint
         }
 
         $fileType = $file->get('mimeType');
-        if (!in_array($fileType, self::TYPES)) {
+        if (!in_array($fileType, static::TYPES)) {
             throw new Error();
         }
 
