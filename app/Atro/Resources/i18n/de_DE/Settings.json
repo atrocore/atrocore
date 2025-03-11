@@ -72,7 +72,9 @@
     "automaticFileExtensionCorrection": "Wenn diese Option aktiviert ist, passt das System bei Bedarf automatisch die Erweiterung jeder hochgeladenen Datei an ihren MIME-Typ an.",
     "applicationName": "Wir empfehlen, diesen Wert so kurz wie möglich zu halten, da die Breite des Browser-Tabs begrenzt ist und Sie möglicherweise noch Seitentitel sehen wollen.",
     "customHeadCode": "Fügen Sie den Code am Ende des <head>-Tags ein. Atrocore validiert benutzerdefinierten Code nicht für Sie, also überprüfen Sie Ihren Code vor der Veröffentlichung.",
-    "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen."
+    "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen.",
+    "companyLogo": "Verfügbare Dateitypen: image/jpeg, image/png, image/gif, image/svg+xml",
+    "favicon": "Verfügbarer Dateityp: image/svg+xml"
   },
   "labels": {
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",

@@ -94,8 +94,9 @@ class Hierarchy extends Base
                             WHERE t.deleted=:deleted AND h.entity_id IS NULL) x
                       WHERE x.id= :id";
             } else {
+                $primarySortBy = $primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : 't.' . $primarySortBy;
                 $query = "SELECT x.position
-                      FROM (SELECT t.id, row_number() over(ORDER BY {($primarySortBy==='sort_order'?'h.hierarchy_sort_order':'t.'.$primarySortBy)} $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
+                      FROM (SELECT t.id, row_number() over(ORDER BY $primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
                             FROM $quotedHierarchyTableName h
                                 LEFT JOIN $quotedTableName t ON t.id=h.entity_id
                                 LEFT JOIN $quotedTableName t1 ON t1.id=h.parent_id
@@ -114,6 +115,7 @@ class Hierarchy extends Base
                             ORDER BY t.$primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) x
                       JOIN (select id from product where id=:id) y ON x.id = y.id";
             } else {
+                $primarySortBy = $primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : 't.' . $primarySortBy;
                 $query = "SELECT x.position
                       FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
                             FROM $quotedHierarchyTableName h
@@ -124,7 +126,7 @@ class Hierarchy extends Base
                               AND h.deleted=:deleted
                               AND t.deleted=:deleted
                               AND t1.deleted=:deleted
-                            ORDER BY {($primarySortBy==='sort_order'?'h.hierarchy_sort_order':'t.'.$primarySortBy)} $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) x
+                            ORDER BY $primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) x
                       JOIN (select id from product where id=:id) y ON x.id = y.id";
             }
         }

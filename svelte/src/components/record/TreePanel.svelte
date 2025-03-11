@@ -663,7 +663,6 @@
             if (activeItem.name === Storage.get('treeItem', scope)) {
                 const data = Storage.get('treeItemSorting', scope)
                 // check if data is valid and field still exist
-                debugger
                 if (data && typeof data === 'object' && !!Metadata.get(['entityDefs', treeScope, 'fields', data.sortBy])) {
                     sortAsc = data.sortAsc
                     sortBy = data.sortBy
