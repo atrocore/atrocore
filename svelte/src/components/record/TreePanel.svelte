@@ -781,7 +781,8 @@
                             Unset selection
                         </button>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default sort-btn"
+                            <button type="button" class="btn btn-default sort-btn" data-tippy="true"
+                                    title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
                                     on:click={onSortAscChange}>
                                 <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
                             </button>
