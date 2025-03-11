@@ -8,11 +8,11 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-interface ActionParams {
+export default interface ActionParams {
     id?: string;
     name?: string;
     action: string;
-    data?: object;
+    data?: Record<string, any>;
     display?: string;
     html?: string;
     label?: string;
@@ -21,4 +21,5 @@ interface ActionParams {
     tooltip?: string;
     callback?: (e: Event) => void;
     hidden?: boolean;
+    active?: boolean;
 }

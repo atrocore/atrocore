@@ -195,7 +195,41 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                         buttons: this.getMenu().buttons ?? [],
                         dropdownButtons: this.getMenu().dropdownButtons ?? [],
                     },
+                    callbacks: {
+                        onAddFavorite: (scope) => {
+                            this.notify('Saving');
+                            const favorites = this.getPreferences().get('favoritesList') || [];
+                            const result =  [...favorites, scope];
+
+                            this.getPreferences().save({
+                                favoritesList: result,
+                            }, {patch: true}).then(() => {
+                                this.notify('Saved', 'success');
+                                window.dispatchEvent(new CustomEvent('favorites:update', {detail: result}));
+                                this.getPreferences().trigger('favorites:update');
+                            });
+                        },
+                        onRemoveFavorite: (scope) => {
+                            this.notify('Saving');
+                            const favorites = this.getPreferences().get('favoritesList') || [];
+
+                            if (!Array.isArray(favorites) || favorites.length === 0) {
+                                throw new Error('Current entity is not in favorites list');
+                            }
+
+                            const result = favorites.filter(item => item !== scope);
+                            this.getPreferences().save({
+                                favoritesList: result
+                            }, {patch: true}).then(() => {
+                                this.notify('Saved', 'success');
+                                window.dispatchEvent(new CustomEvent('favorites:update', {detail: result}));
+                                this.getPreferences().trigger('favorites:update');
+                            });
+                        },
+                        canRunAction: (scope, action) => this.getAcl().check(scope, action)
+                    },
                     viewMode: this.viewMode,
+                    isFavoriteEntity: !!this.getPreferences().get('favoritesList')?.includes(this.scope),
                     onViewModeChange: (mode) => {
                         this.switchViewMode(mode);
                     },
@@ -545,34 +579,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
             router.navigate(url, {trigger: false});
             router.dispatch(this.scope, 'create', options);
-        },
-
-        actionAddFavorite: function (data, event) {
-            this.notify('Saving');
-            event.target.setAttribute('disabled', true);
-            const favorites = this.getPreferences().get('favoritesList') || [];
-            this.getPreferences().save({
-                favoritesList: [...favorites, this.scope],
-            }, {patch: true}).then(() => {
-                this.notify('Saved', 'success');
-                this.getView('header').reloadButtons();
-                this.getPreferences().trigger('favorites:update');
-                this.setupSearchPanel();
-            });
-        },
-
-        actionRemoveFavorite: function (data, event) {
-            this.notify('Saving');
-            event.target.setAttribute('disabled', true);
-            const favorites = this.getPreferences().get('favoritesList') || [];
-            this.getPreferences().save({
-                favoritesList: favorites.filter(item => item !== this.scope)
-            }, {patch: true}).then(() => {
-                this.notify('Saved', 'success');
-                this.getView('header').reloadButtons();
-                this.getPreferences().trigger('favorites:update');
-                this.setupSearchPanel();
-            });
         },
 
         isTreeAllowed() {

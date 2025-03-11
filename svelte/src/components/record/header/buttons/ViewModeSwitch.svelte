@@ -75,3 +75,15 @@
         {/each}
     </div>
 {/if}
+
+<style>
+    .btn:first-child {
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+
+    .btn:last-child {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+</style>
