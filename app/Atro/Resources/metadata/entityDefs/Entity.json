@@ -63,7 +63,7 @@
       "readOnly": true
     },
     "kanbanStatusIgnoreList": {
-      "type": "array",
+      "type": "multiEnum",
       "view": "views/admin/entity-manager/fields/kanban-status-ignore-list"
     },
     "deleteWithoutConfirmation": {
