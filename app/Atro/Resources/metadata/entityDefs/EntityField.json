@@ -111,6 +111,16 @@
       "notStorable": true,
       "readOnly": true
     },
+    "defaultFrom": {
+      "type": "float",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "defaultTo": {
+      "type": "float",
+      "notStorable": true,
+      "readOnly": true
+    },
     "setDefaultOnlyIfRequired": {
       "type": "bool"
     },
