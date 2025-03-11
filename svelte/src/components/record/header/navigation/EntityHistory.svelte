@@ -98,9 +98,16 @@
     }
 
     nav > ul > li:after {
-        content: " > ";
-        margin: 0 0.25em;
-        color: #1a75d1;
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+        margin: 0 .2em;
+        mask-image: url('$assets/icons/chevron_right.svg');
+        background-color: #1a75d1;
+        mask-size: 100%;
+        mask-repeat: no-repeat;
     }
 
     nav > ul > li > a {
