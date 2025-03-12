@@ -151,7 +151,13 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
         },
 
         getFieldView: function (name) {
-            return (this.getFieldViews() || {})[name];
+            const fieldsViews = this.getFieldViews()
+            for (let key of Object.keys(fieldsViews)) {
+                if (fieldsViews[key]?.name === name) {
+                    return fieldsViews[key]
+                }
+            }
+            return null
         },
 
         // TODO remove in 5.4.0
