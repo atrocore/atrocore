@@ -999,6 +999,8 @@
     "unitValueIsRequired": "Unit for the field '%s' is required.",
     "emailIsInvalid": "Email for the field '%s' is not valid.",
     "fileIsInvalid": "File for the field '%s' is not valid.",
+    "dateIsInvalid": "Date for the field '%s' is not valid.",
+    "datetimeIsInvalid": "Date-time for the field '%s' is not valid.",
     "noSuchUnit": "Unit '%s' for the field '%s' is not valid.",
     "noSuchOptions": "Value '%s' for the field '%s' is not valid.",
     "noOptionsDefined": "Options for the field '%s' are not defined.",
