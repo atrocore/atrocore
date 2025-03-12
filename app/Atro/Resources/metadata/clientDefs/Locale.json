@@ -4,6 +4,9 @@
   "views": {
     "list": "views/locale/list"
   },
+  "recordViews": {
+    "detail": "views/locale/record/detail"
+  },
   "relationshipPanels": {
     "measures": {
       "create": false,

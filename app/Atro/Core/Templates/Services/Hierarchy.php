@@ -29,13 +29,6 @@ use Atro\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
-    public function getHierarchySortOrderFieldName(): string
-    {
-        $relationEntityName = ucfirst($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', 'children', 'relationName']));
-
-        return Relation::buildVirtualFieldName($relationEntityName, 'hierarchySortOrder');
-    }
-
     public function getSelectAttributeList($params)
     {
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
@@ -44,9 +37,8 @@ class Hierarchy extends Record
 
         $res = parent::getSelectAttributeList($params);
         if (is_array($res) && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
-            $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
-            if (!in_array($hierarchySortOrderField, $res)) {
-                $res[] = $hierarchySortOrderField;
+            if (!in_array('sortOrder', $res)) {
+                $res[] = 'sortOrder';
             }
         }
 
@@ -153,7 +145,7 @@ class Hierarchy extends Record
         return true;
     }
 
-    public function getTreeDataForSelectedNode(string $id): array
+    public function getTreeDataForSelectedNode(string $id, array $sortParams): array
     {
         $treeBranches = [];
         $this->createTreeBranches($this->getEntity($id), $treeBranches);
@@ -163,7 +155,7 @@ class Hierarchy extends Record
         }
 
         $tree = [];
-        $this->prepareTreeForSelectedNode($entity, $tree);
+        $this->prepareTreeForSelectedNode($entity, $tree, $sortParams);
         $this->prepareTreeData($tree);
 
         $total = empty($tree[0]['total']) ? 0 : $tree[0]['total'];
@@ -226,11 +218,11 @@ class Hierarchy extends Record
         }
     }
 
-    protected function prepareTreeForSelectedNode($entity, array &$tree, string $parentId = ''): void
+    protected function prepareTreeForSelectedNode($entity, array &$tree, array $sortParams, string $parentId = ''): void
     {
         $limit = $this->getConfig()->get('recordsPerPageSmall', 20);
 
-        $position = $this->getRepository()->getEntityPosition($entity, $parentId);
+        $position = $this->getRepository()->getEntityPosition($entity, $parentId, $sortParams);
         $index = $position - 1;
 
         $offset = $index - $limit;
@@ -238,7 +230,7 @@ class Hierarchy extends Record
             $offset = 0;
         }
 
-        $children = $this->getChildren($parentId, ['offset' => $offset, 'maxSize' => $index - $offset + $limit]);
+        $children = $this->getChildren($parentId, array_merge($sortParams, ['offset' => $offset, 'maxSize' => $index - $offset + $limit]));
         if (!empty($children['list'])) {
             foreach ($children['list'] as $v) {
                 $tree[$v['id']] = $v;
@@ -252,7 +244,7 @@ class Hierarchy extends Record
             if (empty($tree[$entity->get('id')]['children'])) {
                 $tree[$entity->get('id')]['children'] = [];
             }
-            $this->prepareTreeForSelectedNode($entity->child, $tree[$entity->get('id')]['children'], $entity->get('id'));
+            $this->prepareTreeForSelectedNode($entity->child, $tree[$entity->get('id')]['children'], $sortParams, $entity->get('id'));
         }
     }
 
@@ -753,13 +745,6 @@ class Hierarchy extends Record
                 }
                 if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
                     $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
-                }
-            }
-
-            if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
-                $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
-                if ($entity->has($hierarchySortOrderField)) {
-                    $entity->set('sortOrder', $entity->get($hierarchySortOrderField));
                 }
             }
         }

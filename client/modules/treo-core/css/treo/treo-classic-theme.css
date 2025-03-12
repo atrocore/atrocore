@@ -20144,7 +20144,7 @@ ul.dropdown-menu > li.checkbox {
 
     #main .side.collapsed > .panel,
     #main .side.collapsed > .panel {
-        display: none;
+        display: none !important;
     }
 }
 
