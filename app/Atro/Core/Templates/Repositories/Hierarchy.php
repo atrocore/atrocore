@@ -702,8 +702,9 @@ class Hierarchy extends Base
 
             $subQuery->setFirstResult(0);
             $subQuery->setMaxResults(null);
+            $subQuery->orderBy("$tableAlias.id");
             $selectCountQuery
-                ->andWhere($expr->in("$tableAlias.id", $subQuery->select("$tableAlias.id")->getSQL()));
+                ->andWhere($expr->in("e1.id", $subQuery->select("$tableAlias.id")->getSQL()));
 
             $qb->select("$tableAlias.*", "({$selectCountQuery->andWhere("$tableAlias.id = r1.parent_id ".($withDeleted?"":"and r1.deleted=:deleted"))->getSQL()}) as children_count");
             if (!$withDeleted) {
