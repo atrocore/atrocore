@@ -585,9 +585,15 @@ class LayoutManager
             // get fields for entity
             $fields = array_keys($entityDefs['fields']);
             if (!empty($relatedScope) && in_array($name, ['list', 'detail'])) {
-                $relatedFields = array_keys($this->getMetadata()->get(['entityDefs', $scope, 'fields']) ?? []);
-                $relatedFields = array_map(fn($f) => "{$relatedScope}__{$f}", $relatedFields);
-                $fields = array_merge($fields, $relatedFields);
+                foreach ($this->getMetadata()->get(['entityDefs', $relatedScope, 'links']) ?? [] as $linkData) {
+                    if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
+                        $relationScope = ucfirst($linkData['relationName']);
+                        $relationFields = array_keys($this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? []);
+                        $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
+                        $fields = array_merge($fields, $relationFields);
+                        break;
+                    }
+                }
             }
 
             $fields[] = 'id';
