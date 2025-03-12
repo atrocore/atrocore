@@ -265,28 +265,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }
         },
 
-/*
-        getMenu() {
-            const menu = Dep.prototype.getMenu.call(this) || {};
-
-            if (!this.getMetadata().get(['scopes', this.scope, 'tab'])) {
-                return menu;
-            }
-
-            const isFavorite = (this.getPreferences().get('favoritesList') || []).includes(this.scope);
-
-            menu.buttons = [{
-                name: 'favorite',
-                action: isFavorite ? 'removeFavorite' : 'addFavorite',
-                style: isFavorite ? 'primary' : 'default',
-                html: '<span class="fa fa-thumb-tack"></span>',
-                cssStyle: 'margin-right: 15px',
-            }, ...(menu.buttons || [])];
-
-            return menu;
-        },
-*/
-
         setupSearchPanel: function () {
             let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
             let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;

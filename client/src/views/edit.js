@@ -83,37 +83,37 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.edit') || this.recordView;
         },
 
-        getHeader: function () {
-            var html = '';
-
-            var headerIconHtml = this.getHeaderIconHtml();
-
-            var arr = [];
-
-            if (this.options.noHeaderLinks) {
-                arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
-            } else {
-                var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-                arr.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
-            }
-
-            if (this.model.isNew()) {
-                arr.push(this.getLanguage().translate('create'));
-            } else {
-                var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
-
-                if (name === '') {
-                    name = this.model.id;
-                }
-
-                if (this.options.noHeaderLinks) {
-                    arr.push(name);
-                } else {
-                    arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
-                }
-            }
-            return this.buildHeaderHtml(arr);
-        },
+        // getHeader: function () {
+        //     var html = '';
+        //
+        //     var headerIconHtml = this.getHeaderIconHtml();
+        //
+        //     var arr = [];
+        //
+        //     if (this.options.noHeaderLinks) {
+        //         arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
+        //     } else {
+        //         var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+        //         arr.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
+        //     }
+        //
+        //     if (this.model.isNew()) {
+        //         arr.push(this.getLanguage().translate('create'));
+        //     } else {
+        //         var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
+        //
+        //         if (name === '') {
+        //             name = this.model.id;
+        //         }
+        //
+        //         if (this.options.noHeaderLinks) {
+        //             arr.push(name);
+        //         } else {
+        //             arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
+        //         }
+        //     }
+        //     return this.buildHeaderHtml(arr);
+        // },
 
         updatePageTitle: function () {
             var title;

@@ -36,13 +36,13 @@ Espo.define('views/settings/edit', 'views/edit', function (Dep) {
 
         scope: 'Settings',
 
-        setupHeader: function () {
-            this.createView('header', this.headerView, {
-                model: this.model,
-                el: '#main main > .header',
-                template: this.options.headerTemplate
-            });
-        }
+        // setupHeader: function () {
+        //     this.createView('header', this.headerView, {
+        //         model: this.model,
+        //         el: '#main main > .header',
+        //         template: this.options.headerTemplate
+        //     });
+        // }
 
     });
 });
