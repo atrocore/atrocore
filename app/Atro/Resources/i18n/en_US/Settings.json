@@ -82,7 +82,9 @@
     "automaticFileExtensionCorrection": "If enabled, the system will automatically adjust, if necessary, the extension of each uploaded file to match its MIME type.",
     "applicationName": "We recommend keeping this value as short as possible, as the width of the browser tab is limited and you may still want to see page titles.",
     "customHeadCode": "Add code at the end of the <head> tag. Atrocore doesn't validate custom code for you, so be sure to check your code before publishing.",
-    "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too."
+    "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too.",
+    "companyLogo": "Available file types: image/jpeg, image/png, image/gif, image/svg+xml",
+    "favicon": "Available file type: image/svg+xml"
   },
   "labels": {
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",

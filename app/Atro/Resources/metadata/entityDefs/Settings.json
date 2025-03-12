@@ -61,11 +61,13 @@
     },
     "companyLogo": {
       "type": "file",
-      "fileTypeId": "a_image"
+      "view": "views/settings/fields/company-logo",
+      "tooltip": true
     },
     "favicon": {
       "type": "file",
-      "fileTypeId": "a_favicon"
+      "fileTypeId": "a_favicon",
+      "tooltip": true
     },
     "b2cMode": {
       "type": "bool",

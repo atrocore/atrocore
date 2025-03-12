@@ -2368,6 +2368,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     if (model.get('__relationEntity')) {
                         this.getModelFactory().create(this.relationScope, relModel => {
                             relModel.set(model.get('__relationEntity'));
+                            model.relationModel = relModel
                             callback(relModel)
                         })
                     } else {

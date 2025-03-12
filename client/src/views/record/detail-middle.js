@@ -48,14 +48,14 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
 
         showPanel: function (name) {
             if (this.isRendered()) {
-                this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
+                this.$el.find('.panel[data-name="' + name + '"]').removeClass('hidden');
             }
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
         },
 
         hidePanel: function (name) {
             if (this.isRendered()) {
-                this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
+                this.$el.find('.panel[data-name="' + name + '"]').addClass('hidden');
             }
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
         },
@@ -65,9 +65,9 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-
+                let $field
                 if (fieldView) {
-                    var $field = fieldView.$el;
+                    $field = fieldView.$el;
                     var $cell = $field.closest('.cell[data-name="' + name + '"]');
                     var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
@@ -75,9 +75,15 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
                     $label.addClass('hidden');
                     $cell.addClass('hidden-cell');
                 } else {
+                    $field = this.$el.find('.field[data-name="' + name + '"]')
+                    $field.addClass('hidden');
                     this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
+                }
+
+                const $panel = $field.closest('.panel')
+                if ($panel.find('.cell').every('.hidden-cell')) {
+                    $panel.addClass('hidden')
                 }
             }.bind(this);
             if (this.isRendered()) {
@@ -102,9 +108,9 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-
+                let $field
                 if (fieldView) {
-                    var $field = fieldView.$el;
+                    $field = fieldView.$el;
                     var $cell = $field.closest('.cell[data-name="' + name + '"]');
                     var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
@@ -112,10 +118,12 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
                     $label.removeClass('hidden');
                     $cell.removeClass('hidden-cell');
                 } else {
+                    $field = this.$el.find('.field[data-name="' + name + '"]')
+                    $field.removeClass('hidden');
                     this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
                 }
+                $field.closest('.panel').removeClass('hidden')
             }.bind(this);
 
             if (this.isRendered()) {
@@ -139,13 +147,7 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
         },
 
         getFieldViews: function () {
-            var nestedViews = this.nestedViews;
-            var fieldViews = {};
-            for (var viewKey in this.nestedViews) {
-                var name = this.nestedViews[viewKey].name;
-                fieldViews[name] = this.nestedViews[viewKey];
-            }
-            return fieldViews;
+            return this.nestedViews
         },
 
         getFieldView: function (name) {

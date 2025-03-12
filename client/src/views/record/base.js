@@ -92,9 +92,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-
+                let $field
                 if (fieldView) {
-                    var $field = fieldView.$el;
+                    $field = fieldView.$el;
                     var $cell = $field.closest('.cell[data-name="' + name + '"]');
                     var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
@@ -102,9 +102,18 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                     $label.addClass('hidden');
                     $cell.addClass('hidden-cell');
                 } else {
+                    $field = this.$el.find('.field[data-name="' + name + '"]')
+                    $field.addClass('hidden');
                     this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
+                }
+
+                const $panel = $field.closest('.panel')
+                if ($panel.find('.cell').length === $panel.find('.cell.hidden-cell').length) {
+                    const name = $panel.attr('data-name')
+                    if (name) {
+                        this.hidePanel(name)
+                    }
                 }
             }.bind(this);
             if (this.isRendered()) {
@@ -129,9 +138,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-
+                let $field
                 if (fieldView) {
-                    var $field = fieldView.$el;
+                    $field = fieldView.$el;
                     var $cell = $field.closest('.cell[data-name="' + name + '"]');
                     var $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
@@ -139,9 +148,15 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                     $label.removeClass('hidden');
                     $cell.removeClass('hidden-cell');
                 } else {
+                    $field = this.$el.find('.field[data-name="' + name + '"]')
+                    $field.removeClass('hidden');
                     this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
+                }
+
+                const panelName = $field.closest('.panel').attr('data-name')
+                if (panelName) {
+                    this.showPanel(panelName)
                 }
             }.bind(this);
 
@@ -408,7 +423,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
         },
 
         processUiHandler: function (type, field) {
-            let additionalParams ={
+            let additionalParams = {
                 currentUserId: this.getPreferences().get('id')
             }
 
@@ -563,6 +578,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
 
             var attrs = this.getChangedAttributes();
 
+            if (!attrs && Object.keys(this.model.relationModel?.changed || {}).length > 0) {
+                attrs = {}
+            }
+
             if (!attrs) {
                 this.trigger('cancel:save');
                 this.afterNotModified();
@@ -579,19 +598,14 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }
 
             let hashParts = window.location.hash.split('/view/');
-            if (typeof hashParts[1] !== 'undefined' && this.model.defs._relationName) {
+            if (this.model.relationModel) {
                 attrs._relationName = this.model.defs._relationName;
                 attrs._relationEntity = hashParts[0].replace('#', '');
                 attrs._relationEntityId = hashParts[1];
 
-                $.each(this.model.defs.fields, (field, fieldDefs) => {
-                    if (fieldDefs.relId && model.get(field)) {
-                        attrs._relationId = model.get(field);
-                    }
-                });
+                attrs._relationId = this.model.relationModel.id
+                attrs._relationData = this.fetch(true)
 
-                // @todo remove it soon
-                attrs._mainEntityId = hashParts[1];
             }
 
             let _prev = {};
@@ -688,12 +702,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             });
         },
 
-        fetch: function () {
+        fetch: function (onlyRelation = false) {
             var data = {};
             var fieldViews = this.getFieldViews();
             for (var i in fieldViews) {
                 var view = fieldViews[i];
-                if (view.mode == 'edit') {
+                if (view.mode === 'edit' && (onlyRelation ? view.options.useRelationModel : !view.options.useRelationModel)) {
                     if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
                         _.extend(data, view.fetch());
                     }
