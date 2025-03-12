@@ -21774,7 +21774,7 @@ td[data-name="draggableIcon"] {
 .full-page-modal .html-preview {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
 }
 
 .full-page-modal .html-preview .body-container {

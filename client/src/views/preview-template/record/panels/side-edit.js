@@ -140,8 +140,6 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                     Espo.ui.notify(false);
 
                     this.createRecordView(model, view => {
-                        view.render();
-
                         this.listenToOnce(view, 'remove', () => {
                             this.clearView('edit');
                             clearTimeout(this.timerHandle);
@@ -155,30 +153,34 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
 
                         this.listenTo(view, 'cancel:save', () => {
                             this.setButtonDisabledState('cancel', false);
-                        })
-
-                        this.listenTo(model, 'change', () => {
-                            clearTimeout(this.timerHandle);
-                            if (!view.hasChangedAttributes()) {
-                                this.setButtonDisabledState('save', true);
-                                return;
-                            }
-
-                            this.setButtonDisabledState('save', this.isAutosaveEnabled());
-
-                            this.timerHandle = this.getAutosaveTimeoutHandle(view);
                         });
 
-                        this.listenTo(this, 'text-interact', (element) => {
-                            clearTimeout(this.timerHandle);
-                            if (!view.hasChangedAttributes()) {
-                                this.setButtonDisabledState('save', true);
-                                return;
-                            }
+                        this.listenToOnce(view, 'after:render', () => {
+                            this.listenTo(model, 'change', () => {
+                                clearTimeout(this.timerHandle);
+                                if (!view.hasChangedAttributes()) {
+                                    this.setButtonDisabledState('save', true);
+                                    return;
+                                }
 
-                            this.setButtonDisabledState('save', this.isAutosaveEnabled());
-                            this.timerHandle = this.getAutosaveTimeoutHandle(view);
-                        }, this);
+                                this.setButtonDisabledState('save', this.isAutosaveEnabled());
+
+                                this.timerHandle = this.getAutosaveTimeoutHandle(view);
+                            });
+
+                            this.listenTo(this, 'text-interact', (element) => {
+                                clearTimeout(this.timerHandle);
+                                if (!view.hasChangedAttributes()) {
+                                    this.setButtonDisabledState('save', true);
+                                    return;
+                                }
+
+                                this.setButtonDisabledState('save', this.isAutosaveEnabled());
+                                this.timerHandle = this.getAutosaveTimeoutHandle(view);
+                            }, this);
+                        });
+
+                        view.render();
                     });
                 }).error(() => {
                     Espo.ui.error('Failed to load selected record');
@@ -191,9 +193,9 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
             if (this.isAutosaveEnabled()) {
                 return setTimeout(() => {
                     if (view.hasChangedAttributes()) {
-                        view.save();
                         this.setButtonDisabledState('save', true);
                         this.setButtonDisabledState('cancel', true);
+                        view.save();
                     }
                 }, this.autosaveTimeout);
             }
@@ -210,11 +212,12 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                 model: model,
                 el: this.options.el + ' .side-body',
                 type: 'editSmall',
-                layoutName: 'detailSmall',
+                layoutName: 'detail',
                 columnCount: 1,
                 buttonsDisabled: true,
                 sideDisabled: true,
                 bottomDisabled: false,
+                scope: model.name,
                 exit: function () {
                 }
             };

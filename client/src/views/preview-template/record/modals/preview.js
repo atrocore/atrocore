@@ -16,6 +16,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         htmlContent: null,
 
+        fullHeight: true,
+
         profile: 'desktop',
 
         profiles: {
