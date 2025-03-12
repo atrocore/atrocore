@@ -1868,7 +1868,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             continue;
                         }
 
-                        var name = cellDefs.name;
+                        let name = cellDefs.name;
+                        let fieldModel, type, viewName;
 
                         // remove relation virtual fields
                         let parts = name.split('__');
@@ -1881,10 +1882,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             if (relEntity !== parts[0]) {
                                 continue;
                             }
+                            fieldModel = this.model.relationModel
+                            type = cellDefs.type || fieldModel.getFieldType(parts[1]) || 'base';
+                            viewName = cellDefs.view || fieldModel.getFieldParam(parts[1], 'view') || this.getFieldManager().getViewName(type);
+                        } else {
+                            fieldModel = this.model
+                            type = cellDefs.type || fieldModel.getFieldType(name) || 'base';
+                            viewName = cellDefs.view || fieldModel.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
                         }
 
-                        var type = cellDefs.type || this.model.getFieldType(name) || 'base';
-                        var viewName = cellDefs.view || this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
                         var o = {
                             el: el + ' .middle .field[data-name="' + name + '"]',
