@@ -42,6 +42,8 @@ class JoinManyToMany
 
         $relOpt = $entity->relations[$relationName];
 
+        $isHierarchyEntity = $mapper->getMetadata()->get(['scopes', $relOpt['relationName'], 'isHierarchyEntity']) ?? false;
+
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
         $nearKey = $keySet['nearKey'];
@@ -101,7 +103,11 @@ class JoinManyToMany
             foreach ($additionalSelect as $sql) {
                 $qb->addSelect($sql);
             }
+
             $qb->addSelect("$relAlias.id as relation__id");
+            if ($isHierarchyEntity) {
+                $qb->addSelect("$relAlias.hierarchy_sort_order as atro_sort_order");
+            }
         }
 
         $qb->innerJoin($alias, $queryConverter->quoteIdentifier($relTable), $relAlias, $condition);

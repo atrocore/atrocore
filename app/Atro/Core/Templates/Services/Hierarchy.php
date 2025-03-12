@@ -29,13 +29,6 @@ use Atro\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
-    public function getHierarchySortOrderFieldName(): string
-    {
-        $relationEntityName = ucfirst($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', 'children', 'relationName']));
-
-        return Relation::buildVirtualFieldName($relationEntityName, 'hierarchySortOrder');
-    }
-
     public function getSelectAttributeList($params)
     {
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
@@ -44,9 +37,8 @@ class Hierarchy extends Record
 
         $res = parent::getSelectAttributeList($params);
         if (is_array($res) && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
-            $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
-            if (!in_array($hierarchySortOrderField, $res)) {
-                $res[] = $hierarchySortOrderField;
+            if (!in_array('sortOrder', $res)) {
+                $res[] = 'sortOrder';
             }
         }
 
@@ -753,13 +745,6 @@ class Hierarchy extends Record
                 }
                 if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
                     $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
-                }
-            }
-
-            if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
-                $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
-                if ($entity->has($hierarchySortOrderField)) {
-                    $entity->set('sortOrder', $entity->get($hierarchySortOrderField));
                 }
             }
         }
