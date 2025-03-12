@@ -71,24 +71,32 @@ class Hierarchy extends Base
         }
     }
 
-    public function getEntityPosition(Entity $entity, string $parentId): ?int
+    public function getEntityPosition(Entity $entity, string $parentId, array $sortParams): ?int
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
-        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
-        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
+        if (!empty($sortParams) && !empty($sortParams['sortBy'])) {
+            $primarySortBy = Util::toUnderScore($sortParams['sortBy']);
+            $sortOrder = !empty($sortParams['asc']) ? 'ASC' : 'DESC';
+        } else {
+            $primarySortBy = 'sort_order';
+            $sortOrder = (!empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC');
+        }
+        $secondarySortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+
         if (Converter::isPgSQL($this->getConnection())) {
             if (empty($parentId)) {
                 $query = "SELECT x.position
-                      FROM (SELECT t.id, row_number() over(ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) AS position
+                      FROM (SELECT t.id, row_number() over(ORDER BY t.$primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
                             FROM $quotedTableName t
                             LEFT JOIN $quotedHierarchyTableName h ON t.id=h.entity_id AND h.deleted=:deleted
                             WHERE t.deleted=:deleted AND h.entity_id IS NULL) x
                       WHERE x.id= :id";
             } else {
+                $primarySortBy = $primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : 't.' . $primarySortBy;
                 $query = "SELECT x.position
-                      FROM (SELECT t.id, row_number() over(ORDER BY h.hierarchy_sort_order ASC, t.$sortBy $sortOrder, t.id ASC) AS position
+                      FROM (SELECT t.id, row_number() over(ORDER BY $primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
                             FROM $quotedHierarchyTableName h
                                 LEFT JOIN $quotedTableName t ON t.id=h.entity_id
                                 LEFT JOIN $quotedTableName t1 ON t1.id=h.parent_id
@@ -104,9 +112,10 @@ class Hierarchy extends Base
                                 LEFT JOIN $quotedHierarchyTableName h ON t.id=h.entity_id AND h.deleted=:deleted
                             WHERE t.deleted=:deleted
                               AND h.entity_id IS NULL
-                            ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
+                            ORDER BY t.$primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) x
                       JOIN (select id from product where id=:id) y ON x.id = y.id";
             } else {
+                $primarySortBy = $primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : 't.' . $primarySortBy;
                 $query = "SELECT x.position
                       FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
                             FROM $quotedHierarchyTableName h
@@ -117,7 +126,7 @@ class Hierarchy extends Base
                               AND h.deleted=:deleted
                               AND t.deleted=:deleted
                               AND t1.deleted=:deleted
-                            ORDER BY h.hierarchy_sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
+                            ORDER BY $primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) x
                       JOIN (select id from product where id=:id) y ON x.id = y.id";
             }
         }
@@ -233,7 +242,7 @@ class Hierarchy extends Base
             }
             $entity->set('parentId', $parentId);
             $this->getEntityManager()->saveEntity($entity);
-        } elseif(!empty($entity)) {
+        } elseif (!empty($entity)) {
             $this->getEntityManager()->removeEntity($entity, ['move' => true]);
         }
 
@@ -672,14 +681,21 @@ class Hierarchy extends Base
 
     protected function getChildrenArrayUsingSelectParams(array $selectParams, string $parentId, QueryBuilder $selectCountQuery)
     {
-
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
-        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
-        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
+        $defaultSortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        if (!empty($selectParams['orderBy'])) {
+            $primarySortBy = Util::toUnderScore($selectParams['orderBy']);
+            $secondarySortBy = 'sort_order';
+        } else {
+            $primarySortBy = 'sort_order';
+            $secondarySortBy = $defaultSortBy;
+        }
+
+        $sortOrder = $selectParams['order'] ?? (!empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC');
         $withDeleted = !empty($selectParams['withDeleted']) && $selectParams['withDeleted'] === true;
 
         $selectParams['callbacks'][] = function (QueryBuilder $qb, $entity, $params, Mapper $mapper)
-        use ($quotedHierarchyTableName, $parentId, $sortOrder, $sortBy, $selectCountQuery, $withDeleted) {
+        use ($quotedHierarchyTableName, $parentId, $sortOrder, $primarySortBy, $secondarySortBy, $selectCountQuery, $withDeleted) {
             $expr = $this->getConnection()->createExpressionBuilder();
             $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
             $subQuery = clone $qb;
@@ -697,14 +713,15 @@ class Hierarchy extends Base
             if (empty($parentId)) {
                 $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'qh', "qh.entity_id = $tableAlias.id" . (!$withDeleted ? " AND qh.deleted = :deleted" : ""))
                     ->andWhere('qh.entity_id is null')
-                    ->orderBy("$tableAlias.sort_order")
-                    ->addOrderBy("$tableAlias.$sortBy", $sortOrder)
+                    ->orderBy("$tableAlias.$primarySortBy", $sortOrder)
+                    ->addOrderBy("$tableAlias.$secondarySortBy", $sortOrder)
                     ->addOrderBy("$tableAlias.id");
             } else {
                 $qb->addSelect('h.hierarchy_sort_order');
                 $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
                     ->andWhere('h.parent_id = :parentId')
-                    ->orderBy('h.hierarchy_sort_order')
+                    ->orderBy($primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : "$tableAlias.$primarySortBy", $sortOrder)
+                    ->addOrderBy($secondarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : "$tableAlias.$secondarySortBy", $sortOrder)
                     ->setParameter('parentId', $parentId);
 
                 if (!$withDeleted) {
