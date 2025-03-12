@@ -20183,7 +20183,7 @@ ul.dropdown-menu > li.checkbox {
 
     #main .detail .side.collapsed > .panel,
     #main .edit .side.collapsed > .panel {
-        display: none;
+        display: none !important;
     }
 }
 
