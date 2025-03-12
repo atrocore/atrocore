@@ -1824,10 +1824,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        isRelationField(name) {
-            return name.split('__').length === 2
-        },
-
         convertDetailLayout: function (simplifiedLayout) {
             var layout = [];
 
@@ -1901,9 +1897,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             mode: this.fieldsMode
                         };
 
-                        if (this.isRelationField(name)) {
+                        if (parts.length === 2) {
                             o.useRelationModel = true
-                            o.defs.name = name.split('__')[1]
+                            o.defs.name = parts[1]
                             if (!cellDefs.customLabel) {
                                 cellDefs.customLabel = this.translate(o.defs.name, 'fields', relEntity) + ' (Relation)'
                             }
