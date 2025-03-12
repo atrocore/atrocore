@@ -10,6 +10,7 @@
     import ActionGroup from "./buttons/ActionGroup.svelte";
     import ActionParams from "./interfaces/ActionParams";
     import OverviewFilterButton from "./buttons/OverviewFilterButton.svelte";
+    import BookmarkButton from "./buttons/BookmarkButton.svelte";
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
@@ -23,6 +24,7 @@
     let dynamicActionsDropdown: ActionParams[] = [];
     let uiHandlerActions: ActionParams[] = [];
     let loadingActions: boolean = false;
+    let bookmarkId: string | null = null;
 
     $: {
         actions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
@@ -93,6 +95,11 @@
                 id: item.data.action_id ?? null
             } as ActionParams));
 
+            const bookmarkAction: Record<string, any> | undefined = list.filter(item => ['bookmark', 'unbookmark'].includes(item.action)).pop();
+            if (bookmarkAction) {
+                bookmarkId = bookmarkAction.data.bookmark_id ?? null;
+            }
+
             dynamicActions = [...(recordButtons?.additionalButtons ?? []), ...preparedList.filter(item => item.display === 'single')]
             dynamicActionsDropdown = preparedList.filter(item => item.display === 'dropdown');
         }).catch(error => {
@@ -138,7 +145,10 @@
                         {#if button.action === 'openOverviewFilter'}
                             <OverviewFilterButton filterApplied={recordButtons?.isOverviewFilterActive ?? false}
                                                   onExecute={executeAction}/>
-                            {:else if }
+                        {:else if ['bookmark', 'unbookmark'].includes(button.action)}
+                            {#if id}
+                                <BookmarkButton entity={scope} {id} bookmarkId={bookmarkId} loading={loadingActions} />
+                            {/if}
                         {:else}
 <!--                            <ActionButton params={button} on:execute={executeAction}/>-->
                         {/if}

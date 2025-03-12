@@ -6,6 +6,7 @@
 
     import BaseHeader from "./BaseHeader.svelte";
     import AnchorNavigation from "./navigation/AnchorNavigation.svelte";
+    import RecordActionButtons from "./interfaces/RecordActionsButtons";
     import RecordActionsGroup from "./RecordActionsGroup.svelte";
 
     export let params: Params;
@@ -13,8 +14,8 @@
     export let recordButtons: RecordActionButtons | null = null;
     export let anchorScrollCallback = (panelName: string, event: Event) => {}
 
-    let mode;
-    let currentIsHeading = params?.currentIsHeading ?? true;
+    let mode: string;
+    let currentIsHeading: boolean = params?.currentIsHeading ?? true;
 
     $: {
         mode = params?.mode ?? 'detail';

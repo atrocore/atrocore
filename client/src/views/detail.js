@@ -122,11 +122,27 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             }
 
             if (!this.getMetadata().get('scopes.' + this.scope + '.bookmarkDisabled')) {
-                this.handleBookmarkButton();
+                let data = {};
+                if (this.model.get('bookmarkId')) {
+                    if (this.getAcl().check('Bookmark', 'delete')) {
+                        data = {
+                            name: 'bookmarking',
+                            title: 'Bookmarked, Click to unbookmark',
+                            action: 'unbookmark',
+                        }
+                    }
 
-                this.listenTo(this.model, 'change:bookmarkId', function () {
-                    this.handleBookmarkButton();
-                }, this);
+                } else {
+                    if (this.getAcl().check('Bookmark', 'create')) {
+                        data = {
+                            name: 'bookmarking',
+                            title: 'Click to bookmark',
+                            action: 'bookmark',
+                        }
+                    }
+                }
+
+                this.addMenuItem('buttons', data, true, false, true);
             }
 
             if (this.model && !this.model.isNew() && this.getMetadata().get(['scopes', this.scope, 'object'])
@@ -626,36 +642,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     this.addFollowButtonToMenu();
                 }
             }
-        },
-
-        handleBookmarkButton: function () {
-            let data = {};
-            if (this.model.get('bookmarkId')) {
-                if (this.getAcl().check('Bookmark', 'delete')) {
-                    data = {
-                        name: 'bookmarking',
-                        title: 'Bookmarked, Click to unbookmark',
-                        style: 'primary',
-                        html: '<span class="fas fa-bookmark"></span>',
-                        action: 'unbookmark',
-                        cssStyle: 'margin: 0 10px 0 0px;color:white;'
-                    }
-                }
-
-            } else {
-                if (this.getAcl().check('Bookmark', 'create')) {
-                    data = {
-                        name: 'bookmarking',
-                        title: 'Click to bookmark',
-                        style: 'default',
-                        html: '<span class="fas fa-bookmark"></span>',
-                        action: 'bookmark',
-                        cssStyle: 'margin: 0 10px 0 0px'
-                    }
-                }
-            }
-
-            this.addMenuItem('buttons', data, true, false, true);
         },
 
         getOverviewFiltersList: function () {
