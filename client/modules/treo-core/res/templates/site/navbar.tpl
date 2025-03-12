@@ -50,10 +50,10 @@
                 <a id="nav-more-tabs-dropdown-{{id}}" class="dropdown-toggle more-group-name" data-toggle="dropdown" href="#" {{#if color}} style="border-color: {{color}}"{{/if}}>
                     <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
                         {{#if iconSrc}}
-                            <img src="{{iconSrc}}" class="icon">
+                            <img src="{{iconSrc}}" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                         {{else}}
                             {{#if defaultIconSrc}}
-                                <img src="{{defaultIconSrc}}" class="default-icon">
+                                <img src="{{defaultIconSrc}}" class="default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                             {{else}}
                                 <span class="short-label-text">{{shortLabel}}</span>
                             {{/if}}
@@ -67,10 +67,10 @@
                         <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
                             <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
                                 {{#if iconSrc}}
-                                    <img src="{{iconSrc}}" class="icon">
+                                    <img src="{{iconSrc}}" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                                 {{else}}
                                     {{#if defaultIconSrc}}
-                                        <img src="{{defaultIconSrc}}" class="default-icon">
+                                        <img src="{{defaultIconSrc}}" class="default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                                     {{else}}
                                         <span class="short-label-text">{{shortLabel}}</span>
                                     {{/if}}
@@ -91,10 +91,10 @@
                     <span class="full-label">{{label}}</span>
                     <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
                     {{#if iconSrc}}
-                        <img src="{{iconSrc}}" class="icon">
+                        <img src="{{iconSrc}}" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                     {{else}}
                         {{#if defaultIconSrc}}
-                            <img src="{{defaultIconSrc}}" class="default-icon">
+                            <img src="{{defaultIconSrc}}" class="default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                         {{else}}
                             <span class="short-label-text">{{shortLabel}}</span>
                         {{/if}}

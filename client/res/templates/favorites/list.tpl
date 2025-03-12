@@ -6,7 +6,7 @@
                     <span class="label-wrapper">
                         {{#if ../hasIcons}}
                             {{#if defaultIconSrc}}
-                                <img src="{{defaultIconSrc}}" class="favorite-icon default-icon">
+                                <img src="{{defaultIconSrc}}" class="favorite-icon default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                             {{else}}
                                  <img src="{{iconSrc}}" class="favorite-icon icon">
                             {{/if}}
