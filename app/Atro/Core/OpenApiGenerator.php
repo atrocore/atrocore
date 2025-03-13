@@ -16,6 +16,7 @@ namespace Atro\Core;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Atro\Services\Composer;
+use Atro\Core\Utils\Util;
 
 class OpenApiGenerator
 {
@@ -1144,6 +1145,11 @@ class OpenApiGenerator
                     'type'    => 'string',
                     'forRead' => true
                 ];
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}OptionData"] = [
+                    'type'       => 'object',
+                    'properties' => $this->getEnumOptionProperties(),
+                    'forRead'    => true
+                ];
                 break;
             case 'extensibleMultiEnum':
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
@@ -1154,6 +1160,15 @@ class OpenApiGenerator
                     'type'    => 'object',
                     'forRead' => true
                 ];
+                $result['components']['schemas'][$entityName]['properties']["{$fieldName}OptionsData"] = [
+                    'type'    => 'array',
+                    'forRead' => true,
+                    'items'   => [
+                        'type'       => 'object',
+                        'properties' => $this->getEnumOptionProperties()
+                    ]
+                ];
+                break;
                 break;
             case "linkMultiple":
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = [
@@ -1168,6 +1183,51 @@ class OpenApiGenerator
             default:
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
         }
+    }
+
+    protected function getEnumOptionProperties()
+    {
+        $config = $this->container->get('config');
+
+        $fields = [
+            'id'    => [
+                'type' => 'string'
+            ],
+            'code'  => [
+                'type' => 'string'
+            ],
+            'color' => [
+                'type' => 'string'
+            ],
+            'name'  => [
+                'type' => 'string'
+            ]
+        ];
+
+        if (!empty($config->get('isMultilangActive'))) {
+            foreach ($config->get('inputLanguageList') ?? [] as $language) {
+                $fields["name" . ucfirst(Util::toCamelCase(strtolower($language)))] = [
+                    'type' => 'string'
+                ];
+            }
+        }
+        return array_merge($fields, [
+            'sortOrder'    => [
+                'type' => 'integer'
+            ],
+            'sorting'      => [
+                'type' => 'integer'
+            ],
+            'description'  => [
+                'type' => 'string'
+            ],
+            'multilingual' => [
+                'type' => 'boolean'
+            ],
+            'preparedName' => [
+                'type' => 'string'
+            ]
+        ]);
     }
 
     protected function getBase(): array
