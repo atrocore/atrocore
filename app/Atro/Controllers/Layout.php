@@ -53,7 +53,7 @@ class Layout extends AbstractRecordController
             throw new Error("Error while saving layout.");
         }
 
-        $this->getDataManager()->clearCache();
+        $this->getDataManager()->clearCache(true);
 
         return $layoutManager->get($params['scope'], $params['viewType'], $relatedEntity, $layoutProfileId);
     }
