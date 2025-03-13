@@ -1097,6 +1097,10 @@ class OpenApiGenerator
 
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
     {
+        if(!empty($fieldData['openApiDisabled'])) {
+            return;
+        }
+
         if (empty($fieldData['openApiEnabled'])) {
             if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
                 return;
@@ -1114,6 +1118,9 @@ class OpenApiGenerator
             case "autoincrement":
             case "int":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'integer'];
+                break;
+            case "float":
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'number'];
                 break;
             case "bool":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'boolean'];
