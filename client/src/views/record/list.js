@@ -2449,6 +2449,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             el?.parent().find('.icons-container').remove();
                             const icons = $('<sup class="status-icons icons-container"></sup>');
                             (this.getStatusIcons(view.model) || []).forEach(el => icons.append(el));
+                            this.afterRenderStatusIcons(icons, view.model);
                             el?.parent().append('&nbsp;');
                             el?.parent().append(icons);
                         })
@@ -2474,6 +2475,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.trigger('after:build-rows');
                 }
             }
+        },
+
+        afterRenderStatusIcons(icons, model) {
+            // do something
         },
 
         showMoreRecords: function (collection, $list, $showMore, callback) {
