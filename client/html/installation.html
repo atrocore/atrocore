@@ -21,6 +21,8 @@
             #general-container {
                 padding: 0;
                 border: 1px solid #c0c0c0;
+                margin-top: 20px;
+                margin-bottom: 50px;
             }
             #general-container header#header {
                 width: 100%;
@@ -29,13 +31,20 @@
                 position: relative;
                 width: 100%;
                 height: auto;
+                display: flex;
+                justify-content: center;
             }
-            #general-container div#navbar div.navbar a.logo img {
-                max-width: 92px;
-                margin: 10px 0 7px 14px;
+
+            #header #navbar .navbar.navbar-inverse.logo-centr-outer .logo-centr-inner .navbar-header a.navbar-brand {
+                height: auto;
+            }
+
+            #header #navbar .navbar.navbar-inverse.logo-centr-outer .logo-centr-inner .navbar-header a.navbar-brand.nav-link.logo img {
+                max-width: 150px;
+                margin: 10px 0 !important;
             }
             #general-container .main-template {
-                min-height: 720px;
+                min-height: 700px;
                 padding: 0;
             }
             #general-container #main-template .msg-box {
@@ -48,6 +57,16 @@
             #general-container .main-template .modal-body {
                 min-height: 620px;
             }
+
+            #general-container .main-template .modal-body.db-config .form-group,
+            #general-container .main-template .modal-body.admin-setup .form-group {
+                padding: 0;
+            }
+
+            #general-container #main-template .point-lbl {
+                display: inline;
+            }
+
             .stepTitle {
                 padding: 5px;
                 background-color: #ececec;
@@ -119,22 +138,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12">
-                    <div class="cell cell-website col-sm-12 form-group">
+                <div class="col-sm-12" style="padding: 0;">
+                    <div class="cell cell-website col-sm-12 form-group" style="padding: 0 5px;">
                         <input class="btn btn-default" type="checkbox" name="license-agree" id="license-agree" value="1">
                         <label class="point-lbl" for="license-agree"><%= translate.labels.acceptTheAgreement %></label>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12">
-                <footer class="modal-footer">
-                    <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
-                </footer>
-            </div>
+            <footer class="col-xs-12 modal-footer">
+                <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
+            </footer>
         </script>
         <script type="text/template" id="db-connect">
             <div class="stepTitle text-center"><%= translate.labels.databaseConfiguration %></div>
-            <div class="col-md-12 col-lg-6 modal-body" style="margin: 10px 0">
+            <div class="col-md-12 col-lg-6 modal-body db-config" style="margin: 10px 0">
                 <div class="form-group">
                     <label for="driver"><%= translate.labels.dbSystem %> *</label>
                     <select class="form-control" id="driver">
@@ -164,12 +181,10 @@
                 </div>
                 <button type="button" class="btn btn-default test-db-connection"><%= translate.labels.testConnection %></button>
             </div>
-            <div class="col-sm-12">
-                <footer class="modal-footer">
-                    <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
-                    <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
-                </footer>
-            </div>
+            <footer class="col-xs-12 modal-footer">
+                <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
+                <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
+            </footer>
         </script>
         <script type="text/template" id="required-settings">
             <div class="stepTitle text-center"><%= translate.labels.requiredSettings %></div>
@@ -192,7 +207,7 @@
                         <td><% if (item.isValid) { %>
                             <span class="fas fa-check" style="color: green;"></span>
                             <% } else { %>
-                            <span class="fas fa-times"  style="color: red;"></span>
+                            <span class="fas fa-times" style="color: red;"></span>
                             <% } %>
                         </td>
                     </tr>
@@ -200,17 +215,15 @@
                 </tbody>
             </table>
             </div>
-            <div class="col-sm-12">
-                <footer class="modal-footer">
-                    <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
-                    <button type="button" class="btn btn-warning re-check-settings"><%= translate.labels.reCheck %></button>
-                    <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
-                </footer>
-            </div>
+            <footer class="col-xs-12 modal-footer">
+                <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
+                <button type="button" class="btn btn-warning re-check-settings"><%= translate.labels.reCheck %></button>
+                <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
+            </footer>
         </script>
         <script type="text/template" id="admin-creation">
             <div class="stepTitle text-center"><%= translate.labels.administratorSetup %></div>
-            <div class="col-sm-6 modal-body" style="margin: 10px 0">
+            <div class="col-sm-6 modal-body admin-setup" style="margin: 10px 0">
                 <div class="form-group">
                     <label for="username"><%= translate.labels.userName %> *</label>
                     <input type="text" class="form-control" id="username">
@@ -224,19 +237,17 @@
                     <input type="password" class="form-control" id="confirmPassword">
                 </div>
             </div>
-            <div class="col-sm-12">
+            <div class="col-sm-12" style="padding: 0 20px;">
                 <div class="cell cell-website col-sm-12 form-group">
                     <input class="btn btn-default" type="checkbox" name="reporting-enabled" id="reporting-enabled" value="1" checked>
                     <label class="point-lbl" for="reporting-enabled"><%= translate.labels.reportingEnabled %></label>
                 </div>
             </div>
-            <div class="col-sm-12">
-                <footer class="modal-footer">
-                    <div class="loader hidden"></div>
-                    <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
-                    <button class="btn btn-primary next-step" type="button"><%= translate.labels.finish %></button>
-                </footer>
-            </div>
+            <footer class="col-xs-12 modal-footer">
+                <div class="loader hidden"></div>
+                <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
+                <button class="btn btn-primary next-step" type="button"><%= translate.labels.finish %></button>
+            </footer>
         </script>
     </body>
 </html>
