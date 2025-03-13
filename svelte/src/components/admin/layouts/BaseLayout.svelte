@@ -14,10 +14,8 @@
 
     let layoutData;
 
-    export let loadLayout = () => {
-        LayoutManager.get(scope, type, layoutProfileId, (fetchedLayout) => {
-            layoutData = fetchedLayout.layout;
-        }, false);
+    export let loadLayout = (callback) => {
+        LayoutManager.get(scope, type, layoutProfileId, callback, false);
     }
 
     export let validate = () => {
@@ -39,7 +37,10 @@
         if (params.inModal) {
             let data = UserData.get();
             if (data && data.user && data.user.isAdmin) {
-                buttonList.unshift({name: 'fullEdit', label: Language.translate('Full Edit', 'labels', "LayoutManager")})
+                buttonList.unshift({
+                    name: 'fullEdit',
+                    label: Language.translate('Full Edit', 'labels', "LayoutManager")
+                })
             }
         }
 
@@ -100,7 +101,7 @@
             emitUpdate(false)
             disabled = false
             if (!params.inModal) {
-                loadLayout()
+                loadData()
             }
         });
     }
@@ -112,7 +113,9 @@
     }
 
     function cancel(): void {
-        loadLayout();
+        if (!params.inModal) {
+            loadData();
+        }
     }
 
     function reset(): void {

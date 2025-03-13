@@ -199,7 +199,7 @@ class LayoutManager
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $layoutRepo->where(['entity' => $scope, 'viewType' => $name, 'relatedEntity' => empty($relatedScope) ? null : $relatedScope, 'layoutProfileId' => $layoutProfileId])->removeCollection();
 
-        $this->getDataManager()->clearCache();
+        $this->getDataManager()->clearCache(true);
 
         return $this->get($scope, $name, $relatedScope, $layoutProfileId);
     }
@@ -209,7 +209,7 @@ class LayoutManager
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $layoutRepo->where(['layoutProfileId' => $layoutProfileId])->removeCollection();
 
-        $this->getDataManager()->clearCache();
+        $this->getDataManager()->clearCache(true);
 
         return true;
     }
