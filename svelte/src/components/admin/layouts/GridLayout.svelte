@@ -23,10 +23,6 @@
             type: 'enum',
             options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
             translation: 'LayoutManager.options.style'
-        },
-        dynamicLogicVisible: {
-            type: 'base',
-            view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
         }
     };
 

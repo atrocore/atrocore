@@ -1839,16 +1839,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
 
-                if (simplifiedLayout[p].dynamicLogicVisible) {
-                    if (this.uiHandler) {
-                        this.uiHandler.defs.panels = this.uiHandler.defs.panels || {};
-                        this.uiHandler.defs.panels[panel.name] = {
-                            visible: simplifiedLayout[p].dynamicLogicVisible
-                        };
-                        this.uiHandler.processPanel(panel.name);
-                    }
-                }
-
                 for (var i in simplifiedLayout[p].rows) {
                     var row = [];
 
