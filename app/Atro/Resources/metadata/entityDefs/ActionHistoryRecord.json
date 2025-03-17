@@ -17,16 +17,9 @@
       "readOnly": true
     },
     "action": {
-      "type": "enum",
+      "type": "varchar",
       "readOnly": true,
-      "len": 8,
-      "options": [
-        "read",
-        "update",
-        "create",
-        "delete",
-        "restore"
-      ]
+      "len": 8
     },
     "createdAt": {
       "type": "datetime"

@@ -16,6 +16,7 @@ namespace Atro\Core;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
@@ -126,39 +127,27 @@ class ControllerManager
             $request
         );
 
-
-//        if ($request->isPost()) {
-//            $action = 'create';
-//        } elseif ($request->isPatch() || $request->isPut()) {
-//            $action = 'update';
-//        } elseif ($request->isDelete()) {
-//            $action = 'delete';
-//        } else {
-//            $action = 'read';
-//        }
-//
-//        $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
-//        $historyRecord->set('action', $action);
-//        $historyRecord->set('userId', $this->getUser()->id);
-//        $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
-//        $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
-//        $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
-//        $historyRecord->set('data', [
-//            'params' => $params,
-//            'data' => $data,
-//            'params' => $params
-//        ]);
-//
-////        if ($entity) {
-////            $historyRecord->set(array(
-////                'targetType' => $entity->getEntityType(),
-////                'targetId'   => $entity->id
-////            ));
-////        }
-//
-//        echo '<pre>';
-//        print_r($request->get);
-//        die();
+        if (
+            empty($this->getConfig()->get('disableActionHistory'))
+            && empty($this->getUser()->get('disableActionHistory'))
+            && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))
+        ) {
+            $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
+            $historyRecord->set('action', $request->getMethod());
+            $historyRecord->set('userId', $this->getUser()->id);
+            $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
+            $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
+            $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
+            $historyRecordData = [
+                'request' => [
+                    'headers' => $request->headers->all(),
+                    'params'  => $params,
+                    'body'    => $data
+                ]
+            ];
+            $historyRecord->set('data', $historyRecordData);
+            $this->getEntityManager()->saveEntity($historyRecord);
+        }
 
         $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
 
@@ -176,12 +165,17 @@ class ControllerManager
             $controller->$afterMethodName($params, $data, $request, $response);
         }
 
-        if (is_bool($result)) {
-            return Json::encode($result);
+        if (!empty($historyRecord)) {
+            $historyRecordData['response'] = [
+                'status' => $response->getStatus(),
+                'body'   => $result
+            ];
+            $historyRecord->set('data', $historyRecordData);
+            $this->getEntityManager()->saveEntity($historyRecord);
         }
 
-        if (is_array($result) || $result instanceof \stdClass) {
-            return Json::encode($result);
+        if (is_bool($result) || is_array($result) || $result instanceof \stdClass) {
+            $result = Json::encode($result);
         }
 
         return $result;
@@ -229,6 +223,11 @@ class ControllerManager
     protected function getMetadata(): Metadata
     {
         return $this->getContainer()->get('metadata');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->getContainer()->get('config');
     }
 
     protected function getEventManager(): Manager

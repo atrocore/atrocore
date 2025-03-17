@@ -29,6 +29,8 @@ class V1Dot13Dot35 extends Base
         } else {
             $this->exec("ALTER TABLE `user` ADD disable_action_history TINYINT(1) DEFAULT '0' NOT NULL");
         }
+
+        $this->exec("truncate action_history_record");
     }
 
     protected function exec(string $sql): void
