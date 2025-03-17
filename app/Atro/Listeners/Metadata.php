@@ -1202,6 +1202,10 @@ class Metadata extends AbstractListener
                     empty($data['entityDefs'][$scope]['links'][$field]['view'])) {
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/user-with-avatar';
                 }
+
+                if(in_array($field, ['createdAt', 'updatedAt']) && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser'])) {
+                    $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/datetime-with-user';
+                }
             }
         }
 
