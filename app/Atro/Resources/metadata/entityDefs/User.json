@@ -10,6 +10,10 @@
         "Token"
       ]
     },
+    "actionHistory": {
+      "type": "bool",
+      "default": true
+    },
     "isAdmin": {
       "type": "bool",
       "tooltip": true

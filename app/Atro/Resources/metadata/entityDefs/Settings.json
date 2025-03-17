@@ -16,6 +16,10 @@
       "type": "bool",
       "default": false
     },
+    "actionHistory": {
+      "type": "bool",
+      "default": true
+    },
     "useCache": {
       "type": "bool",
       "default": true
