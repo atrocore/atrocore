@@ -34,7 +34,7 @@
     </a>
     <div class="body-container">
         <div class="main-container">
-            <iframe title="Preview" style="width:{{size.width}};height:{{size.height}};"></iframe>
+            <iframe style="width:{{size.width}};height:{{size.height}};"></iframe>
         </div>
         <div class="side-container">
             {{{sideEdit}}}

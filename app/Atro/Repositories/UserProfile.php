@@ -26,6 +26,8 @@ class UserProfile extends User
         $entity = $this->entityFactory->create($this->entityType);
         $entity->set($user->toArray());
 
+        $entity->setAsFetched();
+
         return $entity;
     }
 

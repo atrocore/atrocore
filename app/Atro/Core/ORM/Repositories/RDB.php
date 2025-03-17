@@ -428,6 +428,32 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function validateDate(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
+        if (!empty($date = $entity->get($fieldName)) && !preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/", $date)) {
+            throw new BadRequest(
+                sprintf($this->getLanguage()->translate('dateIsInvalid', 'exceptions'), $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType()))
+            );
+        }
+    }
+
+    protected function validateDateTime(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
+        if (!empty($datetime = $entity->get($fieldName)) && !preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])\s(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/", $datetime)) {
+            throw new BadRequest(
+                sprintf($this->getLanguage()->translate('datetimeIsInvalid', 'exceptions'), $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType()))
+            );
+        }
+    }
+
     protected function prepareFieldTypeMultiEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
         $this->prepareFieldTypeArray($entity, $fieldName, $fieldData);

@@ -6593,7 +6593,7 @@ button.close {
 }
 
 #general-container .modal-body {
-    padding: 14px;
+    padding: 20px;
 }
 
 .modal-body .row {
@@ -20183,7 +20183,7 @@ ul.dropdown-menu > li.checkbox {
 
     #main .detail .side.collapsed > .panel,
     #main .edit .side.collapsed > .panel {
-        display: none;
+        display: none !important;
     }
 }
 
@@ -21774,7 +21774,7 @@ td[data-name="draggableIcon"] {
 .full-page-modal .html-preview {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
 }
 
 .full-page-modal .html-preview .body-container {

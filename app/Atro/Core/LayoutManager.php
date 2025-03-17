@@ -40,7 +40,7 @@ class LayoutManager
      * Get a full path of the file
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string         $filePath - File path, Ex. file.json
+     * @param string         $filePath   - File path, Ex. file.json
      *
      * @return string
      */
@@ -101,9 +101,7 @@ class LayoutManager
         list($layout, $storedProfile) = $this->compose($scope, $viewType, $relatedEntity, $layoutProfileId);
 
         // remove fields from layout if this fields not exist in metadata
-        if (empty($relatedEntity)) {
-            $layout = $this->disableNotExistingFields($scope, $viewType, $layout);
-        }
+        $layout = $this->disableNotExistingFields($scope, $relatedEntity, $viewType, $layout);
 
         if ($viewType === 'list') {
             foreach ($layout as $k => $row) {
@@ -201,7 +199,7 @@ class LayoutManager
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $layoutRepo->where(['entity' => $scope, 'viewType' => $name, 'relatedEntity' => empty($relatedScope) ? null : $relatedScope, 'layoutProfileId' => $layoutProfileId])->removeCollection();
 
-        $this->getDataManager()->clearCache();
+        $this->getDataManager()->clearCache(true);
 
         return $this->get($scope, $name, $relatedScope, $layoutProfileId);
     }
@@ -211,7 +209,7 @@ class LayoutManager
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $layoutRepo->where(['layoutProfileId' => $layoutProfileId])->removeCollection();
 
-        $this->getDataManager()->clearCache();
+        $this->getDataManager()->clearCache(true);
 
         return true;
     }
@@ -236,7 +234,7 @@ class LayoutManager
     {
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $where = ['entity' => $scope, 'viewType' => $layoutName, 'layoutProfileId' => $layoutProfileId];
-        if ($layoutName === 'list') {
+        if (in_array($layoutName, ['list', 'detail'])) {
             if (!empty($relatedEntity)) {
                 // validate related entity
                 $isValid = false;
@@ -577,7 +575,7 @@ class LayoutManager
      *
      * @return array
      */
-    protected function disableNotExistingFields($scope, $name, $data): array
+    protected function disableNotExistingFields($scope, $relatedScope, $name, $data): array
     {
         // get entityDefs
         $entityDefs = $this->getMetadata()->get('entityDefs')[$scope] ?? [];
@@ -586,6 +584,18 @@ class LayoutManager
         if (!empty($entityDefs)) {
             // get fields for entity
             $fields = array_keys($entityDefs['fields']);
+            if (!empty($relatedScope) && in_array($name, ['list', 'detail'])) {
+                foreach ($this->getMetadata()->get(['entityDefs', $relatedScope, 'links']) ?? [] as $linkData) {
+                    if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
+                        $relationScope = ucfirst($linkData['relationName']);
+                        $relationFields = array_keys($this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? []);
+                        $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
+                        $fields = array_merge($fields, $relationFields);
+                        break;
+                    }
+                }
+            }
+
             $fields[] = 'id';
 
             // remove fields from layout if this fields not exist in metadata

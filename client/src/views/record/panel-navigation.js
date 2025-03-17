@@ -40,13 +40,13 @@ Espo.define('views/record/panel-navigation', 'view',
         events: {
             'click [data-action="scrollToPanel"]'(e) {
                 let name = $(e.currentTarget).data('name')
-                if(this.isPanelClosed(name)){
+                if (this.isPanelClosed(name)) {
                     let panel = this.options.panelList.filter(p => p.name === name)[0]
                     Backbone.trigger('create-bottom-panel', panel)
-                    this.listenTo(Backbone,'after:create-bottom-panel',function(panel){
-                       setTimeout(() =>  this.actionScrollToPanel(panel.name), 100)
+                    this.listenTo(Backbone, 'after:create-bottom-panel', function (panel) {
+                        setTimeout(() => this.actionScrollToPanel(panel.name), 100)
                     })
-                }else{
+                } else {
                     this.actionScrollToPanel(name);
                 }
             }
@@ -57,7 +57,7 @@ Espo.define('views/record/panel-navigation', 'view',
             this.scope = this.options.scope ?? this.scope
             this.setPanelList();
 
-            this.listenTo(this.model, 'change', () => {
+            this.listenTo(this.model, 'change after:process-ui-handler', () => {
                 this.setPanelList();
                 this.reRender();
             });
@@ -70,7 +70,7 @@ Espo.define('views/record/panel-navigation', 'view',
                         return true;
                     }
 
-                    if(this.isPanelClosed(panel.name)) {
+                    if (this.isPanelClosed(panel.name)) {
                         return true;
                     }
 
@@ -108,8 +108,8 @@ Espo.define('views/record/panel-navigation', 'view',
             }
         },
 
-        isPanelClosed(name){
-            let preferences =  this.getPreferences().get('closedPanelOptions') ?? {};
+        isPanelClosed(name) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? []
             return (scopePreferences['closed'] || []).includes(name)
         },

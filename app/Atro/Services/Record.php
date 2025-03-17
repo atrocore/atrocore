@@ -241,7 +241,11 @@ class Record extends RecordService
 
         $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
 
-        $selectParams['select'] = ['id', 'name'];
+        $fields = ['id', 'name'];
+        if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
+            $fields[] = $selectParams['orderBy'];
+        }
+        $selectParams['select'] = $fields;
         $collection = $repository->find($selectParams);
         $total = $repository->count($selectParams);
         $offset = $params['offset'];

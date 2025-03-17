@@ -604,7 +604,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         loadDynamicActions: function (display) {
-            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled']) || !this.model.id) {
+            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled']) || !this.model.id || this.buttonsDisabled) {
                 return;
             }
 
@@ -938,8 +938,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+        fetch: function (onlyRelation) {
+            var data = Dep.prototype.fetch.call(this, onlyRelation);
+            if (onlyRelation) {
+                return data
+            }
+
             if (this.hasView('side')) {
                 var view = this.getView('side');
                 if ('fetch' in view) {
@@ -1106,7 +1110,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         getFieldView: function (name) {
             var view;
             if (this.hasView('middle')) {
-                view = (this.getView('middle').getFieldViews(true) || {})[name];
+                view = this.getView('middle').getFieldView(name);
             }
             if (!view && this.hasView('side')) {
                 view = (this.getView('side').getFieldViews(true) || {})[name];
@@ -1451,6 +1455,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             const languageFilter = this.getStorage().get('languageFilter', this.scope) || ['allLanguages'];
 
             $.each(this.getFieldViews(), (name, fieldView) => {
+                name = fieldView.name || name
                 if (fieldView.model.getFieldParam(name, 'advancedFilterDisabled') === true) {
                     return;
                 }
@@ -1559,6 +1564,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         scope: this.model.name,
                         viewType: this.layoutName,
                         layoutData: this.layoutData,
+                        relatedScope: this.options.layoutRelatedScope,
                         el: this.getSelector() + '.panel-heading .layout-editor-container',
                     }, (view) => {
                         view.on("refresh", () => this.refreshLayout())
@@ -1858,28 +1864,29 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             continue;
                         }
 
-                        var name = cellDefs.name;
+                        let name = cellDefs.name;
+                        let fieldModel, type, viewName;
 
                         // remove relation virtual fields
                         let parts = name.split('__');
+                        let relEntity = null;
                         if (parts.length === 2) {
-                            let relEntity = null;
-                            if (this.model._relateData) {
-                                relEntity = this.getRelEntity(this.model._relateData.model.urlRoot, this.model._relateData.panelName);
+                            if (this.model.relationModel) {
+                                relEntity = this.model.relationModel.name;
                             }
-                            if (this.model.defs['_relationName']) {
-                                let hashParts = window.location.hash.split('/view/');
-                                if (typeof hashParts[1] !== 'undefined' && this.model.defs._relationName) {
-                                    relEntity = this.getRelEntity(hashParts[0].replace('#', ''), this.model.defs._relationName);
-                                }
-                            }
+
                             if (relEntity !== parts[0]) {
                                 continue;
                             }
+                            fieldModel = this.model.relationModel
+                            type = cellDefs.type || fieldModel.getFieldType(parts[1]) || 'base';
+                            viewName = cellDefs.view || fieldModel.getFieldParam(parts[1], 'view') || this.getFieldManager().getViewName(type);
+                        } else {
+                            fieldModel = this.model
+                            type = cellDefs.type || fieldModel.getFieldType(name) || 'base';
+                            viewName = cellDefs.view || fieldModel.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
                         }
 
-                        var type = cellDefs.type || this.model.getFieldType(name) || 'base';
-                        var viewName = cellDefs.view || this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
                         var o = {
                             el: el + ' .middle .field[data-name="' + name + '"]',
@@ -1889,6 +1896,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             },
                             mode: this.fieldsMode
                         };
+
+                        if (parts.length === 2) {
+                            o.useRelationModel = true
+                            o.defs.name = parts[1]
+                            if (!cellDefs.customLabel) {
+                                cellDefs.customLabel = this.translate(o.defs.name, 'fields', relEntity) + ' (Relation)'
+                            }
+                        }
 
                         if (this.readOnly) {
                             o.readOnly = true;

@@ -236,7 +236,7 @@
       "view": "views/user-profile/fields/notification-profile"
     },
     "lpNavigation": {
-      "type": "array",
+      "type": "jsonObject",
       "notStorable": true,
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,

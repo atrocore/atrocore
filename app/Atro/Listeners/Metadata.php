@@ -792,20 +792,6 @@ class Metadata extends AbstractListener
         $defaultScopes = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'),
             true);
 
-        $virtualFieldDefs = [
-            'notStorable'          => true,
-            'layoutListDisabled'   => true,
-            'layoutDetailDisabled' => true,
-            'massUpdateDisabled'   => true,
-            'importDisabled'       => true,
-            'exportDisabled'       => true,
-            'emHidden'             => true,
-            'isCustom'             => false,
-            'filterDisabled'       => true,
-            'unique'               => false,
-            'required'             => false,
-        ];
-
         foreach ($res as $entityName => $entityDefs) {
             $current = $data['clientDefs'][$entityName] ?? [];
             $data['clientDefs'][$entityName] = empty($current) ? $defaultClientDefs : Util::merge($defaultClientDefs,
@@ -813,39 +799,6 @@ class Metadata extends AbstractListener
 
             $current = $data['entityDefs'][$entityName] ?? [];
             $current = empty($current) ? $entityDefs : Util::merge($entityDefs, $current);
-
-            $additionalFields = array_filter($current['fields'], function ($row) {
-                return empty($row['relationField']);
-            });
-
-            // put virtual fields to entities
-            if (!empty($additionalFields)) {
-                $relFields = array_filter($current['fields'], function ($row) {
-                    return !empty($row['relationField']);
-                });
-                foreach ($relFields as $relField => $relDefs) {
-                    $relEntity = $entityDefs['links'][$relField]['entity'];
-                    $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName,
-                        'id')] = array_merge(['type' => 'varchar', 'relId' => true],
-                        $virtualFieldDefs);
-                    foreach ($additionalFields as $additionalField => $additionalFieldDefs) {
-                        if (!empty($additionalFieldDefs['notStorable'])) {
-                            continue;
-                        }
-                        if ($additionalFieldDefs['type'] === 'linkMultiple') {
-                            continue;
-                        }
-                        if ($additionalFieldDefs['type'] === 'link') {
-                            $additionalFieldDefs['entity'] = $current['links'][$additionalField]['entity'];
-                        }
-                        $current['fields'][$additionalField]['additionalField'] = true;
-                        $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName,
-                            $additionalField)] = array_merge(
-                            $additionalFieldDefs, $virtualFieldDefs
-                        );
-                    }
-                }
-            }
 
             $data['entityDefs'][$entityName] = Util::merge($defaultEntityDefs, $current);
 
@@ -860,7 +813,9 @@ class Metadata extends AbstractListener
             }
 
             $data['scopes'][$entityName]['tab'] = false;
-            $data['scopes'][$entityName]['layouts'] = false;
+            if (!isset($data['scopes'][$entityName]['layouts'])) {
+                $data['scopes'][$entityName]['layouts'] = true;
+            }
             $data['scopes'][$entityName]['customizable'] = false;
         }
     }

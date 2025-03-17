@@ -21,7 +21,7 @@ class Locale extends ReferenceData
 {
     public function refreshCache(): void
     {
-        $this->getInjection('dataManager')->clearCache();
+        $this->getInjection('dataManager')->clearCache(true);
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

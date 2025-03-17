@@ -19,6 +19,14 @@
       "type": "varchar"
     },
     {
+      "name": "defaultFrom",
+      "type": "int"
+    },
+    {
+      "name": "defaultTo",
+      "type": "int"
+    },
+    {
       "name": "minFrom",
       "type": "int"
     },

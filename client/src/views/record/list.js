@@ -2343,14 +2343,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return null
         },
 
-        hasRelationFields() {
-            if (this.listLayout.find(item => this.isRelationField(item.name))) {
-                return true
-            }
-            return false
-        },
-
         isRelationField(name) {
+            if (!name) return false
             return name.split('__').length === 2
         },
 
@@ -2371,13 +2365,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 };
 
                 let getRelationModel = (callback) => {
-                    if (this.hasRelationFields()) {
+                    if (model.get('__relationEntity')) {
                         this.getModelFactory().create(this.relationScope, relModel => {
                             relModel.set(model.get('__relationEntity'));
+                            model.relationModel = relModel
                             callback(relModel)
                         })
                     } else {
-                        callback()
+                        callback(null)
                     }
                 }
 
@@ -2454,6 +2449,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             el?.parent().find('.icons-container').remove();
                             const icons = $('<sup class="status-icons icons-container"></sup>');
                             (this.getStatusIcons(view.model) || []).forEach(el => icons.append(el));
+                            this.afterRenderStatusIcons(icons, view.model);
                             el?.parent().append('&nbsp;');
                             el?.parent().append(icons);
                         })
@@ -2479,6 +2475,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.trigger('after:build-rows');
                 }
             }
+        },
+
+        afterRenderStatusIcons(icons, model) {
+            // do something
         },
 
         showMoreRecords: function (collection, $list, $showMore, callback) {
