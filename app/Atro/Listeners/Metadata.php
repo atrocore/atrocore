@@ -139,27 +139,27 @@ class Metadata extends AbstractListener
             $relationshipEntity = 'UserFollowed' . $scope;
 
             $data['entityDefs'][$scope]['fields']['followers'] = [
-                'type'   => 'linkMultiple',
+                'type' => 'linkMultiple',
                 'noLoad' => true
             ];
 
             $data['entityDefs'][$scope]['links']['followers'] = [
-                'type'         => 'hasMany',
+                'type' => 'hasMany',
                 'relationName' => $relationshipEntity,
-                'foreign'      => 'followed' . Util::pluralize($scope),
-                'entity'       => 'User'
+                'foreign' => 'followed' . Util::pluralize($scope),
+                'entity' => 'User'
             ];
 
             $data['entityDefs']['User']['fields']['followed' . Util::pluralize($scope)] = [
-                'type'   => 'linkMultiple',
+                'type' => 'linkMultiple',
                 'noLoad' => true
             ];
 
             $data['entityDefs']['User']['links']['followed' . Util::pluralize($scope)] = [
-                'type'         => 'hasMany',
+                'type' => 'hasMany',
                 'relationName' => $relationshipEntity,
-                'foreign'      => 'followers',
-                'entity'       => $scope
+                'foreign' => 'followers',
+                'entity' => $scope
             ];
 
             $data['scopes'][$relationshipEntity]['acl'] = false;
@@ -197,7 +197,7 @@ class Metadata extends AbstractListener
         }
 
         $data['clientDefs']['EntityField']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'][] = [
-            "type"      => "isEmpty",
+            "type" => "isEmpty",
             "attribute" => "multilangField"
         ];
     }
@@ -282,23 +282,23 @@ class Metadata extends AbstractListener
             if (in_array($action['type'], ['webhook', 'set'])) {
                 if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
                     $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = [
-                        'id'         => $action['id'],
-                        'name'       => $action['name'],
-                        'display'    => $action['display'],
+                        'id' => $action['id'],
+                        'name' => $action['name'],
+                        'display' => $action['display'],
                         'massAction' => !empty($action['mass_action']),
-                        'acl'        => [
-                            'scope'  => $action['source_entity'],
+                        'acl' => [
+                            'scope' => $action['source_entity'],
                             'action' => 'read',
                         ]
                     ];
                 }
                 if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
                     $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = [
-                        'id'      => $action['id'],
-                        'name'    => $action['name'],
+                        'id' => $action['id'],
+                        'name' => $action['name'],
                         'display' => $action['display'],
-                        'acl'     => [
-                            'scope'  => $action['source_entity'],
+                        'acl' => [
+                            'scope' => $action['source_entity'],
                             'action' => 'read',
                         ]
                     ];
@@ -402,14 +402,14 @@ class Metadata extends AbstractListener
                 }
                 $unitFieldName = $field . 'Unit';
                 $data['entityDefs'][$entityType]['fields'][$unitFieldName] = [
-                    "type"        => "link",
-                    "view"        => "views/fields/unit-link",
-                    "measureId"   => $fieldDefs['measureId'],
+                    "type" => "link",
+                    "view" => "views/fields/unit-link",
+                    "measureId" => $fieldDefs['measureId'],
                     "unitIdField" => true,
-                    "mainField"   => $field,
-                    "required"    => !empty($fieldDefs['required']),
+                    "mainField" => $field,
+                    "required" => !empty($fieldDefs['required']),
                     "notStorable" => !empty($fieldDefs['notStorable']),
-                    "emHidden"    => true
+                    "emHidden" => true
                 ];
 
                 if (isset($fieldDefs['multilangLocale'])) {
@@ -417,9 +417,9 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
-                    "type"                        => "belongsTo",
-                    "entity"                      => "Unit",
-                    "skipOrmDefs"                 => !empty($fieldDefs['notStorable']),
+                    "type" => "belongsTo",
+                    "entity" => "Unit",
+                    "skipOrmDefs" => !empty($fieldDefs['notStorable']),
                     'layoutRelationshipsDisabled' => true,
                 ];
 
@@ -460,16 +460,16 @@ class Metadata extends AbstractListener
                     $virtualFieldName = 'unit' . ucfirst($field);
                     $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
                     $data['entityDefs'][$entityType]['fields'][$virtualFieldName] = [
-                        "type"               => "varchar",
-                        "notStorable"        => true,
-                        "view"               => "views/fields/unit-{$fieldDefs['type']}",
-                        "measureId"          => $fieldDefs['measureId'],
-                        "mainField"          => $field,
-                        "unitField"          => true,
-                        "required"           => false,
-                        "filterDisabled"     => true,
+                        "type" => "varchar",
+                        "notStorable" => true,
+                        "view" => "views/fields/unit-{$fieldDefs['type']}",
+                        "measureId" => $fieldDefs['measureId'],
+                        "mainField" => $field,
+                        "unitField" => true,
+                        "required" => false,
+                        "filterDisabled" => true,
                         "massUpdateDisabled" => true,
-                        "emHidden"           => true
+                        "emHidden" => true
                     ];
 
                     if ($visibleLogic = $this->getMetadata()->get([
@@ -513,17 +513,17 @@ class Metadata extends AbstractListener
                     $field . 'To'
                 ] as $v) {
                     $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
-                        "type"                 => "jsonObject",
-                        "notStorable"          => true,
-                        "mainField"            => $field,
-                        "required"             => false,
-                        "layoutListDisabled"   => true,
+                        "type" => "jsonObject",
+                        "notStorable" => true,
+                        "mainField" => $field,
+                        "required" => false,
+                        "layoutListDisabled" => true,
                         "layoutDetailDisabled" => true,
-                        "massUpdateDisabled"   => true,
-                        "filterDisabled"       => true,
-                        "exportDisabled"       => true,
-                        "importDisabled"       => true,
-                        "emHidden"             => true
+                        "massUpdateDisabled" => true,
+                        "filterDisabled" => true,
+                        "exportDisabled" => true,
+                        "importDisabled" => true,
+                        "emHidden" => true
                     ];
 
                     if (isset($fieldDefs['multilangLocale'])) {
@@ -531,17 +531,17 @@ class Metadata extends AbstractListener
                     }
 
                     $data['entityDefs'][$entityType]['fields'][$v . 'UnitData'] = [
-                        "type"                 => "jsonObject",
-                        "notStorable"          => true,
-                        "mainField"            => $field,
-                        "required"             => false,
-                        "layoutListDisabled"   => true,
+                        "type" => "jsonObject",
+                        "notStorable" => true,
+                        "mainField" => $field,
+                        "required" => false,
+                        "layoutListDisabled" => true,
                         "layoutDetailDisabled" => true,
-                        "massUpdateDisabled"   => true,
-                        "filterDisabled"       => true,
-                        "exportDisabled"       => true,
-                        "importDisabled"       => true,
-                        "emHidden"             => true
+                        "massUpdateDisabled" => true,
+                        "filterDisabled" => true,
+                        "exportDisabled" => true,
+                        "importDisabled" => true,
+                        "emHidden" => true
                     ];
 
                     if (isset($fieldDefs['multilangLocale'])) {
@@ -691,18 +691,18 @@ class Metadata extends AbstractListener
 
                     if ($entityName === 'EntityTeam') {
                         $res[$entityName]['fields'][$leftId] = [
-                            'type'     => 'varchar',
-                            'len'      => 36,
+                            'type' => 'varchar',
+                            'len' => 36,
                             'required' => true
                         ];
                     } else {
                         $res[$entityName]['fields'][$left] = [
-                            'type'          => 'link',
-                            'required'      => true,
+                            'type' => 'link',
+                            'required' => true,
                             'relationField' => true
                         ];
                         $res[$entityName]['links'][$left] = [
-                            'type'   => 'belongsTo',
+                            'type' => 'belongsTo',
                             'entity' => $scope
                         ];
 
@@ -712,17 +712,17 @@ class Metadata extends AbstractListener
                                 && empty($data['entityDefs'][$scope]['links'][$relFieldName])) {
                                 $res[$entityName]['links'][$left]['foreign'] = $relFieldName;
                                 $data['entityDefs'][$scope]['fields'][$relFieldName] = [
-                                    'type'                      => 'linkMultiple',
-                                    'linkToRelationEntity'      => $relationParams['entity'],
-                                    'layoutDetailDisabled'      => true,
+                                    'type' => 'linkMultiple',
+                                    'linkToRelationEntity' => $relationParams['entity'],
+                                    'layoutDetailDisabled' => true,
                                     'layoutLeftSidebarDisabled' => true,
-                                    'massUpdateDisabled'        => true,
-                                    'noLoad'                    => true
+                                    'massUpdateDisabled' => true,
+                                    'noLoad' => true
                                 ];
                                 $data['entityDefs'][$scope]['links'][$relFieldName] = [
-                                    'type'    => 'hasMany',
+                                    'type' => 'hasMany',
                                     'foreign' => $left,
-                                    'entity'  => $entityName
+                                    'entity' => $entityName
                                 ];
                             }
 
@@ -730,12 +730,12 @@ class Metadata extends AbstractListener
                     }
 
                     $res[$entityName]['fields'][$right] = [
-                        'type'          => 'link',
-                        'required'      => true,
+                        'type' => 'link',
+                        'required' => true,
                         'relationField' => true
                     ];
                     $res[$entityName]['links'][$right] = [
-                        'type'   => 'belongsTo',
+                        'type' => 'belongsTo',
                         'entity' => $relationParams['entity']
                     ];
 
@@ -745,17 +745,17 @@ class Metadata extends AbstractListener
                             && empty($data['entityDefs'][$relationParams['entity']]['links'][$relFieldName])) {
                             $res[$entityName]['links'][$right]['foreign'] = $relFieldName;
                             $data['entityDefs'][$relationParams['entity']]['fields'][$relFieldName] = [
-                                'type'                      => 'linkMultiple',
-                                'linkToRelationEntity'      => $scope,
+                                'type' => 'linkMultiple',
+                                'linkToRelationEntity' => $scope,
                                 'layoutLeftSidebarDisabled' => true,
-                                'layoutDetailDisabled'      => true,
-                                'massUpdateDisabled'        => true,
-                                'noLoad'                    => true
+                                'layoutDetailDisabled' => true,
+                                'massUpdateDisabled' => true,
+                                'noLoad' => true
                             ];
                             $data['entityDefs'][$relationParams['entity']]['links'][$relFieldName] = [
-                                'type'    => 'hasMany',
+                                'type' => 'hasMany',
                                 'foreign' => $right,
-                                'entity'  => $entityName
+                                'entity' => $entityName
                             ];
                         }
                     }
@@ -850,51 +850,51 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields']['children']['layoutLeftSidebarDisabled'] = true;
 
             $data['entityDefs'][$scope]['fields']['isRoot'] = [
-                "type"                 => "bool",
-                "notStorable"          => true,
-                "layoutListDisabled"   => true,
+                "type" => "bool",
+                "notStorable" => true,
+                "layoutListDisabled" => true,
                 "layoutDetailDisabled" => true,
-                "massUpdateDisabled"   => true,
-                "filterDisabled"       => true,
-                "importDisabled"       => true,
-                "exportDisabled"       => true,
-                "emHidden"             => true
+                "massUpdateDisabled" => true,
+                "filterDisabled" => true,
+                "importDisabled" => true,
+                "exportDisabled" => true,
+                "emHidden" => true
             ];
 
             $data['entityDefs'][$scope]['fields']['hasChildren'] = [
-                "type"                 => "bool",
-                "notStorable"          => true,
-                "layoutListDisabled"   => true,
+                "type" => "bool",
+                "notStorable" => true,
+                "layoutListDisabled" => true,
                 "layoutDetailDisabled" => true,
-                "massUpdateDisabled"   => true,
-                "filterDisabled"       => true,
-                "importDisabled"       => true,
-                "exportDisabled"       => true,
-                "emHidden"             => true
+                "massUpdateDisabled" => true,
+                "filterDisabled" => true,
+                "importDisabled" => true,
+                "exportDisabled" => true,
+                "emHidden" => true
             ];
 
             $data['entityDefs'][$scope]['fields']['hierarchyRoute'] = [
-                "type"                 => "jsonObject",
-                "notStorable"          => true,
-                "layoutListDisabled"   => true,
+                "type" => "jsonObject",
+                "notStorable" => true,
+                "layoutListDisabled" => true,
                 "layoutDetailDisabled" => true,
-                "massUpdateDisabled"   => true,
-                "filterDisabled"       => true,
-                "importDisabled"       => true,
-                "exportDisabled"       => true,
-                "emHidden"             => true
+                "massUpdateDisabled" => true,
+                "filterDisabled" => true,
+                "importDisabled" => true,
+                "exportDisabled" => true,
+                "emHidden" => true
             ];
 
             $data['entityDefs'][$scope]['fields']['inheritedFields'] = [
-                "type"                 => "array",
-                "notStorable"          => true,
-                "layoutListDisabled"   => true,
+                "type" => "array",
+                "notStorable" => true,
+                "layoutListDisabled" => true,
                 "layoutDetailDisabled" => true,
-                "massUpdateDisabled"   => true,
-                "filterDisabled"       => true,
-                "importDisabled"       => true,
-                "exportDisabled"       => true,
-                "emHidden"             => true
+                "massUpdateDisabled" => true,
+                "filterDisabled" => true,
+                "importDisabled" => true,
+                "exportDisabled" => true,
+                "emHidden" => true
             ];
 
             foreach ($scopeData['fields'] as $fieldName => $fieldData) {
@@ -915,24 +915,24 @@ class Metadata extends AbstractListener
 
             if (empty($data['scopes'][$scope]['multiParents'])) {
                 $data['entityDefs'][$scope]['fields']['parent'] = [
-                    "type"                      => "link",
-                    "notStorable"               => true,
-                    "entity"                    => $scope,
-                    "emHidden"                  => true,
+                    "type" => "link",
+                    "notStorable" => true,
+                    "entity" => $scope,
+                    "emHidden" => true,
                     "layoutLeftSidebarDisabled" => true,
-                    "exportDisabled"            => false,
-                    "importDisabled"            => false
+                    "exportDisabled" => false,
+                    "importDisabled" => false
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'],
                     [
-                        "layoutListDisabled"        => true,
-                        "layoutDetailDisabled"      => true,
+                        "layoutListDisabled" => true,
+                        "layoutDetailDisabled" => true,
                         "layoutLeftSidebarDisabled" => true,
-                        "massUpdateDisabled"        => true,
-                        "filterDisabled"            => true,
-                        "importDisabled"            => true,
-                        "emHidden"                  => true
+                        "massUpdateDisabled" => true,
+                        "filterDisabled" => true,
+                        "importDisabled" => true,
+                        "emHidden" => true
                     ]);
                 $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
             }
@@ -1203,7 +1203,8 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/user-with-avatar';
                 }
 
-                if(in_array($field, ['createdAt', 'updatedAt']) && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser'])) {
+                if (in_array($field, ['createdAt', 'updatedAt']) && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser']) &&
+                    !empty($data['entityDefs'][$scope]['fields'][$field]['view'])) {
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/datetime-with-user';
                 }
             }
@@ -1215,7 +1216,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array  $indexes
+     * @param array $indexes
      * @param string $fieldName
      *
      * @return array
@@ -1262,11 +1263,11 @@ class Metadata extends AbstractListener
 
         foreach ($previewTemplates as $previewTemplate) {
             $data['clientDefs'][$previewTemplate['entity_type']]['additionalButtons'][$previewTemplate['id']] = [
-                'name'           => $previewTemplate['id'],
-                'label'          => $previewTemplate['name'],
+                'name' => $previewTemplate['id'],
+                'label' => $previewTemplate['name'],
                 'actionViewPath' => 'views/preview-template/record/actions/preview',
-                'action'         => 'showHtmlPreview',
-                'optionsToPass'  => [
+                'action' => 'showHtmlPreview',
+                'optionsToPass' => [
                     'model'
                 ]
             ];
@@ -1277,32 +1278,32 @@ class Metadata extends AbstractListener
     {
         foreach (array_keys(($this->getMetadata()->get(['app', 'notificationTransports'], []))) as $transport) {
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'Active'] = [
-                "type"         => "bool",
+                "type" => "bool",
                 "virtualField" => true,
-                "notStorable"  => true
+                "notStorable" => true
             ];
             // field for the notification template selected for this transport
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateId'] = [
-                "type"           => "varchar",
-                "virtualField"   => true,
-                "notStorable"    => true,
+                "type" => "varchar",
+                "virtualField" => true,
+                "notStorable" => true,
                 "filterDisabled" => true,
-                "view"           => "views/notification-rule/fields/notification-template",
-                "name"           => $transport . 'Template',
-                "t_type"         => $transport
+                "view" => "views/notification-rule/fields/notification-template",
+                "name" => $transport . 'Template',
+                "t_type" => $transport
             ];
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateName'] = [
-                "type"           => "varchar",
+                "type" => "varchar",
                 "filterDisabled" => true,
-                "readOnly"       => true,
-                "notStorable"    => true
+                "readOnly" => true,
+                "notStorable" => true
             ];
 
             $data['clientDefs']['NotificationRule']['dynamicLogic']['fields'][$transport . 'TemplateId'] = [
                 "required" => [
                     "conditionGroup" => [
                         [
-                            "type"      => "isTrue",
+                            "type" => "isTrue",
                             "attribute" => $transport . 'Active'
                         ]
                     ]
@@ -1362,8 +1363,8 @@ class Metadata extends AbstractListener
 
             $dataManager->setCacheData(NotificationRule::CACHE_NAME, $cachedData = [
                 "notificationProfilesIds" => $notificationProfilesIds,
-                "notificationRules"       => $notificationRules,
-                "users"                   => $users
+                "notificationRules" => $notificationRules,
+                "users" => $users
             ]);
         }
 
@@ -1403,15 +1404,15 @@ class Metadata extends AbstractListener
                 $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyBookmarked';
                 $data['clientDefs'][$entity]['treeScopes'][] = 'Bookmark';
                 $data['entityDefs'][$entity]['fields']['bookmarkId'] = [
-                    "type"                 => "varchar",
-                    "notStorable"          => true,
-                    "layoutListDisabled"   => true,
+                    "type" => "varchar",
+                    "notStorable" => true,
+                    "layoutListDisabled" => true,
                     "layoutDetailDisabled" => true,
-                    "massUpdateDisabled"   => true,
-                    "filterDisabled"       => true,
-                    "exportDisabled"       => true,
-                    "importDisabled"       => true,
-                    "emHidden"             => true
+                    "massUpdateDisabled" => true,
+                    "filterDisabled" => true,
+                    "exportDisabled" => true,
+                    "importDisabled" => true,
+                    "emHidden" => true
                 ];
             }
         }

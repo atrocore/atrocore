@@ -2025,7 +2025,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
-        createSideView: function () {
+        createSideView: function (callback) {
             var el = this.options.el || '#' + (this.id);
             this.createView('side', this.sideView, {
                 model: this.model,
@@ -2037,7 +2037,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
                 recordViewObject: this
-            });
+            }, callback);
         },
 
         createMiddleView: function (callback) {
@@ -2151,12 +2151,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         build: function (callback) {
             if (!this.sideDisabled && this.sideView) {
-                this.createSideView();
+                if (this.middleView) {
+                    this.createMiddleView((view)=> {
+                        this.createSideView();
+                        callback.call(this,view)
+                    });
+                }
+            } else {
+                if (this.middleView) {
+                    this.createMiddleView(callback);
+                }
             }
 
-            if (this.middleView) {
-                this.createMiddleView(callback);
-            }
 
             if (!this.bottomDisabled && this.bottomView) {
                 this.createBottomView();
