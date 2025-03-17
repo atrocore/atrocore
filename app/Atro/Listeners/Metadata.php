@@ -1190,6 +1190,19 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['links']['teams']['layoutRelationshipsDisabled'] = true;
                 }
             }
+
+            if (empty($data['entityDefs'][$scope]['fields'])) {
+                continue;
+            }
+
+            foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
+                if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'link' &&
+                    !empty($data['entityDefs'][$scope]['links'][$field]['entity']) &&
+                    $data['entityDefs'][$scope]['links'][$field]['entity'] === 'User' &&
+                    empty($data['entityDefs'][$scope]['links'][$field]['view'])) {
+                    $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/user-with-avatar';
+                }
+            }
         }
 
         return $data;

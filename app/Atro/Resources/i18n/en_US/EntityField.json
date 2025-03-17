@@ -49,7 +49,8 @@
     "relationType": "Relation Type",
     "foreignEntity": "Foreign Entity",
     "relationName": "Relation Entity Code",
-    "linkMultipleField": "Link Multiple Field"
+    "linkMultipleField": "Link Multiple Field",
+    "showUser": "Show User Too"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",

@@ -48,7 +48,8 @@
     "relationType": "Beziehungstyp",
     "foreignEntity": "Fremd-Entität",
     "relationName": "Beziehungsentitäts-Code",
-    "linkMultipleField": "Verknüpfung mehrerer Felder"
+    "linkMultipleField": "Verknüpfung mehrerer Felder",
+    "showUser": "Benutzer auch anzeigen"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
