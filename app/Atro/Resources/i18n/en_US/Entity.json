@@ -31,8 +31,7 @@
     "relationInheritance": "Relation inheritance",
     "unInheritedRelations": "Uninherited relations",
     "disableHierarchy": "Disable hierarchy",
-    "fields": "Fields",
-    "disableActionHistory": "Disable Action History"
+    "fields": "Fields"
   },
   "options": {
     "type": {
