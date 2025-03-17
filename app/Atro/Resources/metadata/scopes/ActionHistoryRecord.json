@@ -30,5 +30,6 @@
   "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35,
   "actionDisabled": true,
+  "disableActionHistory": true,
   "emHidden": true
 }

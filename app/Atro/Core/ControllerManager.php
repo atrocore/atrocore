@@ -142,10 +142,19 @@ class ControllerManager
             $historyRecordData = [
                 'request' => [
                     'headers' => $request->headers->all(),
-                    'params'  => $params,
-                    'body'    => $data
+                    'params'  => $params
                 ]
             ];
+
+            if (!empty($data)) {
+                $historyRecordData['request']['body'] = $data;
+            }
+
+            foreach ($historyRecordData['request']['headers'] ?? [] as $k => $v) {
+                if (in_array(trim(strtolower($k)), ['authorization-token', 'authorization'])) {
+                    unset($historyRecordData['request']['headers'][$k]);
+                }
+            }
             $historyRecord->set('data', $historyRecordData);
             $this->getEntityManager()->saveEntity($historyRecord);
         }

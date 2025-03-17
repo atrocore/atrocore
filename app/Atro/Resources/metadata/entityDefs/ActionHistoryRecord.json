@@ -40,9 +40,6 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "target": {
-      "type": "belongsToParent"
-    },
     "authToken": {
       "type": "belongsTo",
       "entity": "AuthToken",
