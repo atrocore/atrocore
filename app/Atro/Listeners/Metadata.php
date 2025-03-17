@@ -1203,9 +1203,10 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/user-with-avatar';
                 }
 
-                if (in_array($field, ['createdAt', 'updatedAt']) && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser']) &&
-                    !empty($data['entityDefs'][$scope]['fields'][$field]['view'])) {
+                if (in_array($field, ['createdAt', 'modifiedAt']) && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser']) &&
+                    empty($data['entityDefs'][$scope]['fields'][$field]['view'])) {
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/datetime-with-user';
+                    $data['entityDefs'][$scope]['fields'][$field]['ignoreViewForSearch'] = true;
                 }
             }
         }
