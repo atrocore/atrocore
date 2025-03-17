@@ -1110,7 +1110,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         getFieldView: function (name) {
             var view;
             if (this.hasView('middle')) {
-                view = (this.getView('middle').getFieldViews(true) || {})[name];
+                view = this.getView('middle').getFieldView(name);
             }
             if (!view && this.hasView('side')) {
                 view = (this.getView('side').getFieldViews(true) || {})[name];

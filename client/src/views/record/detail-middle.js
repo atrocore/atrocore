@@ -152,11 +152,17 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
 
         getFieldView: function (name) {
             const fieldsViews = this.getFieldViews()
+
+            if (fieldsViews[name + 'Field']) {
+                return fieldsViews[name + 'Field']
+            }
+
             for (let key of Object.keys(fieldsViews)) {
                 if (fieldsViews[key]?.name === name) {
                     return fieldsViews[key]
                 }
             }
+
             return null
         },
 
