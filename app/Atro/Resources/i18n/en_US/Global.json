@@ -514,6 +514,7 @@
     "compare": "Compare"
   },
   "fields": {
+    "disableActionHistory": "Disable action logging",
     "followers": "Followers",
     "folderPath": "Folder Path",
     "connection": "Connection",
