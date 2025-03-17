@@ -127,10 +127,20 @@ class ControllerManager
             $request
         );
 
+        $ignoredControllers = [
+            'ActionHistory',
+            'App',
+            'Metadata',
+            'Layout',
+            'I18n',
+            'Settings'
+        ];
+
         if (
             empty($this->getConfig()->get('disableActionHistory'))
             && empty($this->getUser()->get('disableActionHistory'))
             && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))
+            && !in_array($controllerName, $ignoredControllers)
         ) {
             $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
             $historyRecord->set('controllerName', $controllerName);
