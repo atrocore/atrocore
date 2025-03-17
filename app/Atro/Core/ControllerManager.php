@@ -128,7 +128,7 @@ class ControllerManager
         );
 
         $ignoredControllers = [
-            'ActionHistory',
+            'ActionHistoryRecord',
             'App',
             'Metadata',
             'Layout',
@@ -139,8 +139,8 @@ class ControllerManager
         if (
             empty($this->getConfig()->get('disableActionHistory'))
             && empty($this->getUser()->get('disableActionHistory'))
-            && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))
             && !in_array($controllerName, $ignoredControllers)
+            && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))
         ) {
             $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
             $historyRecord->set('controllerName', $controllerName);
@@ -151,10 +151,14 @@ class ControllerManager
             $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
             $historyRecordData = [
                 'request' => [
-                    'headers' => $request->headers->all(),
-                    'params'  => $params
+                    'headers'     => $request->headers->all(),
+                    'params'      => $params
                 ]
             ];
+
+            if (!empty($_GET)){
+                $historyRecordData['request']['queryParams'] = $_GET;
+            }
 
             if (!empty($data)) {
                 $historyRecordData['request']['body'] = $data;
@@ -188,7 +192,7 @@ class ControllerManager
         if (!empty($historyRecord)) {
             $historyRecordData['response'] = [
                 'status' => $response->getStatus(),
-                'body'   => $result
+//                'body'   => $result
             ];
             $historyRecord->set('data', $historyRecordData);
             $this->getEntityManager()->saveEntity($historyRecord);
