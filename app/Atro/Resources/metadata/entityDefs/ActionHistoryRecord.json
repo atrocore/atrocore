@@ -1,17 +1,5 @@
 {
   "fields": {
-    "targetType": {
-      "type": "enum",
-      "readOnly": true,
-      "len": 60,
-      "view": "views/action-history-record/fields/target-type",
-      "translation": "Global.scopeNames"
-    },
-    "target": {
-      "type": "linkParent",
-      "readOnly": true,
-      "view": "views/action-history-record/fields/target"
-    },
     "data": {
       "type": "jsonObject",
       "readOnly": true

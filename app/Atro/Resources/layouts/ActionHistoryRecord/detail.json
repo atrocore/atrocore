@@ -18,20 +18,6 @@
       ],
       [
         {
-          "name": "targetType"
-        },
-        {
-          "name": "createdAt"
-        }
-      ],
-      [
-        {
-          "name": "target",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
           "name": "data",
           "fullWidth": true
         }

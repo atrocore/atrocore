@@ -7,13 +7,6 @@
     "name": "action"
   },
   {
-    "name": "targetType"
-  },
-  {
-    "name": "target",
-    "notSortable": true
-  },
-  {
     "name": "ipAddress"
   },
   {

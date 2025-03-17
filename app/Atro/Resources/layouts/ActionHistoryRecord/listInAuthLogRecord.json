@@ -4,14 +4,6 @@
     "notSortable": true
   },
   {
-    "name": "targetType",
-    "notSortable": true
-  },
-  {
-    "name": "target",
-    "notSortable": true
-  },
-  {
     "name": "createdAt",
     "notSortable": true
   }
