@@ -139,6 +139,7 @@ class ControllerManager
         if (
             empty($this->getConfig()->get('disableActionHistory'))
             && empty($this->getUser()->get('disableActionHistory'))
+            && $this->getUser()->id !== 'system'
             && !in_array($controllerName, $ignoredControllers)
             && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))
         ) {
