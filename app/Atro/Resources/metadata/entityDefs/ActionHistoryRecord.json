@@ -9,6 +9,10 @@
       "readOnly": true,
       "len": 8
     },
+    "controllerName": {
+      "type": "varchar",
+      "readOnly": true
+    },
     "createdAt": {
       "type": "datetime"
     },

@@ -133,6 +133,7 @@ class ControllerManager
             && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))
         ) {
             $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
+            $historyRecord->set('controllerName', $controllerName);
             $historyRecord->set('action', $request->getMethod());
             $historyRecord->set('userId', $this->getUser()->id);
             $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));

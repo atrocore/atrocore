@@ -26,8 +26,10 @@ class V1Dot13Dot35 extends Base
     {
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE \"user\" ADD disable_action_history BOOLEAN DEFAULT 'false' NOT NULL");
+            $this->exec("ALTER TABLE action_history_record ADD controller_name VARCHAR(255) DEFAULT NULL");
         } else {
             $this->exec("ALTER TABLE `user` ADD disable_action_history TINYINT(1) DEFAULT '0' NOT NULL");
+            $this->exec("ALTER TABLE action_history_record ADD controller_name VARCHAR(255) DEFAULT NULL");
         }
 
         $this->exec("truncate action_history_record");

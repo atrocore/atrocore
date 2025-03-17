@@ -1,6 +1,6 @@
 [
   {
-    "label": "",
+    "label": "Details",
     "rows": [
       [
         {
@@ -14,7 +14,9 @@
         {
           "name": "action"
         },
-        false
+        {
+          "name": "controllerName"
+        }
       ],
       [
         {

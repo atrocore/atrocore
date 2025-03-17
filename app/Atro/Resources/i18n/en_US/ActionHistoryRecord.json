@@ -3,19 +3,10 @@
     "user": "User",
     "action": "Action",
     "createdAt": "Date",
-    "target": "Target",
-    "targetType": "Target Type",
+    "controllerName": "Controller Name",
     "authToken": "Auth Token",
     "ipAddress": "IP Address",
     "authLogRecord": "Auth Log Record",
     "data": "Data"
-  },
-  "options": {
-    "action": {
-      "read": "Read",
-      "update": "Update",
-      "delete": "Delete",
-      "create": "Create"
-    }
   }
 }
