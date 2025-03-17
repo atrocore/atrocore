@@ -16,9 +16,9 @@
       "type": "bool",
       "default": false
     },
-    "actionHistory": {
+    "disableActionHistory": {
       "type": "bool",
-      "default": true
+      "default": false
     },
     "useCache": {
       "type": "bool",

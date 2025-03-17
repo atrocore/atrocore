@@ -24,13 +24,10 @@ class V1Dot13Dot35 extends Base
 
     public function up(): void
     {
-        $this->getConfig()->set('actionHistory', true);
-        $this->getConfig()->save();
-
         if ($this->isPgSQL()) {
-            $this->exec("ALTER TABLE \"user\" ADD action_history BOOLEAN DEFAULT 'true' NOT NULL");
+            $this->exec("ALTER TABLE \"user\" ADD disable_action_history BOOLEAN DEFAULT 'false' NOT NULL");
         } else {
-            $this->exec("ALTER TABLE `user` ADD sync_folders TINYINT(1) DEFAULT '1' NOT NULL");
+            $this->exec("ALTER TABLE `user` ADD disable_action_history TINYINT(1) DEFAULT '0' NOT NULL");
         }
     }
 

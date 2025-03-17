@@ -10,9 +10,9 @@
         "Token"
       ]
     },
-    "actionHistory": {
+    "disableActionHistory": {
       "type": "bool",
-      "default": true
+      "default": false
     },
     "isAdmin": {
       "type": "bool",
