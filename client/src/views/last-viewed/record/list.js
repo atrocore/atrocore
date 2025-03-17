@@ -34,8 +34,6 @@ Espo.define('views/last-viewed/record/list', 'views/record/list-expanded', funct
 
     return Dep.extend({
 
-        layoutName: 'listLastViewed',
-
         rowActionsDisabled: true,
 
         massActionsDisabled: true,

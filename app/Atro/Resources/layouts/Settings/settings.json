@@ -38,7 +38,9 @@
         {
           "name": "locale"
         },
-        false
+        {
+          "name": "disableActionHistory"
+        }
       ],
       [
         {
