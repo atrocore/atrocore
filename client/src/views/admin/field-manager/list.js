@@ -130,25 +130,26 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
         },
 
         clearFilters(field) {
-            let presetFilters = this.getPreferences().get('presetFilters') || {};
-            if (!(this.scope in presetFilters)) {
-                presetFilters[this.scope] = [];
-            }
+            this.ajaxGetRequest('SavedSearch',{collectionOnly: true, scope: this.scope},{async:false}).then((result) =>{
+                let presetFilters = result.list;
+                presetFilters.forEach((item, index, obj) => {
+                    for (let filterField in item.data) {
+                        let name = filterField.split('-')[0];
 
-            presetFilters[this.scope].forEach(function (item, index, obj) {
-                for (let filterField in item.data) {
-                    let name = filterField.split('-')[0];
-
-                    if (name === field) {
-                        delete obj[index].data[filterField]
+                        if (name === field) {
+                            delete obj[index].data[filterField]
+                        }
                     }
-                }
-            }, this);
-            presetFilters[this.scope] = presetFilters[this.scope].filter(item => Object.keys(item.data).length > 0);
+                });
 
-            this.getPreferences().set('presetFilters', presetFilters);
-            this.getPreferences().save({patch: true});
-            this.getPreferences().trigger('update');
+                presetFilters.forEach(item => {
+                    if(Object.keys(item.data).length > 0) {
+                       this.ajaxPatchRequest('SavedSearch/'+item.id, item);
+                    }else{
+                        this.ajaxRequest('SavedSearch/'+item.id, 'DELETE')
+                    }
+                })
+            });
 
             let filters = this.getStorage().get('listSearch', this.scope);
             if (filters && filters.advanced) {

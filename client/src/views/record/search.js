@@ -169,9 +169,18 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 }
                 return true;
             }, this);
-            ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {
-                this.presetFilterList.push(item);
-            }, this);
+
+            this.ajaxGetRequest('SavedSearch',{collectionOnly: true, scope: this.scope},{async:false}).then((result) =>{
+                    result.list.forEach(item => {
+                        this.presetFilterList.push({
+                            id: item.id,
+                            name: item.id,
+                            label: item.name,
+                            data: item.data,
+                            primary: item.primary
+                        });
+                    });
+            });
 
             if (this.presetFiltersDisabled) {
                 this.presetFilterList = [];
@@ -583,10 +592,10 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 this.$advancedFiltersPanel.removeClass('hidden');
             },
             'click .dropdown-menu a[data-action="savePreset"]': function (e) {
-                this.createView('savePreset', 'Modals.SaveFilters', {}, function (view) {
+                this.createView('savePreset', 'views/modals/save-filters', {}, function (view) {
                     view.render();
-                    this.listenToOnce(view, 'save', function (name) {
-                        this.savePreset(name);
+                    this.listenToOnce(view, 'save', function (params) {
+                        this.savePreset(params);
                         view.close();
 
                         this.removeFilters();
@@ -830,49 +839,42 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.silentResetFilters();
         },
 
-        savePreset(name) {
-            let id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
-
+        savePreset(params) {
             this.fetch();
             this.updateSearch();
 
-            let presetFilters = this.getPreferences().get('presetFilters') || {};
-            if (!(this.scope in presetFilters)) {
-                presetFilters[this.scope] = [];
-            }
-
             let data = {
-                id: id,
-                name: id,
-                label: name,
+                label: params.name,
                 data: Espo.Utils.cloneDeep(this.advanced),
                 primary: this.primary
             };
 
-            presetFilters[this.scope].push(data);
-
-            this.presetFilterList.push(data);
-
-            this.getPreferences().once('sync', () => {
-                this.getPreferences().trigger('update');
+            this.ajaxPostRequest('SavedSearch', {
+                entityType: this.scope,
+                name: data.label,
+                data: data.data,
+                primary: data.primary,
+                isPublic: params.isPublic
+            }).success(res => {
+                data.id = res.id;
+                data.name = res.id;
+                this.presetFilterList.push(data);
+                this.presetName = res.id;
+                this.render();
                 this.updateSearch()
             });
-
-            this.getPreferences().save({
-                'presetFilters': presetFilters
-            }, {patch: true});
-
-            this.presetName = id;
         },
 
         removePreset: function (id) {
-            var presetFilters = this.getPreferences().get('presetFilters') || {};
-            if (!(this.scope in presetFilters)) {
-                presetFilters[this.scope] = [];
-            }
 
-            var list;
-            list = presetFilters[this.scope];
+            $.ajax({
+                type: 'DELETE',
+                url: `SavedSearch/${id}?silent=true`,
+                contentType: "application/json"
+            });
+
+
+            let list = this.presetFilterList;
             list.forEach(function (item, i) {
                 if (item.id == id) {
                     list.splice(i, 1);
@@ -880,18 +882,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 }
             }, this);
 
-            list = this.presetFilterList;
-            list.forEach(function (item, i) {
-                if (item.id == id) {
-                    list.splice(i, 1);
-                    return;
-                }
-            }, this);
-
-
-            this.getPreferences().set('presetFilters', presetFilters);
-            this.getPreferences().save({patch: true});
-            this.getPreferences().trigger('update');
 
             this.presetName = this.primary;
             this.advanced = {};

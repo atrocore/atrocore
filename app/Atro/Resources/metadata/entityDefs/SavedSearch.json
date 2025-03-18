@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    },
+    "data": {
+      "type": "jsonObject"
+    },
+    "userId": {
+      "type": "varchar"
+    },
+    "entityType": {
+      "type": "varchar",
+      "required": true
+    },
+    "isPublic": {
+      "type": "bool"
+    },
+    "primary": {
+      "type": "varchar",
+      "trim": true
+    }
+  }
+}

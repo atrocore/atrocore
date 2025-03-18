@@ -1,0 +1,16 @@
+{
+  "type": "Base",
+  "entity": true,
+  "object": true,
+  "layouts": true,
+  "tab": false,
+  "acl": true,
+  "customizable":false,
+  "isActiveUnavailable": true,
+  "streamDisabled": true,
+  "notificationDisabled": true,
+  "bookmarkDisabled": true,
+  "actionDisabled": true,
+  "emHidden": true,
+  "aclLevelList": ["no","own","all"]
+}
