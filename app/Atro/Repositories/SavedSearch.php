@@ -25,10 +25,32 @@ class SavedSearch extends Base
     {
         $cachedData = $this->getDataManager()->getCacheData(self::CACHE_NAME);
         if ($cachedData === null) {
-            $cachedData = $this->find()->toArray();
+            $cachedData = [];
+            foreach ($this->find() as $entity) {
+                $this->cleanDeletedFieldsFromFilterData($entity);
+                if(!empty($entity->get('data'))) {
+                    $cachedData[] = $entity->toArray();
+                }
+            }
             $this->getDataManager()->setCacheData(self::CACHE_NAME, $cachedData);
         }
         return $cachedData;
+    }
+
+    public function cleanDeletedFieldsFromFilterData(Entity $entity): void
+    {
+        // Clean filter to remove all removed fields
+        $data = json_decode(json_encode($entity->get('data')), true);
+        foreach ($data as $filterField => $value) {
+            $name = explode('-', $filterField)[0];
+            if ($name === 'id') {
+                continue;
+            }
+            if (!$this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', $name])) {
+                unset($data[$filterField]);
+            }
+        }
+        $entity->set('data', $data);
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

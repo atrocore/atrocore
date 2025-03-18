@@ -24,18 +24,7 @@ class SavedSearch extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        // Clean filter to remove all removed fields
-        $data = json_decode(json_encode($entity->get('data')), true);
-        foreach ($data as $filterField => $value) {
-            $name = explode('-', $filterField)[0];
-            if ($name === 'id') {
-                continue;
-            }
-            if (!$this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', $name])) {
-                unset($data[$filterField]);
-            }
-        }
-        $entity->set('data', $data);
+        $this->getRepository()->cleanDeletedFieldsFromFilterData($entity);
     }
 
     public function findEntities($params)

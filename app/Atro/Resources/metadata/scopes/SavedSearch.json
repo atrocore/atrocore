@@ -1,8 +1,7 @@
 {
   "type": "Base",
   "entity": true,
-  "object": true,
-  "layouts": true,
+  "layouts": false,
   "tab": false,
   "acl": true,
   "customizable":false,
