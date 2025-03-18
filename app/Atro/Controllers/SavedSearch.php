@@ -29,7 +29,9 @@ class SavedSearch extends Base
             "attribute" => "entityType",
             "value" => $request->get('scope')
         ];
-        
+
+        $params['scope'] = $request->get('scope');
+
         parent::fetchListParamsFromRequest($params, $request, $data);
     }
 }
