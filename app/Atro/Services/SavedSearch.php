@@ -20,8 +20,6 @@ use Espo\ORM\Entity;
 
 class SavedSearch extends Base
 {
-    const CACHE_NAME = 'saved_search';
-
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -42,7 +40,7 @@ class SavedSearch extends Base
 
     public function findEntities($params)
     {
-        if (!$this->getDataManager()->isUseCache(self::CACHE_NAME)) {
+        if (!$this->getDataManager()->isUseCache(\Atro\Repositories\SavedSearch::CACHE_NAME)) {
             $params['where'][] = [
                 "type" => "or",
                 "value" => [
@@ -60,11 +58,7 @@ class SavedSearch extends Base
             ];
             return parent::findEntities($params);
         } else {
-            $cachedData = $this->getDataManager()->getCacheData(self::CACHE_NAME);
-            if ($cachedData === null) {
-                $cachedData = $this->getRepository()->find()->toArray();
-                $this->getDataManager()->setCacheData(self::CACHE_NAME, $cachedData);
-            }
+            $cachedData = $this->getRepository()->getEntitiesFromCache();
             if ($this->getAcl()->checkReadOnlyOwn($this->entityType)) {
                 $entities = array_filter($cachedData, function ($item) use ($params) {
                     return $item['userId'] === $this->getUser()->id && $item['entityType'] === $params['_scope'];
@@ -82,20 +76,21 @@ class SavedSearch extends Base
         }
     }
 
-    protected function getDataManager(): DataManager
-    {
-        return $this->getInjection('dataManager');
-    }
 
     protected function getAcl(): Acl
     {
         return $this->getInjection('acl');
     }
 
+    protected function getDataManager(): DataManager
+    {
+        return $this->getInjection('dataManager');
+    }
+
     protected function init()
     {
         parent::init();
-        $this->addDependency('dataManager');
         $this->addDependency('acl');
+        $this->addDependency('dataManager');
     }
 }
