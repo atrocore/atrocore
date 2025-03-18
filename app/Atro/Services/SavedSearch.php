@@ -67,11 +67,11 @@ class SavedSearch extends Base
             }
             if ($this->getAcl()->checkReadOnlyOwn($this->entityType)) {
                 $entities = array_filter($cachedData, function ($item) use ($params) {
-                    return $item['userId'] === $this->getUser()->id && $item['entityType'] === $params['scope'];
+                    return $item['userId'] === $this->getUser()->id && $item['entityType'] === $params['_scope'];
                 });
             } else {
                 $entities = array_filter($cachedData, function ($item) use ($params) {
-                    return $item['entityType'] === $params['scope']
+                    return $item['entityType'] === $params['_scope']
                         && ($item['userId'] === $this->getUser()->id || $item['isPublic'] === true);
                 });
             }

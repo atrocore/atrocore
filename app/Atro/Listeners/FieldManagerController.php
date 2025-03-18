@@ -112,7 +112,6 @@ class FieldManagerController extends AbstractListener
     {
         // delete columns from DB
         $this->deleteColumns($event->getArgument('params')['scope'], $event->getArgument('params')['name']);
-
     }
 
     /**

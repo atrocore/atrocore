@@ -30,7 +30,7 @@ class SavedSearch extends Base
             "value" => $request->get('scope')
         ];
 
-        $params['scope'] = $request->get('scope');
+        $params['_scope'] = $request->get('scope');
 
         parent::fetchListParamsFromRequest($params, $request, $data);
     }
