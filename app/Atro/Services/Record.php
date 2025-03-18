@@ -224,7 +224,7 @@ class Record extends RecordService
     {
         $foreignLink = '';
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
-            if ($linkData['foreign'] === $link && $linkData['entity'] === $scope) {
+            if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
                 $foreignLink = $linkName;
             }
         }

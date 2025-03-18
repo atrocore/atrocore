@@ -56,11 +56,14 @@
         if (!treeScope) {
             sortFields = []
         } else {
-            const fieldDefs = Metadata.get(['entityDefs', treeScope === 'Bookmark' ? scope : treeScope, 'fields']);
+            const sortScope = treeScope === 'Bookmark' ? scope : treeScope
+            const fieldDefs = Metadata.get(['entityDefs', sortScope, 'fields']);
             sortFields = Object.keys(fieldDefs).filter(function (item) {
                 return ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[item].type) && !fieldDefs[item].notStorable;
             }).sort(function (v1, v2) {
-                return Language.translate(v1, 'fields', scope).localeCompare(Language.translate(v2, 'fields', scope));
+                return Language.translate(v1, 'fields', sortScope).localeCompare(Language.translate(v2, 'fields', sortScope));
+            }).map(item => {
+                return {name: item, label: Language.translate(item, 'fields', sortScope)}
             })
         }
     }
@@ -251,6 +254,9 @@
         $tree.tree(treeData);
         $tree.on('tree.load_data', e => {
             Notifier.notify(false)
+            if (callbacks?.treeLoad) {
+                callbacks.treeLoad(treeScope, treeData);
+            }
         })
         $tree.on('tree.refresh', e => {
             if (Storage.get('selectedNodeId', scope) && mode === 'list') {
@@ -277,6 +283,7 @@
             let moveInfo = e.move_info;
             let data = {
                 _position: moveInfo.position,
+                _sortAsc: sortAsc,
                 _target: moveInfo.target_node.id
             };
 
@@ -460,7 +467,7 @@
         }
     }
 
-    function getTreeEl() {
+    export function getTreeEl() {
         return window.$(treeElement)
     }
 
@@ -789,8 +796,8 @@
                             <select class="form-control" style="width: auto;max-width: 120px"
                                     on:change={onSortByChange} bind:value={sortBy}>
                                 {#each sortFields as field }
-                                    <option value="{field}">
-                                        {Language.translate(field, 'fields', treeScope)}
+                                    <option value="{field.name}">
+                                        {field.label}
                                     </option>
                                 {/each}
                             </select>

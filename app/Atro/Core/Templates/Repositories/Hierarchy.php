@@ -228,7 +228,7 @@ class Hierarchy extends Base
         }
     }
 
-    public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId): void
+    public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId, bool $sortAsc = true): void
     {
         /** @var Relation $relationRepository */
         $relationRepository = $this->getEntityManager()->getRepository(ucfirst(Util::toCamelCase($this->hierarchyTableName)));
@@ -253,13 +253,24 @@ class Hierarchy extends Base
         $sortedIds = [];
         if ($position === 'after') {
             foreach ($ids as $id) {
-                $sortedIds[] = $id;
-                if ($id === $target) {
-                    $sortedIds[] = $entityId;
+                if ($sortAsc) {
+                    $sortedIds[] = $id;
+                    if ($id === $target) {
+                        $sortedIds[] = $entityId;
+                    }
+                } else {
+                    if ($id === $target) {
+                        $sortedIds[] = $entityId;
+                    }
+                    $sortedIds[] = $id;
                 }
             }
         } elseif ($position === 'inside') {
-            $sortedIds = array_merge([$entityId], $ids);
+            if ($sortAsc) {
+                $sortedIds = array_merge([$entityId], $ids);
+            } else {
+                $sortedIds = array_merge($ids, [$entityId]);
+            }
         }
 
         $collection = [];
