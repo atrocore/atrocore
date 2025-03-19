@@ -24540,3 +24540,15 @@ a[data-attr-tooltip=true][data-tippy=true] {
 a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-decoration: solid underline;
 }
+
+.pressable-icon {
+    cursor: pointer;
+}
+
+.highlighted-required {
+    background-color: #f0f8ff !important;
+}
+
+.highlighted-qc {
+    background-color: #FFF8B8 !important;
+}

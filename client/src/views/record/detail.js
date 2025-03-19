@@ -1320,12 +1320,33 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
             });
+
+            this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
+                this.highlightRequired();
+            });
         },
 
         remove() {
             Dep.prototype.remove.call(this);
 
             clearInterval(this.realtimeInterval);
+        },
+
+        highlightRequired() {
+            let highlight = $('.highlighted-required').length === 0;
+            $(`.required-sign`).each((k, el) => {
+                let $cell = $(el).parents('.cell');
+                // for product attribute value panel
+                if ($cell.attr('data-name') === 'attribute') {
+                    $cell = $cell.parents('tr');
+                }
+
+                if (!highlight) {
+                    $cell.removeClass('highlighted-required');
+                } else {
+                    $cell.addClass('highlighted-required');
+                }
+            });
         },
 
         initRealtimeListener() {

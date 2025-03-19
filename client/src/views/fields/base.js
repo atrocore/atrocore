@@ -415,8 +415,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             let $sign = statusIcons.find('span.required-sign');
 
             if (statusIcons.size() && !$sign.size()) {
-                statusIcons.prepend(`<span class="fas fa-sm fa-asterisk required-sign" title="${this.translate('Required')}"></span>`);
+                statusIcons.prepend(`<span class="fas fa-sm fa-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></span>`);
                 $sign = statusIcons.find('span.required-sign');
+                $sign.click(() => {
+                    this.model.trigger('toggle-required-fields-highlight');
+                });
             }
 
             $sign.show();
