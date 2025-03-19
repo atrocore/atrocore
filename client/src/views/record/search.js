@@ -170,16 +170,19 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 return true;
             }, this);
 
-            this.ajaxGetRequest('SavedSearch',{collectionOnly: true, scope: this.scope},{async:false}).then((result) =>{
-                    result.list.forEach(item => {
-                        this.presetFilterList.push({
-                            id: item.id,
-                            name: item.id,
-                            label: item.name,
-                            data: item.data,
-                            primary: item.primary
-                        });
+            this.ajaxGetRequest('SavedSearch', {
+                collectionOnly: true,
+                scope: this.scope
+            }, {async: false}).then((result) => {
+                result.list.forEach(item => {
+                    this.presetFilterList.push({
+                        id: item.id,
+                        name: item.id,
+                        label: item.name,
+                        data: item.data,
+                        primary: item.primary
                     });
+                });
             });
 
             if (this.presetFiltersDisabled) {

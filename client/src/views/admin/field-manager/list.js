@@ -130,7 +130,10 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
         },
 
         clearFilters(field) {
-            this.ajaxGetRequest('SavedSearch',{collectionOnly: true, scope: this.scope},{async:false}).then((result) =>{
+            this.ajaxGetRequest('SavedSearch', {
+                collectionOnly: true,
+                scope: this.scope
+            }).then((result) => {
                 let presetFilters = result.list;
                 presetFilters.forEach((item, index, obj) => {
                     for (let filterField in item.data) {
@@ -143,10 +146,10 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                 });
 
                 presetFilters.forEach(item => {
-                    if(Object.keys(item.data).length > 0) {
-                       this.ajaxPatchRequest('SavedSearch/'+item.id, item);
-                    }else{
-                        this.ajaxRequest('SavedSearch/'+item.id, 'DELETE')
+                    if (Object.keys(item.data).length > 0) {
+                        this.ajaxPatchRequest('SavedSearch/' + item.id, item);
+                    } else {
+                        this.ajaxRequest('SavedSearch/' + item.id, 'DELETE')
                     }
                 })
             });
