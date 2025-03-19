@@ -21,7 +21,8 @@
     "information": "Information",
     "error": "Fehler",
     "actionIconColor": "Farbe des Aktionssymbols",
-    "customHeadCode": "Head Code"
+    "customHeadCode": "Head Code",
+    "highlightingColorForRequired": "Hervorhebungsfarbe für erforderliche Daten"
   },
   "tooltips": {
     "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen.",
