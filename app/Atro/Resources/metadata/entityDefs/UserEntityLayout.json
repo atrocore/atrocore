@@ -12,6 +12,9 @@
     "relatedEntity": {
       "type": "varchar"
     },
+    "relatedLink": {
+      "type": "varchar"
+    },
     "layoutProfile": {
       "type": "link"
     },
@@ -40,6 +43,7 @@
       "entity",
       "view_type",
       "related_entity",
+      "related_link",
       "layout_profile_id",
       "deleted"
     ]

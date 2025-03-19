@@ -89,11 +89,10 @@
     }
 
     function getRelationScope(leftScope: string, rightScope: string) {
-        const links = Metadata.get(['entityDefs', leftScope, 'links']) ?? {}
-        for (const link of Object.keys(links)) {
-            if (links[link]?.entity === rightScope && !!links[link].relationName) {
-                return Espo.utils.upperCaseFirst(links[link].relationName)
-            }
+        const parts = rightScope.split('.')
+        const link = Metadata.get(['entityDefs', parts[0], 'links', parts[1]]) ?? {}
+        if (link.entity === leftScope && !!link.relationName) {
+            return Espo.utils.upperCaseFirst(link.relationName)
         }
         return ''
     }
@@ -105,7 +104,7 @@
         if (params.relatedScope && params.type === 'list') {
             relationScope = getRelationScope(params.scope, params.relatedScope)
             // load related scope field
-            if(relationScope){
+            if (relationScope) {
                 const group = {
                     name: relationScope,
                     scope: relationScope,

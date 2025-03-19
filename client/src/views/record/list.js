@@ -2336,7 +2336,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getRelationScope() {
-            const entityType = this.options.layoutRelatedScope
+            const entityType = (this.options.layoutRelatedScope ?? '').split('.')[0]
             if (entityType) {
                 return Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', entityType, 'links', this.relationName, 'relationName']))
             }
@@ -2403,7 +2403,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.createView('layoutConfigurator' + idx, "views/record/layout-configurator", {
                     scope: this.scope,
                     viewType: this.layoutName,
-                    relatedScope: this.getParentModel()?.urlRoot,
+                    relatedScope: this.options.layoutRelatedScope,
                     layoutData: this.layoutData,
                     el: el,
                 }, (view) => {
