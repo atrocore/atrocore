@@ -21,7 +21,8 @@
     "information": "Information",
     "error": "Error",
     "actionIconColor": "Action Icon Color",
-    "customHeadCode": "Head Code"
+    "customHeadCode": "Head Code",
+    "highlightingColorForRequired": "Highlighting color for required data"
   },
   "tooltips": {
     "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too.",
