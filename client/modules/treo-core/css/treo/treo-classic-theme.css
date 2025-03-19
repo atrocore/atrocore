@@ -28,6 +28,8 @@ body {
     --notice: #fcf8e3;
     --information: #e0efff;
     --error: #f2dede;
+    --highlighting-color-for-required: #f0f8ff;
+    --highlighting-color-for-data-quality: #fff8B8;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
@@ -24546,9 +24548,9 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .highlighted-required {
-    background-color: #f0f8ff !important;
+    background-color: var(--highlighting-color-for-required);
 }
 
 .highlighted-qc {
-    background-color: #FFF8B8 !important;
+    background-color: var(--highlighting-color-for-data-quality);
 }

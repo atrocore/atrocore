@@ -86,7 +86,9 @@
         {
           "name": "highlightingColorForRequired"
         },
-        false
+        {
+          "name": "highlightingColorForDataQuality"
+        }
       ],
       [
         {
