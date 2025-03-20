@@ -383,7 +383,7 @@ class Relation extends Base
                             }
 
                             $this->getPseudoTransactionManager()->pushUpdateEntityJob($relEntityName, $entity->get($link .'Id'), [
-                                'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i:s'),
+                                'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i') . ':00',
                                 'modifiedById' => $this->getEntityManager()->getUser()->get('id')
                             ]);
 

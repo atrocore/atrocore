@@ -16,6 +16,11 @@ Espo.define('views/admin/entity-manager/fields/modified-extended-relations', 'vi
             this.params.options = [];
             this.translatedOptions = {};
 
+            if (scope === 'Product' && this.getMetadata()) {
+                this.params.options.push('productAttributeValues');
+                this.translatedOptions['productAttributeValues'] = this.translate('productAttributeValues', 'fields', scope);
+            }
+
             $.each((this.getMetadata().get(['entityDefs', scope, 'fields']) || {}), (field, fieldDefs) => {
                 if (
                     fieldDefs.type === 'linkMultiple'
