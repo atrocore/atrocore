@@ -41,6 +41,7 @@ Espo.define('views/record/row-actions/relationship-unlink-only', 'views/record/r
                     action: 'unlinkRelated',
                     label: 'Unlink',
                     data: {
+                        id: this.model.id,
                         cid: this.model.cid
                     }
                 });

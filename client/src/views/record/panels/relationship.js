@@ -704,7 +704,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         getModel(data, evt) {
-            return this.collection.get(data.cid)
+            if (data.cid) {
+                return this.collection.get(data.cid)
+            }
+            return this.collection.get(data.id)
         },
 
         actionUnlinkRelated: function (data, evt) {

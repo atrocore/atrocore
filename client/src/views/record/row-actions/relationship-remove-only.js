@@ -41,6 +41,7 @@ Espo.define('views/record/row-actions/relationship-remove-only', 'views/record/r
                         action: 'removeRelated',
                         label: 'Delete',
                         data: {
+                            id: this.model.id,
                             cid: this.model.cid
                         }
                     }

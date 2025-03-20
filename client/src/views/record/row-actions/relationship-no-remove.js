@@ -80,6 +80,7 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
                     action: 'unlinkRelated',
                     label: 'Unlink',
                     data: {
+                        id: this.model.id,
                         cid: this.model.cid
                     }
                 });
