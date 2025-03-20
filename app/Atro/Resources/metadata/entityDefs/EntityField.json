@@ -294,6 +294,9 @@
     },
     "htmlSanitizer": {
       "type": "link"
+    },
+    "showUser": {
+      "type": "bool"
     }
   },
   "links": {

@@ -218,7 +218,9 @@
         {
           "name": "useNumericFormat"
         },
-        false
+        {
+          "name": "showUser"
+        }
       ],
       [
         {

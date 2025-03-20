@@ -55,9 +55,9 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
             if (this.$el.length) {
                 let label = this.$el.siblings('.control-label');
-
+                const inSidePanel = $(this.$el).closest('.side').length === 1
                 if (label.length) {
-                    if (this.model.get(this.idName) && this.mode !== 'edit') {
+                    if (this.model.get(this.idName) && inSidePanel && this.mode !== 'edit') {
                         label.css({'margin-left': '39px'});
                     } else {
                         if (label.css('margin-left')) {
