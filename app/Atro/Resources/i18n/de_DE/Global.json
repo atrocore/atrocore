@@ -597,7 +597,8 @@
     "roles": "Rollen",
     "users": "Benutzer",
     "groupEnd": "Gruppenende",
-    "iconClass": "Icon"
+    "iconClass": "Icon",
+    "isPublic": "Öffentlich"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."

@@ -202,15 +202,6 @@
       "exportDisabled": true,
       "importDisabled": true
     },
-    "presetFilters": {
-      "type": "jsonObject",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true
-    },
     "useCustomTabList": {
       "type": "bool",
       "default": false
