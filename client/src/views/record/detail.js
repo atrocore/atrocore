@@ -1547,7 +1547,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (hide && !field.$el.hasClass('hidden')) {
                 field.hide();
                 field.overviewFiltersHidden = true;
-            } else if (field.overviewFiltersHidden) {
+            } else if (!hide && field.overviewFiltersHidden) {
                 field.show();
             }
         },
