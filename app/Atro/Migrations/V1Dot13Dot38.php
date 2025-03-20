@@ -71,7 +71,6 @@ class V1Dot13Dot38 extends Base
         try {
             $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
-            throw  $e;
         }
     }
 }
