@@ -40,7 +40,7 @@ class LayoutManager
      * Get a full path of the file
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string         $filePath   - File path, Ex. file.json
+     * @param string         $filePath - File path, Ex. file.json
      *
      * @return string
      */
@@ -57,7 +57,7 @@ class LayoutManager
      *
      * @return json|string
      */
-    public function get(string $scope, string $viewType, ?string $relatedEntity = null, ?string $layoutProfileId = null, bool $isAdminPage = false): array
+    public function get(string $scope, string $viewType, ?string $relatedEntity = null, ?string $relatedLink = null, ?string $layoutProfileId = null, bool $isAdminPage = false): array
     {
         // prepare scope
         $scope = $this->sanitizeInput($scope);
@@ -69,17 +69,24 @@ class LayoutManager
             $relatedEntity = null;
         }
 
+        if (empty($relatedLink)) {
+            $relatedLink = null;
+        }
+
         $selectedProfileId = $this->getEntityManager()->getConnection()
             ->createQueryBuilder()
             ->select('layout_profile_id')
             ->from('user_entity_layout', 'uel')
             ->where('uel.user_id=:userId and uel.entity=:entity and uel.view_type=:viewType and '
                 . (empty($relatedEntity) ? "uel.related_entity is null" : "uel.related_entity=:relatedEntity")
+                . ' and '
+                . (empty($relatedLink) ? "uel.related_link is null" : "uel.related_link=:relatedLink")
                 . ' and deleted=:false')
             ->setParameters([
                 'entity'        => $scope,
                 'viewType'      => $viewType,
                 'relatedEntity' => $relatedEntity,
+                'relatedLink'   => $relatedLink,
                 'userId'        => $this->getUser()->id,
             ])
             ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -98,10 +105,10 @@ class LayoutManager
         }
 
         // compose
-        list($layout, $storedProfile) = $this->compose($scope, $viewType, $relatedEntity, $layoutProfileId);
+        list($layout, $storedProfile) = $this->compose($scope, $viewType, $relatedEntity, $relatedLink, $layoutProfileId);
 
         // remove fields from layout if this fields not exist in metadata
-        $layout = $this->disableNotExistingFields($scope, $relatedEntity, $viewType, $layout);
+        $layout = $this->disableNotExistingFields($scope, $relatedEntity, $relatedLink, $viewType, $layout);
 
         if ($viewType === 'list') {
             foreach ($layout as $k => $row) {
@@ -117,6 +124,7 @@ class LayoutManager
                 'scope'           => $scope,
                 'viewType'        => $viewType,
                 'relatedEntity'   => $relatedEntity,
+                'relatedLink'     => $relatedLink,
                 'layoutProfileId' => $layoutProfileId,
                 'isAdminPage'     => $isAdminPage,
                 'isCustom'        => !empty($storedProfile),
@@ -133,11 +141,14 @@ class LayoutManager
             ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
             ->where("l.entity=:entity and l.view_type=:viewType and "
                 . (empty($relatedEntity) ? "l.related_entity is null" : "l.related_entity=:relatedEntity")
+                . ' and '
+                . (empty($relatedLink) ? "l.related_link is null" : "l.related_link=:relatedLink")
                 . " and l.deleted=:false and lp.deleted=:false")
             ->setParameters([
                 'entity'        => $scope,
                 'viewType'      => $viewType,
-                'relatedEntity' => $relatedEntity
+                'relatedEntity' => $relatedEntity,
+                'relatedLink'   => $relatedLink,
             ])->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
@@ -191,13 +202,18 @@ class LayoutManager
      *
      * @return json|string
      */
-    public function resetToDefault(string $scope, string $name, string $relatedScope, string $layoutProfileId)
+    public function resetToDefault(string $scope, string $name, string $relatedScope, string $relatedLink, string $layoutProfileId)
     {
         $scope = $this->sanitizeInput($scope);
         $name = $this->sanitizeInput($name);
 
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
-        $layoutRepo->where(['entity' => $scope, 'viewType' => $name, 'relatedEntity' => empty($relatedScope) ? null : $relatedScope, 'layoutProfileId' => $layoutProfileId])->removeCollection();
+        $layoutRepo->where(['entity'          => $scope,
+                            'viewType'        => $name,
+                            'relatedEntity'   => empty($relatedScope) ? null : $relatedScope,
+                            'relatedLink'     => empty($relatedLink) ? null : $relatedLink,
+                            'layoutProfileId' => $layoutProfileId])
+            ->removeCollection();
 
         $this->getDataManager()->clearCache(true);
 
@@ -230,28 +246,22 @@ class LayoutManager
      *
      * @return bool
      */
-    public function save(string $scope, string $layoutName, string $relatedEntity, string $layoutProfileId, array $layoutData): bool
+    public function save(string $scope, string $layoutName, string $relatedEntity, string $relatedLink, string $layoutProfileId, array $layoutData): bool
     {
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $where = ['entity' => $scope, 'viewType' => $layoutName, 'layoutProfileId' => $layoutProfileId];
         if (in_array($layoutName, ['list', 'detail'])) {
             if (!empty($relatedEntity)) {
                 // validate related entity
-                $isValid = false;
-                foreach ($this->getMetadata()->get(['entityDefs', $relatedEntity, 'links']) ?? [] as $link => $data) {
-                    if (!empty($data['entity']) && $data['entity'] === $scope) {
-                        $isValid = true;
-                        break;
-                    }
-                }
-
-                if (empty($isValid)) {
-                    throw new BadRequest("There is no relation between $relatedEntity and $scope");
+                if ($this->getMetadata()->get(['entityDefs', $relatedEntity, 'links', $relatedLink, 'entity']) !== $scope) {
+                    throw new BadRequest("The relation  $relatedEntity($relatedLink) on $scope dont exist");
                 }
             }
 
             $where['relatedEntity'] = empty($relatedEntity) ? null : $relatedEntity;
+            $where['relatedLink'] = empty($relatedLink) ? null : $relatedLink;
         }
+
         $layoutEntity = $layoutRepo->where($where)->findOne();
         if (empty($layoutEntity)) {
             $layoutEntity = $layoutRepo->get();
@@ -272,14 +282,17 @@ class LayoutManager
     }
 
 
-    protected function getCustomLayout(string $scope, string $name, ?string $relatedEntity, ?string $layoutProfileId): array
+    protected function getCustomLayout(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId): array
     {
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $defaultLayoutProfileId = $this->getDefaultLayoutProfileId();
         $isOriginal = false;
 
         $where = [
-            'entity' => $scope, 'viewType' => $name, 'relatedEntity' => empty($relatedEntity) ? null : $relatedEntity,
+            'entity'        => $scope,
+            'viewType'      => $name,
+            'relatedEntity' => empty($relatedEntity) ? null : $relatedEntity,
+            'relatedLink'   => empty($relatedLink) ? null : $relatedLink,
         ];
 
         $profileIds = [];
@@ -315,7 +328,7 @@ class LayoutManager
         }
 
         if (empty($layout) && !empty($relatedEntity)) {
-            return $this->getCustomLayout($scope, $name, null, $layoutProfileId);
+            return $this->getCustomLayout($scope, $name, null, null, $layoutProfileId);
         }
 
         if (!empty($layout)) {
@@ -324,10 +337,10 @@ class LayoutManager
         return [[], null];
     }
 
-    protected function compose(string $scope, string $name, ?string $relatedEntity, ?string $layoutProfileId): array
+    protected function compose(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId): array
     {
         // from custom layout
-        list ($customLayout, $storedProfile) = $this->getCustomLayout($scope, $name, $relatedEntity, $layoutProfileId);
+        list ($customLayout, $storedProfile) = $this->getCustomLayout($scope, $name, $relatedEntity, $relatedLink, $layoutProfileId);
         if (!empty($customLayout)) {
             return [$customLayout, $storedProfile];
         }
@@ -575,7 +588,7 @@ class LayoutManager
      *
      * @return array
      */
-    protected function disableNotExistingFields($scope, $relatedScope, $name, $data): array
+    protected function disableNotExistingFields($scope, $relatedScope, $relatedLink, $name, $data): array
     {
         // get entityDefs
         $entityDefs = $this->getMetadata()->get('entityDefs')[$scope] ?? [];
@@ -585,14 +598,12 @@ class LayoutManager
             // get fields for entity
             $fields = array_keys($entityDefs['fields']);
             if (!empty($relatedScope) && in_array($name, ['list', 'detail'])) {
-                foreach ($this->getMetadata()->get(['entityDefs', $relatedScope, 'links']) ?? [] as $linkData) {
-                    if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
-                        $relationScope = ucfirst($linkData['relationName']);
-                        $relationFields = array_keys($this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? []);
-                        $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
-                        $fields = array_merge($fields, $relationFields);
-                        break;
-                    }
+                $linkData = $this->getMetadata()->get(['entityDefs', $relatedScope, 'links', $relatedLink]) ?? [];
+                if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
+                    $relationScope = ucfirst($linkData['relationName']);
+                    $relationFields = array_keys($this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? []);
+                    $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
+                    $fields = array_merge($fields, $relationFields);
                 }
             }
 

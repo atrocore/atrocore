@@ -147,10 +147,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.filter = this.getStoredFilter();
             }
 
-            if(this.model.urlRoot === 'File') {
+            if (this.model.urlRoot === 'File') {
                 let foreign = this.getMetadata().get(['entityDefs', 'File', 'links', this.link, 'foreign']);
                 let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields', foreign]);
-                if(fieldDefs['type'] === 'linkMultiple' && !(fieldDefs['fileTypes'] ?? []).includes(this.model.get('typeId'))) {
+                if (fieldDefs['type'] === 'linkMultiple' && !(fieldDefs['fileTypes'] ?? []).includes(this.model.get('typeId'))) {
                     canSelect = false;
                     this.defs.create = false;
                 }
@@ -307,7 +307,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.createView('list', viewName, {
                         collection: collection,
                         layoutName: layoutName,
-                        layoutRelatedScope: this.model.name,
+                        layoutRelatedScope: this.model.name + '.' + this.link,
                         listLayout: listLayout,
                         checkboxes: false,
                         rowActionsView: (this.defs.readOnly || this.readOnly) ? false : (this.defs.rowActionsView || this.rowActionsView),
@@ -423,9 +423,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                 });
             }
-            if(this.scope === 'File' && !data['onlyType']) {
+            if (this.scope === 'File' && !data['onlyType']) {
                 let typeIds = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.link, 'fileTypes'], []);
-                if(typeIds && typeIds.length) {
+                if (typeIds && typeIds.length) {
                     data['onlyType'] = typeIds;
                 }
             }
@@ -434,7 +434,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         getSelectBoolFilterList() {
-            if(this.scope === 'File'){
+            if (this.scope === 'File') {
                 return _.extend(this.defs.selectBoolFilterList ?? [], ['onlyType'])
             }
             return this.defs.selectBoolFilterList || null

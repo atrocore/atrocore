@@ -21,8 +21,18 @@ class Layout extends AbstractRecordController
 {
     public function actionGetContent($params, $data, $request)
     {
+        $relatedEntity = null;
+        $relatedLink = null;
+
+        $relatedData = $request->get('relatedScope');
+        if (!empty($relatedData)) {
+            $parts = explode('.', $relatedData);
+            $relatedEntity = $parts[0];
+            $relatedLink = $parts[1];
+        }
+
         $data = $this->getLayoutManager()->get($params['scope'], $params['viewType'],
-            $request->get('relatedScope') ?? null, $request->get('layoutProfileId') ?? null,
+            $relatedEntity, $relatedLink, $request->get('layoutProfileId') ?? null,
             $request->get('isAdminPage') === 'true');
 
         if (empty($data)) {
@@ -39,7 +49,14 @@ class Layout extends AbstractRecordController
         }
 
         $layoutProfileId = (string)$request->get('layoutProfileId');
-        $relatedEntity = (string)$request->get('relatedScope');
+        $relatedEntity = null;
+        $relatedLink = null;
+
+        if (!empty($request->get('relatedScope'))) {
+            $parts = explode('.', $request->get('relatedScope'));
+            $relatedEntity = $parts[0];
+            $relatedLink = $parts[1];
+        }
 
         if ((!$request->isPut() && !$request->isPatch()) || empty($layoutProfileId)) {
             throw new BadRequest();
@@ -47,7 +64,8 @@ class Layout extends AbstractRecordController
 
         $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile($layoutProfileId);
-        $result = $layoutManager->save($params['scope'], $params['viewType'], $relatedEntity, $layoutProfileId, json_decode(json_encode($data), true));
+        $result = $layoutManager->save($params['scope'], $params['viewType'], $relatedEntity,
+            $relatedLink, $layoutProfileId, json_decode(json_encode($data), true));
 
         if ($result === false) {
             throw new Error("Error while saving layout.");
@@ -55,7 +73,7 @@ class Layout extends AbstractRecordController
 
         $this->getDataManager()->clearCache(true);
 
-        return $layoutManager->get($params['scope'], $params['viewType'], $relatedEntity, $layoutProfileId);
+        return $layoutManager->get($params['scope'], $params['viewType'], $relatedEntity, $relatedLink, $layoutProfileId);
     }
 
     public function actionResetToDefault($params, $data, $request)
@@ -68,9 +86,18 @@ class Layout extends AbstractRecordController
             throw new BadRequest();
         }
 
+        $relatedEntity = '';
+        $relatedLink = '';
+
+        if (!empty($data->relatedScope)) {
+            $parts = explode('.', $data->relatedScope);
+            $relatedEntity = $parts[0];
+            $relatedLink = $parts[1];
+        }
+
         $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile((string)$data->layoutProfileId);
-        return $layoutManager->resetToDefault((string)$data->scope, (string)$data->viewType, (string)$data->relatedScope, (string)$data->layoutProfileId);
+        return $layoutManager->resetToDefault((string)$data->scope, (string)$data->viewType, $relatedEntity, $relatedLink, (string)$data->layoutProfileId);
     }
 
     /**

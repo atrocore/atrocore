@@ -16,6 +16,9 @@
       "view": "views/layout/fields/related-entity",
       "tooltip": true
     },
+    "relatedLink": {
+      "type": "varchar"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -96,6 +99,7 @@
       "layout_profile_id",
       "entity",
       "related_entity",
+      "related_link",
       "view_type",
       "deleted"
     ]
