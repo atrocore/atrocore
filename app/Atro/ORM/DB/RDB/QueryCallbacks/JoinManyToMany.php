@@ -15,6 +15,7 @@ namespace Atro\ORM\DB\RDB\QueryCallbacks;
 
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
+use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\IEntity;
@@ -65,6 +66,17 @@ class JoinManyToMany
             foreach ($relOpt['conditions'] as $f => $v) {
                 $condition .= " AND {$relAlias}.{$mapper->toDb($f)} = :{$f}_mm3";
                 $qb->setParameter("{$f}_mm3", $v, Mapper::getParameterType($v));
+            }
+        }
+
+        if (!empty($params['whereRelation'])) {
+            $relationEntity = $mapper->getEntityFactory()->create(ucfirst($relOpt['relationName']));
+            $qc = new QueryConverter($mapper->getEntityFactory(), $qb->getConnection());
+            $wherePart = $qc->getWhere($relationEntity, $params['whereRelation']);
+            $wherePart = str_replace('t1', $relAlias, $wherePart);
+            $condition .= " AND " . $wherePart;
+            foreach ($qc->getParameters() as $p => $v) {
+                $qb->setParameter($p, $v, Mapper::getParameterType($v));
             }
         }
 

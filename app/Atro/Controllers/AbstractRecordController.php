@@ -202,6 +202,7 @@ abstract class AbstractRecordController extends AbstractController
         $link = $params['link'];
 
         $where = $this->prepareWhereQuery($request->get('where'));
+        $whereRelation = $this->prepareWhereQuery($request->get('whereRelation'));
         $offset = $request->get('offset');
         $maxSize = $request->get('maxSize');
         $asc = $request->get('asc', 'true') === 'true';
@@ -217,6 +218,7 @@ abstract class AbstractRecordController extends AbstractController
 
         $params = array(
             'where'          => $where,
+            'whereRelation'  => $whereRelation,
             'offset'         => $offset,
             'maxSize'        => $maxSize,
             'asc'            => $asc,

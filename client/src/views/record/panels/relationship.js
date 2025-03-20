@@ -724,10 +724,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                 let relationName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.panelName, 'relationName']);
                 if (relationName) {
-                    let relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
-                    let relId = model.get(relEntity + '__id');
-                    if (relId) {
-                        url = `${relEntity}/${relId}`;
+                    const relationModel = model.relationModel;
+                    let relEntity = relationModel.name;
+                    if (relEntity) {
+                        let relId = relationModel.get('id');
+                        if (relId) {
+                            url = `${relEntity}/${relId}`;
+                        }
                     }
                 }
 
