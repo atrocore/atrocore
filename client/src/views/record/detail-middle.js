@@ -82,8 +82,11 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
                 }
 
                 const $panel = $field.closest('.panel')
-                if ($panel.find('.cell').every('.hidden-cell')) {
-                    $panel.addClass('hidden')
+                if ($panel.find('> .panel-body > .row > .cell').length === $panel.find('> .panel-body > .row > .cell.hidden-cell').length) {
+                    const name = $panel.attr('data-name')
+                    if (name) {
+                        this.hidePanel(name)
+                    }
                 }
             }.bind(this);
             if (this.isRendered()) {

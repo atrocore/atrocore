@@ -2,5 +2,64 @@
   "controller": "controllers/record",
   "recordViews": {
     "detail": "views/notification-rule/record/detail"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "asOwner": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": ["mentioned"]
+            }
+          ]
+        }
+      },
+      "asFollower": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": ["mentioned"]
+            }
+          ]
+        }
+      },
+      "asAssignee": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": ["mentioned"]
+            }
+          ]
+        }
+      },
+      "asTeamMember": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": ["mentioned"]
+            }
+          ]
+        }
+      },
+      "asNotificationProfile": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": ["mentioned"]
+            }
+          ]
+        }
+      }
+    }
   }
 }

@@ -109,7 +109,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 }
 
                 const $panel = $field.closest('.panel')
-                if ($panel.find('.cell').length === $panel.find('.cell.hidden-cell').length) {
+                if ($panel.find('> .panel-body > .row > .cell').length === $panel.find('> .panel-body > .row > .cell.hidden-cell').length) {
                     const name = $panel.attr('data-name')
                     if (name) {
                         this.hidePanel(name)

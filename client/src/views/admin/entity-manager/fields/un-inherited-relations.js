@@ -40,17 +40,7 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-relations', 'views/f
                     }
                 }
             });
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.model.get('relationInheritance')) {
-                this.$el.parent().show();
-            } else {
-                this.$el.parent().hide();
-            }
-        },
+        }
 
     });
 });

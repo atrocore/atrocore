@@ -41,15 +41,6 @@
   {
     "label": "Notify User",
     "name": "notifyUser",
-    "dynamicLogicVisible": {
-      "conditionGroup": [
-        {
-          "type": "notIn",
-          "attribute": "occurrence",
-          "value": ["mentioned"]
-        }
-      ]
-    },
     "rows": [
       [
         {
