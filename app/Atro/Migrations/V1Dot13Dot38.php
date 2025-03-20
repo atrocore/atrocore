@@ -18,7 +18,7 @@ use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 
-class V1Dot13Dot36 extends Base
+class V1Dot13Dot38 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
