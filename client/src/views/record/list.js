@@ -436,6 +436,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         init: function () {
             this.listLayout = this.options.listLayout || this.listLayout;
+            this.layoutData = this.options.layoutData || this.layoutData
             this.type = this.options.type || this.type;
 
             this.layoutName = this.options.layoutName || this.layoutName || this.type;
@@ -2407,7 +2408,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     layoutData: this.layoutData,
                     el: el,
                 }, (view) => {
-                    view.on("refresh", () => this.refreshLayout())
+                    view.on("refresh", () => {
+                        if (this.options.disableRefreshLayout) {
+                            this.trigger('refresh-layout')
+                        } else {
+                            this.refreshLayout()
+                        }
+                    })
                     view.render()
                 })
             })
