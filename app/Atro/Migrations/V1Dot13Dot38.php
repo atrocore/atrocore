@@ -28,7 +28,7 @@ class V1Dot13Dot38 extends Base
             $this->exec("CREATE TABLE saved_search (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', data TEXT DEFAULT NULL, user_id VARCHAR(255) DEFAULT NULL, entity_type VARCHAR(255) DEFAULT NULL, \"primary\" VARCHAR(255) DEFAULT NULL, is_public BOOLEAN DEFAULT 'false' NOT NULL, PRIMARY KEY(id));");
             $this->exec("COMMENT ON COLUMN saved_search.data IS '(DC2Type:jsonObject)'");
         } else {
-            $this->exec("CREATE TABLE saved_search (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', user_id VARCHAR(255) DEFAULT NULL, entity_type VARCHAR(255) DEFAULT NULL, primary VARCHAR(255) DEFAULT NULL, is_public TINYINT(1) DEFAULT '0' NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec("CREATE TABLE saved_search (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', user_id VARCHAR(255) DEFAULT NULL, entity_type VARCHAR(255) DEFAULT NULL, `primary` VARCHAR(255) DEFAULT NULL, is_public TINYINT(1) DEFAULT '0' NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
 
         $results = $this->getConnection()->createQueryBuilder()
@@ -71,6 +71,7 @@ class V1Dot13Dot38 extends Base
         try {
             $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
+            throw  $e;
         }
     }
 }
