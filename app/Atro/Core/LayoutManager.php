@@ -350,7 +350,12 @@ class LayoutManager
 
         if (!empty($relatedEntity)) {
             if ($name == 'list') {
-                $data = $this->getLayoutFromFiles($scope, "listIn$relatedEntity");
+                $data = $this->getLayoutFromFiles($scope, "listIn{$relatedEntity}For" . ucfirst($relatedLink));
+                if (empty($data)) {
+                    $data = $this->getLayoutFromFiles($scope, "listIn$relatedEntity");
+                }
+            } elseif ($name == 'detail') {
+                $data = $this->getLayoutFromFiles($scope, "detailIn{$relatedEntity}For" . ucfirst($relatedLink));
             }
         }
 
