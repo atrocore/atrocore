@@ -20,12 +20,17 @@ class Base extends RDB
 {
     public function hasDeletedRecordsToClear(): bool
     {
+        return !empty($this->getNumberOfDeletedRecordsToClear());
+    }
+
+    public function getNumberOfDeletedRecordsToClear(): int
+    {
         if (empty($this->seed)) {
-            return false;
+            return 0;
         }
 
         if (!empty($this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']))) {
-            return true;
+            return 0;
         }
 
         $clearDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
@@ -56,10 +61,10 @@ class Base extends RDB
             $qb->setParameter('date', $date);
         }
 
-        return !empty($qb->fetchAssociative());
+        return (int)$qb->fetchOne();
     }
 
-    public function clearDeletedRecords(): void
+    public function clearDeletedRecords(?int $iteration = null, ?int $maxPerJob = null): void
     {
         if (empty($this->seed)) {
             return;
@@ -69,19 +74,22 @@ class Base extends RDB
 
         if (!empty($autoDeleteAfterDays) && $autoDeleteAfterDays > 0) {
             $date = (new \DateTime())->modify("-$autoDeleteAfterDays days");
+            $limit = 2000;
+            $count = 0;
             while (true) {
                 $toDelete = [];
+                $offset = empty($iteration) ? 0 : ($iteration - 1) * ($maxPerJob ?? 0);
                 if ($this->seed->hasField('modifiedAt')) {
                     $toDelete = $this
                         ->where(['modifiedAt<' => $date->format('Y-m-d H:i:s')])
-                        ->limit(0, 2000)
-                        ->order('modifiedAt')
+                        ->limit($offset, $limit)
+                        ->order('id')
                         ->find();
                 } elseif ($this->seed->hasField('createdAt')) {
                     $toDelete = $this
                         ->where(['createdAt<' => $date->format('Y-m-d H:i:s')])
-                        ->limit(0, 2000)
-                        ->order('createdAt')
+                        ->limit($offset, $limit)
+                        ->order('id')
                         ->find();
                 }
                 if (empty($toDelete[0])) {
@@ -90,9 +98,17 @@ class Base extends RDB
                 foreach ($toDelete as $entity) {
                     $this->getEntityManager()->removeEntity($entity);
                 }
+
+                $count += $limit;
+                if (!empty($maxPerJob) && $count >= $maxPerJob) {
+                    break;
+                }
             }
         }
+    }
 
+    public function clearDeletedRecordsDefinitively(): void
+    {
         $clearDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
 
         $date = new \DateTime();
@@ -122,4 +138,5 @@ class Base extends RDB
 
         $qb->executeQuery();
     }
+
 }
