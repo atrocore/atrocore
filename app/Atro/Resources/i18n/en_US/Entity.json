@@ -56,7 +56,7 @@
   },
   "tooltips": {
     "clearDeletedAfterDays": "Records for this entity are permanently deleted XX days after the deletion date.",
-    "autoDeleteAfterDays": "Updates of this field are logged in stream.",
+    "autoDeleteAfterDays": "Records for this entity are deleted XX days after the date of the last change.",
     "disabled": "Check if you don't need this entity in your system.",
     "textFilterFields": "Fields used by text search.",
     "statusField": "Updates of this field are logged in stream.",
