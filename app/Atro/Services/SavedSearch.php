@@ -39,9 +39,8 @@ class SavedSearch extends Base
                         "value" => $this->getUser()->id
                     ],
                     [
-                        "type" => "equals",
-                        "attribute" => "isPublic",
-                        "value" => true
+                        "type" => "isTrue",
+                        "attribute" => "isPublic"
                     ]
                 ]
             ];

@@ -869,31 +869,35 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
         },
 
         removePreset: function (id) {
-
+            this.notify('Loading...')
             $.ajax({
                 type: 'DELETE',
                 url: `SavedSearch/${id}?silent=true`,
-                contentType: "application/json"
-            });
+                contentType: "application/json",
+                success: () => {
+                    this.notify(false)
+                    let list = this.presetFilterList;
+                    list.forEach(function (item, i) {
+                        if (item.id == id) {
+                            list.splice(i, 1);
+                            return;
+                        }
+                    }, this);
 
 
-            let list = this.presetFilterList;
-            list.forEach(function (item, i) {
-                if (item.id == id) {
-                    list.splice(i, 1);
-                    return;
+                    this.presetName = this.primary;
+                    this.advanced = {};
+
+                    this.removeFilters();
+
+                    this.render();
+                    this.updateSearch();
+                    this.updateCollection();
+                },
+                error: (e) => {
+                    this.notify((e.responseText !== null && e.responseText !== '') ? e.responseText:  e.statusText, 'danger')
                 }
-            }, this);
-
-
-            this.presetName = this.primary;
-            this.advanced = {};
-
-            this.removeFilters();
-
-            this.render();
-            this.updateSearch();
-            this.updateCollection();
+            });
         },
 
         updateAddFilterButton: function () {
