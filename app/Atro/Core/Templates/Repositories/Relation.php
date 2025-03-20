@@ -358,37 +358,36 @@ class Relation extends Base
             ->find();
     }
 
-    protected function updateModifiedAtForRelatedEntity(Entity $entity)
+    protected function updateModifiedAtForRelatedEntity(Entity $entity): void
     {
         $isHierarchyEntity = $this->getMetadata()->get(['scopes', $this->entityType, 'isHierarchyEntity'], false);
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'links'], []) as $link => $defs) {
-            if (array_key_exists('entity', $defs) && !empty($defs['entity'])) {
-                $relEntityName = $defs['entity'];
-                $modifiedExtendedRelations = $this->getMetadata()->get(['scopes', $relEntityName, 'modifiedExtendedRelations'], []);
+            if (empty($defs['entity'])) {
+                continue;
+            }
 
-                if (!empty($modifiedExtendedRelations)) {
-                    foreach ($modifiedExtendedRelations as $relation) {
-                        $relDefs = $this->getMetadata()->get(['entityDefs', $relEntityName, 'links', $relation]);
+            $modifiedExtendedRelations = $this->getMetadata()->get(['scopes', $defs['entity'], 'modifiedExtendedRelations'], []);
+            if (empty($modifiedExtendedRelations)) {
+                return;
+            }
 
-                        if (!empty($relDefs['relationName']) && $relDefs['relationName'] == lcfirst($this->entityType)) {
-                            if ($isHierarchyEntity) {
-                                if (empty($relDefs['midKeys']) || !is_array($relDefs['midKeys']) || count($relDefs['midKeys']) < 2) {
-                                    continue;
-                                }
-
-                                if ($link . 'Id' != $relDefs['midKeys'][1]) {
-                                    continue;
-                                }
-                            }
-
-                            $this->getPseudoTransactionManager()->pushUpdateEntityJob($relEntityName, $entity->get($link .'Id'), [
-                                'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i') . ':00',
-                                'modifiedById' => $this->getEntityManager()->getUser()->get('id')
-                            ]);
-
+            foreach ($modifiedExtendedRelations as $relation) {
+                $relDefs = $this->getMetadata()->get(['entityDefs', $defs['entity'], 'links', $relation]);
+                if (!empty($relDefs['relationName']) && $relDefs['relationName'] == lcfirst($this->entityType)) {
+                    if ($isHierarchyEntity) {
+                        if (empty($relDefs['midKeys']) || !is_array($relDefs['midKeys']) || count($relDefs['midKeys']) < 2) {
+                            continue;
+                        }
+                        if ($link . 'Id' != $relDefs['midKeys'][1]) {
+                            continue;
                         }
                     }
+
+                    $this->getPseudoTransactionManager()->pushUpdateEntityJob($defs['entity'], $entity->get($link .'Id'), [
+                        'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i') . ':00',
+                        'modifiedById' => $this->getEntityManager()->getUser()->get('id')
+                    ]);
                 }
             }
         }
