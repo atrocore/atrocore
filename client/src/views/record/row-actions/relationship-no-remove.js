@@ -39,7 +39,8 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
                 action: 'quickView',
                 label: 'View',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
+                    cid: this.model.cid
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
@@ -49,7 +50,8 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
                         action: 'reupload',
                         label: 'Reupload',
                         data: {
-                            id: this.model.get('id')
+                            id: this.model.get('id'),
+                            cid: this.model.cid
                         },
                     });
                 }
@@ -57,7 +59,8 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
                     action: 'quickEdit',
                     label: 'Edit',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
+                        cid: this.model.cid
                     },
                     link: '#' + this.model.name + '/edit/' + this.model.id
                 });
@@ -67,7 +70,8 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
                         action: 'inheritRelated',
                         label: 'inherit',
                         data: {
-                            id: this.model.id
+                            id: this.model.id,
+                            cid: this.model.cid
                         }
                     });
                 }
@@ -76,7 +80,7 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
                     action: 'unlinkRelated',
                     label: 'Unlink',
                     data: {
-                        id: this.model.id
+                        cid: this.model.cid
                     }
                 });
             }

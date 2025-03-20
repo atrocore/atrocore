@@ -79,7 +79,7 @@ Espo.define('views/unit/row-actions/relationship-unit', 'views/record/row-action
                     action: 'removeRelated',
                     label: 'Remove',
                     data: {
-                        id: this.model.id
+                        cid: this.model.cid
                     }
                 });
             }

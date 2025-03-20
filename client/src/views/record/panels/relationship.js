@@ -576,9 +576,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.collection.fetch();
         },
 
-        actionViewRelated: function (data) {
-            var id = data.id;
-            var scope = this.collection.get(id).name;
+        actionViewRelated: function (data, evt) {
+            const model = this.getModel(data, evt)
+            const id = model.id;
+            const scope = model.name;
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
 
@@ -586,7 +587,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.createView('quickDetail', viewName, {
                 scope: scope,
                 id: id,
-                model: this.collection.get(id),
+                model: model,
             }, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);
@@ -661,11 +662,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             });
         },
 
-        actionEditRelated: function (data) {
-            var id = data.id;
-            var scope = this.collection.get(id).name;
+        actionEditRelated: function (data, evt) {
+            const model = this.getModel(data, evt)
+            const id = model.id;
+            const scope = model.name;
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+            const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
             this.notify('Loading...');
             this.createView('quickEdit', viewName, {
@@ -701,8 +703,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             });
         },
 
-        actionUnlinkRelated: function (data) {
-            let id = data.id;
+        getModel(data, evt) {
+            return this.collection.get(data.cid)
+        },
+
+        actionUnlinkRelated: function (data, evt) {
+            const model = this.getModel(data, evt)
+            let id = model.id;
             let scope = this.collection.url.split('/').shift();
             let link = this.collection.url.split('/').pop();
             let message = this.translate('unlinkRecordConfirmation', 'messages');
@@ -717,7 +724,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 message: message,
                 confirmText: this.translate('Unlink')
             }, () => {
-                let model = this.collection.get(id);
                 this.notify('Unlinking...');
 
                 let url = this.collection.url;
@@ -755,8 +761,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             });
         },
 
-        actionRemoveRelated: function (data) {
-            let id = data.id;
+        actionRemoveRelated: function (data, evt) {
+            const model = this.getModel(data, evt)
 
             let message = 'Global.messages.removeRecordConfirmation';
             if (this.isHierarchical()) {
@@ -767,8 +773,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (scopeMessage) {
                 message = scopeMessage;
             }
-
-            let model = this.collection.get(id);
 
             let parts = message.split('.');
 
