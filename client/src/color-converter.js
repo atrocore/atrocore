@@ -105,7 +105,7 @@ Espo.define('color-converter', [], function () {
         },
 
         hsl() {
-            // Code taken from https://stackoverflow.com/a/9493060/2688027, licensed under CC BY-SA.
+            // Code from: https://stackoverflow.com/a/9493060/2688027, licensed under CC BY-SA. Author: https://stackoverflow.com/users/650722/mohsen.
             const r = this.r / 255;
             const g = this.g / 255;
             const b = this.b / 255;

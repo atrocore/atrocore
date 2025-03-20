@@ -21,6 +21,8 @@
     "information": "Information",
     "error": "Error",
     "actionIconColor": "Action Icon Color",
+    "navigationIconColor": "Navigation Icon Color",
+    "statusIconColor": "Status Icon Color",
     "customHeadCode": "Head Code"
   },
   "tooltips": {

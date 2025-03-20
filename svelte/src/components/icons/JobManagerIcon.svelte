@@ -28,7 +28,7 @@
 </script>
 
 <a href="/" class="notifications-button" bind:this={icon} on:click={event=>{event.preventDefault();openPanel();}} title={Language.translate('jobManager')}>
-    <span class="fas fa-tasks"></span>
+    <svg class="icon"><use href="client/img/icons/icons.svg#tasks"></use></svg>
     {#if qmPaused}
     <span class="fas fa-pause-circle pause-icon"></span>
     {/if}

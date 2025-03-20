@@ -384,7 +384,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 }
 
                 html += `<a href="javascript:" class="btn action ${treeButtonClass} change-view action" data-view="tree"><span class="fa fa-stream"></span></a>`
-                html += `<a href="javascript:" class="btn action ${tableButtonClass} change-view action" data-view="list"><span class="fa fa-th-list"></span></a>`;
+                html += `<a href="javascript:" class="btn action ${tableButtonClass} change-view action" data-view="list"><svg class="icon"><use href="client/img/icons/icons.svg#th-list"></use></svg></a>`;
 
                 this.setupTree();
                 this.toggleViewType();

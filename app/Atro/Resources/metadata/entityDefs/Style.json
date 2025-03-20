@@ -81,6 +81,12 @@
     "actionIconColor": {
       "type": "color"
     },
+    "navigationIconColor": {
+      "type": "color"
+    },
+    "statusIconColor": {
+      "type": "color"
+    },
     "navbarStaticItemsHeight": {
       "type": "int"
     },

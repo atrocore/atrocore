@@ -73,7 +73,7 @@
             </li>
             {{/if}}
             <li class="dropdown menu-container">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-bars"></span></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><svg class="icon"><use href="client/img/icons/icons.svg#bars"></use></svg></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                         {{#unless divider}}

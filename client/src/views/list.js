@@ -288,7 +288,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 name: 'favorite',
                 action: isFavorite ? 'removeFavorite' : 'addFavorite',
                 style: isFavorite ? 'primary' : 'default',
-                iconHtml: '<span class="fa fa-thumb-tack"></span>',
+                iconHtml: '<svg class="icon"><use href="client/img/icons/icons.svg#thumb-tack"></use></svg>',
                 cssStyle: 'margin-right: 15px',
             }, ...(menu.buttons || [])];
 

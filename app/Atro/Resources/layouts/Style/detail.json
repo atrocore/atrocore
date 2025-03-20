@@ -12,7 +12,8 @@
       [{"name": "panelTitleColor"}, {"name": "headerTitleColor"}],
       [{"name": "success"}, {"name": "notice"}],
       [{"name": "information"}, {"name": "error"}],
-      [{"name": "actionIconColor"}, false],
+      [{"name": "actionIconColor"}, {"name": "navigationIconColor"}],
+      [{"name": "statusIconColor"}, false],
       [{"name": "customStylesheet", "fullWidth": true}],
       [{"name": "customStylesheetPath", "fullWidth": true}]
     ]

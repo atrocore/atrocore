@@ -1,6 +1,6 @@
 
 <div class="button-container clearfix">
-    <button class="btn btn-default btn-icon" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><span class="fas fa-pencil-alt fa-sm"></span></button>
+    <button class="btn btn-default btn-icon" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg></button>
     <button class="btn btn-default btn-icon" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><span class="fas fa-plus"></span></button>
 
     {{#ifNotEqual dashboardLayout.length 1}}

@@ -163,7 +163,7 @@
                                     <div class="right">
                                         <a href="javascript:" data-action="editField" class="edit-field"
                                            on:click={()=>editField(item)}>
-                                            <i class="fas fa-pencil-alt fa-sm"></i>
+                                            <svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg>
                                         </a>
                                     </div>
                                 {/if}

@@ -1,6 +1,6 @@
 {{#if showLayoutEditor}}
     <a class="dropdown-toggle btn-link {{ linkClass }}" style="cursor: pointer" data-toggle="dropdown">
-        <span class="fas fa-cog cursor-pointer" style="font-size: 1em;"></span>
+        <svg class="icon cursor-pointer" data-action="configureFavorites"><use href="client/img/icons/icons.svg#cog"></use></svg>
     </a>
     <ul class="dropdown-menu pull-right">
         {{#each storedProfiles}}

@@ -1,4 +1,4 @@
 <a href="javascript:" class="notifications-button" data-action="showLastViewed">
-    <span class="fas fa-history"></span>
+    <svg class="icon"><use href="client/img/icons/icons.svg#history"></use></svg>
 </a>
 <div class="last-viewed-panel-container"></div>

@@ -462,7 +462,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         addUnfollowButtonToMenu: function () {
             this.addMenuItem('buttons', {
                 name: 'following',
-                html: '<span class="fas fa-bell"></span>',
+                html: '<svg class="icon"><use href="client/img/icons/icons.svg#bell"></use></svg>',
                 title: 'Your are following, Click to unfollow',
                 action: 'unfollow',
                 cssStyle: 'margin: 0 10px 0 0px;color:white;',
@@ -475,7 +475,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 name: 'following',
                 title: 'Click to follow',
                 style: 'default',
-                html: '<span class="fas fa-bell"></span>',
+                html: '<svg class="icon"><use href="client/img/icons/icons.svg#bell"></use></svg>',
                 action: 'follow',
                 cssStyle: 'margin: 0 10px 0 0px;'
             }, true, false, true);
@@ -535,7 +535,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         name: 'bookmarking',
                         title: 'Bookmarked, Click to unbookmark',
                         style: 'primary',
-                        html: '<span class="fas fa-bookmark"></span>',
+                        html: '<svg class="icon"><use href="client/img/icons/icons.svg#bookmark"></use></svg>',
                         action: 'unbookmark',
                         cssStyle: 'margin: 0 10px 0 0px;color:white;'
                     }
@@ -547,7 +547,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         name: 'bookmarking',
                         title: 'Click to bookmark',
                         style: 'default',
-                        html: '<span class="fas fa-bookmark"></span>',
+                        html: '<svg class="icon"><use href="client/img/icons/icons.svg#bookmark"></use></svg>',
                         action: 'bookmark',
                         cssStyle: 'margin: 0 10px 0 0px'
                     }

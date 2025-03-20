@@ -415,8 +415,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             let $sign = statusIcons.find('span.required-sign');
 
             if (statusIcons.size() && !$sign.size()) {
-                statusIcons.prepend(`<span class="fas fa-sm fa-asterisk required-sign" title="${this.translate('Required')}"></span>`);
-                $sign = statusIcons.find('span.required-sign');
+                statusIcons.prepend(`<svg class="icon icon-small required-sign" title="${this.translate('Required')}"><use href="client/img/icons/icons.svg#asterisk"></use></svg>`);
+                $sign = statusIcons.find('.required-sign');
             }
 
             $sign.show();
@@ -555,9 +555,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             const $cell = this.getCellElement();
             const inlineActions = this.getInlineActionsContainer();
 
-            $cell.find('.fa-pencil-alt').parent().remove();
+            $cell.find('.inline-edit').parent().remove();
 
-            const $editLink = $(`<a href="javascript:" class="inline-edit-link hidden" title="${this.translate('Edit')}"><span class="fas fa-pencil-alt fa-sm"></span></a>`);
+            const $editLink = $(`<a href="javascript:" class="inline-edit-link hidden" title="${this.translate('Edit')}"><svg class="icon icon-small inline-edit"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg></a>`);
 
             if (inlineActions.size()) {
                 inlineActions.prepend($editLink);

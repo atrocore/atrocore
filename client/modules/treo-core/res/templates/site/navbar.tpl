@@ -1,7 +1,7 @@
 <div class="navbar navbar-inverse" role="navigation" data-orientation="{{#if navbarIsVertical}}vertical{{else}}horizontal{{/if}}">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle">
-            <span class="fas fa-bars"></span>
+            <svg class="icon"><use href="client/img/icons/icons.svg#bars"></use></svg>
         </button>
         <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-home" title="{{translate 'homepage'}}"></span></a>
         <div class="navbar-header-inner pull-right">
@@ -22,7 +22,7 @@
                 {{#if hasJM}}<li class="dropdown queue-badge-container"></li>{{/if}}
             </ul>
             <div class="dropdown menu-container visible-xs pull-left">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-user"></span></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><svg class="icon"><use href="client/img/icons/icons.svg#user"></use></svg></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
@@ -41,7 +41,7 @@
             <li class="header">
                 <span>{{translate "Navigation Menu"}}</span>
                 {{#if canConfigureMenu}}
-                <span data-action="configureMenu" class="fas fa-cog cursor-pointer" style="font-size: 1em;"></span>
+                <svg class="icon cursor-pointer"><use href="client/img/icons/icons.svg#cog"></use></svg>
                 {{/if}}
             </li>
             {{#each tabDefsList}}
@@ -126,7 +126,7 @@
 
         <ul class="nav navbar-nav navbar-right navbar-dropdowns">
             <li class="dropdown menu-container hidden-xs">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-user"></span></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><svg class="icon"><use href="client/img/icons/icons.svg#user"></use></svg></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
@@ -153,12 +153,12 @@
             {{/if}}
             <li class="dropdown hidden-xs favorites">
                 <a href="javascript:" type="button" class="favorite show-more-button favorites-dropdown-btn dropdown-toggle" data-toggle="dropdown">
-                    <span class="fas fa-star"></span>
+                    <svg class="icon"><use href="client/img/icons/icons.svg#star"></use></svg>
                 </a>
                 <div class="dropdown-menu favorites-dropdown">
                     <div class="header">
                         <span>Favorites</span>
-                        <span data-action="configureFavorites" class="fas fa-cog configure-btn" style="font-size: 1em;"></span>
+                        <svg class="icon configure-btn" data-action="configureFavorites"><use href="client/img/icons/icons.svg#cog"></use></svg>
                     </div>
                     <div role="separator" class="divider"></div>
                     <div class="wrapper">

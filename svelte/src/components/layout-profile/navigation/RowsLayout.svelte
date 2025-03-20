@@ -242,7 +242,7 @@
                                     {#if item.canEdit}
                                         <a href="javascript:" data-action="editField" class="edit-field"
                                            on:click={()=>editItem(item)}>
-                                            <i class="fas fa-pencil-alt fa-sm"></i>
+                                            <svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg>
                                         </a>
                                     {/if}
                                     {#if item.canRemove}

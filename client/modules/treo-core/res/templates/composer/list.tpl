@@ -22,7 +22,7 @@
                     <div class="panel-heading">
                         <div class="pull-right btn-group">
                             <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="installed" title="{{translate 'clickToRefresh' category='messages'}}">
-                                <span class="fas fa-sync"></span>
+                                <svg class="icon icon-small"><use href="client/img/icons/icons.svg#sync"></use></svg>
                             </button>
                         </div>
                         <h4 class="panel-title">
@@ -37,7 +37,7 @@
                     <div class="panel-heading">
                         <div class="pull-right btn-group">
                             <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="store" title="{{translate 'clickToRefresh' category='messages'}}">
-                                <span class="fas fa-sync"></span>
+                                <svg class="icon icon-small"><use href="client/img/icons/icons.svg#sync"></use></svg>
                             </button>
                         </div>
                         <h4 class="panel-title">

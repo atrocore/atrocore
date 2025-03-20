@@ -24,6 +24,8 @@ body {
     --panel-title-color: #000;
     --header-title-color: #000;
     --action-icon-color: #333;
+    --navigation-icon-color: #000;
+    --status-icon-color: #777;
     --success: #dff0d8;
     --notice: #fcf8e3;
     --information: #e0efff;
@@ -14674,10 +14676,16 @@ body > #header .navbar-brand span.home-icon {
     border-color: transparent
 }
 
-#header .navbar .default-icon,
-#header .navbar .icon {
+.default-icon, .icon {
     width: 20px;
-    height: auto;
+    height: 20px;
+    display: inline;
+    vertical-align: middle;
+}
+
+.icon-small {
+    width: 16px;
+    height: 16px;
 }
 
 #header .navbar li.tab > a > span.full-label {

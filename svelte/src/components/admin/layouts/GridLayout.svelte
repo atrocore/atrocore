@@ -453,7 +453,7 @@
                                     <label data-is-custom={panel.customLabel ? 'true' : undefined}>{panel.customLabel || panel.label || ''}</label>&nbsp;
                                     <a href="#" data-action="edit-panel-label" class="edit-panel-label"
                                        on:click|preventDefault={() => editPanelLabel(panel)}>
-                                        <i class="fas fa-pencil-alt fa-sm"></i>
+                                        <svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg>
                                     </a>
                                     <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
                                        data-number={panel.number} on:click|preventDefault={() => removePanel(panel.number)}>

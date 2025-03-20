@@ -674,8 +674,8 @@
             class="btn btn-link collapse-panel"
             class:collapsed={isCollapsed}
             on:click={handleCollapsePanel}>
-        <span class="toggle-icon-left fas fa-angle-left" class:hidden={isCollapsed}></span>
-        <span class="toggle-icon-right fas fa-angle-right" class:hidden={!isCollapsed}></span>
+        <svg class="icon toggle-icon-left" class:hidden={isCollapsed}><use href="client/img/icons/icons.svg#angle-left"></use></svg>
+        <svg class="icon toggle-icon-right" class:hidden={!isCollapsed}><use href="client/img/icons/icons.svg#angle-right"></use></svg>
     </button>
     <div class="category-panel" class:hidden={isCollapsed}>
         <div style="display: flex;flex-direction: row-reverse;align-items: center;height: 35px">

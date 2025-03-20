@@ -31,6 +31,8 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
             information: '--information',
             error: '--error',
             actionIconColor: '--action-icon-color',
+            navigationIconColor: '--navigation-icon-color',
+            statusIconColor: '--status-icon-color',
         },
 
         afterRender() {

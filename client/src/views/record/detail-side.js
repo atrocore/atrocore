@@ -301,12 +301,12 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
             if (isCollapsed) {
                 this.$el.removeClass('collapsed');
-                button.find('span.toggle-icon-left').addClass('hidden');
-                button.find('span.toggle-icon-right').removeClass('hidden');
+                button.find('.toggle-icon-left').addClass('hidden');
+                button.find('.toggle-icon-right').removeClass('hidden');
             } else {
                 this.$el.addClass('collapsed');
-                button.find('span.toggle-icon-left').removeClass('hidden');
-                button.find('span.toggle-icon-right').addClass('hidden');
+                button.find('.toggle-icon-left').removeClass('hidden');
+                button.find('.toggle-icon-right').addClass('hidden');
             }
 
             if (!type) {
