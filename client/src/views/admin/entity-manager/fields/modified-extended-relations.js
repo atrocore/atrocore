@@ -16,7 +16,7 @@ Espo.define('views/admin/entity-manager/fields/modified-extended-relations', 'vi
             this.params.options = [];
             this.translatedOptions = {};
 
-            if (scope === 'Product' && this.getMetadata()) {
+            if (scope === 'Product' && this.getMetadata().get('scopes.Product.module') === 'Pim') {
                 this.params.options.push('productAttributeValues');
                 this.translatedOptions['productAttributeValues'] = this.translate('productAttributeValues', 'fields', scope);
             }
