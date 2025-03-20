@@ -369,7 +369,7 @@ class Relation extends Base
 
             $modifiedExtendedRelations = $this->getMetadata()->get(['scopes', $defs['entity'], 'modifiedExtendedRelations'], []);
             if (empty($modifiedExtendedRelations)) {
-                return;
+                continue;
             }
 
             foreach ($modifiedExtendedRelations as $relation) {
