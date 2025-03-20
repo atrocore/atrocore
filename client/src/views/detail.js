@@ -265,8 +265,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             selectNode: data => {
                                 view.selectNode(data);
                             },
-                            treeLoad: treeData => {
-                                view.treeLoad(treeData);
+                            treeLoad: (treeScope, treeData) => {
+                                if(view.treeLoad){
+                                    view.treeLoad(treeScope, treeData);
+                                }
                             },
                             treeReset: () => {
                                 view.treeReset()
