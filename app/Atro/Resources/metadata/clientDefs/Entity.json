@@ -224,6 +224,76 @@
             }
           ]
         }
+      },
+      "disableHierarchy": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      },
+      "dragAndDrop": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      },
+      "fieldValueInheritance": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      },
+      "unInheritedFields": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      },
+      "relationInheritance": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      },
+      "unInheritedRelations": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "relationInheritance"
+            }
+          ]
+        }
       }
     }
   }

@@ -2,25 +2,123 @@
   {
     "label": "Details",
     "rows": [
-      [{"name": "name"}, {"name": "code"}],
-      [{"name": "navigationManuBackgroundColor"}, {"name": "navigationMenuFontColor"}],
-      [{"name": "linkFontColor"}, {"name": "anchorNavigationBackground"}],
-      [{"name": "primaryColor"}, {"name": "secondaryColor"}],
-      [{"name": "primaryFontColor"}, {"name": "secondaryFontColor"}],
-      [{"name": "labelColor"}, {"name": "iconColor"}],
-      [{"name": "primaryBorderColor"}, {"name": "secondaryBorderColor"}],
-      [{"name": "panelTitleColor"}, {"name": "headerTitleColor"}],
-      [{"name": "success"}, {"name": "notice"}],
-      [{"name": "information"}, {"name": "error"}],
-      [{"name": "actionIconColor"}, false],
-      [{"name": "customStylesheet", "fullWidth": true}],
-      [{"name": "customStylesheetPath", "fullWidth": true}]
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "navigationManuBackgroundColor"
+        },
+        {
+          "name": "navigationMenuFontColor"
+        }
+      ],
+      [
+        {
+          "name": "linkFontColor"
+        },
+        {
+          "name": "anchorNavigationBackground"
+        }
+      ],
+      [
+        {
+          "name": "primaryColor"
+        },
+        {
+          "name": "secondaryColor"
+        }
+      ],
+      [
+        {
+          "name": "primaryFontColor"
+        },
+        {
+          "name": "secondaryFontColor"
+        }
+      ],
+      [
+        {
+          "name": "labelColor"
+        },
+        {
+          "name": "iconColor"
+        }
+      ],
+      [
+        {
+          "name": "primaryBorderColor"
+        },
+        {
+          "name": "secondaryBorderColor"
+        }
+      ],
+      [
+        {
+          "name": "panelTitleColor"
+        },
+        {
+          "name": "headerTitleColor"
+        }
+      ],
+      [
+        {
+          "name": "success"
+        },
+        {
+          "name": "notice"
+        }
+      ],
+      [
+        {
+          "name": "information"
+        },
+        {
+          "name": "error"
+        }
+      ],
+      [
+        {
+          "name": "highlightingColorForRequired"
+        },
+        {
+          "name": "highlightingColorForDataQuality"
+        }
+      ],
+      [
+        {
+          "name": "actionIconColor"
+        },
+        false
+      ],
+      [
+        {
+          "name": "customStylesheet",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "customStylesheetPath",
+          "fullWidth": true
+        }
+      ]
     ]
   },
   {
     "label": "Custom Code",
     "rows": [
-      [{"name": "customHeadCode", "fullWidth":  true}]
+      [
+        {
+          "name": "customHeadCode",
+          "fullWidth": true
+        }
+      ]
     ]
   }
 ]

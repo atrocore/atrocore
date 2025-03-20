@@ -1110,7 +1110,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         getFieldView: function (name) {
             var view;
             if (this.hasView('middle')) {
-                view = (this.getView('middle').getFieldViews(true) || {})[name];
+                view = this.getView('middle').getFieldView(name);
             }
             if (!view && this.hasView('side')) {
                 view = (this.getView('side').getFieldViews(true) || {})[name];
@@ -1320,12 +1320,33 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
             });
+
+            this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
+                this.highlightRequired();
+            });
         },
 
         remove() {
             Dep.prototype.remove.call(this);
 
             clearInterval(this.realtimeInterval);
+        },
+
+        highlightRequired() {
+            let highlight = $('.highlighted-required').length === 0;
+            $(`.required-sign`).each((k, el) => {
+                let $cell = $(el).parents('.cell');
+                // for product attribute value panel
+                if ($cell.attr('data-name') === 'attribute') {
+                    $cell = $cell.parents('tr');
+                }
+
+                if (!highlight) {
+                    $cell.removeClass('highlighted-required');
+                } else {
+                    $cell.addClass('highlighted-required');
+                }
+            });
         },
 
         initRealtimeListener() {
@@ -1526,7 +1547,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (hide && !field.$el.hasClass('hidden')) {
                 field.hide();
                 field.overviewFiltersHidden = true;
-            } else if (field.overviewFiltersHidden) {
+            } else if (!hide && field.overviewFiltersHidden) {
                 field.show();
             }
         },
@@ -1838,16 +1859,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 panel.name = simplifiedLayout[p].name || 'panel-' + p.toString();
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
-
-                if (simplifiedLayout[p].dynamicLogicVisible) {
-                    if (this.uiHandler) {
-                        this.uiHandler.defs.panels = this.uiHandler.defs.panels || {};
-                        this.uiHandler.defs.panels[panel.name] = {
-                            visible: simplifiedLayout[p].dynamicLogicVisible
-                        };
-                        this.uiHandler.processPanel(panel.name);
-                    }
-                }
 
                 for (var i in simplifiedLayout[p].rows) {
                     var row = [];

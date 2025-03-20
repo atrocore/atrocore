@@ -514,6 +514,7 @@
     "compare": "Compare"
   },
   "fields": {
+    "disableActionHistory": "Disable action logging",
     "followers": "Followers",
     "folderPath": "Folder Path",
     "connection": "Connection",
@@ -589,7 +590,8 @@
     "roles": "Roles",
     "users": "Users",
     "groupEnd": "Group end",
-    "iconClass": "Icon"
+    "iconClass": "Icon",
+    "isPublic": "Public"
   },
   "tooltips": {
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."

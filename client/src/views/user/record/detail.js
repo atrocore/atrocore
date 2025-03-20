@@ -179,7 +179,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     "name": "accessControl",
                     "rows": [
                         [{"name":"isActive"}, {"name":"isAdmin"}],
-                        [{"name":"teams"}, false],
+                        [{"name":"teams"}, {"name":"disableActionHistory"}],
                         [{"name":"roles"}, {"name":"defaultTeam"}]
                     ]
                 });

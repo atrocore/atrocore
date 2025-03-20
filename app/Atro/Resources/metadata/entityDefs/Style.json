@@ -23,6 +23,10 @@
       "view": "views/fields/script",
       "language": "css"
     },
+    "highlightingColorForRequired": {
+      "type": "color",
+      "default": "#f0f8ff"
+    },
     "navigationManuBackgroundColor": {
       "type": "color"
     },

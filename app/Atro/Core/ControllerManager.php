@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Core\EventManager\Manager;
-use Atro\Core\Exceptions\BadRequest;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\Entities\User;
+use Espo\ORM\EntityManager;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -125,6 +127,53 @@ class ControllerManager
             $request
         );
 
+        $ignoredControllers = [
+            'ActionHistoryRecord',
+            'App',
+            'Metadata',
+            'Layout',
+            'I18n',
+            'Settings'
+        ];
+
+        if (
+            empty($this->getConfig()->get('disableActionHistory'))
+            && empty($this->getUser()->get('disableActionHistory'))
+            && $this->getUser()->id !== 'system'
+            && !in_array($controllerName, $ignoredControllers)
+            && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))
+        ) {
+            $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
+            $historyRecord->set('controllerName', $controllerName);
+            $historyRecord->set('action', $request->getMethod());
+            $historyRecord->set('userId', $this->getUser()->id);
+            $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
+            $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
+            $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
+            $historyRecordData = [
+                'request' => [
+                    'headers'     => $request->headers->all(),
+                    'params'      => $params
+                ]
+            ];
+
+            if (!empty($_GET)){
+                $historyRecordData['request']['queryParams'] = $_GET;
+            }
+
+            if (!empty($data)) {
+                $historyRecordData['request']['body'] = $data;
+            }
+
+            foreach ($historyRecordData['request']['headers'] ?? [] as $k => $v) {
+                if (in_array(trim(strtolower($k)), ['authorization-token', 'authorization'])) {
+                    unset($historyRecordData['request']['headers'][$k]);
+                }
+            }
+            $historyRecord->set('data', $historyRecordData);
+            $this->getEntityManager()->saveEntity($historyRecord);
+        }
+
         $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
 
         $this->dispatch(
@@ -141,12 +190,17 @@ class ControllerManager
             $controller->$afterMethodName($params, $data, $request, $response);
         }
 
-        if (is_bool($result)) {
-            return Json::encode($result);
+        if (!empty($historyRecord)) {
+            $historyRecordData['response'] = [
+                'status' => $response->getStatus(),
+//                'body'   => $result
+            ];
+            $historyRecord->set('data', $historyRecordData);
+            $this->getEntityManager()->saveEntity($historyRecord);
         }
 
-        if (is_array($result) || $result instanceof \stdClass) {
-            return Json::encode($result);
+        if (is_bool($result) || is_array($result) || $result instanceof \stdClass) {
+            $result = Json::encode($result);
         }
 
         return $result;
@@ -196,8 +250,23 @@ class ControllerManager
         return $this->getContainer()->get('metadata');
     }
 
+    protected function getConfig(): Config
+    {
+        return $this->getContainer()->get('config');
+    }
+
     protected function getEventManager(): Manager
     {
         return $this->getContainer()->get('eventManager');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->getContainer()->get('entityManager');
+    }
+
+    protected function getUser(): User
+    {
+        return $this->getContainer()->get('user');
     }
 }

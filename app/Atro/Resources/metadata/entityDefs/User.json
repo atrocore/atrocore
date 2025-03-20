@@ -10,6 +10,10 @@
         "Token"
       ]
     },
+    "disableActionHistory": {
+      "type": "bool",
+      "default": false
+    },
     "isAdmin": {
       "type": "bool",
       "tooltip": true
@@ -190,15 +194,6 @@
       "importDisabled": true
     },
     "dashletsOptions": {
-      "type": "jsonObject",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true
-    },
-    "presetFilters": {
       "type": "jsonObject",
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,

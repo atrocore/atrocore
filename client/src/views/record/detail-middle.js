@@ -82,8 +82,11 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
                 }
 
                 const $panel = $field.closest('.panel')
-                if ($panel.find('.cell').every('.hidden-cell')) {
-                    $panel.addClass('hidden')
+                if ($panel.find('> .panel-body > .row > .cell').length === $panel.find('> .panel-body > .row > .cell.hidden-cell').length) {
+                    const name = $panel.attr('data-name')
+                    if (name) {
+                        this.hidePanel(name)
+                    }
                 }
             }.bind(this);
             if (this.isRendered()) {
@@ -152,11 +155,17 @@ Espo.define('views/record/detail-middle', 'view', function (Dep) {
 
         getFieldView: function (name) {
             const fieldsViews = this.getFieldViews()
+
+            if (fieldsViews[name + 'Field']) {
+                return fieldsViews[name + 'Field']
+            }
+
             for (let key of Object.keys(fieldsViews)) {
                 if (fieldsViews[key]?.name === name) {
                     return fieldsViews[key]
                 }
             }
+
             return null
         },
 
