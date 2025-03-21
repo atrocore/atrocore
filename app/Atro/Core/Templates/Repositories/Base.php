@@ -91,9 +91,7 @@ class Base extends RDB
             }
 
             if (!empty($where)) {
-                $GLOBALS['debugSQL'] = [];
                 $service->massRemove(['where' => $where]);
-                $GLOBALS['log']->error(print_r($GLOBALS['debugSQL'], true));
             }
         }
 
