@@ -64,8 +64,8 @@ class Layout extends AbstractRecordController
 
         $layoutManager = $this->getLayoutManager();
         $layoutManager->checkLayoutProfile($layoutProfileId);
-        $result = $layoutManager->save($params['scope'], $params['viewType'], $relatedEntity,
-            $relatedLink, $layoutProfileId, json_decode(json_encode($data), true));
+        $result = $layoutManager->save($params['scope'], $params['viewType'], (string)$relatedEntity,
+            (string)$relatedLink, $layoutProfileId, json_decode(json_encode($data), true));
 
         if ($result === false) {
             throw new Error("Error while saving layout.");

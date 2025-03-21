@@ -42,7 +42,8 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
                         action: 'reupload',
                         label: 'Reupload',
                         data: {
-                            id: this.model.get('id')
+                            id: this.model.get('id'),
+                            cid: this.model.cid
                         },
                     });
                 }
@@ -50,7 +51,8 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
                     action: 'quickEdit',
                     label: 'Edit',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
+                        cid: this.model.cid
                     }
                 });
                 if (this.model.has('isInherited') && !this.model.get('isInherited')) {
@@ -58,7 +60,8 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
                         action: 'inheritRelated',
                         label: 'inherit',
                         data: {
-                            id: this.model.id
+                            id: this.model.id,
+                            cid: this.model.cid
                         }
                     });
                 }
@@ -68,7 +71,8 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
                     action: 'quickRemove',
                     label: 'Remove',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
+                        cid: this.model.cid
                     }
                 });
             }

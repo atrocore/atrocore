@@ -39,7 +39,8 @@ Espo.define('views/record/row-actions/relationship-view-and-edit', 'views/record
                 action: 'quickView',
                 label: 'View',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
+                    cid: this.model.cid
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
@@ -57,7 +58,8 @@ Espo.define('views/record/row-actions/relationship-view-and-edit', 'views/record
                     action: 'quickEdit',
                     label: 'Edit',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
+                        cid: this.model.cid
                     },
                     link: '#' + this.model.name + '/edit/' + this.model.id
                 });
@@ -67,7 +69,8 @@ Espo.define('views/record/row-actions/relationship-view-and-edit', 'views/record
                         action: 'inheritRelated',
                         label: 'inherit',
                         data: {
-                            id: this.model.id
+                            id: this.model.id,
+                            cid: this.model.cid
                         }
                     });
                 }
