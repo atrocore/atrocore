@@ -39,6 +39,18 @@
     },
     "layoutProfile": {
       "type": "link"
+    },
+    "hash": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
@@ -74,18 +86,6 @@
       "type": "belongsTo",
       "entity": "LayoutProfile",
       "foreign": "layouts"
-    },
-    "hash": {
-      "type": "varchar",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
     }
   },
   "collection": {
@@ -107,6 +107,9 @@
     }
   },
   "uniqueIndexes": {
-
+    "unique": [
+      "hash",
+      "deleted"
+    ]
   }
 }

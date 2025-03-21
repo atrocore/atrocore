@@ -26,13 +26,10 @@ class V1Dot13Dot41 extends Base
 
     public function up(): void
     {
-        if ($this->isPgSQL()) {
-            $this->execute("DROP INDEX idx_layout_layout_profile;");
-            $this->execute("DROP INDEX idx_user_entity_layout_unique;");
-            $this->execute("ALTER TABLE user_entity_layout ADD hash VARCHAR(255) DEFAULT NULL;");
-        } else {
-
-        }
+        $this->execute("DROP INDEX idx_layout_layout_profile;");
+        $this->execute("DROP INDEX idx_user_entity_layout_unique;");
+        $this->execute("ALTER TABLE user_entity_layout ADD hash VARCHAR(255) DEFAULT NULL;");
+        $this->execute("ALTER TABLE layout ADD hash VARCHAR(255) DEFAULT NULL;");
 
         // calculate hash
         foreach (['layout', 'user_entity_layout'] as $table) {
@@ -97,9 +94,11 @@ class V1Dot13Dot41 extends Base
         }
 
         if ($this->isPgSQL()) {
-
+            $this->execute('CREATE UNIQUE INDEX IDX_LAYOUT_UNIQUE ON layout (hash, deleted);');
+            $this->execute('CREATE UNIQUE INDEX IDX_USER_ENTITY_LAYOUT_UNIQUE ON user_entity_layout (hash, deleted);');
         } else {
-
+            $this->execute('CREATE UNIQUE INDEX IDX_LAYOUT_UNIQUE ON layout (hash, deleted);');
+            $this->execute('CREATE UNIQUE INDEX IDX_USER_ENTITY_LAYOUT_UNIQUE ON user_entity_layout (hash, deleted)');
         }
     }
 
@@ -129,7 +128,7 @@ class V1Dot13Dot41 extends Base
         try {
             $this->getPDO()->exec($sql);
         } catch (\Throwable $e) {
-            // ignore all
+            $e; // ignore all
         }
     }
 

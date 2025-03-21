@@ -50,5 +50,9 @@
     }
   },
   "uniqueIndexes": {
+    "unique": [
+      "hash",
+      "deleted"
+    ]
   }
 }

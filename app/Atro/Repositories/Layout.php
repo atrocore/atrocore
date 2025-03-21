@@ -237,6 +237,13 @@ class Layout extends Base
         return true;
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        $entity->set('hash', self::generateHash($entity));
+
+        parent::beforeSave($entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         switch ($entity->get('viewType')) {
@@ -262,4 +269,23 @@ class Layout extends Base
                 break;
         }
     }
+
+    public static function generateHash(Entity $entity, $forUser = false): string
+    {
+        $fields = [
+            "layout_profile_id",
+            "entity",
+            "related_entity",
+            "related_link",
+            "view_type"
+        ];
+        if ($forUser) {
+            $fields[] = "user_id";
+        }
+        $text = join("\n", array_map(function ($field) use ($entity) {
+            return empty($entity->get($field)) ? "" : $entity->get($field);
+        }, $fields));
+        return md5('atrocore_salt' . $text);
+    }
+
 }
