@@ -17,14 +17,8 @@ use Espo\ORM\Entity;
 
 class SavedSearch extends Base
 {
-    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
-    {
-        return true;
-    }
-
     public function checkIsOwner(User $user, Entity $entity)
     {
         return $user->id === $entity->get('userId');
     }
-
 }

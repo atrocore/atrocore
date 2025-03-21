@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\DataManager;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\Base;
+use Espo\Core\Acl;
 use Espo\ORM\Entity;
 
 class SavedSearch extends Base
@@ -55,7 +57,12 @@ class SavedSearch extends Base
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        $entity->set('userId', $this->getEntityManager()->getUser()->id);
+        $currentUserId = $this->getEntityManager()->getUser()->id;
+
+        if($entity->isNew()) {
+            $entity->set('userId', $currentUserId);
+        }
+
         parent::beforeSave($entity, $options);
     }
 
@@ -84,9 +91,15 @@ class SavedSearch extends Base
         return $this->getInjection('dataManager');
     }
 
+    protected function getAcl(): Acl
+    {
+        return $this->getInjection('acl');
+    }
+
     protected function init()
     {
         parent::init();
         $this->addDependency('dataManager');
+        $this->addDependency('acl');
     }
 }
