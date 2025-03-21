@@ -87,11 +87,6 @@ class Base extends RDB
             }
         }
 
-        $this->clearDeletedRecordsDefinitively();
-    }
-
-    public function clearDeletedRecordsDefinitively(): void
-    {
         $clearDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
 
         $date = new \DateTime();
@@ -121,5 +116,4 @@ class Base extends RDB
 
         $qb->executeQuery();
     }
-
 }
