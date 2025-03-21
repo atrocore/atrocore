@@ -273,14 +273,14 @@ class Layout extends Base
     public static function generateHash(Entity $entity, $forUser = false): string
     {
         $fields = [
-            "layout_profile_id",
+            "layoutProfileId",
             "entity",
-            "related_entity",
-            "related_link",
-            "view_type"
+            "relatedEntity",
+            "relatedLink",
+            "viewType"
         ];
         if ($forUser) {
-            $fields[] = "user_id";
+            $fields[] = "userId";
         }
         $text = join("\n", array_map(function ($field) use ($entity) {
             return empty($entity->get($field)) ? "" : $entity->get($field);
