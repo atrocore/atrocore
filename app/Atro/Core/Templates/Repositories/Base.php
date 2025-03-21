@@ -60,40 +60,6 @@ class Base extends RDB
         return !empty($qb->fetchOne());
     }
 
-    public function getNumberOfRecordsToAutoDelete(): int
-    {
-        $autoDays = $this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']);
-        if (empty($autoDays)) {
-            return 0;
-        }
-
-        $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
-
-        $qb = $this->getConnection()->createQueryBuilder()
-            ->select('count(*) as total')
-            ->from($this->getConnection()->quoteIdentifier($tableName))
-            ->where('deleted=:false')
-            ->setParameter('false', false, ParameterType::BOOLEAN);
-
-        $date = new \DateTime();
-        $date->modify("-{$autoDays} days");
-        $date = $date->format('Y-m-d H:i:s');
-
-        if ($this->seed->hasField('modifiedAt')) {
-            if ($this->seed->hasField('createdAt')) {
-                $qb->andWhere('modified_at<:date OR (modified_at IS NULL AND created_at<:date)');
-            } else {
-                $qb->andWhere('modified_at<:date OR modified_at IS NULL');
-            }
-            $qb->setParameter('date', $date);
-        } elseif ($this->seed->hasField('createdAt')) {
-            $qb->andWhere('created_at<:date OR created_at IS NULL');
-            $qb->setParameter('date', $date);
-        }
-
-        return (int)$qb->fetchOne();
-    }
-
     public function clearDeletedRecords(): void
     {
         if (empty($this->seed)) {
