@@ -21,7 +21,7 @@ class EntityTeam extends Relation
         return true;
     }
 
-    public function clearDeletedRecords(?int $iteration = null, ?int $maxPerJob = null): void
+    public function clearDeletedRecords(): void
     {
         foreach ($this->getMetadata()->get('entityDefs', []) as $scope => $data) {
             $tableName = $this->getEntityManager()->getMapper()->toDb($scope);

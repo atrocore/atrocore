@@ -19,15 +19,13 @@ class ClearEntity extends AbstractJob implements JobInterface
 {
     public function run(Job $job): void
     {
-        $payload = $job->getPayload();
-        $entityName = $payload['entityName'] ?? null;
+        $entityName = $job->getPayload()['entityName'] ?? null;
         if (empty($entityName)) {
             return;
         }
 
         try {
-            $repository = $this->getEntityManager()->getRepository($entityName);
-            $repository->clearDeletedRecords();
+            $this->getEntityManager()->getRepository($entityName)->clearDeletedRecords();
         } catch (\Throwable $e) {
             $GLOBALS['log']->error("Clear Entity failed for $entityName: {$e->getMessage()}");
         }
