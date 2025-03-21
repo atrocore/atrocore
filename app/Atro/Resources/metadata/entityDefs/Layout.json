@@ -74,6 +74,18 @@
       "type": "belongsTo",
       "entity": "LayoutProfile",
       "foreign": "layouts"
+    },
+    "hash": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "collection": {
@@ -95,13 +107,6 @@
     }
   },
   "uniqueIndexes": {
-    "layout_profile": [
-      "layout_profile_id",
-      "entity",
-      "related_entity",
-      "related_link",
-      "view_type",
-      "deleted"
-    ]
+
   }
 }

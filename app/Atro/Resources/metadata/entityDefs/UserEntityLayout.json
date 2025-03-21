@@ -25,6 +25,18 @@
     "modifiedAt": {
       "type": "datetime",
       "readOnly": true
+    },
+    "hash": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
@@ -38,14 +50,5 @@
     }
   },
   "uniqueIndexes": {
-    "unique": [
-      "user_id",
-      "entity",
-      "view_type",
-      "related_entity",
-      "related_link",
-      "layout_profile_id",
-      "deleted"
-    ]
   }
 }
