@@ -77,13 +77,23 @@ class Base extends RDB
             $where = [];
 
             if ($this->seed->hasField('modifiedAt')) {
-                $where['modifiedAt<'] = $date->format('Y-m-d H:i:s');
+                $where[] = [
+                    'attribute' => 'modifiedAt',
+                    'type'      => 'before',
+                    'value'     => $date->format('Y-m-d H:i:s')
+                ];
             } elseif ($this->seed->hasField('createdAt')) {
-                $where['createdAt<'] = $date->format('Y-m-d H:i:s');
+                $where[] = [
+                    'attribute' => 'createdAt',
+                    'type'      => 'before',
+                    'value'     => $date->format('Y-m-d H:i:s')
+                ];
             }
 
             if (!empty($where)) {
+                $GLOBALS['debugSQL'] = [];
                 $service->massRemove(['where' => $where]);
+                $GLOBALS['log']->error(print_r($GLOBALS['debugSQL'], true));
             }
         }
 
