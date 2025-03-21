@@ -19,6 +19,7 @@ use Atro\Core\ModuleManager\Manager;
 use Atro\Migrations\V1Dot12Dot1;
 use Atro\Migrations\V1Dot12Dot12;
 use Atro\Migrations\V1Dot13Dot16;
+use Atro\Migrations\V1Dot13Dot40;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
@@ -752,7 +753,11 @@ class Installer extends HasContainer
         }
         @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json', json_encode($emailTemplates));
 
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'HtmlSanitizer.json', json_encode([V1Dot12Dot1::getDefaultHtmlSanitizer()]));
+        $standardSanitizer = V1Dot12Dot1::getDefaultHtmlSanitizer();
+        $tableOnlySanitizer = V1Dot13Dot40::getDefaultHtmlSanitizer();
+        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'HtmlSanitizer.json', json_encode(
+            array_merge([$standardSanitizer['id'] => $standardSanitizer], [$tableOnlySanitizer['id'] => $tableOnlySanitizer])
+        ));
 
         @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Style.json', json_encode(V1Dot12Dot12::getDefaultStyles()));
 
