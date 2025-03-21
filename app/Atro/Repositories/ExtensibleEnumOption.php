@@ -232,4 +232,16 @@ class ExtensibleEnumOption extends Base
         return 'name';
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update('extensible_enum_extensible_enum_option')
+            ->set('deleted', ':true')
+            ->where('extensible_enum_option_id=:id')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
+
+        parent::afterRemove($entity, $options);
+    }
 }

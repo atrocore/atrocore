@@ -24,11 +24,13 @@ class ExtensibleEnumExtensibleEnumOption extends Relation
     public function getNextSorting(Entity $entity): int
     {
         $max = $this->getConnection()->createQueryBuilder()
-            ->select('sorting')
-            ->from('extensible_enum_extensible_enum_option')
-            ->where('deleted=:false')
-            ->andWhere('extensible_enum_id=:extensibleEnumId')
-            ->orderBy('sorting', 'DESC')
+            ->select('t.sorting')
+            ->from('extensible_enum_extensible_enum_option', 't')
+            ->leftJoin('t', 'extensible_enum_option', 'o', 'o.id=t.extensible_enum_option_id')
+            ->where('t.deleted=:false')
+            ->andWhere('o.deleted=:false')
+            ->andWhere('t.extensible_enum_id=:extensibleEnumId')
+            ->orderBy('t.sorting', 'DESC')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('extensibleEnumId', $entity->get('extensibleEnumId'))
             ->fetchOne();
