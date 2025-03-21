@@ -31,25 +31,16 @@ class ClearEntities extends AbstractJob implements JobInterface
         }
 
         foreach ($entities as $entityName) {
-            $count = $this->getEntityManager()->getRepository($entityName)->getNumberOfRecordsToAutoDelete();
-            $maxPerJob = 10000;
-
-            $jobCount = max((int)ceil($count / $maxPerJob), 1);
-            for ($i = 1; $i <= $jobCount; $i++) {
-                $jobEntity = $this->getEntityManager()->getEntity('Job');
-                $jobEntity->set([
-                    'name'           => "Clear $entityName " . ($jobCount == 1 ? '' : "($i)"),
-                    'type'           => 'ClearEntity',
-                    'scheduledJobId' => $job->get('scheduledJobId'),
-                    'payload'        => [
-                        'entityName'      => $entityName,
-                        'maxPerJob'       => $maxPerJob,
-                        'iteration'       => $i,
-                        'isLastIteration' => $i === $jobCount,
-                    ]
-                ]);
-                $this->getEntityManager()->saveEntity($jobEntity);
-            }
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'           => "Clear $entityName",
+                'type'           => 'ClearEntity',
+                'scheduledJobId' => $job->get('scheduledJobId'),
+                'payload'        => [
+                    'entityName' => $entityName
+                ]
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
         }
     }
 }

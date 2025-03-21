@@ -27,10 +27,7 @@ class ClearEntity extends AbstractJob implements JobInterface
 
         try {
             $repository = $this->getEntityManager()->getRepository($entityName);
-            $repository->clearDeletedRecords($payload['iteration'], $payload['maxPerJob']);
-            if (!empty($payload['isLastIteration'])) {
-                $repository->clearDeletedRecordsDefinitively();
-            }
+            $repository->clearDeletedRecords();
         } catch (\Throwable $e) {
             $GLOBALS['log']->error("Clear Entity failed for $entityName: {$e->getMessage()}");
         }

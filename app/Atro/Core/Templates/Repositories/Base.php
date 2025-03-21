@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\ORM\Repositories\RDB;
+use Atro\Services\Record;
 use Doctrine\DBAL\ParameterType;
 
 class Base extends RDB
@@ -93,7 +94,7 @@ class Base extends RDB
         return (int)$qb->fetchOne();
     }
 
-    public function clearDeletedRecords(?int $iteration = null, ?int $maxPerJob = null): void
+    public function clearDeletedRecords(): void
     {
         if (empty($this->seed)) {
             return;
@@ -103,37 +104,24 @@ class Base extends RDB
 
         if (!empty($autoDeleteAfterDays) && $autoDeleteAfterDays > 0) {
             $date = (new \DateTime())->modify("-$autoDeleteAfterDays days");
-            $limit = 2000;
-            $count = 0;
-            while (true) {
-                $toDelete = [];
-                $offset = empty($iteration) ? 0 : ($iteration - 1) * ($maxPerJob ?? 0);
-                if ($this->seed->hasField('modifiedAt')) {
-                    $toDelete = $this
-                        ->where(['modifiedAt<' => $date->format('Y-m-d H:i:s')])
-                        ->limit($offset, $limit)
-                        ->order('id')
-                        ->find();
-                } elseif ($this->seed->hasField('createdAt')) {
-                    $toDelete = $this
-                        ->where(['createdAt<' => $date->format('Y-m-d H:i:s')])
-                        ->limit($offset, $limit)
-                        ->order('id')
-                        ->find();
-                }
-                if (empty($toDelete[0])) {
-                    break;
-                }
-                foreach ($toDelete as $entity) {
-                    $this->getEntityManager()->removeEntity($entity);
-                }
 
-                $count += $limit;
-                if (!empty($maxPerJob) && $count >= $maxPerJob) {
-                    break;
-                }
+            // delete using massActions
+            /** @var $service Record * */
+            $service = $this->getEntityManager()->getContainer()->get('serviceFactory')->create($this->entityName);
+            $where = [];
+
+            if ($this->seed->hasField('modifiedAt')) {
+                $where['modifiedAt<'] = $date->format('Y-m-d H:i:s');
+            } elseif ($this->seed->hasField('createdAt')) {
+                $where['createdAt<'] = $date->format('Y-m-d H:i:s');
+            }
+
+            if (!empty($where)) {
+                $service->massRemove(['where' => $where]);
             }
         }
+
+        $this->clearDeletedRecordsDefinitively();
     }
 
     public function clearDeletedRecordsDefinitively(): void
