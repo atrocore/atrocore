@@ -17,11 +17,11 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 
-class V1Dot13Dot40 extends Base
+class V1Dot13Dot41 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-03-21 12:00:00');
+        return new \DateTime('2025-03-24 12:00:00');
     }
 
     public function up(): void
@@ -52,9 +52,9 @@ class V1Dot13Dot40 extends Base
     public static function getDefaultHtmlSanitizer(): array
     {
         return [
-            "id"            => 'tables_only',
-            "code"          => "tables_only",
-            "name"          => "Tables Only",
+            "id"            => 'flat_table',
+            "code"          => "flat_table",
+            "name"          => "Flat table",
             "configuration" => "allow_elements:
     table: \"*\"
     tr: \"*\"
@@ -63,11 +63,9 @@ class V1Dot13Dot40 extends Base
     thead: \"*\"
     tbody: \"*\"
     tfoot: \"*\"
-    caption: \"*\"
-    col: \"*\"
-    colgroup: \"*\"
     
-allow_safe_attributes: true"
+drop_attributes:
+    style: \"*\""
         ];
     }
 }
