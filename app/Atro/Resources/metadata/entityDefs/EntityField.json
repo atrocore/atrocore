@@ -163,6 +163,11 @@
       "type": "array",
       "view": "views/admin/field-manager/fields/options-extended"
     },
+    "optionColors": {
+      "type": "array",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true
+    },
     "extensibleEnum": {
       "type": "link"
     },
