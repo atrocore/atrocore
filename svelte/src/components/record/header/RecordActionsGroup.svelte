@@ -11,9 +11,13 @@
     import ActionParams from "./interfaces/ActionParams";
     import OverviewFilterButton from "./buttons/OverviewFilterButton.svelte";
     import BookmarkButton from "./buttons/BookmarkButton.svelte";
+    import FollowButton from "./buttons/FollowButton.svelte";
+    import RecordCallbacks from "./interfaces/RecordCallbacks";
+    import NavigationButtons from "./buttons/NavigationButtons.svelte";
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
+    export let callbacks: RecordCallbacks;
     export let permissions: Permissions;
     export let scope: string;
     export let id: string | null;
@@ -143,14 +147,21 @@
                 <div class="header-items">
                     {#each recordButtons?.headerButtons?.buttons ?? [] as button}
                         {#if button.action === 'openOverviewFilter'}
-                            <OverviewFilterButton filterApplied={recordButtons?.isOverviewFilterActive ?? false}
+                            <OverviewFilterButton filterApplied={recordButtons.isOverviewFilterActive ?? false}
                                                   onExecute={executeAction}/>
                         {:else if ['bookmark', 'unbookmark'].includes(button.action)}
                             {#if id}
                                 <BookmarkButton entity={scope} {id} bookmarkId={bookmarkId} loading={loadingActions} />
                             {/if}
+                        {:else if ['follow', 'unfollow'].includes(button.action)}
+                            {#if id && recordButtons.followers}
+                                <FollowButton entity={scope} {id} followers={recordButtons.followers}
+                                              onFollow={callbacks.onFollow} onUnfollow={callbacks.onUnfollow} />
+                            {/if}
+                        {:else if button.action === 'navigation'}
+                            <NavigationButtons hasNext={recordButtons.hasNext} hasPrevious={recordButtons.hasPrevious} onExecute={executeAction} />
                         {:else}
-<!--                            <ActionButton params={button} on:execute={executeAction}/>-->
+                            <ActionButton params={button} on:execute={executeAction}/>
                         {/if}
                     {/each}
                 </div>

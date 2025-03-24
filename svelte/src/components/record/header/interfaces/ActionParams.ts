@@ -21,5 +21,6 @@ export default interface ActionParams {
     tooltip?: string;
     callback?: (e: Event) => void;
     hidden?: boolean;
+    disabled?: boolean;
     active?: boolean;
 }

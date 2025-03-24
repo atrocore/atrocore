@@ -8,10 +8,12 @@
     import AnchorNavigation from "./navigation/AnchorNavigation.svelte";
     import RecordActionButtons from "./interfaces/RecordActionsButtons";
     import RecordActionsGroup from "./RecordActionsGroup.svelte";
+    import RecordCallbacks from "./interfaces/RecordCallbacks";
 
     export let params: Params;
     export let anchorNavItems: AnchorNavItem[] = [];
     export let recordButtons: RecordActionButtons | null = null;
+    export let callbacks: RecordCallbacks;
     export let anchorScrollCallback = (panelName: string, event: Event) => {}
 
     let mode: string;
@@ -35,6 +37,10 @@
         });
     }
 
+    window.addEventListener('breadcrumbs:items-updated', (event: CustomEvent) => {
+        params.breadcrumbs = event.detail;
+    })
+
     onMount(() => {
         if (params.afterOnMount) {
             params.afterOnMount();
@@ -44,7 +50,7 @@
 
 <BaseHeader breadcrumbs={params.breadcrumbs} {currentIsHeading}>
     <div class="detail-button-container">
-        <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions} {recordButtons} />
+        <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions} {recordButtons} {callbacks} />
     </div>
     <div class="panel-navigation">
         <AnchorNavigation items={anchorNavItems} scrollCallback={anchorScrollCallback} />

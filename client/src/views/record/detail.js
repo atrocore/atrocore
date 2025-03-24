@@ -746,15 +746,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 searchContainer.addClass('hidden');
             }
 
-            let headerButtonsContainer = $('.header-buttons-container');
-            if (headerButtonsContainer.length) {
-                let main = $('#main');
-                let headerBreadcrumbs = $('.header-breadcrumbs:not(.fixed-header-breadcrumbs)');
-
-                if (main.length && headerBreadcrumbs.length && headerButtonsContainer.outerWidth() > main.outerWidth() - headerBreadcrumbs.outerWidth()) {
-                    // headerButtonsContainer.addClass('full-row');
-                }
-            }
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
@@ -1957,7 +1948,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 recordViewObject: this
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
-                    this.createPanelNavigationView(this.getMiddlePanels().concat(view.panelList));
+                    this.trigger('detailPanelsLoaded', {list: this.getMiddlePanels().concat(view.panelList)});
                 })
                 if (callback) {
                     callback(view)
@@ -1977,60 +1968,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
             return middlePanels
-        },
-
-        createPanelNavigationView(panelList) {
-            let el = this.options.el || '#' + (this.id);
-            this.createView('panelDetailNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .panel-navigation.panel-left',
-            }, (view) => {
-                this.listenTo(this, 'after:set-detail-mode', () => {
-                    view.reRender();
-                });
-
-                this.listenTo(view, 'after:render', () => {
-                    if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
-                        this.getAcl().check('LayoutProfile', 'read')
-                        && this.mode !== 'edit'
-                    ) {
-                        var bottomView = this.getView('bottom');
-                        this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
-                            scope: this.scope,
-                            viewType: 'relationships',
-                            layoutData: bottomView.layoutData,
-                            linkClass: 'btn',
-                            el: el + ' .panel-navigation.panel-left .layout-editor-container',
-                        }, (view) => {
-                            view.on("refresh", () => {
-                                this.createBottomView(view => {
-                                    view.render()
-                                })
-                            })
-                            view.render()
-                        })
-                    }
-                })
-
-                view.render();
-
-            });
-
-            this.createView('panelEditNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .panel-navigation.panel-right',
-            }, function (view) {
-                this.listenTo(this, 'after:set-edit-mode', () => {
-                    view.reRender();
-                });
-                view.render();
-            });
-
-
         },
 
         build: function (callback) {

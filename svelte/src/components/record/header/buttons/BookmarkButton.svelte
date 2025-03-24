@@ -1,6 +1,9 @@
 <script lang="ts">
     import ActionParams from "../interfaces/ActionParams";
     import ActionButton from "./ActionButton.svelte";
+    import {Notifier} from "../../../../utils/Notifier";
+    import {Language} from "../../../../utils/Language";
+    import {UserData} from "../../../../utils/UserData";
 
     export let entity: string;
     export let id: string;
@@ -17,12 +20,72 @@
             action: bookmarkId ? 'unbookmark' : 'bookmark',
             html: '<span class="fas fa-bookmark"></span>',
             style: style,
+            disabled: loading,
         } as ActionParams;
     }
 
-    function addBookmark(): void {}
+    async function addBookmark(): Promise<void> {
+        const userData = UserData.get();
+        if (!userData) {
+            return;
+        }
 
-    function removeBookmark(): void {}
+        Notifier.notify(Language.translate('Bookmarking') + '...');
+        loading = true;
+
+        try {
+            const response = await fetch('/api/v1/Bookmark', {
+                'method': 'POST',
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
+                },
+                'body': JSON.stringify({
+                    'entityType': entity,
+                    'entityId': id,
+                }),
+            })
+
+            if (response.ok) {
+                const data = await response.json();
+                bookmarkId = data.id;
+                Notifier.notify(Language.translate('Done'), 'success');
+            }
+        } catch (e) {
+            console.error('Error on adding bookmark', e);
+        } finally {
+            loading = false;
+        }
+    }
+
+    async function removeBookmark(): Promise<void> {
+        const userData = UserData.get();
+        if (!userData || !bookmarkId) {
+            return;
+        }
+
+        Notifier.notify(Language.translate('Unbookmarking') + '...');
+        loading = true;
+
+        try {
+            const response = await fetch('/api/v1/Bookmark/' + bookmarkId, {
+                'method': 'DELETE',
+                'headers': {
+                    'Authorization-Token': btoa(userData.user.userName + ':' + userData.token),
+                    'permanently': 'true',
+                },
+            });
+
+            if (response.ok) {
+                bookmarkId = null;
+                Notifier.notify(Language.translate('Done'), 'success');
+            }
+        } catch (e) {
+            console.error('Error on removing bookmark', e);
+        } finally {
+            loading = false;
+        }
+    }
 
     function execute(e: CustomEvent): void {
         if (params.action === 'unbookmark') {

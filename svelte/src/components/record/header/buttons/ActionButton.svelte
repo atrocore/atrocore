@@ -27,7 +27,9 @@
     }
 </script>
 
-<button class={computedClassNames} data-name={params.name} data-action={params.action || params.name} data-id={params.id} type="button"
-        on:click={runAction} title={params.tooltip}>
-    {#if params.html}{@html params.html}{:else}{Language.translate(params.label)}{/if}
-</button>
+{#if !params.hidden}
+    <button class={computedClassNames} data-name={params.name} data-action={params.action || params.name}
+            data-id={params.id} type="button" on:click={runAction} title={params.tooltip} disabled={params.disabled}>
+        {#if params.html}{@html params.html}{:else}{Language.translate(params.label)}{/if}
+    </button>
+{/if}

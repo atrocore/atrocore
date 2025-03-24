@@ -62,24 +62,15 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         navigateButtonsDisabled: false,
 
+        hasPrevious: false,
+
+        hasNext: false,
+
         treeAllowed: false,
 
         sideAllowed: true,
 
         panelsList: [],
-
-        navigationButtons: {
-            previous: {
-                html: '<span class="fas fa-chevron-left"></span>',
-                title: 'Previous Entry',
-                disabled: true
-            },
-            next: {
-                html: '<span class="fas fa-chevron-right"></span>',
-                title: 'Next Entry',
-                disabled: true
-            }
-        },
 
         mode: 'detail',
 
@@ -170,46 +161,30 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 }
             }
 
-            if (this.navigationButtons) {
-                let navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
+            if (!this.navigateButtonsDisabled && !!this.model.collection) {
+                this.hasPrevious = false;
+                this.hasNext = false;
 
-                if (navigateButtonsEnabled) {
-                    this.navigationButtons.previous.disabled = true;
-                    this.navigationButtons.next.disabled = true;
+                if (this.indexOfRecord > 0) {
+                    this.hasPrevious = true;
+                }
 
-                    if (this.indexOfRecord > 0) {
-                        this.navigationButtons.previous.disabled = false;
-                    }
-
-                    if (this.indexOfRecord < this.model.collection.total - 1) {
-                        this.navigationButtons.next.disabled = false;
-                    } else {
-                        if (this.model.collection.total === -1) {
-                            this.navigationButtons.next.disabled = false;
-                        } else if (this.model.collection.total === -2) {
-                            if (this.indexOfRecord < this.model.collection.length - 1) {
-                                this.navigationButtons.next.disabled = false;
-                            }
+                if (this.indexOfRecord < this.model.collection.total - 1) {
+                    this.hasNext = true;
+                } else {
+                    if (this.model.collection.total === -1) {
+                        this.hasNext = true;
+                    } else if (this.model.collection.total === -2) {
+                        if (this.indexOfRecord < this.model.collection.length - 1) {
+                            this.hasNext = true;
                         }
                     }
-
-                    if (this.navigationButtons.previous.disabled && this.navigationButtons.next.disabled) {
-                        navigateButtonsEnabled = false;
-                    }
                 }
-
-                for (const [key, data] of Object.entries(this.navigationButtons)) {
-                    this.removeMenuItem(key);
-                    this.addMenuItem('buttons', {
-                        name: key,
-                        html: data.html,
-                        style: data.disabled ? 'default disabled' : 'default',
-                        action: key,
-                        title: this.translate(data.title)
-                    })
-                }
-
             }
+
+            this.addMenuItem('buttons', {
+                action: 'navigation'
+            });
 
             this.listenTo(this.model, 'after:change-mode', (mode) => {
                 this.mode = mode;
@@ -365,70 +340,110 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             record.executeAction(action, data, event);
         },
 
-        setupHeader: function () {
+        isPanelClosed(name) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? []
+            return (scopePreferences['closed'] || []).includes(name)
+        },
+
+        scrollToPanel(name) {
+            let panel = $('#main').find(`.panel[data-name="${name}"]`);
+            if (panel.size() > 0) {
+                const header = document.querySelector('.page-header');
+                const content = document.querySelector("main") || document.querySelector('#main');
+                panel = panel.get(0);
+
+                if (!content || !panel) return;
+
+                const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                const stickyOffset = header.offsetHeight;
+                content.scrollTo({
+                    top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
+                    behavior: "smooth"
+                });
+            }
+        },
+
+        getHeaderOptions() {
             const record = this.getView('record');
 
-            new Svelte.DetailHeader({
-                target: document.querySelector('#main main > .header'),
-                props: {
-                    params: {
-                        mode: this.mode,
-                        scope: this.scope,
-                        id: this.model.id,
-                        permissions: {
-                            canRead: this.getAcl().check(this.scope, 'read'),
-                            canEdit: this.getAcl().check(this.scope, 'edit'),
-                            canCreate: this.getAcl().check(this.scope, 'create'),
-                            canDelete: this.getAcl().check(this.scope, 'delete'),
-                            canReadStream: this.getAcl().check(this.scope, 'stream'),
-                        },
-                        breadcrumbs: this.getBreadcrumbsItems(),
-                        afterOnMount: () => {
-                            this.setupTourButton();
-                        }
+            const options = {
+                params: {
+                    mode: this.mode,
+                    scope: this.scope,
+                    id: this.model.id,
+                    permissions: {
+                        canRead: this.getAcl().check(this.scope, 'read'),
+                        canEdit: this.getAcl().check(this.scope, 'edit'),
+                        canCreate: this.getAcl().check(this.scope, 'create'),
+                        canDelete: this.getAcl().check(this.scope, 'delete'),
+                        canReadStream: this.getAcl().check(this.scope, 'stream'),
                     },
-                    recordButtons: {
-                        buttons: record.buttonList,
-                        editButtons: record.buttonEditList,
-                        dropdownButtons: record.dropdownItemList,
-                        dropdownEditButtons: record.dropdownEditItemList,
-                        additionalButtons: record.additionalButtons,
-                        additionalEditButtons: record.additionalEditButtons,
-                        headerButtons: this.getMenu(),
-                        isOverviewFilterActive: this.isOverviewFilterApply(),
-                        executeAction: (action, data, event) => {
-                            this.executeAction(action, data, event);
-                        },
+                    breadcrumbs: this.getBreadcrumbsItems(),
+                    afterOnMount: () => {
+                        this.setupTourButton();
+                    }
+                },
+                recordButtons: {
+                    buttons: record.buttonList,
+                    editButtons: record.buttonEditList,
+                    dropdownButtons: record.dropdownItemList,
+                    dropdownEditButtons: record.dropdownEditItemList,
+                    additionalButtons: record.additionalButtons,
+                    additionalEditButtons: record.additionalEditButtons,
+                    headerButtons: this.getMenu(),
+                    isOverviewFilterActive: this.isOverviewFilterApply(), // need to be added dynamically
+                    followers: this.model.get('followersNames') ?? {}, // need to be added dynamically
+                    hasPrevious: this.hasPrevious,
+                    hasNext: this.hasNext,
+                    executeAction: (action, data, event) => {
+                        this.executeAction(action, data, event);
                     },
-                    anchorNavItems: this.panelsList,
-                    anchorScrollCallback: (name, event) => {
-                        let panel = $('#main').find(`.panel[data-name="${name}"]`);
-                        if (panel.size() > 0) {
-                            const header = document.querySelector('.page-header');
-                            const content = document.querySelector("main") || document.querySelector('#main');
-                            panel = panel.get(0);
-
-                            if (!content || !panel) return;
-
-                            const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
-                            const stickyOffset = header.offsetHeight;
-                            content.scrollTo({
-                                top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
-                                behavior: "smooth"
-                            });
-                        }
+                },
+                callbacks: {
+                    onFollow: () => {
+                        let followersNames = this.model.get('followersNames') || {};
+                        followersNames[this.getUser().get('id')] = this.getUser().get('name');
+                        this.model.set('isFollowed', true);
+                        this.model.set('followersIds', Object.keys(followersNames));
+                        this.model.set('followersNames', followersNames);
+                    },
+                    onUnfollow: () => {
+                        let followersNames = Object.fromEntries(Object.entries(this.model.get('followersNames') || {}).filter(([key]) => key !== this.getUser().get('id')));
+                        this.model.set('isFollowed', false);
+                        this.model.set('followersIds', Object.keys(followersNames));
+                        this.model.set('followersNames', followersNames);
+                    },
+                },
+                anchorNavItems: this.panelsList,
+                anchorScrollCallback: (name, event) => {
+                    if (this.isPanelClosed(name)) {
+                        const panel = this.panelList.filter(p => p.name === name)[0]
+                        Backbone.trigger('create-bottom-panel', panel)
+                        this.listenTo(Backbone, 'after:create-bottom-panel', function (panel) {
+                            setTimeout(() => this.scrollToPanel(panel.name), 100)
+                        })
+                    } else {
+                        this.scrollToPanel(name);
                     }
                 }
+            };
+
+            return options;
+        },
+
+        setupHeader: function () {
+            new Svelte.DetailHeader({
+                target: document.querySelector('#main main > .header'),
+                props: this.getHeaderOptions()
             });
 
-            // this.listenTo(this.model, 'sync', function (model) {
-            //     if (model.hasChanged('name')) {
-            //         if (this.getView('header')) {
-            //             this.getView('header').reRender();
-            //         }
-            //         this.updatePageTitle();
-            //     }
-            // }, this);
+            this.listenTo(this.model, 'sync', function (model) {
+                if (model.hasChanged('name')) {
+                    window.dispatchEvent(new CustomEvent('breadcrumbs:items-updated', { detail: this.getBreadcrumbsItems() }));
+                    this.updatePageTitle();
+                }
+            }, this);
         },
 
         getBoolFilterData(link) {
@@ -612,7 +627,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 o.rootUrl = this.options.params.rootUrl;
             }
             if (!this.navigateButtonsDisabled) {
-                o.hasNext = !this.navigationButtons.next.disabled;
+                o.hasNext = this.hasNext;
             }
 
             this.treeAllowed = !o.isWide && this.isTreeAllowed();
@@ -753,90 +768,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 });
             });
         },
-
-        actionBookmark: function () {
-            $el = this.$el.find('[data-action="bookmark"]');
-            $el.addClass('disabled');
-            this.notify(this.translate('Bookmarking') + '...');
-            $.ajax({
-                url: 'Bookmark',
-                type: 'POST',
-                data: JSON.stringify({
-                    entityType: this.scope,
-                    entityId: this.model.id
-                }),
-                success: (result) => {
-                    this.model.set('bookmarkId', result.id)
-                    this.notify(this.translate('Done'), 'success')
-                    $el.removeClass('disabled');
-                },
-                error: () => {
-                    $el.removeClass('disabled');
-                }
-            });
-        },
-
-        actionUnbookmark: function () {
-            $el = this.$el.find('[data-action="unbookmark"]');
-            $el.addClass('disabled');
-            this.notify(this.translate('Unbookmarking') + '...');
-            $.ajax({
-                url: `Bookmark/${this.model.get('bookmarkId')}`,
-                type: 'DELETE',
-                headers: {
-                    'permanently': true
-                },
-                success: () => {
-                    this.notify(this.translate('Done'), 'success')
-                    this.model.set('bookmarkId', null);
-                    $el.removeClass('disabled');
-                },
-                error: function () {
-                    $el.removeClass('disabled');
-                },
-            });
-        },
-
-        actionFollow: function () {
-            $el = this.$el.find('[data-action="follow"]');
-            $el.addClass('disabled');
-            $.ajax({
-                url: this.model.name + '/' + this.model.id + '/subscription',
-                type: 'PUT',
-                success: function () {
-                    $el.remove();
-                    let followersNames = this.model.get('followersNames') || {};
-                    followersNames[this.getUser().get('id')] = this.getUser().get('name');
-                    this.model.set('isFollowed', true);
-                    this.model.set('followersIds', Object.keys(followersNames));
-                    this.model.set('followersNames', followersNames);
-                }.bind(this),
-                error: function () {
-                    $el.removeClass('disabled');
-                }.bind(this)
-            });
-        },
-
-        actionUnfollow: function () {
-            $el = this.$el.find('[data-action="unfollow"]');
-            $el.addClass('disabled');
-            $.ajax({
-                url: this.model.name + '/' + this.model.id + '/subscription',
-                type: 'DELETE',
-                success: function () {
-                    $el.remove();
-                    let followersNames = Object.fromEntries(Object.entries(this.model.get('followersNames') || {}).filter(([key]) => key !== this.getUser().get('id')));
-                    this.model.set('isFollowed', false);
-                    this.model.set('followersIds', Object.keys(followersNames));
-                    this.model.set('followersNames', followersNames);
-                }.bind(this),
-                error: function () {
-                    $el.removeClass('disabled');
-                }.bind(this)
-            });
-
-        },
-
 
         getBreadcrumbsItems: function (isAdmin = false) {
             const result = Dep.prototype.getBreadcrumbsItems.call(this, isAdmin) || [];

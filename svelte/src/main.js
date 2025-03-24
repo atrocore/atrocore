@@ -24,6 +24,7 @@ import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
 import Favorites from "./components/layout-profile/navigation/Favorites.svelte";
 import TreePanel from "./components/record/TreePanel.svelte";
+import BaseHeader from "./components/record/header/BaseHeader.svelte";
 import ListHeader from "./components/record/header/ListHeader.svelte";
 import DetailHeader from "./components/record/header/DetailHeader.svelte";
 
@@ -38,4 +39,4 @@ window.SvelteStorage = Storage;
 window.driver = driver;
 window.tippy = tippy;
 
-export {UpdatePanel, JobManagerIcon, LayoutComponent, TreePanel, ApiRequestComponent, Script, Navigation, Favorites, ListHeader, DetailHeader};
+export {UpdatePanel, JobManagerIcon, LayoutComponent, TreePanel, ApiRequestComponent, Script, Navigation, Favorites, BaseHeader, ListHeader, DetailHeader};
