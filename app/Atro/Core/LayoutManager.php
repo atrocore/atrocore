@@ -611,6 +611,7 @@ class LayoutManager
                 if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
                     $relationScope = ucfirst($linkData['relationName']);
                     $relationFields = array_keys($this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? []);
+                    $relationFields[] = 'id';
                     $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
                     $fields = array_merge($fields, $relationFields);
                 }

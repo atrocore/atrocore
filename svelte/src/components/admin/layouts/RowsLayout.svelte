@@ -44,12 +44,28 @@
                     const movedItem = selectedFields[evt.oldIndex]
                     selectedFields.splice(evt.oldIndex, 1)
 
-                    availableGroups = availableGroups.map(group => {
-                        if (group.name === ul.attributes['data-name'].value) {
-                            group.fields.splice(evt.newIndex, 0, movedItem)
+                    let itemGroup = availableGroups.find(group => !group.prefix)
+
+                    availableGroups.forEach(group => {
+                        if (group.prefix) {
+                            if (movedItem.name.startsWith(group.prefix)) {
+                                itemGroup = group
+                            }
                         }
-                        return group
                     })
+
+                    if (itemGroup.name !== ul.attributes['data-name'].value) {
+                        const correctUl = document.querySelector(`#layout ul.disabled[data-name="${itemGroup.name}"]`)
+                        if (correctUl.children.length) {
+                            correctUl.insertBefore(evt.item, correctUl.children[0]);
+                        } else {
+                            correctUl.appendChild(evt.item);
+                        }
+                        itemGroup.fields.unshift(movedItem)
+                    } else {
+                        itemGroup.fields.splice(evt.newIndex, 0, movedItem)
+                    }
+                    availableGroups = [...availableGroups]
                 }
                 selectedFields = [...selectedFields];
             }
@@ -63,19 +79,23 @@
                     const toUl = evt.to.closest('.connected')
                     let movedItem = null
                     if (toUl.classList.contains('disabled')) {
-                        // remove from old Group
-                        for (let group of availableGroups) {
-                            if (group.name === ul.attributes['data-name'].value) {
-                                [movedItem] = group.fields.splice(evt.oldIndex, 1);
-                                break
+                        if (toUl !== ul) {
+                            // cancel drop
+                            if (evt.oldIndex >= evt.from.children.length) {
+                                evt.from.appendChild(evt.item);
+                            } else {
+                                evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
                             }
+                            return
                         }
-                        if (movedItem) {
-                            for (let group of availableGroups) {
-                                if (group.name === toUl.attributes['data-name'].value) {
+
+                        for (let group of availableGroups) {
+                            if (group.name === toUl.attributes['data-name'].value) {
+                                [movedItem] = group.fields.splice(evt.oldIndex, 1);
+                                if (movedItem) {
                                     group.fields.splice(evt.newIndex, 0, movedItem)
-                                    break
                                 }
+                                break
                             }
                         }
                     } else {
