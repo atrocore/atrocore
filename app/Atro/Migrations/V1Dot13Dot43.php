@@ -17,17 +17,23 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 
-class V1Dot13Dot42 extends Base
+class V1Dot13Dot43 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-03-24 08:00:00');
+        return new \DateTime('2025-03-24 14:00:00');
     }
 
     public function up(): void
     {
-        $this->execute("DROP INDEX idx_layout_layout_profile;");
-        $this->execute("DROP INDEX idx_user_entity_layout_unique;");
+        if ($this->isPgSQL()) {
+            $this->execute("DROP INDEX idx_layout_layout_profile;");
+            $this->execute("DROP INDEX idx_user_entity_layout_unique;");
+        } else {
+            $this->execute("DROP INDEX IDX_LAYOUT_LAYOUT_PROFILE ON layout;");
+            $this->execute("DROP INDEX IDX_USER_ENTITY_LAYOUT_UNIQUE ON user_entity_layout;");
+        }
+
         $this->execute("ALTER TABLE user_entity_layout ADD hash VARCHAR(255) DEFAULT NULL;");
         $this->execute("ALTER TABLE layout ADD hash VARCHAR(255) DEFAULT NULL;");
 
@@ -39,6 +45,7 @@ class V1Dot13Dot42 extends Base
                 $records = $this->getConnection()->createQueryBuilder()
                     ->from($table)
                     ->select('*')
+                    ->where('hash is null')
                     ->setMaxResults($limit)
                     ->setFirstResult($offset)
                     ->fetchAllAssociative();
