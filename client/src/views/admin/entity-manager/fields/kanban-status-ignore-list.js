@@ -23,28 +23,31 @@ Espo.define('views/admin/entity-manager/fields/kanban-status-ignore-list', 'view
 
         setupOptions() {
             const type = this.getMetadata().get(['entityDefs', this.model.get('code'), 'fields', this.model.get('statusField'), 'type'])
+
             if (type === 'enum') {
                 this.params.options = this.getMetadata().get(['entityDefs', this.model.get('code'), 'fields', this.model.get('statusField'), 'options']) || [];
                 this.translatedOptions = {'': ''};
                 this.params.options.forEach(option => {
                     this.translatedOptions[option] = this.getLanguage().translateOption(option, this.model.get('statusField'), this.model.get('code'));
                 });
-            } else {
+            } else if (type === 'extensibleEnum') {
                 const extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.get('code'), 'fields', this.model.get('statusField'), 'extensibleEnumId'])
-                let key = 'extensible_enum_' + extensibleEnumId;
+                if (extensibleEnumId) {
+                    let key = 'extensible_enum_' + extensibleEnumId;
 
-                if (!Espo[key]) {
-                    Espo[key] = [];
-                    this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
-                        Espo[key] = res;
-                    });
+                    if (!Espo[key]) {
+                        Espo[key] = [];
+                        this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
+                            Espo[key] = res;
+                        });
+                    }
+
+                    this.params.options = Espo[key].map(item => item.id)
+                    this.params.translatedOptions = {'': ''}
+                    Espo[key].forEach(item => {
+                        this.params.translatedOptions[item.id] = item.name
+                    })
                 }
-
-                this.params.options = Espo[key].map(item => item.id)
-                this.params.translatedOptions = {'': ''}
-                Espo[key].forEach(item => {
-                    this.params.translatedOptions[item.id] = item.name
-                })
             }
         },
 

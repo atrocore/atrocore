@@ -118,15 +118,6 @@
   },
   {
     "label": "hierarchyManagement",
-    "dynamicLogicVisible": {
-      "conditionGroup": [
-        {
-          "type": "equals",
-          "attribute": "type",
-          "value": "Hierarchy"
-        }
-      ]
-    },
     "rows": [
       [
         {

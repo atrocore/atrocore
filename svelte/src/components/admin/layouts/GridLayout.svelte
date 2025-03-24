@@ -23,10 +23,6 @@
             type: 'enum',
             options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
             translation: 'LayoutManager.options.style'
-        },
-        dynamicLogicVisible: {
-            type: 'base',
-            view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
         }
     };
 
@@ -78,11 +74,10 @@
     }
 
     function getRelationScope(leftScope: string, rightScope: string) {
-        const links = Metadata.get(['entityDefs', leftScope, 'links']) ?? {}
-        for (const link of Object.keys(links)) {
-            if (links[link]?.entity === rightScope && !!links[link].relationName) {
-                return Espo.utils.upperCaseFirst(links[link].relationName)
-            }
+        const parts = rightScope.split('.')
+        const link = Metadata.get(['entityDefs', parts[0], 'links', parts[1]]) ?? {}
+        if (link.entity === leftScope && !!link.relationName) {
+            return Espo.utils.upperCaseFirst(link.relationName)
         }
         return ''
     }

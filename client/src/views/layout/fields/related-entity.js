@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/layout/fields/related-entity', 'views/layout/fields/entity', function (Dep) {
+Espo.define('views/layout/fields/related-entity', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 
@@ -22,20 +22,64 @@ Espo.define('views/layout/fields/related-entity', 'views/layout/fields/entity', 
                 return false
             }
 
-            const links = this.getMetadata().get(`entityDefs.${scope}.links`) || {}
 
-            const link = Object.keys(links)
-                .find(link => links[link]?.entity === entity)
-
-
-            return !!link && this.getMetadata().get('scopes.' + scope + '.entity') &&
+            return this.getMetadata().get('scopes.' + scope + '.entity') &&
                 this.getMetadata().get('scopes.' + scope + '.type') !== 'Relation' &&
                 this.getMetadata().get('scopes.' + scope + '.layouts');
         },
 
+        getAvailableOptions: function () {
+            let options = [];
+
+            for (const scope of this.getMetadata().getScopeList()) {
+                if (this.isScopeAvailable(scope)) {
+                    const links = this.getMetadata().get(`entityDefs.${scope}.links`) || {}
+                    const linkNames = Object.keys(links)
+                        .filter(link => links[link]?.entity === this.model.get('entity'))
+                    linkNames.forEach(linkName => {
+                        options.push({
+                            name: `${scope}.${linkName}`,
+                            scope: scope,
+                            link: linkName,
+                            label: this.translate(scope, 'scopeName')
+                        })
+                    })
+                }
+            }
+
+            options.forEach(option => {
+                const similar = options.filter(o => o.label === option.label)
+                if (similar.length > 1) {
+                    similar.forEach(option => {
+                        const name = this.translate(option.link, 'fields', option.scope)
+                        option.label = option.label + ` (${name})`
+                    })
+                }
+            })
+
+            options = options.sort(function (v1, v2) {
+                return v1.label.localeCompare(v2.label);
+            });
+
+            return options;
+        },
+
+        setupOptions: function () {
+           const options = this.getAvailableOptions()
+
+            this.params.options = options.map(option => option.name);
+            this.params.translatedOptions = options.reduce((prev, curr) => {
+                prev[curr.name] = curr.label;
+                return prev;
+            }, {})
+        },
 
         setup: function () {
+            this.setupOptions();
             Dep.prototype.setup.call(this);
+            if (!this.model.get(this.name) && this.params.options.length) {
+                this.model.set(this.name, this.params.options[0])
+            }
 
             this.listenTo(this.model, 'change:entity change:viewType', () => {
                 this.setupOptions()

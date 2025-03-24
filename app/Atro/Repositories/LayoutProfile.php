@@ -60,7 +60,7 @@ class LayoutProfile extends Base
 
         if ((empty($options['cascadeChange']) && $entity->isAttributeChanged('isDefault') && $entity->get('isDefault') === true) ||
             $entity->isAttributeChanged('hideShowFullList') || $entity->isAttributeChanged('navigation')) {
-            $this->getInjection('dataManager')->clearCache();
+            $this->getInjection('dataManager')->clearCache(true);
         }
     }
 

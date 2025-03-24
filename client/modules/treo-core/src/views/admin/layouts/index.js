@@ -15,17 +15,25 @@ Espo.define('treo-core:views/admin/layouts/index', 'class-replace!treo-core:view
 
         events: _.extend({}, Dep.prototype.events, {
             'click button[data-action="resetAllToDefault"]': function () {
-                const profile = (Espo['link_LayoutProfile'] || []).find(l => l.id === this.model.get('layoutProfileId'))
-                this.confirm(this.translate('resetAllToDefaultConfirm', 'messages').replace(':name', profile ? profile.name : 'Custom'), function () {
-                    this.resetAllToDefault();
-                }, this);
+                const options = this.getView('layoutProfile')?.params?.linkOptions || []
+                const profile = options.find(l => l.id === this.model.get('layoutProfileId'))
+                if (profile) {
+                    this.confirm(this.translate('resetAllToDefaultConfirm', 'messages').replace(':name', profile.name), function () {
+                        this.resetAllToDefault();
+                    }, this);
+                } else {
+                    this.notify('No layout profile selected', 'error')
+                }
             },
         }),
 
         resetAllToDefault: function () {
             this.notify('Saving...');
-            this.ajaxPostRequest('Layout/action/resetAllToDefault?layoutProfileId=' + this.model.get('layoutProfileId') || 'custom').then(() => {
+            this.ajaxPostRequest('Layout/action/resetAllToDefault?layoutProfileId=' + this.model.get('layoutProfileId')).then(() => {
                 this.notify('Done', 'success');
+                setTimeout(() => {
+                    Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
+                }, 2000)
             });
         },
     })

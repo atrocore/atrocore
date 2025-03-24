@@ -28,6 +28,8 @@ body {
     --notice: #fcf8e3;
     --information: #e0efff;
     --error: #f2dede;
+    --highlighting-color-for-required: #f0f8ff;
+    --highlighting-color-for-data-quality: #fff8B8;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
@@ -6577,7 +6579,7 @@ button.close {
 }
 
 #general-container .modal-body {
-    padding: 14px;
+    padding: 20px;
 }
 
 .modal-body .row {
@@ -21675,7 +21677,7 @@ td[data-name="draggableIcon"] {
 .full-page-modal .html-preview {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
 }
 
 .full-page-modal .html-preview .body-container {
@@ -24440,4 +24442,16 @@ a[data-attr-tooltip=true][data-tippy=true] {
 
 a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-decoration: solid underline;
+}
+
+.pressable-icon {
+    cursor: pointer;
+}
+
+.highlighted-required {
+    background-color: var(--highlighting-color-for-required);
+}
+
+.highlighted-qc {
+    background-color: var(--highlighting-color-for-data-quality);
 }

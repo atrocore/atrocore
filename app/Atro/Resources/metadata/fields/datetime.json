@@ -1,45 +1,49 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name": "defaultDate",
-         "type": "varchar"
-      },
-      {
-         "name":"after",
-         "type":"varchar"
-      },
-      {
-         "name":"before",
-         "type":"varchar"
-      },
-      {
-         "type": "bool",
-         "name":"useNumericFormat"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
-         "name": "unique",
-         "type": "bool"
-      },
-      {
-         "name": "index",
-         "type": "bool"
-      }
-   ],
-   "filter": true,
-   "auditable": true,
-   "qbFilterType": "datetime",
-   "fieldDefs":{
-      "notNull":false
-   },
-   "personalData": true,
-   "group": "date"
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "defaultDate",
+      "type": "varchar"
+    },
+    {
+      "name": "after",
+      "type": "varchar"
+    },
+    {
+      "name": "before",
+      "type": "varchar"
+    },
+    {
+      "type": "bool",
+      "name": "useNumericFormat"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    },
+    {
+      "name": "index",
+      "type": "bool"
+    },
+    {
+      "name": "showUser",
+      "type": "bool"
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "qbFilterType": "datetime",
+  "fieldDefs": {
+    "notNull": false
+  },
+  "personalData": true,
+  "group": "date"
 }

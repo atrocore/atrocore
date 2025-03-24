@@ -228,7 +228,7 @@ class Hierarchy extends Base
         }
     }
 
-    public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId): void
+    public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId, bool $sortAsc = true): void
     {
         /** @var Relation $relationRepository */
         $relationRepository = $this->getEntityManager()->getRepository(ucfirst(Util::toCamelCase($this->hierarchyTableName)));
@@ -253,13 +253,24 @@ class Hierarchy extends Base
         $sortedIds = [];
         if ($position === 'after') {
             foreach ($ids as $id) {
-                $sortedIds[] = $id;
-                if ($id === $target) {
-                    $sortedIds[] = $entityId;
+                if ($sortAsc) {
+                    $sortedIds[] = $id;
+                    if ($id === $target) {
+                        $sortedIds[] = $entityId;
+                    }
+                } else {
+                    if ($id === $target) {
+                        $sortedIds[] = $entityId;
+                    }
+                    $sortedIds[] = $id;
                 }
             }
         } elseif ($position === 'inside') {
-            $sortedIds = array_merge([$entityId], $ids);
+            if ($sortAsc) {
+                $sortedIds = array_merge([$entityId], $ids);
+            } else {
+                $sortedIds = array_merge($ids, [$entityId]);
+            }
         }
 
         $collection = [];
@@ -702,8 +713,9 @@ class Hierarchy extends Base
 
             $subQuery->setFirstResult(0);
             $subQuery->setMaxResults(null);
+            $subQuery->orderBy("$tableAlias.id");
             $selectCountQuery
-                ->andWhere($expr->in("$tableAlias.id", $subQuery->select("$tableAlias.id")->getSQL()));
+                ->andWhere($expr->in("e1.id", $subQuery->select("$tableAlias.id")->getSQL()));
 
             $qb->select("$tableAlias.*", "({$selectCountQuery->andWhere("$tableAlias.id = r1.parent_id ".($withDeleted?"":"and r1.deleted=:deleted"))->getSQL()}) as children_count");
             if (!$withDeleted) {

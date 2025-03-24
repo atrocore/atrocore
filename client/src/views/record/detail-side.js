@@ -317,6 +317,11 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
             $(window).trigger('resize');
         },
 
+        isFieldInDetailLayout(field) {
+            const layout = JSON.stringify(this.recordViewObject.gridLayout)
+            return layout.includes('"'+field.replace(':','')+'"');
+        },
+
         setupDefaultPanel: function () {
             this.defaultPanelDefs = Espo.Utils.cloneDeep(this.defaultPanelDefs);
 
@@ -327,6 +332,9 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                     || (scopeDefs.hasAssignedUser && fieldDefs.name === ':assignedUser' && this.getAcl().check('User', 'read'))
                     || (scopeDefs.hasTeam && fieldDefs.name === 'teams' && this.getAcl().check('Team', 'read'));
             });
+
+
+            this.defaultPanelDefs.options.fieldList = this.defaultPanelDefs.options.fieldList.filter(fieldDefs => !this.isFieldInDetailLayout(fieldDefs.name));
 
             let hasAnyField = (this.defaultPanelDefs.options.fieldList || []).some(fieldDefs => {
                 if ((fieldDefs.name === ':ownerUser' && this.model.hasLink('ownerUser')) || (fieldDefs.name === ':assignedUser' && (this.model.hasLink('assignedUsers') || this.model.hasLink('assignedUser')))) {

@@ -436,6 +436,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         init: function () {
             this.listLayout = this.options.listLayout || this.listLayout;
+            this.layoutData = this.options.layoutData || this.layoutData
             this.type = this.options.type || this.type;
 
             this.layoutName = this.options.layoutName || this.layoutName || this.type;
@@ -2336,7 +2337,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getRelationScope() {
-            const entityType = this.options.layoutRelatedScope
+            const entityType = (this.options.layoutRelatedScope ?? '').split('.')[0]
             if (entityType) {
                 return Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', entityType, 'links', this.relationName, 'relationName']))
             }
@@ -2403,11 +2404,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.createView('layoutConfigurator' + idx, "views/record/layout-configurator", {
                     scope: this.scope,
                     viewType: this.layoutName,
-                    relatedScope: this.getParentModel()?.urlRoot,
+                    relatedScope: this.options.layoutRelatedScope,
                     layoutData: this.layoutData,
                     el: el,
                 }, (view) => {
-                    view.on("refresh", () => this.refreshLayout())
+                    view.on("refresh", () => {
+                        if (this.options.disableRefreshLayout) {
+                            this.trigger('refresh-layout')
+                        } else {
+                            this.refreshLayout()
+                        }
+                    })
                     view.render()
                 })
             })
@@ -2449,6 +2456,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             el?.parent().find('.icons-container').remove();
                             const icons = $('<sup class="status-icons icons-container"></sup>');
                             (this.getStatusIcons(view.model) || []).forEach(el => icons.append(el));
+                            this.afterRenderStatusIcons(icons, view.model);
                             el?.parent().append('&nbsp;');
                             el?.parent().append(icons);
                         })
@@ -2474,6 +2482,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.trigger('after:build-rows');
                 }
             }
+        },
+
+        afterRenderStatusIcons(icons, model) {
+            // do something
         },
 
         showMoreRecords: function (collection, $list, $showMore, callback) {

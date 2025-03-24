@@ -21,20 +21,40 @@ use Espo\ORM\Entity;
 
 class ExtensibleEnumExtensibleEnumOption extends Relation
 {
+    public function getNextSorting(Entity $entity): int
+    {
+        $max = $this->getConnection()->createQueryBuilder()
+            ->select('t.sorting')
+            ->from('extensible_enum_extensible_enum_option', 't')
+            ->leftJoin('t', 'extensible_enum_option', 'o', 'o.id=t.extensible_enum_option_id')
+            ->where('t.deleted=:false')
+            ->andWhere('o.deleted=:false')
+            ->andWhere('t.extensible_enum_id=:extensibleEnumId')
+            ->orderBy('t.sorting', 'DESC')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('extensibleEnumId', $entity->get('extensibleEnumId'))
+            ->fetchOne();
+
+        return empty($max) ? 0 : $max + 10;
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew() && $entity->get('sorting') === null) {
-            $entity->set('sorting', time() - (new \DateTime('2023-01-01'))->getTimestamp());
+        if ($entity->get('sorting') === null) {
+            $entity->set('sorting', $this->getNextSorting($entity));
         }
 
         parent::beforeSave($entity, $options);
     }
 
-
-
     public function updateSortOrder(string $extensibleEnumId, array $extensibleEnumOptionIds): void
     {
-        $collection = $this->where(['extensibleEnumId' => $extensibleEnumId, 'extensibleEnumOptionId' => $extensibleEnumOptionIds])->find();
+        $collection = $this
+            ->where([
+                'extensibleEnumId'       => $extensibleEnumId,
+                'extensibleEnumOptionId' => $extensibleEnumOptionIds
+            ])
+            ->find();
         if (empty($collection[0])) {
             return;
         }
@@ -55,6 +75,7 @@ class ExtensibleEnumExtensibleEnumOption extends Relation
     {
         $this->validateSystemOptions($entity);
         $this->validateOptionsBeforeUnlink($entity);
+
         parent::beforeRemove($entity, $options);
     }
 
@@ -131,6 +152,4 @@ class ExtensibleEnumExtensibleEnumOption extends Relation
             }
         }
     }
-
-
 }

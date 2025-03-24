@@ -1,70 +1,60 @@
 {
-    "fields": {
-        "number": {
-            "type": "int",
-            "index": true
-        },
-        "targetType": {
-            "type": "enum",
-            "len": 60,
-            "view": "views/action-history-record/fields/target-type",
-            "translation": "Global.scopeNames"
-        },
-        "target": {
-            "type": "linkParent",
-            "view": "views/action-history-record/fields/target"
-        },
-        "data": {
-            "type": "jsonObject"
-        },
-        "action": {
-            "type": "enum",
-            "len": 8,
-            "optionsIds": ["read", "update", "create", "delete","restore"],
-            "options": ["read", "update", "create", "delete","restore"]
-        },
-        "createdAt": {
-            "type": "datetime"
-        },
-        "user": {
-            "type": "link"
-        },
-        "ipAddress": {
-            "type": "varchar",
-            "len": 42,
-            "maxLength": "39"
-        },
-        "authToken": {
-            "type": "link"
-        },
-        "authLogRecord": {
-            "type": "link"
-        }
+  "fields": {
+    "data": {
+      "type": "jsonObject",
+      "readOnly": true
     },
-    "links": {
-        "user": {
-            "type": "belongsTo",
-            "entity": "User"
-        },
-        "target": {
-            "type": "belongsToParent"
-        },
-        "authToken": {
-            "type": "belongsTo",
-            "entity": "AuthToken",
-            "foreignName": "id",
-            "foreign": "actionHistoryRecords"
-        },
-        "authLogRecord": {
-            "type": "belongsTo",
-            "entity": "AuthLogRecord",
-            "foreignName": "id",
-            "foreign": "actionHistoryRecords"
-        }
+    "action": {
+      "type": "varchar",
+      "readOnly": true,
+      "len": 8
     },
-    "collection": {
-        "sortBy": "number",
-        "asc": false,
-        "textFilterFields": ["ipAddress", "userName"]
+    "controllerName": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "createdAt": {
+      "type": "datetime"
+    },
+    "user": {
+      "type": "link",
+      "readOnly": true
+    },
+    "ipAddress": {
+      "type": "varchar",
+      "readOnly": true,
+      "len": 42,
+      "maxLength": "39"
+    },
+    "authToken": {
+      "type": "link",
+      "readOnly": true
+    },
+    "authLogRecord": {
+      "type": "link",
+      "readOnly": true
     }
+  },
+  "links": {
+    "user": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "authToken": {
+      "type": "belongsTo",
+      "entity": "AuthToken",
+      "foreignName": "id",
+      "foreign": "actionHistoryRecords"
+    },
+    "authLogRecord": {
+      "type": "belongsTo",
+      "entity": "AuthLogRecord",
+      "foreignName": "id",
+      "foreign": "actionHistoryRecords"
+    }
+  },
+  "collection": {
+    "sortBy": "id",
+    "asc": false
+  }
 }

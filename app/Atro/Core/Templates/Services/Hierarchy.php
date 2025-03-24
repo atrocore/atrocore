@@ -522,7 +522,12 @@ class Hierarchy extends Record
             if (!$this->getAcl()->check($entity, 'edit')) {
                 throw new Forbidden();
             }
-            $this->getRepository()->updatePositionInTree((string)$id, (string)$data->_position, (string)$data->_target, (string)$data->parentId);
+
+            $sortAsc = true;
+            if (property_exists($data, '_sortAsc')) {
+                $sortAsc = $data->_sortAsc === 'true';
+            }
+            $this->getRepository()->updatePositionInTree((string)$id, (string)$data->_position, (string)$data->_target, (string)$data->parentId, $sortAsc);
             return $this->getEntity($id);
         }
 

@@ -227,6 +227,20 @@
             }
           ]
         }
+      },
+      "showUser": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "code",
+              "type": "in",
+              "value": [
+                "createdAt",
+                "modifiedAt"
+              ]
+            }
+          ]
+        }
       }
     }
   }

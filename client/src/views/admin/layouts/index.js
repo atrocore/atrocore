@@ -69,7 +69,7 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                             return;
                         }
                         const relatedEntity = this.getView("relatedEntity")
-                        if (relatedEntity && this.model.get('relatedEntity') && !relatedEntity.getAvailableOptions().includes(this.model.get('relatedEntity'))) {
+                        if (relatedEntity && this.model.get('relatedEntity') && !relatedEntity.getAvailableOptions().find(o => o.name === this.model.get('relatedEntity'))) {
                             return;
                         }
                         this.openLayout(this.model.get('entity'), this.model.get('viewType'), this.model.get('relatedEntity') ?? null, this.model.get('layoutProfileId'))
