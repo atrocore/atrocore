@@ -17,7 +17,12 @@ class LoggingConnection extends \Doctrine\DBAL\Connection
     {
         if (isset($GLOBALS['debugSQL'])) {
             $start = microtime(true);
-            $result = parent::executeQuery($sql, $params, $types);
+            try {
+                $result = parent::executeQuery($sql, $params, $types);
+            } catch (\Exception $e) {
+                // for xdebug break point
+                throw $e;
+            }
             $executionTime = number_format((microtime(true) - $start) * 1000, 2);
 
             $GLOBALS['debugSQL'][] = "[{$executionTime}ms] " . $sql .
@@ -33,7 +38,12 @@ class LoggingConnection extends \Doctrine\DBAL\Connection
     {
         if (isset($GLOBALS['debugSQL'])) {
             $start = microtime(true);
-            $result = parent::executeStatement($sql, $params, $types);
+            try {
+                $result = parent::executeStatement($sql, $params, $types);
+            } catch (\Exception $e) {
+                // for xdebug break point
+                throw $e;
+            }
             $executionTime = number_format((microtime(true) - $start) * 1000, 2);
 
             $GLOBALS['debugSQL'][] = "[{$executionTime}ms] " . $sql .
