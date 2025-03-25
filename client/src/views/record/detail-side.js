@@ -113,11 +113,11 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
             this.panelList = this.options.panelList || this.panelList;
             this.scope = this.entityType = this.options.model.name;
 
-            this.recordHelper = this.options.recordHelper;
+                                                        this.recordHelper = this.options.recordHelper;
 
-            this.panelList = Espo.Utils.clone(this.panelList);
+                                                        this.panelList = Espo.Utils.clone(this.panelList);
 
-            this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
+                                                        this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
 

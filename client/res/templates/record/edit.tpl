@@ -18,7 +18,7 @@
     {{/unless}}
 
     <div class="row">
-        <div class="overview {{#if isWide}}col-md-12{{else}}{{#if isSmall}}col-md-7{{else}}{{#if side}}col-md-8{{else}}col-md-12{{/if}}{{/if}}{{/if}}">
+        <div class="overview">
             <div class="middle">{{{middle}}}</div>
             <div class="extra">{{{extra}}}</div>
             <div class="bottom">{{{bottom}}}</div>

@@ -255,8 +255,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             if (this.treeAllowed) {
                 const view = this.getView('record')
                 window.treePanelComponent = new Svelte.TreePanel({
-                    target: $(`${this.options.el}`).get(0),
-                    anchor: $(`${this.options.el} .tree-panel-anchor`).get(0),
+                    target: $(`${this.options.el} .content-wrapper`).get(0),
+                    anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
                     props: {
                         scope: this.scope,
                         model: this.model,
@@ -285,7 +285,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         scope: this.scope,
                         viewType: 'leftSidebar',
                         layoutData: window.treePanelComponent.getLayoutData(),
-                        el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
+                        el: $(`${this.options.el} .content-wrapper .catalog-tree-panel .layout-editor-container`).get(0),
                     }, (view) => {
                         view.on("refresh", () => {
                             window.treePanelComponent.refreshLayout()
@@ -296,12 +296,44 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
                 view.onTreePanelRendered();
             }
+
+            window.rightSideViewComponent = new Svelte.SideView({
+                target:  $(`${this.options.el} .content-wrapper`).get(0),
+                props: {
+                    scope: this.scope,
+                    model: this.model,
+                    mode: 'detail',
+                    loadSummary: () => {
+                           let el = this.options.el + ' .right-side-view .summary'
+                            let recordView = this.getView('record');
+                            recordView.createRightSideView(el, (view) => {
+                                if (this.getUser().isAdmin()) {
+                                    this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                                        scope: this.scope,
+                                        viewType: 'rightSideView',
+                                        layoutData: recordView.layoutSideViewData,
+                                        el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
+                                    }, (view) => {
+                                        view.on("refresh", () => {
+                                            recordView.refreshRightSideLayout()
+                                        })
+                                        view.render()
+                                    })
+                                }
+                                view.render();
+                            })
+                    },
+                    callbacks: {
+
+                    }
+                }
+            })
         },
 
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
-                el: '#main > main > .header',
+                el: '#main main > .header',
                 scope: this.scope
             }, view => {
                 this.listenTo(view, 'after:render', () => {
@@ -490,7 +522,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         setupRecord: function () {
             const o = {
                 model: this.model,
-                el: '#main > main > .record',
+                el: '#main main > .record',
                 scope: this.scope
             };
             this.optionsToPass.forEach(function (option) {

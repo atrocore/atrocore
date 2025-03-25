@@ -73,6 +73,7 @@ class Layout extends Base
                         }
                     }
                     break;
+                case 'rightSideView':
                 case 'detail':
                     $repository = $this->getEntityManager()->getRepository('LayoutSection');
                     $rowItemRepository = $this->getEntityManager()->getRepository('LayoutRowItem');
@@ -181,45 +182,6 @@ class Layout extends Base
                     foreach ($relationshipItems as $relationshipItem) {
                         if (!in_array($relationshipItem, $processedRelationships)) {
                             $this->getEntityManager()->removeEntity($relationshipItem);
-                        }
-                    }
-                    break;
-                case 'sidePanelsDetail':
-                    $repository = $this->getEntityManager()->getRepository('LayoutSidePanelItem');
-                    $panelItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
-                    $processedItems = [];
-
-                    $index = 0;
-                    foreach ($data as $key => $item) {
-                        $panelItemEntity = null;
-                        if (!empty($item['id'])) {
-                            foreach ($panelItems as $panelItem) {
-                                if ($panelItem->get('id') === $item['id']) {
-                                    $panelItemEntity = $panelItem;
-                                    $processedItems[] = $panelItemEntity;
-                                }
-                            }
-                        }
-                        if (empty($panelItemEntity)) {
-                            $panelItemEntity = $repository->get();
-                        }
-
-                        $panelItemEntity->set([
-                            'layoutId'  => $entity->get('id'),
-                            'name'      => $key,
-                            'style'     => $item['style'] ?? '',
-                            'sticked'   => $item['sticked'] ?? false,
-                            'disabled'  => $item['disabled'] ?? false,
-                            'sortOrder' => $index,
-                        ]);
-
-                        $this->getEntityManager()->saveEntity($panelItemEntity);
-                        $index++;
-                    }
-
-                    foreach ($panelItems as $panelItem) {
-                        if (!in_array($panelItem, $processedItems)) {
-                            $this->getEntityManager()->removeEntity($panelItem);
                         }
                     }
                     break;

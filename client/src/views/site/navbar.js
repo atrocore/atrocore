@@ -32,6 +32,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
         },
 
         events: {
+
             'mouseover .menu:not(.menu-open)': function(e) {
                 e.preventDefault();
                 this.menuShouldBeOpen = true;
@@ -40,76 +41,11 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
                 this.handleMenuVisibility(e);
             },
-            'mouseover .navbar-toggle': function(e){
-                e.preventDefault();
-                this.menuShouldBeOpen = true;
-                this.handleMenuVisibility(e);
-            },
-            'mouseleave .menu': function(e) {
-                this.handleMouseLeave(e);
-            },
-            'mouseleave .navbar-toggle': function(e) {
-                this.handleMouseLeave(e);
-            },
-            'click .menu.open-menu a.nav-link': function (e) {
-                var $a = $(e.currentTarget);
-                var href = $a.attr('href');
-                if (href && href != '#') {
-                    this.$el.find('.menu').removeClass('open-menu');
-                }
-            },
-            'click .navbar-collapse.in a.nav-link': function (e) {
-                var $a = $(e.currentTarget);
-                var href = $a.attr('href');
-                if (href && href != '#') {
-                    this.$el.find('.navbar-collapse.in').collapse('hide');
-                }
-            },
-            'click [data-action="quickCreate"]': function (e) {
-                e.preventDefault();
-                var scope = $(e.currentTarget).data('name');
-                this.quickCreate(scope);
-            },
-            'click a.action': function (e) {
-                var $el = $(e.currentTarget);
-
-                var action = $el.data('action');
-                var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                if (typeof this[method] == 'function') {
-                    var data = $el.data();
-                    this[method](data, e);
-                    e.preventDefault();
-                }
-            },
             'transitionend .menu' : function(e) {
                 if(e.originalEvent.propertyName === 'transform' && !this.$el.find('.menu').hasClass('open-menu')) {
                     this.$el.find('.menu').addClass('not-collapsed');
                     this.$el.find('.menu').off('transitionend');
                 }
-            },
-            'click [data-action="configureMenu"]': function(e) {
-                if(!this.getUser().isAdmin()) {
-                    return;
-                }
-                this.notify('Loading');
-                this.getModelFactory().create('LayoutProfile', (model) => {
-                    model.id = this.getPreferences().get('layoutProfileId');
-                    model.fetch().success(() => {
-                        this.notify(false);
-                        this.createView('edit', 'views/layout-profile/modals/navigation', {
-                            field: 'navigation',
-                            model: model
-                        }, view => {
-                            view.render();
-                            this.listenTo(model, 'sync', () => {
-                                this.getPreferences().set('ldNavigation', this.tabList =  model.get('navigation'));
-                                this.setup();
-                                this.reRender();
-                            });
-                        });
-                    });
-                })
-
             },
             'click .navbar-toggle': function (e) {
                 if (this.$el.find('.menu').hasClass('open-menu')) {

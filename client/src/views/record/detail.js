@@ -44,6 +44,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         layoutName: 'detail',
 
+        sideLayoutName: 'rightSideView',
+
         fieldsMode: 'detail',
 
         gridLayout: null,
@@ -115,7 +117,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         middleView: 'views/record/detail-middle',
 
-        sideView: 'views/record/detail-side',
+        rightSideView: 'views/record/right-side-view',
 
         bottomView: 'views/record/detail-bottom',
 
@@ -207,7 +209,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionEdit: function () {
             if (!this.editModeDisabled) {
                 this.setEditMode();
-                this.resetSidebar();
             } else {
                 var options = {
                     id: this.model.id,
@@ -330,7 +331,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionCancelEdit: function () {
             this.cancelEdit();
-            this.resetSidebar();
         },
 
         actionSelfAssign: function () {
@@ -770,13 +770,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     bottomView.showPanel(name);
                 }
             }
-
-            var sideView = this.getView('side');
-            if (sideView) {
-                if ('showPanel' in sideView) {
-                    sideView.showPanel(name);
-                }
-            }
         },
 
         hidePanel: function (name) {
@@ -791,13 +784,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (bottomView) {
                 if ('hidePanel' in bottomView) {
                     bottomView.hidePanel(name);
-                }
-            }
-
-            var sideView = this.getView('side');
-            if (sideView) {
-                if ('hidePanel' in sideView) {
-                    sideView.hidePanel(name);
                 }
             }
         },
@@ -930,13 +916,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             observer.observe($('#content').get(0));
         },
 
-        resetSidebar() {
-            let side = $('#main > main > .record .row > .side');
-
-            if (side) {
-                side.removeClass('scrolled fixed-bottom fixed-top');
-            }
-        },
 
         fetch: function (onlyRelation) {
             var data = Dep.prototype.fetch.call(this, onlyRelation);
@@ -1094,9 +1073,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
                 }
             }
-            if (this.hasView('side')) {
-                if ('getFieldViews' in this.getView('side')) {
-                    _.extend(fields, this.getView('side').getFieldViews(withHidden));
+            if (this.hasView('rightSideView')) {
+                if ('getFieldViews' in this.getView('rightSideView')) {
+                    _.extend(fields, this.getView('rightSideView').getFieldViews(withHidden));
                 }
             }
             if (this.hasView('bottom')) {
@@ -1112,8 +1091,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.hasView('middle')) {
                 view = this.getView('middle').getFieldView(name);
             }
-            if (!view && this.hasView('side')) {
-                view = (this.getView('side').getFieldViews(true) || {})[name];
+
+            if (!view && this.hasView('rightSideView')) {
+                view = (this.getView('rightSideView').getFieldViews(true) || {})[name];
             }
             if (!view && this.hasView('bottom')) {
                 view = (this.getView('bottom').getFieldViews(true) || {})[name];
@@ -1247,10 +1227,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             if ('isWide' in this.options) {
                 this.isWide = this.options.isWide;
-            }
-
-            if ('sideView' in this.options) {
-                this.sideView = this.options.sideView;
             }
 
             if ('bottomView' in this.options) {
@@ -1697,11 +1673,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 bottomView.setReadOnly();
             }
 
-            var sideView = this.getView('side');
-            if (sideView && 'setReadOnly' in sideView) {
-                sideView.setReadOnly();
-            }
-
             this.getFieldList().forEach(function (field) {
                 this.setFieldReadOnly(field);
             }, this);
@@ -1715,11 +1686,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var bottomView = this.getView('bottom');
             if (bottomView && 'setNotReadOnly' in bottomView) {
                 bottomView.setNotReadOnly();
-            }
-
-            var sideView = this.getView('side');
-            if (sideView && 'setNotReadOnly' in sideView) {
-                sideView.setNotReadOnly();
             }
 
             this.getFieldList().forEach(function (field) {
@@ -1845,10 +1811,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        convertDetailLayout: function (simplifiedLayout) {
+        convertDetailLayout: function (simplifiedLayout, el) {
             var layout = [];
 
-            var el = this.options.el || '#' + (this.id);
+            el = el ?? (this.options.el || '#' + (this.id));
 
             for (var p in simplifiedLayout) {
                 var panel = {};
@@ -1900,7 +1866,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
 
                         var o = {
-                            el: el + ' .middle .field[data-name="' + name + '"]',
+                            el: el + '  .field[data-name="' + name + '"]',
                             defs: {
                                 name: name,
                                 params: cellDefs.params || {}
@@ -1968,7 +1934,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             name: name + 'Field',
                             view: viewName,
                             field: name,
-                            el: el + ' .middle .field[data-name="' + name + '"]',
+                            el: el + '  .field[data-name="' + name + '"]',
                             fullWidth: fullWidth,
                             options: o
                         };
@@ -2036,24 +2002,58 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
-        createSideView: function (callback) {
-            var el = this.options.el || '#' + (this.id);
-            this.createView('side', this.sideView, {
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .side',
-                type: this.type,
-                isSmall: this.isSmall,
-                readOnly: this.readOnly,
-                inlineEditDisabled: this.inlineEditDisabled,
-                recordHelper: this.recordHelper,
-                recordViewObject: this
-            }, callback);
+        getSideLayout: function(el, callback) {
+            if (this.gridSideLayout) {
+                callback(this.gridSideLayout, el);
+                return;
+            }
+
+            this._helper.layoutManager.get(this.model.name, this.sideLayoutName, null, function (data) {
+                this.layoutSideViewData = data
+                this.gridSideLayout = {
+                    type: 'record',
+                    layout: this.convertDetailLayout(data.layout, el)
+                };
+                callback(this.gridSideLayout);
+            }.bind(this));
+        },
+
+        createRightSideView: function(el, callback) {
+            this.getSideLayout(el, (layout) => {
+                this.createView('rightSideView', this.rightSideView, {
+                    model: this.model,
+                    scope: this.scope,
+                    type: this.type,
+                    _layout: layout,
+                    el: el,
+                    layoutData: {
+                        model: this.model,
+                        columnCount: this.columnCount
+                    },
+                    recordHelper: this.recordHelper,
+                    recordViewObject: this
+                }, callback);
+            })
+        },
+
+        refreshRightSideLayout() {
+            this.gridSideLayout = null
+            this.notify('Loading...')
+            this.getSideLayout(null, (layout) => {
+                this.notify(false)
+                const rightSideView = this.getView('rightSideView')
+                if (rightSideView) {
+                    rightSideView._layout = layout
+                    rightSideView._loadNestedViews(() => {
+                        rightSideView.reRender()
+                    });
+                }
+            })
         },
 
         createMiddleView: function (callback) {
             var el = this.options.el || '#' + (this.id);
-            this.waitForView('middle');
+            // this.waitForView('middle');
             this.getGridLayout(function (layout) {
                 this.createView('middle', this.middleView, {
                     model: this.model,
@@ -2161,20 +2161,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         build: function (callback) {
-            if (!this.sideDisabled && this.sideView) {
-                if (this.middleView) {
-                    this.createMiddleView((view)=> {
-                        this.createSideView();
-                        callback.call(this,view)
-                    });
-                }
-            } else {
-                if (this.middleView) {
-                    this.createMiddleView(callback);
-                }
+
+            if (this.middleView) {
+                this.createMiddleView(callback);
             }
-
-
+            
             if (!this.bottomDisabled && this.bottomView) {
                 this.createBottomView();
             }
