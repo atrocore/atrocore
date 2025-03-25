@@ -68,19 +68,23 @@ class Layout extends AbstractListener
                 $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
 
                 if(!empty($scopeDefs['hasOwner'])) {
-                    $result[0]['rows'][] = [["name" => "ownerUser", false]];
+                    $result[0]['rows'][] = [["name" => "ownerUser", "fullWidth" => true]];
                 }
 
                 if(!empty($scopeDefs['hasAssignedUser'])) {
-                    $result[0]['rows'][] = [["name" => "assignedUser", false]];
+                    $result[0]['rows'][] = [["name" => "assignedUser", "fullWidth" => true]];
                 }
 
                 if(!empty($scopeDefs['hasTeam'])) {
-                    $result[0]['rows'][] = [["name" => "teams", false]];
+                    $result[0]['rows'][] = [["name" => "teams", "fullWidth" => true]];
                 }
 
-                $result[0]['rows'][] = [["name" => "created", false]];
-                $result[0]['rows'][] = [["name" => "modified", false]];
+                if(!empty($scopeDefs['stream'])) {
+                    $result[0]['rows'][] = [["name" => "followers", "fullWidth" => true]];
+                }
+
+                $result[0]['rows'][] = [["name" => "created", "fullWidth" => true]];
+                $result[0]['rows'][] = [["name" => "modified", "fullWidth" => true]];
 
                 $event->setArgument('result', $result);
             }
