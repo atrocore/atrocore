@@ -1,7 +1,9 @@
 <script lang="ts">
     import {Storage} from "../../utils/Storage";
     import {onMount} from "svelte";
-    import {active} from "sortablejs";
+    import GfiImage from "../../assets/image_gfi.svg"
+    import GfiHideImage from "../../assets/hide_image_gfi.svg"
+    import {Language} from "../../utils/Language";
 
     export let scope: string;
     export let minWidth: number = 300;
@@ -15,18 +17,19 @@
     let isDragging: boolean = false;
     let startX: number;
     let startWidth: number;
-    let mouseLeaveTimer: number|null;
-    let mouseEnterTimer: number|null;
+    let mouseLeaveTimer: number | null;
+    let mouseEnterTimer: number | null;
     let isMouseOver = false;
+    let isPin = true;
 
     let items = [
         {
             "name": "summary",
-            "label": "Summary"
+            "label": Language.translate('Summary'),
         },
         // {
         //     "name":"activities",
-        //     "label": "Activities"
+        //     "label": Language.translate('Activities')
         // }
     ];
     let activeItem = items[0];
@@ -80,16 +83,22 @@
     }
 
     function handleCollapsePanel(e: Event) {
-        console.log(e.target)
-        isCollapsed = !isCollapsed;
+        updateCollapse(!isCollapsed);
+    }
+
+    function updateCollapse(value: boolean) {
+        isCollapsed = value;
         Storage.set('right-side-view-collapse', scope, isCollapsed ? 'collapsed' : '');
     }
 
     function handleMouseLeave() {
+        if (isPin) {
+            return;
+        }
         isMouseOver = false;
 
         // Clear any pending expand timer
-        if(mouseEnterTimer !== null) {
+        if (mouseEnterTimer !== null) {
             clearTimeout(mouseEnterTimer);
         }
 
@@ -98,16 +107,19 @@
         // Start timer to collapse
         mouseLeaveTimer = setTimeout(() => {
             if (!isMouseOver) {
-                isCollapsed = true;
+                updateCollapse(true)
             }
         }, 500);
     }
 
     function handleMouseEnter() {
+        if (isPin) {
+            return;
+        }
         isMouseOver = true;
 
         // Clear any pending collapse timer
-        if(mouseLeaveTimer !== null) {
+        if (mouseLeaveTimer !== null) {
             clearTimeout(mouseLeaveTimer);
         }
 
@@ -117,10 +129,15 @@
         if (isCollapsed) {
             mouseEnterTimer = setTimeout(() => {
                 if (isMouseOver) {
-                    isCollapsed = false;
+                    updateCollapse(false)
                 }
             }, 500);
         }
+    }
+
+    function handlePin(e: Event) {
+        isPin = !isPin;
+        Storage.set('right-side-view-pin', scope, isPin ? 'pin' : 'not-pinned');
     }
 
     onMount(() => {
@@ -130,13 +147,16 @@
         }
 
         isCollapsed = Storage.get('right-side-view-collapse', scope) === 'collapsed';
+
+        isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned';
+        console.log("isPin", isPin)
         loadSummary();
 
         return () => {
-            if(mouseLeaveTimer !== null) {
+            if (mouseLeaveTimer !== null) {
                 clearTimeout(mouseLeaveTimer);
             }
-            if(mouseEnterTimer !== null) {
+            if (mouseEnterTimer !== null) {
                 clearTimeout(mouseEnterTimer);
             }
         };
@@ -144,20 +164,27 @@
 
 </script>
 
+<div class:expanded={!isCollapsed}
+     class:not-pinned={!isPin}></div>
 <aside class="right-side-view" style="width: {sideViewWidth}"
-       on:click|self="{handleCollapsePanel}"
+
        class:collapsed={isCollapsed}
        class:expanded={!isCollapsed}
+       class:pinned={isPin}
        on:mouseenter={handleMouseEnter}
        on:mouseleave={handleMouseLeave}
 >
+
+    <div class="collapse-strip" on:click|self="{handleCollapsePanel}"></div>
+
+    <button type="button"
+            class="btn btn-link collapse-panel"
+            on:click={handleCollapsePanel}>
+        <span class="toggle-icon-left fas fa-angle-left" class:hidden={!isCollapsed}></span>
+        <span class="toggle-icon-right fas fa-angle-right" class:hidden={isCollapsed}></span>
+    </button>
     <div class="content">
-        <button type="button"
-                class="btn btn-link collapse-panel"
-                on:click={handleCollapsePanel}>
-            <span class="toggle-icon-left fas fa-angle-left" class:hidden={!isCollapsed}></span>
-            <span class="toggle-icon-right fas fa-angle-right" class:hidden={isCollapsed}></span>
-        </button>
+
         <div class="btn-group">
             {#each items as item}
                 {#if item.name !== activeItem.name}
@@ -167,7 +194,13 @@
                     </a>
                 {/if}
             {/each}
+            <button class="btn btn-link" style="padding: 0;border: 0; margin-left:-2px" on:click={handlePin}
+                    title="{Language.translate(isPin ? 'enableAutomaticClosing': 'disableAutomaticClosing')}">
+                <img src="{GfiImage}" alt="image" class:hidden={!isPin}>
+                <img src="{GfiHideImage}" alt="hide_image" class:hidden={isPin}>
+            </button>
         </div>
+
         <div style="display: flex; align-items: center">
             <h5 style="font-weight: bold; margin-right: 10px; font-size: 16px;">{activeItem.label}</h5>
             <div class="layout-editor-container" class:hidden={activeItem.name !== 'summary'}></div>
@@ -189,6 +222,7 @@
 </aside>
 
 <style>
+
     .right-side-view {
         position: sticky;
         height: calc(100vh - 46px);
@@ -199,6 +233,26 @@
         border-top: 1px solid var(--primary-border-color);
         border-left: 1px solid var(--primary-border-color);
         overflow-y: auto;
+        transition: .6s width cubic-bezier(0.19, 1, .22, 1);
+    }
+
+    .right-side-view:not(.pinned):not(.collapsed) {
+        position: absolute;
+        right: 0;
+    }
+
+    .collapse-strip {
+        height: 100%;
+        position: fixed;
+        top: 0;
+        margin-left: -10px;
+        width: 20px;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    .expanded .collapse-strip {
+        margin-left: -20px;
     }
 
     .right-side-view > .content {
@@ -208,7 +262,6 @@
 
     .collapsed.right-side-view {
         padding: 10px 10px;
-        cursor: pointer;
     }
 
     .collapsed > .content {
@@ -266,4 +319,22 @@
         font-size: 12px;
         color: #999;
     }
+
+    div.not-pinned.expanded {
+        width: 20px;
+    }
+
+    div.not-pinned:not(.expanded) {
+        width: 0;
+    }
+
+    .content .btn-group {
+        display: flex;
+    }
+
+    :global(.right-side-view .row .cell .field) {
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--secondary-border-color);
+    }
+
 </style>

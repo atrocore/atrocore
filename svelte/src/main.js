@@ -2,6 +2,7 @@ import 'driver.js/dist/driver.css'
 import './styles/style.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/border.css';
+import "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=image"
 
 import {driver} from 'driver.js'
 import tippy from 'tippy.js';

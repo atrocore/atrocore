@@ -296,16 +296,16 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
                 view.onTreePanelRendered();
             }
-
-            window.rightSideViewComponent = new Svelte.SideView({
-                target:  $(`${this.options.el} .content-wrapper`).get(0),
-                props: {
-                    scope: this.scope,
-                    model: this.model,
-                    mode: 'detail',
-                    loadSummary: () => {
-                           let el = this.options.el + ' .right-side-view .summary'
-                            let recordView = this.getView('record');
+            let recordView = this.getView('record');
+            if(recordView && recordView.sideView) {
+                window.rightSideViewComponent = new Svelte.SideView({
+                    target:  $(`${this.options.el} .content-wrapper`).get(0),
+                    props: {
+                        scope: this.scope,
+                        model: this.model,
+                        mode: 'detail',
+                        loadSummary: () => {
+                            let el = this.options.el + ' .right-side-view .summary'
                             recordView.createRightSideView(el, (view) => {
                                 if (this.getUser().isAdmin()) {
                                     this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
@@ -322,12 +322,14 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                                 }
                                 view.render();
                             })
-                    },
-                    callbacks: {
+                        },
+                        callbacks: {
 
+                        }
                     }
-                }
-            })
+                })
+            }
+
         },
 
         setupHeader: function () {

@@ -1195,6 +1195,20 @@ class Metadata extends AbstractListener
                 continue;
             }
 
+            $data['entityDefs'][$scope]['fields']['created'] = [
+                'type' => 'datetime',
+                'view' => 'views/fields/created-at-with-user',
+                'notStorable' => true,
+                'ignoreViewForSearch' => true,
+            ];
+
+            $data['entityDefs'][$scope]['fields']['modified'] = [
+                'type' => 'datetime',
+                'view' => 'views/fields/modified-at-with-user',
+                'notStorable' => true,
+                'ignoreViewForSearch' => true,
+            ];
+
             foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
                 if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'link' &&
                     !empty($data['entityDefs'][$scope]['links'][$field]['entity']) &&

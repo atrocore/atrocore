@@ -54,6 +54,38 @@ class Layout extends AbstractListener
             }
         }
 
+        if($event->getArgument('params')['viewType'] === 'rightSideView') {
+            $result = $event->getArgument('result');
+            if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
+                $scope = $event->getArgument('params')['scope'];
+                $result = [
+                    [
+                        "label" => "Access Management",
+                        "rows" => []
+                    ]
+                ];
+
+                $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
+
+                if($scopeDefs['hasOwner']) {
+                    $result[0]['rows'][] = [["name" => "ownerUser", false]];
+                }
+
+                if($scopeDefs['hasAssignedUser']) {
+                    $result[0]['rows'][] = [["name" => "assignedUser", false]];
+                }
+
+                if($scopeDefs['hasTeam']) {
+                    $result[0]['rows'][] = [["name" => "teams", false]];
+                }
+
+                $result[0]['rows'][] = [["name" => "created", false]];
+                $result[0]['rows'][] = [["name" => "modified", false]];
+
+                $event->setArgument('result', $result);
+            }
+        }
+
         $this->getEventManager()->dispatch($event->getArgument('target'), $event->getArgument('params')['viewType'], $event);
     }
 
