@@ -298,7 +298,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             }
             let recordView = this.getView('record');
             if(recordView && recordView.sideView) {
-                window.rightSideViewComponent = new Svelte.SideView({
+               new Svelte.RightSideView({
                     target:  $(`${this.options.el} .content-wrapper`).get(0),
                     props: {
                         scope: this.scope,

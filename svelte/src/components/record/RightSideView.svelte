@@ -149,7 +149,7 @@
         isCollapsed = Storage.get('right-side-view-collapse', scope) === 'collapsed';
 
         isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned';
-        console.log("isPin", isPin)
+
         loadSummary();
 
         return () => {

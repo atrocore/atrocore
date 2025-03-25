@@ -21,11 +21,11 @@ import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
 import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
-// import Script from "./components/fields/Script.svelte";
+import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
 import Favorites from "./components/layout-profile/navigation/Favorites.svelte";
 import TreePanel from "./components/record/TreePanel.svelte";
-import SideView from "./components/record/SideView.svelte";
+import RightSideView from "./components/record/RightSideView.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -39,11 +39,11 @@ window.driver = driver;
 window.tippy = tippy;
 
 export {
-    /*Script,*/
+    Script,
     UpdatePanel,
     JobManagerIcon,
     LayoutComponent,
-    SideView,
+    RightSideView,
     TreePanel,
     ApiRequestComponent,
     Navigation,
