@@ -11,9 +11,13 @@
 
     export let isCollapsed: boolean = false;
 
+
     let isDragging: boolean = false;
     let startX: number;
     let startWidth: number;
+    let mouseLeaveTimer: number|null;
+    let mouseEnterTimer: number|null;
+    let isMouseOver = false;
 
     let items = [
         {
@@ -81,6 +85,44 @@
         Storage.set('right-side-view-collapse', scope, isCollapsed ? 'collapsed' : '');
     }
 
+    function handleMouseLeave() {
+        isMouseOver = false;
+
+        // Clear any pending expand timer
+        if(mouseEnterTimer !== null) {
+            clearTimeout(mouseEnterTimer);
+        }
+
+        mouseEnterTimer = null;
+
+        // Start timer to collapse
+        mouseLeaveTimer = setTimeout(() => {
+            if (!isMouseOver) {
+                isCollapsed = true;
+            }
+        }, 500);
+    }
+
+    function handleMouseEnter() {
+        isMouseOver = true;
+
+        // Clear any pending collapse timer
+        if(mouseLeaveTimer !== null) {
+            clearTimeout(mouseLeaveTimer);
+        }
+
+        mouseLeaveTimer = null;
+
+        // Start timer to expand if currently collapsed
+        if (isCollapsed) {
+            mouseEnterTimer = setTimeout(() => {
+                if (isMouseOver) {
+                    isCollapsed = false;
+                }
+            }, 500);
+        }
+    }
+
     onMount(() => {
         const savedWidth = Storage.get('rightSideView', scope);
         if (savedWidth) {
@@ -89,45 +131,61 @@
 
         isCollapsed = Storage.get('right-side-view-collapse', scope) === 'collapsed';
         loadSummary();
+
+        return () => {
+            if(mouseLeaveTimer !== null) {
+                clearTimeout(mouseLeaveTimer);
+            }
+            if(mouseEnterTimer !== null) {
+                clearTimeout(mouseEnterTimer);
+            }
+        };
     })
 
 </script>
 
-<aside class="right-side-view" style="width: {sideViewWidth}" on:click|self="{handleCollapsePanel}"
-       class:collapsed={isCollapsed}>
-    <button type="button"
-            class="btn btn-link collapse-panel"
-            on:click={handleCollapsePanel}>
-        <span class="toggle-icon-left fas fa-angle-left" class:hidden={!isCollapsed}></span>
-        <span class="toggle-icon-right fas fa-angle-right" class:hidden={isCollapsed}></span>
-    </button>
-    <div class="btn-group">
-        {#each items as item}
-            {#if item.name !== activeItem.name}
-                <a href="javascript:" on:click={()=>setActiveItem(item)}
-                   class="btn btn-link item">
-                    {item.label}
-                </a>
-            {/if}
-        {/each}
+<aside class="right-side-view" style="width: {sideViewWidth}"
+       on:click|self="{handleCollapsePanel}"
+       class:collapsed={isCollapsed}
+       class:expanded={!isCollapsed}
+       on:mouseenter={handleMouseEnter}
+       on:mouseleave={handleMouseLeave}
+>
+    <div class="content">
+        <button type="button"
+                class="btn btn-link collapse-panel"
+                on:click={handleCollapsePanel}>
+            <span class="toggle-icon-left fas fa-angle-left" class:hidden={!isCollapsed}></span>
+            <span class="toggle-icon-right fas fa-angle-right" class:hidden={isCollapsed}></span>
+        </button>
+        <div class="btn-group">
+            {#each items as item}
+                {#if item.name !== activeItem.name}
+                    <a href="javascript:" on:click={()=>setActiveItem(item)}
+                       class="btn btn-link item">
+                        {item.label}
+                    </a>
+                {/if}
+            {/each}
+        </div>
+        <div style="display: flex; align-items: center">
+            <h5 style="font-weight: bold; margin-right: 10px; font-size: 16px;">{activeItem.label}</h5>
+            <div class="layout-editor-container" class:hidden={activeItem.name !== 'summary'}></div>
+        </div>
+
+
+        <div class="summary" class:hidden={activeItem.name !== 'summary'}>
+
+        </div>
+
+        <div class="activities" class:hidden={activeItem.name !== 'activities'}>
+
+        </div>
+
+        {#if !isCollapsed}
+            <div class="side-panel-resizer" on:mousedown={startResize}></div>
+        {/if}
     </div>
-    <div style="display: flex; align-items: center">
-        <h5 style="font-weight: bold; margin-right: 10px; font-size: 16px;">{activeItem.label}</h5>
-        <div class="layout-editor-container" class:hidden={activeItem.name !== 'summary'}></div>
-    </div>
-
-
-    <div class="summary" class:hidden={activeItem.name !== 'summary'}>
-
-    </div>
-
-    <div class="activities" class:hidden={activeItem.name !== 'activities'}>
-
-    </div>
-
-    {#if !isCollapsed}
-        <div class="side-panel-resizer" on:mousedown={startResize}></div>
-    {/if}
 </aside>
 
 <style>
@@ -143,13 +201,19 @@
         overflow-y: auto;
     }
 
+    .right-side-view > .content {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
     .collapsed.right-side-view {
         padding: 10px 10px;
         cursor: pointer;
     }
 
-    .collapsed div {
+    .collapsed > .content {
         display: none !important;
+        opacity: 0;
     }
 
     .side-panel-resizer {

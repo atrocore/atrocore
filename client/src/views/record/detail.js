@@ -2039,16 +2039,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         refreshRightSideLayout() {
             this.gridSideLayout = null
             this.notify('Loading...')
-            this.getSideLayout(null, (layout) => {
-                this.notify(false)
-                const rightSideView = this.getView('rightSideView')
-                if (rightSideView) {
+            const rightSideView = this.getView('rightSideView')
+            if(rightSideView) {
+                this.getSideLayout(rightSideView.options.el, (layout) => {
+                    this.notify(false)
                     rightSideView._layout = layout
                     rightSideView._loadNestedViews(() => {
                         rightSideView.reRender()
                     });
-                }
-            })
+                })
+            }
         },
 
         createMiddleView: function (callback) {
