@@ -162,7 +162,7 @@ class LayoutManager
     }
 
 
-    public function saveUserPreference(string $scope, string $viewType, ?string $relatedScope = null, ?string $layoutProfileId = null): bool
+    public function saveUserPreference(string $scope, string $viewType, ?string $relatedEntity = null, ?string $relatedLink = null, ?string $layoutProfileId = null): bool
     {
         /* @var $repository RDB */
         $repository = $this->getEntityManager()->getRepository('UserEntityLayout');
@@ -171,7 +171,8 @@ class LayoutManager
                 'userId'        => $this->getUser()->id,
                 'entity'        => $scope,
                 'viewType'      => $viewType,
-                'relatedEntity' => empty($relatedScope) ? null : $relatedScope
+                'relatedEntity' => empty($relatedEntity) ? null : $relatedEntity,
+                'relatedLink'   => empty($relatedLink) ? null : $relatedLink
             ])
             ->findOne();
 
@@ -185,8 +186,11 @@ class LayoutManager
                 $record->set('userId', $this->getUser()->id);
                 $record->set('entity', $scope);
                 $record->set('viewType', $viewType);
-                if (!empty($relatedScope)) {
-                    $record->set('relatedEntity', $relatedScope);
+                if (!empty($relatedEntity)) {
+                    $record->set('relatedEntity', $relatedEntity);
+                }
+                if (!empty($relatedLink)) {
+                    $record->set('relatedLink', $relatedLink);
                 }
             }
             $record->set('layoutProfileId', $layoutProfileId);
@@ -349,7 +353,12 @@ class LayoutManager
 
         if (!empty($relatedEntity)) {
             if ($name == 'list') {
-                $data = $this->getLayoutFromFiles($scope, "listIn$relatedEntity");
+                $data = $this->getLayoutFromFiles($scope, "listIn{$relatedEntity}For" . ucfirst($relatedLink));
+                if (empty($data)) {
+                    $data = $this->getLayoutFromFiles($scope, "listIn$relatedEntity");
+                }
+            } elseif ($name == 'detail') {
+                $data = $this->getLayoutFromFiles($scope, "detailIn{$relatedEntity}For" . ucfirst($relatedLink));
             }
         }
 
@@ -601,6 +610,7 @@ class LayoutManager
                 if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
                     $relationScope = ucfirst($linkData['relationName']);
                     $relationFields = array_keys($this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? []);
+                    $relationFields[] = 'id';
                     $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
                     $fields = array_merge($fields, $relationFields);
                 }

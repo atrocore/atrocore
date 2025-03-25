@@ -9,16 +9,20 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Acl;
+declare(strict_types=1);
 
-use Espo\Core\Acl\Base;
-use Atro\Entities\User;
+namespace Atro\Repositories;
+
+use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
-class SavedSearch extends Base
+class UserEntityLayout extends Base
 {
-    public function checkIsOwner(User $user, Entity $entity)
+    protected function beforeSave(Entity $entity, array $options = [])
     {
-        return $user->id === $entity->get('userId');
+        $entity->set('hash', Layout::generateHash($entity, true));
+
+        parent::beforeSave($entity, $options);
     }
+
 }

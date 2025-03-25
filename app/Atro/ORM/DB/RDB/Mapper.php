@@ -700,6 +700,11 @@ class Mapper implements MapperInterface
         return $this->metadata;
     }
 
+    public function getEntityFactory(): EntityFactory
+    {
+        return $this->entityFactory;
+    }
+
     private function error(string $message): void
     {
         if (!empty($GLOBALS['debug'])) {

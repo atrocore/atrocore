@@ -9,7 +9,8 @@
       "type": "jsonObject"
     },
     "userId": {
-      "type": "varchar"
+      "type": "varchar",
+      "readOnly": true
     },
     "entityType": {
       "type": "varchar",

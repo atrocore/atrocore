@@ -391,6 +391,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.getParentView() && this.getParentView().getParentView()) {
                 let view = this.getParentView().getParentView();
 
+                if (view.panelName && this.getMetadata().get(`clientDefs.${view.model.name}.relationshipPanels.${view.panelName}.disabledSelectAllResult`)) {
+                    return false;
+                }
+
                 if (view.fieldType && view.fieldType === 'linkMultiple') {
                     if (!view.mode || view.mode !== 'search') {
                         return false;
@@ -436,6 +440,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         init: function () {
             this.listLayout = this.options.listLayout || this.listLayout;
+            this.layoutData = this.options.layoutData || this.layoutData
             this.type = this.options.type || this.type;
 
             this.layoutName = this.options.layoutName || this.layoutName || this.type;
@@ -2407,7 +2412,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     layoutData: this.layoutData,
                     el: el,
                 }, (view) => {
-                    view.on("refresh", () => this.refreshLayout())
+                    view.on("refresh", () => {
+                        if (this.options.disableRefreshLayout) {
+                            this.trigger('refresh-layout')
+                        } else {
+                            this.refreshLayout()
+                        }
+                    })
                     view.render()
                 })
             })

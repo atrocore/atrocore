@@ -323,8 +323,27 @@
         document.querySelectorAll('ul.rows').forEach(el => {
             initPanel(el)
         });
-        document.querySelectorAll('ul.cells.disabled').forEach(el => {
-            Sortable.create(el, {animation: 150, group: 'cells', draggable: 'li.cell'});
+        document.querySelectorAll('ul.cells.disabled').forEach(ul => {
+            Sortable.create(ul, {
+                animation: 150,
+                group: 'cells',
+                draggable: 'li.cell',
+                onEnd: function (evt) {
+                    const toUl = evt.to.closest('.cells.disabled')
+                    let movedItem = null
+                    if (toUl) {
+                        if (toUl !== ul) {
+                            // cancel drop
+                            if (evt.oldIndex >= evt.from.children.length) {
+                                evt.from.appendChild(evt.item);
+                            } else {
+                                evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
+                            }
+                            return
+                        }
+                    }
+                }
+            });
         });
     }
 

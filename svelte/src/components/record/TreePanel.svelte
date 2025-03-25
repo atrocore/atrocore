@@ -568,7 +568,7 @@
         }
 
         activeItem = treeItem
-        initSorting()
+        initSorting(false)
         Storage.set('treeItem', scope, treeItem.name)
         Notifier.notify('Loading...')
         tick().then(() => {
@@ -684,6 +684,11 @@
         } else {
             sortBy = Metadata.get(['entityDefs', treeScope, 'collection', 'sortBy']) || 'name'
         }
+
+        if (!Metadata.get(['entityDefs', treeScope, 'fields', sortBy])) {
+            sortBy = sortFields[0]?.name
+        }
+
         sortAsc = !!Metadata.get(['entityDefs', treeScope, 'collection', 'asc'])
         Storage.set('treeItemSorting', scope, {sortBy, sortAsc})
     }

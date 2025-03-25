@@ -15,6 +15,7 @@
     "Action": "Action",
     "ExtensibleEnum": "List",
     "ExtensibleEnumOption": "List Option",
+    "ExtensibleEnumExtensibleEnumOption": "List (List Option)",
     "Sharing": "Sharing",
     "Locale": "Locale",
     "Connection": "Connection",
@@ -63,7 +64,8 @@
     "NotificationRule": "Notification Rule",
     "HtmlSanitizer": "HTML Sanitizer",
     "Bookmark": "Bookmark",
-    "SystemIcon": "System Icon"
+    "SystemIcon": "System Icon",
+    "ProductHierarchy": "Product Hierarchy"
   },
   "scopeNamesPlural": {
     "UserProfile": "User Profiles",
@@ -374,7 +376,6 @@
     "scopeFilter": "Channel",
     "editGroup": "Edit Group",
     "addGroup": "Begin / end group"
-
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

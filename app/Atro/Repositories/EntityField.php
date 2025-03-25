@@ -341,6 +341,9 @@ class EntityField extends ReferenceData
 
         $commonFields = ['tooltipLink', 'tooltip', 'type', 'isCustom'];
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
+        if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
+            $typeFields[] = 'optionColors';
+        }
 
         foreach (array_merge($commonFields, $typeFields) as $field) {
             $fieldType = $this->getMetadata()->get("entityDefs.EntityField.fields.{$field}.type");
