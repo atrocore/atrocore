@@ -24,6 +24,22 @@ class Language extends AbstractListener
         $data = $event->getArgument('data');
 
         foreach ($data as $locale => $rows) {
+            foreach ($this->getMetadata()->get('scopes', []) as $scope => $scopeDefs) {
+                if (str_starts_with($scope, 'UserFollowed')) {
+                    $relScope = str_replace('UserFollowed', '', $scope);
+                    if (empty($data[$locale]['Global']['scopeNames'][$scope])) {
+                        $data[$locale]['Global']['scopeNames'][$scope] = $this->getLabel($data, $locale, 'Global', 'UserFollowed', 'labels') .
+                            " " . $this->getLabel($data, $locale, 'Global', $relScope, 'scopeNames');
+                    }
+                    if (empty($data[$locale]['Global']['scopeNamesPlural'][$scope])) {
+                        $data[$locale]['Global']['scopeNamesPlural'][$scope] = $this->getLabel($data, $locale, 'Global', 'UserFollowed', 'labels') .
+                            " " . $this->getLabel($data, $locale, 'Global', $relScope, 'scopeNamesPlural');
+                    }
+                }
+            }
+        }
+
+        foreach ($data as $locale => $rows) {
             foreach ($this->getMetadata()->get('entityDefs', []) as $entity => $entityDefs) {
                 if (empty($entityDefs['fields'])) {
                     continue 1;

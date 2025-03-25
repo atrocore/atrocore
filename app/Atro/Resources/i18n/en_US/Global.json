@@ -124,6 +124,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "UserFollowed": "User Followed",
     "authenticate": "Authenticate",
     "Download": "Download",
     "Load data": "Load data",
