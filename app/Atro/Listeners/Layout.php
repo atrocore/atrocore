@@ -67,15 +67,15 @@ class Layout extends AbstractListener
 
                 $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
 
-                if($scopeDefs['hasOwner']) {
+                if(!empty($scopeDefs['hasOwner'])) {
                     $result[0]['rows'][] = [["name" => "ownerUser", false]];
                 }
 
-                if($scopeDefs['hasAssignedUser']) {
+                if(!empty($scopeDefs['hasAssignedUser'])) {
                     $result[0]['rows'][] = [["name" => "assignedUser", false]];
                 }
 
-                if($scopeDefs['hasTeam']) {
+                if(!empty($scopeDefs['hasTeam'])) {
                     $result[0]['rows'][] = [["name" => "teams", false]];
                 }
 
