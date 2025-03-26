@@ -110,8 +110,9 @@ Espo.define('views/main', 'view', function (Dep) {
             return menu;
         },
 
-        getBreadcrumbsItems: function (isAdmin = false) {
+        getBreadcrumbsItems: function () {
             const result = [];
+            let isAdmin = this.isAdmin ?? false;
 
             if (!isAdmin && this.entityType) {
                 const tab = this.getMetadata().get(`scopes.${this.entityType}.tab`);
@@ -121,10 +122,7 @@ Espo.define('views/main', 'view', function (Dep) {
             }
 
             if (isAdmin) {
-                result.push({
-                    url: '#Admin',
-                    label: this.getLanguage().translate('Administration', 'labels')
-                });
+                result.push(this.getAdminBreadcrumbsItem());
             }
 
             return result;
@@ -211,7 +209,7 @@ Espo.define('views/main', 'view', function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header')?.reRender();
+                this.getView('header')?.reRender(); // TODO: refresh actions
             }
         },
 
@@ -282,7 +280,18 @@ Espo.define('views/main', 'view', function (Dep) {
             if (!this.isRendered()) return;
             this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
             this.$el.find('.page-header a.action[data-action="'+name+'"]').removeClass('hidden');
-        }
+        },
+
+        executeAction(action, data, event) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, event);
+                return;
+            }
+
+            const record = this.getView('record');
+            record?.executeAction(action, data, event);
+        },
 
     });
 });

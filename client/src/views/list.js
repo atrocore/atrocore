@@ -476,14 +476,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             });
         },
 
-        getHeader: function () {
-            var headerIconHtml = this.getHeaderIconHtml();
-
-            return this.buildHeaderHtml([
-                headerIconHtml + this.getLanguage().translate(this.scope, 'scopeNamesPlural')
-            ]);
-        },
-
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
         },
