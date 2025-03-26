@@ -19,9 +19,9 @@ class LoggingConnection extends \Doctrine\DBAL\Connection
             $start = microtime(true);
             try {
                 $result = parent::executeQuery($sql, $params, $types);
-            } catch (\Exception $e) {
-                // for xdebug break point
+            } catch (\Throwable $e) {
                 throw $e;
+                // for xdebug break point
             }
             $executionTime = number_format((microtime(true) - $start) * 1000, 2);
 
@@ -40,9 +40,9 @@ class LoggingConnection extends \Doctrine\DBAL\Connection
             $start = microtime(true);
             try {
                 $result = parent::executeStatement($sql, $params, $types);
-            } catch (\Exception $e) {
-                // for xdebug break point
+            } catch (\Throwable $e) {
                 throw $e;
+                // for xdebug break point
             }
             $executionTime = number_format((microtime(true) - $start) * 1000, 2);
 
