@@ -1674,13 +1674,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         enableButtons: function () {
-            this.$el.find(".button-container .action").removeAttr('disabled').removeClass('disabled');
-            this.$el.find(".button-container .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
+            $(".page-header .detail-button-container .action").removeAttr('disabled').removeClass('disabled');
+            $(".page-header .detail-button-container .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
         },
 
         disableButtons: function () {
-            this.$el.find(".button-container .action").attr('disabled', 'disabled').addClass('disabled');
-            this.$el.find(".button-container .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
+            $(".page-header .detail-button-container .action").attr('disabled', 'disabled').addClass('disabled');
+            $(".page-header .detail-button-container .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
         },
 
         removeButton: function (name) {
