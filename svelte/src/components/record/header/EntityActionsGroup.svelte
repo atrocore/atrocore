@@ -71,7 +71,7 @@
 </script>
 
 <div class="buttons-container">
-    <ActionGroup {actions} {dropdownActions} className="entity-actions" hasMoreButton={true}/>
+    <ActionGroup {actions} {dropdownActions} className="entity-actions" hasMoreButton={true} dropdownPosition="right"/>
     <div class="right-group">
         {#if hasFavoriteButton}
             <div class="entity-buttons">

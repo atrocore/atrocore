@@ -10,9 +10,18 @@
     export let dynamicActionsDropdown: ActionParams[] = [];
     export let loadingActions: boolean = false;
     export let hasMoreButton: boolean = false;
+    export let dropdownPosition: string = 'left';
     export let className: string = '';
-    export let executeAction: Function = () => {
-    };
+    export let executeAction: (e: CustomEvent<any>) => void = () => {};
+
+    let dropdownClass: string;
+    $: {
+        dropdownClass = 'dropdown-menu';
+
+        if (dropdownPosition === 'right') {
+            dropdownClass += ' dropdown-menu-right';
+        }
+    }
 </script>
 
 <div class="btn-group {className}">
@@ -31,7 +40,7 @@
     {/if}
 
     {#if dropdownActions.length > 0 || dynamicActionsDropdown.length > 0}
-        <ul class="dropdown-menu">
+        <ul class={dropdownClass}>
             {#each dropdownActions as item}
                 <li>
                     <ActionDropdownItem params={item} on:execute={executeAction} />
