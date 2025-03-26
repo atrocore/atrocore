@@ -107,6 +107,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 this.listenTo(this.model, 'change:isFollowed', function () {
                     this.handleFollowButton();
                 }, this);
+
+                this.listenTo(this.model, 'change:followersNames', function () {
+                    window.dispatchEvent(new CustomEvent('record:followers-updated', { detail: this.model.get('followersNames') }));
+                });
             }
 
             if (!this.getMetadata().get('scopes.' + this.scope + '.bookmarkDisabled')) {
@@ -711,7 +715,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             if (shouldBeHidden) {
                 this.addMenuItem('buttons', {
                     name: 'following',
-                    style: 'hidden',
+                    hidden: true
                 }, true, false, true);
             } else if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();

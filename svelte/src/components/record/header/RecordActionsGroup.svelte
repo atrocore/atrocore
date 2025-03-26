@@ -28,6 +28,7 @@
     let dynamicActions: ActionParams[] = [];
     let dynamicActionsDropdown: ActionParams[] = [];
     let uiHandlerActions: ActionParams[] = [];
+    let headerButtons: ActionParams[] = [];
     let loadingActions: boolean = false;
     let bookmarkId: string | null = null;
 
@@ -35,7 +36,8 @@
         recordActions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
         additionalActions = [...(recordButtons?.additionalButtons ?? []), ...dynamicActions];
         dropdownActions = (mode === 'edit' ? recordButtons?.dropdownEditButtons : recordButtons?.dropdownButtons) ?? [];
-        uiHandlerActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...getUiHandlerButtons()] : [])
+        uiHandlerActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...getUiHandlerButtons()] : []);
+        headerButtons = (recordButtons?.headerButtons?.buttons ?? []).filter(button => !button.hidden);
     }
 
     window.addEventListener('detail:overview-filters-changed', (e: CustomEvent) => {
@@ -54,13 +56,18 @@
 
 
     window.addEventListener('record:buttons-update', (event: CustomEvent) => {
-        console.log('record:buttons-update', event)
         if (recordButtons) {
             recordButtons = Object.assign(recordButtons, event.detail || {});
         } else {
             recordButtons = event.detail || {} as RecordActionButtons;
         }
     });
+
+    window.addEventListener('record:followers-updated', (event: CustomEvent) => {
+        if (recordButtons) {
+            recordButtons.followers = event.detail;
+        }
+    })
 
     async function loadDynamicActions(): Promise<Record<string, any>[]> {
         let userData = UserData.get();
@@ -164,7 +171,7 @@
         <div class="header-buttons-container">
             <div class="header-buttons">
                 <div class="header-items">
-                    {#each recordButtons?.headerButtons?.buttons ?? [] as button}
+                    {#each headerButtons as button}
                         {#if button.action === 'openOverviewFilter'}
                             <OverviewFilterButton filterApplied={recordButtons.isOverviewFilterActive ?? false}
                                                   onExecute={executeAction}/>

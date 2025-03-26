@@ -209,7 +209,11 @@ Espo.define('views/main', 'view', function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header')?.reRender(); // TODO: refresh actions
+                window.dispatchEvent(new CustomEvent('record:buttons-update', {
+                    detail: {
+                        headerButtons: this.getMenu()
+                    }
+                }));
             }
         },
 
@@ -239,7 +243,11 @@ Espo.define('views/main', 'view', function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header').reRender();
+                window.dispatchEvent(new CustomEvent('record:buttons-update', {
+                    detail: {
+                        headerButtons: this.getMenu()
+                    }
+                }));
             }
         },
 
