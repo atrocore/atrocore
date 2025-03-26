@@ -9,8 +9,8 @@
  */
 
 export default interface BreadcrumbsItem {
-    url: string;
-    label?: string;
+    url?: string;
+    label: string;
     html?: string;
     className?: string;
 }

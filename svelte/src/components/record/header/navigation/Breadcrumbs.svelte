@@ -9,9 +9,13 @@
     {#each items as item, index}
         <li class="breadcrumbs-item" class:full-width={index === items.length - 1 && currentIsHeading}>
             {#if index !== items.length - 1}
-                <a href="{item.url}" class={item.className}>
-                    {#if item.html}{@html item.html}{:else}{item.label}{/if}
-                </a>
+                {#if item.url}
+                    <a href="{item.url}" class={item.className}>
+                        {#if item.html}{@html item.html}{:else}{item.label}{/if}
+                    </a>
+                {:else}
+                    <span class={item.className}>{#if item.html}{@html item.html}{:else}{item.label}{/if}</span>
+                {/if}
             {:else}
                 {#if currentIsHeading}
                     <h3 class={item.className}>
