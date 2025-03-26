@@ -19,7 +19,8 @@ class LoggingConnection extends \Doctrine\DBAL\Connection
             $start = microtime(true);
             try {
                 $result = parent::executeQuery($sql, $params, $types);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
+                $a = 0;
                 // for xdebug break point
                 throw $e;
             }
