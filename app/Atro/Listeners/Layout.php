@@ -79,12 +79,13 @@ class Layout extends AbstractListener
                     $result[0]['rows'][] = [["name" => "teams", "fullWidth" => true]];
                 }
 
-                if(!empty($scopeDefs['stream'])) {
-                    $result[0]['rows'][] = [["name" => "followers", "fullWidth" => true]];
-                }
 
                 $result[0]['rows'][] = [["name" => "created", "fullWidth" => true]];
                 $result[0]['rows'][] = [["name" => "modified", "fullWidth" => true]];
+
+                if(!empty($scopeDefs['stream'])) {
+                    $result[0]['rows'][] = [["name" => "followers", "fullWidth" => true]];
+                }
 
                 $event->setArgument('result', $result);
             }
