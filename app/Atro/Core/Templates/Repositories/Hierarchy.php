@@ -363,7 +363,7 @@ class Hierarchy extends Base
             $selectCountQuery->andWhere('e1.deleted = :deleted');
         }
         if ($selectParams) {
-            return $this->getChildrenArrayUsingSelectParams($selectParams, $parentId, $selectCountQuery);
+            return $this->getChildrenArrayUsingSelectParams($selectParams, $parentId);
         }
 
         $expr = $this->getConnection()->createExpressionBuilder();
@@ -690,8 +690,9 @@ class Hierarchy extends Base
         }
     }
 
-    protected function getChildrenArrayUsingSelectParams(array $selectParams, string $parentId, QueryBuilder $selectCountQuery)
+    protected function getChildrenArrayUsingSelectParams(array $selectParams, string $parentId)
     {
+        $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
         $defaultSortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
         if (!empty($selectParams['orderBy'])) {
@@ -708,27 +709,46 @@ class Hierarchy extends Base
         $subQueryParams = array_merge($selectParams, ['select' => ['id'], 'disableParentLoad' => true]);
 
         $selectParams['callbacks'][] = function (QueryBuilder $qb, $entity, $params, Mapper $mapper)
-        use ($subQueryParams, $quotedHierarchyTableName, $parentId, $sortOrder, $primarySortBy, $secondarySortBy, $selectCountQuery, $withDeleted) {
+        use ($subQueryParams, $quotedTableName, $quotedHierarchyTableName, $parentId, $sortOrder, $primarySortBy, $secondarySortBy, $withDeleted) {
             $expr = $this->getConnection()->createExpressionBuilder();
             $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
 
 
             if (!empty($subQueryParams['whereClause'])) {
-                $subQuery = $mapper->createSelectQueryBuilder($entity, $subQueryParams);
-                $subQuery->setFirstResult(0);
-                $subQuery->setMaxResults(null);
-                $subQuery->orderBy("$tableAlias.id");
-            $selectCountQuery
-//                ->andWhere($expr->in("e1.id", $subQuery->getSQL()));
-                ->andWhere("exists(" . $subQuery->andWhere("e1.id = $tableAlias.id")->getSQL() . ")");
+                $selectCountQuery = $mapper->createSelectQueryBuilder($entity, $subQueryParams);
+                $selectCountQuery->setFirstResult(0);
+                $selectCountQuery->setMaxResults(null);
 
-                foreach ($subQuery->getParameters() as $key => $value) {
-                    $qb->setParameter($key, $value, $subQuery->getParameterType($key));
+                $selectCountQuery->select("COUNT($tableAlias.id)");
+                $selectCountQuery->join($tableAlias, $quotedHierarchyTableName, 'r1', "$tableAlias.id = r1.entity_id");
+                if (!$withDeleted) {
+                    $selectCountQuery->andWhere('r1.deleted = :deleted');
                 }
+                $selectCountQuery->andWhere("__id = r1.parent_id");
+
+                foreach ($selectCountQuery->getParameters() as $key => $value) {
+                    $qb->setParameter($key, $value, $selectCountQuery->getParameterType($key));
+                }
+
+                $countSql = str_replace("$tableAlias.", 't2.', $selectCountQuery->getSQL());
+                $countSql = str_replace("` $tableAlias", '` t2', $countSql);
+                $countSql = str_replace('__id', "$tableAlias.id", $countSql);
+            } else {
+                $selectCountQuery = $this->getConnection()->createQueryBuilder()
+                    ->from($quotedHierarchyTableName, 'r1')
+                    ->select('COUNT(r1.id)')
+                    ->join('r1', $quotedTableName, 'e1', 'e1.id = r1.entity_id');
+
+                if (!$withDeleted) {
+                    $selectCountQuery->andWhere('e1.deleted = :deleted and r1.deleted = :deleted');
+                }
+                $selectCountQuery->andWhere("$tableAlias.id = r1.parent_id");
+                $countSql = $selectCountQuery->getSQL();
             }
 
 
-            $qb->select("$tableAlias.*", "({$selectCountQuery->andWhere("$tableAlias.id = r1.parent_id ".($withDeleted?"":"and r1.deleted=:deleted"))->getSQL()}) as children_count");
+            $qb->select("$tableAlias.*", "({$countSql}) as children_count");
+
             if (!$withDeleted) {
                 $qb->setParameter('deleled', false, ParameterType::BOOLEAN);
             }
