@@ -1702,6 +1702,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         getRecordButtons() {
+            if (this.buttonsDisabled) {
+                return null;
+            }
+
             return {
                 buttons: this.buttonList,
                 editButtons: this.buttonEditList,
