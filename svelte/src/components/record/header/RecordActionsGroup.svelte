@@ -46,6 +46,10 @@
         recordButtons.isOverviewFilterActive = data.isOverviewFilterActive;
     });
 
+    window.addEventListener('record:actions-reload', (e: CustomEvent) => {
+        reloadDynamicActions();
+    });
+
     async function loadDynamicActions(): Promise<Record<string, any>[] | undefined> {
         let userData = UserData.get();
         if (!userData || !id) {
@@ -92,6 +96,9 @@
             return;
         }
 
+        dynamicActions = recordButtons?.additionalButtons ?? [];
+        dynamicActionsDropdown = [];
+
         loadingActions = true;
         loadDynamicActions().then((list: Record<string, any>[]) => {
             const preparedList: ActionParams[] = list.map((item: Record<string, any>) => ({
@@ -104,10 +111,9 @@
                 bookmarkId = bookmarkAction.data.bookmark_id ?? null;
             }
 
-            dynamicActions = [...(recordButtons?.additionalButtons ?? []), ...preparedList.filter(item => item.display === 'single')]
+            dynamicActions = [...dynamicActions, ...preparedList.filter(item => item.display === 'single')]
             dynamicActionsDropdown = preparedList.filter(item => item.display === 'dropdown');
         }).catch(error => {
-            dynamicActions = recordButtons?.additionalButtons ?? [];
             console.error(error);
         }).finally(() => loadingActions = false);
     }

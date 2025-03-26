@@ -584,9 +584,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        loadDynamicActions: function (display) {
-        },
-
         isHierarchical() {
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
                 && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
@@ -695,19 +692,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         afterRender: function () {
             this.initRealtimeListener();
 
-            this.loadDynamicActions('single')
-
             this.listenTo(this.model, 'after:save', () => {
-                this.loadDynamicActions('single')
-            })
-
-            this.listenTo(this.model, 'sync', () => {
-                this.loadDynamicActions('single')
-            })
-
-            $(this.$el).find('.record-buttons button[data-toggle="dropdown"]').parent().on('show.bs.dropdown', () => {
-                this.loadDynamicActions('dropdown')
-            })
+                window.dispatchEvent(new Event('record:actions-reload'));
+            });
 
             var $container = this.$el.find('.detail-button-container');
 
@@ -834,8 +821,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         setEditMode: function () {
             this.trigger('before:set-edit-mode');
-            this.$el.find('.record-buttons').addClass('hidden');
-            this.$el.find('.edit-buttons').removeClass('hidden');
             this.disableButtons();
 
             var fields = this.getFieldViews(true);
@@ -865,14 +850,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
             this.model.trigger('after:change-mode', 'edit');
-            this.$el.find('.layout-editor-container').addClass('hidden');
         },
 
         setDetailMode: function () {
             this.trigger('before:set-detail-mode');
-            this.$el.find('.edit-buttons').addClass('hidden');
-            this.$el.find('.record-buttons').removeClass('hidden');
-            this.$el.find('.layout-editor-container').removeClass('hidden')
 
             var fields = this.getFieldViews(true);
             for (var field in fields) {
