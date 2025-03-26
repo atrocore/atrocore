@@ -252,7 +252,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }
             }, this);
 
-            this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+            this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']) || this.model.getFieldParam(this.name, 'measureId');
             if (this.params.measureId) {
                 this.measureId = this.params.measureId;
             }
