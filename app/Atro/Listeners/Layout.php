@@ -56,7 +56,7 @@ class Layout extends AbstractListener
 
         if($event->getArgument('params')['viewType'] === 'rightSideView') {
             $result = $event->getArgument('result');
-            if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
+            if (empty($event->getArgument('params')['isCustom']) || empty($result)) {
                 $scope = $event->getArgument('params')['scope'];
                 $result = [
                     [
