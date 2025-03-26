@@ -342,6 +342,22 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             record.executeAction(action, data, event);
         },
 
+        getVisiblePanels() {
+            return (this.panelsList ?? []).filter(panel => {
+                if (panel.name === 'panel-0') {
+                    return true;
+                }
+
+                if (this.isPanelClosed(panel.name)) {
+                    return true;
+                }
+
+                const panelElement = document.querySelector(`div.panel[data-name="${panel.name}"]`);
+
+                return panelElement && panelElement.style.display !== 'none' && !$(panelElement).hasClass('hidden');
+            });
+        },
+
         isPanelClosed(name) {
             let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? []
@@ -384,6 +400,29 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     breadcrumbs: this.getBreadcrumbsItems(),
                     afterOnMount: () => {
                         this.setupTourButton();
+
+                        if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
+                            this.getAcl().check('LayoutProfile', 'read')
+                            && this.mode !== 'edit'
+                        ) {
+                            let el = this.options.el || '#' + (this.id);
+                            const recordView = this.getView('record');
+                            const bottomView = recordView.getView('bottom');
+
+                            this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
+                                scope: this.scope,
+                                viewType: 'relationships',
+                                layoutData: bottomView.layoutData,
+                                el: el + ' .panel-navigation .layout-editor-container',
+                            }, (view) => {
+                                view.on("refresh", () => {
+                                    recordView.createBottomView(view => {
+                                        view.render()
+                                    })
+                                })
+                                view.render()
+                            })
+                        }
                     }
                 },
                 recordButtons: {
@@ -398,6 +437,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     followers: this.model.get('followersNames') ?? {}, // need to be added dynamically
                     hasPrevious: this.hasPrevious,
                     hasNext: this.hasNext,
+                    hasLayoutEditor: this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read'),
                     executeAction: (action, data, event) => {
                         this.executeAction(action, data, event);
                     },
@@ -417,13 +457,13 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         this.model.set('followersNames', followersNames);
                     },
                 },
-                anchorNavItems: this.panelsList,
+                anchorNavItems: this.getVisiblePanels(),
                 anchorScrollCallback: (name, event) => {
                     if (this.isPanelClosed(name)) {
-                        const panel = this.panelList.filter(p => p.name === name)[0]
-                        Backbone.trigger('create-bottom-panel', panel)
-                        this.listenTo(Backbone, 'after:create-bottom-panel', function (panel) {
-                            setTimeout(() => this.scrollToPanel(panel.name), 100)
+                        const panel = this.panelsList.filter(p => p.name === name)[0];
+                        Backbone.trigger('create-bottom-panel', panel);
+                        this.listenToOnce(Backbone, 'after:create-bottom-panel', function (panel) {
+                            setTimeout(() => this.scrollToPanel(panel.name), 100);
                         })
                     } else {
                         this.scrollToPanel(name);
@@ -637,7 +677,15 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             this.createView('record', this.getRecordViewName(), o, view => {
                 this.listenTo(view, 'detailPanelsLoaded', data => {
                     this.panelsList = data.list;
-                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { list: data.list }));
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
+                });
+
+                this.listenTo(view.model, 'change after:process-ui-handler', () => {
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
+                });
+
+                this.listenTo(view, 'after:render', view => {
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                 });
             });
         },

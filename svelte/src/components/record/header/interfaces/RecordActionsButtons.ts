@@ -20,6 +20,7 @@ export default interface RecordActionButtons {
     headerButtons: Record<string, ActionParams[]>;
     hasPrevious: boolean;
     hasNext: boolean;
+    hasLayoutEditor: boolean;
     isOverviewFilterActive: boolean;
     followers?: Record<string, any>,
     executeAction: (action: string, data?: Map<string, any>, event?: Event) => void;

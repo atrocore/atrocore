@@ -11,4 +11,5 @@
 export default interface AnchorNavItem {
     name: string;
     title?: string;
+    hidden?: boolean;
 }

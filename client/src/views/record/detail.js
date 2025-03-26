@@ -139,8 +139,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         fetchOnModelAfterSaveError: true,
 
-        panelNavigationView: 'views/record/panel-navigation',
-
         layoutData: null,
 
         events: {

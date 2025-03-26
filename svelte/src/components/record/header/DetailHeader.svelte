@@ -14,7 +14,8 @@
     export let anchorNavItems: AnchorNavItem[] = [];
     export let recordButtons: RecordActionButtons | null = null;
     export let callbacks: RecordCallbacks;
-    export let anchorScrollCallback = (panelName: string, event: Event) => {}
+    export let anchorScrollCallback = (panelName: string, event: Event) => {
+    }
 
     let mode: string;
     let currentIsHeading: boolean = params?.currentIsHeading ?? true;
@@ -50,9 +51,13 @@
 
 <BaseHeader breadcrumbs={params.breadcrumbs} {currentIsHeading}>
     <div class="detail-button-container">
-        <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions} {recordButtons} {callbacks} />
+        <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions}
+                            {recordButtons} {callbacks}/>
     </div>
-    <div class="panel-navigation">
-        <AnchorNavigation items={anchorNavItems} scrollCallback={anchorScrollCallback} />
-    </div>
+    {#if anchorNavItems.length > 1}
+        <div class="anchor-nav-container">
+            <AnchorNavigation items={anchorNavItems} scrollCallback={anchorScrollCallback}
+                              hasLayoutEditor={recordButtons.hasLayoutEditor && params.mode !== 'edit'}/>
+        </div>
+    {/if}
 </BaseHeader>
