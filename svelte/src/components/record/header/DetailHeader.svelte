@@ -38,7 +38,7 @@
 
     window.addEventListener('breadcrumbs:items-updated', (event: CustomEvent) => {
         params.breadcrumbs = event.detail;
-    })
+    });
 
     onMount(() => {
         if (params.afterOnMount) {

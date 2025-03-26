@@ -696,6 +696,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 window.dispatchEvent(new Event('record:actions-reload'));
             });
 
+            window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
+
             var $container = this.$el.find('.detail-button-container');
 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
@@ -1696,6 +1698,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             if (this.isRendered()) {
                 this.$el.find('.detail-button-container .action[data-action="' + name + '"]').remove();
+            }
+        },
+
+        getRecordButtons() {
+            return {
+                buttons: this.buttonList,
+                editButtons: this.buttonEditList,
+                dropdownButtons: this.dropdownItemList,
+                dropdownEditButtons: this.dropdownEditItemList,
+                additionalButtons: this.additionalButtons,
+                additionalEditButtons: this.additionalEditButtons,
             }
         },
 

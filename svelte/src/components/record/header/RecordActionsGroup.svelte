@@ -22,8 +22,9 @@
     export let scope: string;
     export let id: string | null;
 
-    let actions: ActionParams[] = [];
+    let recordActions: ActionParams[] = [];
     let dropdownActions: ActionParams[] = [];
+    let additionalActions: ActionParams[] = [];
     let dynamicActions: ActionParams[] = [];
     let dynamicActionsDropdown: ActionParams[] = [];
     let uiHandlerActions: ActionParams[] = [];
@@ -31,7 +32,8 @@
     let bookmarkId: string | null = null;
 
     $: {
-        actions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
+        recordActions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
+        additionalActions = [...(recordButtons?.additionalButtons ?? []), ...dynamicActions];
         dropdownActions = (mode === 'edit' ? recordButtons?.dropdownEditButtons : recordButtons?.dropdownButtons) ?? [];
         uiHandlerActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...getUiHandlerButtons()] : [])
     }
@@ -48,6 +50,16 @@
 
     window.addEventListener('record:actions-reload', (e: CustomEvent) => {
         reloadDynamicActions();
+    });
+
+
+    window.addEventListener('record:buttons-update', (event: CustomEvent) => {
+        console.log('record:buttons-update', event)
+        if (recordButtons) {
+            recordButtons = Object.assign(recordButtons, event.detail || {});
+        } else {
+            recordButtons = event.detail || {} as RecordActionButtons;
+        }
     });
 
     async function loadDynamicActions(): Promise<Record<string, any>[]> {
@@ -97,10 +109,10 @@
             return;
         }
 
-        dynamicActions = recordButtons?.additionalButtons ?? [];
+        dynamicActions = [];
         dynamicActionsDropdown = [];
-
         loadingActions = true;
+
         loadDynamicActions().then((list: Record<string, any>[]) => {
             const preparedList: ActionParams[] = list.map((item: Record<string, any>) => ({
                 ...item,
@@ -112,7 +124,7 @@
                 bookmarkId = bookmarkAction.data.bookmark_id ?? null;
             }
 
-            dynamicActions = [...dynamicActions, ...preparedList.filter(item => item.display === 'single')]
+            dynamicActions = preparedList.filter(item => item.display === 'single');
             dynamicActionsDropdown = preparedList.filter(item => item.display === 'dropdown');
         }).catch(error => {
             console.error(error);
@@ -120,7 +132,7 @@
     }
 
     function executeAction(event: CustomEvent): void {
-        recordButtons?.executeAction(event.detail.action, event.detail.data, event);
+        recordButtons?.executeAction(event.detail.action, event.detail.data, event.detail.event || event);
     }
 
     onMount(() => {
@@ -129,10 +141,10 @@
 </script>
 
 <div class="button-row">
-    <ActionGroup {actions} {dropdownActions} dynamicActionsDropdown={mode !== 'edit' ? dynamicActionsDropdown : []}
+    <ActionGroup actions={recordActions} {dropdownActions} dynamicActionsDropdown={mode !== 'edit' ? dynamicActionsDropdown : []}
                  {executeAction} {loadingActions} hasMoreButton={true} className="record-actions">
         {#if mode === 'detail'}
-            {#each dynamicActions as action}
+            {#each additionalActions as action}
                 <ActionButton params={action} on:execute={executeAction} className="additional-button dynamic-action"/>
             {/each}
 

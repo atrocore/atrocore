@@ -17,7 +17,7 @@
     }
 
     function runAction(e: Event) {
-        const el = e.target as HTMLElement;
+        const el = e.currentTarget as HTMLElement;
 
         dispatch('execute', {
             data: el.dataset,

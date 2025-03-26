@@ -421,9 +421,21 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         getHeaderOptions() {
+            let observer = null;
+
             const record = this.getView('record');
             const hasLayoutEditor = this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read');
-            let observer = null;
+            const recordButtons = Object.assign(record.getRecordButtons(), {
+                headerButtons: this.getMenu(),
+                isOverviewFilterActive: this.isOverviewFilterApply(), // need to be added dynamically
+                followers: this.model.get('followersNames') ?? {}, // need to be added dynamically
+                hasPrevious: this.hasPrevious,
+                hasNext: this.hasNext,
+                hasLayoutEditor: hasLayoutEditor,
+                executeAction: (action, data, event) => {
+                    this.executeAction(action, data, event);
+                },
+            });
 
             const options = {
                 params: {
@@ -458,23 +470,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         }
                     }
                 },
-                recordButtons: {
-                    buttons: record.buttonList,
-                    editButtons: record.buttonEditList,
-                    dropdownButtons: record.dropdownItemList,
-                    dropdownEditButtons: record.dropdownEditItemList,
-                    additionalButtons: record.additionalButtons,
-                    additionalEditButtons: record.additionalEditButtons,
-                    headerButtons: this.getMenu(),
-                    isOverviewFilterActive: this.isOverviewFilterApply(), // need to be added dynamically
-                    followers: this.model.get('followersNames') ?? {}, // need to be added dynamically
-                    hasPrevious: this.hasPrevious,
-                    hasNext: this.hasNext,
-                    hasLayoutEditor: hasLayoutEditor,
-                    executeAction: (action, data, event) => {
-                        this.executeAction(action, data, event);
-                    },
-                },
+                recordButtons: recordButtons,
                 callbacks: {
                     onFollow: () => {
                         let followersNames = this.model.get('followersNames') || {};
