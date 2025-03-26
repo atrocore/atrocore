@@ -707,6 +707,12 @@ class Hierarchy extends Base
         $withDeleted = !empty($selectParams['withDeleted']) && $selectParams['withDeleted'] === true;
 
         $subQueryParams = array_merge($selectParams, ['select' => ['id'], 'disableParentLoad' => true]);
+        if (!Converter::isPgSQL($this->getConnection())) {
+            // remove id filter for children on mysql to improve performance
+            if (!empty($subQueryParams['whereClause'][0]['id!=']) && count($subQueryParams['whereClause']) === 1) {
+                unset($subQueryParams['whereClause'][0]);
+            }
+        }
 
         $selectParams['callbacks'][] = function (QueryBuilder $qb, $entity, $params, Mapper $mapper)
         use ($subQueryParams, $quotedTableName, $quotedHierarchyTableName, $parentId, $sortOrder, $primarySortBy, $secondarySortBy, $withDeleted) {
