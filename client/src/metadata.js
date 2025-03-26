@@ -93,17 +93,6 @@ Espo.define('metadata', [], function () {
 
                 if (!(key in pointer)) {
                     result = defaultValue;
-                    if (this.data['scopes']['Attribute'] && key === 'attributes' && i === 2 && arr[0] === 'entityDefs') {
-                        this.ajax({
-                            url: 'Attribute/action/loadAttributes?path=' + arr.join('.'),
-                            type: 'GET',
-                            dataType: 'JSON',
-                            async: false,
-                            success(data) {
-                                result = data;
-                            }
-                        });
-                    }
                     break;
                 }
                 if (arr.length - 1 == i) {
