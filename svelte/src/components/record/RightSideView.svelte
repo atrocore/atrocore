@@ -4,12 +4,15 @@
     import GfiImage from "../../assets/image_gfi.svg"
     import GfiHideImage from "../../assets/hide_image_gfi.svg"
     import {Language} from "../../utils/Language";
+    import {Metadata} from "../../utils/Metadata";
 
     export let scope: string;
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let loadSummary: Function;
+
+    export let loadActivities: Function;
 
     export let isCollapsed: boolean = false;
 
@@ -21,21 +24,22 @@
     let mouseEnterTimer: number | null;
     let isMouseOver = false;
     let isPin = true;
+    let streamLoaded = true;
 
     let items = [
         {
             "name": "summary",
             "label": Language.translate('Summary'),
-        },
-        // {
-        //     "name":"activities",
-        //     "label": Language.translate('Activities')
-        // }
+        }
     ];
     let activeItem = items[0];
 
 
     $: sideViewWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
+
+    function hasStream() {
+        return  Metadata.get(['scopes', scope, 'stream']) === true;
+    }
 
     function handleResize(e: MouseEvent) {
         if (!isDragging) return;
@@ -80,6 +84,10 @@
         }
 
         activeItem = item;
+
+        if(item.name === 'activities') {
+            refreshActivities();
+        }
     }
 
     function handleCollapsePanel(e: Event) {
@@ -140,6 +148,10 @@
         Storage.set('right-side-view-pin', scope, isPin ? 'pin' : 'not-pinned');
     }
 
+    function refreshActivities() {
+        loadActivities();
+    }
+
     onMount(() => {
         const savedWidth = Storage.get('rightSideView', scope);
         if (savedWidth) {
@@ -151,6 +163,15 @@
         isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned';
 
         loadSummary();
+
+        if(hasStream()) {
+            items = [
+                ...items,
+                {
+                "name":"activities",
+                "label": Language.translate('Activities')
+            }]
+        }
 
         return () => {
             if (mouseLeaveTimer !== null) {

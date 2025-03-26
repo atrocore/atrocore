@@ -157,13 +157,13 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         setupStreamPanel: function () {
             this.panelList.push({
                 "name": "stream",
-                "label": "Stream",
+                "label": "Activities",
                 "title": this.translate('Stream', 'labels', this.scope),
                 "view": "views/stream/panel",
                 "sticked": false,
                 "hidden": this.isPanelClosed('stream'),
                 "order": this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
-                "expanded": !this.isPanelClosed('stream')
+                "expanded": false
             });
         },
 

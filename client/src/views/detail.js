@@ -323,7 +323,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                                 view.render();
                             })
                         },
-                        callbacks: {
+                        loadActivities: () => {
 
                         }
                     }
