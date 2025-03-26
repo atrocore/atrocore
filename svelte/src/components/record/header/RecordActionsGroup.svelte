@@ -50,10 +50,10 @@
         reloadDynamicActions();
     });
 
-    async function loadDynamicActions(): Promise<Record<string, any>[] | undefined> {
+    async function loadDynamicActions(): Promise<Record<string, any>[]> {
         let userData = UserData.get();
         if (!userData || !id) {
-            return;
+            return [];
         }
 
         try {
@@ -72,6 +72,7 @@
             return await response.json();
         } catch (error) {
             console.error('Error:', error);
+            return [];
         }
     }
 
