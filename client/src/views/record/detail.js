@@ -2027,19 +2027,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
-                // data.layout.push({
-                //     id: 'attributeValues',
-                //     label: 'Test 222',
-                //     rows: [
-                //         [
-                //             {name: 'attr_1' + this.model.id},
-                //             {name: 'attr_2' + this.model.id}
-                //         ]
-                //     ]
-                // });
-
-                // console.log(this.model.id)
-
+                this.prepareLayoutData(data);
                 this.layoutData = data
                 this.gridLayout = {
                     type: gridLayoutType,
@@ -2047,6 +2035,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 };
                 callback(this.gridLayout);
             }.bind(this));
+        },
+
+        prepareLayoutData(data) {
+            // do something
         },
 
         createSideView: function (callback) {
