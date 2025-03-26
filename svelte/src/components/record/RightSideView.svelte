@@ -24,7 +24,7 @@
     let mouseEnterTimer: number | null;
     let isMouseOver = false;
     let isPin = true;
-    let streamLoaded = true;
+    let streamView: Object;
 
     let items = [
         {
@@ -85,9 +85,11 @@
 
         activeItem = item;
 
-        if(item.name === 'activities') {
-            refreshActivities();
+        if(activeItem.name === 'activities') {
+            refreshActivities()
         }
+
+        Storage.set('right-side-view-active-item', scope, activeItem.name);
     }
 
     function handleCollapsePanel(e: Event) {
@@ -97,6 +99,9 @@
     function updateCollapse(value: boolean) {
         isCollapsed = value;
         Storage.set('right-side-view-collapse', scope, isCollapsed ? 'collapsed' : '');
+        if(activeItem.name === 'activities') {
+            refreshActivities();
+        }
     }
 
     function handleMouseLeave() {
@@ -149,7 +154,18 @@
     }
 
     function refreshActivities() {
-        loadActivities();
+
+        if(isCollapsed) {
+            return;
+        }
+
+        if(streamView == null) {
+            loadActivities((view) => {
+                streamView = view;
+            });
+        }else{
+             streamView?.refresh();
+        }
     }
 
     onMount(() => {
@@ -171,6 +187,13 @@
                 "name":"activities",
                 "label": Language.translate('Activities')
             }]
+        }
+
+        let itemName =   Storage.get('right-side-view-active-item', scope);
+
+        if(itemName && items.map(i => i.name).includes(itemName)) {
+
+             setActiveItem(items.find(i => i.name === itemName));
         }
 
         return () => {
@@ -356,6 +379,10 @@
     :global(.right-side-view .row .cell .field) {
         padding-bottom: 6px;
         border-bottom: 1px solid var(--secondary-border-color);
+    }
+
+    :global(.right-side-view .panel-heading .panel-title .collapser) {
+        display: none;
     }
 
 </style>

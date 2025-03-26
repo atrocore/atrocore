@@ -28,9 +28,11 @@
                 {{/if}}
             </div>
             <h4 class="panel-title">
+            {{#unless hideCollapser}}
             <span class="collapser" data-action="collapsePanel" data-panel="{{name}}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M480-80 240-320l44-44 196 196 196-196 44 44L480-80ZM284-596l-44-44 240-240 240 240-44 44-196-196-196 196Z"></path></svg>
             </span>
+            {{/unless}}
             {{#unless notRefreshable}}
             <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-panel="{{name}}">
             {{/unless}}
