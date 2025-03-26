@@ -313,10 +313,10 @@ class Metadata
                     $row['overwrite'] = !empty($parsedData['field']['overwrite']);
                     switch ($parsedData['field']['updateType']) {
                         case 'basic':
-                            $row['updateData'] = $parsedData['fieldData'];
+                            $row['updateData'] = $parsedData['fieldData'] ?? [];
                             break;
                         case 'script':
-                            $row['updateData'] = $parsedData['field']['updateScript'];
+                            $row['updateData'] = $parsedData['field']['updateScript'] ?? '';
                             break;
                     }
                     break;
