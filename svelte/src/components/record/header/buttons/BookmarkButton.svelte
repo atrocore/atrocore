@@ -21,6 +21,7 @@
             html: '<span class="fas fa-bookmark"></span>',
             style: style,
             disabled: loading,
+            tooltip: Language.translate(bookmarkId ? 'actionUnbookmark' : 'actionBookmark'),
         } as ActionParams;
     }
 

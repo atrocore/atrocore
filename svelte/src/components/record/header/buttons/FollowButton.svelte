@@ -2,6 +2,7 @@
     import ActionButton from "./ActionButton.svelte";
     import ActionParams from "../interfaces/ActionParams";
     import {UserData} from "../../../../utils/UserData";
+    import {Language} from "../../../../utils/Language";
 
     export let entity: string;
     export let id: string;
@@ -24,6 +25,7 @@
             html: '<span class="fas fa-bell"></span>',
             style: style,
             disabled: loading,
+            tooltip: Language.translate(isFollowed ? 'actionUnfollow' : 'actionFollow'),
         } as ActionParams;
     }
 

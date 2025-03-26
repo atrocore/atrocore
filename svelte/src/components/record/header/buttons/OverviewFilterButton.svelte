@@ -1,6 +1,7 @@
 <script lang="ts">
     import ActionParams from "../interfaces/ActionParams";
     import ActionButton from "./ActionButton.svelte";
+    import {Language} from "../../../../utils/Language";
 
     export let filterApplied: boolean = false;
     export let onExecute: (e: CustomEvent) => void;
@@ -13,7 +14,8 @@
         params = {
             action: 'openOverviewFilter',
             html: '<span class="fas fa-filter"></span>',
-            style: style
+            style: style,
+            tooltip: Language.translate('actionOpenFilter')
         } as ActionParams;
     }
 

@@ -373,8 +373,12 @@
     "language": "Language",
     "scopeFilter": "Channel",
     "editGroup": "Edit Group",
-    "addGroup": "Begin / end group"
-
+    "addGroup": "Begin / end group",
+    "actionFollow": "Click to follow",
+    "actionUnfollow": "Your are following, Click to unfollow",
+    "actionBookmark": "Click to bookmark",
+    "actionUnbookmark": "Bookmarked, Click to unbookmark",
+    "actionOpenFilter": "Open Filter"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
