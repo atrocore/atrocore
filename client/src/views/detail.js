@@ -42,8 +42,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         optionsToPass: ['attributes', 'returnUrl', 'returnDispatchParams', 'rootUrl'],
 
-        headerView: 'views/detail-header',
-
         recordView: 'views/record/detail',
 
         overviewFilterView: 'views/modals/overview-filter',
@@ -84,7 +82,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
 

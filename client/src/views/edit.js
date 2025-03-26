@@ -44,8 +44,6 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         optionsToPass: ['returnUrl', 'returnDispatchParams', 'attributes', 'rootUrl'],
 
-        headerView: 'views/header',
-
         recordView: 'views/record/edit',
 
         setup: function () {

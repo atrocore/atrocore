@@ -101,9 +101,6 @@
   "views/admin/integrations/index": [
     "treo-core"
   ],
-  "views/edit": [
-    "treo-core"
-  ],
   "views/admin/field-manager/index": [
     "treo-core"
   ],

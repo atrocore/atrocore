@@ -68,22 +68,9 @@ Espo.define('views/header', 'view', function (Dep) {
             }
         },
 
-        afterRender: function () {
-            this.createView('headerButtons', 'views/record/header-buttons', {
-                el: this.options.el + ' .header-buttons-container',
-                model: this.model,
-                items: this.getItems()
-            }, view => view.render());
-        },
-
         getItems: function () {
             return this.getParentView().getMenu() || {};
         },
-
-        reloadButtons: function () {
-            this.getView('headerButtons').setItems(this.getItems());
-        },
-
     });
 });
 

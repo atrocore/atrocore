@@ -40,8 +40,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
         name: 'List',
 
-        headerView: 'views/header',
-
         searchView: 'views/record/search',
 
         recordView: 'views/record/list',
@@ -106,7 +104,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
             this.entityType = this.collection.name;
 
-            this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
             this.searchView = this.options.searchView || this.searchView;
 
