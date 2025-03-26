@@ -11,6 +11,7 @@
     }
 
     export let scope: string;
+    export let currentIsHeading: boolean = true;
 
     let items: LastEntityRecord[];
 
@@ -21,12 +22,16 @@
         name: item,
         label: Language.translate(item, 'scopeNamesPlural'),
         link: `#${item}`,
-    }) as LastEntityRecord);
+    }) as LastEntityRecord).concat({
+        name: scope,
+        label: Language.translate(scope, 'scopeNamesPlural'),
+        link: `#${scope}`,
+    } as LastEntityRecord);
 
     async function loadLastEntities(): Promise<string[]> {
         let userData = UserData.get();
         if (!userData) {
-            return;
+            return [];
         }
 
         try {
@@ -55,6 +60,7 @@
             return await response.json();
         } catch (error) {
             console.error('Error:', error);
+            return [];
         }
     }
 
@@ -73,13 +79,21 @@
 
 {#if loading}
     <div class="entity-history">
-        <Preloader heightPx="10"/>
+        <Preloader heightPx={10}/>
     </div>
 {:else if items.length > 0}
     <nav class="entity-history">
         <ul>
-            {#each items as item}
-                <li><a href={item.link}>{item.label}</a></li>
+            {#each items as item, index}
+                {#if index !== items.length - 1}
+                    <li><a href={item.link}>{item.label}</a></li>
+                {:else}
+                    {#if currentIsHeading}
+                        <li class="full-width"><h3 class="header-title">{item.label}</h3></li>
+                    {:else}
+                        <li><span>{item.label}</span></li>
+                    {/if}
+                {/if}
             {/each}
         </ul>
     </nav>
@@ -97,7 +111,12 @@
         color: #000;
     }
 
-    nav > ul > li:after {
+    nav > ul > li.full-width {
+        display: block;
+        margin: 10px 0;
+    }
+
+    nav > ul > li:not(:last-child):after {
         content: "";
         display: inline-block;
         width: 16px;
@@ -112,5 +131,9 @@
 
     nav > ul > li > a {
         color: inherit;
+    }
+
+    h3 {
+        font-size: 20px;
     }
 </style>

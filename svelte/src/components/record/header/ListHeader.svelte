@@ -31,7 +31,7 @@
 </script>
 
 <EntityHistory scope={params.scope} />
-<BaseHeader breadcrumbs={params.breadcrumbs}>
+<BaseHeader>
     <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} />
     <div class="search-container"></div>
 </BaseHeader>
