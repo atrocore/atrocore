@@ -382,8 +382,48 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             }
         },
 
+        setupLayoutEditorButton() {
+            let el = this.options.el || '#' + (this.id);
+            const recordView = this.getView('record');
+            const bottomView = recordView.getView('bottom');
+
+            this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
+                scope: this.scope,
+                viewType: 'relationships',
+                layoutData: bottomView.layoutData,
+                el: el + ' .panel-navigation .layout-editor-container',
+            }, (view) => {
+                view.on("refresh", () => {
+                    recordView.createBottomView(view => {
+                        view.render();
+                    })
+                })
+                view.render();
+            })
+        },
+
+        initHeaderObserver() {
+            return new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (!node instanceof HTMLElement || !node.classList) {
+                            return;
+                        }
+
+                        if (node.classList.contains('header-title') && (node.tagName ?? '').toLowerCase() === 'h3') {
+                            this.setupTourButton();
+                        } else if (node.classList.contains('layout-editor-container')) {
+                            this.setupLayoutEditorButton();
+                        }
+                    })
+                });
+            })
+        },
+
         getHeaderOptions() {
             const record = this.getView('record');
+            const hasLayoutEditor = this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read');
+            let observer = null;
 
             const options = {
                 params: {
@@ -400,28 +440,21 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     breadcrumbs: this.getBreadcrumbsItems(),
                     afterOnMount: () => {
                         this.setupTourButton();
+                        if (hasLayoutEditor) {
+                            this.setupLayoutEditorButton();
+                        }
 
-                        if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
-                            this.getAcl().check('LayoutProfile', 'read')
-                            && this.mode !== 'edit'
-                        ) {
-                            let el = this.options.el || '#' + (this.id);
-                            const recordView = this.getView('record');
-                            const bottomView = recordView.getView('bottom');
-
-                            this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
-                                scope: this.scope,
-                                viewType: 'relationships',
-                                layoutData: bottomView.layoutData,
-                                el: el + ' .panel-navigation .layout-editor-container',
-                            }, (view) => {
-                                view.on("refresh", () => {
-                                    recordView.createBottomView(view => {
-                                        view.render()
-                                    })
-                                })
-                                view.render()
-                            })
+                        observer = this.initHeaderObserver();
+                        if (observer) {
+                            observer.observe(document.querySelector('.page-header'), {
+                                childList: true,
+                                subtree: true
+                            });
+                        }
+                    },
+                    afterOnDestroy: () => {
+                        if (observer) {
+                            observer.disconnect();
                         }
                     }
                 },
@@ -437,7 +470,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     followers: this.model.get('followersNames') ?? {}, // need to be added dynamically
                     hasPrevious: this.hasPrevious,
                     hasNext: this.hasNext,
-                    hasLayoutEditor: this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read'),
+                    hasLayoutEditor: hasLayoutEditor,
                     executeAction: (action, data, event) => {
                         this.executeAction(action, data, event);
                     },

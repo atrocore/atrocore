@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import {onDestroy, onMount} from "svelte";
 
     import Params from "./interfaces/Params"
     import AnchorNavItem from "./interfaces/AnchorNavItem";
@@ -20,9 +20,7 @@
     let mode: string;
     let currentIsHeading: boolean = params?.currentIsHeading ?? true;
 
-    $: {
-        mode = params?.mode ?? 'detail';
-    }
+    $: mode = params.mode ?? 'detail';
 
     window.addEventListener('detail:panels-loaded', (event: CustomEvent) => {
         anchorNavItems = event.detail;
@@ -47,17 +45,25 @@
             params.afterOnMount();
         }
     });
+
+    onDestroy(() => {
+        if (params.afterOnDestroy) {
+            params.afterOnDestroy();
+        }
+    });
 </script>
 
 <BaseHeader breadcrumbs={params.breadcrumbs} {currentIsHeading}>
-    <div class="detail-button-container">
-        <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions}
-                            {recordButtons} {callbacks}/>
-    </div>
+    {#if recordButtons}
+        <div class="detail-button-container">
+            <RecordActionsGroup {mode} scope={params.scope} id={params.id} permissions={params.scopePermissions}
+                                {recordButtons} {callbacks}/>
+        </div>
+    {/if}
     {#if anchorNavItems.length > 1}
         <div class="anchor-nav-container">
             <AnchorNavigation items={anchorNavItems} scrollCallback={anchorScrollCallback}
-                              hasLayoutEditor={recordButtons.hasLayoutEditor && params.mode !== 'edit'}/>
+                              hasLayoutEditor={recordButtons?.hasLayoutEditor && params.mode !== 'edit'}/>
         </div>
     {/if}
 </BaseHeader>

@@ -18,5 +18,6 @@ export default interface Params {
     breadcrumbs: BreadcrumbsItem[],
     currentIsHeading: boolean;
     afterOnMount?: Function,
+    afterOnDestroy?: Function,
     scopePermissions?: Permissions
 }
