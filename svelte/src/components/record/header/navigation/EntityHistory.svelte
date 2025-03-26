@@ -34,6 +34,7 @@
             return [];
         }
 
+        lastEntities = [];
         try {
             let url = '/api/v1/LastViewed/action/getLastEntities'
             const params = new URLSearchParams({
@@ -77,12 +78,12 @@
     });
 </script>
 
-{#if loading}
-    <div class="entity-history">
+<nav class="entity-history">
+    {#if loading}
         <Preloader heightPx={10}/>
-    </div>
-{:else if items.length > 0}
-    <nav class="entity-history">
+    {/if}
+
+    {#if items.length > 0}
         <ul>
             {#each items as item, index}
                 {#if index !== items.length - 1}
@@ -96,8 +97,9 @@
                 {/if}
             {/each}
         </ul>
-    </nav>
-{/if}
+    {/if}
+</nav>
+
 
 <style>
     nav > ul {
