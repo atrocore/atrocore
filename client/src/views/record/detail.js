@@ -117,7 +117,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         middleView: 'views/record/detail-middle',
 
-        sideView: 'views/record/right-side-view',
+        rightSideView: 'views/record/right-side-view',
 
         bottomView: 'views/record/detail-bottom',
 
@@ -2020,7 +2020,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         createRightSideView: function(el, callback) {
             this.getSideLayout(el, (layout) => {
-                this.createView('rightSideView', this.sideView, {
+                this.createView('rightSideView', this.rightSideView, {
                     model: this.model,
                     scope: this.scope,
                     type: this.type,
