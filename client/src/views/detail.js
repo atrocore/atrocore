@@ -115,7 +115,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     if (this.getAcl().check('Bookmark', 'delete')) {
                         data = {
                             name: 'bookmarking',
-                            title: 'Bookmarked, Click to unbookmark',
                             action: 'unbookmark',
                         }
                     }
@@ -124,7 +123,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     if (this.getAcl().check('Bookmark', 'create')) {
                         data = {
                             name: 'bookmarking',
-                            title: 'Click to bookmark',
                             action: 'bookmark',
                         }
                     }
@@ -139,7 +137,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             ) {
                 this.addMenuItem('buttons', {
                     name: 'filtering',
-                    title: 'Open Filter',
                     action: 'openOverviewFilter'
                 }, true, false, true);
             }
@@ -424,8 +421,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             const hasLayoutEditor = this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read');
             const recordButtons = Object.assign(record.getRecordButtons(), {
                 headerButtons: this.getMenu(),
-                isOverviewFilterActive: this.isOverviewFilterApply(), // need to be added dynamically
-                followers: this.model.get('followersNames') ?? {}, // need to be added dynamically
+                isOverviewFilterActive: this.isOverviewFilterApply(),
+                followers: this.model.get('followersNames') ?? {},
                 hasPrevious: this.hasPrevious,
                 hasNext: this.hasNext,
                 hasLayoutEditor: hasLayoutEditor,
@@ -434,7 +431,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 },
             });
 
-            const options = {
+            return {
                 params: {
                     mode: this.mode,
                     scope: this.scope,
@@ -496,8 +493,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     }
                 }
             };
-
-            return options;
         },
 
         setupHeader: function () {
@@ -659,22 +654,14 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         addUnfollowButtonToMenu: function () {
             this.addMenuItem('buttons', {
                 name: 'following',
-                html: '<span class="fas fa-bell"></span>',
-                title: 'Your are following, Click to unfollow',
                 action: 'unfollow',
-                cssStyle: 'margin: 0 10px 0 0px;color:white;',
-                style: 'primary'
             }, true, false, true);
         },
 
         addFollowButtonToMenu: function () {
             this.addMenuItem('buttons', {
                 name: 'following',
-                title: 'Click to follow',
-                style: 'default',
-                html: '<span class="fas fa-bell"></span>',
                 action: 'follow',
-                cssStyle: 'margin: 0 10px 0 0px;'
             }, true, false, true);
         },
 
