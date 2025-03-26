@@ -718,7 +718,7 @@ class Hierarchy extends Base
                 $selectCountQuery = $mapper->createSelectQueryBuilder($entity, $subQueryParams);
                 $selectCountQuery->setFirstResult(0);
                 $selectCountQuery->setMaxResults(null);
-
+                $selectCountQuery->resetQueryPart('orderBy');
                 $selectCountQuery->select("COUNT($tableAlias.id)");
                 $selectCountQuery->join($tableAlias, $quotedHierarchyTableName, 'r1', "$tableAlias.id = r1.entity_id");
                 if (!$withDeleted) {
@@ -731,7 +731,7 @@ class Hierarchy extends Base
                 }
 
                 $countSql = str_replace("$tableAlias.", 't2.', $selectCountQuery->getSQL());
-                $countSql = str_replace("` $tableAlias", '` t2', $countSql);
+                $countSql = str_replace(" $tableAlias ", ' t2 ', $countSql);
                 $countSql = str_replace('__id', "$tableAlias.id", $countSql);
             } else {
                 $selectCountQuery = $this->getConnection()->createQueryBuilder()
