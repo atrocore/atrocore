@@ -1198,6 +1198,7 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields']['created'] = [
                 'type' => 'datetime',
                 'view' => 'views/fields/created-at-with-user',
+                'notStorable' => true,
                 'readOnly' => true,
                 'ignoreViewForSearch' => true,
             ];
@@ -1205,6 +1206,7 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields']['modified'] = [
                 'type' => 'datetime',
                 'view' => 'views/fields/modified-at-with-user',
+                'notStorable' => true,
                 'readOnly' => true,
                 'ignoreViewForSearch' => true,
             ];
