@@ -43,7 +43,7 @@
     };
 
 
-    $: sideViewWidth = isMobile ? `${window.innerWidth * 0.9}px` : (  isCollapsed ? 'auto' : `${currentWidth}px`);
+    $: sideViewWidth = isMobile ? `${window.innerWidth}px` : (  isCollapsed ? 'auto' : `${currentWidth}px`);
 
     function handleResize(e: MouseEvent) {
         if (!isDragging) return;
