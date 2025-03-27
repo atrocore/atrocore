@@ -187,4 +187,20 @@
     .detail  > .detail-button-container  > .panel-navigation > .nav-pills > li {
         margin-left: 0;
     }
+
+    .nav-pills > li {
+        float: left;
+        margin-left: 4px;
+    }
+
+    .nav-pills > li > a {
+        border-radius: 2px;
+        border: 1px solid #eee;
+        background-color: var(--anchor-nav-background);
+    }
+
+    .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+        color: #fff;
+        background-color: #537898
+    }
 </style>

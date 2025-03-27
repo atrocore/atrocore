@@ -370,6 +370,13 @@ Espo.define('view', [], function () {
             }
             return hash >>> 0; // Ensure it's a 32-bit unsigned integer
         },
+
+        getAdminBreadcrumbsItem: function() {
+            return {
+                url: '#Admin',
+                label: this.getLanguage().translate('Administration', 'labels')
+            };
+        }
     });
 
 });

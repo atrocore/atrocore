@@ -36,6 +36,23 @@ Espo.define('treo-core:views/admin/layouts/index', 'class-replace!treo-core:view
                 }, 2000)
             });
         },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            new Svelte.BaseHeader({
+                target: document.querySelector('#layout-header'),
+                props: {
+                    breadcrumbs: [
+                        this.getAdminBreadcrumbsItem(),
+                        {
+                            url: '#Admin/Layouts',
+                            label: this.translate('Layout Manager', 'labels', 'Admin')
+                        }
+                    ]
+                }
+            })
+        }
     })
 );
 

@@ -11,12 +11,6 @@
   "controllers/admin": [
     "treo-core"
   ],
-  "views/admin/auth-log-record/list": [
-    "treo-core"
-  ],
-  "views/admin/auth-token/list": [
-    "treo-core"
-  ],
   "views/admin/job/list": [
     "treo-core"
   ],
@@ -105,9 +99,6 @@
     "treo-core"
   ],
   "views/admin/integrations/index": [
-    "treo-core"
-  ],
-  "views/edit": [
     "treo-core"
   ],
   "views/admin/field-manager/index": [
