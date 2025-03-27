@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB;
 
+use Atro\Core\Utils\Config;
 use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
@@ -23,7 +24,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 
 class Mapper implements MapperInterface
 {
@@ -708,6 +709,11 @@ class Mapper implements MapperInterface
             return;
         }
 
+        $languages = [];
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            $languages = $this->getConfig()->get('inputLanguageList', []);
+        }
+
         $tableName = $this->toDb(lcfirst($entity->getEntityType()));
 
         $res = $this->connection->createQueryBuilder()
@@ -744,16 +750,6 @@ class Mapper implements MapperInterface
                         'type'             => 'jsonArray',
                         'attributeValueId' => $row['id'],
                         'column'           => "json_value"
-                    ];
-                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
-                    break;
-                case 'text':
-                case 'markdown':
-                case 'wysiwyg':
-                    $entity->fields[$name] = [
-                        'type'             => 'text',
-                        'attributeValueId' => $row['id'],
-                        'column'           => "text_value"
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
@@ -864,16 +860,43 @@ class Mapper implements MapperInterface
                     ];
                     $data[$name . 'Id'] = $row[$entity->fields[$name . 'Id']['column']] ?? null;
                     break;
-                case 'linkMultiple':
-                    // nothing to change
+                case 'text':
+                case 'markdown':
+                case 'wysiwyg':
+                    $entity->fields[$name] = [
+                        'type'             => 'text',
+                        'attributeValueId' => $row['id'],
+                        'column'           => "text_value"
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    foreach ($languages as $language) {
+                        $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
+                        $entity->fields[$lName] = [
+                            'type'             => 'text',
+                            'attributeValueId' => $row['id'],
+                            'column'           => "text_value_" . strtolower($language)
+                        ];
+                        $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
+                    }
                     break;
-                default:
+                case 'varchar':
                     $entity->fields[$name] = [
                         'type'             => 'varchar',
                         'attributeValueId' => $row['id'],
                         'column'           => "varchar_value"
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    foreach ($languages as $language) {
+                        $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
+                        $entity->fields[$lName] = [
+                            'type'             => 'varchar',
+                            'attributeValueId' => $row['id'],
+                            'column'           => "varchar_value_" . strtolower($language)
+                        ];
+                        $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
+                    }
                     break;
             }
         }
@@ -902,6 +925,11 @@ class Mapper implements MapperInterface
     public function getEntityFactory(): EntityFactory
     {
         return $this->entityFactory;
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->metadata->getConfig();
     }
 
     private function error(string $message): void
