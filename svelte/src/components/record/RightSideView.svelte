@@ -42,6 +42,7 @@
         isMobile = window.innerWidth <= 768;
     };
 
+    $: sideViewWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
 
 
     $: sideViewWidth = isMobile ? `${window.innerWidth * 0.9}px` : (  isCollapsed ? 'auto' : `${currentWidth}px`);
@@ -169,7 +170,7 @@
                 streamView = view;
             });
         }else{
-            streamView?.refresh();
+             streamView?.refresh();
         }
     }
 
@@ -283,13 +284,11 @@
 <style>
 
     .right-side-view {
-        position: sticky;
-        height: calc(100vh - 46px);
-        top: 0;
+        position: relative;
+        height: 100%;
         z-index: 1300;
         background: #fff;
         padding: 10px 20px;
-        border-top: 1px solid var(--primary-border-color);
         border-left: 1px solid var(--primary-border-color);
         overflow-y: auto;
         transition: .6s width cubic-bezier(0.19, 1, .22, 1);
@@ -399,24 +398,5 @@
     :global(.right-side-view .panel-heading .panel-title .collapser) {
         display: none;
     }
-
-    :global(.dropdown-menu.textcomplete-dropdown){
-        z-index: 1300 !important;
-    }
-
-    @media (max-width: 768px) {
-        .collapsed.right-side-view {
-            position: fixed;
-            width:0 !important;
-            right: 20px;
-            padding: 0;
-            border-left: 0 solid transparent;
-        }
-
-        button.collapse-panel {
-            bottom: 20px;
-        }
-    }
-
 
 </style>

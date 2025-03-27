@@ -23,7 +23,7 @@ Espo.define('treo-core:controllers/currency', 'controller', function (Dep) {
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'treo-core:admin/settings/headers/currency',
+                    headerTitle: 'Currency',
                     recordView: 'views/admin/currency'
                 });
             }, this);

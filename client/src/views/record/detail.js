@@ -177,6 +177,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        executeAction: function (action, data = null, e = null) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, e);
+            }
+        },
+
         refreshLayout() {
             this.detailLayout = null
             this.gridLayout = null
@@ -582,122 +589,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     'name': 'copyConfigurations'
                 });
             }
-
-            if (this.model.id && !this.buttonsDisabled) {
-                const recordActions = this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []
-
-                if (recordActions.filter(a => a.display === 'single').length > 0) {
-                    this.additionalButtons.push({
-                        preloader: true
-                    });
-                }
-
-                if (recordActions.filter(a => a.display === 'dropdown').length > 0) {
-                    this.dropdownItemList.push({
-                        divider: true
-                    });
-                    this.dropdownItemList.push({
-                        preloader: true
-                    });
-                }
-
-                this.setupUiHandlerButtons()
-            }
-
-        },
-
-        loadDynamicActions: function (display) {
-            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled']) || !this.model.id || this.buttonsDisabled) {
-                return;
-            }
-
-            const $buttons = $(this.$el).find('.record-buttons')
-
-            if (display === 'single') {
-                const hasButton = !!this.additionalButtons.find(i => i.preloader)
-                if (!hasButton && this.getMetadata().get(['scopes', this.entityType, 'bookmarkDisabled'])) {
-                    return
-                }
-                $buttons.find('.btn-group >.dynamic-action').remove()
-                if (hasButton) {
-                    $buttons.find('a.preloader').show()
-                }
-            }
-
-            if (display === 'dropdown') {
-                if (this.dropdownItemList.find(i => i.preloader) == null) {
-                    return
-                }
-                $buttons.find('.dropdown-menu .dynamic-action').remove()
-                $buttons.find('li.preloader,li.divider').show()
-            }
-
-
-            this.model.fetchDynamicActions(display)
-                .then(actions => {
-                    const dropdownItemList = [];
-                    const additionalButtons = [];
-                    actions.forEach(action => {
-                        if (action.display === 'dropdown') {
-                            dropdownItemList.push({
-                                ...action,
-                                id: action.data['action_id'],
-                            });
-                        }
-
-                        if (action.display === 'single') {
-                            additionalButtons.push({
-                                ...action,
-                                id: action.data['action_id'],
-                            });
-                        }
-
-                        if (action.action === 'bookmark') {
-                            this.model.set('bookmarkId', action.data['bookmark_id'])
-                        }
-                    })
-
-                    if (display === 'dropdown') {
-                        let template = this._templator.compileTemplate(`
-                        {{#each dropdownItemList}}
-                                <li class="dynamic-action"><a href="javascript:" class="action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=scope}}{{/if}}</a></li>
-                        {{/each}}`)
-                        let html = this._renderer.render(template, {dropdownItemList, scope: this.scope})
-
-                        $buttons.find('li.preloader').hide()
-                        $buttons.find('.dropdown-menu .dynamic-action').remove()
-                        $(html).insertBefore($buttons.find('ul > li.preloader'))
-                        if (dropdownItemList.length === 0) {
-                            $buttons.find('li.divider').hide()
-                        }
-                    }
-
-                    if (display === 'single') {
-                        let template = this._templator.compileTemplate(`
-                            {{#each additionalButtons}}
-                                <button type="button" class="btn btn-default additional-button action dynamic-action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>
-                            {{/each}}`)
-                        let html = this._renderer.render(template, {additionalButtons})
-
-                        $buttons.find('a.preloader').hide()
-                        $buttons.find('.btn-group >.dynamic-action').remove()
-                        $(html).insertBefore($buttons.find('a.preloader'))
-                    }
-                })
-        },
-
-        setupUiHandlerButtons() {
-            this.additionalEditButtons = [];
-            (this.getMetadata().get(['clientDefs', this.scope, 'uiHandler']) || []).forEach(handler => {
-                if (handler.type === 'setValue' && handler.triggerAction === 'onButtonClick') {
-                    this.additionalEditButtons.push({
-                        'action': 'uiHandler',
-                        'id': handler.id,
-                        'label': handler.name
-                    })
-
-                }
-            })
         },
 
         isHierarchical() {
@@ -794,19 +685,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         afterRender: function () {
             this.initRealtimeListener();
 
-            this.loadDynamicActions('single')
-
             this.listenTo(this.model, 'after:save', () => {
-                this.loadDynamicActions('single')
-            })
+                window.dispatchEvent(new Event('record:actions-reload'));
+            });
 
-            this.listenTo(this.model, 'sync', () => {
-                this.loadDynamicActions('single')
-            })
-
-            $(this.$el).find('.record-buttons button[data-toggle="dropdown"]').parent().on('show.bs.dropdown', () => {
-                this.loadDynamicActions('dropdown')
-            })
+            window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
 
             var $container = this.$el.find('.detail-button-container');
 
@@ -843,15 +726,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 searchContainer.addClass('hidden');
             }
 
-            let headerButtonsContainer = $('.header-buttons-container');
-            if (headerButtonsContainer.length) {
-                let main = $('#main');
-                let headerBreadcrumbs = $('.header-breadcrumbs:not(.fixed-header-breadcrumbs)');
-
-                if (main.length && headerBreadcrumbs.length && headerButtonsContainer.outerWidth() > main.outerWidth() - headerBreadcrumbs.outerWidth()) {
-                    // headerButtonsContainer.addClass('full-row');
-                }
-            }
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
@@ -919,7 +793,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             observer.observe($('#content').get(0));
         },
 
-
         fetch: function (onlyRelation) {
             var data = Dep.prototype.fetch.call(this, onlyRelation);
             if (onlyRelation) {
@@ -974,14 +847,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
             this.model.trigger('after:change-mode', 'edit');
-            this.$el.find('.layout-editor-container').addClass('hidden');
         },
 
         setDetailMode: function () {
             this.trigger('before:set-detail-mode');
-            this.$el.find('.edit-buttons').addClass('hidden');
-            this.$el.find('.record-buttons').removeClass('hidden');
-            this.$el.find('.layout-editor-container').removeClass('hidden')
 
             var fields = this.getFieldViews(true);
             for (var field in fields) {
@@ -1787,13 +1656,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         enableButtons: function () {
-            this.$el.find(".button-container .action").removeAttr('disabled').removeClass('disabled');
-            this.$el.find(".button-container .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
+            $(".page-header .detail-button-container .action").removeAttr('disabled').removeClass('disabled');
+            $(".page-header .detail-button-container .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
         },
 
         disableButtons: function () {
-            this.$el.find(".button-container .action").attr('disabled', 'disabled').addClass('disabled');
-            this.$el.find(".button-container .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
+            $(".page-header .detail-button-container .action").attr('disabled', 'disabled').addClass('disabled');
+            $(".page-header .detail-button-container .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
         },
 
         removeButton: function (name) {
@@ -1811,6 +1680,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             if (this.isRendered()) {
                 this.$el.find('.detail-button-container .action[data-action="' + name + '"]').remove();
+            }
+        },
+
+        getRecordButtons() {
+            if (this.buttonsDisabled) {
+                return null;
+            }
+
+            return {
+                buttons: this.buttonList,
+                editButtons: this.buttonEditList,
+                dropdownButtons: this.dropdownItemList,
+                dropdownEditButtons: this.dropdownEditItemList,
+                additionalButtons: this.additionalButtons,
+                additionalEditButtons: this.additionalEditButtons,
             }
         },
 
@@ -2087,7 +1971,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 recordViewObject: this
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
-                    this.createPanelNavigationView(this.getMiddlePanels().concat(view.panelList));
+                    this.trigger('detailPanelsLoaded', {list: this.getMiddlePanels().concat(view.panelList)});
                 })
                 if (callback) {
                     callback(view)
@@ -2109,66 +1993,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             return middlePanels
         },
 
-        createPanelNavigationView(panelList) {
-            let el = this.options.el || '#' + (this.id);
-            this.createView('panelDetailNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .panel-navigation.panel-left',
-            }, (view) => {
-                this.listenTo(this, 'after:set-detail-mode', () => {
-                    view.reRender();
-                });
-
-                this.listenTo(view, 'after:render', () => {
-                    if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
-                        this.getAcl().check('LayoutProfile', 'read')
-                        && this.mode !== 'edit'
-                    ) {
-                        var bottomView = this.getView('bottom');
-                        this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
-                            scope: this.scope,
-                            viewType: 'relationships',
-                            layoutData: bottomView.layoutData,
-                            linkClass: 'btn',
-                            el: el + ' .panel-navigation.panel-left .layout-editor-container',
-                        }, (view) => {
-                            view.on("refresh", () => {
-                                this.createBottomView(view => {
-                                    view.render()
-                                })
-                            })
-                            view.render()
-                        })
-                    }
-                })
-
-                view.render();
-
-            });
-
-            this.createView('panelEditNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .panel-navigation.panel-right',
-            }, function (view) {
-                this.listenTo(this, 'after:set-edit-mode', () => {
-                    view.reRender();
-                });
-                view.render();
-            });
-
-
-        },
-
         build: function (callback) {
 
             if (this.middleView) {
                 this.createMiddleView(callback);
             }
-            
+
             if (!this.bottomDisabled && this.bottomView) {
                 this.createBottomView();
             }

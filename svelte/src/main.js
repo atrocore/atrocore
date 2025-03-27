@@ -26,6 +26,9 @@ import Navigation from "./components/layout-profile/navigation/Navigation.svelte
 import Favorites from "./components/layout-profile/navigation/Favorites.svelte";
 import TreePanel from "./components/record/TreePanel.svelte";
 import RightSideView from "./components/record/RightSideView.svelte";
+import BaseHeader from "./components/record/header/BaseHeader.svelte";
+import ListHeader from "./components/record/header/ListHeader.svelte";
+import DetailHeader from "./components/record/header/DetailHeader.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -47,5 +50,8 @@ export {
     TreePanel,
     ApiRequestComponent,
     Navigation,
-    Favorites
+    Favorites,
+    BaseHeader,
+    ListHeader,
+    DetailHeader
 };

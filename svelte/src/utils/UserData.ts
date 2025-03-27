@@ -4,6 +4,8 @@ const data = writable({});
 
 interface UserDataInterface {
     user: {
+        id: string,
+        name: string,
         userName: string
     },
     token: string

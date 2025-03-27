@@ -27,7 +27,6 @@ Espo.define('treo-core:controllers/admin', 'class-replace!treo-core:controllers/
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'treo-core:admin/settings/headers/settings',
                     recordView: 'views/admin/settings'
                 });
             }, this);
@@ -41,7 +40,7 @@ Espo.define('treo-core:controllers/admin', 'class-replace!treo-core:controllers/
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'treo-core:admin/settings/headers/notifications',
+                    headerTitle: 'Notifications',
                     recordView: 'views/admin/notifications'
                 });
             }, this);
@@ -55,7 +54,7 @@ Espo.define('treo-core:controllers/admin', 'class-replace!treo-core:controllers/
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'treo-core:admin/settings/headers/outbound-emails',
+                    headerTitle: 'Outbound Emails',
                     recordView: 'views/admin/outbound-emails'
                 });
             }, this);
@@ -69,7 +68,7 @@ Espo.define('treo-core:controllers/admin', 'class-replace!treo-core:controllers/
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'treo-core:admin/settings/headers/inbound-emails',
+                    headerTitle: 'Inbound Emails',
                     recordView: 'views/admin/inbound-emails'
                 });
             }, this);
@@ -83,8 +82,8 @@ Espo.define('treo-core:controllers/admin', 'class-replace!treo-core:controllers/
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'treo-core:admin/settings/headers/user-interface',
-                    recordView: 'views/admin/user-interface'
+                    recordView: 'views/admin/user-interface',
+                    headerTitle: 'User Interface'
                 });
             }, this);
             model.fetch();
@@ -97,7 +96,7 @@ Espo.define('treo-core:controllers/admin', 'class-replace!treo-core:controllers/
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'treo-core:admin/settings/headers/authentication',
+                    headerTitle: 'Authentication',
                     recordView: 'views/admin/authentication'
                 });
             }, this);
