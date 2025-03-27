@@ -41,6 +41,10 @@ Espo.define('views/stream/header', 'view', function (Dep) {
 
             this.activeFilters = this.options.activeFilters ?? [];
 
+            if(!Array.isArray(this.activeFilters)) {
+                this.activeFilters = [this.activeFilters];
+            }
+
             this.filterList = [
                 {
                     name: "posts",
