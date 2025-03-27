@@ -743,7 +743,7 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'jsonArray',
                         'attributeValueId' => $row['id'],
-                        'column'           => "text_value"
+                        'column'           => "json_value"
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
