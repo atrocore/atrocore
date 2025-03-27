@@ -402,6 +402,10 @@
         display: none;
     }
 
+    :global(.dropdown-menu.textcomplete-dropdown){
+        z-index: 1300 !important;
+    }
+
     @media (max-width: 768px) {
         .collapsed.right-side-view {
             position: fixed;
