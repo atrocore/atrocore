@@ -4,12 +4,15 @@
     import GfiImage from "../../assets/image_gfi.svg"
     import GfiHideImage from "../../assets/hide_image_gfi.svg"
     import {Language} from "../../utils/Language";
+    import {Metadata} from "../../utils/Metadata";
 
     export let scope: string;
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let loadSummary: Function;
+
+    export let loadActivities: Function;
 
     export let isCollapsed: boolean = false;
 
@@ -21,21 +24,22 @@
     let mouseEnterTimer: number | null;
     let isMouseOver = false;
     let isPin = true;
+    let streamView: Object;
 
     let items = [
         {
             "name": "summary",
             "label": Language.translate('Summary'),
-        },
-        // {
-        //     "name":"activities",
-        //     "label": Language.translate('Activities')
-        // }
+        }
     ];
     let activeItem = items[0];
 
 
     $: sideViewWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
+
+    function hasStream() {
+        return  Metadata.get(['scopes', scope, 'stream']) === true;
+    }
 
     function handleResize(e: MouseEvent) {
         if (!isDragging) return;
@@ -80,6 +84,12 @@
         }
 
         activeItem = item;
+
+        if(activeItem.name === 'activities') {
+            refreshActivities()
+        }
+
+        Storage.set('right-side-view-active-item', scope, activeItem.name);
     }
 
     function handleCollapsePanel(e: Event) {
@@ -89,6 +99,9 @@
     function updateCollapse(value: boolean) {
         isCollapsed = value;
         Storage.set('right-side-view-collapse', scope, isCollapsed ? 'collapsed' : '');
+        if(activeItem.name === 'activities') {
+            refreshActivities();
+        }
     }
 
     function handleMouseLeave() {
@@ -140,6 +153,21 @@
         Storage.set('right-side-view-pin', scope, isPin ? 'pin' : 'not-pinned');
     }
 
+    function refreshActivities() {
+
+        if(isCollapsed) {
+            return;
+        }
+
+        if(streamView == null) {
+            loadActivities((view) => {
+                streamView = view;
+            });
+        }else{
+             streamView?.refresh();
+        }
+    }
+
     onMount(() => {
         const savedWidth = Storage.get('rightSideView', scope);
         if (savedWidth) {
@@ -151,6 +179,22 @@
         isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned';
 
         loadSummary();
+
+        if(hasStream()) {
+            items = [
+                ...items,
+                {
+                "name":"activities",
+                "label": Language.translate('Activities')
+            }]
+        }
+
+        let itemName =   Storage.get('right-side-view-active-item', scope);
+
+        if(itemName && items.map(i => i.name).includes(itemName)) {
+
+             setActiveItem(items.find(i => i.name === itemName));
+        }
 
         return () => {
             if (mouseLeaveTimer !== null) {
@@ -335,6 +379,10 @@
     :global(.right-side-view .row .cell .field) {
         padding-bottom: 6px;
         border-bottom: 1px solid var(--secondary-border-color);
+    }
+
+    :global(.right-side-view .panel-heading .panel-title .collapser) {
+        display: none;
     }
 
 </style>

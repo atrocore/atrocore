@@ -4,10 +4,6 @@
       "type": "varchar",
       "readOnly": true
     },
-    "isStreamSide": {
-      "type": "bool",
-      "tooltip": true
-    },
     "isStreamPanelFirst": {
       "type": "bool",
       "tooltip": true

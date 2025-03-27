@@ -323,8 +323,19 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                                 view.render();
                             })
                         },
-                        callbacks: {
-
+                        loadActivities: (callback) => {
+                            let el = this.options.el + ' .right-side-view .activities'
+                            this.createView('activities', 'views/record/activities', {
+                                model: this.model,
+                                el: el,
+                                recordHelper: recordView.recordHelper,
+                                recordViewObject: recordView.recordViewObject
+                            }, view => {
+                                if(callback) {
+                                    callback(view);
+                                }
+                                 view.render();
+                            })
                         }
                     }
                 })

@@ -5,7 +5,6 @@
     "variables": "Variables",
     "locale": "Locale par défaut",
     "appId": "ID",
-    "isStreamSide": "Le flux est-il à côté ?",
     "isStreamPanelFirst": "Le groupe de travail sur les flux est-il le premier",
     "useCache": "Utiliser le cache",
     "currencyRates": "Valeurs des taux",
@@ -84,7 +83,6 @@
     "customHeadCode": "Ajoutez le code à la fin de la balise <head>. Atrocore ne valide pas le code personnalisé pour vous, alors assurez-vous de vérifier votre code avant de le publier.",
     "reportingEnabled": "Les rapports d'erreur anonymes seront envoyés à AtroCore pour une identification et une résolution plus rapides des problèmes.",
     "fileNameRegexPattern": "Pour activer uniquement les lettres minuscules d'une longueur maximale de 24 symboles, utilisez \"/^[a-z]{1,24}$/\". 24 symboles, utilisez \"/^[a-z]{1,24}$/\".",
-    "isStreamSide": "Si elle est activée : Le panneau de flux s'affiche sur le côté.",
     "passwordRegexPattern": "Définissez des règles de complexité pour les mots de passe à l'aide d'expressions régulières. \nConseil : utilisez des groupes comme (?=.*\\d) pour définir les symboles requis. \n\nSuivez ce lien <a href=\"{message_link}\" target=\"_blank\"></a> pour mettre à jour un message d'erreur de validation.",
     "passwordExpireDays": "Définissez la période (en jours) après laquelle les utilisateurs doivent mettre à jour leur mot de passe.",
     "favicon": "Il est recommandé de réduire cette valeur au maximum, car la largeur de l'onglet du navigateur est limitée et il se peut que vous souhaitiez toujours voir les titres des pages."

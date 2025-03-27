@@ -12,7 +12,7 @@
     {
         "label": "Representation",
         "rows": [
-            [{"name": "isStreamSide"}, {"name": "isStreamPanelFirst"}]
+            [{"name": "isStreamPanelFirst"}, false]
         ]
     },
     {
