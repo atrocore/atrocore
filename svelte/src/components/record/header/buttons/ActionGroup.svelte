@@ -69,6 +69,7 @@
 <style>
     .btn-group {
         display: flex;
+        flex-wrap: wrap;
         align-items: stretch;
     }
 

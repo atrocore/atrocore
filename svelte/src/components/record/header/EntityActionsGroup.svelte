@@ -92,6 +92,7 @@
     .buttons-container {
         display: flex;
         flex-wrap: wrap;
+        gap: 10px;
     }
 
     .buttons-container :global(.entity-actions) {

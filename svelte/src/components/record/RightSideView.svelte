@@ -268,9 +268,8 @@
 <style>
 
     .right-side-view {
-        position: sticky;
+        position: relative;
         height: 100%;
-        top: 0;
         z-index: 1300;
         background: #fff;
         padding: 10px 20px;
@@ -384,4 +383,28 @@
         display: none;
     }
 
+    @media screen and (max-width: 767px) {
+        .right-side-view:not(.collapsed) {
+            position: absolute;
+            width: 100% !important;
+        }
+
+        .right-side-view.collapsed {
+            padding: 0;
+        }
+
+        .right-side-view.collapsed .btn.collapse-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            left: auto;
+            border-radius: 50%;
+            background: rgba(250, 250, 250, 0.75);
+            border: 1px solid #F0F0F0;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            z-index: 999;
+        }
+    }
 </style>

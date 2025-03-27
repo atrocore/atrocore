@@ -1835,8 +1835,6 @@ pre code {
 .container {
     margin-right: auto;
     margin-left: auto;
-    padding-left: 10px;
-    padding-right: 10px
 }
 
 .container:before, .container:after {
@@ -14959,9 +14957,7 @@ label {
 }
 
 .page-header .header-buttons-container {
-    margin-left: auto !important;
-    width: auto !important;
-    float: right;
+    margin-left: auto;
 }
 
 .header .header-buttons-container.full-row {
@@ -20377,11 +20373,6 @@ button.category:focus {
     margin-top: 3px;
 }
 
-#main main > .record > .detail > .overview,
-#main main > .record > .edit > .overview {
-    margin: 0 -10px;
-}
-
 #main main .detail-button-container {
     position: relative;
     z-index: 101;
@@ -20444,6 +20435,7 @@ button.category:focus {
     #navbar .nav.navbar-nav.navbar-right {
         background-color: var(--nav-menu-background);
         padding-right: 8px;
+        margin-left: auto;
     }
 
     #navbar .nav.navbar-nav.navbar-right > li {
@@ -20720,6 +20712,18 @@ button.category:focus {
         min-height: calc(100vh - 80px);
     }
 
+    #main {
+        padding: 0 10px;
+    }
+
+    #main main {
+        padding: 0 10px;
+    }
+
+    #main > .content-wrapper {
+        margin: 0 -10px;
+    }
+
     body > .container.content:not(#content) {
         min-height: calc(100vh - 28px);
     }
@@ -20740,19 +20744,23 @@ button.category:focus {
         margin: 0 -10px;
     }
 
-    .detail .overview,
-    .edit .overview,
-    #main main > .list-container,
     #main main > .page-header {
-        width: 100% !important;
-        margin-left: 0 !important;
+        margin: 0 -10px;
+        padding: 10px 10px 0;
+    }
+
+    .page-header.detail-page-header {
+        position: static;
     }
 
     .detail .overview,
     .edit .overview,
-    #main .side,
     #main .side {
         min-height: auto !important;
+    }
+
+    #main .side.collapsed {
+        display: none;
     }
 
     .overview-filters-container {
@@ -20951,10 +20959,18 @@ button.category:focus {
     }
 
     #main .catalog-tree-panel-hidden > button.collapse-panel {
-        border: 0;
-        left: -3px;
+        left: 20px;
+        bottom: 20px;
         z-index: 999;
-        position: relative;
+        position: fixed;
+        right: auto;
+        top: auto;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #fafafabf;
+        border: 1px solid #F0F0F0;
+        padding: 0;
     }
 
     #main .record .catalog-tree-panel-hidden > button.collapse-panel {
@@ -20971,15 +20987,17 @@ button.category:focus {
     #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
         position: fixed;
         top: 45px;
-        z-index: 1000;
+        z-index: 1301;
         bottom: 0;
         left: 0;
         width: 100% !important;
     }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
-        min-height: 53px;
         padding: 0;
+        width: 0 !important;
+        height: 0 !important;
+        flex-basis: 0;
     }
 
     #main .catalog-tree-panel button:active {
@@ -21031,6 +21049,7 @@ button.category:focus {
         transform: translate(-150%, 0);
         transition: .3s transform cubic-bezier(0.19, 1, .22, 1);
         height: 0;
+        overflow: hidden;
     }
 
 
@@ -21159,11 +21178,6 @@ button.category:focus {
         width: calc(100% - 30px);
         box-shadow: none;
         margin: 0 15px;
-    }
-
-    #main .header.page-header .header-buttons-container {
-        width: 100% !important;
-        margin-left: unset;
     }
 
     .page-header .header-buttons div.pull-right {
@@ -22351,12 +22365,8 @@ select {
 
     #header .navbar-collapse {
         transition: .3s transform cubic-bezier(0.19, 1, .22, 1);
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 44px;
         z-index: 100;
-        background: #424242;
+        background: var(--nav-menu-background);
         display: block;
         height: calc(100vh - 44px);
         border: 0;
@@ -24371,7 +24381,7 @@ span[data-img-src]::after {
     margin: 7px -15px 10px;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .navbar-favorites {
         display: none;
     }
