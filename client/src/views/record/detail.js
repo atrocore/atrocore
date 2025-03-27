@@ -174,6 +174,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        executeAction: function (action, data = null, e = null) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, e);
+            }
+        },
+
         refreshLayout() {
             this.detailLayout = null
             this.gridLayout = null
