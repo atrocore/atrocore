@@ -126,6 +126,10 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 this.disableSavePreset = this.options.disableSavePreset;
             }
 
+            if(!this.getAcl().check('SavedSearch', 'create')) {
+                this.disableSavePreset = true;
+            }
+
             this.viewMode = this.options.viewMode;
             this.viewModeList = this.options.viewModeList;
 
@@ -170,20 +174,22 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 return true;
             }, this);
 
-            this.ajaxGetRequest('SavedSearch', {
-                collectionOnly: true,
-                scope: this.scope
-            }, {async: false}).then((result) => {
-                result.list.forEach(item => {
-                    this.presetFilterList.push({
-                        id: item.id,
-                        name: item.id,
-                        label: item.name,
-                        data: item.data,
-                        primary: item.primary
+            if(this.getAcl().check('SavedSearch', 'read')) {
+                this.ajaxGetRequest('SavedSearch', {
+                    collectionOnly: true,
+                    scope: this.scope
+                }, {async: false}).then((result) => {
+                    result.list.forEach(item => {
+                        this.presetFilterList.push({
+                            id: item.id,
+                            name: item.id,
+                            label: item.name,
+                            data: item.data,
+                            primary: item.primary
+                        });
                     });
                 });
-            });
+            }
 
             if (this.presetFiltersDisabled) {
                 this.presetFilterList = [];
@@ -1086,7 +1092,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 filterLabel = label;
                 filterStyle = style;
 
-                if (id) {
+                if (id && this.getAcl().check('SavedSearch', 'delete')) {
                     this.$el.find('ul.dropdown-menu > li.divider.preset-control').removeClass('hidden');
                     this.$el.find('ul.dropdown-menu > li.preset-control.remove-preset').removeClass('hidden');
                 }
