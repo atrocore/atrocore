@@ -42,8 +42,6 @@
         isMobile = window.innerWidth <= 768;
     };
 
-    $: sideViewWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
-
 
     $: sideViewWidth = isMobile ? `${window.innerWidth * 0.9}px` : (  isCollapsed ? 'auto' : `${currentWidth}px`);
 
@@ -398,5 +396,24 @@
     :global(.right-side-view .panel-heading .panel-title .collapser) {
         display: none;
     }
+
+    :global(.dropdown-menu.textcomplete-dropdown){
+        z-index: 1300 !important;
+    }
+
+    @media (max-width: 768px) {
+        .collapsed.right-side-view {
+            position: fixed;
+            width:0 !important;
+            right: 20px;
+            padding: 0;
+            border-left: 0 solid transparent;
+        }
+
+        button.collapse-panel {
+            bottom: 20px;
+        }
+    }
+
 
 </style>
