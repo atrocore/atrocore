@@ -16,6 +16,8 @@
 
     export let isCollapsed: boolean = false;
 
+    export let hasStream: boolean = false;
+
 
     let isDragging: boolean = false;
     let startX: number;
@@ -43,10 +45,6 @@
 
 
     $: sideViewWidth = isMobile ? `${window.innerWidth * 0.9}px` : (  isCollapsed ? 'auto' : `${currentWidth}px`);
-
-    function hasStream() {
-        return  Metadata.get(['scopes', scope, 'stream']) === true;
-    }
 
     function handleResize(e: MouseEvent) {
         if (!isDragging) return;
@@ -194,7 +192,7 @@
 
         loadSummary();
 
-        if(hasStream()) {
+        if(hasStream) {
             items = [
                 ...items,
                 {

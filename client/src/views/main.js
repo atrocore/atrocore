@@ -272,6 +272,7 @@ Espo.define('views/main', 'view', function (Dep) {
                         scope: this.scope,
                         model: this.model,
                         mode: this.mode,
+                        hasStream: !!this.getMetadata().get(['scopes', this.scope, 'stream']),
                         loadSummary: () => {
                             let el = this.options.el + ' .right-side-view .summary';
                             recordView.createRightSideView(el, (view) => {
