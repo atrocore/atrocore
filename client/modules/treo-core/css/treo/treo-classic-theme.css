@@ -19351,9 +19351,14 @@ input#sn-checkbox-open-in-new-window {
     color: #fff;
 }
 
-#nofitication,
 #notification {
     text-align: justify;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    box-shadow: 0 0 5px -1px rgba(0, 0, 0, .3);
 }
 
 .alert {

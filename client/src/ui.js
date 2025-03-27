@@ -341,7 +341,7 @@ Espo.define('ui', [], function () {
         },
 
         notify: function (message, type, timeout, closeButton) {
-            $('#nofitication').remove();
+            $('#notification').remove();
 
             if (message) {
                 type = type || 'warning';
@@ -353,11 +353,7 @@ Espo.define('ui', [], function () {
                     type = 'danger';
                 }
 
-                var el = $('<div class="alert alert-' + type + ' fade in" id="nofitication" />').css({
-                    position: 'fixed',
-                    top: '0px',
-                    'z-index': 2000,
-                }).html(message);
+                var el = $('<div class="alert alert-' + type + ' fade in" id="notification" />').html(message);
 
                 if (closeButton) {
                     el.append('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>');
@@ -370,7 +366,7 @@ Espo.define('ui', [], function () {
                 }
 
                 el.appendTo('body');
-                el.css("left", ($(window).width() - el.width()) / 2 + $(window).scrollLeft()  + "px");
+                el.css("top", (($('#header').height() + 10) + "px"))
             }
         },
 
