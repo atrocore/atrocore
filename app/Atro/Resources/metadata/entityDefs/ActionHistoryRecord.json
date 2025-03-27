@@ -13,6 +13,24 @@
       "type": "varchar",
       "readOnly": true
     },
+    "controllerAction": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "target": {
+      "type": "varchar",
+      "notStorable": true,
+      "view": "views/action-history-record/fields/target"
+    },
+    "targetId": {
+      "type": "varchar",
+      "readOnly": true,
+      "len": 36
+    },
+    "targetName": {
+      "type": "varchar",
+      "notStorable": true
+    },
     "createdAt": {
       "type": "datetime"
     },
