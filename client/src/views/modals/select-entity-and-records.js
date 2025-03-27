@@ -224,9 +224,9 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             this.model.get('foreignEntities').forEach(entityDefs => {
                 let link = entityDefs.link;
                 options.push(link);
-                let translation = this.translate(link, 'links', this.model.get('mainEntity'));
+                let translation = this.translate(link, 'fields', this.model.get('mainEntity'));
                 if (entityDefs.addRelationCustomDefs) {
-                    translation = this.translate(entityDefs.addRelationCustomDefs.link, 'links', this.model.get('mainEntity'));
+                    translation = this.translate(entityDefs.addRelationCustomDefs.link, 'fields', this.model.get('mainEntity'));
                 }
                 translatedOptions[link] = translation;
             });
