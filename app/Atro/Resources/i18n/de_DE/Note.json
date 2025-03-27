@@ -8,7 +8,9 @@
   },
   "filters": {
     "all": "Alle",
-    "updates": "Aktualisierungen"
+    "updates": "Aktualisierungen",
+    "notes": "Anmerkungen",
+    "emails": "Anmerkungen"
   },
   "messages": {
     "writeMessage": "Schreiben Sie hier Ihre Nachricht"

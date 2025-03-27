@@ -9,7 +9,9 @@
   "filters": {
     "all": "All",
     "posts": "Posts",
-    "updates": "Updates"
+    "updates": "Updates",
+    "notes": "Notes",
+    "emails": "Emails"
   },
   "options": {
     "type": {

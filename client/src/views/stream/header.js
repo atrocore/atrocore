@@ -44,20 +44,20 @@ Espo.define('views/stream/header', 'view', function (Dep) {
             this.filterList = [
                 {
                     name: "posts",
-                    label: this.translate('Notes'),
+                    label: this.translate('notes', 'filters', 'Note'),
                     action: "filter",
                     isActive: this.activeFilters.includes('notes')
 
                 },
                 {
                     name: "updates",
-                    label: this.translate('Updates'),
+                    label: this.translate('updates', 'filters', 'Note'),
                     action: "filter",
                     isActive: this.activeFilters.includes('updates')
                 },
                 {
                     name: "emails",
-                    label: this.translate('Emails'),
+                    label: this.translate('emails', 'filters', 'Note'),
                     action: "filter",
                     isActive: this.activeFilters.includes('emails')
                 }
