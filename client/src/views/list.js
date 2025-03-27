@@ -634,8 +634,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }
 
             window.treePanelComponent = new Svelte.TreePanel({
-                target: $(`${this.options.el}`).get(0),
-                anchor: $(`${this.options.el} .tree-panel-anchor`).get(0),
+                target: $(`${this.options.el} .content-wrapper`).get(0),
+                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
                 props: {
                     scope: scope ? scope : this.scope,
                     model: this.model,

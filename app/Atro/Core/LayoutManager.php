@@ -250,7 +250,7 @@ class LayoutManager
      *
      * @return bool
      */
-    public function save(string $scope, string $layoutName, string $relatedEntity, string $relatedLink, string $layoutProfileId, array $layoutData): bool
+    public function save(string $scope, string $layoutName, ?string $relatedEntity, ?string $relatedLink, string $layoutProfileId, array $layoutData): bool
     {
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $where = ['entity' => $scope, 'viewType' => $layoutName, 'layoutProfileId' => $layoutProfileId];
@@ -272,7 +272,6 @@ class LayoutManager
             $layoutEntity->set($where);
             $layoutRepo->save($layoutEntity);
         }
-
         return $layoutRepo->saveContent($layoutEntity, $layoutData);
     }
 

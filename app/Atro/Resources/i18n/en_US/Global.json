@@ -376,7 +376,11 @@
     "language": "Language",
     "scopeFilter": "Channel",
     "editGroup": "Edit Group",
-    "addGroup": "Begin / end group"
+    "addGroup": "Begin / end group",
+    "Summary": "Summary",
+    "Activities": "Activities",
+    "enableAutomaticClosing": "Enable  automatic opening and closing of this panel on mouse over.",
+    "disableAutomaticClosing": "Disable automatic opening and closing of this panel on mouse over."
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
@@ -593,7 +597,9 @@
     "users": "Users",
     "groupEnd": "Group end",
     "iconClass": "Icon",
-    "isPublic": "Public"
+    "isPublic": "Public",
+    "created": "Created",
+    "modified": "Modified"
   },
   "tooltips": {
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."
