@@ -219,8 +219,6 @@ class MassActions extends HasContainer
                         $repository->relate($entity, $link, $foreignEntity);
                     } catch (UniqueConstraintViolationException $e) {
                     } catch (NotUnique $e) {
-                        $message = $this->getLanguage()->translate('notUniqueCreatedValue', 'exceptions');
-                        throw new NotUnique($message);
                     } catch (BadRequest $e) {
                         $related--;
                         $notRelated[] = [
