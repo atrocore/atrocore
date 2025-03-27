@@ -16,6 +16,8 @@
 
     export let isCollapsed: boolean = false;
 
+    export let hasStream: boolean = false;
+
 
     let isDragging: boolean = false;
     let startX: number;
@@ -34,12 +36,16 @@
     ];
     let activeItem = items[0];
 
+    let isMobile = false;
+
+    const checkScreenSize = () => {
+        isMobile = window.innerWidth <= 768;
+    };
 
     $: sideViewWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
 
-    function hasStream() {
-        return  Metadata.get(['scopes', scope, 'stream']) === true;
-    }
+
+    $: sideViewWidth = isMobile ? `${window.innerWidth * 0.9}px` : (  isCollapsed ? 'auto' : `${currentWidth}px`);
 
     function handleResize(e: MouseEvent) {
         if (!isDragging) return;
@@ -174,26 +180,33 @@
             currentWidth = parseInt(savedWidth) || minWidth;
         }
 
-        isCollapsed = Storage.get('right-side-view-collapse', scope) === 'collapsed';
+        checkScreenSize();
 
-        isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned';
+        isCollapsed = (Storage.get('right-side-view-collapse', scope) === 'collapsed') || isMobile;
+
+        isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned' ;
+
+
+
+        window.addEventListener("resize", checkScreenSize);
+
 
         loadSummary();
 
-        if(hasStream()) {
+        if(hasStream) {
             items = [
                 ...items,
                 {
-                "name":"activities",
-                "label": Language.translate('Activities')
-            }]
+                    "name":"activities",
+                    "label": Language.translate('Activities')
+                }]
         }
 
         let itemName =   Storage.get('right-side-view-active-item', scope);
 
         if(itemName && items.map(i => i.name).includes(itemName)) {
 
-             setActiveItem(items.find(i => i.name === itemName));
+            setActiveItem(items.find(i => i.name === itemName));
         }
 
         return () => {
@@ -203,18 +216,19 @@
             if (mouseEnterTimer !== null) {
                 clearTimeout(mouseEnterTimer);
             }
+            window.removeEventListener("resize", checkScreenSize);
         };
     })
 
 </script>
 
-<div class:expanded={!isCollapsed}
-     class:not-pinned={!isPin}></div>
+<div class:expanded={!isCollapsed }
+     class:not-pinned={!isPin || isMobile}></div>
 <aside class="right-side-view" style="width: {sideViewWidth}"
 
        class:collapsed={isCollapsed}
        class:expanded={!isCollapsed}
-       class:pinned={isPin}
+       class:pinned={isPin && !isMobile}
        on:mouseenter={handleMouseEnter}
        on:mouseleave={handleMouseLeave}
 >
@@ -238,11 +252,13 @@
                     </a>
                 {/if}
             {/each}
-            <button class="btn btn-link" style="padding: 0;border: 0; margin-left:-2px" on:click={handlePin}
-                    title="{Language.translate(isPin ? 'enableAutomaticClosing': 'disableAutomaticClosing')}">
-                <img src="{GfiImage}" alt="image" class:hidden={!isPin}>
-                <img src="{GfiHideImage}" alt="hide_image" class:hidden={isPin}>
-            </button>
+            {#if !isMobile}
+                <button class="btn btn-link" style="padding: 0;border: 0; margin-left:-2px" on:click={handlePin}
+                        title="{Language.translate(isPin ? 'enableAutomaticClosing': 'disableAutomaticClosing')}">
+                    <img src="{GfiImage}" alt="image" class:hidden={!isPin}>
+                    <img src="{GfiHideImage}" alt="hide_image" class:hidden={isPin}>
+                </button>
+            {/if}
         </div>
 
         <div style="display: flex; align-items: center">
@@ -303,7 +319,7 @@
     }
 
     .collapsed.right-side-view {
-        padding: 10px 10px;
+        padding: 15px;
     }
 
     .collapsed > .content {
@@ -345,7 +361,7 @@
     }
 
     :global(.right-side-view .dropdown-menu.pull-right) {
-        right: auto;
+        right: 0;
     }
 
     :global(.right-side-view .panel-default > .panel-heading) {
@@ -363,7 +379,7 @@
     }
 
     div.not-pinned.expanded {
-        width: 20px;
+        width: 30px;
     }
 
     div.not-pinned:not(.expanded) {
@@ -383,28 +399,4 @@
         display: none;
     }
 
-    @media screen and (max-width: 767px) {
-        .right-side-view:not(.collapsed) {
-            position: absolute;
-            width: 100% !important;
-        }
-
-        .right-side-view.collapsed {
-            padding: 0;
-        }
-
-        .right-side-view.collapsed .btn.collapse-panel {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            left: auto;
-            border-radius: 50%;
-            background: rgba(250, 250, 250, 0.75);
-            border: 1px solid #F0F0F0;
-            width: 30px;
-            height: 30px;
-            padding: 0;
-            z-index: 999;
-        }
-    }
 </style>

@@ -292,50 +292,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
                 view.onTreePanelRendered();
             }
-            let recordView = this.getView('record');
-            if(recordView && recordView.sideView !== false && recordView.rightSideView) {
-               new Svelte.RightSideView({
-                    target:  $(`${this.options.el} .content-wrapper`).get(0),
-                    props: {
-                        scope: this.scope,
-                        model: this.model,
-                        mode: 'detail',
-                        loadSummary: () => {
-                            let el = this.options.el + ' .right-side-view .summary'
-                            recordView.createRightSideView(el, (view) => {
-                                if (this.getUser().isAdmin()) {
-                                    this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
-                                        scope: this.scope,
-                                        viewType: 'rightSideView',
-                                        layoutData: recordView.layoutSideViewData,
-                                        el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
-                                    }, (view) => {
-                                        view.on("refresh", () => {
-                                            recordView.refreshRightSideLayout()
-                                        })
-                                        view.render()
-                                    })
-                                }
-                                view.render();
-                            })
-                        },
-                        loadActivities: (callback) => {
-                            let el = this.options.el + ' .right-side-view .activities'
-                            this.createView('activities', 'views/record/activities', {
-                                model: this.model,
-                                el: el,
-                                recordHelper: recordView.recordHelper,
-                                recordViewObject: recordView.recordViewObject
-                            }, view => {
-                                if(callback) {
-                                    callback(view);
-                                }
-                                 view.render();
-                            })
-                        }
-                    }
-                })
-            }
+
+            this.loadRightSideView()
 
             let isScrolledMore = false;
             const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');

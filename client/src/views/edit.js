@@ -151,6 +151,8 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             Dep.prototype.afterRender.call(this);
 
             this.setupHeader();
+
+            this.loadRightSideView();
         }
     });
 });

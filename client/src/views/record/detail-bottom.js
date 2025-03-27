@@ -162,7 +162,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 view: "views/stream/panel",
                 sticked: false,
                 hidden: this.isPanelClosed('stream'),
-                order: this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
+                order:  5,
                 expanded: false,
                 avoidLoadingOnCollapse: true
             });

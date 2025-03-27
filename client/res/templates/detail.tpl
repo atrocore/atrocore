@@ -1,3 +1,4 @@
+
 <div class="content-wrapper">
     {{#if treeAllowed}}
         <aside class="tree-panel-anchor"></aside>
@@ -7,4 +8,5 @@
         <div class="record">{{{record}}}</div>
         <div class="bottom">{{{bottom}}}</div>
     </main>
+
 </div>
