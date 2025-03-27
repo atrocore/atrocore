@@ -322,7 +322,7 @@
     }
 
     .collapsed.right-side-view {
-        padding: 10px 10px;
+        padding: 15px;
     }
 
     .collapsed > .content {
@@ -382,7 +382,7 @@
     }
 
     div.not-pinned.expanded {
-        width: 20px;
+        width: 30px;
     }
 
     div.not-pinned:not(.expanded) {
@@ -406,7 +406,7 @@
         .collapsed.right-side-view {
             position: fixed;
             width:0 !important;
-            right: 10px;
+            right: 20px;
             padding: 0;
             border-left: 0 solid transparent;
         }

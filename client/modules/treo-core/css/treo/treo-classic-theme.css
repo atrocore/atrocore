@@ -24531,7 +24531,13 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 @media (max-width: 768px) {
-    #main {
+    #main:has(.content-wrapper) {
         padding: 0 !important;
+    }
+    #main > .content-wrapper {
+         margin: 0 ;
+    }
+    .container {
+        padding: 0;
     }
 }
