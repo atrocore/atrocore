@@ -5,7 +5,6 @@
     "variables": "Variables",
     "locale": "Locale par défaut",
     "appId": "ID",
-    "isStreamPanelFirst": "Le groupe de travail sur les flux est-il le premier",
     "useCache": "Utiliser le cache",
     "currencyRates": "Valeurs des taux",
     "companyLogo": "Logo de l'en-tête",
@@ -67,7 +66,6 @@
     "sendNotificationInSync": "Envoyer des notifications sans travail"
   },
   "tooltips": {
-    "isStreamPanelFirst": "Si cette option est activée : Le panneau de flux s'affichera juste après l'aperçu.",
     "recordsPerPage": "Nombre d'enregistrements initialement affichés dans les vues en liste.",
     "recordsPerPageSmall": "Nombre d'enregistrements initialement affichés dans les panneaux de relation.",
     "followCreatedEntities": "Les utilisateurs suivront automatiquement les enregistrements qu'ils ont créés.",

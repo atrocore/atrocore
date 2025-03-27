@@ -4,10 +4,6 @@
       "type": "varchar",
       "readOnly": true
     },
-    "isStreamPanelFirst": {
-      "type": "bool",
-      "tooltip": true
-    },
     "isMultilangActive": {
       "type": "bool",
       "default": false
