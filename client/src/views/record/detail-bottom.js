@@ -230,7 +230,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     return item;
                 }, this);
 
-                if (this.streamPanel && !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && !this.getConfig().get('isStreamSide')) {
+                if (this.streamPanel && !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled')) {
                     this.setupStreamPanel();
                 }
 
