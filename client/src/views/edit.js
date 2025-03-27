@@ -134,6 +134,8 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             $('.page-header').addClass('detail-page-header');
 
             Dep.prototype.afterRender.call(this);
+
+            this.loadRightSideView();
         }
     });
 });

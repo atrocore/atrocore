@@ -261,6 +261,57 @@ Espo.define('views/main', 'view', function (Dep) {
             if (!this.isRendered()) return;
             this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
             this.$el.find('.page-header a.action[data-action="'+name+'"]').removeClass('hidden');
+        },
+
+        loadRightSideView: function() {
+            let recordView = this.getView('record');
+            if(recordView && recordView.sideView && recordView.rightSideView) {
+                new Svelte.RightSideView({
+                    target:  $(`${this.options.el} .content-wrapper`).get(0),
+                    props: {
+                        scope: this.scope,
+                        model: this.model,
+                        mode: this.mode,
+                        loadSummary: () => {
+                            let el = this.options.el + ' .right-side-view .summary';
+                            recordView.createRightSideView(el, (view) => {
+                                if (this.getUser().isAdmin()) {
+                                    if (this.mode === 'detail') {
+                                        this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                                            scope: this.scope,
+                                            viewType: 'rightSideView',
+                                            layoutData: recordView.layoutSideViewData,
+                                            el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
+                                        }, (view) => {
+                                            view.on("refresh", () => {
+                                                recordView.refreshRightSideLayout()
+                                            })
+                                            view.render()
+                                        })
+                                    }
+                                }
+                                view.render();
+                            });
+
+                        },
+                        loadActivities: (callback) => {
+                            let el = this.options.el + ' .right-side-view .activities'
+                            this.createView('activities', 'views/record/activities', {
+                                model: this.model,
+                                el: el,
+                                recordHelper: recordView.recordHelper,
+                                recordViewObject: recordView.recordViewObject
+                            }, view => {
+                                if(callback) {
+                                    callback(view);
+                                }
+                                view.render();
+                            })
+                        }
+                    }
+                })
+            }
+
         }
 
     });

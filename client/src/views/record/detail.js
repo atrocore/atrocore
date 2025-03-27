@@ -117,6 +117,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         middleView: 'views/record/detail-middle',
 
+        // legacy property
+        sideView: true,
+
         rightSideView: 'views/record/right-side-view',
 
         bottomView: 'views/record/detail-bottom',
@@ -2053,7 +2056,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         createMiddleView: function (callback) {
             var el = this.options.el || '#' + (this.id);
-            // this.waitForView('middle');
+            this.waitForView('middle');
             this.getGridLayout(function (layout) {
                 this.createView('middle', this.middleView, {
                     model: this.model,

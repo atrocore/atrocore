@@ -21054,6 +21054,7 @@ button.category:focus {
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
         min-height: 53px;
         padding: 0;
+        display: none;
     }
 
     #main .catalog-tree-panel button:active {
@@ -24529,9 +24530,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: var(--highlighting-color-for-data-quality);
 }
 
-#main main > .record > .edit  .overview {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    margin: 0 -20px;
+@media (max-width: 768px) {
+    #main {
+        padding: 0 !important;
+    }
 }

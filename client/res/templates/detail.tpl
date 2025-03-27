@@ -10,17 +10,3 @@
     </main>
 
 </div>
-<style>
-    /*#main:has(.detail) {*/
-    /*    display: flex;*/
-    /*}*/
-
-    /*body > .content:has(.detail) {*/
-    /*    overflow-y: hidden;*/
-    /*}*/
-
-    /*#main > main:has(.detail) {*/
-    /*    overflow-y: auto;*/
-    /*    width: 100%;*/
-    /*}*/
-</style>
