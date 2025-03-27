@@ -362,7 +362,7 @@
     }
 
     :global(.right-side-view .dropdown-menu.pull-right) {
-        right: auto;
+        right: 0;
     }
 
     :global(.right-side-view .panel-default > .panel-heading) {
