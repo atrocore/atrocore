@@ -269,12 +269,11 @@
 
     .right-side-view {
         position: sticky;
-        height: calc(100vh - 46px);
+        height: 100%;
         top: 0;
         z-index: 1300;
         background: #fff;
         padding: 10px 20px;
-        border-top: 1px solid var(--primary-border-color);
         border-left: 1px solid var(--primary-border-color);
         overflow-y: auto;
         transition: .6s width cubic-bezier(0.19, 1, .22, 1);
