@@ -380,7 +380,12 @@
     "Summary": "Summary",
     "Activities": "Activities",
     "enableAutomaticClosing": "Enable  automatic opening and closing of this panel on mouse over.",
-    "disableAutomaticClosing": "Disable automatic opening and closing of this panel on mouse over."
+    "disableAutomaticClosing": "Disable automatic opening and closing of this panel on mouse over.",
+    "actionFollow": "Click to follow",
+    "actionUnfollow": "Your are following, Click to unfollow",
+    "actionBookmark": "Click to bookmark",
+    "actionUnbookmark": "Bookmarked, Click to unbookmark",
+    "actionOpenFilter": "Open Filter"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
@@ -597,9 +602,7 @@
     "users": "Users",
     "groupEnd": "Group end",
     "iconClass": "Icon",
-    "isPublic": "Public",
-    "created": "Created",
-    "modified": "Modified"
+    "isPublic": "Public"
   },
   "tooltips": {
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."

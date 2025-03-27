@@ -167,10 +167,22 @@ Espo.define('treo-core:views/composer/list', 'views/list',
             });
         },
 
-        getHeader() {
-            return this.buildHeaderHtml([
-                this.getLanguage().translate('Composer', 'labels', 'Admin')
-            ], true);
+        getBreadcrumbsItems() {
+            return [
+                this.getAdminBreadcrumbsItem(),
+                {
+                    label: this.translate('Composer', 'labels', 'Admin'),
+                }
+            ]
+        },
+
+        setupHeader() {
+            new Svelte.BaseHeader({
+                target: document.querySelector('.page-header'),
+                props: {
+                    breadcrumbs: this.getBreadcrumbsItems(),
+                }
+            })
         },
 
         updatePageTitle() {

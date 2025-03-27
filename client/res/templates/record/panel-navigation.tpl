@@ -4,5 +4,7 @@
             <a href="javascript:" data-action="scrollToPanel" data-name="{{name}}">{{title}}</a>
         </li>
     {{/each}}
-    <div class="layout-editor-container btn-group"></div>
+    <li>
+        <span class="layout-editor-container btn-group"></span>
+    </li>
 </ul>

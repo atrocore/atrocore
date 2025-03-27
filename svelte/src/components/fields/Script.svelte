@@ -487,10 +487,6 @@
                     const {default: HtmlWorker} = await import('monaco-editor/esm/vs/language/html/html.worker?worker');
                     return new HtmlWorker();
                 }
-                if (label === "typescript" || label === "javascript") {
-                    const {default: TsWorker} = await import('monaco-editor/esm/vs/language/typescript/ts.worker?worker');
-                    return new TsWorker();
-                }
                 const {default: EditorWorker} = await import('monaco-editor/esm/vs/editor/editor.worker?worker');
                 return new EditorWorker();
             },

@@ -162,6 +162,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 view: "views/stream/panel",
                 sticked: false,
                 hidden: this.isPanelClosed('stream'),
+                order:  5,
                 expanded: false,
                 avoidLoadingOnCollapse: true
             });
@@ -229,7 +230,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     return item;
                 }, this);
 
-                if (this.streamPanel && !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled')) {
+                if (this.streamPanel && !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && !this.getConfig().get('isStreamSide')) {
                     this.setupStreamPanel();
                 }
 

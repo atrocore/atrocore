@@ -2,6 +2,7 @@
   "controller": "controllers/file",
   "createDisabled": true,
   "iconClass": "fas fa-file",
+  "plateViewMode": true,
   "boolFilterList": [
     "onlyMy",
     "onlyType",
@@ -48,48 +49,6 @@
         "view": "views/file/record/panels/side/download/main"
       }
     ]
-  },
-  "menu": {
-    "list": {
-      "buttons": [
-        {
-          "acl": "read",
-          "name": "list",
-          "label": "",
-          "link": "#File/list",
-          "title": "List",
-          "iconHtml": "<span class=\"fa fa-list\"></span>"
-        },
-        {
-          "acl": "read",
-          "name": "plate",
-          "label": "",
-          "link": "#File/plate",
-          "title": "Plate",
-          "iconHtml": "<span class=\"fa fa-th\"></span>"
-        }
-      ]
-    },
-    "plate": {
-      "buttons": [
-        {
-          "acl": "read",
-          "name": "list",
-          "label": "",
-          "link": "#File/list",
-          "title": "List",
-          "iconHtml": "<span class=\"fa fa-list\"></span>"
-        },
-        {
-          "acl": "read",
-          "name": "plate",
-          "label": "",
-          "link": "#File/plate",
-          "title": "Plate",
-          "iconHtml": "<span class=\"fa fa-th\"></span>"
-        }
-      ]
-    }
   },
   "dynamicLogic": {
     "fields": {

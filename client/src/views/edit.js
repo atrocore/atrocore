@@ -44,24 +44,71 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         optionsToPass: ['returnUrl', 'returnDispatchParams', 'attributes', 'rootUrl'],
 
-        headerView: 'views/header',
-
         recordView: 'views/record/edit',
 
         setup: function () {
-            this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
 
-            this.setupHeader();
             this.setupRecord();
         },
 
         setupHeader: function () {
-            this.createView('header', this.headerView, {
-                model: this.model,
-                el: '#main main > .header',
-                scope: this.scope
+            const record = this.getView('record');
+
+            new Svelte.DetailHeader({
+                target: document.querySelector('#main main > .header'),
+                props: {
+                    params: {
+                        mode: 'edit',
+                        scope: this.scope,
+                        id: this.model.id,
+                        permissions: {
+                            canRead: this.getAcl().check(this.scope, 'read'),
+                            canEdit: this.getAcl().check(this.scope, 'edit'),
+                            canCreate: this.getAcl().check(this.scope, 'create'),
+                            canDelete: this.getAcl().check(this.scope, 'delete'),
+                            canReadStream: this.getAcl().check(this.scope, 'stream'),
+                        },
+                        breadcrumbs: this.getBreadcrumbsItems(),
+                        afterOnMount: () => {
+                            this.setupTourButton();
+                        }
+                    },
+                    recordButtons: {
+                        editButtons: record.buttonList,
+                        dropdownEditButtons: record.dropdownEditItemList,
+                        additionalEditButtons: record.additionalEditButtons,
+                        headerButtons: this.getMenu(),
+                        executeAction: (action, data, event) => {
+                            this.executeAction(action, data, event);
+                        },
+                    }
+                }
             });
+        },
+
+        getBreadcrumbsItems: function () {
+            const items = Dep.prototype.getBreadcrumbsItems.call(this);
+
+            const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+            items.push({
+                label: this.getLanguage().translate(this.scope, 'scopeNamesPlural'),
+                url: rootUrl,
+            });
+
+            if (this.model.isNew()) {
+                items.push({
+                    label: this.getLanguage().translate('New'),
+                    url: `#${this.scope}/create`,
+                });
+            } else {
+                items.push({
+                    label: this.model.get('name') || this.model.id,
+                    url: `#${this.scope}/view/${this.model.id}`,
+                });
+            }
+
+            return items;
         },
 
         setupRecord: function () {
@@ -83,38 +130,6 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.edit') || this.recordView;
         },
 
-        getHeader: function () {
-            var html = '';
-
-            var headerIconHtml = this.getHeaderIconHtml();
-
-            var arr = [];
-
-            if (this.options.noHeaderLinks) {
-                arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
-            } else {
-                var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-                arr.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
-            }
-
-            if (this.model.isNew()) {
-                arr.push(this.getLanguage().translate('create'));
-            } else {
-                var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
-
-                if (name === '') {
-                    name = this.model.id;
-                }
-
-                if (this.options.noHeaderLinks) {
-                    arr.push(name);
-                } else {
-                    arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
-                }
-            }
-            return this.buildHeaderHtml(arr);
-        },
-
         updatePageTitle: function () {
             var title;
             if (this.model.isNew()) {
@@ -134,6 +149,8 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             $('.page-header').addClass('detail-page-header');
 
             Dep.prototype.afterRender.call(this);
+
+            this.setupHeader();
 
             this.loadRightSideView();
         }
