@@ -20627,14 +20627,6 @@ button.category:focus {
         cursor: col-resize;
     }
 
-    #main .side > .side-panel-resizer {
-        width: 2px;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        cursor: col-resize;
-    }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden .category-panel-resizer {
         cursor: default;

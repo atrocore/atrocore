@@ -348,7 +348,11 @@
     "Visit Community": "Gemeinschaft besuchen",
     "fieldStatus": "Feld Wert",
     "language": "Sprache",
-    "scopeFilter": "Kanal"
+    "scopeFilter": "Kanal",
+    "Summary": "Zusammenfassung",
+    "Activities": "Aktivitäten",
+    "enableAutomaticClosing": "Aktivieren  des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
+    "disableAutomaticClosing": "Deaktivieren des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus."
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -598,7 +602,9 @@
     "users": "Benutzer",
     "groupEnd": "Gruppenende",
     "iconClass": "Icon",
-    "isPublic": "Öffentlich"
+    "isPublic": "Öffentlich",
+    "created": "Erstellt",
+    "modified": "Geändert"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."

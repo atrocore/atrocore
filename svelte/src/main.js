@@ -2,6 +2,7 @@ import 'driver.js/dist/driver.css'
 import './styles/style.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/border.css';
+import "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=image"
 
 import {driver} from 'driver.js'
 import tippy from 'tippy.js';
@@ -24,6 +25,7 @@ import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
 import Favorites from "./components/layout-profile/navigation/Favorites.svelte";
 import TreePanel from "./components/record/TreePanel.svelte";
+import RightSideView from "./components/record/RightSideView.svelte";
 import BaseHeader from "./components/record/header/BaseHeader.svelte";
 import ListHeader from "./components/record/header/ListHeader.svelte";
 import DetailHeader from "./components/record/header/DetailHeader.svelte";
@@ -39,4 +41,17 @@ window.SvelteStorage = Storage;
 window.driver = driver;
 window.tippy = tippy;
 
-export {UpdatePanel, JobManagerIcon, LayoutComponent, TreePanel, ApiRequestComponent, Script, Navigation, Favorites, BaseHeader, ListHeader, DetailHeader};
+export {
+    Script,
+    UpdatePanel,
+    JobManagerIcon,
+    LayoutComponent,
+    RightSideView,
+    TreePanel,
+    ApiRequestComponent,
+    Navigation,
+    Favorites,
+    BaseHeader,
+    ListHeader,
+    DetailHeader
+};

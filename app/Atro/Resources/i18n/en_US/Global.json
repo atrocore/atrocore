@@ -15,6 +15,7 @@
     "Action": "Action",
     "ExtensibleEnum": "List",
     "ExtensibleEnumOption": "List Option",
+    "ExtensibleEnumExtensibleEnumOption": "List (List Option)",
     "Sharing": "Sharing",
     "Locale": "Locale",
     "Connection": "Connection",
@@ -63,7 +64,8 @@
     "NotificationRule": "Notification Rule",
     "HtmlSanitizer": "HTML Sanitizer",
     "Bookmark": "Bookmark",
-    "SystemIcon": "System Icon"
+    "SystemIcon": "System Icon",
+    "ProductHierarchy": "Product Hierarchy"
   },
   "scopeNamesPlural": {
     "UserProfile": "User Profiles",
@@ -122,6 +124,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "UserFollowed": "User Followed",
     "authenticate": "Authenticate",
     "Download": "Download",
     "Load data": "Load data",
@@ -374,6 +377,10 @@
     "scopeFilter": "Channel",
     "editGroup": "Edit Group",
     "addGroup": "Begin / end group",
+    "Summary": "Summary",
+    "Activities": "Activities",
+    "enableAutomaticClosing": "Enable  automatic opening and closing of this panel on mouse over.",
+    "disableAutomaticClosing": "Disable automatic opening and closing of this panel on mouse over.",
     "actionFollow": "Click to follow",
     "actionUnfollow": "Your are following, Click to unfollow",
     "actionBookmark": "Click to bookmark",

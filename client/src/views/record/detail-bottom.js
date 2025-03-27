@@ -156,14 +156,15 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
         setupStreamPanel: function () {
             this.panelList.push({
-                "name": "stream",
-                "label": "Stream",
-                "title": this.translate('Stream', 'labels', this.scope),
-                "view": "views/stream/panel",
-                "sticked": false,
-                "hidden": this.isPanelClosed('stream'),
-                "order": this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
-                "expanded": !this.isPanelClosed('stream')
+                name: "stream",
+                label: "Activities",
+                title: this.translate('Activities', 'labels'),
+                view: "views/stream/panel",
+                sticked: false,
+                hidden: this.isPanelClosed('stream'),
+                order: this.getConfig().get('isStreamPanelFirst') ? 2 : 5,
+                expanded: false,
+                avoidLoadingOnCollapse: true
             });
         },
 
@@ -459,10 +460,11 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         },
 
         createPanelViews() {
-            this.panelList.filter(p => !p.hidden)
-                .forEach(p => {
-                    this.createPanelView(p);
-                });
+            this.panelList.filter(p => {
+                return !p.hidden &&  (p.expanded || !p.avoidLoadingOnCollapse);
+            }).forEach(p => {
+                this.createPanelView(p);
+            });
         },
 
         createPanelView(p, callback) {
@@ -557,8 +559,23 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             this.panelList.sort((a, b) => (((a.order || 0) - (b.order || 0)) || (a.index - b.index)));
         },
 
-        collapseBottomPanel(panel, type) {
-            let panelBody = this.$el.find(`.panel-body[data-name="${panel}"]`);
+        collapseBottomPanel(name, type) {
+            let panelBody = this.$el.find(`.panel-body[data-name="${name}"]`);
+            let panelIndex = this.panelList.findIndex(panel => panel.name === name);
+            let panel = this.panelList[panelIndex];
+
+            if(!panel.alreadyLoaded && panel.avoidLoadingOnCollapse  && !panelBody.hasClass('in')) {
+                panelBody.html('<img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg">');
+                panel.alreadyLoaded = true;
+                this.createPanelView(panel,(view, _) => {
+                    if ('getActionList' in view) {
+                       panel.actionList = this.filterActions(view.getActionList());
+                    }
+                    this.rebuildPanelHeading(panel);
+
+                    view.render();
+                });
+            }
             panelBody.collapse(type ? type : 'toggle');
         },
 

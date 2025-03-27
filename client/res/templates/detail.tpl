@@ -7,7 +7,4 @@
         <div class="record">{{{record}}}</div>
         <div class="bottom">{{{bottom}}}</div>
     </main>
-    {{#if sideAllowed}}
-        <aside class="side">{{{side}}}</aside>
-    {{/if}}
 </div>

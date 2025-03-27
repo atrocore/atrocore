@@ -326,10 +326,14 @@ class Entity extends ReferenceData
                 $saveMetadata = true;
             } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
+
                 if ($loadedVal === $entity->get($field)) {
                     $this->getMetadata()->delete('scopes', $entity->get('code'), [$field]);
                 } else {
-                    $this->getMetadata()->set('scopes', $entity->get('code'), [$field => $entity->get($field)]);
+                    $currentVal = $entity->get($field);
+                    $currentVal = is_array($currentVal) && empty($currentVal) ? null : $currentVal;
+
+                    $this->getMetadata()->set('scopes', $entity->get('code'), [$field => $currentVal]);
                 }
                 $saveMetadata = true;
             }
@@ -356,8 +360,12 @@ class Entity extends ReferenceData
             throw new Forbidden();
         }
 
-        if ($entity->get('type') === 'Hierarchy' && !empty($entity->get('modifiedExtendedRelations'))) {
-            if (in_array('parents', $entity->get('modifiedExtendedRelations')) && in_array('children', $entity->get('modifiedExtendedRelations'))) {
+        if ($entity->get('type') === 'Hierarchy' && !empty($modifiedExtendedRelations = $entity->get('modifiedExtendedRelations'))) {
+            if (!is_array($modifiedExtendedRelations)) {
+                $modifiedExtendedRelations = [];
+            }
+
+            if (in_array('parents', $modifiedExtendedRelations) && in_array('children', $modifiedExtendedRelations)) {
                 throw new BadRequest(str_replace(['{parents}', '{children}'],
                     [$this->getLanguage()->translate('parents', 'fields', $entity->get('code')), $this->getLanguage()->translate('children', 'fields', $entity->get('code'))],
                     $this->getLanguage()->translate('parentsAndChildrenShouldNotBeInModifiedExtendedRelations', 'exceptions', 'Entity')));

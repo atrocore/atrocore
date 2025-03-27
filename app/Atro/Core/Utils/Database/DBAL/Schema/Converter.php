@@ -57,8 +57,6 @@ class Converter
     public function createSchema(): Schema
     {
         $ormMetadata = $this->ormMetadata->getData();
-        $ormMetadata['ActionHistoryRecord']['fields']['targetType']['len'] = 60;
-        $ormMetadata['ActionHistoryRecord']['fields']['targetId']['len'] = 62;
 
         // UserProfile is the virtual entity and should not have the db table
         unset($ormMetadata['UserProfile']);

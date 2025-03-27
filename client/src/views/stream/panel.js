@@ -81,7 +81,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         setup: function () {
-            this.title = this.translate('Stream');
+            this.title = this.translate('Activities');
 
             this.scope = this.model.name;
 
