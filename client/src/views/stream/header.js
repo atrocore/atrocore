@@ -75,16 +75,6 @@ Espo.define('views/stream/header', 'view', function (Dep) {
             return {
                 filterList: this.filterList
             }
-        },
-
-        enableButtons: function () {
-            this.disabled = false;
-            $('a[data-action="filter"]').removeClass('disabled');
-        },
-
-        disableButtons: function () {
-            this.disabled = true;
-            $('a[data-action="filter"]').addClass('disabled');
         }
     })
 });
