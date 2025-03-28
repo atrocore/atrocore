@@ -590,7 +590,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initRemoveAttributeValue() {
-            if (!this.model.getFieldParam(this.name, 'attributeId') || !this.getAcl().check(this.model.name, 'edit')) {
+            let name = this.name.replace(/^unitAttr_/, "attr_");
+            if (!this.model.getFieldParam(name, 'attributeId') || !this.getAcl().check(this.model.name, 'edit')) {
                 return;
             }
 
@@ -614,7 +615,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, () => {
                     const data = {
                         entityName: this.model.name,
-                        id: this.model.getFieldParam(this.name, 'id')
+                        id: this.model.getFieldParam(name, 'id')
                     }
 
                     $.ajax({
