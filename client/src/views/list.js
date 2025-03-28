@@ -721,7 +721,10 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         shouldSetupRightSideView() {
-            return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled');
+            let streamAllowed = this.model
+                ? this.getAcl().checkModel(this.model, 'stream', true)
+                : this.getAcl().check(this.scope, 'stream');
+            return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed;
         }
     });
 });

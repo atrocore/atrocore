@@ -313,13 +313,16 @@ Espo.define('views/main', 'view', function (Dep) {
         setupRightSideView: function() {
             if(this.shouldSetupRightSideView()) {
                 let recordView = this.getMainRecord();
+                let streamAllowed = this.model
+                    ? this.getAcl().checkModel(this.model, 'stream', true)
+                    : this.getAcl().check(this.scope, 'stream');
                 new Svelte.RightSideView({
                     target:  $(`${this.options.el} .content-wrapper`).get(0),
                     props: {
                         scope: this.scope,
                         model: this.model,
                         mode: this.mode ?? this.viewMode,
-                        hasStream: !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled'),
+                        hasStream: !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed,
                         loadSummary: () => {
                             let el = this.options.el + ' .right-side-view .summary';
                             recordView.createRightSideView(el, (view) => {

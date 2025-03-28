@@ -368,8 +368,12 @@
         margin-left: -15px;
     }
 
-    :global(.right-side-view .dropdown-menu.pull-right) {
+    :global(.right-side-view .layout-editor-container .dropdown-menu.pull-right) {
         right: auto;
+    }
+
+    :global(.right-side-view .activities .dropdown-menu.pull-right) {
+        right: 0;
     }
 
     :global(.right-side-view .panel-default > .panel-heading) {
