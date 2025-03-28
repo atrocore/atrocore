@@ -14,7 +14,7 @@ Espo.define('views/record/right-side-view-bottom', 'views/record/detail-bottom',
 
         setup: function () {
 
-            this.panelList = this.getMetadata().get(['clientDefs', this.scope,'rightSidePanels', 'detail']) || []
+            this.panelList = this.getMetadata().get(['clientDefs', this.scope,'rightSidePanels']) || []
             this.panelList.forEach(function (item) {
                 item.expanded = true;
             })

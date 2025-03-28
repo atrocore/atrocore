@@ -61,7 +61,6 @@
     "detail": "Detalle",
     "massUpdate": "Actualización masiva",
     "relationships": "Paneles de relaciones",
-    "sidePanelsDetail": "Paneles laterales (detalle)",
     "kanban": "Kanban"
   },
   "fieldTypes": {

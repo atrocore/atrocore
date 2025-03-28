@@ -65,11 +65,6 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
                     return '<a href="' + this.getDownloadUrl(id) + '" target="_blank"><span class="fiv-cla fiv-icon-' + this.model.get('extension') + ' fiv-size-lg"></span></a>';
                 }
             }
-        },
-
-        fetch() {
-            return {};
         }
-
     })
 );

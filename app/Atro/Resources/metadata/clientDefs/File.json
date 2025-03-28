@@ -30,8 +30,7 @@
   "treeScopes": [
     "Folder"
   ],
-  "rightSidePanels": {
-    "detail": [
+  "rightSidePanels":  [
       {
         "name": "sharing",
         "label": "Sharing",
@@ -43,8 +42,7 @@
         "label": "customDownload",
         "view": "views/file/record/panels/side/download/main"
       }
-    ]
-  },
+    ],
   "dynamicLogic": {
     "fields": {
       "storage": {
