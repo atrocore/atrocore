@@ -42,6 +42,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         header: 'views/stream/header',
 
+        filterList: ['posts', 'updates', 'emails'],
+
         events: _.extend({
             'click button.post': function () {
                 this.post();
@@ -354,7 +356,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
 
         getStoredFilter: function () {
-            return this.getStorage().get('state', 'streamPanelFilter') || ['posts', 'updates', 'emails'];
+            return this.getStorage().get('state', 'streamPanelFilter') || this.filterList;
         },
 
         storeFilter: function (filter) {
@@ -377,6 +379,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
               el: this.options.el + ' .header',
               scope: this.scope,
               model: this.model,
+              filterList: this.filterList,
               activeFilters: this.getStoredFilter(),
               collection: this.collection,
           }, view => {
