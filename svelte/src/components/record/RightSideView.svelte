@@ -317,7 +317,7 @@
     }
 
     .collapsed.right-side-view {
-        padding: 15px;
+        padding: 10px;
     }
 
     .collapsed > .content {
@@ -359,7 +359,7 @@
     }
 
     :global(.right-side-view .dropdown-menu.pull-right) {
-        right: 0;
+        right: auto;
     }
 
     :global(.right-side-view .panel-default > .panel-heading) {
@@ -377,7 +377,7 @@
     }
 
     div.not-pinned.expanded {
-        width: 30px;
+        width: 20px;
     }
 
     div.not-pinned:not(.expanded) {

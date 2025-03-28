@@ -602,7 +602,9 @@
     "users": "Users",
     "groupEnd": "Group end",
     "iconClass": "Icon",
-    "isPublic": "Public"
+    "isPublic": "Public",
+    "created": "Created",
+    "modified": "Modified"
   },
   "tooltips": {
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."
