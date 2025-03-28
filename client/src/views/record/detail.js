@@ -2094,54 +2094,48 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         prepareLayoutData(data) {
-            if (!this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
-                return;
-            }
+            if (this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
+                let params = {
+                    entityName: this.model.name,
+                    entityId: this.model.get('id')
+                };
 
-            if (!this.getAcl().check(this.model.name, 'read')) {
-                return;
-            }
+                let layoutRows = [];
 
-            let params = {
-                entityName: this.model.name,
-                entityId: this.model.get('id')
-            };
+                this.ajaxGetRequest('Attribute/action/recordAttributes', params, {async: false}).success(items => {
+                    let layoutRow = [];
+                    items.forEach(item => {
+                        this.model.defs['fields'][item.name] = item;
+                        layoutRow.push({
+                            name: item.name,
+                            customLabel: item.label,
+                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
+                        });
+                        if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                            layoutRows.push(layoutRow);
+                            layoutRow = [];
+                        }
+                    })
 
-            let layoutRows = [];
-
-            this.ajaxGetRequest('Attribute/action/recordAttributes', params, {async: false}).success(items => {
-                let layoutRow = [];
-                items.forEach(item => {
-                    this.model.defs['fields'][item.name] = item;
-                    layoutRow.push({
-                        name: item.name,
-                        customLabel: item.label,
-                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
-                    });
-                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                    if (layoutRow.length > 0) {
+                        layoutRow.push(false);
                         layoutRows.push(layoutRow);
-                        layoutRow = [];
                     }
                 })
 
-                if (layoutRow.length > 0) {
-                    layoutRow.push(false);
-                    layoutRows.push(layoutRow);
-                }
-            })
+                data.layout.forEach((row, k) => {
+                    if (row.id === 'attributeValues') {
+                        delete data.layout[k];
+                    }
+                })
 
-            data.layout.forEach((row, k) => {
-                if (row.id === 'attributeValues') {
-                    delete data.layout[k];
+                if (layoutRows.length > 0) {
+                    data.layout.push({
+                        id: 'attributeValues',
+                        label: this.translate('attributeValues'),
+                        rows: layoutRows
+                    });
                 }
-            })
-
-            if (layoutRows.length > 0) {
-                data.layout.push({
-                    id: 'attributeValues',
-                    label: this.translate('attributeValues'),
-                    rows: layoutRows
-                });
             }
         },
 
