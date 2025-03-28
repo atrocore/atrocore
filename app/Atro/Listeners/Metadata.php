@@ -1201,6 +1201,11 @@ class Metadata extends AbstractListener
                 'notStorable' => true,
                 'readOnly' => true,
                 'ignoreViewForSearch' => true,
+                "massUpdateDisabled"=> true,
+                "filterDisabled"=> true,
+                "exportDisabled"=> true,
+                "importDisabled"=> true,
+                "emHidden"=> true
             ];
 
             $data['entityDefs'][$scope]['fields']['modified'] = [
@@ -1209,6 +1214,11 @@ class Metadata extends AbstractListener
                 'notStorable' => true,
                 'readOnly' => true,
                 'ignoreViewForSearch' => true,
+                "massUpdateDisabled"=> true,
+                "filterDisabled"=> true,
+                "exportDisabled"=> true,
+                "importDisabled"=> true,
+                "emHidden"=> true
             ];
 
             foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
