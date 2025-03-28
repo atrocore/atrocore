@@ -373,6 +373,41 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         getSelfAssignAttributes: function () {
         },
 
+        actionAddAttribute() {
+            this.notify('Loading...');
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'Attribute',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', selectObj => {
+                    this.notify('Loading...');
+                    const data = {
+                        entityName: this.model.name,
+                        entityId: this.model.get('id'),
+                    }
+                    if (Array.isArray(selectObj)) {
+                        data.ids = selectObj.map(o => o.id)
+                    } else {
+                        data.where = selectObj.where
+                    }
+                    $.ajax({
+                        url: `Attribute/action/addAttributeValue`,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: () => {
+                            this.refreshLayout();
+                            this.notify('Saved', 'success');
+                        }
+                    });
+                });
+            });
+        },
+
         setupActionItems: function () {
             if (this.getMetadata().get(['scopes', this.model.name, 'disabled'])) {
                 this.buttonList = []
@@ -394,6 +429,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         'name': 'duplicate'
                     });
                 }
+            }
+
+            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
+                this.dropdownItemList.push({
+                    label: 'addAttribute',
+                    name: 'addAttribute'
+                });
             }
 
             if (this.getMetadata().get(['clientDefs', this.entityType, 'showCompareAction'])) {
@@ -929,6 +971,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 observer.unobserve($('#content').get(0));
             });
             observer.observe($('#content').get(0));
+
+            this.$el.find('.panel-heading').each((k, el) => {
+                let $el = $(el);
+                let isAttributeValuePanel = $el.parent().find('.remove-attribute-value').length > 0;
+
+                if (isAttributeValuePanel) {
+                    let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><span class="fas fa-plus cursor-pointer" style="font-size: 1em;"></span></a></div>';
+                    $el.append(html);
+                    $el.find('.add-attribute-value-container').click(()=>{
+                        this.actionAddAttribute();
+                    });
+                }
+            });
         },
 
         resetSidebar() {
@@ -2039,7 +2094,55 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         prepareLayoutData(data) {
-            // do something
+            if (!this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
+                return;
+            }
+
+            if (!this.getAcl().check(this.model.name, 'read')) {
+                return;
+            }
+
+            let params = {
+                entityName: this.model.name,
+                entityId: this.model.get('id')
+            };
+
+            let layoutRows = [];
+
+            this.ajaxGetRequest('Attribute/action/recordAttributes', params, {async: false}).success(items => {
+                let layoutRow = [];
+                items.forEach(item => {
+                    this.model.defs['fields'][item.name] = item;
+                    layoutRow.push({
+                        name: item.name,
+                        customLabel: item.label,
+                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
+                    });
+                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                        layoutRows.push(layoutRow);
+                        layoutRow = [];
+                    }
+                })
+
+                if (layoutRow.length > 0) {
+                    layoutRow.push(false);
+                    layoutRows.push(layoutRow);
+                }
+            })
+
+            data.layout.forEach((row, k) => {
+                if (row.id === 'attributeValues') {
+                    delete data.layout[k];
+                }
+            })
+
+            if (layoutRows.length > 0) {
+                data.layout.push({
+                    id: 'attributeValues',
+                    label: this.translate('attributeValues'),
+                    rows: layoutRows
+                });
+            }
         },
 
         createSideView: function (callback) {
