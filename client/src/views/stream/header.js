@@ -45,27 +45,14 @@ Espo.define('views/stream/header', 'view', function (Dep) {
                 this.activeFilters = [this.activeFilters];
             }
 
-            this.filterList = [
-                {
-                    name: "posts",
-                    label: this.translate('notes', 'filters', 'Note'),
+            this.filterList = this.options.filterList.map(item => {
+                return {
+                    name: item,
+                    label: this.translate(item === 'posts' ? 'notes': item, 'filters', 'Note'),
                     action: "filter",
-                    isActive: this.activeFilters.includes('posts')
-
-                },
-                {
-                    name: "updates",
-                    label: this.translate('updates', 'filters', 'Note'),
-                    action: "filter",
-                    isActive: this.activeFilters.includes('updates')
-                },
-                {
-                    name: "emails",
-                    label: this.translate('emails', 'filters', 'Note'),
-                    action: "filter",
-                    isActive: this.activeFilters.includes('emails')
-                }
-            ];
+                    isActive: this.activeFilters.includes(item)
+                };
+            });
         },
 
         data: function () {
