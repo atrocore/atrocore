@@ -4,21 +4,16 @@
     import GfiImage from "../../assets/image_gfi.svg"
     import GfiHideImage from "../../assets/hide_image_gfi.svg"
     import {Language} from "../../utils/Language";
-    import {Metadata} from "../../utils/Metadata";
     import Item from './interfaces/Item'
 
     export let scope: string;
-
     export let mode: string;
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let loadSummary: Function;
-
     export let loadActivities: Function;
-
     export let isCollapsed: boolean = false;
-
     export let hasStream: boolean = false;
 
 
@@ -30,7 +25,6 @@
     let isMouseOver = false;
     let isPin = true;
     let streamView: Object;
-
     let items: Item[] = [];
     let activeItem: Item ;
 
