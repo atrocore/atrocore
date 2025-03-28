@@ -293,7 +293,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 view.onTreePanelRendered();
             }
 
-            this.loadRightSideView()
+            this.setupRightSideView()
 
             let isScrolledMore = false;
             const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');

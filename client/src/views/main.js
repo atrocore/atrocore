@@ -300,15 +300,25 @@ Espo.define('views/main', 'view', function (Dep) {
             const record = this.getView('record');
             record?.executeAction(action, data, event);
         },
-        loadRightSideView: function() {
-            let recordView = this.getView('record');
-            if(recordView && recordView.sideView && recordView.rightSideView) {
+
+        getMainRecord: function() {
+            return this.getView('record');
+        },
+
+        shouldSetupRightSideView: function() {
+            let recordView = this.getMainRecord();
+            return recordView && recordView.sideView && recordView.rightSideView;
+        },
+
+        setupRightSideView: function() {
+            if(this.shouldSetupRightSideView()) {
+                let recordView = this.getMainRecord();
                 new Svelte.RightSideView({
                     target:  $(`${this.options.el} .content-wrapper`).get(0),
                     props: {
                         scope: this.scope,
                         model: this.model,
-                        mode: this.mode,
+                        mode: this.mode ?? this.viewMode,
                         hasStream: !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled'),
                         loadSummary: () => {
                             let el = this.options.el + ' .right-side-view .summary';
@@ -335,10 +345,12 @@ Espo.define('views/main', 'view', function (Dep) {
                         loadActivities: (callback) => {
                             let el = this.options.el + ' .right-side-view .activities'
                             this.createView('activities', 'views/record/activities', {
-                                model: this.model,
                                 el: el,
-                                recordHelper: recordView.recordHelper,
-                                recordViewObject: recordView.recordViewObject
+                                model: this.model,
+                                mode: this.mode ?? this.viewMode,
+                                scope: this.scope,
+                                recordHelper: recordView?.recordHelper,
+                                recordViewObject: recordView?.recordViewObject
                             }, view => {
                                 if(callback) {
                                     callback(view);

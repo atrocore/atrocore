@@ -85,14 +85,14 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         setup: function () {
             this.title = this.translate('Activities');
 
-            this.scope = this.model.name;
+            this.scope = this.options.defs.scope ?? this.model.name;
 
             this.filter = this.getStoredFilter();
 
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
 
-            this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
-            this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
+            this.storageTextKey = 'stream-post-' + this.scope + '-' + this.model?.id;
+            this.storageAttachmentsKey = 'stream-post-attachments-' + this.scope + '-' + this.model?.id;
 
             this.on('remove', function () {
                 this.storeControl();
@@ -156,7 +156,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         createCollection: function (callback, context) {
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
-                collection.url = this.model.name + '/' + this.model.id + '/stream';
+                if(this.mode === 'list') {
+                    collection.url = 'Stream' + '/' + this.scope
+                }else{
+                    collection.url = this.model.name + '/' + this.model.id + '/stream';
+                }
                 collection.sortBy = 'createdAt';
                 collection.asc = false;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
@@ -167,7 +171,12 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            const streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
+            let  streamAllowed;
+            if(this.mode === 'list') {
+                  streamAllowed = this.getAcl().check(this.scope, 'stream')
+            }else {
+                  streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
+            }
             if (!streamAllowed) {
                 this.$el.parent().hide();
                 return;

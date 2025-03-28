@@ -383,6 +383,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             this.createTreePanel();
             this.setupHeader();
 
+
             let treePanelView = this.getView('treePanel');
 
             this.collection.isFetched = false;
@@ -404,6 +405,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 }
             });
             observer.observe($('#content').get(0));
+
+            this.setupRightSideView();
         },
 
         loadList: function () {
@@ -715,7 +718,10 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             if (window.treePanelComponent) {
                 window.treePanelComponent.reloadBookmarks()
             }
-        }
+        },
 
+        shouldSetupRightSideView() {
+            return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled');
+        }
     });
 });
