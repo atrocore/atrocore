@@ -214,7 +214,7 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
 
         initCloseNotification() {
             $('.close').click(function () {
-                $('#nofitication').remove();
+                $('#notification').remove();
             });
         },
 
