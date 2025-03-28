@@ -182,7 +182,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (middle) {
                     middle._layout = layout
                     middle._loadNestedViews(() => {
-                        middle.reRender()
+                        // middle.reRender()
                     })
 
                     // update panel navigation
@@ -192,10 +192,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             let navigation = this.getView(key)
                             if (navigation) {
                                 navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
-                                navigation.reRender()
+                                // navigation.reRender()
                             }
                         }
                     }
+                    this.reRender();
                 }
             })
         },

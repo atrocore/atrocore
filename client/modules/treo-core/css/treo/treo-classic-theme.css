@@ -24274,7 +24274,7 @@ span[data-img-src]::after {
     text-align: center;
 }
 
-.layout-editor-container .btn-link {
+.layout-editor-container .btn-link, .add-attribute-value-container .btn-link {
     color: #333;
 }
 
