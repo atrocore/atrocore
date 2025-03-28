@@ -23,6 +23,12 @@
         display: flex;
         padding: 20px 0;
         justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+    }
+
+    .panel-stream .header a {
+        margin-top: 10px;
     }
 
     .panel-stream .header .filter .filter-item {
@@ -46,5 +52,17 @@
         border: 1px solid rgb(126 183 241);
         border-radius: 5px;
         background-color: rgba(126, 183, 241, 0.1);
+    }
+
+    .panel-stream .header .filter .filter-item.disabled {
+        cursor: crosshair;
+    }
+
+    .panel-stream .header .filter .filter-item.disabled:hover {
+        border: 1px solid transparent;
+        background-color: transparent;
+    }
+    .no-data {
+        padding: 10px 0;
     }
 </style>
