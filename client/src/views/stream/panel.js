@@ -378,9 +378,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
               activeFilters: this.getStoredFilter(),
               collection: this.collection,
           }, view => {
-              this.listenTo(this.collection, 'sync', function () {
-                  view.enableButtons()
-              });
               this.listenTo(view, 'filter-update', (activeFilter) => {
                   this.storeFilter(activeFilter);
                   this.setFilter(activeFilter);
@@ -401,7 +398,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 this.collection.reset();
                 this.collection.fetch();
             }else{
-                this.$el.find('.list-container').html('<div class="no-data">No Data</div>')
+                this.$el.find('.list-container').html('<span >No Data</span>')
             }
         }
 

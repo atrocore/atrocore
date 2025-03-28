@@ -426,6 +426,4 @@
     :global(.activities .panel-stream .panel-title), :global(.activities .panel-stream .panel-heading .btn-group) {
         display: none;
     }
-
-
 </style>
