@@ -291,7 +291,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             }, this);
             if (!this.defs.hidden) {
-                collection.fetch();
+                this.fetchCollection();
             }
 
             this.createView('attachments', 'views/fields/link-multiple', {
@@ -354,14 +354,14 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
 
         getStoredFilter: function () {
-            return this.getStorage().get('state', 'streamPanelFilter' + this.scope) || null;
+            return this.getStorage().get('state', 'streamPanelFilter') || ['posts', 'updates', 'emails'];
         },
 
         storeFilter: function (filter) {
             if (filter) {
-                this.getStorage().set('state', 'streamPanelFilter' + this.scope, filter);
+                this.getStorage().set('state', 'streamPanelFilter', filter);
             } else {
-                this.getStorage().clear('state', 'streamPanelFilter' + this.scope);
+                this.getStorage().clear('state', 'streamPanelFilter');
             }
         },
 
@@ -377,13 +377,17 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
               el: this.options.el + ' .header',
               scope: this.scope,
               model: this.model,
-              activeFilters: this.getStoredFilter()
+              activeFilters: this.getStoredFilter(),
+              collection: this.collection,
           }, view => {
+              this.listenTo(this.collection, 'sync', function () {
+                  view.enableButtons()
+              });
               this.listenTo(view, 'filter-update', (activeFilter) => {
                   this.storeFilter(activeFilter);
                   this.setFilter(activeFilter);
-                  this.collection.reset();
-                  this.collection.fetch();
+                  this.collection.abortLastFetch();
+                 this.fetchCollection();
               })
           })
         },
@@ -393,6 +397,15 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 this.getView('list').showNewRecords();
             }
         },
+
+        fetchCollection() {
+            if(this.getStoredFilter().length) {
+                this.collection.reset();
+                this.collection.fetch();
+            }else{
+                this.$el.find('.list-container').html('<div class="no-data">No Data</div>')
+            }
+        }
 
     });
 });
