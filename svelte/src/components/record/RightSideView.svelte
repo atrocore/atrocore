@@ -266,7 +266,6 @@
 
 
         <div class="summary" class:hidden={activeItem.name !== 'summary'}>
-
         </div>
 
         <div class="activities" class:hidden={activeItem.name !== 'activities'}>
@@ -423,5 +422,16 @@
         display: none;
     }
 
+    :global(.right-side-view .field .attachment-preview) {
+        display: block;
+    }
 
+    :global(.right-side-view .field .attachment-preview img) {
+        display: block;
+        margin: 0 auto;
+    }
+
+    :global(.right-side-view .panel-heading > .btn-group) {
+        right: 0;
+    }
 </style>

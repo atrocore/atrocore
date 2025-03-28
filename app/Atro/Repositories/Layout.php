@@ -214,6 +214,7 @@ class Layout extends Base
                     ->where(['layoutId' => $entity->get('id')])
                     ->removeCollection();
                 break;
+            case 'rightSidePanel':
             case 'detail':
                 $this->getEntityManager()->getRepository('LayoutSection')
                     ->where(['layoutId' => $entity->get('id')])
@@ -221,11 +222,6 @@ class Layout extends Base
                 break;
             case 'relationships':
                 $this->getEntityManager()->getRepository('LayoutRelationshipItem')
-                    ->where(['layoutId' => $entity->get('id')])
-                    ->removeCollection();
-                break;
-            case 'sidePanelsDetail':
-                $this->getEntityManager()->getRepository('LayoutSidePanelItem')
                     ->where(['layoutId' => $entity->get('id')])
                     ->removeCollection();
                 break;

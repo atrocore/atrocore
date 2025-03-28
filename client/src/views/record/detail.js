@@ -44,8 +44,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         layoutName: 'detail',
 
-        sideLayoutName: 'rightSideView',
-
         fieldsMode: 'detail',
 
         gridLayout: null,
@@ -119,8 +117,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         // legacy property
         sideView: true,
-
-        rightSideView: 'views/record/right-side-view',
 
         bottomView: 'views/record/detail-bottom',
 
@@ -945,11 +941,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
                 }
             }
-            if (this.hasView('rightSideView')) {
-                if ('getFieldViews' in this.getView('rightSideView')) {
-                    _.extend(fields, this.getView('rightSideView').getFieldViews(withHidden));
-                }
-            }
+
             if (this.hasView('bottom')) {
                 if ('getFieldViews' in this.getView('bottom')) {
                     _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
@@ -964,9 +956,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 view = this.getView('middle').getFieldView(name);
             }
 
-            if (!view && this.hasView('rightSideView')) {
-                view = (this.getView('rightSideView').getFieldViews(true) || {})[name];
-            }
             if (!view && this.hasView('bottom')) {
                 view = (this.getView('bottom').getFieldViews(true) || {})[name];
             }
@@ -978,6 +967,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         data: function () {
+
             if (!this.options.hasNext) {
                 this.buttonEditList = (this.buttonEditList || []).filter(row => {
                     return row.name !== 'saveAndNext';
@@ -1888,56 +1878,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 callback(this.gridLayout);
             }.bind(this));
         },
-
-        getSideLayout: function(el, callback) {
-            if (this.gridSideLayout) {
-                callback(this.gridSideLayout, el);
-                return;
-            }
-
-            this._helper.layoutManager.get(this.model.name, this.sideLayoutName, null, function (data) {
-                this.layoutSideViewData = data
-                this.gridSideLayout = {
-                    type: 'record',
-                    layout: this.convertDetailLayout(data.layout, el)
-                };
-                callback(this.gridSideLayout);
-            }.bind(this));
-        },
-
-        createRightSideView: function(el, callback) {
-            this.getSideLayout(el, (layout) => {
-                this.createView('rightSideView', this.rightSideView, {
-                    model: this.model,
-                    scope: this.scope,
-                    type: this.type,
-                    _layout: layout,
-                    el: el,
-                    layoutData: {
-                        model: this.model,
-                        columnCount: this.columnCount
-                    },
-                    recordHelper: this.recordHelper,
-                    recordViewObject: this
-                }, callback);
-            })
-        },
-
-        refreshRightSideLayout() {
-            this.gridSideLayout = null
-            this.notify('Loading...')
-            const rightSideView = this.getView('rightSideView')
-            if(rightSideView) {
-                this.getSideLayout(rightSideView.options.el, (layout) => {
-                    this.notify(false)
-                    rightSideView._layout = layout
-                    rightSideView._loadNestedViews(() => {
-                        rightSideView.reRender()
-                    });
-                })
-            }
-        },
-
+        
         createMiddleView: function (callback) {
             var el = this.options.el || '#' + (this.id);
             this.waitForView('middle');
