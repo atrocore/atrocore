@@ -40,6 +40,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         postDisabled: false,
 
+        header: 'views/stream/header',
+
         events: _.extend({
             'click button.post': function () {
                 this.post();
@@ -121,6 +123,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.listenTo(this.model, 'sync', () => {
                 this.reRender();
             });
+
+            this.setupFilter();
         },
 
         storeControl: function () {
@@ -348,27 +352,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             return [];
         },
 
-        filterList: ['all', 'posts', 'updates'],
-
-        getActionList: function () {
-            var list = [];
-            this.filterList.forEach(function (item) {
-                var selected = false;
-                if (item == 'all') {
-                    selected = !this.filter;
-                } else {
-                    selected = item === this.filter;
-                }
-                list.push({
-                    action: 'selectFilter',
-                    html: '<span class="check-icon fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span><div>' + this.translate(item, 'filters', 'Note') + '</div>',
-                    data: {
-                        name: item
-                    }
-                });
-            }, this);
-            return list;
-        },
 
         getStoredFilter: function () {
             return this.getStorage().get('state', 'streamPanelFilter' + this.scope) || null;
@@ -389,25 +372,20 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             }
         },
 
-        actionSelectFilter: function (data) {
-            var filter = data.name;
-            var filterInternal = filter;
-            if (filter == 'all') {
-                filterInternal = false;
-            }
-            this.storeFilter(filterInternal);
-            this.setFilter(filterInternal);
-
-            this.filterList.forEach(function (item) {
-                var $el = this.$el.closest('.panel').find('[data-name="' + item + '"] span');
-                if (item === filter) {
-                    $el.removeClass('hidden');
-                } else {
-                    $el.addClass('hidden');
-                }
-            }, this);
-            this.collection.reset();
-            this.collection.fetch();
+        setupFilter: function () {
+          this.createView('streamHeader', this.header,  {
+              el: this.options.el + ' .header',
+              scope: this.scope,
+              model: this.model,
+              activeFilters: this.getStoredFilter()
+          }, view => {
+              this.listenTo(view, 'filter-update', (activeFilter) => {
+                  this.storeFilter(activeFilter);
+                  this.setFilter(activeFilter);
+                  this.collection.reset();
+                  this.collection.fetch();
+              })
+          })
         },
 
         actionRefresh: function () {

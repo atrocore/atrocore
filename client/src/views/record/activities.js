@@ -13,7 +13,7 @@ Espo.define('views/record/activities', 'views/record/detail-bottom', function (D
             this.panelList = [{
                 model: this.options.model,
                 name: "stream",
-                label: "Activities",
+                label: "",
                 title: this.translate('Activities', 'labels'),
                 view: "views/stream/panel",
                 sticked: false,
