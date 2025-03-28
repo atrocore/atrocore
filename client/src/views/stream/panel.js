@@ -171,12 +171,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            let  streamAllowed;
-            if(this.mode === 'list') {
-                  streamAllowed = this.getAcl().check(this.scope, 'stream')
-            }else {
-                  streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
-            }
+            let streamAllowed = this.model
+                ? this.getAcl().checkModel(this.model, 'stream', true)
+                : this.getAcl().check(this.scope, 'stream');
+            
             if (!streamAllowed) {
                 this.$el.parent().hide();
                 return;

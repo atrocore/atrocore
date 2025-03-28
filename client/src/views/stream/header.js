@@ -19,9 +19,6 @@ Espo.define('views/stream/header', 'view', function (Dep) {
         events: {
             'click a[data-action="filter"]': function (e) {
                 e.preventDefault();
-                if(this.disabled) {
-                    return;
-                }
                 let name = $(e.target).data('name')
                 if ($(e.target).hasClass('active')) {
                     $(e.target).removeClass('active');
