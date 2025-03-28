@@ -30,13 +30,8 @@
   "treeScopes": [
     "Folder"
   ],
-  "sidePanels": {
+  "rightSidePanels": {
     "detail": [
-      {
-        "name": "preview",
-        "label": "Preview",
-        "view": "views/file/record/panels/side/preview"
-      },
       {
         "name": "sharing",
         "label": "Sharing",

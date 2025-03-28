@@ -300,6 +300,7 @@ Espo.define('views/main', 'view', function (Dep) {
             const record = this.getView('record');
             record?.executeAction(action, data, event);
         },
+
         loadRightSideView: function() {
             let recordView = this.getView('record');
             let streamAllowed = this.model
@@ -307,7 +308,7 @@ Espo.define('views/main', 'view', function (Dep) {
                 : this.getAcl().check(this.scope, 'stream');
 
 
-            if(recordView && recordView.sideView && recordView.rightSideView) {
+            if(recordView && recordView.sideView) {
                 new Svelte.RightSideView({
                     target:  $(`${this.options.el} .content-wrapper`).get(0),
                     props: {
@@ -316,26 +317,29 @@ Espo.define('views/main', 'view', function (Dep) {
                         mode: this.mode,
                         hasStream: !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed,
                         loadSummary: () => {
-                            let el = this.options.el + ' .right-side-view .summary';
-                            recordView.createRightSideView(el, (view) => {
+                            this.createView('rightSideView', this.rightSideView, {
+                                el: this.options.el + ' .right-side-view .summary',
+                                scope: this.scope,
+                                mode: this.mode,
+                                model: this.model
+                            }, view => {
+                                view.render();
                                 if (this.getUser().isAdmin()) {
                                     if (this.mode === 'detail') {
                                         this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
                                             scope: this.scope,
                                             viewType: 'rightSideView',
-                                            layoutData: recordView.layoutSideViewData,
+                                            layoutData: view.layoutData,
                                             el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
-                                        }, (view) => {
-                                            view.on("refresh", () => {
-                                                recordView.refreshRightSideLayout()
+                                        }, (v) => {
+                                            v.on("refresh", () => {
+                                                view.refreshLayout()
                                             })
-                                            view.render()
+                                            v.render()
                                         })
                                     }
                                 }
-                                view.render();
                             });
-
                         },
                         loadActivities: (callback) => {
                             let el = this.options.el + ' .right-side-view .activities'

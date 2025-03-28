@@ -385,7 +385,8 @@
     "actionUnfollow": "Your are following, Click to unfollow",
     "actionBookmark": "Click to bookmark",
     "actionUnbookmark": "Bookmarked, Click to unbookmark",
-    "actionOpenFilter": "Open Filter"
+    "actionOpenFilter": "Open Filter",
+    "accessManagement": "Access Management"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
