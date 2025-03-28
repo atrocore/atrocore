@@ -382,7 +382,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                   this.storeFilter(activeFilter);
                   this.setFilter(activeFilter);
                   this.collection.abortLastFetch();
-                 this.fetchCollection();
+                  this.fetchCollection();
               })
           })
         },
