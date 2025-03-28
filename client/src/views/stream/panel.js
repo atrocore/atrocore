@@ -171,16 +171,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            let streamAllowed = this.model
-                ? this.getAcl().checkModel(this.model, 'stream', true)
-                : this.getAcl().check(this.scope, 'stream');
-            
-            if (!streamAllowed) {
-                this.$el.parent().hide();
-                return;
-            } else {
-                this.$el.parent().show();
-            }
 
             this.$postContainer = this.$el.find('.post-container');
 
