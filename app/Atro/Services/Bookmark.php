@@ -27,8 +27,8 @@ class Bookmark extends Base
     {
         $params['where'][] = [
             "attribute" => "userId",
-            "type" => "equals",
-            "value" => $this->getUser()->id
+            "type"      => "equals",
+            "value"     => $this->getUser()->id
         ];
 
         $params['sortBy'] = "entityType";
@@ -96,14 +96,14 @@ class Bookmark extends Base
 
             $result[$entityType] = [
                 "collection" => $collectionArr,
-                "key" => $entityType,
-                "rowList" => array_column($collectionArr, 'id')
+                "key"        => $entityType,
+                "rowList"    => array_column($collectionArr, 'id')
             ];
         }
 
         return [
             "total" => $count,
-            "list" => array_values($result)
+            "list"  => array_values($result)
         ];
     }
 
@@ -119,11 +119,11 @@ class Bookmark extends Base
 
             foreach ($collection as $item) {
                 $result[] = [
-                    'id' => $item->get('id'),
-                    'name' => $item->get('name') ?? $item->get('id'),
-                    'offset' => $index,
-                    'total' => $collection->count(),
-                    'disabled' => false,
+                    'id'             => $item->get('id'),
+                    'name'           => $item->get('name') ?? $item->get('id'),
+                    'offset'         => $index,
+                    'total'          => $collection->count(),
+                    'disabled'       => false,
                     'load_on_demand' => false
                 ];
                 $index++;
@@ -133,13 +133,17 @@ class Bookmark extends Base
 
         } else {
             $params['where'][] = [
-                'type' => 'bool',
+                'type'  => 'bool',
                 'value' => ['onlyBookmarked']
             ];
 
             $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
 
-            $selectParams['select'] = ['id', 'name'];
+            $fields = ['id', 'name'];
+            if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
+                $fields[] = $selectParams['orderBy'];
+            }
+            $selectParams['select'] = $fields;
             $collection = $repository->find($selectParams);
             $total = $repository->count($selectParams);
             $offset = $params['offset'];
@@ -147,11 +151,11 @@ class Bookmark extends Base
 
             foreach ($collection as $key => $item) {
                 $result[] = [
-                    'id' => $item->get('id'),
-                    'name' => $item->get('name') ?? $item->get('id'),
-                    'offset' => $offset + $key,
-                    'total' => $total,
-                    'disabled' => false,
+                    'id'             => $item->get('id'),
+                    'name'           => $item->get('name') ?? $item->get('id'),
+                    'offset'         => $offset + $key,
+                    'total'          => $total,
+                    'disabled'       => false,
                     'load_on_demand' => false
                 ];
             }
@@ -159,7 +163,7 @@ class Bookmark extends Base
 
 
         return [
-            'list' => $result,
+            'list'  => $result,
             'total' => $total
         ];
     }

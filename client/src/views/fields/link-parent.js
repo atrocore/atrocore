@@ -103,9 +103,9 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         setup: function () {
-            this.nameName = this.name + 'Name';
-            this.typeName = this.name + 'Type';
-            this.idName = this.name + 'Id';
+            this.nameName = this.nameName || this.name + 'Name';
+            this.typeName = this.typeName || this.name + 'Type';
+            this.idName = this.idName || this.name + 'Id';
 
             this.foreignScopeList = this.options.foreignScopeList || this.foreignScopeList;
             this.foreignScopeList = this.foreignScopeList || this.params.entityList || this.model.getLinkParam(this.name, 'entityList') || [];
@@ -368,7 +368,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 this.handleSearchType(type);
             }
 
-            if(this.mode !== 'list' && !this.foreignScopeList.length) {
+            if (this.mode !== 'list' && !this.foreignScopeList.length) {
                 this.hide();
             }
         },

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\ORM\Repositories\RDB;
+use Atro\Services\Record;
 use Doctrine\DBAL\ParameterType;
 
 class Base extends RDB
@@ -56,7 +57,7 @@ class Base extends RDB
             $qb->setParameter('date', $date);
         }
 
-        return !empty($qb->fetchAssociative());
+        return !empty($qb->fetchOne());
     }
 
     public function clearDeletedRecords(): void
@@ -69,27 +70,28 @@ class Base extends RDB
 
         if (!empty($autoDeleteAfterDays) && $autoDeleteAfterDays > 0) {
             $date = (new \DateTime())->modify("-$autoDeleteAfterDays days");
-            while (true) {
-                $toDelete = [];
-                if ($this->seed->hasField('modifiedAt')) {
-                    $toDelete = $this
-                        ->where(['modifiedAt<' => $date->format('Y-m-d H:i:s')])
-                        ->limit(0, 2000)
-                        ->order('modifiedAt')
-                        ->find();
-                } elseif ($this->seed->hasField('createdAt')) {
-                    $toDelete = $this
-                        ->where(['createdAt<' => $date->format('Y-m-d H:i:s')])
-                        ->limit(0, 2000)
-                        ->order('createdAt')
-                        ->find();
-                }
-                if (empty($toDelete[0])) {
-                    break;
-                }
-                foreach ($toDelete as $entity) {
-                    $this->getEntityManager()->removeEntity($entity);
-                }
+
+            // delete using massActions
+            /** @var $service Record * */
+            $service = $this->getEntityManager()->getContainer()->get('serviceFactory')->create($this->entityName);
+            $where = [];
+
+            if ($this->seed->hasField('modifiedAt')) {
+                $where[] = [
+                    'attribute' => 'modifiedAt',
+                    'type'      => 'before',
+                    'value'     => $date->format('Y-m-d H:i:s')
+                ];
+            } elseif ($this->seed->hasField('createdAt')) {
+                $where[] = [
+                    'attribute' => 'createdAt',
+                    'type'      => 'before',
+                    'value'     => $date->format('Y-m-d H:i:s')
+                ];
+            }
+
+            if (!empty($where)) {
+                $service->massRemove(['where' => $where]);
             }
         }
 

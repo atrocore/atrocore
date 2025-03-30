@@ -75,15 +75,6 @@
       ]
     ],
     "style": "default",
-    "dynamicLogicVisible": {
-      "conditionGroup": [
-        {
-          "type": "equals",
-          "attribute": "type",
-          "value": "Scale"
-        }
-      ]
-    },
     "customLabel": "Min"
   }
 ]

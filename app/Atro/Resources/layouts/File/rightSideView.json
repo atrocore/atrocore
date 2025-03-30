@@ -1,0 +1,15 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [{"name": "preview", "fullWidth":  true}]
+    ]
+  },
+  {
+    "label": "accessManagement",
+    "rows": [
+      [{"name":  "created", "fullWidth":  true}],
+      [{"name":  "modified", "fullWidth":  true}]
+    ]
+  }
+]

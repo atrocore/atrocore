@@ -1,8 +1,14 @@
 {
   "controller": "controllers/record",
+<<<<<<< HEAD
   "iconClass": "local_library",
   "views": {
     "list": "views/locale/list"
+=======
+  "iconClass": "fas fa-globe",
+  "recordViews": {
+    "detail": "views/locale/record/detail"
+>>>>>>> master
   },
   "relationshipPanels": {
     "measures": {

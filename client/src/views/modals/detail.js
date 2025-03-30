@@ -139,13 +139,16 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 } else {
                     this.model = this.sourceModel.clone();
                     this.model.collection = this.sourceModel.collection;
-
+                    this.model.relationModel = this.sourceModel.relationModel;
                     this.listenTo(this.model, 'change', function () {
                         this.sourceModel.set(this.model.getClonedAttributes());
                     }, this);
 
                     this.once('after:render', function () {
                         this.model.fetch();
+                        if (this.model.relationModel) {
+                            this.model.relationModel.fetch()
+                        }
                     }, this);
                     this.createRecordView();
                 }
@@ -202,7 +205,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
             }
             if (!this.fullFormDisabled) {
-                this.header = '<a href="#' + scope + '/view/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
+                this.header = '<a href="#' + scope + '/view/' + this.id + '" class="action" title="' + this.translate('Full Form') + '" data-action="fullForm">' + this.header + '</a>';
             }
 
             this.header = iconHtml + this.header;
@@ -214,7 +217,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 } else {
                     this.hideButton('edit');
                     if (editAccess === null) {
-                        this.listenToOnce(model, 'sync', function() {
+                        this.listenToOnce(model, 'sync', function () {
                             if (this.getAcl().check(model, 'edit')) {
                                 this.showButton('edit');
                             }
@@ -230,7 +233,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 } else {
                     this.hideButton('remove');
                     if (removeAccess === null) {
-                        this.listenToOnce(model, 'sync', function() {
+                        this.listenToOnce(model, 'sync', function () {
                             if (this.getAcl().check(model, 'delete')) {
                                 this.showButton('remove');
                             }
@@ -255,7 +258,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 inlineEditDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
-                exit: function () {}
+                exit: function () {
+                }
             };
             this.createView('record', viewName, options, callback);
         },
@@ -312,7 +316,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             if (nextButtonEnabled) {
                 this.enableButton('next');
             } else {
-                 this.disableButton('next');
+                this.disableButton('next');
             }
         },
 

@@ -22,10 +22,15 @@ Espo.define('views/user-profile/detail', 'views/detail', Dep => {
             return this.recordView;
         },
 
-        buildHeaderHtml(path) {
-            path = [this.getLanguage().translate(this.scope, 'scopeNamesPlural'), this.model.get('name')];
-
-            return Dep.prototype.buildHeaderHtml.call(this, path);
+        getBreadcrumbsItems() {
+            return [
+                {
+                    label: this.getLanguage().translate(this.scope, 'scopeNamesPlural'),
+                },
+                {
+                    label: this.model.get('name'),
+                }
+            ];
         },
 
         afterRender() {

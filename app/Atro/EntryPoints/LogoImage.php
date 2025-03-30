@@ -18,6 +18,8 @@ class LogoImage extends Image
 {
     public static bool $authRequired = false;
 
+    public const TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+
     public function run()
     {
         $id = !empty($_GET['id']) ? $_GET['id'] : $this->getConfig()->get('companyLogoId');

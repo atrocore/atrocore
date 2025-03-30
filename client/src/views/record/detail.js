@@ -115,7 +115,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         middleView: 'views/record/detail-middle',
 
-        sideView: 'views/record/detail-side',
+        // legacy property
+        sideView: true,
 
         bottomView: 'views/record/detail-bottom',
 
@@ -172,6 +173,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        executeAction: function (action, data = null, e = null) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, e);
+            }
+        },
+
         refreshLayout() {
             this.detailLayout = null
             this.gridLayout = null
@@ -207,7 +215,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionEdit: function () {
             if (!this.editModeDisabled) {
                 this.setEditMode();
-                this.resetSidebar();
             } else {
                 var options = {
                     id: this.model.id,
@@ -330,7 +337,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionCancelEdit: function () {
             this.cancelEdit();
-            this.resetSidebar();
         },
 
         actionSelfAssign: function () {
@@ -579,122 +585,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     'name': 'copyConfigurations'
                 });
             }
-
-            if (this.model.id && !this.buttonsDisabled) {
-                const recordActions = this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []
-
-                if (recordActions.filter(a => a.display === 'single').length > 0) {
-                    this.additionalButtons.push({
-                        preloader: true
-                    });
-                }
-
-                if (recordActions.filter(a => a.display === 'dropdown').length > 0) {
-                    this.dropdownItemList.push({
-                        divider: true
-                    });
-                    this.dropdownItemList.push({
-                        preloader: true
-                    });
-                }
-
-                this.setupUiHandlerButtons()
-            }
-
-        },
-
-        loadDynamicActions: function (display) {
-            if (this.getMetadata().get(['scopes', this.scope, 'actionDisabled']) || !this.model.id) {
-                return;
-            }
-
-            const $buttons = $(this.$el).find('.record-buttons')
-
-            if (display === 'single') {
-                const hasButton = !!this.additionalButtons.find(i => i.preloader)
-                if (!hasButton && this.getMetadata().get(['scopes', this.entityType, 'bookmarkDisabled'])) {
-                    return
-                }
-                $buttons.find('.btn-group >.dynamic-action').remove()
-                if (hasButton) {
-                    $buttons.find('a.preloader').show()
-                }
-            }
-
-            if (display === 'dropdown') {
-                if (this.dropdownItemList.find(i => i.preloader) == null) {
-                    return
-                }
-                $buttons.find('.dropdown-menu .dynamic-action').remove()
-                $buttons.find('li.preloader,li.divider').show()
-            }
-
-
-            this.model.fetchDynamicActions(display)
-                .then(actions => {
-                    const dropdownItemList = [];
-                    const additionalButtons = [];
-                    actions.forEach(action => {
-                        if (action.display === 'dropdown') {
-                            dropdownItemList.push({
-                                ...action,
-                                id: action.data['action_id'],
-                            });
-                        }
-
-                        if (action.display === 'single') {
-                            additionalButtons.push({
-                                ...action,
-                                id: action.data['action_id'],
-                            });
-                        }
-
-                        if (action.action === 'bookmark') {
-                            this.model.set('bookmarkId', action.data['bookmark_id'])
-                        }
-                    })
-
-                    if (display === 'dropdown') {
-                        let template = this._templator.compileTemplate(`
-                        {{#each dropdownItemList}}
-                                <li class="dynamic-action"><a href="javascript:" class="action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=scope}}{{/if}}</a></li>
-                        {{/each}}`)
-                        let html = this._renderer.render(template, {dropdownItemList, scope: this.scope})
-
-                        $buttons.find('li.preloader').hide()
-                        $buttons.find('.dropdown-menu .dynamic-action').remove()
-                        $(html).insertBefore($buttons.find('ul > li.preloader'))
-                        if (dropdownItemList.length === 0) {
-                            $buttons.find('li.divider').hide()
-                        }
-                    }
-
-                    if (display === 'single') {
-                        let template = this._templator.compileTemplate(`
-                            {{#each additionalButtons}}
-                                <button type="button" class="btn btn-default additional-button action dynamic-action" data-action="{{action}}" {{#if id}}data-id="{{id}}"{{/if}}>{{label}}</button>
-                            {{/each}}`)
-                        let html = this._renderer.render(template, {additionalButtons})
-
-                        $buttons.find('a.preloader').hide()
-                        $buttons.find('.btn-group >.dynamic-action').remove()
-                        $(html).insertBefore($buttons.find('a.preloader'))
-                    }
-                })
-        },
-
-        setupUiHandlerButtons() {
-            this.additionalEditButtons = [];
-            (this.getMetadata().get(['clientDefs', this.scope, 'uiHandler']) || []).forEach(handler => {
-                if (handler.type === 'setValue' && handler.triggerAction === 'onButtonClick') {
-                    this.additionalEditButtons.push({
-                        'action': 'uiHandler',
-                        'id': handler.id,
-                        'label': handler.name
-                    })
-
-                }
-            })
         },
 
         isHierarchical() {
@@ -770,13 +660,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     bottomView.showPanel(name);
                 }
             }
-
-            var sideView = this.getView('side');
-            if (sideView) {
-                if ('showPanel' in sideView) {
-                    sideView.showPanel(name);
-                }
-            }
         },
 
         hidePanel: function (name) {
@@ -793,31 +676,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     bottomView.hidePanel(name);
                 }
             }
-
-            var sideView = this.getView('side');
-            if (sideView) {
-                if ('hidePanel' in sideView) {
-                    sideView.hidePanel(name);
-                }
-            }
         },
 
         afterRender: function () {
             this.initRealtimeListener();
 
-            this.loadDynamicActions('single')
-
             this.listenTo(this.model, 'after:save', () => {
-                this.loadDynamicActions('single')
-            })
+                window.dispatchEvent(new Event('record:actions-reload'));
+            });
 
-            this.listenTo(this.model, 'sync', () => {
-                this.loadDynamicActions('single')
-            })
-
-            $(this.$el).find('.record-buttons button[data-toggle="dropdown"]').parent().on('show.bs.dropdown', () => {
-                this.loadDynamicActions('dropdown')
-            })
+            window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
 
             var $container = this.$el.find('.detail-button-container');
 
@@ -854,15 +722,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 searchContainer.addClass('hidden');
             }
 
-            let headerButtonsContainer = $('.header-buttons-container');
-            if (headerButtonsContainer.length) {
-                let main = $('#main');
-                let headerBreadcrumbs = $('.header-breadcrumbs:not(.fixed-header-breadcrumbs)');
-
-                if (main.length && headerBreadcrumbs.length && headerButtonsContainer.outerWidth() > main.outerWidth() - headerBreadcrumbs.outerWidth()) {
-                    // headerButtonsContainer.addClass('full-row');
-                }
-            }
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
@@ -930,16 +789,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             observer.observe($('#content').get(0));
         },
 
-        resetSidebar() {
-            let side = $('#main > main > .record .row > .side');
-
-            if (side) {
-                side.removeClass('scrolled fixed-bottom fixed-top');
+        fetch: function (onlyRelation) {
+            var data = Dep.prototype.fetch.call(this, onlyRelation);
+            if (onlyRelation) {
+                return data
             }
-        },
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
             if (this.hasView('side')) {
                 var view = this.getView('side');
                 if ('fetch' in view) {
@@ -988,14 +843,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
             this.model.trigger('after:change-mode', 'edit');
-            this.$el.find('.layout-editor-container').addClass('hidden');
         },
 
         setDetailMode: function () {
             this.trigger('before:set-detail-mode');
-            this.$el.find('.edit-buttons').addClass('hidden');
-            this.$el.find('.record-buttons').removeClass('hidden');
-            this.$el.find('.layout-editor-container').removeClass('hidden')
 
             var fields = this.getFieldViews(true);
             for (var field in fields) {
@@ -1090,11 +941,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
                 }
             }
-            if (this.hasView('side')) {
-                if ('getFieldViews' in this.getView('side')) {
-                    _.extend(fields, this.getView('side').getFieldViews(withHidden));
-                }
-            }
+
             if (this.hasView('bottom')) {
                 if ('getFieldViews' in this.getView('bottom')) {
                     _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
@@ -1106,11 +953,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         getFieldView: function (name) {
             var view;
             if (this.hasView('middle')) {
-                view = (this.getView('middle').getFieldViews(true) || {})[name];
+                view = this.getView('middle').getFieldView(name);
             }
-            if (!view && this.hasView('side')) {
-                view = (this.getView('side').getFieldViews(true) || {})[name];
-            }
+
             if (!view && this.hasView('bottom')) {
                 view = (this.getView('bottom').getFieldViews(true) || {})[name];
             }
@@ -1122,6 +967,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         data: function () {
+
             if (!this.options.hasNext) {
                 this.buttonEditList = (this.buttonEditList || []).filter(row => {
                     return row.name !== 'saveAndNext';
@@ -1245,10 +1091,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.isWide = this.options.isWide;
             }
 
-            if ('sideView' in this.options) {
-                this.sideView = this.options.sideView;
-            }
-
             if ('bottomView' in this.options) {
                 this.bottomView = this.options.bottomView;
             }
@@ -1316,12 +1158,33 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 this.setupTourButton()
             });
+
+            this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
+                this.highlightRequired();
+            });
         },
 
         remove() {
             Dep.prototype.remove.call(this);
 
             clearInterval(this.realtimeInterval);
+        },
+
+        highlightRequired() {
+            let highlight = $('.highlighted-required').length === 0;
+            $(`.required-sign`).each((k, el) => {
+                let $cell = $(el).parents('.cell');
+                // for product attribute value panel
+                if ($cell.attr('data-name') === 'attribute') {
+                    $cell = $cell.parents('tr');
+                }
+
+                if (!highlight) {
+                    $cell.removeClass('highlighted-required');
+                } else {
+                    $cell.addClass('highlighted-required');
+                }
+            });
         },
 
         initRealtimeListener() {
@@ -1451,6 +1314,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             const languageFilter = this.getStorage().get('languageFilter', this.scope) || ['allLanguages'];
 
             $.each(this.getFieldViews(), (name, fieldView) => {
+                name = fieldView.name || name
                 if (fieldView.model.getFieldParam(name, 'advancedFilterDisabled') === true) {
                     return;
                 }
@@ -1521,7 +1385,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (hide && !field.$el.hasClass('hidden')) {
                 field.hide();
                 field.overviewFiltersHidden = true;
-            } else if (field.overviewFiltersHidden) {
+            } else if (!hide && field.overviewFiltersHidden) {
                 field.show();
             }
         },
@@ -1559,6 +1423,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         scope: this.model.name,
                         viewType: this.layoutName,
                         layoutData: this.layoutData,
+                        relatedScope: this.options.layoutRelatedScope,
                         el: this.getSelector() + '.panel-heading .layout-editor-container',
                     }, (view) => {
                         view.on("refresh", () => this.refreshLayout())
@@ -1670,11 +1535,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 bottomView.setReadOnly();
             }
 
-            var sideView = this.getView('side');
-            if (sideView && 'setReadOnly' in sideView) {
-                sideView.setReadOnly();
-            }
-
             this.getFieldList().forEach(function (field) {
                 this.setFieldReadOnly(field);
             }, this);
@@ -1688,11 +1548,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var bottomView = this.getView('bottom');
             if (bottomView && 'setNotReadOnly' in bottomView) {
                 bottomView.setNotReadOnly();
-            }
-
-            var sideView = this.getView('side');
-            if (sideView && 'setNotReadOnly' in sideView) {
-                sideView.setNotReadOnly();
             }
 
             this.getFieldList().forEach(function (field) {
@@ -1791,13 +1646,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         enableButtons: function () {
-            this.$el.find(".button-container .action").removeAttr('disabled').removeClass('disabled');
-            this.$el.find(".button-container .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
+            $(".page-header .detail-button-container .action").removeAttr('disabled').removeClass('disabled');
+            $(".page-header .detail-button-container .dropdown-toggle").removeAttr('disabled').removeClass('disabled');
         },
 
         disableButtons: function () {
-            this.$el.find(".button-container .action").attr('disabled', 'disabled').addClass('disabled');
-            this.$el.find(".button-container .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
+            $(".page-header .detail-button-container .action").attr('disabled', 'disabled').addClass('disabled');
+            $(".page-header .detail-button-container .dropdown-toggle").attr('disabled', 'disabled').addClass('disabled');
         },
 
         removeButton: function (name) {
@@ -1818,10 +1673,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        convertDetailLayout: function (simplifiedLayout) {
+        getRecordButtons() {
+            if (this.buttonsDisabled) {
+                return null;
+            }
+
+            return {
+                buttons: this.buttonList,
+                editButtons: this.buttonEditList,
+                dropdownButtons: this.dropdownItemList,
+                dropdownEditButtons: this.dropdownEditItemList,
+                additionalButtons: this.additionalButtons,
+                additionalEditButtons: this.additionalEditButtons,
+            }
+        },
+
+        convertDetailLayout: function (simplifiedLayout, el) {
             var layout = [];
 
-            var el = this.options.el || '#' + (this.id);
+            el = el ?? (this.options.el || '#' + (this.id));
 
             for (var p in simplifiedLayout) {
                 var panel = {};
@@ -1832,16 +1702,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 panel.name = simplifiedLayout[p].name || 'panel-' + p.toString();
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
-
-                if (simplifiedLayout[p].dynamicLogicVisible) {
-                    if (this.uiHandler) {
-                        this.uiHandler.defs.panels = this.uiHandler.defs.panels || {};
-                        this.uiHandler.defs.panels[panel.name] = {
-                            visible: simplifiedLayout[p].dynamicLogicVisible
-                        };
-                        this.uiHandler.processPanel(panel.name);
-                    }
-                }
 
                 for (var i in simplifiedLayout[p].rows) {
                     var row = [];
@@ -1858,37 +1718,46 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             continue;
                         }
 
-                        var name = cellDefs.name;
+                        let name = cellDefs.name;
+                        let fieldModel, type, viewName;
 
                         // remove relation virtual fields
                         let parts = name.split('__');
+                        let relEntity = null;
                         if (parts.length === 2) {
-                            let relEntity = null;
-                            if (this.model._relateData) {
-                                relEntity = this.getRelEntity(this.model._relateData.model.urlRoot, this.model._relateData.panelName);
+                            if (this.model.relationModel) {
+                                relEntity = this.model.relationModel.name;
                             }
-                            if (this.model.defs['_relationName']) {
-                                let hashParts = window.location.hash.split('/view/');
-                                if (typeof hashParts[1] !== 'undefined' && this.model.defs._relationName) {
-                                    relEntity = this.getRelEntity(hashParts[0].replace('#', ''), this.model.defs._relationName);
-                                }
-                            }
+
                             if (relEntity !== parts[0]) {
                                 continue;
                             }
+                            fieldModel = this.model.relationModel
+                            type = cellDefs.type || fieldModel.getFieldType(parts[1]) || 'base';
+                            viewName = cellDefs.view || fieldModel.getFieldParam(parts[1], 'view') || this.getFieldManager().getViewName(type);
+                        } else {
+                            fieldModel = this.model
+                            type = cellDefs.type || fieldModel.getFieldType(name) || 'base';
+                            viewName = cellDefs.view || fieldModel.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
                         }
 
-                        var type = cellDefs.type || this.model.getFieldType(name) || 'base';
-                        var viewName = cellDefs.view || this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 
                         var o = {
-                            el: el + ' .middle .field[data-name="' + name + '"]',
+                            el: el + '  .field[data-name="' + name + '"]',
                             defs: {
                                 name: name,
                                 params: cellDefs.params || {}
                             },
                             mode: this.fieldsMode
                         };
+
+                        if (parts.length === 2) {
+                            o.useRelationModel = true
+                            o.defs.name = parts[1]
+                            if (!cellDefs.customLabel) {
+                                cellDefs.customLabel = this.translate(o.defs.name, 'fields', relEntity) + ' (Relation)'
+                            }
+                        }
 
                         if (this.readOnly) {
                             o.readOnly = true;
@@ -1942,7 +1811,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             name: name + 'Field',
                             view: viewName,
                             field: name,
-                            el: el + ' .middle .field[data-name="' + name + '"]',
+                            el: el + '  .field[data-name="' + name + '"]',
                             fullWidth: fullWidth,
                             options: o
                         };
@@ -2009,22 +1878,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 callback(this.gridLayout);
             }.bind(this));
         },
-
-        createSideView: function () {
-            var el = this.options.el || '#' + (this.id);
-            this.createView('side', this.sideView, {
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .side',
-                type: this.type,
-                isSmall: this.isSmall,
-                readOnly: this.readOnly,
-                inlineEditDisabled: this.inlineEditDisabled,
-                recordHelper: this.recordHelper,
-                recordViewObject: this
-            });
-        },
-
+        
         createMiddleView: function (callback) {
             var el = this.options.el || '#' + (this.id);
             this.waitForView('middle');
@@ -2058,7 +1912,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 recordViewObject: this
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
-                    this.createPanelNavigationView(this.getMiddlePanels().concat(view.panelList));
+                    this.trigger('detailPanelsLoaded', {list: this.getMiddlePanels().concat(view.panelList)});
                 })
                 if (callback) {
                     callback(view)
@@ -2080,64 +1934,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             return middlePanels
         },
 
-        createPanelNavigationView(panelList) {
-            let el = this.options.el || '#' + (this.id);
-            this.createView('panelDetailNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .panel-navigation.panel-left',
-            }, (view) => {
-                this.listenTo(this, 'after:set-detail-mode', () => {
-                    view.reRender();
-                });
-
-                this.listenTo(view, 'after:render', () => {
-                    if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) &&
-                        this.getAcl().check('LayoutProfile', 'read')
-                        && this.mode !== 'edit'
-                    ) {
-                        var bottomView = this.getView('bottom');
-                        this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
-                            scope: this.scope,
-                            viewType: 'relationships',
-                            layoutData: bottomView.layoutData,
-                            linkClass: 'btn',
-                            el: el + ' .panel-navigation.panel-left .layout-editor-container',
-                        }, (view) => {
-                            view.on("refresh", () => {
-                                this.createBottomView(view => {
-                                    view.render()
-                                })
-                            })
-                            view.render()
-                        })
-                    }
-                })
-
-                view.render();
-
-            });
-
-            this.createView('panelEditNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                scope: this.scope,
-                el: el + ' .panel-navigation.panel-right',
-            }, function (view) {
-                this.listenTo(this, 'after:set-edit-mode', () => {
-                    view.reRender();
-                });
-                view.render();
-            });
-
-
-        },
-
         build: function (callback) {
-            if (!this.sideDisabled && this.sideView) {
-                this.createSideView();
-            }
 
             if (this.middleView) {
                 this.createMiddleView(callback);

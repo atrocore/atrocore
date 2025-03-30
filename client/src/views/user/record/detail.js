@@ -34,8 +34,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
-        sideView: 'views/user/record/detail-side',
-
         editModeDisabled: true,
 
         setup: function () {
@@ -179,7 +177,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     "name": "accessControl",
                     "rows": [
                         [{"name":"isActive"}, {"name":"isAdmin"}],
-                        [{"name":"teams"}, false],
+                        [{"name":"teams"}, {"name":"disableActionHistory"}],
                         [{"name":"roles"}, {"name":"defaultTeam"}]
                     ]
                 });

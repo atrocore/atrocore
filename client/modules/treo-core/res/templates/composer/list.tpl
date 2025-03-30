@@ -57,6 +57,10 @@
 </main>
 
 <style>
+    main.composer {
+        margin: 0 -20px;
+    }
+
     main.composer .row {
         display: flex;
         align-content: stretch;
@@ -100,6 +104,10 @@
     }
 
     @media screen and (max-width: 768px) {
+        main.composer {
+            margin: 0 -10px;
+        }
+
         .log-list-container {
             margin-left: -10px;
             margin-right: -10px;

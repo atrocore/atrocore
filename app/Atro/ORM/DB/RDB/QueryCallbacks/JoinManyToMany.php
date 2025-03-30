@@ -15,6 +15,7 @@ namespace Atro\ORM\DB\RDB\QueryCallbacks;
 
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
+use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\IEntity;
@@ -42,6 +43,8 @@ class JoinManyToMany
 
         $relOpt = $entity->relations[$relationName];
 
+        $isHierarchyEntity = $mapper->getMetadata()->get(['scopes', $relOpt['relationName'], 'isHierarchyEntity']) ?? false;
+
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
         $nearKey = $keySet['nearKey'];
@@ -66,42 +69,23 @@ class JoinManyToMany
             }
         }
 
+        if (!empty($params['whereRelation'])) {
+            $relationEntity = $mapper->getEntityFactory()->create(ucfirst($relOpt['relationName']));
+            $qc = new QueryConverter($mapper->getEntityFactory(), $qb->getConnection());
+            $wherePart = $qc->getWhere($relationEntity, $params['whereRelation']);
+            $wherePart = str_replace('t1', $relAlias, $wherePart);
+            $condition .= " AND " . $wherePart;
+            foreach ($qc->getParameters() as $p => $v) {
+                $qb->setParameter($p, $v, Mapper::getParameterType($v));
+            }
+        }
+
         // put additional select
         if (empty($params['aggregation']) && !empty($params['select'])) {
-            $additionalSelect = [];
-            foreach ($params['select'] as $item) {
-                if (!empty($data = Relation::isVirtualRelationField($item))) {
-                    if (lcfirst($relOpt['relationName']) === lcfirst($data['relationName'])) {
-                        $foreignEntity = $mapper->getMetadata()->get(['entityDefs', $data['relationName'], 'links', $data['fieldName'], 'entity']);
-                        if (!empty($foreignEntity)) {
-                            $relationColumn = $mapper->toDb("{$data['fieldName']}Id");
-                            $relationForeignAlias = $mapper->toDb($foreignEntity) . '_' . Util::generateUniqueHash();
-                            $relationCondition = "$relAlias.{$relationColumn} = $relationForeignAlias.id AND $relationForeignAlias.deleted=:deleted_mm2";
-
-                            $qb->leftJoin($relAlias, $queryConverter->quoteIdentifier($mapper->toDb($foreignEntity)), $relationForeignAlias, $relationCondition);
-
-                            $relIdItem = $item . 'Id';
-                            $relIdFieldAlias = $queryConverter->fieldToAlias($relIdItem);
-                            $additionalSelect[$relIdItem] = "$relationForeignAlias.id AS $relIdFieldAlias";
-
-                            $relNameItem = $item . 'Name';
-                            $relNameFieldAlias = $queryConverter->fieldToAlias($relNameItem);
-                            $additionalSelect[$relNameItem] = "$relationForeignAlias.name AS $relNameFieldAlias";
-                        } else {
-                            $fieldAlias = $queryConverter->fieldToAlias($item);
-                            $additionalSelect[$item] = "$relAlias.{$mapper->toDb($data['fieldName'])} AS $fieldAlias";
-                        }
-
-                        $idItem = Relation::buildVirtualFieldName($data['relationName'], 'id');
-                        $idFieldAlias = $queryConverter->fieldToAlias($idItem);
-                        $additionalSelect[$idItem] = "$relAlias.id AS $idFieldAlias";
-                    }
-                }
-            }
-            foreach ($additionalSelect as $sql) {
-                $qb->addSelect($sql);
-            }
             $qb->addSelect("$relAlias.id as relation__id");
+            if ($isHierarchyEntity) {
+                $qb->addSelect("$relAlias.hierarchy_sort_order as atro_sort_order");
+            }
         }
 
         $qb->innerJoin($alias, $queryConverter->quoteIdentifier($relTable), $relAlias, $condition);

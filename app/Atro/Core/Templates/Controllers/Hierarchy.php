@@ -60,7 +60,11 @@ class Hierarchy extends AbstractRecordController
         }
 
         if (empty($request->get('node')) && !empty($request->get('selectedId'))) {
-            return $this->getRecordService()->getTreeDataForSelectedNode((string)$request->get('selectedId'));
+            $sortParams = [
+                'asc'         => $request->get('asc', 'true') === 'true',
+                'sortBy'      => $request->get('sortBy'),
+            ];
+            return $this->getRecordService()->getTreeDataForSelectedNode((string)$request->get('selectedId'), $sortParams);
         }
 
         $params = [

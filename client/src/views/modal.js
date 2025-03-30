@@ -233,6 +233,7 @@ Espo.define('views/modal', 'view', function (Dep) {
             const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter') || ['allLanguages'];
 
             $.each(this.getFieldViews(), (name, fieldView) => {
+                name = fieldView.name || name
                 if (fieldView.model.getFieldParam(name, 'advancedFilterDisabled') === true) {
                     return;
                 }

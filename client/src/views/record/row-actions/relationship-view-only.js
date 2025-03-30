@@ -40,7 +40,8 @@ Espo.define('views/record/row-actions/relationship-view-only', 'views/record/row
                     action: 'viewRelated',
                     label: 'View',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
+                        cid: this.model.cid
                     },
                     link: '#' + this.model.name + '/view/' + this.model.id
                 }

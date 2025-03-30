@@ -218,7 +218,9 @@
         {
           "name": "useNumericFormat"
         },
-        false
+        {
+          "name": "showUser"
+        }
       ],
       [
         {
@@ -252,18 +254,6 @@
   },
   {
     "label": "relationManagement",
-    "dynamicLogicVisible": {
-      "conditionGroup": [
-        {
-          "type": "in",
-          "attribute": "type",
-          "value": [
-            "link",
-            "linkMultiple"
-          ]
-        }
-      ]
-    },
     "rows": [
       [
         {

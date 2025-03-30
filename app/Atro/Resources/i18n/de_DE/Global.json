@@ -18,7 +18,7 @@
     "Translation": "Label",
     "Locale": "Gebietsschema",
     "Connection": "Verbindung",
-    "Stream": "Stream",
+    "Stream": "Activities",
     "Composer": "Composer",
     "Dashlet": "Dashlet",
     "KnowledgeBaseCategory": "Knowledge Base Kategorie",
@@ -348,7 +348,12 @@
     "Visit Community": "Gemeinschaft besuchen",
     "fieldStatus": "Feld Wert",
     "language": "Sprache",
-    "scopeFilter": "Kanal"
+    "scopeFilter": "Kanal",
+    "Summary": "Zusammenfassung",
+    "Activities": "Aktivitäten",
+    "enableAutomaticClosing": "Aktivieren  des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
+    "disableAutomaticClosing": "Deaktivieren des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
+    "accessManagement": "Zugangsverwaltung"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -529,6 +534,7 @@
     "compare": "Vergleichen Sie"
   },
   "fields": {
+    "disableActionHistory": "Aktionsprotokollierung deaktivieren",
     "followers": "Abonnenten",
     "path": "Ordner Pfad",
     "connection": "Verbindung",
@@ -596,7 +602,10 @@
     "roles": "Rollen",
     "users": "Benutzer",
     "groupEnd": "Gruppenende",
-    "iconClass": "Icon"
+    "iconClass": "Icon",
+    "isPublic": "Öffentlich",
+    "created": "Erstellt",
+    "modified": "Geändert"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
@@ -944,6 +953,8 @@
     "unitValueIsRequired": "Die Einheit für das Feld '%s' erforderlich.",
     "emailIsInvalid": "E-Mail für das Feld '%s' ist ungültig.",
     "fileIsInvalid": "Datei für das Feld '%s' ist ungültig.",
+    "dateIsInvalid": "Datum für das Feld '%s' ist ungültig.",
+    "datetimeIsInvalid": "Datum-Uhrzeit für das Feld '%s' ist ungültig.",
     "noSuchUnit": "Die Einheit '%s' für das Feld '%s' ist ungültig.",
     "noSuchOptions": "Der Wert '%s' für das Feld '%s' ist ungültig.",
     "noOptionsDefined": "Optionen für das Feld '%s' sind nicht definiert.",

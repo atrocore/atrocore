@@ -20,19 +20,19 @@ class Avatar extends Image
 
     public static bool $notStrictAuth = true;
 
-    protected array $systemColor = [212, 114, 155];
+    protected string $systemColor = '#D4729B';
 
     protected array $colorList
         = [
-            [111, 168, 214],
-            [237, 197, 85],
-            [212, 114, 155],
-            '#8093BD',
-            [124, 196, 164],
-            [138, 124, 194],
-            [222, 102, 102],
-            '#ABE3A1',
-            '#E8AF64',
+            "#6FA8D6",
+            "#EDC555",
+            "#D4729B",
+            "#8093BD",
+            "#7CC4A4",
+            "#8A7CC2",
+            "#DE6666",
+            "#ABE3A1",
+            "#E8AF64"
         ];
 
     protected function getColor($hash)
@@ -75,7 +75,8 @@ class Avatar extends Image
         if (!empty($id) && !empty($file = $this->getEntityManager()->getEntity("File", $id))) {
             $this->show($file, $size);
         } else {
-            $identicon = new \Identicon\Identicon();
+            $avatar = new \LasseRafn\InitialAvatarGenerator\InitialAvatar();
+
             if (empty($size)) {
                 $size = 'small';
             }
@@ -91,8 +92,13 @@ class Avatar extends Image
                     $color = $this->systemColor;
                 }
 
-                $imgContent = $identicon->getImageData($hash, $width, $color);
-                echo $imgContent;
+                echo $avatar->name($user->get('name'))
+                    ->size($width)
+                    ->background($color)
+                    ->color('#fff')
+                    ->generate()
+                    ->stream('png', 100);
+
                 exit;
             }
         }

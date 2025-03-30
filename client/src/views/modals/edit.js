@@ -93,6 +93,9 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             });
 
             this.scope = this.scope || this.options.scope;
+            if (this.options.relate) {
+                this.relationScope = Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', this.scope, 'links', this.options.relate.link, 'relationName']))
+            }
             this.id = this.options.id;
 
             this.sourceModel = this.model;
@@ -111,10 +114,14 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 }
             });
 
-            this.getModelFactory().create(this.scope, function (model) {
+            this.getModels((model, relationModel) => {
                 if (this.id) {
                     if (this.sourceModel) {
                         model = this.model = this.sourceModel.clone();
+                        if (this.sourceModel.relationModel) {
+                            model.relationModel = relationModel = this.sourceModel.relationModel.clone()
+                            relationModel.fetch()
+                        }
                     } else {
                         this.model = model;
                         model.id = this.id;
@@ -138,6 +145,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                         });
                     }
                     this.model = model;
+                    model.relationModel = relationModel
                     if (this.options.relate) {
                         model.setRelate(this.options.relate);
                         model._relateData = this.options.relate;
@@ -147,7 +155,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     }
                     this.createRecordView(model);
                 }
-            }.bind(this));
+            })
 
             if (!this.id) {
                 this.header = `${this.getLanguage().translate(this.scope, 'scopeNames')}: ${this.translate('New')}`;
@@ -180,9 +188,21 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             }
         },
 
+        getModels(callback) {
+            this.getModelFactory().create(this.scope, model => {
+                if (!this.relationScope) {
+                    callback(model, null)
+                } else {
+                    this.getModelFactory().create(this.relationScope, function (relationModel) {
+                        callback(model, relationModel)
+                    })
+                }
+            })
+        },
+
         isHierarchical() {
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
         },
 
         getNonInheritedFields: function () {
@@ -235,13 +255,15 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 buttonsDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
-                exit: function () {}
+                exit: function () {
+                }
             };
             this.handleRecordViewOptions(options);
             this.createView('edit', viewName, options, callback);
         },
 
-        handleRecordViewOptions: function (options) {},
+        handleRecordViewOptions: function (options) {
+        },
 
         actionSave: function () {
             let editView = this.getView('edit');

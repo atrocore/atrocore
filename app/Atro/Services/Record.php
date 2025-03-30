@@ -224,7 +224,7 @@ class Record extends RecordService
     {
         $foreignLink = '';
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
-            if ($linkData['foreign'] === $link && $linkData['entity'] === $scope) {
+            if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
                 $foreignLink = $linkName;
             }
         }
@@ -241,7 +241,11 @@ class Record extends RecordService
 
         $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
 
-        $selectParams['select'] = ['id', 'name'];
+        $fields = ['id', 'name'];
+        if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
+            $fields[] = $selectParams['orderBy'];
+        }
+        $selectParams['select'] = $fields;
         $collection = $repository->find($selectParams);
         $total = $repository->count($selectParams);
         $offset = $params['offset'];
@@ -431,19 +435,5 @@ class Record extends RecordService
         return $this
             ->dispatchEvent('afterGetRequiredFields', new Event(['entity' => $entity, 'data' => $data, 'result' => $res]))
             ->getArgument('result');
-    }
-
-    protected function processActionHistoryRecord($action, Entity $entity)
-    {
-        if (
-            $this->actionHistoryDisabled
-            || $this->getMetadata()->get("scopes.{$entity->getEntityName()}.disableActionHistory")
-            || $this->getConfig()->get('actionHistoryDisabled')
-            || $this->getMemoryStorage()->get('importJobId')
-        ) {
-            return;
-        }
-
-        parent::processActionHistoryRecord($action, $entity);
     }
 }

@@ -51,12 +51,9 @@
             case 'relationships':
                 LayoutComponent = RelationShipsLayout;
                 break;
+            case 'rightSideView':
             case 'detail':
                 LayoutComponent = GridLayout;
-                break;
-            case 'sidePanelsDetail':
-                viewType = "detail"
-                LayoutComponent = SideDetailLayout
                 break;
         }
     }

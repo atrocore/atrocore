@@ -110,6 +110,29 @@ Espo.define('views/main', 'view', function (Dep) {
             return menu;
         },
 
+        getBreadcrumbsItems: function () {
+            const result = [];
+            let isAdmin = this.isAdmin ?? false;
+
+            if (!isAdmin && this.entityType) {
+                const tab = this.getMetadata().get(`scopes.${this.entityType}.tab`);
+                if (tab === false) {
+                    isAdmin = true;
+                }
+            }
+
+            if (isAdmin) {
+                result.push(this.getAdminBreadcrumbsItem());
+            }
+
+            return result;
+        },
+
+        isHierarchical() {
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+        },
+
         getHeader: function () {},
 
         buildHeaderHtml: function (arr, isAdmin) {
@@ -124,19 +147,15 @@ Espo.define('views/main', 'view', function (Dep) {
 
             if (isAdmin) {
                 a.unshift(`<a href='#Admin' class="action">${this.getLanguage().translate('Administration', 'labels')}</a>`);
-            } else {
-                a.unshift(`<a href='#' class="action">${this.getLanguage().translate('Dashboard', 'labels')}</a>`);
             }
 
             arr.forEach(function (item, index) {
                 if (index !== arr.length - 1) {
                     a.push('<span class="subsection">' + item + '</span>');
-                } else {
-                    a.push('<span>' + item + '</span>');
                 }
             }, this);
 
-            return '<div class="header-breadcrumbs fixed-header-breadcrumbs"><div class="breadcrumbs-wrapper">' + a.join('') + '</div></div><div class="header-title">' + arr.pop() + '</div>';
+            return '<div class="header-breadcrumbs fixed-header-breadcrumbs"><div class="breadcrumbs-wrapper">' + a.join('') + '<h3 class="header-title">' + arr.pop() + '</h3></div></div>';
         },
 
         getHeaderIconHtml: function () {
@@ -190,7 +209,11 @@ Espo.define('views/main', 'view', function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header').reRender();
+                window.dispatchEvent(new CustomEvent('record:buttons-update', {
+                    detail: {
+                        headerButtons: this.getMenu()
+                    }
+                }));
             }
         },
 
@@ -220,7 +243,11 @@ Espo.define('views/main', 'view', function (Dep) {
             }
 
             if (!doNotReRender && this.isRendered()) {
-                this.getView('header').reRender();
+                window.dispatchEvent(new CustomEvent('record:buttons-update', {
+                    detail: {
+                        headerButtons: this.getMenu()
+                    }
+                }));
             }
         },
 
@@ -261,8 +288,78 @@ Espo.define('views/main', 'view', function (Dep) {
             if (!this.isRendered()) return;
             this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
             this.$el.find('.page-header a.action[data-action="'+name+'"]').removeClass('hidden');
-        }
+        },
 
+        executeAction(action, data, event) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, event);
+                return;
+            }
+
+            const record = this.getView('record');
+            record?.executeAction(action, data, event);
+        },
+
+        loadRightSideView: function() {
+            let recordView = this.getView('record');
+            let streamAllowed = this.model
+                ? this.getAcl().checkModel(this.model, 'stream', true)
+                : this.getAcl().check(this.scope, 'stream');
+
+
+            if(recordView && recordView.sideView) {
+                new Svelte.RightSideView({
+                    target:  $(`${this.options.el} .content-wrapper`).get(0),
+                    props: {
+                        scope: this.scope,
+                        model: this.model,
+                        mode: this.mode,
+                        hasStream: !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed,
+                        loadSummary: () => {
+                            this.createView('rightSideView', this.rightSideView, {
+                                el: this.options.el + ' .right-side-view .summary',
+                                scope: this.scope,
+                                mode: this.mode,
+                                model: this.model
+                            }, view => {
+                                view.render();
+                                if (this.getUser().isAdmin()) {
+                                    if (this.mode === 'detail') {
+                                        this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                                            scope: this.scope,
+                                            viewType: 'rightSideView',
+                                            layoutData: view.layoutData,
+                                            el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
+                                        }, (v) => {
+                                            v.on("refresh", () => {
+                                                view.refreshLayout()
+                                            })
+                                            v.render()
+                                        })
+                                    }
+                                }
+                            });
+                        },
+                        loadActivities: (callback) => {
+                            let el = this.options.el + ' .right-side-view .activities'
+                            this.createView('activities', 'views/record/activities', {
+                                model: this.model,
+                                el: el,
+                                recordHelper: recordView.recordHelper,
+                                recordViewObject: recordView.recordViewObject
+                            }, view => {
+                                if(callback) {
+                                    callback(view);
+                                }
+                                view.render();
+                            })
+                        }
+                    }
+                })
+            }
+
+        }
     });
 });
 

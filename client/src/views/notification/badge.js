@@ -65,7 +65,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                 this.$number?.removeClass('hidden').html(count.toString());
                             }
 
-                            if (savedCount && count > savedCount && $('#nofitication.alert-danger').length === 0) {
+                            if (savedCount && count > savedCount && $('#notification.alert-danger').length === 0) {
                                 if ((count - savedCount) > 1) {
                                     Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
                                 } else {

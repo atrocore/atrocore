@@ -16,7 +16,6 @@
       "view": "views/file/fields/preview",
       "notStorable": true,
       "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,

@@ -6,8 +6,6 @@
     "variables": "Variables",
     "locale": "Default Locale",
     "appId": "ID",
-    "isStreamSide": "Is stream in side",
-    "isStreamPanelFirst": "Is stream panel first",
     "useCache": "Use Cache",
     "currencyRates": "Rate Values",
     "companyLogo": "Header Logo",
@@ -19,7 +17,7 @@
     "globalSearchEntityList": "Global Search Entity List",
     "assignmentNotifications": "Notifications upon assignment",
     "assignmentEmailNotifications": "Notifications upon assignment",
-    "streamEmailNotifications": "Notifications about updates in Stream for internal users",
+    "streamEmailNotifications": "Notifications about updates in Activities for internal users",
     "avatarsDisabled": "Disable Avatars",
     "followCreatedEntities": "Follow created records",
     "displayListViewRecordCount": "Display Total Count (on List View)",
@@ -64,8 +62,6 @@
     "maxConcurrentWorkers": "Upper limit on the number of tasks or processes that can run simultaneously in the background of a server.",
     "reportingEnabled": "Anonymous error reports will be send to AtroCore for faster problem identification and resolution.",
     "fileNameRegexPattern": "To enable only small letters with max. 24-symbol length use \"/^[a-z]{1,24}$/\".",
-    "isStreamSide": "If enabled: Stream panel will be shown in side.",
-    "isStreamPanelFirst": "If enabled: Stream panel will be shown right after overview.",
     "recordsPerPage": "Number of records initially displayed in list views.",
     "recordsPerPageSmall": "Number of records initially displayed in relationship panels.",
     "followCreatedEntities": "Users will automatically follow records they created.",
@@ -82,7 +78,9 @@
     "automaticFileExtensionCorrection": "If enabled, the system will automatically adjust, if necessary, the extension of each uploaded file to match its MIME type.",
     "applicationName": "We recommend keeping this value as short as possible, as the width of the browser tab is limited and you may still want to see page titles.",
     "customHeadCode": "Add code at the end of the <head> tag. Atrocore doesn't validate custom code for you, so be sure to check your code before publishing.",
-    "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too."
+    "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too.",
+    "companyLogo": "Available file types: image/jpeg, image/png, image/gif, image/svg+xml",
+    "favicon": "Available file type: image/svg+xml"
   },
   "labels": {
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",

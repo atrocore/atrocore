@@ -39,6 +39,9 @@
     let layoutData;
     let selectNodeId;
     let isHidden = false;
+    let sortAsc = true;
+    let sortBy = null;
+    let sortFields = []
 
     $: if (currentWidth) {
         if (callbacks?.treeWidthChanged) {
@@ -49,6 +52,21 @@
     $: treePanelWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
     $: isSelectionEnabled = activeItem && (!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list'
+    $: {
+        if (!treeScope) {
+            sortFields = []
+        } else {
+            const sortScope = treeScope === 'Bookmark' ? scope : treeScope
+            const fieldDefs = Metadata.get(['entityDefs', sortScope, 'fields']);
+            sortFields = Object.keys(fieldDefs).filter(function (item) {
+                return ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[item].type) && !fieldDefs[item].notStorable;
+            }).sort(function (v1, v2) {
+                return Language.translate(v1, 'fields', sortScope).localeCompare(Language.translate(v2, 'fields', sortScope));
+            }).map(item => {
+                return {name: item, label: Language.translate(item, 'fields', sortScope)}
+            })
+        }
+    }
 
     export function handleCollectionSearch(searchedCollection) {
         if (collection && searchedCollection.name === scope) {
@@ -139,6 +157,7 @@
             return;
         }
 
+
         let $tree = window.$(treeElement);
         let whereData = getWhereData()
 
@@ -150,7 +169,9 @@
             Espo.ajax.getRequest(`${treeScope}/action/TreeData`, {
                 "where": whereData,
                 "scope": scope,
-                "link": activeItem.name
+                "link": activeItem.name,
+                "sortBy": sortBy,
+                "asc": !!sortAsc
             }).then(response => {
                 buildTree(response.tree);
             });
@@ -165,7 +186,7 @@
             selectable: true,
             saveState: false,
             autoOpen: false,
-            dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']),
+            dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']) && sortBy === 'sortOrder',
             useContextMenu: false,
             closedIcon: window.$('<i class="fa fa-angle-right"></i>'),
             openedIcon: window.$('<i class="fa fa-angle-down"></i>'),
@@ -233,6 +254,9 @@
         $tree.tree(treeData);
         $tree.on('tree.load_data', e => {
             Notifier.notify(false)
+            if (callbacks?.treeLoad) {
+                callbacks.treeLoad(treeScope, treeData);
+            }
         })
         $tree.on('tree.refresh', e => {
             if (Storage.get('selectedNodeId', scope) && mode === 'list') {
@@ -259,6 +283,7 @@
             let moveInfo = e.move_info;
             let data = {
                 _position: moveInfo.position,
+                _sortAsc: sortAsc,
                 _target: moveInfo.target_node.id
             };
 
@@ -361,6 +386,9 @@
 
     function generateUrl(node) {
         let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}`;
+        if (sortBy) {
+            url += `&sortBy=${sortBy}&asc=${sortAsc ? 'true' : 'false'}`
+        }
         if (node && node.showMoreDirection) {
             let offset = node.offset;
             let maxSize1 = maxSize;
@@ -439,7 +467,7 @@
         }
     }
 
-    function getTreeEl() {
+    export function getTreeEl() {
         return window.$(treeElement)
     }
 
@@ -540,6 +568,7 @@
         }
 
         activeItem = treeItem
+        initSorting(false)
         Storage.set('treeItem', scope, treeItem.name)
         Notifier.notify('Loading...')
         tick().then(() => {
@@ -574,6 +603,19 @@
 
     export function getLayoutData() {
         return layoutData;
+    }
+
+    function onSortByChange(event) {
+        sortBy = event.target.value
+        Storage.set('treeItemSorting', scope, {sortBy, sortAsc})
+        rebuildTree()
+    }
+
+    function onSortAscChange(event) {
+        event.preventDefault();
+        sortAsc = !sortAsc;
+        Storage.set('treeItemSorting', scope, {sortBy, sortAsc})
+        rebuildTree()
     }
 
     function loadLayout(callback) {
@@ -611,10 +653,44 @@
                 } else {
                     activeItem = treeItems.find(ti => ti.name === treeItem);
                 }
+                initSorting(true)
             }
 
             callback()
         })
+    }
+
+    function initSorting(useCache) {
+        treeScope = getLinkScope(activeItem.name)
+        if (treeScope === 'Bookmark') {
+            treeScope = scope
+        }
+
+        if (useCache) {
+            if (activeItem.name === Storage.get('treeItem', scope)) {
+                const data = Storage.get('treeItemSorting', scope)
+                // check if data is valid and field still exist
+                if (data && typeof data === 'object' && !!Metadata.get(['entityDefs', treeScope, 'fields', data.sortBy])) {
+                    sortAsc = data.sortAsc
+                    sortBy = data.sortBy
+                    return
+                }
+            }
+        }
+
+        if (Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
+            !Metadata.get(['scopes', treeScope, 'hierarchyDisabled']) && activeItem.name !== '_bookmark') {
+            sortBy = 'sortOrder'
+        } else {
+            sortBy = Metadata.get(['entityDefs', treeScope, 'collection', 'sortBy']) || 'name'
+        }
+
+        if (!Metadata.get(['entityDefs', treeScope, 'fields', sortBy])) {
+            sortBy = sortFields[0]?.name
+        }
+
+        sortAsc = !!Metadata.get(['entityDefs', treeScope, 'collection', 'asc'])
+        Storage.set('treeItemSorting', scope, {sortBy, sortAsc})
     }
 
     export function refreshLayout() {
@@ -710,12 +786,27 @@
                                 class:hidden={!searchValue}></button>
                         <button on:click={applySearch} class="fas fa-search search-in-tree-button"></button>
                     </div>
-                    <div style="margin-top: 20px">
-                        <button on:click={callUnselectNode} type="button"
+                    <div style="margin-top: 20px;display: flex; justify-content: space-between;flex-wrap: wrap">
+                        <button on:click={callUnselectNode} type="button" style="margin-bottom: 5px"
                                 disabled="{!selectNodeId || !isSelectionEnabled}"
                                 class="btn btn-default">
                             Unset selection
                         </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default sort-btn" data-tippy="true"
+                                    title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
+                                    on:click={onSortAscChange}>
+                                <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
+                            </button>
+                            <select class="form-control" style="width: auto;max-width: 120px"
+                                    on:change={onSortByChange} bind:value={sortBy}>
+                                {#each sortFields as field }
+                                    <option value="{field.name}">
+                                        {field.label}
+                                    </option>
+                                {/each}
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -768,6 +859,10 @@
         border: 1px solid;
         border-radius: 5px;
         font-size: 14px;
+    }
+
+    .sort-btn:focus {
+        background: white;
     }
 
     .unset-selection i {

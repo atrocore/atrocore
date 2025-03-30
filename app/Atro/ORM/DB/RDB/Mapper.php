@@ -143,7 +143,7 @@ class Mapper implements MapperInterface
         }
 
         // select parent_id if single parent hierarchy
-        if ($this->isSingleParentHierarchy($entity) && empty($params['aggregation']) && !$innerSql) {
+        if ($this->isSingleParentHierarchy($entity) && empty($params['aggregation']) && empty($params['disableParentLoad']) && !$innerSql) {
             $tableName = $this->getQueryConverter()->toDb($entity->getEntityType());
             $ta = $this->getQueryConverter()::TABLE_ALIAS;
             $relAlias1 = 'hierarchy_alias_' . Util::generateUniqueHash();
@@ -698,6 +698,11 @@ class Mapper implements MapperInterface
     public function getMetadata(): Metadata
     {
         return $this->metadata;
+    }
+
+    public function getEntityFactory(): EntityFactory
+    {
+        return $this->entityFactory;
     }
 
     private function error(string $message): void

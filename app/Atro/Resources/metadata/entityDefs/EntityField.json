@@ -111,6 +111,16 @@
       "notStorable": true,
       "readOnly": true
     },
+    "defaultFrom": {
+      "type": "float",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "defaultTo": {
+      "type": "float",
+      "notStorable": true,
+      "readOnly": true
+    },
     "setDefaultOnlyIfRequired": {
       "type": "bool"
     },
@@ -152,6 +162,11 @@
     "options": {
       "type": "array",
       "view": "views/admin/field-manager/fields/options-extended"
+    },
+    "optionColors": {
+      "type": "array",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true
     },
     "extensibleEnum": {
       "type": "link"
@@ -284,6 +299,9 @@
     },
     "htmlSanitizer": {
       "type": "link"
+    },
+    "showUser": {
+      "type": "bool"
     }
   },
   "links": {

@@ -399,6 +399,13 @@ Espo.define('view', [], function () {
             }
 
             return null;
+        },
+
+        getAdminBreadcrumbsItem: function() {
+            return {
+                url: '#Admin',
+                label: this.getLanguage().translate('Administration', 'labels')
+            };
         }
     });
 

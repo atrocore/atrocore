@@ -16,6 +16,9 @@
       "view": "views/layout/fields/related-entity",
       "tooltip": true
     },
+    "relatedLink": {
+      "type": "varchar"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -36,6 +39,18 @@
     },
     "layoutProfile": {
       "type": "link"
+    },
+    "hash": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
@@ -92,11 +107,8 @@
     }
   },
   "uniqueIndexes": {
-    "layout_profile": [
-      "layout_profile_id",
-      "entity",
-      "related_entity",
-      "view_type",
+    "unique": [
+      "hash",
       "deleted"
     ]
   }

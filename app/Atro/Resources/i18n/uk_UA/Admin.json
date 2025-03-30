@@ -103,7 +103,8 @@
     "massUpdate": "Масове оновлення",
     "relationships": "Панелі зв'язків",
     "sidePanelsDetail": "Бічні панелі (Деталі)",
-    "leftSidebar": "Лівий сайдбар"
+    "leftSidebar": "Вид зліва",
+    "rightSideView": "Вид з правого боку"
   },
   "fields": {
     "request": "Запит",

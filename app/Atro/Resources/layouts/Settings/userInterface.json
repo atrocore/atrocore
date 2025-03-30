@@ -10,12 +10,6 @@
         ]
     },
     {
-        "label": "Representation",
-        "rows": [
-            [{"name": "isStreamSide"}, {"name": "isStreamPanelFirst"}]
-        ]
-    },
-    {
         "label": "Style Configuration",
         "rows": [
             [{"name": "defaultStyle"}, false],

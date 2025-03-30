@@ -7,6 +7,7 @@
     import {Metadata} from "../../../utils/Metadata";
     import {LayoutManager} from "../../../utils/LayoutManager";
     import Group from "./interfaces/Group";
+    import {Utils} from "../../../utils/Utils.js";
 
     export let params: Params;
 
@@ -88,11 +89,10 @@
     }
 
     function getRelationScope(leftScope: string, rightScope: string) {
-        const links = Metadata.get(['entityDefs', leftScope, 'links']) ?? {}
-        for (const link of Object.keys(links)) {
-            if (links[link]?.entity === rightScope && !!links[link].relationName) {
-                return Espo.utils.upperCaseFirst(links[link].relationName)
-            }
+        const parts = rightScope.split('.')
+        const link = Metadata.get(['entityDefs', parts[0], 'links', parts[1]]) ?? {}
+        if (link.entity === leftScope && !!link.relationName) {
+            return Espo.utils.upperCaseFirst(link.relationName)
         }
         return ''
     }
@@ -100,33 +100,35 @@
     function readDataFromLayout(layout: LayoutItem[]): void {
         const groups = []
         let relationScope = ''
-        let allFields = Object.keys(Metadata.get(['entityDefs', params.scope, 'fields']) || {}).filter(field =>
-            checkFieldType(getFieldType(params.scope, field)) && isFieldEnabled(params.scope, field)
-        );
 
         if (params.relatedScope && params.type === 'list') {
             relationScope = getRelationScope(params.scope, params.relatedScope)
             // load related scope field
-            const group = {
-                name: relationScope,
-                scope: relationScope,
-                prefix: relationScope + '__'
+            if (relationScope) {
+                const group = {
+                    name: relationScope,
+                    scope: relationScope,
+                    prefix: relationScope + '__'
+                }
+                let allFields = Object.keys(Metadata.get(['entityDefs', relationScope, 'fields']) || {}).filter(field =>
+                    checkFieldType(getFieldType(relationScope, field)) && isFieldEnabled(relationScope, field)
+                );
+
+                // remove links
+                allFields = allFields.filter(field => !(Metadata.get(['entityDefs', relationScope, 'fields', field, 'relationField']) ?? false))
+
+                allFields = allFields.sort((v1, v2) =>
+                    getTranslation(relationScope, v1).localeCompare(getTranslation(relationScope, v2))
+                ).map(f => group.prefix + f)
+
+                group.fields = allFields
+                groups.push(group)
             }
-            let allFields = Object.keys(Metadata.get(['entityDefs', relationScope, 'fields']) || {}).filter(field =>
-                checkFieldType(getFieldType(relationScope, field)) && isFieldEnabled(relationScope, field)
-            );
-
-            // remove links
-            allFields = allFields.filter(field => !(Metadata.get(['entityDefs', relationScope, 'fields', field, 'relationField']) ?? false))
-
-            allFields = allFields.sort((v1, v2) =>
-                getTranslation(relationScope, v1).localeCompare(getTranslation(relationScope, v2))
-            ).map(f => group.prefix + f)
-
-            group.fields = allFields
-            groups.push(group)
         }
 
+        let allFields = Object.keys(Metadata.get(['entityDefs', params.scope, 'fields']) || {}).filter(field =>
+            checkFieldType(getFieldType(params.scope, field)) && isFieldEnabled(params.scope, field)
+        );
         allFields.push(...getAdditionalFields())
         allFields = allFields.sort((v1, v2) =>
             getTranslation(params.scope, v1).localeCompare(getTranslation(params.scope, v2))
@@ -207,9 +209,9 @@
             return false;
         }
 
-        const disabledParameters = ['disabled', `layout${Espo.utils.upperCaseFirst(params.type)}Disabled`];
+        const disabledParameters = ['disabled', `layout${Utils.upperCaseFirst(params.type)}Disabled`];
         if (params.reelType) {
-            disabledParameters.push(`layout${Espo.utils.upperCaseFirst(params.reelType)}Disabled`)
+            disabledParameters.push(`layout${Utils.upperCaseFirst(params.reelType)}Disabled`)
         }
         for (let param of disabledParameters) {
             if (Metadata.get(['entityDefs', scope, 'fields', name, param])) {

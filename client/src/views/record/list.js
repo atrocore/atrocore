@@ -391,6 +391,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.getParentView() && this.getParentView().getParentView()) {
                 let view = this.getParentView().getParentView();
 
+                if (view.panelName && this.getMetadata().get(`clientDefs.${view.model.name}.relationshipPanels.${view.panelName}.disabledSelectAllResult`)) {
+                    return false;
+                }
+
                 if (view.fieldType && view.fieldType === 'linkMultiple') {
                     if (!view.mode || view.mode !== 'search') {
                         return false;
@@ -436,6 +440,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         init: function () {
             this.listLayout = this.options.listLayout || this.listLayout;
+            this.layoutData = this.options.layoutData || this.layoutData
             this.type = this.options.type || this.type;
 
             this.layoutName = this.options.layoutName || this.layoutName || this.type;
@@ -1332,7 +1337,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             }
                         }.bind(this));
                     } else if (this.$el.parent().prop('id') === 'main' || (this.$el.parent().prop("tagName") || '').toLowerCase() === 'main') {
-                        const content = $('#content')
+                        const content = this.$el.parent();
 
                         content.off('scroll', this.$el);
                         content.on('scroll', this.$el, function () {
@@ -1584,7 +1589,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         fixedTableHead() {
             let $window = $(window),
-                content = $('#content'),
+                content = $('#main main'),
                 fixedTable = this.$el.find('.fixed-header-table'),
                 fullTable = this.$el.find('.full-table'),
                 navBarRight = $('.navbar-right'),
@@ -2336,21 +2341,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getRelationScope() {
-            const entityType = this.options.layoutRelatedScope
+            const entityType = (this.options.layoutRelatedScope ?? '').split('.')[0]
             if (entityType) {
                 return Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', entityType, 'links', this.relationName, 'relationName']))
             }
             return null
         },
 
-        hasRelationFields() {
-            if (this.listLayout.find(item => this.isRelationField(item.name))) {
-                return true
-            }
-            return false
-        },
-
         isRelationField(name) {
+            if (!name) return false
             return name.split('__').length === 2
         },
 
@@ -2371,13 +2370,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 };
 
                 let getRelationModel = (callback) => {
-                    if (this.hasRelationFields()) {
+                    if (model.get('__relationEntity')) {
                         this.getModelFactory().create(this.relationScope, relModel => {
                             relModel.set(model.get('__relationEntity'));
+                            model.relationModel = relModel
                             callback(relModel)
                         })
                     } else {
-                        callback()
+                        callback(null)
                     }
                 }
 
@@ -2408,11 +2408,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.createView('layoutConfigurator' + idx, "views/record/layout-configurator", {
                     scope: this.scope,
                     viewType: this.layoutName,
-                    relatedScope: this.getParentModel()?.urlRoot,
+                    relatedScope: this.options.layoutRelatedScope,
                     layoutData: this.layoutData,
                     el: el,
                 }, (view) => {
-                    view.on("refresh", () => this.refreshLayout())
+                    view.on("refresh", () => {
+                        if (this.options.disableRefreshLayout) {
+                            this.trigger('refresh-layout')
+                        } else {
+                            this.refreshLayout()
+                        }
+                    })
                     view.render()
                 })
             })
@@ -2454,6 +2460,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             el?.parent().find('.icons-container').remove();
                             const icons = $('<sup class="status-icons icons-container"></sup>');
                             (this.getStatusIcons(view.model) || []).forEach(el => icons.append(el));
+                            this.afterRenderStatusIcons(icons, view.model);
                             el?.parent().append('&nbsp;');
                             el?.parent().append(icons);
                         })
@@ -2479,6 +2486,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.trigger('after:build-rows');
                 }
             }
+        },
+
+        afterRenderStatusIcons(icons, model) {
+            // do something
         },
 
         showMoreRecords: function (collection, $list, $showMore, callback) {

@@ -68,7 +68,7 @@
     }
   },
   "collection": {
-    "sortBy": "priority",
+    "sortBy": "createdAt",
     "asc": false
   },
   "uniqueIndexes": {

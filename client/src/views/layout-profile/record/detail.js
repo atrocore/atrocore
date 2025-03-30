@@ -12,6 +12,16 @@ Espo.define('views/layout-profile/record/detail', 'views/record/detail', functio
 
     return Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'after:save', () => {
+                setTimeout(() => {
+                    this.showReloadPageMessage()
+                }, 2000);
+            });
+        },
+
         setupActionItems() {
             if (this.getUser().isAdmin()) {
                 if (!this.additionalButtons.find(b => b.name === 'menu')) {

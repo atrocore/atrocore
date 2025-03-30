@@ -40,8 +40,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
         name: 'List',
 
-        headerView: 'views/header',
-
         searchView: 'views/record/search',
 
         recordView: 'views/record/list',
@@ -106,11 +104,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
             this.entityType = this.collection.name;
 
-            this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
             this.searchView = this.options.searchView || this.searchView;
-
-            this.setupHeader();
 
             if (this.searchPanel) {
                 this.setupSearchManager();
@@ -124,74 +119,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             if (this.createButton) {
                 this.setupCreateButton();
             }
-
-            if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
-                let buttonKanban = {
-                    link: '#' + this.scope + '/kanban',
-                    name: 'kanban',
-                    title: 'Kanban',
-                    acl: 'read',
-                    iconHtml: '<span class="fa fa-grip-horizontal"></span>'
-                };
-
-                let listIndex = this.menu.buttons.findIndex(button => button.name === 'list');
-                if (listIndex > -1) {
-                    this.menu.buttons.splice(listIndex, 0, buttonKanban);
-                } else {
-                    this.menu.buttons.unshift({
-                        link: '#' + this.scope + '/list',
-                        name: 'list',
-                        title: 'List',
-                        acl: 'read',
-                        iconHtml: '<span class=\"fa fa-list\"></span>'
-                    });
-                    this.menu.buttons.unshift(buttonKanban);
-                }
-            }
-
-            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).forEach(dynamicAction => {
-                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
-                    if (dynamicAction.display === 'dropdown') {
-                        let skip = false;
-                        (this.menu.dropdown || []).forEach(item => {
-                            if (item.data && item.data.id && item.data.id === dynamicAction.id) {
-                                skip = true;
-                            }
-                        });
-
-                        if (!skip) {
-                            (this.menu.dropdown || []).push({
-                                label: dynamicAction.name,
-                                action: "dynamicEntityAction",
-                                iconHtml: '',
-                                data: {
-                                    id: dynamicAction.id
-                                }
-                            });
-                        }
-                    }
-
-                    if (dynamicAction.display === 'single') {
-                        let skip = false;
-                        (this.menu.buttons || []).forEach(item => {
-                            if (item.data && item.data.id && item.data.id === dynamicAction.id) {
-                                skip = true;
-                            }
-                        });
-
-                        if (!skip) {
-                            (this.menu.buttons || []).unshift({
-                                label: dynamicAction.name,
-                                action: "dynamicEntityAction",
-                                iconHtml: '',
-                                data: {
-                                    id: dynamicAction.id
-                                }
-                            });
-                        }
-                    }
-                }
-            });
 
             this.getStorage().set('list-view', this.scope, this.viewMode);
 
@@ -243,12 +170,72 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }
         },
 
+        getBreadcrumbsItems() {
+            return [
+                {
+                    url: '#' + this.scope,
+                    label: this.getLanguage().translate(this.scope, 'scopeNamesPlural'),
+                    className: 'header-title'
+                }
+            ];
+        },
+
         setupHeader: function () {
-            this.createView('header', this.headerView, {
-                collection: this.collection,
-                el: '#main .page-header',
-                scope: this.scope,
-                isXsSingleRow: true
+            new Svelte.ListHeader({
+                target: document.querySelector('#main .page-header'),
+                props: {
+                    params: {
+                        breadcrumbs: this.getBreadcrumbsItems(),
+                        scope: this.scope
+                    },
+                    entityActions: {
+                        buttons: this.getMenu().buttons ?? [],
+                        dropdownButtons: this.getMenu().dropdownButtons ?? [],
+                    },
+                    callbacks: {
+                        onAddFavorite: (scope) => {
+                            this.notify('Saving');
+                            const favorites = this.getPreferences().get('favoritesList') || [];
+                            const result =  [...favorites, scope];
+
+                            this.getPreferences().save({
+                                favoritesList: result,
+                            }, {patch: true}).then(() => {
+                                this.notify('Saved', 'success');
+                                window.dispatchEvent(new CustomEvent('favorites:update', {detail: result}));
+                                this.getPreferences().trigger('favorites:update');
+                            });
+                        },
+                        onRemoveFavorite: (scope) => {
+                            this.notify('Saving');
+                            const favorites = this.getPreferences().get('favoritesList') || [];
+
+                            if (!Array.isArray(favorites) || favorites.length === 0) {
+                                throw new Error('Current entity is not in favorites list');
+                            }
+
+                            const result = favorites.filter(item => item !== scope);
+                            this.getPreferences().save({
+                                favoritesList: result
+                            }, {patch: true}).then(() => {
+                                this.notify('Saved', 'success');
+                                window.dispatchEvent(new CustomEvent('favorites:update', {detail: result}));
+                                this.getPreferences().trigger('favorites:update');
+                            });
+                        },
+                        canRunAction: (scope, action) => this.getAcl().check(scope, action)
+                    },
+                    viewMode: this.viewMode,
+                    isFavoriteEntity: !!this.getPreferences().get('favoritesList')?.includes(this.scope),
+                    onViewModeChange: (mode) => {
+                        this.switchViewMode(mode);
+                    },
+                    renderSearch: () => {
+                        if (this.searchPanel) {
+                            this.setupSearchPanel();
+                        }
+                    }
+                }
             });
         },
 
@@ -256,7 +243,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             if (this.quickCreate) {
                 this.menu.buttons.unshift({
                     action: 'quickCreate',
-                    label: 'Create ' + this.scope,
+                    label: this.translate('Create ' + this.scope, 'labels', this.scope),
                     style: 'primary',
                     acl: 'create',
                     aclScope: this.entityType || this.scope,
@@ -266,7 +253,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 this.menu.buttons.unshift({
                     link: '#' + this.scope + '/create',
                     action: 'create',
-                    label: 'Create ' + this.scope,
+                    label: this.translate('Create ' + this.scope, 'labels', this.scope),
                     style: 'primary',
                     acl: 'create',
                     aclScope: this.entityType || this.scope,
@@ -275,34 +262,18 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }
         },
 
-        getMenu() {
-            const menu = Dep.prototype.getMenu.call(this) || {};
-
-            if (!this.getMetadata().get(['scopes', this.scope, 'tab'])) {
-                return menu;
-            }
-
-            const isFavorite = (this.getPreferences().get('favoritesList') || []).includes(this.scope);
-
-            menu.buttons = [{
-                name: 'favorite',
-                action: isFavorite ? 'removeFavorite' : 'addFavorite',
-                style: isFavorite ? 'primary' : 'default',
-                iconHtml: '<svg class="icon"><use href="client/img/icons/icons.svg#thumb-tack"></use></svg>',
-                cssStyle: 'margin-right: 15px',
-            }, ...(menu.buttons || [])];
-
-            return menu;
-        },
-
         setupSearchPanel: function () {
-            this.createView('search', this.searchView, {
+            let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
+            let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;
+
+            this.createView('search', searchView, {
                 collection: this.collection,
-                el: '#main .page-header .row .search-container',
+                el: '#main .page-header .search-container',
                 searchManager: this.searchManager,
                 scope: this.scope,
                 viewMode: this.viewMode,
-                viewModeList: this.viewModeList
+                viewModeList: this.viewModeList,
+                hiddenBoolFilterList: hiddenBoolFilterList,
             }, function (view) {
                 view.render();
                 this.listenTo(view, 'reset', function () {
@@ -409,7 +380,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         afterRender: function () {
-            this.createTreePanel()
+            this.createTreePanel();
+            this.setupHeader();
+
             let treePanelView = this.getView('treePanel');
 
             this.collection.isFetched = false;
@@ -422,19 +395,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
 
             if (!this.hasView('list')) {
                 this.loadList();
-            }
-
-            if (this.searchPanel) {
-                this.setupSearchPanel();
-            }
-
-            let mode = this.getStorage().get('list-view', this.scope);
-            let button = $('a[data-name="' + mode + '"]');
-            if (button.length) {
-                if (button.hasClass('btn-default')) {
-                    button.removeClass('btn-default');
-                }
-                button.addClass('btn-primary');
             }
 
             let observer = new ResizeObserver(() => {
@@ -513,14 +473,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             });
         },
 
-        getHeader: function () {
-            var headerIconHtml = this.getHeaderIconHtml();
-
-            return this.buildHeaderHtml([
-                headerIconHtml + this.getLanguage().translate(this.scope, 'scopeNamesPlural')
-            ]);
-        },
-
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
         },
@@ -596,34 +548,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             router.dispatch(this.scope, 'create', options);
         },
 
-        actionAddFavorite: function (data, event) {
-            this.notify('Saving');
-            event.target.setAttribute('disabled', true);
-            const favorites = this.getPreferences().get('favoritesList') || [];
-            this.getPreferences().save({
-                favoritesList: [...favorites, this.scope],
-            }, {patch: true}).then(() => {
-                this.notify('Saved', 'success');
-                this.getView('header').reRender();
-                this.getPreferences().trigger('favorites:update');
-                this.setupSearchPanel();
-            });
-        },
-
-        actionRemoveFavorite: function (data, event) {
-            this.notify('Saving');
-            event.target.setAttribute('disabled', true);
-            const favorites = this.getPreferences().get('favoritesList') || [];
-            this.getPreferences().save({
-                favoritesList: favorites.filter(item => item !== this.scope)
-            }, {patch: true}).then(() => {
-                this.notify('Saved', 'success');
-                this.getView('header').reRender();
-                this.getPreferences().trigger('favorites:update');
-                this.setupSearchPanel();
-            });
-        },
-
         isTreeAllowed() {
             return !this.getMetadata().get(['scopes', this.scope, 'leftSidebarDisabled'])
         },
@@ -634,8 +558,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             }
 
             window.treePanelComponent = new Svelte.TreePanel({
-                target: $(`${this.options.el}`).get(0),
-                anchor: $(`${this.options.el} .tree-panel-anchor`).get(0),
+                target: $(`${this.options.el} .content-wrapper`).get(0),
+                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
                 props: {
                     scope: scope ? scope : this.scope,
                     model: this.model,
