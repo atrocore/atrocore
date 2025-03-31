@@ -180,13 +180,52 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
             ];
         },
 
+        initHeaderObserver() {
+            return new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (!node instanceof HTMLElement || !node.classList) {
+                            return;
+                        }
+
+                        if (node.classList.contains('header-title') && (node.tagName ?? '').toLowerCase() === 'h3') {
+                            this.setupTourButton();
+                        } else if (node.classList.contains('search-container') && this.searchPanel) {
+                            this.setupSearchPanel();
+                        }
+                    })
+                });
+            })
+        },
+
         setupHeader: function () {
+            let observer = null;
+
             new Svelte.ListHeader({
                 target: document.querySelector('#main .page-header'),
                 props: {
                     params: {
                         breadcrumbs: this.getBreadcrumbsItems(),
-                        scope: this.scope
+                        scope: this.scope,
+                        afterOnMount: () => {
+                            this.setupTourButton();
+                            if (this.searchPanel) {
+                                this.setupSearchPanel();
+                            }
+
+                            observer = this.initHeaderObserver();
+                            if (observer) {
+                                observer.observe(document.querySelector('.page-header'), {
+                                    childList: true,
+                                    subtree: true
+                                });
+                            }
+                        },
+                        afterOnDestroy: () => {
+                            if (observer) {
+                                observer.disconnect();
+                            }
+                        },
                     },
                     entityActions: {
                         buttons: this.getMenu().buttons ?? [],
@@ -229,11 +268,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                     isFavoriteEntity: !!this.getPreferences().get('favoritesList')?.includes(this.scope),
                     onViewModeChange: (mode) => {
                         this.switchViewMode(mode);
-                    },
-                    renderSearch: () => {
-                        if (this.searchPanel) {
-                            this.setupSearchPanel();
-                        }
                     }
                 }
             });
