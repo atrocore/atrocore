@@ -723,9 +723,8 @@ class Mapper implements MapperInterface
         }
 
         $tableName = $this->toDb(lcfirst($entity->getEntityType()));
-
         $res = $this->connection->createQueryBuilder()
-            ->select('a.*, av.id as av_id')
+            ->select('a.*, av.id as av_id, av.bool_value, av.date_value, av.datetime_value, av.int_value, av.int_value1, av.float_value, av.float_value1, av.varchar_value, av.text_value, av.reference_value, av.json_value')
             ->from("{$tableName}_attribute_value", 'av')
             ->leftJoin('av', $this->connection->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
             ->where('av.deleted=:false')
@@ -735,6 +734,8 @@ class Mapper implements MapperInterface
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $data['id'])
             ->fetchAllAssociative();
+
+        $data['attributeValues'] = [];
 
         foreach ($res as $row) {
             $id = $row['av_id'];
