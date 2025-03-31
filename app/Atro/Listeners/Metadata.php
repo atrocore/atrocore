@@ -1108,6 +1108,19 @@ class Metadata extends AbstractListener
                     'emHidden'          => true,
                 ];
 
+                $metadata["entityDefs"][$scope]['fields']["attributeValues"] = [
+                    "type"                        => "jsonObject",
+                    "notStorable"                 => true,
+                    "layoutDetailDisabled"        => true,
+                    "layoutListDisabled"          => true,
+                    "layoutRelationshipsDisabled" => true,
+                    "layoutLeftSidebarDisabled"   => true,
+                    "massUpdateDisabled"          => true,
+                    "importDisabled"              => true,
+                    "exportDisabled"              => true,
+                    "emHidden"                    => true,
+                ];
+
                 $metadata["entityDefs"][$scope]['fields'][lcfirst($scope) . "AttributeValues"] = [
                     "type"                        => "linkMultiple",
                     "layoutDetailDisabled"        => true,

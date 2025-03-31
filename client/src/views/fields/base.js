@@ -624,8 +624,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: () => {
-                            this.getParentView().getParentView().refreshLayout();
-                            this.notify('Done', 'success');
+                            this.model.fetch().then(() => {
+                                this.getParentView().getParentView().refreshLayout();
+                                this.notify('Done', 'success');
+                            });
                         }
                     });
                 });
