@@ -52,12 +52,7 @@ Espo.define('views/header', 'view', function (Dep) {
                 data.header = this.getParentView().getHeader();
             }
             data.scope = this.scope || this.getParentView().scope;
-            data.items = this.getItems();
             data.isXsSingleRow = this.options.isXsSingleRow;
-
-            if ((data.items.buttons || []).length < 2) {
-                data.isHeaderAdditionalSpace = true;
-            }
 
             return data;
         },
@@ -73,16 +68,9 @@ Espo.define('views/header', 'view', function (Dep) {
             }
         },
 
-        afterRender: function () {
-
-        },
-
         getItems: function () {
-            var items = this.getParentView().getMenu() || {};
-
-            return items;
+            return this.getParentView().getMenu() || {};
         },
-
     });
 });
 

@@ -21,8 +21,14 @@ class ClearEntities extends AbstractJob implements JobInterface
     {
         $entities = [];
         foreach ($this->getMetadata()->get('scopes') as $scopeName => $scopeDefs) {
+            if (empty($scopeDefs['entity'])) {
+                continue;
+            }
+
             try {
-                if ($this->getEntityManager()->getRepository($scopeName)->hasDeletedRecordsToClear()) {
+                $repository = $this->getEntityManager()->getRepository($scopeName);
+                if (method_exists($repository, 'hasDeletedRecordsToClear') &&
+                    $repository->hasDeletedRecordsToClear()) {
                     $entities[] = $scopeName;
                 }
             } catch (\Throwable $e) {

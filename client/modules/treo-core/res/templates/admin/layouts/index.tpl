@@ -1,15 +1,7 @@
 <main>
     <div class="page-header">
-        <h3>
-            <div class="header-breadcrumbs">
-                <div class="breadcrumbs-wrapper">
-                    <a href="#Admin">{{translate 'Administration'}}</a>{{translate 'Layout Manager' scope='Admin'}}
-                </div>
-            </div>
-            <div class="header-title">{{translate 'Layout Manager' scope='Admin'}}</div>
-        </h3>
-
-        <div style="display: flex">
+        <div id="layout-header"></div>
+        <div id="layout-header-buttons" style="display: flex">
             <div id="layout-buttons"></div>
             <button style="margin: 10px 7px 10px 20px" class="btn btn-default action" data-action="resetAllToDefault" type="button">{{translate 'resetAllToDefault'}}</button>
         </div>
@@ -52,6 +44,17 @@
 </main>
 
 <style>
+    #layout-header-buttons .btn {
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+
+    #layout-buttons .button-container {
+        display: flex;
+        gap: 10px;
+    }
+
     #layouts-menu .well {
         border: 1px solid #ededed;
         background-color: #fcfcfc;

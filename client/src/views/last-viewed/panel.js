@@ -57,7 +57,7 @@ Espo.define('views/last-viewed/panel', 'view', function (Dep) {
                         rows: [
                             [
                                 {
-                                    name:"targetType",
+                                    name:"controllerName",
                                     notSortable: true
                                 },
                                 {

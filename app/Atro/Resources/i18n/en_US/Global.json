@@ -39,7 +39,7 @@
     "OutboundEmail": "Outbound Email",
     "ScheduledJob": "Scheduled Job",
     "Dashboard": "Dashboard",
-    "Stream": "Stream",
+    "Stream": "Activities",
     "Job": "Job",
     "ScheduledJobLogRecord": "Scheduled Job Log Record",
     "PasswordChangeRequest": "Password Change Request",
@@ -98,7 +98,7 @@
     "Dashboard": "Dashboards",
     "Note": "Notes",
     "Notification": "Notifications",
-    "Stream": "Streams",
+    "Stream": "Activities",
     "User": "Users",
     "Team": "Teams",
     "Role": "Roles",
@@ -125,6 +125,7 @@
   },
   "labels": {
     "confirmRemoveAttributeValue": "Are you sure you want to delete Attribute Value?",
+    "UserFollowed": "User Followed",
     "authenticate": "Authenticate",
     "Download": "Download",
     "Load data": "Load data",
@@ -282,7 +283,7 @@
     "Inactive": "Inactive",
     "Write your comment here": "Write your comment here",
     "Post": "Post",
-    "Stream": "Stream",
+    "Stream": "Activities",
     "Show more": "Show more",
     "Read more": "Read more ...",
     "Show %s more": "Show %s more",
@@ -376,7 +377,17 @@
     "language": "Language",
     "scopeFilter": "Channel",
     "editGroup": "Edit Group",
-    "addGroup": "Begin / end group"
+    "addGroup": "Begin / end group",
+    "Summary": "Summary",
+    "Activities": "Activities",
+    "enableAutomaticClosing": "Enable  automatic opening and closing of this panel on mouse over.",
+    "disableAutomaticClosing": "Disable automatic opening and closing of this panel on mouse over.",
+    "actionFollow": "Click to follow",
+    "actionUnfollow": "Your are following, Click to unfollow",
+    "actionBookmark": "Click to bookmark",
+    "actionUnbookmark": "Bookmarked, Click to unbookmark",
+    "actionOpenFilter": "Open Filter",
+    "accessManagement": "Access Management"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
@@ -445,10 +456,10 @@
     "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.",
     "writeYourCommentHere": "Write your comment here",
     "writeMessageToUser": "Write a message to {user}",
-    "writeMessageToSelf": "Write a message on your stream",
+    "writeMessageToSelf": "Write a message on your Activities",
     "typeAndPressEnter": "Type & press enter",
     "checkForNewNotifications": "Check for new notifications",
-    "checkForNewNotes": "Check for stream updates",
+    "checkForNewNotes": "Check for activities updates",
     "internalPost": "Post will be seen only by internal users",
     "internalPostTitle": "Post is seen only by internal users",
     "done": "Done",
@@ -593,13 +604,15 @@
     "users": "Users",
     "groupEnd": "Group end",
     "iconClass": "Icon",
-    "isPublic": "Public"
+    "isPublic": "Public",
+    "created": "Created",
+    "modified": "Modified"
   },
   "tooltips": {
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."
   },
   "dashlets": {
-    "Stream": "Stream",
+    "Stream": "Activities",
     "Records": "Record List"
   },
   "notificationMessages": {

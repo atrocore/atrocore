@@ -46,8 +46,6 @@
     "emailAddressIsOptedOutByDefault": "Отметить новые адреса эл. почты как те, которые не принимают участия в эл. рассылке",
     "adminNotificationsNewExtensionVersion": "Показывать уведомления, когда доступны новые версии расширений",
     "appId": "ID",
-    "isStreamSide": "Поток внутри",
-    "isStreamPanelFirst": "Is stream panel first",
     "assignmentNotifications": "Уведомления при назначении",
     "aclStrictMode": "ACL строгий режим",
     "navigationManuBackgroundColor": "Фон меню навигации",
@@ -85,8 +83,6 @@
     "textFilterUseContainsForVarchar": "Если не отмечено, используется оператор «начинается с». Вы можете использовать специальный символ '%'.",
     "authTokenPreventConcurrent": "Пользователи не смогут войти в систему с нескольких устройств одновременно.",
     "emailAddressIsOptedOutByDefault": "При создании новой записи, эл. адрес будет отмечено как тот, который не участвует в эл. рассылке.",
-    "isStreamSide": "Если включено: панель потока будет отображаться сбоку.",
-    "isStreamPanelFirst": "Если включено: панель потока будет отображаться сразу после обзора.",
     "customStylesheetPath": "Ваши пользовательские стили CSS будут записаны в этот файл. Вы также можете вносить изменения в него напрямую."
   },
   "labels": {

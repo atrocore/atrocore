@@ -66,13 +66,14 @@ class ControllerManager
     }
 
     public function process(
-        string $controllerName,
-        string $actionName,
-        array $params,
-        $data,
-        ?Request $request,
+        string    $controllerName,
+        string    $actionName,
+        array     $params,
+                  $data,
+        ?Request  $request,
         ?Response $response
-    ): string {
+    ): string
+    {
         $controllerClassName = self::getControllerClassName($controllerName, $this->getMetadata());
 
         if (empty($controllerClassName) || !class_exists($controllerClassName)) {
@@ -151,14 +152,20 @@ class ControllerManager
             $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
             $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
             $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
+            if (!empty($params['action'])) {
+                $historyRecord->set('controllerAction', $params['action']);
+            }
+            if (!empty($params['id'])) {
+                $historyRecord->set('targetId', $params['id']);
+            }
             $historyRecordData = [
                 'request' => [
-                    'headers'     => $request->headers->all(),
-                    'params'      => $params
+                    'headers' => $request->headers->all(),
+                    'params'  => $params
                 ]
             ];
 
-            if (!empty($_GET)){
+            if (!empty($_GET)) {
                 $historyRecordData['request']['queryParams'] = $_GET;
             }
 
@@ -211,11 +218,12 @@ class ControllerManager
         string $action,
         string $controller,
         string $method,
-        &$params,
-        &$data,
-        $request,
-        &$result = null
-    ): void {
+               &$params,
+               &$data,
+               $request,
+               &$result = null
+    ): void
+    {
         $arguments = [
             'controller' => $controller,
             'action'     => $method,

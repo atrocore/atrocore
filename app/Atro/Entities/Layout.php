@@ -55,6 +55,7 @@ class Layout extends Base
                 }
                 return $data;
 
+            case 'rightSideView':
             case 'detail':
                 $data = [];
                 foreach ($this->get('sections', ['orderBy' => 'sortOrder']) ?? [] as $section) {
@@ -115,24 +116,6 @@ class Layout extends Base
                         }
                     }
                     $data[] = $newItem;
-                }
-                return $data;
-
-            case 'sidePanelsDetail':
-                $sidePanelItems = $this->get('sidePanelItems');
-                $sidePanelItems = empty($sidePanelItems) ? [] : $sidePanelItems->toArray();
-                usort($sidePanelItems, function ($a, $b) {
-                    return $a['sortOrder'] <=> $b['sortOrder'];
-                });
-                $data = [];
-                foreach ($sidePanelItems as $item) {
-                    $newItem = [];
-                    foreach ($this->getKeyList(['style', 'hiddenPerDefault', 'disabled', 'sortOrder'], $withIds) as $key) {
-                        if (isset($item[$key])) {
-                            $newItem[$key] = $item[$key];
-                        }
-                    }
-                    $data[$item['name']] = $newItem;
                 }
                 return $data;
         }

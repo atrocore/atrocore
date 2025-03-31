@@ -80,10 +80,10 @@
     "list": "List",
     "detail": "Details",
     "massUpdate": "Mass Update",
-    "sidePanelsDetail": "Sidebar",
     "kanban": "Kanban",
     "upload": "Upload",
-    "leftSidebar": "Left Sidebar"
+    "leftSidebar": "Left Side View",
+    "rightSideView": "Right Side view"
   },
   "fieldTypes": {
     "color": "Color",

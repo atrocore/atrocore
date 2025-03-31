@@ -5,8 +5,6 @@
     "variables": "Variablen",
     "locale": "Standard-Locale",
     "appId": "ID",
-    "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
-    "isStreamPanelFirst": "Ist Aktivitätenpanel zuerst",
     "useCache": "Cache nutzen",
     "companyLogo": "Header-Logo",
     "favicon": "Favicon",
@@ -54,8 +52,6 @@
   "tooltips": {
     "maxConcurrentWorkers": "Obergrenze für die Anzahl der Aufgaben oder Prozesse, die gleichzeitig im Hintergrund eines Servers laufen können.",
     "fileNameRegexPattern": "Um nur die Kleinbuchstaben mit max. Länge von 24 Symbolen zu erlauben, verwenden Sie \"/^[a-z]{1,24}$/\".",
-    "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",
-    "isStreamPanelFirst": "Wenn aktiviert, wird das Aktivitätenpanel direkt nach der Übersicht angezeigt.",
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
     "recordsPerPageSmall": "Anzahl Sätze in Beziehungssubpanels",
     "followCreatedEntities": "Benutzer abonnieren automatisch alle Einträge, die sie selbst erstellen.",

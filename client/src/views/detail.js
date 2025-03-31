@@ -42,9 +42,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         optionsToPass: ['attributes', 'returnUrl', 'returnDispatchParams', 'rootUrl'],
 
-        headerView: 'views/header',
-
         recordView: 'views/record/detail',
+
+        rightSideView: 'views/record/right-side-view',
 
         overviewFilterView: 'views/modals/overview-filter',
 
@@ -62,20 +62,11 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         navigateButtonsDisabled: false,
 
-        treeAllowed: false,
+        hasPrevious: false,
 
-        navigationButtons: {
-            previous: {
-                html: '<span class="fas fa-chevron-left"></span>',
-                title: 'Previous Entry',
-                disabled: true
-            },
-            next: {
-                html: '<span class="fas fa-chevron-right"></span>',
-                title: 'Next Entry',
-                disabled: true
-            }
-        },
+        hasNext: false,
+
+        treeAllowed: false,
 
         mode: 'detail',
 
@@ -88,11 +79,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
             this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
 
-            this.setupHeader();
             this.setupRecord();
 
             this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link, callback) => {
@@ -115,21 +104,42 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 this.listenTo(this.model, 'change:isFollowed', function () {
                     this.handleFollowButton();
                 }, this);
+
+                this.listenTo(this.model, 'change:followersNames', function () {
+                    window.dispatchEvent(new CustomEvent('record:followers-updated', { detail: this.model.get('followersNames') }));
+                });
             }
 
             if (!this.getMetadata().get('scopes.' + this.scope + '.bookmarkDisabled')) {
-                this.handleBookmarkButton();
+                let data = {};
+                if (this.model.get('bookmarkId')) {
+                    if (this.getAcl().check('Bookmark', 'delete')) {
+                        data = {
+                            name: 'bookmarking',
+                            action: 'unbookmark',
+                        }
+                    }
 
-                this.listenTo(this.model, 'change:bookmarkId', function () {
-                    this.handleBookmarkButton();
-                }, this);
+                } else {
+                    if (this.getAcl().check('Bookmark', 'create')) {
+                        data = {
+                            name: 'bookmarking',
+                            action: 'bookmark',
+                        }
+                    }
+                }
+
+                this.addMenuItem('buttons', data, true, false, true);
             }
 
             if (this.model && !this.model.isNew() && this.getMetadata().get(['scopes', this.scope, 'object'])
                 && this.getMetadata().get(['scopes', this.scope, 'overviewFilters']) !== false
                 && this.getMetadata().get(['scopes', this.scope, 'hideFieldTypeFilters']) !== true
             ) {
-                this.handleFilterButton();
+                this.addMenuItem('buttons', {
+                    name: 'filtering',
+                    action: 'openOverviewFilter'
+                }, true, false, true);
             }
 
             var collection = this.collection = this.model.collection;
@@ -146,48 +156,35 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 }
             }
 
-            if (this.navigationButtons) {
-                let navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
+            if (!this.navigateButtonsDisabled && !!this.model.collection) {
+                this.hasPrevious = false;
+                this.hasNext = false;
 
-                if (navigateButtonsEnabled) {
-                    this.navigationButtons.previous.disabled = true;
-                    this.navigationButtons.next.disabled = true;
+                if (this.indexOfRecord > 0) {
+                    this.hasPrevious = true;
+                }
 
-                    if (this.indexOfRecord > 0) {
-                        this.navigationButtons.previous.disabled = false;
-                    }
-
-                    if (this.indexOfRecord < this.model.collection.total - 1) {
-                        this.navigationButtons.next.disabled = false;
-                    } else {
-                        if (this.model.collection.total === -1) {
-                            this.navigationButtons.next.disabled = false;
-                        } else if (this.model.collection.total === -2) {
-                            if (this.indexOfRecord < this.model.collection.length - 1) {
-                                this.navigationButtons.next.disabled = false;
-                            }
+                if (this.indexOfRecord < this.model.collection.total - 1) {
+                    this.hasNext = true;
+                } else {
+                    if (this.model.collection.total === -1) {
+                        this.hasNext = true;
+                    } else if (this.model.collection.total === -2) {
+                        if (this.indexOfRecord < this.model.collection.length - 1) {
+                            this.hasNext = true;
                         }
                     }
-
-                    if (this.navigationButtons.previous.disabled && this.navigationButtons.next.disabled) {
-                        navigateButtonsEnabled = false;
-                    }
                 }
-
-                for (const [key, data] of Object.entries(this.navigationButtons)) {
-                    this.removeMenuItem(key);
-                    this.addMenuItem('buttons', {
-                        name: key,
-                        html: data.html,
-                        style: data.disabled ? 'default disabled' : 'default',
-                        action: key,
-                        title: this.translate(data.title)
-                    })
-                }
-
             }
 
-            this.listenTo(this.model, 'after:change-mode', (mode) => this.mode = mode)
+            this.addMenuItem('buttons', {
+                action: 'navigation'
+            });
+
+            this.listenTo(this.model, 'after:change-mode', (mode) => {
+                this.mode = mode;
+                window.dispatchEvent(new CustomEvent('record-mode:changed', { detail: mode }));
+            });
         },
 
         switchToModelByIndex: function (indexOfRecord) {
@@ -249,14 +246,15 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         afterRender() {
             $('.page-header').addClass('detail-page-header');
-
             Dep.prototype.afterRender.call(this);
 
+            this.setupHeader();
+
+            const view = this.getView('record');
             if (this.treeAllowed) {
-                const view = this.getView('record')
                 window.treePanelComponent = new Svelte.TreePanel({
-                    target: $(`${this.options.el}`).get(0),
-                    anchor: $(`${this.options.el} .tree-panel-anchor`).get(0),
+                    target: $(`${this.options.el} .content-wrapper`).get(0),
+                    anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
                     props: {
                         scope: this.scope,
                         model: this.model,
@@ -285,7 +283,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         scope: this.scope,
                         viewType: 'leftSidebar',
                         layoutData: window.treePanelComponent.getLayoutData(),
-                        el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
+                        el: $(`${this.options.el} .content-wrapper .catalog-tree-panel .layout-editor-container`).get(0),
                     }, (view) => {
                         view.on("refresh", () => {
                             window.treePanelComponent.refreshLayout()
@@ -296,24 +294,205 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
                 view.onTreePanelRendered();
             }
+
+            this.loadRightSideView()
+
+            let isScrolledMore = false;
+            const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');
+
+            $('#main main').on('scroll', (e) => {
+                const scrolled = e.target.scrollTop > breadcrumbs.offsetHeight;
+
+                if (scrolled !== isScrolledMore) {
+                    isScrolledMore = scrolled;
+                    if (isScrolledMore) {
+                        window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: false}));
+                    } else {
+                        window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: true}));
+                    }
+                }
+            });
+        },
+
+        executeAction(action, data, event) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, event);
+                return;
+            }
+
+            const record = this.getView('record');
+            record.executeAction(action, data, event);
+        },
+
+        getVisiblePanels() {
+            return (this.panelsList ?? []).filter(panel => {
+                if (panel.name === 'panel-0') {
+                    return true;
+                }
+
+                if (this.isPanelClosed(panel.name)) {
+                    return true;
+                }
+
+                const panelElement = document.querySelector(`div.panel[data-name="${panel.name}"]`);
+
+                return panelElement && panelElement.style.display !== 'none' && !$(panelElement).hasClass('hidden');
+            });
+        },
+
+        isPanelClosed(name) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? []
+            return (scopePreferences['closed'] || []).includes(name)
+        },
+
+        scrollToPanel(name) {
+            let panel = $('#main').find(`.panel[data-name="${name}"]`);
+            if (panel.size() > 0) {
+                const header = document.querySelector('.page-header');
+                const content = document.querySelector("main") || document.querySelector('#main');
+                panel = panel.get(0);
+
+                if (!content || !panel) return;
+
+                const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                const stickyOffset = header.offsetHeight;
+                content.scrollTo({
+                    top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
+                    behavior: "smooth"
+                });
+            }
+        },
+
+        setupLayoutEditorButton() {
+            let el = this.options.el || '#' + (this.id);
+            const recordView = this.getView('record');
+            const bottomView = recordView.getView('bottom');
+
+            this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
+                scope: this.scope,
+                viewType: 'relationships',
+                layoutData: bottomView.layoutData,
+                el: el + ' .panel-navigation .layout-editor-container',
+            }, (view) => {
+                view.on("refresh", () => {
+                    recordView.createBottomView(view => {
+                        view.render();
+                    })
+                })
+                view.render();
+            })
+        },
+
+        initHeaderObserver() {
+            return new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (!node instanceof HTMLElement || !node.classList) {
+                            return;
+                        }
+
+                        if (node.classList.contains('header-title') && (node.tagName ?? '').toLowerCase() === 'h3') {
+                            this.setupTourButton();
+                        } else if (node.classList.contains('layout-editor-container')) {
+                            this.setupLayoutEditorButton();
+                        }
+                    })
+                });
+            })
+        },
+
+        getHeaderOptions() {
+            let observer = null;
+
+            const record = this.getView('record');
+            const hasLayoutEditor = this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read');
+            const recordButtons = Object.assign(record.getRecordButtons(), {
+                headerButtons: this.getMenu(),
+                isOverviewFilterActive: this.isOverviewFilterApply(),
+                followers: this.model.get('followersNames') ?? {},
+                hasPrevious: this.hasPrevious,
+                hasNext: this.hasNext,
+                hasLayoutEditor: hasLayoutEditor,
+                executeAction: (action, data, event) => {
+                    this.executeAction(action, data, event);
+                },
+            });
+
+            return {
+                params: {
+                    mode: this.mode,
+                    scope: this.scope,
+                    id: this.model.id,
+                    permissions: {
+                        canRead: this.getAcl().check(this.scope, 'read'),
+                        canEdit: this.getAcl().check(this.scope, 'edit'),
+                        canCreate: this.getAcl().check(this.scope, 'create'),
+                        canDelete: this.getAcl().check(this.scope, 'delete'),
+                        canReadStream: this.getAcl().check(this.scope, 'stream'),
+                    },
+                    breadcrumbs: this.getBreadcrumbsItems(),
+                    afterOnMount: () => {
+                        this.setupTourButton();
+                        if (hasLayoutEditor) {
+                            this.setupLayoutEditorButton();
+                        }
+
+                        observer = this.initHeaderObserver();
+                        if (observer) {
+                            observer.observe(document.querySelector('.page-header'), {
+                                childList: true,
+                                subtree: true
+                            });
+                        }
+                    },
+                    afterOnDestroy: () => {
+                        if (observer) {
+                            observer.disconnect();
+                        }
+                    }
+                },
+                recordButtons: recordButtons,
+                callbacks: {
+                    onFollow: () => {
+                        let followersNames = this.model.get('followersNames') || {};
+                        followersNames[this.getUser().get('id')] = this.getUser().get('name');
+                        this.model.set('isFollowed', true);
+                        this.model.set('followersIds', Object.keys(followersNames));
+                        this.model.set('followersNames', followersNames);
+                    },
+                    onUnfollow: () => {
+                        let followersNames = Object.fromEntries(Object.entries(this.model.get('followersNames') || {}).filter(([key]) => key !== this.getUser().get('id')));
+                        this.model.set('isFollowed', false);
+                        this.model.set('followersIds', Object.keys(followersNames));
+                        this.model.set('followersNames', followersNames);
+                    },
+                },
+                anchorNavItems: this.getVisiblePanels(),
+                anchorScrollCallback: (name, event) => {
+                    if (this.isPanelClosed(name)) {
+                        const panel = this.panelsList.filter(p => p.name === name)[0];
+                        Backbone.trigger('create-bottom-panel', panel);
+                        this.listenToOnce(Backbone, 'after:create-bottom-panel', function (panel) {
+                            setTimeout(() => this.scrollToPanel(panel.name), 100);
+                        })
+                    } else {
+                        this.scrollToPanel(name);
+                    }
+                }
+            };
         },
 
         setupHeader: function () {
-            this.createView('header', this.headerView, {
-                model: this.model,
-                el: '#main > main > .header',
-                scope: this.scope
-            }, view => {
-                this.listenTo(view, 'after:render', () => {
-                    this.setupTourButton();
-                });
+            new Svelte.DetailHeader({
+                target: document.querySelector('#main main > .header'),
+                props: this.getHeaderOptions()
             });
 
             this.listenTo(this.model, 'sync', function (model) {
                 if (model.hasChanged('name')) {
-                    if (this.getView('header')) {
-                        this.getView('header').reRender();
-                    }
+                    window.dispatchEvent(new CustomEvent('breadcrumbs:items-updated', { detail: this.getBreadcrumbsItems() }));
                     this.updatePageTitle();
                 }
             }, this);
@@ -464,22 +643,14 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         addUnfollowButtonToMenu: function () {
             this.addMenuItem('buttons', {
                 name: 'following',
-                html: '<span class="fas fa-bell"></span>',
-                title: 'Your are following, Click to unfollow',
                 action: 'unfollow',
-                cssStyle: 'margin: 0 10px 0 0px;color:white;',
-                style: 'primary'
             }, true, false, true);
         },
 
         addFollowButtonToMenu: function () {
             this.addMenuItem('buttons', {
                 name: 'following',
-                title: 'Click to follow',
-                style: 'default',
-                html: '<span class="fas fa-bell"></span>',
                 action: 'follow',
-                cssStyle: 'margin: 0 10px 0 0px;'
             }, true, false, true);
         },
 
@@ -490,7 +661,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         setupRecord: function () {
             const o = {
                 model: this.model,
-                el: '#main > main > .record',
+                el: '#main main > .record',
                 scope: this.scope
             };
             this.optionsToPass.forEach(function (option) {
@@ -500,13 +671,24 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 o.rootUrl = this.options.params.rootUrl;
             }
             if (!this.navigateButtonsDisabled) {
-                o.hasNext = !this.navigationButtons.next.disabled;
+                o.hasNext = this.hasNext;
             }
 
             this.treeAllowed = !o.isWide && this.isTreeAllowed();
 
             this.createView('record', this.getRecordViewName(), o, view => {
+                this.listenTo(view, 'detailPanelsLoaded', data => {
+                    this.panelsList = data.list;
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
+                });
 
+                this.listenTo(view.model, 'change after:process-ui-handler', () => {
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
+                });
+
+                this.listenTo(view, 'after:render', view => {
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
+                });
             });
         },
 
@@ -518,7 +700,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             if (shouldBeHidden) {
                 this.addMenuItem('buttons', {
                     name: 'following',
-                    style: 'hidden',
+                    hidden: true
                 }, true, false, true);
             } else if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
@@ -527,53 +709,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     this.addFollowButtonToMenu();
                 }
             }
-        },
-
-        handleBookmarkButton: function () {
-            let data = {};
-            if (this.model.get('bookmarkId')) {
-                if (this.getAcl().check('Bookmark', 'delete')) {
-                    data = {
-                        name: 'bookmarking',
-                        title: 'Bookmarked, Click to unbookmark',
-                        style: 'primary',
-                        html: '<span class="fas fa-bookmark"></span>',
-                        action: 'unbookmark',
-                        cssStyle: 'margin: 0 10px 0 0px;color:white;'
-                    }
-                }
-
-            } else {
-                if (this.getAcl().check('Bookmark', 'create')) {
-                    data = {
-                        name: 'bookmarking',
-                        title: 'Click to bookmark',
-                        style: 'default',
-                        html: '<span class="fas fa-bookmark"></span>',
-                        action: 'bookmark',
-                        cssStyle: 'margin: 0 10px 0 0px'
-                    }
-                }
-            }
-
-            this.addMenuItem('buttons', data, true, false, true);
-        },
-
-        handleFilterButton() {
-            let cssStyle = 'margin: 0 10px 0 0px'
-            let style = 'default';
-            if (this.isOverviewFilterApply()) {
-                cssStyle += ';color:white;'
-                style = 'danger';
-            }
-            this.addMenuItem('buttons', {
-                name: 'filtering',
-                title: 'Open Filter',
-                style: style,
-                html: '<span class="fas fa-filter"></span>',
-                action: 'openOverviewFilter',
-                cssStyle: cssStyle
-            }, true, false, true)
         },
 
         getOverviewFiltersList: function () {
@@ -676,118 +811,41 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
                     if (filterChanged) {
                         this.model.trigger('overview-filters-changed');
-                        this.handleFilterButton();
+                        window.dispatchEvent(new CustomEvent('detail:overview-filters-changed', {
+                            detail: {
+                                isOverviewFilterActive: this.isOverviewFilterApply()
+                            }
+                        }));
                     }
                 });
             });
         },
 
-        actionBookmark: function () {
-            $el = this.$el.find('[data-action="bookmark"]');
-            $el.addClass('disabled');
-            this.notify(this.translate('Bookmarking') + '...');
-            $.ajax({
-                url: 'Bookmark',
-                type: 'POST',
-                data: JSON.stringify({
-                    entityType: this.scope,
-                    entityId: this.model.id
-                }),
-                success: (result) => {
-                    this.model.set('bookmarkId', result.id)
-                    this.notify(this.translate('Done'), 'success')
-                    $el.removeClass('disabled');
-                },
-                error: () => {
-                    $el.removeClass('disabled');
-                }
+        getBreadcrumbsItems: function (isAdmin = false) {
+            const result = Dep.prototype.getBreadcrumbsItems.call(this, isAdmin) || [];
+            const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+
+            result.push({
+                url: rootUrl,
+                label: this.getLanguage().translate(this.scope, 'scopeNamesPlural')
             });
-        },
-
-        actionUnbookmark: function () {
-            $el = this.$el.find('[data-action="unbookmark"]');
-            $el.addClass('disabled');
-            this.notify(this.translate('Unbookmarking') + '...');
-            $.ajax({
-                url: `Bookmark/${this.model.get('bookmarkId')}`,
-                type: 'DELETE',
-                headers: {
-                    'permanently': true
-                },
-                success: () => {
-                    this.notify(this.translate('Done'), 'success')
-                    this.model.set('bookmarkId', null);
-                    $el.removeClass('disabled');
-                },
-                error: function () {
-                    $el.removeClass('disabled');
-                },
-            });
-        },
-
-        actionFollow: function () {
-            $el = this.$el.find('[data-action="follow"]');
-            $el.addClass('disabled');
-            $.ajax({
-                url: this.model.name + '/' + this.model.id + '/subscription',
-                type: 'PUT',
-                success: function () {
-                    $el.remove();
-                    let followersNames = this.model.get('followersNames') || {};
-                    followersNames[this.getUser().get('id')] = this.getUser().get('name');
-                    this.model.set('isFollowed', true);
-                    this.model.set('followersIds', Object.keys(followersNames));
-                    this.model.set('followersNames', followersNames);
-                }.bind(this),
-                error: function () {
-                    $el.removeClass('disabled');
-                }.bind(this)
-            });
-        },
-
-        actionUnfollow: function () {
-            $el = this.$el.find('[data-action="unfollow"]');
-            $el.addClass('disabled');
-            $.ajax({
-                url: this.model.name + '/' + this.model.id + '/subscription',
-                type: 'DELETE',
-                success: function () {
-                    $el.remove();
-                    let followersNames = Object.fromEntries(Object.entries(this.model.get('followersNames') || {}).filter(([key]) => key !== this.getUser().get('id')));
-                    this.model.set('isFollowed', false);
-                    this.model.set('followersIds', Object.keys(followersNames));
-                    this.model.set('followersNames', followersNames);
-                }.bind(this),
-                error: function () {
-                    $el.removeClass('disabled');
-                }.bind(this)
-            });
-
-        },
-
-        getHeader: function () {
-            let name = Handlebars.Utils.escapeExpression(this.model.get('name'));
-
-            if (name === '') {
-                name = this.model.id;
-            }
-
-            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-
-            let headerIconHtml = this.getHeaderIconHtml();
-
-            let path = [];
-            path.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
 
             if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true && this.model.get('hierarchyRoute')) {
                 $.each(this.model.get('hierarchyRoute'), (id, name) => {
-                    path.push('<a href="' + rootUrl + '/view/' + id + '" class="action">' + name + '</a>');
+                    result.push({
+                        url: `${rootUrl}/view/${id}`,
+                        label: name
+                    });
                 });
             }
 
-            path.push(name);
+            result.push({
+                url: `${rootUrl}/view/${this.model.id}`,
+                label: this.model.get('name') || this.model.id,
+                className: 'header-title'
+            })
 
-            return this.buildHeaderHtml(path);
+            return result;
         },
 
         isHierarchical() {

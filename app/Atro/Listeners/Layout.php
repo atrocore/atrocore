@@ -54,6 +54,43 @@ class Layout extends AbstractListener
             }
         }
 
+        if($event->getArgument('params')['viewType'] === 'rightSideView') {
+            $result = $event->getArgument('result');
+            if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
+                $scope = $event->getArgument('params')['scope'];
+                $result = [
+                    [
+                        "label" => "accessManagement",
+                        "rows" => []
+                    ]
+                ];
+
+                $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
+
+                if(!empty($scopeDefs['hasOwner'])) {
+                    $result[0]['rows'][] = [["name" => "ownerUser", "fullWidth" => true]];
+                }
+
+                if(!empty($scopeDefs['hasAssignedUser'])) {
+                    $result[0]['rows'][] = [["name" => "assignedUser", "fullWidth" => true]];
+                }
+
+                if(!empty($scopeDefs['hasTeam'])) {
+                    $result[0]['rows'][] = [["name" => "teams", "fullWidth" => true]];
+                }
+
+
+                $result[0]['rows'][] = [["name" => "created", "fullWidth" => true]];
+                $result[0]['rows'][] = [["name" => "modified", "fullWidth" => true]];
+
+                if(!empty($scopeDefs['stream'])) {
+                    $result[0]['rows'][] = [["name" => "followers", "fullWidth" => true]];
+                }
+
+                $event->setArgument('result', $result);
+            }
+        }
+
         $this->getEventManager()->dispatch($event->getArgument('target'), $event->getArgument('params')['viewType'], $event);
     }
 

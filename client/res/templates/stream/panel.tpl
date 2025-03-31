@@ -11,7 +11,8 @@
         </div>
     </div>
 </div>
-
+{{{streamHeader}}}
 <div class="list-container">
     {{{list}}}
 </div>
+

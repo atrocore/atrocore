@@ -87,7 +87,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'admin/settings/headers/settings',
                     recordView: 'views/admin/settings'
                 });
             }, this);
@@ -113,7 +112,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'admin/settings/headers/notifications',
+                    headerTitle: 'Notifications',
                     recordView: 'views/admin/notifications'
                 });
             }, this);
@@ -127,7 +126,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'admin/settings/headers/outbound-emails',
+                    headerTitle: 'Outbound Emails',
                     recordView: 'views/admin/outbound-emails'
                 });
             }, this);
@@ -186,8 +185,8 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'admin/settings/headers/user-interface',
-                    recordView: 'views/admin/user-interface'
+                    recordView: 'views/admin/user-interface',
+                    headerTitle: 'User Interface'
                 });
             }, this);
             model.fetch();
@@ -200,7 +199,7 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 model.id = '1';
                 this.main('views/settings/edit', {
                     model: model,
-                    headerTemplate: 'admin/settings/headers/authentication',
+                    headerTitle: 'Authentication',
                     recordView: 'views/admin/authentication'
                 });
             }, this);
