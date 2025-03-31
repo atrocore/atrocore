@@ -236,8 +236,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: () => {
-                            this.refreshLayout();
-                            this.notify('Saved', 'success');
+                            this.model.fetch().then(() => {
+                                this.refreshLayout();
+                                this.notify('Saved', 'success');
+                            });
                         }
                     });
                 });
@@ -1942,33 +1944,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         prepareLayoutData(data) {
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
-                let params = {
-                    entityName: this.model.name,
-                    entityId: this.model.get('id')
-                };
-
                 let layoutRows = [];
-
-                this.ajaxGetRequest('Attribute/action/recordAttributes', params, {async: false}).success(items => {
-                    let layoutRow = [];
-                    items.forEach(item => {
-                        this.model.defs['fields'][item.name] = item;
-                        layoutRow.push({
-                            name: item.name,
-                            customLabel: item.label,
-                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
-                        });
-                        if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
-                            layoutRows.push(layoutRow);
-                            layoutRow = [];
-                        }
-                    })
-
-                    if (layoutRow.length > 0) {
-                        layoutRow.push(false);
+                let layoutRow = [];
+                (this.model.get('attributeValues') || []).forEach(item => {
+                    this.model.defs['fields'][item.name] = item;
+                    layoutRow.push({
+                        name: item.name,
+                        customLabel: item.label,
+                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
+                    });
+                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
                         layoutRows.push(layoutRow);
+                        layoutRow = [];
                     }
                 })
+
+                if (layoutRow.length > 0) {
+                    layoutRow.push(false);
+                    layoutRows.push(layoutRow);
+                }
 
                 data.layout.forEach((row, k) => {
                     if (row.id === 'attributeValues') {
