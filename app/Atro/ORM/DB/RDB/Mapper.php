@@ -711,16 +711,26 @@ class Mapper implements MapperInterface
 
         $languages = [];
         if (!empty($this->getConfig()->get('isMultilangActive'))) {
-            $languages = $this->getConfig()->get('inputLanguageList', []);
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                $languages[$code] = $code;
+                foreach ($this->getConfig()->get('referenceData.Language', []) as $v) {
+                    if ($code === $v['code']) {
+                        $languages[$code] = $v['name'];
+                        break;
+                    }
+                }
+            }
         }
 
         $tableName = $this->toDb(lcfirst($entity->getEntityType()));
 
         $res = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from("{$tableName}_attribute_value")
-            ->where('deleted=:false')
-            ->andWhere("{$tableName}_id=:id")
+            ->select('av.*, a.is_required, a.name as attribute_name')
+            ->from("{$tableName}_attribute_value", 'av')
+            ->leftJoin('av', $this->connection->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
+            ->where('av.deleted=:false')
+            ->andWhere('a.deleted=:false')
+            ->andWhere("av.{$tableName}_id=:id")
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $data['id'])
             ->fetchAllAssociative();
@@ -733,7 +743,10 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'varchar',
                         'attributeValueId' => $row['id'],
-                        'column'           => "reference_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "reference_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
@@ -741,7 +754,10 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'jsonArray',
                         'attributeValueId' => $row['id'],
-                        'column'           => "text_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "text_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
@@ -749,7 +765,10 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'jsonArray',
                         'attributeValueId' => $row['id'],
-                        'column'           => "json_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "json_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
@@ -757,7 +776,10 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'bool',
                         'attributeValueId' => $row['id'],
-                        'column'           => "bool_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "bool_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
@@ -765,14 +787,20 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'int',
                         'attributeValueId' => $row['id'],
-                        'column'           => "int_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "int_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
 
                     $entity->fields[$name . 'UnitId'] = [
                         'type'             => 'varchar',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'reference_value'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
                     break;
@@ -780,21 +808,30 @@ class Mapper implements MapperInterface
                     $entity->fields[$name . 'From'] = [
                         'type'             => 'int',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'int_value'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'int_value',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'From'] = $row[$entity->fields[$name . 'From']['column']] ?? null;
 
                     $entity->fields[$name . 'To'] = [
                         'type'             => 'int',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'int_value1'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'int_value1',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'To'] = $row[$entity->fields[$name . 'To']['column']] ?? null;
 
                     $entity->fields[$name . 'UnitId'] = [
                         'type'             => 'varchar',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'reference_value'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
                     break;
@@ -802,14 +839,20 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'float',
                         'attributeValueId' => $row['id'],
-                        'column'           => "float_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "float_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
 
                     $entity->fields[$name . 'UnitId'] = [
                         'type'             => 'varchar',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'reference_value'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
                     break;
@@ -817,21 +860,30 @@ class Mapper implements MapperInterface
                     $entity->fields[$name . 'From'] = [
                         'type'             => 'float',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'float_value'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'float_value',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'From'] = $row[$entity->fields[$name . 'From']['column']] ?? null;
 
                     $entity->fields[$name . 'To'] = [
                         'type'             => 'float',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'float_value1'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'float_value1',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'To'] = $row[$entity->fields[$name . 'To']['column']] ?? null;
 
                     $entity->fields[$name . 'UnitId'] = [
                         'type'             => 'varchar',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'reference_value'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
                     break;
@@ -839,7 +891,10 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'date',
                         'attributeValueId' => $row['id'],
-                        'column'           => "date_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "date_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
@@ -847,7 +902,10 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'datetime',
                         'attributeValueId' => $row['id'],
-                        'column'           => "datetime_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "datetime_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
@@ -856,7 +914,10 @@ class Mapper implements MapperInterface
                     $entity->fields[$name . 'Id'] = [
                         'type'             => 'varchar',
                         'attributeValueId' => $row['id'],
-                        'column'           => 'reference_value'
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'Id'] = $row[$entity->fields[$name . 'Id']['column']] ?? null;
                     break;
@@ -866,16 +927,22 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'text',
                         'attributeValueId' => $row['id'],
-                        'column'           => "text_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "text_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
 
-                    foreach ($languages as $language) {
+                    foreach ($languages as $language => $languageName) {
                         $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
                         $entity->fields[$lName] = [
                             'type'             => 'text',
                             'attributeValueId' => $row['id'],
-                            'column'           => "text_value_" . strtolower($language)
+                            'attributeId'      => $row['attribute_id'],
+                            'attributeName'    => $row['attribute_name'] . ' / ' . $languageName,
+                            'column'           => "text_value_" . strtolower($language),
+                            'required'         => !empty($row['is_required'])
                         ];
                         $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
                     }
@@ -884,16 +951,22 @@ class Mapper implements MapperInterface
                     $entity->fields[$name] = [
                         'type'             => 'varchar',
                         'attributeValueId' => $row['id'],
-                        'column'           => "varchar_value"
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "varchar_value",
+                        'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
 
-                    foreach ($languages as $language) {
+                    foreach ($languages as $language => $languageName) {
                         $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
                         $entity->fields[$lName] = [
                             'type'             => 'varchar',
                             'attributeValueId' => $row['id'],
-                            'column'           => "varchar_value_" . strtolower($language)
+                            'attributeId'      => $row['attribute_id'],
+                            'attributeName'    => $row['attribute_name'] . ' / ' . $languageName,
+                            'column'           => "varchar_value_" . strtolower($language),
+                            'required'         => !empty($row['is_required'])
                         ];
                         $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
                     }
