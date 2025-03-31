@@ -191,6 +191,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     middle._layout = layout
                     middle._loadNestedViews(() => {
                         // middle.reRender()
+                        this.reRender();
                     })
 
                     // update panel navigation
@@ -200,7 +201,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             let navigation = this.getView(key)
                             if (navigation) {
                                 navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
-                                // navigation.reRender()
+                                navigation.reRender()
                             }
                         }
                     }
@@ -1940,7 +1941,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         prepareLayoutData(data) {
-            if (this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
+            if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
                 let params = {
                     entityName: this.model.name,
                     entityId: this.model.get('id')
