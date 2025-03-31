@@ -32,26 +32,7 @@ Espo.define('views/record/right-side-view-edit', 'views/record/edit', function (
             })
         },
         afterRender: function () {
-            var fields = this.getFieldViews();
-
-            var fieldInEditMode = null;
-            for (var field in fields) {
-                var fieldView = fields[field];
-                this.listenTo(fieldView, 'edit', function (view) {
-                    if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
-                        fieldInEditMode.inlineEditClose();
-                    }
-                    fieldInEditMode = view;
-                }, this);
-
-                this.listenTo(fieldView, 'inline-edit-on', function () {
-                    this.inlineEditModeIsOn = true;
-                }, this);
-                this.listenTo(fieldView, 'inline-edit-off', function () {
-                    this.inlineEditModeIsOn = false;
-                    this.setIsNotChanged();
-                }, this);
-            }
+            this.initListenToInlineMode();
         }
     });
 });
