@@ -221,9 +221,7 @@ class Metadata
 
     protected function loadUiHandlers(array &$metadata): void
     {
-        /** @var Config $config */
-        $config = $this->container->get('config');
-
+        $config = $this->getConfig();
         if (!$config->get('isInstalled', false)) {
             return;
         }
@@ -707,6 +705,11 @@ class Metadata
     public function getDataManager(): DataManager
     {
         return $this->dataManager;
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 
     public function getScopePath(string $scopeName, string $delim = '/'): string
