@@ -33,12 +33,6 @@ class Record extends RecordService
         if (!empty($_GET['timezone'])) {
             $this->modifyEntityFieldsByTimezone($entity, $_GET['timezone']);
         }
-
-//        if ($entity->getEntityName() === 'Foo'){
-//            echo '<pre>';
-//            print_r($entity->toArray());
-//            die();
-//        }
     }
 
     public function modifyEntityFieldsByTimezone(Entity $entity, string $timezone): void
