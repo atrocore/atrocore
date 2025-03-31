@@ -191,6 +191,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     middle._layout = layout
                     middle._loadNestedViews(() => {
                         // middle.reRender()
+                        this.reRender();
                     })
 
                     // update panel navigation
@@ -200,7 +201,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             let navigation = this.getView(key)
                             if (navigation) {
                                 navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
-                                // navigation.reRender()
+                                navigation.reRender()
                             }
                         }
                     }
@@ -720,24 +721,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        afterRender: function () {
-            this.initRealtimeListener();
-
-            this.listenTo(this.model, 'after:save', () => {
-                window.dispatchEvent(new Event('record:actions-reload'));
-            });
-
-            window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
-
-            var $container = this.$el.find('.detail-button-container');
-
-            var stickTop = this.getThemeManager().getParam('stickTop') || 62;
-            var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
-
-            var $window = $(window);
-
-            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
+        initListenToInlineMode: function() {
             var fields = this.getFieldViews();
 
             var fieldInEditMode = null;
@@ -758,6 +742,27 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.setIsNotChanged();
                 }, this);
             }
+        },
+
+        afterRender: function () {
+            this.initRealtimeListener();
+
+            this.listenTo(this.model, 'after:save', () => {
+                window.dispatchEvent(new Event('record:actions-reload'));
+            });
+
+            window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
+
+            var $container = this.$el.find('.detail-button-container');
+
+            var stickTop = this.getThemeManager().getParam('stickTop') || 62;
+            var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
+
+            var $window = $(window);
+
+            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+
+            this.initListenToInlineMode();
 
             let searchContainer = $('.page-header .search-container');
             if (searchContainer.length && !this.$el.parents('.modal-container').length) {
@@ -1936,7 +1941,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         prepareLayoutData(data) {
-            if (this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
+            if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
                 let params = {
                     entityName: this.model.name,
                     entityId: this.model.get('id')
