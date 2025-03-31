@@ -79,8 +79,8 @@
                             <span class="full-label">{{label}}</span>
                         </a>
                         <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                    <i class="fas fa-plus fa-sm"></i>
-                </button>
+                            <svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>
+                        </button>
                     </li>
                     {{/each}}
                 </ul>
@@ -102,7 +102,7 @@
                     </span>
                 </a>
                 <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                    <i class="fas fa-plus fa-sm"></i>
+                    <svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>
                 </button>
             </li>
             {{/if}}

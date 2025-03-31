@@ -412,11 +412,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.initStatusContainer();
 
             const statusIcons = this.getStatusIconsContainer();
-            let $sign = statusIcons.find('span.required-sign');
+            let $sign = statusIcons.find('.required-sign');
 
             if (statusIcons.size() && !$sign.size()) {
                 statusIcons.prepend(`<svg class="icon icon-small required-sign pressable-icon" title="${this.translate('Required')}"><use href="client/img/icons/icons.svg#asterisk"></use></svg>`);
-                $sign = statusIcons.find('span.required-sign');
+                $sign = statusIcons.find('.required-sign');
                 $sign.click(() => {
                     this.model.trigger('toggle-required-fields-highlight');
                 });
@@ -426,7 +426,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         hideRequiredSign: function () {
-            this.getStatusIconsContainer().find('span.required-sign').hide();
+            this.getStatusIconsContainer().find('.required-sign').hide();
         },
 
         getSearchParamsData: function () {
@@ -690,8 +690,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         addInlineEditLinks: function () {
             const fieldActions = this.getInlineActionsContainer();
             const $cell = this.getCellElement();
-            const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><span class="fa fa-check"></span></a>`);
-            const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><span class="fa fa-times"></span></a>`);
+            const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><svg class="icon"><use href="client/img/icons/icons.svg#check"></use></svg></a>`);
+            const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></a>`);
 
             if (fieldActions.size()) {
                 fieldActions.append($saveLink);

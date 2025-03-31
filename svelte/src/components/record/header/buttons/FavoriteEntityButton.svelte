@@ -14,7 +14,7 @@
         style = active ? 'primary' : 'default';
         params = {
             action: "favorite",
-            html: `<span class="fa fa-thumb-tack"></span>`,
+            html: `<svg class="icon"><use href="client/img/icons/icons.svg#thumb-tack"></use></svg>`,
             style: style
         } as ActionParams;
     }

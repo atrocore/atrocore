@@ -290,9 +290,6 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 items = tab.items.map(item => this.getTabDefs(item));
                 link = 'javascript:';
             } else {
-                if (!colorsDisabled) {
-                    color = this.getMetadata().get(['clientDefs', tab, 'color']) || null;
-                }
                 if (!tabIconsDisabled) {
                     iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass']);
                 }
@@ -312,7 +309,6 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 name: name,
                 items: items,
                 group: group,
-                color: color
             };
 
             if (iconClass) {
@@ -331,10 +327,21 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 result.defaultIconSrc = this.getDefaultTabIcon(result.name);
             }
 
-            if (color) {
-                let colorConverter = new ColorConverter(color);
-                result.colorFilter = colorConverter.solve().filter;
+            let filter = null;
+            if (this.getStorage().get('icons', 'navigationIconColor')) {
+                filter = this.getStorage().get('icons', 'navigationIconColor');
+            } else {
+                let style = this.getThemeManager().getStyle();
+
+                if (style && style['navigationIconColor']) {
+                    let colorConverter = new ColorConverter(style['navigationIconColor']);
+
+                    filter = colorConverter.solve().filter;
+                    this.getStorage().set('icons', 'navigationIconColor', filter)
+                }
             }
+
+            result.colorFilter = filter;
 
             return result;
         },

@@ -169,7 +169,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     link: this.link,
                     acl: 'create',
                     aclScope: this.scope,
-                    html: '<span class="fas fa-plus"></span>',
+                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>',
                     data: {
                         link: this.link,
                     }

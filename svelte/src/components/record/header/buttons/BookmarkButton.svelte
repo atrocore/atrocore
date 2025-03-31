@@ -18,7 +18,7 @@
         params = {
             name: 'bookmarking',
             action: bookmarkId ? 'unbookmark' : 'bookmark',
-            html: '<span class="fas fa-bookmark"></span>',
+            html: '<svg class="icon"><use href="client/img/icons/icons.svg#bookmark"></use></svg>',
             style: style,
             disabled: loading,
             tooltip: Language.translate(bookmarkId ? 'actionUnbookmark' : 'actionBookmark'),

@@ -92,12 +92,6 @@
       ],
       [
         {
-          "name": "actionIconColor"
-        },
-        false
-      ],
-      [
-        {
           "name": "customStylesheet",
           "fullWidth": true
         }
@@ -107,6 +101,12 @@
           "name": "customStylesheetPath",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "actionIconColor"
+        },
+        false
       ],
       [
         {

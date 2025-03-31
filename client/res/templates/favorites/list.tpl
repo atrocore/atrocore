@@ -8,7 +8,7 @@
                             {{#if defaultIconSrc}}
                                 <img src="{{defaultIconSrc}}" class="favorite-icon default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                             {{else}}
-                                 <img src="{{iconSrc}}" class="favorite-icon icon">
+                                 <img src="{{iconSrc}}" class="favorite-icon icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                             {{/if}}
                         {{/if}}
                         <span class="full-label">{{label}}</span>

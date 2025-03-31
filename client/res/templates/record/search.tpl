@@ -59,7 +59,7 @@
                     <span class="fas fa-times"></span>
                 </button>
                 <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide filter-btn" data-action="search" title="{{translate 'Search'}}">
-                    <span class="fas fa-search"></span>
+                   <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
                 </button>
             </div>
         </div>

@@ -784,7 +784,9 @@
                                placeholder="Type and press Enter...">
                         <button on:click={treeReset} class="fas fa-times reset-search-in-tree-button"
                                 class:hidden={!searchValue}></button>
-                        <button on:click={applySearch} class="fas fa-search search-in-tree-button"></button>
+                        <button on:click={applySearch} class="search-in-tree-button">
+                            <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
+                        </button>
                     </div>
                     <div style="margin-top: 20px;display: flex; justify-content: space-between;flex-wrap: wrap">
                         <button on:click={callUnselectNode} type="button" style="margin-bottom: 5px"
@@ -867,5 +869,9 @@
 
     .unset-selection i {
         font-size: 14px;
+    }
+
+    .search-in-tree-button {
+        margin-top: -5px;
     }
 </style>
