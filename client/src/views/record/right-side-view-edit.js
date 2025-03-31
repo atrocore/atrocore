@@ -9,14 +9,12 @@
  */
 
 
-Espo.define('views/record/right-side-view', 'views/record/detail', function (Dep) {
+Espo.define('views/record/right-side-view-edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
         template: 'record/right-side-view',
 
         middleView: 'views/record/right-side-view-middle',
-
-        bottomView: 'views/record/right-side-view-bottom',
 
         layoutName: 'rightSideView',
 

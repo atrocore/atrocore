@@ -19531,7 +19531,7 @@ input#sn-checkbox-open-in-new-window {
     border-right-width: 1px;
 }
 
-.panel-default > .panel-heading > .btn-group > .btn-default:hover {
+.panel-default > .panel-heading > .btn-group > .btn-default:hover, .add-attribute-value-container > .btn-link:hover {
     z-index: 0;
     background: #fafafa
 }
@@ -24210,8 +24210,13 @@ span[data-img-src]::after {
     text-align: center;
 }
 
-.layout-editor-container .btn-link {
+.layout-editor-container .btn-link{
     color: #333;
+}
+
+.add-attribute-value-container .btn-link {
+    color: #333;
+    padding: 5px 6px 6px 6px;
 }
 
 .panel .layout-editor-container {

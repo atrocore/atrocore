@@ -124,6 +124,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "confirmRemoveAttributeValue": "Are you sure you want to delete the attribute?",
     "UserFollowed": "User Followed",
     "authenticate": "Authenticate",
     "Download": "Download",

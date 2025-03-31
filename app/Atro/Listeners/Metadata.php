@@ -15,7 +15,6 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
-use Atro\Core\Templates\Repositories\Relation;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -46,6 +45,8 @@ class Metadata extends AbstractListener
         $data = $this->addArchive($data);
 
         $data = $this->addActive($data);
+
+        $this->addAttributeValuePanel($data);
 
         $data = $this->prepareMultiLang($data);
 
@@ -1074,6 +1075,206 @@ class Metadata extends AbstractListener
         }
 
         return $data;
+    }
+
+    protected function addAttributeValuePanel(array &$metadata): void
+    {
+        if (empty($metadata['scopes']['Attribute']['type'])) {
+            return;
+        }
+
+        foreach ($metadata['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (
+                !empty($scopeDefs['hasAttribute'])
+                && in_array($scopeDefs['type'], ['Base', 'Hierarchy'])
+                && !in_array($scope, ["Attribute", "Classification", "Product", "ProductAttributeValue"])
+            ) {
+                $entityName = "{$scope}AttributeValue";
+
+                $metadata['scopes'][$entityName] = [
+                    'type'              => "Base",
+                    'attributeValueFor' => $scope,
+                    'entity'            => false,
+                    'layouts'           => false,
+                    'tab'               => false,
+                    'acl'               => false,
+                    'customizable'      => false,
+                    'importable'        => false,
+                    'notifications'     => false,
+                    'disabled'          => false,
+                    'object'            => false,
+                    'streamDisabled'    => true,
+                    'hideLastViewed'    => true,
+                    'emHidden'          => true,
+                ];
+
+                $metadata["entityDefs"][$scope]['fields'][lcfirst($scope) . "AttributeValues"] = [
+                    "type"                        => "linkMultiple",
+                    "layoutDetailDisabled"        => true,
+                    "layoutListDisabled"          => true,
+                    "layoutRelationshipsDisabled" => true,
+                    "layoutLeftSidebarDisabled"   => true,
+                    "massUpdateDisabled"          => true,
+                    "importDisabled"              => true,
+                    "exportDisabled"              => true,
+                    "noLoad"                      => true
+                ];
+
+                $metadata["entityDefs"][$scope]['links'][lcfirst($scope) . "AttributeValues"] = [
+                    "type"                        => "hasMany",
+                    "foreign"                     => lcfirst($scope),
+                    "layoutRelationshipsDisabled" => true,
+                    "entity"                      => "{$scope}AttributeValue",
+                    "disableMassRelation"         => true
+                ];
+
+                $metadata["entityDefs"][$entityName] = [
+                    "fields"        => [
+                        lcfirst($scope)  => [
+                            "type"     => "link",
+                            "required" => true
+                        ],
+                        "attribute"      => [
+                            "type"     => "link",
+                            "required" => true
+                        ],
+                        "attributeType"  => [
+                            "type" => "varchar"
+                        ],
+                        "boolValue"      => [
+                            "type"    => "bool",
+                            "notNull" => false
+                        ],
+                        "dateValue"      => [
+                            "type" => "date"
+                        ],
+                        "datetimeValue"  => [
+                            "type" => "datetime"
+                        ],
+                        "intValue"       => [
+                            "type" => "int"
+                        ],
+                        "intValue1"      => [
+                            "type" => "int"
+                        ],
+                        "floatValue"     => [
+                            "type" => "float"
+                        ],
+                        "floatValue1"    => [
+                            "type" => "float"
+                        ],
+                        "varcharValue"   => [
+                            "type"        => "varchar",
+                            "isMultilang" => true
+                        ],
+                        "textValue"      => [
+                            "type"        => "text",
+                            "isMultilang" => true
+                        ],
+                        "referenceValue" => [
+                            "type"      => "varchar",
+                            "maxLength" => 50
+                        ],
+                        "jsonValue"      => [
+                            "type" => "jsonObject"
+                        ]
+                    ],
+                    "links"         => [
+                        lcfirst($scope) => [
+                            "type"     => "belongsTo",
+                            "entity"   => $scope,
+                            "foreign"  => lcfirst($scope) . "AttributeValues",
+                            "emHidden" => true
+                        ],
+                        "attribute"     => [
+                            "type"     => "belongsTo",
+                            "entity"   => "Attribute",
+                            "emHidden" => true
+                        ]
+                    ],
+                    "uniqueIndexes" => [
+                        "unique_relationship" => [
+                            "deleted",
+                            lcfirst($scope) . "_id",
+                            "attribute_id"
+                        ]
+                    ],
+                    "indexes"       => [
+                        "boolValue"      => [
+                            "columns" => [
+                                "boolValue",
+                                "deleted"
+                            ]
+                        ],
+                        "dateValue"      => [
+                            "columns" => [
+                                "dateValue",
+                                "deleted"
+                            ]
+                        ],
+                        "datetimeValue"  => [
+                            "columns" => [
+                                "datetimeValue",
+                                "deleted"
+                            ]
+                        ],
+                        "intValue"       => [
+                            "columns" => [
+                                "intValue",
+                                "deleted"
+                            ]
+                        ],
+                        "intValue1"      => [
+                            "columns" => [
+                                "intValue1",
+                                "deleted"
+                            ]
+                        ],
+                        "floatValue"     => [
+                            "columns" => [
+                                "floatValue",
+                                "deleted"
+                            ]
+                        ],
+                        "floatValue1"    => [
+                            "columns" => [
+                                "floatValue1",
+                                "deleted"
+                            ]
+                        ],
+                        "varcharValue"   => [
+                            "columns" => [
+                                "varcharValue",
+                                "deleted"
+                            ]
+                        ],
+                        "textValue"      => [
+                            "columns" => [
+                                "textValue",
+                                "deleted"
+                            ]
+                        ],
+                        "referenceValue" => [
+                            "columns" => [
+                                "referenceValue",
+                                "deleted"
+                            ]
+                        ],
+                        "jsonValue"      => [
+                            "columns" => [
+                                "jsonValue",
+                                "deleted"
+                            ]
+                        ]
+                    ],
+                    "collection"    => [
+                        "sortBy"           => "id",
+                        "asc"              => false,
+                        "textFilterFields" => []
+                    ]
+                ];
+            }
+        }
     }
 
     public function addArchive(array $data)

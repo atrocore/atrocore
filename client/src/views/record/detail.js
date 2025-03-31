@@ -190,7 +190,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (middle) {
                     middle._layout = layout
                     middle._loadNestedViews(() => {
-                        middle.reRender()
+                        // middle.reRender()
+                        this.reRender();
                     })
 
                     // update panel navigation
@@ -206,6 +207,41 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
             })
+        },
+
+        actionAddAttribute() {
+            this.notify('Loading...');
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'Attribute',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', selectObj => {
+                    this.notify('Loading...');
+                    const data = {
+                        entityName: this.model.name,
+                        entityId: this.model.get('id'),
+                    }
+                    if (Array.isArray(selectObj)) {
+                        data.ids = selectObj.map(o => o.id)
+                    } else {
+                        data.where = selectObj.where
+                    }
+                    $.ajax({
+                        url: `Attribute/action/addAttributeValue`,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: () => {
+                            this.refreshLayout();
+                            this.notify('Saved', 'success');
+                        }
+                    });
+                });
+            });
         },
 
         showReloadPageMessage() {
@@ -399,6 +435,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         'name': 'duplicate'
                     });
                 }
+            }
+
+            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
+                this.dropdownItemList.push({
+                    label: 'addAttribute',
+                    name: 'addAttribute'
+                });
             }
 
             if (this.getMetadata().get(['clientDefs', this.entityType, 'showCompareAction'])) {
@@ -678,24 +721,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        afterRender: function () {
-            this.initRealtimeListener();
-
-            this.listenTo(this.model, 'after:save', () => {
-                window.dispatchEvent(new Event('record:actions-reload'));
-            });
-
-            window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
-
-            var $container = this.$el.find('.detail-button-container');
-
-            var stickTop = this.getThemeManager().getParam('stickTop') || 62;
-            var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
-
-            var $window = $(window);
-
-            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
+        initListenToInlineMode: function() {
             var fields = this.getFieldViews();
 
             var fieldInEditMode = null;
@@ -716,6 +742,27 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.setIsNotChanged();
                 }, this);
             }
+        },
+
+        afterRender: function () {
+            this.initRealtimeListener();
+
+            this.listenTo(this.model, 'after:save', () => {
+                window.dispatchEvent(new Event('record:actions-reload'));
+            });
+
+            window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
+
+            var $container = this.$el.find('.detail-button-container');
+
+            var stickTop = this.getThemeManager().getParam('stickTop') || 62;
+            var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
+
+            var $window = $(window);
+
+            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+
+            this.initListenToInlineMode();
 
             let searchContainer = $('.page-header .search-container');
             if (searchContainer.length && !this.$el.parents('.modal-container').length) {
@@ -787,6 +834,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 observer.unobserve($('#content').get(0));
             });
             observer.observe($('#content').get(0));
+
+            this.$el.find('.panel-heading').each((k, el) => {
+                let $el = $(el);
+                let isAttributeValuePanel = $el.parent().find('.remove-attribute-value').length > 0;
+
+                if (isAttributeValuePanel) {
+                    let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><span class="fas fa-plus cursor-pointer" style="font-size: 1em;"></span></a></div>';
+                    $el.append(html);
+                    $el.find('.add-attribute-value-container').click(()=>{
+                        this.actionAddAttribute();
+                    });
+                }
+            });
         },
 
         fetch: function (onlyRelation) {
@@ -1870,6 +1930,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+                this.prepareLayoutData(data);
                 this.layoutData = data
                 this.gridLayout = {
                     type: gridLayoutType,
@@ -1877,6 +1938,52 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 };
                 callback(this.gridLayout);
             }.bind(this));
+        },
+
+        prepareLayoutData(data) {
+            if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
+                let params = {
+                    entityName: this.model.name,
+                    entityId: this.model.get('id')
+                };
+
+                let layoutRows = [];
+
+                this.ajaxGetRequest('Attribute/action/recordAttributes', params, {async: false}).success(items => {
+                    let layoutRow = [];
+                    items.forEach(item => {
+                        this.model.defs['fields'][item.name] = item;
+                        layoutRow.push({
+                            name: item.name,
+                            customLabel: item.label,
+                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
+                        });
+                        if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                            layoutRows.push(layoutRow);
+                            layoutRow = [];
+                        }
+                    })
+
+                    if (layoutRow.length > 0) {
+                        layoutRow.push(false);
+                        layoutRows.push(layoutRow);
+                    }
+                })
+
+                data.layout.forEach((row, k) => {
+                    if (row.id === 'attributeValues') {
+                        delete data.layout[k];
+                    }
+                })
+
+                if (layoutRows.length > 0) {
+                    data.layout.push({
+                        id: 'attributeValues',
+                        label: this.translate('attributeValues'),
+                        rows: layoutRows
+                    });
+                }
+            }
         },
         
         createMiddleView: function (callback) {
