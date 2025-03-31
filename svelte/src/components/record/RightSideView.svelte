@@ -12,8 +12,11 @@
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let loadSummary: Function;
+
     export let loadActivities: Function;
+
     export let isCollapsed: boolean = false;
+
     export let hasStream: boolean = false;
 
 
@@ -26,7 +29,7 @@
     let isPin = true;
     let streamView: Object;
     let items: Item[] = [];
-    let activeItem: Item ;
+    let activeItem: Item;
 
     if (mode !== 'list') {
         items.push({
@@ -186,7 +189,7 @@
 
         window.addEventListener("resize", checkScreenSize);
 
-        if(mode !== 'list') {
+        if (mode !== 'list') {
             loadSummary();
         }
 
@@ -194,11 +197,10 @@
             items = [
                 ...items,
                 {
-                    name: "activities",
-                    label: Language.translate('Activities')
+                    "name": "activities",
+                    "label": Language.translate('Activities')
                 }]
         }
-
 
         let itemName = Storage.get('right-side-view-active-item', scope);
 
@@ -425,5 +427,18 @@
 
     :global(.activities .panel-stream .panel-title), :global(.activities .panel-stream .panel-heading .btn-group) {
         display: none;
+    }
+
+    :global(.right-side-view .field .attachment-preview) {
+        display: block;
+    }
+
+    :global(.right-side-view .field .attachment-preview img) {
+        display: block;
+        margin: 0 auto;
+    }
+
+    :global(.right-side-view .panel-heading > .btn-group) {
+        right: 0;
     }
 </style>

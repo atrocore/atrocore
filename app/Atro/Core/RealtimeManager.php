@@ -24,7 +24,8 @@ class RealtimeManager
         $fileName = $dir . DIRECTORY_SEPARATOR . "{$entityId}.json";
 
         if (file_exists($fileName)) {
-            $timestamp = file_get_contents($fileName);
+            $data = json_decode(file_get_contents($fileName), true);
+            $timestamp = $data['timestamp'] ?? time();
         } else {
             $timestamp = time();
 

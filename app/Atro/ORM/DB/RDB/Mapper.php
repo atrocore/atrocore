@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB;
 
+use Atro\Core\Utils\Config;
 use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
@@ -23,7 +24,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 
 class Mapper implements MapperInterface
 {
@@ -46,15 +47,16 @@ class Mapper implements MapperInterface
         $params['whereClause']['id'] = $id;
 
         $res = $this->select($entity, $params);
-        if (empty($res)) {
+        if (empty($res[0])) {
             return null;
         }
 
-        foreach ($res as $row) {
-            $entity->set($row);
-            $entity->setAsFetched();
-            break;
-        }
+        $row = $res[0];
+
+        $this->addAttributeValues($entity, $row);
+
+        $entity->set($row);
+        $entity->setAsFetched();
 
         return $entity;
     }
@@ -554,6 +556,7 @@ class Mapper implements MapperInterface
     public function update(IEntity $entity): bool
     {
         $setArr = [];
+        $attrs = [];
         foreach ($this->toValueMap($entity) as $attribute => $value) {
             if ($attribute == 'id') {
                 continue;
@@ -568,7 +571,11 @@ class Mapper implements MapperInterface
                 continue;
             }
 
-            $setArr[$attribute] = $this->prepareValueForUpdate($type, $value);
+            if (!empty($entity->fields[$attribute]['column'])) {
+                $attrs[$attribute] = $value;
+            } else {
+                $setArr[$attribute] = $this->prepareValueForUpdate($type, $value);
+            }
         }
 
         if (count($setArr) == 0) {
@@ -594,6 +601,22 @@ class Mapper implements MapperInterface
             $sql = $qb->getSQL();
             $this->error("RDB UPDATE failed for SQL: $sql");
             throw $e;
+        }
+
+        if ($this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
+            $name = $this->toDb(lcfirst($entity->getEntityType()));
+            foreach ($attrs as $key => $value) {
+                if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
+                    $value = json_encode($value);
+                }
+                $this->connection->createQueryBuilder()
+                    ->update("{$name}_attribute_value")
+                    ->set($entity->fields[$key]['column'], ':value')
+                    ->where('id=:id')
+                    ->setParameter('value', $value, self::getParameterType($value))
+                    ->setParameter('id', $entity->fields[$key]['attributeValueId'])
+                    ->executeQuery();
+            }
         }
 
         return true;
@@ -680,6 +703,278 @@ class Mapper implements MapperInterface
         return $value;
     }
 
+    protected function addAttributeValues(IEntity $entity, array &$data): void
+    {
+        if (!$this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
+            return;
+        }
+
+        $languages = [];
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                $languages[$code] = $code;
+                foreach ($this->getConfig()->get('referenceData.Language', []) as $v) {
+                    if ($code === $v['code']) {
+                        $languages[$code] = $v['name'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        $tableName = $this->toDb(lcfirst($entity->getEntityType()));
+
+        $res = $this->connection->createQueryBuilder()
+            ->select('av.*, a.is_required, a.name as attribute_name')
+            ->from("{$tableName}_attribute_value", 'av')
+            ->leftJoin('av', $this->connection->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
+            ->where('av.deleted=:false')
+            ->andWhere('a.deleted=:false')
+            ->andWhere("av.{$tableName}_id=:id")
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('id', $data['id'])
+            ->fetchAllAssociative();
+
+        foreach ($res as $row) {
+            $name = "attr_{$row['id']}";
+
+            switch ($row['attribute_type']) {
+                case 'extensibleEnum':
+                    $entity->fields[$name] = [
+                        'type'             => 'varchar',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "reference_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+                    break;
+                case 'extensibleMultiEnum':
+                    $entity->fields[$name] = [
+                        'type'             => 'jsonArray',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "text_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+                    break;
+                case 'array':
+                    $entity->fields[$name] = [
+                        'type'             => 'jsonArray',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "json_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+                    break;
+                case 'bool':
+                    $entity->fields[$name] = [
+                        'type'             => 'bool',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "bool_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+                    break;
+                case 'int':
+                    $entity->fields[$name] = [
+                        'type'             => 'int',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "int_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    $entity->fields[$name . 'UnitId'] = [
+                        'type'             => 'varchar',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
+                    break;
+                case 'rangeInt':
+                    $entity->fields[$name . 'From'] = [
+                        'type'             => 'int',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'int_value',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'From'] = $row[$entity->fields[$name . 'From']['column']] ?? null;
+
+                    $entity->fields[$name . 'To'] = [
+                        'type'             => 'int',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'int_value1',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'To'] = $row[$entity->fields[$name . 'To']['column']] ?? null;
+
+                    $entity->fields[$name . 'UnitId'] = [
+                        'type'             => 'varchar',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
+                    break;
+                case 'float':
+                    $entity->fields[$name] = [
+                        'type'             => 'float',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "float_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    $entity->fields[$name . 'UnitId'] = [
+                        'type'             => 'varchar',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
+                    break;
+                case 'rangeFloat':
+                    $entity->fields[$name . 'From'] = [
+                        'type'             => 'float',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'float_value',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'From'] = $row[$entity->fields[$name . 'From']['column']] ?? null;
+
+                    $entity->fields[$name . 'To'] = [
+                        'type'             => 'float',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'float_value1',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'To'] = $row[$entity->fields[$name . 'To']['column']] ?? null;
+
+                    $entity->fields[$name . 'UnitId'] = [
+                        'type'             => 'varchar',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
+                    break;
+                case 'date':
+                    $entity->fields[$name] = [
+                        'type'             => 'date',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "date_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+                    break;
+                case 'datetime':
+                    $entity->fields[$name] = [
+                        'type'             => 'datetime',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "datetime_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+                    break;
+                case 'file':
+                case 'link':
+                    $entity->fields[$name . 'Id'] = [
+                        'type'             => 'varchar',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'Id'] = $row[$entity->fields[$name . 'Id']['column']] ?? null;
+                    break;
+                case 'text':
+                case 'markdown':
+                case 'wysiwyg':
+                    $entity->fields[$name] = [
+                        'type'             => 'text',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "text_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    foreach ($languages as $language => $languageName) {
+                        $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
+                        $entity->fields[$lName] = [
+                            'type'             => 'text',
+                            'attributeValueId' => $row['id'],
+                            'attributeId'      => $row['attribute_id'],
+                            'attributeName'    => $row['attribute_name'] . ' / ' . $languageName,
+                            'column'           => "text_value_" . strtolower($language),
+                            'required'         => !empty($row['is_required'])
+                        ];
+                        $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
+                    }
+                    break;
+                case 'varchar':
+                    $entity->fields[$name] = [
+                        'type'             => 'varchar',
+                        'attributeValueId' => $row['id'],
+                        'attributeId'      => $row['attribute_id'],
+                        'attributeName'    => $row['attribute_name'],
+                        'column'           => "varchar_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    foreach ($languages as $language => $languageName) {
+                        $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
+                        $entity->fields[$lName] = [
+                            'type'             => 'varchar',
+                            'attributeValueId' => $row['id'],
+                            'attributeId'      => $row['attribute_id'],
+                            'attributeName'    => $row['attribute_name'] . ' / ' . $languageName,
+                            'column'           => "varchar_value_" . strtolower($language),
+                            'required'         => !empty($row['is_required'])
+                        ];
+                        $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
+                    }
+                    break;
+            }
+        }
+    }
+
     public function toDb(string $field): string
     {
         return $this->getQueryConverter()->toDb($field);
@@ -703,6 +998,11 @@ class Mapper implements MapperInterface
     public function getEntityFactory(): EntityFactory
     {
         return $this->entityFactory;
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->metadata->getConfig();
     }
 
     private function error(string $message): void

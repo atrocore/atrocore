@@ -44,8 +44,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         layoutName: 'detail',
 
-        sideLayoutName: 'rightSideView',
-
         fieldsMode: 'detail',
 
         gridLayout: null,
@@ -120,8 +118,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         // legacy property
         sideView: true,
 
-        rightSideView: 'views/record/right-side-view',
-
         bottomView: 'views/record/detail-bottom',
 
         sideDisabled: false,
@@ -194,7 +190,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (middle) {
                     middle._layout = layout
                     middle._loadNestedViews(() => {
-                        middle.reRender()
+                        // middle.reRender()
                     })
 
                     // update panel navigation
@@ -204,12 +200,47 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             let navigation = this.getView(key)
                             if (navigation) {
                                 navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
-                                navigation.reRender()
+                                // navigation.reRender()
                             }
                         }
                     }
                 }
             })
+        },
+
+        actionAddAttribute() {
+            this.notify('Loading...');
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'Attribute',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', selectObj => {
+                    this.notify('Loading...');
+                    const data = {
+                        entityName: this.model.name,
+                        entityId: this.model.get('id'),
+                    }
+                    if (Array.isArray(selectObj)) {
+                        data.ids = selectObj.map(o => o.id)
+                    } else {
+                        data.where = selectObj.where
+                    }
+                    $.ajax({
+                        url: `Attribute/action/addAttributeValue`,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: () => {
+                            this.refreshLayout();
+                            this.notify('Saved', 'success');
+                        }
+                    });
+                });
+            });
         },
 
         showReloadPageMessage() {
@@ -403,6 +434,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         'name': 'duplicate'
                     });
                 }
+            }
+
+            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
+                this.dropdownItemList.push({
+                    label: 'addAttribute',
+                    name: 'addAttribute'
+                });
             }
 
             if (this.getMetadata().get(['clientDefs', this.entityType, 'showCompareAction'])) {
@@ -791,6 +829,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 observer.unobserve($('#content').get(0));
             });
             observer.observe($('#content').get(0));
+
+            this.$el.find('.panel-heading').each((k, el) => {
+                let $el = $(el);
+                let isAttributeValuePanel = $el.parent().find('.remove-attribute-value').length > 0;
+
+                if (isAttributeValuePanel) {
+                    let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><span class="fas fa-plus cursor-pointer" style="font-size: 1em;"></span></a></div>';
+                    $el.append(html);
+                    $el.find('.add-attribute-value-container').click(()=>{
+                        this.actionAddAttribute();
+                    });
+                }
+            });
         },
 
         fetch: function (onlyRelation) {
@@ -945,11 +996,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
                 }
             }
-            if (this.hasView('rightSideView')) {
-                if ('getFieldViews' in this.getView('rightSideView')) {
-                    _.extend(fields, this.getView('rightSideView').getFieldViews(withHidden));
-                }
-            }
+
             if (this.hasView('bottom')) {
                 if ('getFieldViews' in this.getView('bottom')) {
                     _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
@@ -964,9 +1011,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 view = this.getView('middle').getFieldView(name);
             }
 
-            if (!view && this.hasView('rightSideView')) {
-                view = (this.getView('rightSideView').getFieldViews(true) || {})[name];
-            }
             if (!view && this.hasView('bottom')) {
                 view = (this.getView('bottom').getFieldViews(true) || {})[name];
             }
@@ -978,6 +1022,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         data: function () {
+
             if (!this.options.hasNext) {
                 this.buttonEditList = (this.buttonEditList || []).filter(row => {
                     return row.name !== 'saveAndNext';
@@ -1880,6 +1925,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+                this.prepareLayoutData(data);
                 this.layoutData = data
                 this.gridLayout = {
                     type: gridLayoutType,
@@ -1889,55 +1935,52 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
-        getSideLayout: function(el, callback) {
-            if (this.gridSideLayout) {
-                callback(this.gridSideLayout, el);
-                return;
-            }
-
-            this._helper.layoutManager.get(this.model.name, this.sideLayoutName, null, function (data) {
-                this.layoutSideViewData = data
-                this.gridSideLayout = {
-                    type: 'record',
-                    layout: this.convertDetailLayout(data.layout, el)
+        prepareLayoutData(data) {
+            if (this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
+                let params = {
+                    entityName: this.model.name,
+                    entityId: this.model.get('id')
                 };
-                callback(this.gridSideLayout);
-            }.bind(this));
-        },
 
-        createRightSideView: function(el, callback) {
-            this.getSideLayout(el, (layout) => {
-                this.createView('rightSideView', this.rightSideView, {
-                    model: this.model,
-                    scope: this.scope,
-                    type: this.type,
-                    _layout: layout,
-                    el: el,
-                    layoutData: {
-                        model: this.model,
-                        columnCount: this.columnCount
-                    },
-                    recordHelper: this.recordHelper,
-                    recordViewObject: this
-                }, callback);
-            })
-        },
+                let layoutRows = [];
 
-        refreshRightSideLayout() {
-            this.gridSideLayout = null
-            this.notify('Loading...')
-            const rightSideView = this.getView('rightSideView')
-            if(rightSideView) {
-                this.getSideLayout(rightSideView.options.el, (layout) => {
-                    this.notify(false)
-                    rightSideView._layout = layout
-                    rightSideView._loadNestedViews(() => {
-                        rightSideView.reRender()
-                    });
+                this.ajaxGetRequest('Attribute/action/recordAttributes', params, {async: false}).success(items => {
+                    let layoutRow = [];
+                    items.forEach(item => {
+                        this.model.defs['fields'][item.name] = item;
+                        layoutRow.push({
+                            name: item.name,
+                            customLabel: item.label,
+                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
+                        });
+                        if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                            layoutRows.push(layoutRow);
+                            layoutRow = [];
+                        }
+                    })
+
+                    if (layoutRow.length > 0) {
+                        layoutRow.push(false);
+                        layoutRows.push(layoutRow);
+                    }
                 })
+
+                data.layout.forEach((row, k) => {
+                    if (row.id === 'attributeValues') {
+                        delete data.layout[k];
+                    }
+                })
+
+                if (layoutRows.length > 0) {
+                    data.layout.push({
+                        id: 'attributeValues',
+                        label: this.translate('attributeValues'),
+                        rows: layoutRows
+                    });
+                }
             }
         },
-
+        
         createMiddleView: function (callback) {
             var el = this.options.el || '#' + (this.id);
             this.waitForView('middle');

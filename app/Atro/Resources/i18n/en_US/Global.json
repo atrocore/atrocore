@@ -124,6 +124,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "confirmRemoveAttributeValue": "Are you sure you want to delete Attribute Value?",
     "UserFollowed": "User Followed",
     "authenticate": "Authenticate",
     "Download": "Download",
@@ -385,7 +386,8 @@
     "actionUnfollow": "Your are following, Click to unfollow",
     "actionBookmark": "Click to bookmark",
     "actionUnbookmark": "Bookmarked, Click to unbookmark",
-    "actionOpenFilter": "Open Filter"
+    "actionOpenFilter": "Open Filter",
+    "accessManagement": "Access Management"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

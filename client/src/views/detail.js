@@ -44,6 +44,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         recordView: 'views/record/detail',
 
+        rightSideView: 'views/record/right-side-view',
+
         overviewFilterView: 'views/modals/overview-filter',
 
         relatedAttributeMap: {},

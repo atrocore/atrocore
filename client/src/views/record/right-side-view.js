@@ -9,9 +9,29 @@
  */
 
 
-Espo.define('views/record/right-side-view', 'views/record/detail-middle', function (Dep) {
+Espo.define('views/record/right-side-view', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
+        template: 'record/right-side-view',
 
+        middleView: 'views/record/right-side-view-middle',
+
+        bottomView: 'views/record/right-side-view-bottom',
+
+        layoutName: 'rightSideView',
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.listenTo(this.model, 'after:change-mode', (mode) => {
+                if(mode === this.mode) {
+                    return;
+                }
+                if(mode === 'edit') {
+                    this.setEditMode();
+                }else{
+                    this.setDetailMode()
+                }
+            })
+        }
     });
 });

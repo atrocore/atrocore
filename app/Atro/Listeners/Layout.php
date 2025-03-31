@@ -60,7 +60,7 @@ class Layout extends AbstractListener
                 $scope = $event->getArgument('params')['scope'];
                 $result = [
                     [
-                        "label" => "Access Management",
+                        "label" => "accessManagement",
                         "rows" => []
                     ]
                 ];

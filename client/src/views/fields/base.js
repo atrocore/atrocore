@@ -252,7 +252,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }
             }, this);
 
-            this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+            this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']) || this.model.getFieldParam(this.name, 'measureId');
             if (this.params.measureId) {
                 this.measureId = this.params.measureId;
             }
@@ -391,12 +391,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initInlineActions: function () {
-            if (!this.inlineEditDisabled) {
-                this.listenTo(this, 'after:render', () => {
-                    this.initStatusContainer();
+            this.listenTo(this, 'after:render', () => {
+                this.initStatusContainer();
+                this.initRemoveAttributeValue();
+                if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
-                }, this);
-            }
+                }
+            }, this);
         },
 
         initInheritanceActions: function () {
@@ -586,6 +587,64 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     $editLink.addClass('hidden');
                 }
             }.bind(this));
+        },
+
+        initRemoveAttributeValue() {
+            let name = this.name.replace(/^unitAttr_/, "attr_");
+            if (!this.model.getFieldParam(name, 'attributeId') || !this.getAcl().check(this.model.name, 'edit')) {
+                return;
+            }
+
+            const $cell = this.getCellElement();
+            const inlineActions = this.getInlineActionsContainer();
+
+            $cell.find('.fa-trash-alt').parent().remove();
+
+            const $removeLink = $(`<a href="javascript:" class="remove-attribute-value hidden" title="${this.translate('Delete')}"><span class="fas fa-trash-alt fa-sm"></span></a>`);
+
+            if (inlineActions.size()) {
+                inlineActions.prepend($removeLink);
+            } else {
+                $cell.prepend($removeLink);
+            }
+
+            $removeLink.on('click', () => {
+                this.confirm({
+                    message: this.translate('confirmRemoveAttributeValue'),
+                    confirmText: this.translate('Remove')
+                }, () => {
+                    const data = {
+                        entityName: this.model.name,
+                        id: this.model.getFieldParam(name, 'id')
+                    }
+
+                    $.ajax({
+                        url: `Attribute/action/removeAttributeValue`,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: () => {
+                            this.getParentView().getParentView().refreshLayout();
+                            this.notify('Done', 'success');
+                        }
+                    });
+                });
+            });
+
+            $cell.on('mouseenter', e => {
+                e.stopPropagation();
+                if (this.disabled || this.readOnly) {
+                    return;
+                }
+                if (this.mode === 'detail') {
+                    $removeLink.removeClass('hidden');
+                }
+            }).on('mouseleave', e => {
+                e.stopPropagation();
+                if (this.mode === 'detail') {
+                    $removeLink.addClass('hidden');
+                }
+            });
         },
 
         initElement: function () {
