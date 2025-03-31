@@ -66,8 +66,6 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
 
         dropdownItemList: [],
 
-        sideView: 'views/record/edit-side',
-
         bottomView: 'views/record/edit-bottom',
 
         duplicateAction: false,
