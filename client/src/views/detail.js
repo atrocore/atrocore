@@ -301,15 +301,22 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');
 
             $('#main main').on('scroll', (e) => {
-                const scrolled = e.target.scrollTop > breadcrumbs.offsetHeight;
+                const prevHeight = breadcrumbs.offsetHeight;
+                const newScrolledState = e.target.scrollTop > prevHeight;
 
-                if (scrolled !== isScrolledMore) {
-                    isScrolledMore = scrolled;
-                    if (isScrolledMore) {
-                        window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: false}));
-                    } else {
-                        window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: true}));
-                    }
+                if (newScrolledState !== isScrolledMore) {
+                    isScrolledMore = newScrolledState;
+
+                    window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', { detail: !isScrolledMore }));
+
+                    setTimeout(() => {
+                        const newHeight = breadcrumbs.offsetHeight;
+                        const heightDiff = newHeight - prevHeight;
+
+                        if (heightDiff !== 0) {
+                            e.target.scrollTop -= heightDiff + 10;
+                        }
+                    }, 0);
                 }
             });
         },
@@ -490,12 +497,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 props: this.getHeaderOptions()
             });
 
-            this.listenTo(this.model, 'sync', function (model) {
-                if (model.hasChanged('name')) {
-                    window.dispatchEvent(new CustomEvent('breadcrumbs:items-updated', { detail: this.getBreadcrumbsItems() }));
-                    this.updatePageTitle();
-                }
-            }, this);
+            this.listenTo(this.model, 'change:name', function () {
+                window.dispatchEvent(new CustomEvent('breadcrumbs:items-updated', { detail: this.getBreadcrumbsItems() }));
+                this.updatePageTitle();
+            });
         },
 
         getBoolFilterData(link) {
