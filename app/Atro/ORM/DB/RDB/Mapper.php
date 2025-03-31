@@ -990,17 +990,19 @@ class Mapper implements MapperInterface
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
 
-                    foreach ($languages as $language => $languageName) {
-                        $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
-                        $entity->fields[$lName] = [
-                            'type'             => 'text',
-                            'attributeValueId' => $id,
-                            'attributeId'      => $row['id'],
-                            'attributeName'    => $row['name'] . ' / ' . $languageName,
-                            'column'           => "text_value_" . strtolower($language),
-                            'required'         => !empty($row['is_required'])
-                        ];
-                        $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
+                    if (!empty($row['is_multilang'])) {
+                        foreach ($languages as $language => $languageName) {
+                            $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
+                            $entity->fields[$lName] = [
+                                'type'             => 'text',
+                                'attributeValueId' => $id,
+                                'attributeId'      => $row['id'],
+                                'attributeName'    => $row['name'] . ' / ' . $languageName,
+                                'column'           => "text_value_" . strtolower($language),
+                                'required'         => !empty($row['is_required'])
+                            ];
+                            $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
+                        }
                     }
                     break;
                 case 'varchar':
@@ -1014,17 +1016,19 @@ class Mapper implements MapperInterface
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
 
-                    foreach ($languages as $language => $languageName) {
-                        $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
-                        $entity->fields[$lName] = [
-                            'type'             => 'varchar',
-                            'attributeValueId' => $id,
-                            'attributeId'      => $row['id'],
-                            'attributeName'    => $row['name'] . ' / ' . $languageName,
-                            'column'           => "varchar_value_" . strtolower($language),
-                            'required'         => !empty($row['is_required'])
-                        ];
-                        $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
+                    if (!empty($row['is_multilang'])) {
+                        foreach ($languages as $language => $languageName) {
+                            $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
+                            $entity->fields[$lName] = [
+                                'type'             => 'varchar',
+                                'attributeValueId' => $id,
+                                'attributeId'      => $row['id'],
+                                'attributeName'    => $row['name'] . ' / ' . $languageName,
+                                'column'           => "varchar_value_" . strtolower($language),
+                                'required'         => !empty($row['is_required'])
+                            ];
+                            $data[$lName] = $row[$entity->fields[$lName]['column']] ?? null;
+                        }
                     }
                     break;
             }
