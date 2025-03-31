@@ -237,7 +237,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         contentType: 'application/json',
                         success: () => {
                             this.model.fetch().then(() => {
-                                this.refreshLayout();
                                 this.notify('Saved', 'success');
                             });
                         }
@@ -1223,6 +1222,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
                 this.highlightRequired();
+            });
+
+            this.listenTo(this.model, 'sync', () => {
+                this.refreshLayout();
             });
         },
 
