@@ -451,7 +451,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getInheritedIconHtml: function () {
-            return `<span data-name="${this.name}" class="fas fa-link fa-sm info-field-icon inherited" title="${this.translate('inherited')}"></span>`;
+            return `<svg data-name="${this.name}" class="icon icon-small info-field-icon inherited" title="${this.translate('inherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`;
         },
 
         getNonInheritedIconEl: function () {
@@ -459,7 +459,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getNonInheritedIconHtml: function () {
-            return `<span data-name="${this.name}" class="fas fa-unlink fa-sm info-field-icon not-inherited" title="${this.translate('notInherited')}"></span>`;
+            return `<svg data-name="${this.name}" class="icon icon-small info-field-icon not-inherited" title="${this.translate('notInherited')}"><use href="client/img/icons/icons.svg#unlink"></use></svg>`;
         },
 
         getInheritActionEl: function () {
@@ -536,7 +536,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (this.getNonInheritedIconEl().length === 0 && !this.isInheritedField()) {
                 this.getStatusIconsContainer().append(this.getNonInheritedIconHtml());
-                this.getInlineActionsContainer().append(`<a href="javascript:" data-name="${this.name}" data-action="setAsInherited" class="action lock-link hidden" title="${this.translate('setAsInherited')}"><span class="fas fa-link fa-sm"></span></a>`);
+                this.getInlineActionsContainer().append(`<svg class="icon icon-small action lock-link hidden" data-name="${this.name}" data-action="setAsInherited" title="${this.translate('setAsInherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`);
             }
 
             $cell.on('mouseenter', function (e) {

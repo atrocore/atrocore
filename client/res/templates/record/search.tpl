@@ -56,7 +56,7 @@
             {{#unless textFilterDisabled}}<input type="text" class="form-control text-filter" placeholder="{{translate 'typeAndPressEnter'}}" name="textFilter" value="{{textFilter}}" tabindex="1">{{/unless}}
             <div class="input-group-btn">
                 <button type="button" class="btn btn-default reset filter-btn" data-action="reset" title="{{translate 'Reset'}}">
-                    <span class="fas fa-times"></span>
+                    <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
                 </button>
                 <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide filter-btn" data-action="search" title="{{translate 'Search'}}">
                    <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>

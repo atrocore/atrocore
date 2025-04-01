@@ -354,7 +354,7 @@
     }
 
     .collapsed button.collapse-panel {
-        margin-left: -15px;
+        margin-left: -20px;
     }
 
     :global(.right-side-view .layout-editor-container .dropdown-menu.pull-right) {

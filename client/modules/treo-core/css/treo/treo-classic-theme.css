@@ -21622,7 +21622,6 @@ tr.list-row.main-category > .cell:first-child {
 
 .search-row .btn-default {
     border: 0;
-    margin-bottom: -1px;
 }
 
 .search-row .filters-button:hover,
@@ -22496,8 +22495,9 @@ select {
 
 .info-field-icon.inherited,
 .info-field-icon.not-inherited,
+.status-icons .icon,
 .lock-link {
-    padding-left: 5px;
+    padding-left: 5px !important;
     text-align: center;
     -webkit-border-radius: 3px;
     border-radius: 3px;
