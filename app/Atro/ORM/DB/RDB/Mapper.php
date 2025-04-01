@@ -790,6 +790,14 @@ class Mapper implements MapperInterface
                 $attributeRow['view'] = $dropdownTypes[$row['type']];
             }
 
+            if ($row['type'] === 'rangeInt') {
+                $attributeRow['view'] = 'views/fields/range-int';
+            }
+
+            if ($row['type'] === 'rangeFloat') {
+                $attributeRow['view'] = 'views/fields/range-float';
+            }
+
             $data['attributeValues'][] = $attributeRow;
             if (!empty($row['is_multilang'])) {
                 foreach ($languages as $language => $languageName) {
