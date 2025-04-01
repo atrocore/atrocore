@@ -801,6 +801,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "reference_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -813,6 +814,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "json_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -824,6 +826,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "bool_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -835,6 +838,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "int_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -845,6 +849,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'reference_value',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -856,6 +861,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'int_value',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -866,6 +872,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'int_value1',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -876,6 +883,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'reference_value',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -887,6 +895,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "float_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -897,6 +906,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'reference_value',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -908,6 +918,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'float_value',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -918,6 +929,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'float_value1',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -928,6 +940,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'reference_value',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -939,6 +952,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "date_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -950,6 +964,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "datetime_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -962,6 +977,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => 'reference_value',
                         'required'         => !empty($row['is_required'])
                     ];
@@ -975,6 +991,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "text_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -988,6 +1005,7 @@ class Mapper implements MapperInterface
                                 'attributeValueId' => $id,
                                 'attributeId'      => $row['id'],
                                 'attributeName'    => $row['name'] . ' / ' . $languageName,
+                                'attributeType'    => $row['type'],
                                 'column'           => "text_value_" . strtolower($language),
                                 'required'         => !empty($row['is_required'])
                             ];
@@ -1001,6 +1019,7 @@ class Mapper implements MapperInterface
                         'attributeValueId' => $id,
                         'attributeId'      => $row['id'],
                         'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
                         'column'           => "varchar_value",
                         'required'         => !empty($row['is_required'])
                     ];
@@ -1014,6 +1033,7 @@ class Mapper implements MapperInterface
                                 'attributeValueId' => $id,
                                 'attributeId'      => $row['id'],
                                 'attributeName'    => $row['name'] . ' / ' . $languageName,
+                                'attributeType'    => $row['type'],
                                 'column'           => "varchar_value_" . strtolower($language),
                                 'required'         => !empty($row['is_required'])
                             ];

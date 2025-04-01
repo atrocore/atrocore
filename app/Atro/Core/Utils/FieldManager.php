@@ -13,6 +13,7 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
 
 class FieldManager
 {
@@ -26,14 +27,14 @@ class FieldManager
         $this->metadata = $container->get('metadata');
     }
 
-    public function getActualAttributeList(string $scope, string $name): array
+    public function getActualAttributeList(string $scope, string $name, ?Entity $entity = null): array
     {
-        return $this->getAttributeListByType($scope, $name, 'actual');
+        return $this->getAttributeListByType($scope, $name, 'actual', $entity);
     }
 
-    public function getNotActualAttributeList(string $scope, string $name): array
+    public function getNotActualAttributeList(string $scope, string $name, ?Entity $entity = null): array
     {
-        return $this->getAttributeListByType($scope, $name, 'notActual');
+        return $this->getAttributeListByType($scope, $name, 'notActual', $entity);
     }
 
     public function getAttributeList(string $scope, string $name): array
@@ -64,9 +65,9 @@ class FieldManager
         return $this->fieldByTypeListCache[$scope][$type];
     }
 
-    protected function getAttributeListByType(string $scope, string $name, string $type): array
+    protected function getAttributeListByType(string $scope, string $name, string $type, ?Entity $entity): array
     {
-        $fieldType = $this->metadata->get('entityDefs.' . $scope . '.fields.' . $name . '.type');
+        $fieldType = $entity->getFields()[$name]['attributeType'] ?? $this->metadata->get('entityDefs.' . $scope . '.fields.' . $name . '.type');
 
         if (!$fieldType) {
             return [];

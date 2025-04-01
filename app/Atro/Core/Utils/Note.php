@@ -174,11 +174,20 @@ class Note
                 }
 
                 if (!empty($d['type']) && in_array($d['type'], $auditableTypes) && !in_array($field, $systemFields) && empty($d['notStorable'])) {
-                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
-                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field, $entity);
+                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field, $entity);
                     $auditedFields[$field]['fieldType'] = $d['type'];
                 }
             }
+
+            foreach ($entity->getFields() as $field => $fieldDefs) {
+                if (!empty($fieldDefs['attributeId'])) {
+                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field, $entity);
+                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field, $entity);
+                    $auditedFields[$field]['fieldType'] = $fieldDefs['attributeType'];
+                }
+            }
+
             $this->auditedFieldsCache[$entityType] = $auditedFields;
         }
 
