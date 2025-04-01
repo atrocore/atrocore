@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import {onDestroy, onMount} from "svelte";
 
     import BaseHeader from "./BaseHeader.svelte";
     import Params from "./interfaces/Params"
@@ -9,7 +9,6 @@
     import EntityCallbacks from "./interfaces/EntityCallbacks";
 
     export let params: Params;
-    export let renderSearch = (): void => {};
     export let entityActions: EntityActionButtons;
     export let callbacks: EntityCallbacks;
     export let viewMode: string = 'list';
@@ -25,9 +24,13 @@
         if (params.afterOnMount) {
             params.afterOnMount();
         }
-
-        renderSearch();
     });
+
+    onDestroy(() => {
+        if (params.afterOnDestroy) {
+            params.afterOnDestroy();
+        }
+    })
 </script>
 
 <EntityHistory scope={params.scope} />
