@@ -724,15 +724,17 @@ class Mapper implements MapperInterface
 
         $tableName = $this->toDb(lcfirst($entity->getEntityType()));
         $res = $this->connection->createQueryBuilder()
-            ->select('a.*, av.id as av_id, av.bool_value, av.date_value, av.datetime_value, av.int_value, av.int_value1, av.float_value, av.float_value1, av.varchar_value, av.text_value, av.reference_value, av.json_value')
+            ->select('a.*, av.id as av_id, av.bool_value, av.date_value, av.datetime_value, av.int_value, av.int_value1, av.float_value, av.float_value1, av.varchar_value, av.text_value, av.reference_value, av.json_value, f.name as file_name')
             ->from("{$tableName}_attribute_value", 'av')
             ->leftJoin('av', $this->connection->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
+            ->leftJoin('av', $this->connection->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType')
             ->where('av.deleted=:false')
             ->andWhere('a.deleted=:false')
             ->andWhere("av.{$tableName}_id=:id")
             ->orderBy('a.sort_order', 'ASC')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $data['id'])
+            ->setParameter('fileType', 'file')
             ->fetchAllAssociative();
 
         $data['attributeValues'] = [];
@@ -756,7 +758,11 @@ class Mapper implements MapperInterface
                 'extensibleEnumId'              => $row['extensible_enum_id'] ?? null
             ];
 
-            $attributeData = @json_decode($row['data'], true);
+            $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+
+            if (!empty($attributeData['entityType'])){
+                $attributeRow['entity'] = $attributeData['entityType'];
+            }
 
             if (!empty($attributeData['maxLength'])) {
                 $attributeRow['maxLength'] = $attributeData['maxLength'];
@@ -956,6 +962,22 @@ class Mapper implements MapperInterface
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
                 case 'file':
+                    $entity->fields[$name . 'Id'] = [
+                        'type'             => 'varchar',
+                        'attributeValueId' => $id,
+                        'attributeId'      => $row['id'],
+                        'attributeName'    => $row['name'],
+                        'column'           => 'reference_value',
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name . 'Id'] = $row[$entity->fields[$name . 'Id']['column']] ?? null;
+
+                    $entity->fields[$name . 'Name'] = [
+                        'type'        => 'varchar',
+                        'notStorable' => true
+                    ];
+                    $data[$name . 'Name'] = $row['file_name'] ?? null;
+                    break;
                 case 'link':
                     $entity->fields[$name . 'Id'] = [
                         'type'             => 'varchar',
@@ -966,6 +988,26 @@ class Mapper implements MapperInterface
                         'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'Id'] = $row[$entity->fields[$name . 'Id']['column']] ?? null;
+
+                    if (!empty($attributeData['entityType'])) {
+                        $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
+                        try {
+                            $referenceItem = $this->connection->createQueryBuilder()
+                                ->select('*')
+                                ->from($referenceTable)
+                                ->where('id=:id')
+                                ->setParameter('id', $row['reference_value'])
+                                ->fetchAssociative();
+
+                            $entity->fields[$name . 'Name'] = [
+                                'type'        => 'varchar',
+                                'notStorable' => true
+                            ];
+                            $data[$name . 'Name'] = $referenceItem['name'] ?? null;
+                        } catch (\Throwable $e) {
+                            // ignore all
+                        }
+                    }
                     break;
                 case 'text':
                 case 'markdown':
