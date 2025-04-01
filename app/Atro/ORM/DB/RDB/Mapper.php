@@ -1111,6 +1111,19 @@ class Mapper implements MapperInterface
                         }
                     }
                     break;
+                default:
+                    $entity->fields[$name] = [
+                        'type'             => 'varchar',
+                        'name'             => $name,
+                        'attributeValueId' => $id,
+                        'attributeId'      => $row['id'],
+                        'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
+                        'column'           => "varchar_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+                    break;
             }
         }
     }
