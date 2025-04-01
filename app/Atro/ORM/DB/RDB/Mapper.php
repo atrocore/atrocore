@@ -807,16 +807,6 @@ class Mapper implements MapperInterface
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
                     break;
                 case 'extensibleMultiEnum':
-                    $entity->fields[$name] = [
-                        'type'             => 'jsonArray',
-                        'attributeValueId' => $id,
-                        'attributeId'      => $row['id'],
-                        'attributeName'    => $row['name'],
-                        'column'           => "text_value",
-                        'required'         => !empty($row['is_required'])
-                    ];
-                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
-                    break;
                 case 'array':
                     $entity->fields[$name] = [
                         'type'             => 'jsonArray',
