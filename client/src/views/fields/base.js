@@ -619,15 +619,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }
 
                 $button.on('click', () => {
-                    const data = {
-                        entityName: this.model.name,
-                        id: this.model.getFieldParam(name, 'id')
-                    }
-
-                    recordView.executeActionRequest({
-                        actionId: action.data.action_id,
-                        entityId: this.model.get('id')
-                    })
+                    recordView.actionDynamicAction({id: action.data.action_id})
                 });
             })
 
