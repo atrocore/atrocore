@@ -67,7 +67,10 @@ class FieldManager
 
     protected function getAttributeListByType(string $scope, string $name, string $type, ?Entity $entity): array
     {
-        $fieldType = $entity->getFields()[$name]['attributeType'] ?? $this->metadata->get('entityDefs.' . $scope . '.fields.' . $name . '.type');
+        $fieldType = $this->metadata->get('entityDefs.' . $scope . '.fields.' . $name . '.type');
+        if (!$fieldType && !empty($entity) && !empty($entity->getFields()[$name]['attributeType'])) {
+            $fieldType = $entity->getFields()[$name]['attributeType'];
+        }
 
         if (!$fieldType) {
             return [];
