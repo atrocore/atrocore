@@ -52,7 +52,8 @@
               "attribute": "usage",
               "value": [
                 "entity",
-                "record"
+                "record",
+                "field"
               ]
             }
           ]
@@ -95,6 +96,30 @@
               "value": [
                 "entity",
                 "record"
+              ]
+            }
+          ]
+        }
+      },
+      "displayField": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "field"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "field"
               ]
             }
           ]
@@ -158,7 +183,8 @@
               "type": "notIn",
               "attribute": "usage",
               "value": [
-                "record"
+                "record",
+                "field"
               ]
             }
           ]

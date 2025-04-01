@@ -394,6 +394,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.listenTo(this, 'after:render', () => {
                 this.initStatusContainer();
                 this.initRemoveAttributeValue();
+                this.initDynamicFieldActions();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
                 }
@@ -408,6 +409,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, this);
             }
         },
+
 
         showRequiredSign: function () {
             this.initStatusContainer();
@@ -587,6 +589,63 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     $editLink.addClass('hidden');
                 }
             }.bind(this));
+        },
+
+        getRecordView() {
+            return this.getParentView()?.getParentView();
+        },
+
+        initDynamicFieldActions() {
+            const recordView = this.getRecordView();
+            let dynamicActions = recordView?.dynamicFieldActions || [];
+            dynamicActions = dynamicActions.filter(action => action.displayField === this.name)
+
+            if (!dynamicActions.length) {
+                return;
+            }
+
+            const $cell = this.getCellElement();
+            const inlineActions = this.getInlineActionsContainer();
+
+            $cell.find('.dynamic-action').remove();
+
+            dynamicActions.forEach(action => {
+                const $button = $(`<a href="javascript:" class="dynamic-action hidden" style="margin-left: 3px" title="${action.label}">${action.label}</a>`);
+
+                if (inlineActions.size()) {
+                    inlineActions.prepend($button);
+                } else {
+                    $cell.prepend($button);
+                }
+
+                $button.on('click', () => {
+                    const data = {
+                        entityName: this.model.name,
+                        id: this.model.getFieldParam(name, 'id')
+                    }
+
+                    recordView.executeActionRequest({
+                        actionId: action.data.action_id,
+                        entityId: this.model.get('id')
+                    })
+                });
+            })
+
+
+            $cell.on('mouseenter', e => {
+                e.stopPropagation();
+                if (this.disabled || this.readOnly) {
+                    return;
+                }
+                if (this.mode === 'detail') {
+                    $cell.find('.dynamic-action').removeClass('hidden');
+                }
+            }).on('mouseleave', e => {
+                e.stopPropagation();
+                if (this.mode === 'detail') {
+                    $cell.find('.dynamic-action').addClass('hidden');
+                }
+            });
         },
 
         initRemoveAttributeValue() {
@@ -950,7 +1009,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     maxSize: 100,
                 };
 
-                if(customOptions) {
+                if (customOptions) {
                     options = {...options, ...customOptions}
                 }
 

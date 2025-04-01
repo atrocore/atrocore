@@ -722,7 +722,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        initListenToInlineMode: function() {
+        initListenToInlineMode: function () {
             var fields = this.getFieldViews();
 
             var fieldInEditMode = null;
@@ -843,7 +843,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (isAttributeValuePanel) {
                     let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><span class="fas fa-plus cursor-pointer" style="font-size: 1em;"></span></a></div>';
                     $el.append(html);
-                    $el.find('.add-attribute-value-container').click(()=>{
+                    $el.find('.add-attribute-value-container').click(() => {
                         this.actionAddAttribute();
                     });
                 }
@@ -1225,7 +1225,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
 
             this.listenTo(this.model, 'sync', () => {
-                this.refreshLayout();
+                if (this.layoutHasActionFields()) {
+                    this.fetchDynamicFieldActions(() => {
+                        this.refreshLayout();
+                    })
+                } else {
+                    this.refreshLayout();
+                }
             });
         },
 
@@ -1982,24 +1988,65 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
         },
-        
+
+        layoutHasActionFields() {
+            if (this.getMetadata().get(['scopes', this.model.name, 'actionDisabled'])) {
+                return false;
+            }
+            const fieldActions = this.getMetadata().get(['clientDefs', this.scope, 'dynamicFieldActions']) || []
+            let layoutHasActionFields = false
+
+            if (fieldActions.length) {
+                const fields = fieldActions.map(action => action.displayField);
+                this.gridLayout.layout.forEach(panel => {
+                    panel.rows.forEach(row => {
+                        row.forEach(cell => {
+                            if (cell && fields.includes(cell.field)) {
+                                layoutHasActionFields = true;
+                            }
+                        })
+                    })
+                })
+            }
+
+            return layoutHasActionFields;
+        },
+
+        fetchDynamicFieldActions(callback) {
+            this.model.fetchDynamicActions('field')
+                .then(actions => {
+                    this.dynamicFieldActions = actions;
+                    callback();
+                })
+        },
+
         createMiddleView: function (callback) {
             var el = this.options.el || '#' + (this.id);
             this.waitForView('middle');
             this.getGridLayout(function (layout) {
-                this.createView('middle', this.middleView, {
-                    model: this.model,
-                    scope: this.scope,
-                    type: this.type,
-                    _layout: layout,
-                    el: el + ' .middle',
-                    layoutData: {
+
+                const createView = () => {
+                    this.createView('middle', this.middleView, {
                         model: this.model,
-                        columnCount: this.columnCount
-                    },
-                    recordHelper: this.recordHelper,
-                    recordViewObject: this
-                }, callback);
+                        scope: this.scope,
+                        type: this.type,
+                        _layout: layout,
+                        el: el + ' .middle',
+                        layoutData: {
+                            model: this.model,
+                            columnCount: this.columnCount
+                        },
+                        recordHelper: this.recordHelper,
+                        recordViewObject: this
+                    }, callback);
+                }
+
+                if (this.layoutHasActionFields()) {
+                    this.fetchDynamicFieldActions(createView);
+                } else {
+                    createView();
+                }
+
             }.bind(this));
         },
 

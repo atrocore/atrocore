@@ -12,7 +12,8 @@
     "webhookUrl": "URL",
     "executeAs": "Execute As",
     "conditionsType": "Conditions Type",
-    "conditions": "Conditions"
+    "conditions": "Conditions",
+    "displayField": "Display Field"
   },
   "labels": {
     "Create Action": "Create Action",
@@ -28,7 +29,8 @@
   "options": {
     "usage": {
       "entity": "Entity level",
-      "record": "Record level"
+      "record": "Record level",
+      "field": "Field level"
     },
     "display": {
       "dropdown": "Dropdown",
