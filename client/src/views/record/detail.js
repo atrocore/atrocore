@@ -722,7 +722,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        initListenToInlineMode: function () {
+        initListenToInlineMode: function() {
             var fields = this.getFieldViews();
 
             var fieldInEditMode = null;
@@ -1220,9 +1220,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.setupTourButton()
             });
 
-            this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
-                this.highlightRequired();
-            });
+            if (this.layoutName === 'detail') {
+                this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
+                    this.highlightRequired();
+                });
 
             this.listenTo(this.model, 'sync', () => {
                 if (this.layoutHasActionFields()) {
@@ -1988,65 +1989,24 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
         },
-
-        layoutHasActionFields() {
-            if (this.getMetadata().get(['scopes', this.model.name, 'actionDisabled'])) {
-                return false;
-            }
-            const fieldActions = this.getMetadata().get(['clientDefs', this.scope, 'dynamicFieldActions']) || []
-            let layoutHasActionFields = false
-
-            if (fieldActions.length) {
-                const fields = fieldActions.map(action => action.displayField);
-                this.gridLayout.layout.forEach(panel => {
-                    panel.rows.forEach(row => {
-                        row.forEach(cell => {
-                            if (cell && fields.includes(cell.field)) {
-                                layoutHasActionFields = true;
-                            }
-                        })
-                    })
-                })
-            }
-
-            return layoutHasActionFields;
-        },
-
-        fetchDynamicFieldActions(callback) {
-            this.model.fetchDynamicActions('field')
-                .then(actions => {
-                    this.dynamicFieldActions = actions;
-                    callback();
-                })
-        },
-
+        
         createMiddleView: function (callback) {
             var el = this.options.el || '#' + (this.id);
             this.waitForView('middle');
             this.getGridLayout(function (layout) {
-
-                const createView = () => {
-                    this.createView('middle', this.middleView, {
+                this.createView('middle', this.middleView, {
+                    model: this.model,
+                    scope: this.scope,
+                    type: this.type,
+                    _layout: layout,
+                    el: el + ' .middle',
+                    layoutData: {
                         model: this.model,
-                        scope: this.scope,
-                        type: this.type,
-                        _layout: layout,
-                        el: el + ' .middle',
-                        layoutData: {
-                            model: this.model,
-                            columnCount: this.columnCount
-                        },
-                        recordHelper: this.recordHelper,
-                        recordViewObject: this
-                    }, callback);
-                }
-
-                if (this.layoutHasActionFields()) {
-                    this.fetchDynamicFieldActions(createView);
-                } else {
-                    createView();
-                }
-
+                        columnCount: this.columnCount
+                    },
+                    recordHelper: this.recordHelper,
+                    recordViewObject: this
+                }, callback);
             }.bind(this));
         },
 
