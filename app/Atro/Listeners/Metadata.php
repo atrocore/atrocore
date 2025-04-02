@@ -1272,12 +1272,6 @@ class Metadata extends AbstractListener
                                 "referenceValue",
                                 "deleted"
                             ]
-                        ],
-                        "jsonValue"      => [
-                            "columns" => [
-                                "jsonValue",
-                                "deleted"
-                            ]
                         ]
                     ],
                     "collection"    => [
