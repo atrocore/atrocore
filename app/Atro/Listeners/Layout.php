@@ -43,9 +43,6 @@ class Layout extends AbstractListener
                 if ($this->getMetadata()->get(['scopes', $scope, 'type']) === 'Hierarchy'
                     && empty($this->getMetadata()->get(['scopes', $scope, 'disableHierarchy'], false))) {
                     $result = $event->getArgument('result');
-
-
-
                     $exists = false;
                     foreach ($result as $item) {
                         if ($item['name'] === '_self') {
