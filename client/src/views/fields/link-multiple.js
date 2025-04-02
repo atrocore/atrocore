@@ -84,6 +84,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.notify('Please wait...');
 
             let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'links', this.name, 'foreignName']) ?? 'name'
+
             this.ajaxGetRequest(`${this.model.name}/${this.model.get('id')}/${this.name}`, {
                 select: `id, ${foreignName}`
             }).success(res => {
