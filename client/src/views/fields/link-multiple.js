@@ -83,13 +83,16 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         actionLoadData() {
             this.notify('Please wait...');
 
-            this.ajaxGetRequest(`${this.model.name}/${this.model.get('id')}/${this.name}`).success(res => {
+            let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'links', this.name, 'foreignName']) ?? 'name'
+            this.ajaxGetRequest(`${this.model.name}/${this.model.get('id')}/${this.name}`, {
+                select: `id, ${foreignName}`
+            }).success(res => {
                 let ids = [];
                 let names = {};
                 if (res.list) {
                     res.list.forEach(item => {
                         ids.push(item.id);
-                        names[item.id] = item.name;
+                        names[item.id] = item[foreignName];
                     })
                 }
 
