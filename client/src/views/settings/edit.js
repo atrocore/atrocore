@@ -68,9 +68,7 @@ Espo.define('views/settings/edit', ['views/edit', 'lib!JsTree'], function (Dep) 
                     }
                 }
             });
-
         }
-
     });
 });
 
