@@ -20029,24 +20029,19 @@ ul.dropdown-menu > li.checkbox {
     margin-right: -15px;
 }
 
-#main .side {
-    background-color: #fafafa;
-    height: 100%;
-}
+/*#main .catalog-tree-panel {*/
+/*    position: relative;*/
+/*    border-right: 1px solid #e8eced;*/
+/*    padding: 0 10px 0 20px;*/
+/*    float: left;*/
+/*    min-height: 35px;*/
+/*}*/
 
-#main .catalog-tree-panel {
-    position: relative;
-    border-right: 1px solid #e8eced;
-    padding: 0 10px 0 20px;
-    float: left;
-    min-height: 35px;
-}
-
-#main .catalog-tree-panel,
-#main .catalog-tree-panel .panel,
-#main .catalog-tree-panel .category-search {
-    background-color: #fafafa;
-}
+/*#main .catalog-tree-panel,*/
+/*#main .catalog-tree-panel .panel,*/
+/*#main .catalog-tree-panel .category-search {*/
+/*    background-color: #fafafa;*/
+/*}*/
 
 #main .catalog-tree-panel + .list-container {
     padding: 0;

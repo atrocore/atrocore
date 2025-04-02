@@ -8,6 +8,8 @@
     import {Config} from "../../utils/Config.js";
     import {Notifier} from "../../utils/Notifier";
     import {UserData} from "../../utils/UserData";
+    import Preloader from "../icons/loading/Preloader.svelte";
+    import BaseSidebar from "./BaseSidebar.svelte";
 
     export let scope: string;
     export let model;
@@ -24,12 +26,10 @@
 
     const dispatch = createEventDispatcher();
 
+    let isPinned: boolean = true;
     let treeElement: HTMLElement;
     let layoutEditorElement: HTMLElement;
     let searchInputElement: HTMLInputElement;
-    let isDragging: boolean = false;
-    let startX: number;
-    let startWidth: number;
     let treeItems: [] = [];
     let activeItem: object;
     let layoutLoading = false;
@@ -49,7 +49,6 @@
         }
     }
 
-    $: treePanelWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
     $: isSelectionEnabled = activeItem && (!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list'
     $: {
@@ -75,60 +74,6 @@
         if (!isCollapsed) {
             rebuildTree()
         }
-    }
-
-    function handleCollapsePanel() {
-        isCollapsed = !isCollapsed;
-
-        if (isCollapsed) {
-            window.$('.page-header').addClass('collapsed').removeClass('not-collapsed');
-            window.$('#tree-list-table').addClass('collapsed');
-        } else {
-            window.$('.page-header').removeClass('collapsed').addClass('not-collapsed');
-            window.$('#tree-list-table').removeClass('collapsed');
-        }
-        // dispatch('collapse-panel', {isCollapsed});
-        Storage.set('catalog-tree-panel', scope, isCollapsed ? 'collapsed' : '');
-
-        if (!isCollapsed) {
-            rebuildTree()
-        }
-    }
-
-    function handleResize(e: MouseEvent) {
-        if (!isDragging) return;
-        e.preventDefault();
-
-        const width = startWidth + (e.pageX - startX);
-        if (width >= minWidth && width <= maxWidth) {
-            currentWidth = width;
-        }
-    }
-
-    function startResize(e: MouseEvent) {
-        isDragging = true;
-        startX = e.pageX;
-        startWidth = currentWidth;
-
-        // Add the event listeners to document instead of window
-        document.addEventListener('mousemove', handleResize);
-        document.addEventListener('mouseup', stopResize, {once: true});
-
-        // Prevent text selection during drag
-        document.body.style.userSelect = 'none';
-    }
-
-    function stopResize() {
-        if (!isDragging) return;
-
-        isDragging = false;
-        Storage.set('panelWidth', scope, currentWidth.toString());
-
-        // Remove event listeners
-        document.removeEventListener('mousemove', handleResize);
-
-        // Restore text selection
-        document.body.style.userSelect = '';
     }
 
     //region Tree methods
@@ -711,6 +656,7 @@
             isCollapsed = true;
         }
 
+        isPinned = Storage.get('catalog-tree-panel-pin', scope) !== 'not-pinned' ;
         loadLayout(() => {
             if (treeItems.length === 0) {
                 isCollapsed = true
@@ -733,44 +679,46 @@
                 renderLayoutEditor(layoutEditorElement)
             }
         })
-
-        return () => {
-            // Cleanup any remaining event listeners
-            if (isDragging) {
-                stopResize();
-            }
-        };
     });
+
+    function onSidebarResize(e: CustomEvent): void {
+        Storage.set('panelWidth', scope, currentWidth.toString());
+    }
+
+    function onSidebarCollapse(e: CustomEvent): void {
+        Storage.set('catalog-tree-panel', scope, isCollapsed ? 'collapsed' : '');
+
+        if (!isCollapsed) {
+            rebuildTree();
+        }
+    }
+
+    function onSidebarPin(e: CustomEvent): void {
+        Storage.set('catalog-tree-panel-pin', scope, isPinned ? 'pin' : 'not-pinned');
+    }
 </script>
 
-<aside class="catalog-tree-panel" class:collapsed={isCollapsed} class:catalog-tree-panel-hidden={isCollapsed}
-       transition:fade class:hidden={isHidden}
-       style="width: {treePanelWidth}">
-    <button type="button"
-            class="btn btn-link collapse-panel"
-            class:collapsed={isCollapsed}
-            on:click={handleCollapsePanel}>
-        <span class="toggle-icon-left fas fa-angle-left" class:hidden={isCollapsed}></span>
-        <span class="toggle-icon-right fas fa-angle-right" class:hidden={!isCollapsed}></span>
-    </button>
+<BaseSidebar className="catalog-tree-panel" position="left" bind:width={currentWidth} bind:isCollapsed={isCollapsed}
+             bind:isPinned={isPinned} on:sidebar-resize={onSidebarResize} on:sidebar-collapse={onSidebarCollapse}
+             on:sidebar-pin={onSidebarPin}>
     <div class="category-panel" class:hidden={isCollapsed}>
-        <div style="display: flex;flex-direction: row-reverse;align-items: center;height: 35px">
-            <div style="margin-right: 20px" bind:this={layoutEditorElement} class="layout-editor-container"></div>
-        </div>
-
         {#if layoutLoading}
             <div class="text-center">
-                <img class="preloader" style="height:12px;" src="client/img/atro-loader.svg">
+                <Preloader heightPx={12} />
             </div>
         {:else if treeItems.length > 0 }
-            <div class="panel-group" style="margin-bottom: 10px; margin-top: -10px;">
+            <div class="panel-group" style="margin-bottom: 10px; margin-top: 10px;">
+
                 <div class="btn-group">
                     {#each treeItems as treeItem}
-                        <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
-                            {treeItem.label}
-                        </a>
+                        {#if treeItem.name !== activeItem.name}
+                            <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
+                               class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
+                                {treeItem.label}
+                            </a>
+                        {/if}
                     {/each}
+                    <div bind:this={layoutEditorElement} class="layout-editor-container"></div>
                 </div>
             </div>
             <hr style="margin: 0 -10px">
@@ -814,16 +762,8 @@
                 </div>
             {/if}
         {/if}
-
-
-        {#if !isCollapsed}
-            <div
-                    class="category-panel-resizer"
-                    on:mousedown={startResize}
-            ></div>
-        {/if}
     </div>
-</aside>
+</BaseSidebar>
 
 <style>
     .category-panel-resizer {
@@ -841,7 +781,7 @@
     }
 
     .tree-item {
-        padding: 6px 20px 6px 0;
+        padding: 4px 20px 4px 0;
         color: #333;
         text-decoration: underline;
     }

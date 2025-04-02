@@ -1,8 +1,8 @@
 <script lang="ts">
     import {Storage} from "../../utils/Storage";
     import {onMount} from "svelte";
-    import GfiImage from "../../assets/image_gfi.svg"
-    import GfiHideImage from "../../assets/hide_image_gfi.svg"
+    import GfiImage from "$assets/image_gfi.svg"
+    import GfiHideImage from "$assets/hide_image_gfi.svg"
     import {Language} from "../../utils/Language";
     import {Metadata} from "../../utils/Metadata";
 
@@ -288,7 +288,6 @@
         padding: 10px 20px;
         border-left: 1px solid var(--primary-border-color);
         overflow-y: auto;
-        transition: .6s width cubic-bezier(0.19, 1, .22, 1);
     }
 
     .right-side-view:not(.pinned):not(.collapsed) {
@@ -331,6 +330,10 @@
         top: 0;
         left: 0;
         cursor: col-resize;
+    }
+
+    .side-panel-resizer:hover {
+        background: rgba(0, 0, 0, 0.1);
     }
 
     .item {
