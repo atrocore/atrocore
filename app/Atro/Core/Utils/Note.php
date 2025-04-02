@@ -164,7 +164,7 @@ class Note
 
             $systemFields = ['id', 'deleted', 'createdAt', 'modifiedAt', 'createdBy'];
 
-            $fields = $this->getMetadata()->get('entityDefs.' . $entityType . '.fields');
+            $fields = $entity->entityDefs['fields'] ?? $this->getMetadata()->get("entityDefs.{$entityType}.fields", []);
 
             $auditedFields = [];
             foreach ($fields as $field => $d) {
@@ -177,14 +177,6 @@ class Note
                     $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field, $entity);
                     $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field, $entity);
                     $auditedFields[$field]['fieldType'] = $d['type'];
-                }
-            }
-
-            foreach ($entity->getFields() as $field => $fieldDefs) {
-                if (!empty($fieldDefs['attributeId'])) {
-                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field, $entity);
-                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field, $entity);
-                    $auditedFields[$field]['fieldType'] = $fieldDefs['attributeType'];
                 }
             }
 
