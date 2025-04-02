@@ -155,6 +155,10 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             this.setupHeader();
 
             this.setupRightSideView();
+        },
+
+        canLoadActivities: function () {
+            return false;
         }
     });
 });
