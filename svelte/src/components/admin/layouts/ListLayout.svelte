@@ -8,6 +8,7 @@
     import {LayoutManager} from "../../../utils/LayoutManager";
     import Group from "./interfaces/Group";
     import {Utils} from "../../../utils/Utils.js";
+    import {UserData} from "../../../utils/UserData";
 
     export let params: Params;
 
@@ -67,6 +68,10 @@
         if (field === '_bookmark') {
             return Language.translate('Bookmark', 'scopeNamesPlural', 'Global')
         }
+
+        if (field === '_admin') {
+            return Language.translate('Administration', 'labels', 'Global')
+        }
         return Language.translate(field, 'fields', scope)
     }
 
@@ -79,6 +84,10 @@
             if (Metadata.get(['scopes', params.scope, 'type']) === 'Hierarchy' && !Metadata.get(['scopes', params.scope, 'disableHierarchy'])) {
                 fields.push('_self')
             }
+            if (UserData.get()?.user?.isAdmin) {
+                fields.push('_admin')
+            }
+
         }
 
         return fields;

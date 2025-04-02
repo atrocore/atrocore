@@ -8,12 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/api-request/index', 'view', function (Dep) {
+Espo.define('views/admin/api-request/index', ['view', 'lib!JsTree'], function (Dep) {
     return Dep.extend({
         template: 'admin/api-request/index',
         setup() {
             this.once('after:render', () => {
-                this.svelteComponent = new Svelte.ApiRequestComponent({
+                new Svelte.ApiRequestComponent({
                     target: $('#api-request-content').get(0),
                     props: {
                         afterOnMount: (model) => {
@@ -112,6 +112,20 @@ Espo.define('views/admin/api-request/index', 'view', function (Dep) {
                                     model.set('response', e.responseText);
                                 }
                             })
+                        }
+                    }
+                });
+
+                new Svelte.TreePanel({
+                    target: $(`${this.options.el} .content-wrapper`).get(0),
+                    anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
+                    props: {
+                        scope: 'Settings',
+                        model: this.model,
+                        mode: 'detail',
+                        isAdminPage: true,
+                        callbacks: {
+
                         }
                     }
                 });

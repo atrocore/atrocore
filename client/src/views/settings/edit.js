@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/settings/edit', 'views/edit', function (Dep) {
+Espo.define('views/settings/edit', ['views/edit', 'lib!JsTree'], function (Dep) {
 
     return Dep.extend({
 
@@ -44,6 +44,31 @@ Espo.define('views/settings/edit', 'views/edit', function (Dep) {
                     label: this.options.headerTitle ? this.translate(this.options.headerTitle, 'labels', 'Admin') : this.translate(this.scope)
                 }
             ];
+        },
+
+        data: function () {
+          return {
+              treeAllowed: true
+          }
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            new Svelte.TreePanel({
+                target: $(`${this.options.el} .content-wrapper`).get(0),
+                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
+                props: {
+                    scope: this.scope,
+                    model: this.model,
+                    noLayout: true,
+                    mode: 'detail',
+                    callbacks: {
+
+                    }
+                }
+            });
+
         }
 
     });

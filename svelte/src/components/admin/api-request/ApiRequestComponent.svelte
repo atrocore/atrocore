@@ -36,7 +36,7 @@
 <div class="page-header">
     <BaseHeader breadcrumbs={breadcrumbs} />
 
-    <button on:click={sendRequest(model)} style="margin: 10px 7px 10px 5px" class="btn btn-primary action" data-action="execute"
+    <button on:click={sendRequest(model)} style="margin: 10px 7px 0 5px" class="btn btn-primary action" data-action="execute"
             type="button">{Language.translate('execute', 'labels', 'Admin')}</button>
 </div>
 

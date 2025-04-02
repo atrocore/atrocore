@@ -24519,3 +24519,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     border: 1px solid transparent;
     background-color: transparent;
 }
+
+.admin-page {
+    margin-left: 20px;
+    max-height: 100vh;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.admin-page .row {
+    margin-right: 0;
+}
