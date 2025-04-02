@@ -371,7 +371,6 @@ Espo.define('views/main', 'view', function (Dep) {
                     }
                 })
             }
-
         }
     });
 });
