@@ -821,8 +821,43 @@ class Mapper implements MapperInterface
                         'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    $entity->entityDefs['fields'][$name] = [
+                        'type'                 => 'extensibleEnum',
+                        'required'             => !empty($row['is_required']),
+                        'label'                => $row['name'],
+                        'prohibitedEmptyValue' => !empty($row['prohibited_empty_value']),
+                        'dropdown'             => !empty($row['dropdown']),
+                        'extensibleEnumId'     => $row['extensible_enum_id'] ?? null
+                    ];
+                    if (!empty($row['dropdown'])) {
+                        $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-enum-dropdown";
+                    }
                     break;
                 case 'extensibleMultiEnum':
+                    $entity->fields[$name] = [
+                        'type'             => 'jsonArray',
+                        'name'             => $name,
+                        'attributeValueId' => $id,
+                        'attributeId'      => $row['id'],
+                        'attributeName'    => $row['name'],
+                        'attributeType'    => $row['type'],
+                        'column'           => "json_value",
+                        'required'         => !empty($row['is_required'])
+                    ];
+                    $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    $entity->entityDefs['fields'][$name] = [
+                        'type'             => 'extensibleMultiEnum',
+                        'required'         => !empty($row['is_required']),
+                        'label'            => $row['name'],
+                        'dropdown'         => !empty($row['dropdown']),
+                        'extensibleEnumId' => $row['extensible_enum_id'] ?? null
+                    ];
+                    if (!empty($row['dropdown'])) {
+                        $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";
+                    }
+                    break;
                 case 'array':
                     $entity->fields[$name] = [
                         'type'             => 'jsonArray',
@@ -835,6 +870,12 @@ class Mapper implements MapperInterface
                         'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    $entity->entityDefs['fields'][$name] = [
+                        'type'     => 'array',
+                        'required' => !empty($row['is_required']),
+                        'label'    => $row['name']
+                    ];
                     break;
                 case 'bool':
                     $entity->fields[$name] = [
@@ -848,6 +889,12 @@ class Mapper implements MapperInterface
                         'required'         => !empty($row['is_required'])
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
+
+                    $entity->entityDefs['fields'][$name] = [
+                        'type'     => 'bool',
+                        'required' => !empty($row['is_required']),
+                        'label'    => $row['name']
+                    ];
                     break;
                 case 'int':
                     $entity->fields[$name] = [
@@ -862,6 +909,19 @@ class Mapper implements MapperInterface
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
 
+                    $entity->entityDefs['fields'][$name] = [
+                        'type'     => 'int',
+                        'required' => !empty($row['is_required']),
+                        'label'    => $row['name'],
+                        'notNull'  => !empty($row['not_null']),
+                    ];
+                    if (isset($attributeData['min'])) {
+                        $entity->entityDefs['fields'][$name]['min'] = $attributeData['min'];
+                    }
+                    if (isset($attributeData['max'])) {
+                        $entity->entityDefs['fields'][$name]['max'] = $attributeData['max'];
+                    }
+
                     $entity->fields[$name . 'UnitId'] = [
                         'type'             => 'varchar',
                         'name'             => $name,
@@ -873,6 +933,25 @@ class Mapper implements MapperInterface
                         'required'         => !empty($row['is_required'])
                     ];
                     $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
+                    $entity->fields[$name . 'UnitName'] = [
+                        'type'        => 'varchar',
+                        'notStorable' => true
+                    ];
+
+                    if (isset($row['measure_id'])) {
+                        $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
+                        $entity->entityDefs['fields'][$name]['view'] = "views/fields/unit-int'";
+                        $entity->entityDefs['fields'][$name . 'Unit'] = [
+                            "type"        => "link",
+                            'label'       => "{$row['name']} (Unit)",
+                            "view"        => "views/fields/unit-link",
+                            "measureId"   => $row['measure_id'],
+                            "entity"      => 'Unit',
+                            "unitIdField" => true,
+                            "mainField"   => $name,
+                            'required'    => !empty($row['is_required'])
+                        ];
+                    }
                     break;
                 case 'rangeInt':
                     $entity->fields[$name . 'From'] = [
@@ -924,6 +1003,12 @@ class Mapper implements MapperInterface
                     ];
                     $data[$name] = $row[$entity->fields[$name]['column']] ?? null;
 
+                    $entity->entityDefs['fields'][$name] = [
+                        'type'     => 'float',
+                        'required' => !empty($row['is_required']),
+                        'label'    => $row['name'],
+                    ];
+
                     $entity->fields[$name . 'UnitId'] = [
                         'type'             => 'varchar',
                         'name'             => $name,
@@ -934,7 +1019,22 @@ class Mapper implements MapperInterface
                         'column'           => 'reference_value',
                         'required'         => !empty($row['is_required'])
                     ];
+                    $entity->fields[$name . 'UnitName'] = [
+                        'type'        => 'varchar',
+                        'notStorable' => true
+                    ];
                     $data[$name . 'UnitId'] = $row[$entity->fields[$name . 'UnitId']['column']] ?? null;
+
+                    $entity->entityDefs['fields'][$name . 'Unit'] = [
+                        "type"        => "link",
+                        'label'       => "{$row['name']} (Unit)",
+                        "view"        => "views/fields/unit-link",
+                        "measureId"   => $row['measure_id'],
+                        "entity"      => 'Unit',
+                        "unitIdField" => true,
+                        "mainField"   => $name,
+                        'required'    => !empty($row['is_required'])
+                    ];
                     break;
                 case 'rangeFloat':
                     $entity->fields[$name . 'From'] = [
