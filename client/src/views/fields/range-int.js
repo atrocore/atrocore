@@ -118,6 +118,22 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             }
         },
 
+        translate: function (name, category, scope) {
+            if (category === 'fields' && scope === this.model.name) {
+                let attributeLabel = this.model.getFieldParam(this.name, 'label');
+                if (attributeLabel) {
+                    if (name === this.name + 'To') {
+                        return Dep.prototype.translate.call(this, 'To', category, scope);
+                    }
+                    if (name === this.name + 'From') {
+                        return Dep.prototype.translate.call(this, 'From', category, scope);
+                    }
+                }
+            }
+
+            return Dep.prototype.translate.call(this, name, category, scope);
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {

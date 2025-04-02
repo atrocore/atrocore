@@ -1220,13 +1220,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.setupTourButton()
             });
 
-            this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
-                this.highlightRequired();
-            });
+            if (this.layoutName === 'detail') {
+                this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
+                    this.highlightRequired();
+                });
 
-            this.listenTo(this.model, 'sync', () => {
-                this.refreshLayout();
-            });
+                this.listenTo(this.model, 'sync', () => {
+                    this.refreshLayout();
+                });
+            }
         },
 
         remove() {
@@ -1949,18 +1951,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
                 let layoutRows = [];
                 let layoutRow = [];
-                (this.model.get('attributeValues') || []).forEach(item => {
-                    this.model.defs['fields'][item.name] = item;
-                    layoutRow.push({
-                        name: item.name,
-                        customLabel: item.label,
-                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
-                    });
-                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
-                        layoutRows.push(layoutRow);
-                        layoutRow = [];
-                    }
-                })
+
+                if (!this.model.isNew()) {
+                    (this.model.get('attributeValues') || []).forEach(item => {
+                        this.model.defs['fields'][item.name] = item;
+                        layoutRow.push({
+                            name: item.name,
+                            customLabel: item.label,
+                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
+                        });
+                        if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                            layoutRows.push(layoutRow);
+                            layoutRow = [];
+                        }
+                    })
+                }
 
                 if (layoutRow.length > 0) {
                     layoutRow.push(false);

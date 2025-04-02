@@ -84,6 +84,18 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         defaultFilterValue: null,
 
+        translate: function (name, category, scope) {
+            if (category === 'fields' && scope === this.model.name) {
+                let preparedAttributeName = name.replace(/^unitAttr_/, "attr_");
+                let attributeLabel = this.model.getFieldParam(preparedAttributeName, 'label');
+                if (attributeLabel) {
+                    return attributeLabel;
+                }
+            }
+
+            return Dep.prototype.translate.call(this, name, category, scope);
+        },
+
         isRequired: function () {
             return this.params.required;
         }, /**
