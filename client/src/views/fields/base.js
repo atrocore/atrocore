@@ -602,7 +602,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initRemoveAttributeValue() {
-            if (!this.model.get('attributesDefs') || !this.name  || !this.model.get('attributesDefs')[this.name] || !this.getAcl().check(this.model.name, 'edit')) {
+            if (!this.model.get('attributesDefs') || !this.name || !this.model.get('attributesDefs')[this.name] || !this.getAcl().check(this.model.name, 'edit')) {
+                return;
+            }
+
+            let attributeValueId = this.model.get('attributesDefs')[this.name]['attributeValueId'] || null;
+            if (!attributeValueId) {
                 return;
             }
 
@@ -626,7 +631,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, () => {
                     const data = {
                         entityName: this.model.name,
-                        id: this.model.get('attributesDefs')[this.name]['attributeValueId']
+                        id: attributeValueId
                     }
 
                     $.ajax({
