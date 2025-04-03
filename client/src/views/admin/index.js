@@ -31,7 +31,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/index', 'view', function (Dep) {
+Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
 
     return Dep.extend({
 
@@ -82,6 +82,23 @@ Espo.define('views/admin/index', 'view', function (Dep) {
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Administration'));
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            new Svelte.TreePanel({
+                target: $(`${this.options.el} .content-wrapper`).get(0),
+                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
+                props: {
+                    scope: this.scope,
+                    model: this.model,
+                    mode: 'detail',
+                    isAdminPage: true,
+                    callbacks: {
+
+                    }
+                }
+            });
         }
 
     });

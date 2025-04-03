@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {createEventDispatcher, onMount, tick} from 'svelte';
+    import {onMount, tick} from 'svelte';
     import {fade} from 'svelte/transition';
     import {Storage} from "../../utils/Storage";
     import {LayoutManager} from "../../utils/LayoutManager";
@@ -22,7 +22,7 @@
 
     export let renderLayoutEditor;
 
-    const dispatch = createEventDispatcher();
+    export let isAdminPage: boolean = false;
 
     let treeElement: HTMLElement;
     let layoutEditorElement: HTMLElement;
@@ -51,7 +51,7 @@
 
     $: treePanelWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
-    $: isSelectionEnabled = activeItem && (!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list'
+    $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
     $: {
         if (!treeScope) {
             sortFields = []
@@ -152,12 +152,20 @@
         return whereData
     }
 
+    function getHashScope() {
+        let locationHash = window.location.hash;
+        return locationHash.split('/').shift().replace('#', '');
+    }
+
     function buildTree(data = null): void {
         if (!activeItem) {
             return;
         }
 
 
+        if (activeItem.name === '_admin') {
+            data = getAdminTreeData();
+        }
         let $tree = window.$(treeElement);
         let whereData = getWhereData()
 
@@ -223,10 +231,18 @@
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
+
                 if (!['_self', '_bookmark'].includes(activeItem.name) && selectNodeId === node.id) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
+
+                if (activeItem.name === '_admin'
+                    && ((Metadata.get(['scopes', getHashScope()]) && node.id.includes('#' + getHashScope())) || node.id === window.location.hash)) {
+                    $tree.tree('addToSelection', node);
+                    $li.addClass('jqtree-selected');
+                }
+
 
                 $title.attr('data-id', node.id);
 
@@ -259,6 +275,17 @@
             }
         })
         $tree.on('tree.refresh', e => {
+            if (activeItem.name === '_admin') {
+                let hashScope = getHashScope();
+                if (Metadata.get(['scopes', hashScope])) {
+                    selectTreeNode(hashScope, [])
+                    if (callbacks?.selectNode) {
+                        callbacks.selectNode({id: hashScope}, true);
+                    }
+                }
+                return;
+            }
+
             if (Storage.get('selectedNodeId', scope) && mode === 'list') {
                 const id = Storage.get('selectedNodeId', scope);
                 const route = Storage.get('selectedNodeRoute', scope);
@@ -304,6 +331,12 @@
         })
         $tree.on('tree.click', e => {
             e.preventDefault();
+
+            if (activeItem.name === '_admin' && !e.node.disabled) {
+                window.location.href = e.node.id;
+                return;
+            }
+
             if (e.node.disabled) {
                 return false;
             }
@@ -555,6 +588,7 @@
         searchValue = ''
         searchInputElement.value = ''
         Storage.clear('treeSearchValue', treeScope)
+        Storage.clear('treeSearchValue', '_admin')
 
         if (mode === 'list') {
             if (selectNodeId) {
@@ -586,10 +620,13 @@
 
     function applySearch() {
         searchValue = searchInputElement.value
-        if (searchValue) {
+        if (searchValue && activeItem.name === '_admin') {
+            Storage.set('treeSearchValue', '_admin', searchValue)
+        } else if (searchValue) {
             Storage.set('treeSearchValue', scope, searchValue)
         } else {
             Storage.clear('treeSearchValue', scope)
+            Storage.clear('treeSearchValue', '_admin')
         }
         Notifier.notify('Loading...')
         rebuildTree()
@@ -618,46 +655,103 @@
         rebuildTree()
     }
 
-    function loadLayout(callback) {
-        LayoutManager.get(scope, 'leftSidebar', null, null, (data) => {
-            layoutData = data
-            treeItems = data.layout.map(item => {
-                const type = Metadata.get(['entityDefs', scope, 'fields', item.name, 'type'])
-                let label = ''
-                if (item.name === '_self') {
-                    label = Language.get('Global', 'scopeNamesPlural', scope)
-                } else if (item.name === '_bookmark') {
-                    label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
-                } else {
-                    if (type == 'link') {
-                        const itemScope = getLinkScope(item.name)
-                        label = Language.get('Global', 'scopeNamesPlural', itemScope)
-                    }
-
-                    if (!label) {
-                        label = Language.get(scope, 'links', item.name) || Language.get(scope, 'fields', item.name) || Language.get('Global', 'fields', item.name)
-                    }
-                }
-
-
-                return {
-                    name: item.name,
-                    label: label
-                }
-            })
-            const treeItem = Storage.get('treeItem', scope);
-            if (treeItems.length > 0) {
-                if (!treeItem || !treeItems.find(ti => ti.name === treeItem)) {
-                    Storage.set('treeItem', scope, treeItems[0].name);
-                    activeItem = treeItems[0]
-                } else {
-                    activeItem = treeItems.find(ti => ti.name === treeItem);
-                }
-                initSorting(true)
+    function getAdminTreeData() {
+        let data = Metadata.get(['app', 'adminPanel']);
+        let total = Object.keys(data).length;
+        let result = [];
+        let i = 0;
+        Object.entries(data).forEach(([k, v]) => {
+            let treeItem = {
+                id: k,
+                name: Language.get('Admin', 'labels', v['label']) ?? v['label'],
+                offset: i,
+                total: total,
+                disabled: true,
+                load_on_demand: false,
+                children: []
             }
+            let j = 0;
+            let totalItem = v['itemList'].length;
+            for (const item of v['itemList']) {
+                const label = Language.translate(item['label'], 'labels', 'Admin');
+                if ((searchValue ?? '').length < 3 || (label.toLowerCase().includes(searchValue.toLowerCase()))) {
+                    treeItem.children.push({
+                        id: item['url'],
+                        name: label,
+                        offset: j,
+                        total: totalItem,
+                        disabled: false,
+                        load_on_demand: false,
+                    });
+                    j++;
+                }
 
+            }
+            if (treeItem.children.length === 0) {
+                return;
+            }
+            result.push(treeItem);
+            i++;
+        });
+
+        return result;
+    }
+
+    function loadLayout(callback) {
+        if(isAdminPage) {
+            activeItem = {
+                name: '_admin',
+                label: Language.get('Global', 'labels', 'Administration')
+            }
+            treeItems = [activeItem];
             callback()
-        })
+        }else{
+            LayoutManager.get(scope, 'leftSidebar', null, null, (data) => {
+                layoutData = data
+                treeItems = data.layout.map(item => {
+                    const type = Metadata.get(['entityDefs', scope, 'fields', item.name, 'type'])
+                    let label = ''
+                    if (item.name === '_self') {
+                        label = Language.get('Global', 'scopeNamesPlural', scope)
+                    } else if (item.name === '_bookmark') {
+                        label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
+                    } else if (item.name === '_admin') {
+                        label = Language.get('Global', 'labels', 'Administration')
+                    } else {
+                        if (type == 'link') {
+                            const itemScope = getLinkScope(item.name)
+                            label = Language.get('Global', 'scopeNamesPlural', itemScope)
+                        }
+
+                        if (!label) {
+                            label = Language.get(scope, 'links', item.name) || Language.get(scope, 'fields', item.name) || Language.get('Global', 'fields', item.name)
+                        }
+                    }
+
+
+                    return {
+                        name: item.name,
+                        label: label
+                    }
+                })
+                let treeItem = Storage.get('treeItem', scope);
+                // admin should always be the selected one
+                if (getHashScope() === scope) {
+                    treeItem = '_admin';
+                }
+                if (treeItems.length > 0) {
+                    if (!treeItem || !treeItems.find(ti => ti.name === treeItem)) {
+                        Storage.set('treeItem', scope, treeItems[0].name);
+                        activeItem = treeItems[0]
+                    } else {
+                        activeItem = treeItems.find(ti => ti.name === treeItem);
+                    }
+                    initSorting(true)
+                }
+
+                callback()
+            })
+        }
     }
 
     function initSorting(useCache) {
@@ -720,7 +814,11 @@
                 }
             }
             tick().then(() => {
-                searchValue = Storage.get('treeSearchValue', scope) || null;
+                if (activeItem.name === '_admin') {
+                    searchValue = Storage.get('treeSearchValue', '_admin') || null
+                } else {
+                    searchValue = Storage.get('treeSearchValue', scope) || null;
+                }
                 if (searchValue) {
                     searchInputElement.value = searchValue
                 }
@@ -786,28 +884,30 @@
                                 class:hidden={!searchValue}></button>
                         <button on:click={applySearch} class="fas fa-search search-in-tree-button"></button>
                     </div>
-                    <div style="margin-top: 20px;display: flex; justify-content: space-between;flex-wrap: wrap">
-                        <button on:click={callUnselectNode} type="button" style="margin-bottom: 5px"
-                                disabled="{!selectNodeId || !isSelectionEnabled}"
-                                class="btn btn-default">
-                            Unset selection
-                        </button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default sort-btn" data-tippy="true"
-                                    title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
-                                    on:click={onSortAscChange}>
-                                <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
+                    {#if activeItem.name !== '_admin' }
+                        <div style="margin-top: 20px;display: flex; justify-content: space-between;flex-wrap: wrap">
+                            <button on:click={callUnselectNode} type="button" style="margin-bottom: 5px"
+                                    disabled="{!selectNodeId || !isSelectionEnabled}"
+                                    class="btn btn-default">
+                                Unset selection
                             </button>
-                            <select class="form-control" style="width: auto;max-width: 120px"
-                                    on:change={onSortByChange} bind:value={sortBy}>
-                                {#each sortFields as field }
-                                    <option value="{field.name}">
-                                        {field.label}
-                                    </option>
-                                {/each}
-                            </select>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default sort-btn" data-tippy="true"
+                                        title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
+                                        on:click={onSortAscChange}>
+                                    <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
+                                </button>
+                                <select class="form-control" style="width: auto;max-width: 120px"
+                                        on:change={onSortByChange} bind:value={sortBy}>
+                                    {#each sortFields as field }
+                                        <option value="{field.name}">
+                                            {field.label}
+                                        </option>
+                                    {/each}
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    {/if}
                 </div>
 
                 <div class="panel-group category-tree" bind:this={treeElement}>
