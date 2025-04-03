@@ -9,5 +9,6 @@
   "oauth1": "\\Atro\\ConnectionType\\ConnectionOauth1",
   "otto": "\\Atro\\ConnectionType\\ConnectionOtto",
   "cookie": "\\Atro\\ConnectionType\\ConnectionCookie",
-  "smtp": "\\Atro\\ConnectionType\\ConnectionSmtp"
+  "smtp": "\\Atro\\ConnectionType\\ConnectionSmtp",
+  "pdoSql": "\\Atro\\ConnectionType\\ConnectionPdoSql"
 }
