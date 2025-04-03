@@ -40,22 +40,31 @@ class AttributeFieldConverter
             return;
         }
 
-        $languages = [];
+//        $languages = [];
+//        if (!empty($this->config->get('isMultilangActive'))) {
+//            foreach ($this->config->get('inputLanguageList', []) as $code) {
+//                $languages[$code] = $code;
+//                foreach ($this->config->get('referenceData.Language', []) as $v) {
+//                    if ($code === $v['code']) {
+//                        $languages[$code] = $v['name'];
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+
+        $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
+
+        $select = 'a.*, av.id as av_id, av.bool_value, av.date_value, av.datetime_value, av.int_value, av.int_value1, av.float_value, av.float_value1, av.varchar_value, av.text_value, av.reference_value, av.json_value, f.name as file_name';
         if (!empty($this->config->get('isMultilangActive'))) {
             foreach ($this->config->get('inputLanguageList', []) as $code) {
-                $languages[$code] = $code;
-                foreach ($this->config->get('referenceData.Language', []) as $v) {
-                    if ($code === $v['code']) {
-                        $languages[$code] = $v['name'];
-                        break;
-                    }
-                }
+                $select .= ',av.varchar_value_' . strtolower($code);
+                $select .= ',av.text_value_' . strtolower($code);
             }
         }
 
-        $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
         $res = $this->conn->createQueryBuilder()
-            ->select('a.*, av.id as av_id, av.bool_value, av.date_value, av.datetime_value, av.int_value, av.int_value1, av.float_value, av.float_value1, av.varchar_value, av.text_value, av.reference_value, av.json_value, f.name as file_name')
+            ->select($select)
             ->from("{$tableName}_attribute_value", 'av')
             ->leftJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
             ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType')
