@@ -1955,14 +1955,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (!this.model.isNew()) {
                     $.each(this.model.get('attributesDefs') || {}, (name, defs) => {
                         this.model.defs['fields'][name] = defs;
-                        layoutRow.push({
-                            name: name,
-                            customLabel: defs.label,
-                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
-                        });
-                        if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
-                            layoutRows.push(layoutRow);
-                            layoutRow = [];
+                        if (!defs.layoutDetailDisabled) {
+                            let item = {
+                                name: name,
+                                customLabel: defs.label,
+                                fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
+                            }
+                            if (defs.layoutDetailView) {
+                                item.view = defs.layoutDetailView;
+                            }
+                            layoutRow.push(item);
+                            if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                                layoutRows.push(layoutRow);
+                                layoutRow = [];
+                            }
                         }
                     });
                 }
