@@ -411,6 +411,15 @@ class Record extends RecordService
         return true;
     }
 
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    {
+        parent::duplicateLinks($entity, $duplicatingEntity);
+
+        if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.hasAttribute")) {
+            $this->getRepository()->duplicateAttributeValues($entity, $duplicatingEntity);
+        }
+    }
+
     protected function getMandatoryLinksToMerge(): array
     {
         return [];

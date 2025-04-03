@@ -118,7 +118,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
         },
 
         getExtensibleEnumId() {
-            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']) ?? this.model.getFieldParam(this.name, 'extensibleEnumId');
             if (this.params.extensibleEnumId) {
                 extensibleEnumId = this.params.extensibleEnumId;
             }

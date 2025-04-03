@@ -37,7 +37,12 @@
       {
          "name": "index",
          "type": "bool"
-      }
+      },
+     {
+       "name": "isMultilang",
+       "type": "bool",
+       "tooltip": true
+     }
    ],
    "filter": true,
    "auditable": true,

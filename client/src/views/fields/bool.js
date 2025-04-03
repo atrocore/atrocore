@@ -50,10 +50,8 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         notNull: true,
 
-        setup(){
-            this.notNull = this.params?.notNull
-                ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? true;
-
+        setup() {
+            this.notNull = this.model.getFieldParam(this.name, 'notNull') ?? this.params?.notNull ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? true;
         },
 
         setupSearch() {

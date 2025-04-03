@@ -29,6 +29,12 @@
       ],
       [
         {
+          "name": "displayField"
+        },
+        false
+      ],
+      [
+        {
           "name": "massAction"
         },
         {
