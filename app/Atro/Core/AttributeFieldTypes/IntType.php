@@ -18,6 +18,7 @@ use Espo\ORM\IEntity;
 class IntType implements AttributeFieldTypeInterface
 {
     protected Language $language;
+    protected string $type = 'int';
 
     public function __construct(Container $container)
     {
@@ -27,10 +28,10 @@ class IntType implements AttributeFieldTypeInterface
     public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
     {
         $entity->fields[$name] = [
-            'type'             => 'int',
+            'type'             => $this->type,
             'name'             => $name,
             'attributeValueId' => $id,
-            'column'           => "int_value",
+            'column'           => "{$this->type}_value",
             'required'         => !empty($row['is_required'])
         ];
 
@@ -38,7 +39,7 @@ class IntType implements AttributeFieldTypeInterface
 
         $entity->entityDefs['fields'][$name] = [
             'attributeValueId' => $id,
-            'type'             => 'int',
+            'type'             => $this->type,
             'required'         => !empty($row['is_required']),
             'notNull'          => !empty($row['not_null']),
             'label'            => $row['name']
@@ -51,9 +52,13 @@ class IntType implements AttributeFieldTypeInterface
             $entity->entityDefs['fields'][$name]['max'] = $attributeData['max'];
         }
 
+        if ($this->type === 'float') {
+            $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'] = $row['amount_of_digits_after_comma'] ?? null;
+        }
+
         if (isset($row['measure_id'])) {
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
-            $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-int";
+            $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
 
             $entity->fields[$name . 'UnitId'] = [
                 'type'             => 'varchar',

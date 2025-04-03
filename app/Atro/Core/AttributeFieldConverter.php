@@ -204,52 +204,6 @@ class AttributeFieldConverter
 ////                        ];
 ////                    }
 ////                    break;
-////                case 'float':
-////                    $entity->fields[$name] = [
-////                        'type'             => 'float',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => "float_value",
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
-////
-////                    $entity->entityDefs['fields'][$name] = [
-////                        'type'     => 'float',
-////                        'required' => !empty($row['is_required']),
-////                        'label'    => $row['name'],
-////                    ];
-////
-////                    $entity->fields[$name . 'UnitId'] = [
-////                        'type'             => 'varchar',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => 'reference_value',
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->fields[$name . 'UnitName'] = [
-////                        'type'        => 'varchar',
-////                        'notStorable' => true
-////                    ];
-////                    $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
-////
-////                    $entity->entityDefs['fields'][$name . 'Unit'] = [
-////                        "type"        => "link",
-////                        'label'       => "{$row['name']} (Unit)",
-////                        "view"        => "views/fields/unit-link",
-////                        "measureId"   => $row['measure_id'],
-////                        "entity"      => 'Unit',
-////                        "unitIdField" => true,
-////                        "mainField"   => $name,
-////                        'required'    => !empty($row['is_required'])
-////                    ];
-////                    break;
 ////                case 'rangeFloat':
 ////                    $entity->fields[$name . 'From'] = [
 ////                        'type'             => 'float',
