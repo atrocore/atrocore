@@ -416,8 +416,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         afterRender: function () {
             this.createTreePanel();
             this.setupHeader();
-
-
+            
             let treePanelView = this.getView('treePanel');
 
             this.collection.isFetched = false;

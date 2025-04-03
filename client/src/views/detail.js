@@ -298,7 +298,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 view.onTreePanelRendered();
             }
 
-            this.setupRightSideView()
+            this.setupRightSideView();
 
             let isScrolledMore = false;
             $('#main main').on('scroll', (e) => {
