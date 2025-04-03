@@ -12,14 +12,16 @@
     "smtpUsername": "Ім'я користувача",
     "smtpPassword": "Пароль",
     "outboundEmailFromName": "Ім'я відправника",
-    "outboundEmailFromAddress": "Адреса відправника"
+    "outboundEmailFromAddress": "Адреса відправника",
+    "dsn": "Dsn"
   },
   "labels": {
     "connectionSuccess": "З'єднання успішно встановлено",
     "testConnection": "Перевірити з'єднання",
     "sendTestEmail": "Надіслати тестовий електронний лист",
     "Create Connection": "Створити з'єднання",
-    "smtp": "SMTP"
+    "smtp": "SMTP",
+    "pdoSql": "PDO SQL"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не встановлено.",

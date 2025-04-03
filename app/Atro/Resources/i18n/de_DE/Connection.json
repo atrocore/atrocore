@@ -21,7 +21,8 @@
     "sendTestEmail": "Test-E-Mail senden",
     "Create Connection": "Verbindung erstellen",
     "cookie": "Cookie-Sitzung",
-    "smtp": "SMTP"
+    "smtp": "SMTP",
+    "pdoSql": "PDO SQL"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",

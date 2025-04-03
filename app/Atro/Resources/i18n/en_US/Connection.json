@@ -41,7 +41,8 @@
     "smtpOauthTokenUrl": "Oauth Token URL",
     "smtpClientId": "Client ID",
     "smtpClientSecret": "Client Secret",
-    "smtpAuthType": "Auth Type"
+    "smtpAuthType": "Auth Type",
+    "dsn": "Dsn"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
@@ -66,7 +67,8 @@
     "receipts": "Receipts",
     "price-reduction": "Price reduction",
     "oauth1": "Oauth 1.0",
-    "smtp": "SMTP"
+    "smtp": "SMTP",
+    "pdoSql": "PDO SQL"
   },
   "options": {
     "smtpAuthType": {

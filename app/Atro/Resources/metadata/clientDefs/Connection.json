@@ -16,6 +16,19 @@
   },
   "dynamicLogic": {
     "fields": {
+      "dsn": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        }
+      },
       "dbName": {
         "visible": {
           "conditionGroup": [
@@ -103,7 +116,8 @@
                 "msql",
                 "ftp",
                 "sftp",
-                "cookie"
+                "cookie",
+                "pdoSql"
               ]
             }
           ]
@@ -121,7 +135,8 @@
                 "msql",
                 "ftp",
                 "sftp",
-                "cookie"
+                "cookie",
+                "pdoSql"
               ]
             }
           ]
