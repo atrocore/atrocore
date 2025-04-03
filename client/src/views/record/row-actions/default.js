@@ -104,7 +104,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 $(this.$el).find('li.dynamic-action').remove()
             }
 
-            this.model.fetchDynamicActions()
+            this.model.fetchDynamicActions('record')
                 .then(dynamicActions => {
                     $(this.$el).find('li.dynamic-action').remove()
 

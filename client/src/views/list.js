@@ -502,7 +502,11 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
-                        this.collection.fetch();
+                        this.collection.fetch({
+                            headers: {
+                                'Entity-History': 'true'
+                            }
+                        });
                     }.bind(this));
                 } else {
                     view.render();
