@@ -158,7 +158,7 @@ class Action extends Base
         return $this->getInjection('container')->get($className);
     }
 
-    public function getRecordDynamicActions(string $scope, string $id, ?string $display)
+    public function getDynamicActions(string $scope, string $id, ?string $type, ?string $display)
     {
         if ($this->getMetadata()->get(['scopes', $scope, 'actionDisabled'], false)) {
             throw new Error("Action for '$scope' disabled");
@@ -172,7 +172,8 @@ class Action extends Base
         $dynamicActions = [];
         $actionIds = [];
 
-        foreach ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicRecordActions']) ?? [] as $action) {
+
+        foreach ($this->getMetadata()->get(['clientDefs', $scope, $type === 'field' ? 'dynamicFieldActions' : 'dynamicRecordActions']) ?? [] as $action) {
             if (!empty($action['acl']['scope'])) {
                 if (!$this->getAcl()->check($action['acl']['scope'], $action['acl']['action'])) {
                     continue;
@@ -182,7 +183,7 @@ class Action extends Base
                 continue;
             }
 
-            $dynamicActions[] = [
+            $data = [
                 'action'  => 'dynamicAction',
                 'label'   => $action['name'],
                 'display' => $action['display'] ?? null,
@@ -192,11 +193,17 @@ class Action extends Base
                     'entity_id' => $id
                 ]
             ];
+
+            if ($type === 'field') {
+                $data['displayField'] = $action['displayField'] ?? null;
+            }
+
+            $dynamicActions[] = $data;
             $actionIds[] = $action['id'];
         }
 
         if (!empty($actionIds)) {
-            $actions = $this->getentityManager()->getRepository('Action')->findByIds($actionIds);
+            $actions = $this->getEntityManager()->getRepository('Action')->findByIds($actionIds);
 
             foreach ($actions as $action) {
                 foreach ($dynamicActions as $dynamicAction) {
@@ -219,7 +226,7 @@ class Action extends Base
         }
 
 
-        if (!$this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled'])) {
+        if (!$this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled']) && $type === 'record') {
             $result = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('id')
                 ->from('bookmark')

@@ -76,7 +76,7 @@
         }
 
         try {
-            const response = await fetch(`/api/v1/Action/${scope}/${id}/dynamicActions`, {
+            const response = await fetch(`/api/v1/Action/${scope}/${id}/dynamicActions?type=record`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

@@ -34,12 +34,16 @@ Espo.define('views/fields/entity-field', 'views/fields/enum', Dep => {
 
     return Dep.extend({
 
+        entityField: 'entityType',
+
         setup() {
+            this.entityField = this.model.getFieldParam(this.name, 'entityField') || this.entityField;
+
             this.prepareEnumOptions();
 
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:entityType', () => {
+            this.listenTo(this.model, `change:${this.entityField}`, () => {
                 this.model.set(this.name, null);
                 this.prepareEnumOptions();
                 this.reRender();
@@ -57,7 +61,7 @@ Espo.define('views/fields/entity-field', 'views/fields/enum', Dep => {
         },
 
         getEntityType() {
-            return this.model.get('entityType');
+            return this.model.get(this.entityField);
         },
 
         getEntityFields() {

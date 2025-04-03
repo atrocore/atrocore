@@ -4,9 +4,10 @@
     import GfiImage from "$assets/image_gfi.svg"
     import GfiHideImage from "$assets/hide_image_gfi.svg"
     import {Language} from "../../utils/Language";
-    import {Metadata} from "../../utils/Metadata";
+    import Item from './interfaces/Item'
 
     export let scope: string;
+    export let mode: string;
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
@@ -27,14 +28,17 @@
     let isMouseOver = false;
     let isPin = true;
     let streamView: Object;
+    let items: Item[] = [];
+    let activeItem: Item;
 
-    let items = [
-        {
-            "name": "summary",
-            "label": Language.translate('Summary'),
-        }
-    ];
-    let activeItem = items[0];
+    if (mode !== 'list') {
+        items.push({
+            name: "summary",
+            label: Language.translate('Summary'),
+        });
+
+        activeItem = items[0];
+    }
 
     let isMobile = false;
 
@@ -42,8 +46,7 @@
         isMobile = window.innerWidth <= 768;
     };
 
-
-    $: sideViewWidth = isMobile ? `${window.innerWidth}px` : (  isCollapsed ? 'auto' : `${currentWidth}px`);
+    $: sideViewWidth = isMobile ? `${window.innerWidth}px` : (isCollapsed ? 'auto' : `${currentWidth}px`);
 
     function handleResize(e: MouseEvent) {
         if (!isDragging) return;
@@ -89,7 +92,7 @@
 
         activeItem = item;
 
-        if(activeItem.name === 'activities') {
+        if (activeItem.name === 'activities') {
             refreshActivities()
         }
 
@@ -103,7 +106,7 @@
     function updateCollapse(value: boolean) {
         isCollapsed = value;
         Storage.set('right-side-view-collapse', scope, isCollapsed ? 'collapsed' : '');
-        if(activeItem.name === 'activities') {
+        if (activeItem.name === 'activities') {
             refreshActivities();
         }
     }
@@ -159,16 +162,16 @@
 
     function refreshActivities() {
 
-        if(isCollapsed) {
+        if (isCollapsed) {
             return;
         }
 
-        if(streamView == null) {
+        if (streamView == null) {
             loadActivities((view) => {
                 streamView = view;
             });
-        }else{
-             streamView?.refresh();
+        } else {
+            streamView?.refresh();
         }
     }
 
@@ -182,29 +185,32 @@
 
         isCollapsed = (Storage.get('right-side-view-collapse', scope) === 'collapsed') || isMobile;
 
-        isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned' ;
-
-
+        isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned';
 
         window.addEventListener("resize", checkScreenSize);
 
+        if (mode !== 'list') {
+            loadSummary();
+        }
 
-        loadSummary();
-
-        if(hasStream) {
+        if (hasStream) {
             items = [
                 ...items,
                 {
-                    "name":"activities",
+                    "name": "activities",
                     "label": Language.translate('Activities')
                 }]
         }
 
-        let itemName =   Storage.get('right-side-view-active-item', scope);
+        let itemName = Storage.get('right-side-view-active-item', scope);
 
-        if(itemName && items.map(i => i.name).includes(itemName)) {
+        if (itemName && items.map(i => i.name).includes(itemName)) {
 
             setActiveItem(items.find(i => i.name === itemName));
+        }
+
+        if(!activeItem) {
+            setActiveItem(items[0]);
         }
 
         return () => {
@@ -260,15 +266,16 @@
         </div>
 
         <div style="display: flex; align-items: center">
-            <h5 style="font-weight: bold; margin-right: 10px; font-size: 16px;">{activeItem.label}</h5>
-            <div class="layout-editor-container" class:hidden={activeItem.name !== 'summary'}></div>
+            <h5 style="font-weight: bold; margin-right: 10px; font-size: 16px;">{activeItem?.label ?? ''}</h5>
+            <div class="layout-editor-container" class:hidden={activeItem?.name !== 'summary'}></div>
         </div>
 
 
-        <div class="summary" class:hidden={activeItem.name !== 'summary'}>
+        <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
+
         </div>
 
-        <div class="activities" class:hidden={activeItem.name !== 'activities'}>
+        <div class="activities" class:hidden={activeItem?.name !== 'activities'}>
 
         </div>
 
@@ -403,14 +410,14 @@
         display: none;
     }
 
-    :global(.dropdown-menu.textcomplete-dropdown){
+    :global(.dropdown-menu.textcomplete-dropdown) {
         z-index: 1300 !important;
     }
 
     @media (max-width: 768px) {
         .collapsed.right-side-view {
             position: fixed;
-            width:0 !important;
+            width: 0 !important;
             right: 20px;
             padding: 0;
             border-left: 0 solid transparent;

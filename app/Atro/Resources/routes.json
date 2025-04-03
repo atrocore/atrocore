@@ -383,6 +383,15 @@
     }
   },
   {
+    "route": "/Stream/:scope",
+    "method": "get",
+    "params": {
+      "controller": "Stream",
+      "action": "list",
+      "scope": ":scope"
+    }
+  },
+  {
     "route": "/GlobalSearch",
     "method": "get",
     "params": {

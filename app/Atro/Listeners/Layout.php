@@ -29,6 +29,16 @@ class Layout extends AbstractListener
             if (empty($event->getArgument('params')['isCustom'])) {
                 $scope = $event->getArgument('params')['scope'];
 
+                if($scope === 'Settings' && $this->getUser()->isAdmin()) {
+                    $result[] = ['name' => '_admin'];
+                    $event->setArgument('result', $result);
+                }
+                // add admin navigation
+                if($this->isAdminView($scope) && $this->getUser()->isAdmin()) {
+                    $result[] = ['name' => '_admin'];
+                    $event->setArgument('result', $result);
+                }
+
                 // add _self if entity is hierarchy type
                 if ($this->getMetadata()->get(['scopes', $scope, 'type']) === 'Hierarchy'
                     && empty($this->getMetadata()->get(['scopes', $scope, 'disableHierarchy'], false))) {
@@ -94,6 +104,17 @@ class Layout extends AbstractListener
         $this->getEventManager()->dispatch($event->getArgument('target'), $event->getArgument('params')['viewType'], $event);
     }
 
+    protected  function isAdminView($scope): bool
+    {
+        foreach ($this->getMetadata()->get(['app', 'adminPanel']) as $panel) {
+            foreach ($panel['itemList'] as $item) {
+                if(!empty($item['url']) && str_starts_with($item['url'], "#$scope")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     protected function getEventManager(): Manager
     {

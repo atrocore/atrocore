@@ -4,6 +4,7 @@ Espo.define('views/record/activities', 'views/record/detail-bottom', function (D
 
         init: function () {
             this.model = this.options.model;
+            this.mode = this.options.mode;
             Dep.prototype.init.call(this);
         },
 
@@ -12,6 +13,7 @@ Espo.define('views/record/activities', 'views/record/detail-bottom', function (D
 
             this.panelList = [{
                 model: this.options.model,
+                scope: this.options.scope,
                 name: "stream",
                 label: "",
                 title: this.translate('Activities', 'labels'),

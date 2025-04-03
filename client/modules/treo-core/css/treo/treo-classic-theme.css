@@ -19321,7 +19321,7 @@ input#sn-checkbox-open-in-new-window {
     margin-top: 4px;
 }
 
-.detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body div:not(.filter) > .form-group div.field {
+#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group div.field {
     padding-bottom: 6px;
     border-bottom: 1px solid var(--secondary-border-color);
 }
@@ -24513,4 +24513,15 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .panel-stream .header .filter .filter-item.disabled:hover {
     border: 1px solid transparent;
     background-color: transparent;
+}
+
+.admin-page {
+    margin-left: 20px;
+    max-height: 100vh;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.admin-page .row {
+    margin-right: 0;
 }
