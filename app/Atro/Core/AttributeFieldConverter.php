@@ -526,5 +526,6 @@ class AttributeFieldConverter
         }
 
         $entity->set('attributesDefs', $attributesDefs);
+        $entity->setAsFetched();
     }
 }
