@@ -13,30 +13,31 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Espo\ORM\IEntity;
 
-class ExtensibleEnumType implements AttributeFieldTypeInterface
+class ExtensibleMultiEnumType implements AttributeFieldTypeInterface
 {
     public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
     {
         $entity->fields[$name] = [
-            'type'             => 'varchar',
+            'type'             => 'jsonArray',
             'name'             => $name,
             'attributeValueId' => $id,
-            'column'           => "reference_value",
+            'column'           => "json_value",
             'required'         => !empty($row['is_required'])
         ];
-        $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+
+        $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
+        $entity->set($name, is_array($value) ? $value : null);
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeValueId'     => $id,
-            'type'                 => 'extensibleEnum',
-            'required'             => !empty($row['is_required']),
-            'label'                => $row['name'],
-            'prohibitedEmptyValue' => !empty($row['prohibited_empty_value']),
-            'dropdown'             => !empty($row['dropdown']),
-            'extensibleEnumId'     => $row['extensible_enum_id'] ?? null
+            'attributeValueId' => $id,
+            'type'             => 'extensibleMultiEnum',
+            'required'         => !empty($row['is_required']),
+            'label'            => $row['name'],
+            'dropdown'         => !empty($row['dropdown']),
+            'extensibleEnumId' => $row['extensible_enum_id'] ?? null
         ];
         if (!empty($row['dropdown'])) {
-            $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-enum-dropdown";
+            $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";
         }
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

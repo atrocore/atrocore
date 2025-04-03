@@ -146,32 +146,7 @@ class AttributeFieldConverter
 //
 //            $entity->set('attributeValues', $attributeValues);
 
-
 //            switch ($row['type']) {
-////                case 'extensibleMultiEnum':
-////                    $entity->fields[$name] = [
-////                        'type'             => 'jsonArray',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => "json_value",
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
-////
-////                    $entity->entityDefs['fields'][$name] = [
-////                        'type'             => 'extensibleMultiEnum',
-////                        'required'         => !empty($row['is_required']),
-////                        'label'            => $row['name'],
-////                        'dropdown'         => !empty($row['dropdown']),
-////                        'extensibleEnumId' => $row['extensible_enum_id'] ?? null
-////                    ];
-////                    if (!empty($row['dropdown'])) {
-////                        $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";
-////                    }
-////                    break;
 ////                case 'array':
 ////                    $entity->fields[$name] = [
 ////                        'type'             => 'jsonArray',
