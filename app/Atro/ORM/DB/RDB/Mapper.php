@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB;
 
-use Atro\Core\AttributeValueConverter;
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Utils\Config;
 use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
@@ -33,15 +33,15 @@ class Mapper implements MapperInterface
     protected EntityFactory $entityFactory;
     protected Metadata $metadata;
     protected QueryConverter $queryConverter;
-    protected AttributeValueConverter $attributeValueConverter;
+    protected AttributeFieldConverter $attributeFieldConverter;
     private array $singleParentHierarchy = [];
 
-    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata, AttributeValueConverter $attributeValueConverter)
+    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata, AttributeFieldConverter $attributeFieldConverter)
     {
         $this->connection = $connection;
         $this->entityFactory = $entityFactory;
         $this->metadata = $metadata;
-        $this->attributeValueConverter = $attributeValueConverter;
+        $this->attributeFieldConverter = $attributeFieldConverter;
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
@@ -59,7 +59,7 @@ class Mapper implements MapperInterface
         $entity->set($row);
         $entity->setAsFetched();
 
-        $this->attributeValueConverter->addAttributeValues($entity);
+        $this->attributeFieldConverter->putAttributesToEntity($entity);
 
         return $entity;
     }

@@ -1953,18 +1953,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let layoutRow = [];
 
                 if (!this.model.isNew()) {
-                    (this.model.get('attributeValues') || []).forEach(item => {
-                        this.model.defs['fields'][item.name] = item;
+                    $.each(this.model.get('attributesDefs') || {}, (name, defs) => {
+                        this.model.defs['fields'][name] = defs;
                         layoutRow.push({
-                            name: item.name,
-                            customLabel: item.label,
-                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
+                            name: name,
+                            customLabel: defs.label,
+                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
                         });
                         if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
                             layoutRows.push(layoutRow);
                             layoutRow = [];
                         }
-                    })
+                    });
                 }
 
                 if (layoutRow.length > 0) {
