@@ -30,6 +30,7 @@ Espo.define('views/stream/header', 'view', function (Dep) {
                     }
                 }
 
+                this.activeFilters = this.activeFilters.filter(v => this.options.filterList.includes(v));
                 this.trigger('filter-update', this.activeFilters);
             }
         },
