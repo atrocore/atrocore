@@ -334,38 +334,6 @@ class AttributeFieldConverter
 ////                        }
 ////                    }
 ////                    break;
-////                case 'text':
-////                case 'markdown':
-////                case 'wysiwyg':
-////                    $entity->fields[$name] = [
-////                        'type'             => 'text',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => "text_value",
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
-////
-////                    if (!empty($row['is_multilang'])) {
-////                        foreach ($languages as $language => $languageName) {
-////                            $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
-////                            $entity->fields[$lName] = [
-////                                'type'             => 'text',
-////                                'name'             => $name,
-////                                'attributeValueId' => $id,
-////                                'attributeId'      => $row['id'],
-////                                'attributeName'    => $row['name'] . ' / ' . $languageName,
-////                                'attributeType'    => $row['type'],
-////                                'column'           => "text_value_" . strtolower($language),
-////                                'required'         => !empty($row['is_required'])
-////                            ];
-////                            $entity->set($lName, $row[$entity->fields[$lName]['column']] ?? null);
-////                        }
-////                    }
-////                    break;
 ////                case 'varchar':
 ////                    $entity->fields[$name] = [
 ////                        'type'             => 'varchar',
