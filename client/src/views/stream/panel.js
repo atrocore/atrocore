@@ -42,8 +42,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         header: 'views/stream/header',
 
-        filterList: ['posts', 'updates', 'emails'],
-
         events: _.extend({
             'click button.post': function () {
                 this.post();
@@ -55,6 +53,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             data.postDisabled = this.postDisabled;
             data.placeholderText = this.placeholderText;
             return data;
+        },
+
+        getFilterList: function () {
+            return  this.getMetadata().get(['scopes', this.scope, 'filterInNote']) || ['posts', 'updates']
         },
 
         enablePostingMode: function () {
@@ -344,8 +346,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         prepareNoteForPost: function (model) {
-            model.set('parentId', this.model.id);
-            model.set('parentType', this.model.name);
+            model.set('parentId', this.model?.id);
+            model.set('parentType', this.scope ?? this.model.name);
         },
 
         getButtonList: function () {
@@ -354,7 +356,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
 
         getStoredFilter: function () {
-            return this.getStorage().get('state', 'streamPanelFilter') || this.filterList;
+            let lists =  this.getStorage().get('state', 'streamPanelFilter') || this.getFilterList();
+            return  lists.filter(v => this.getFilterList().includes(v));
         },
 
         storeFilter: function (filter) {
@@ -377,7 +380,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
               el: this.options.el + ' .header',
               scope: this.scope,
               model: this.model,
-              filterList: this.filterList,
+              mode: this.options.mode,
+              filterList: this.getFilterList(),
               activeFilters: this.getStoredFilter(),
               collection: this.collection,
           }, view => {
