@@ -42,7 +42,7 @@ class FileType extends AbstractFieldType
             'attributeValueId' => $id,
             'type'             => 'file',
             'required'         => !empty($row['is_required']),
-            'label'            => $row['name'],
+            'label'            => $row[$this->prepareKey('name', $row)],
             'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];

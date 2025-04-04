@@ -30,7 +30,7 @@ class ExtensibleEnumType extends AbstractFieldType
             'attributeValueId'     => $id,
             'type'                 => 'extensibleEnum',
             'required'             => !empty($row['is_required']),
-            'label'                => $row['name'],
+            'label'                => $row[$this->prepareKey('name', $row)],
             'prohibitedEmptyValue' => !empty($row['prohibited_empty_value']),
             'dropdown'             => !empty($row['dropdown']),
             'extensibleEnumId'     => $row['extensible_enum_id'] ?? null,

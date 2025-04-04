@@ -34,7 +34,7 @@ class IntType extends AbstractFieldType
             'type'             => $this->type,
             'required'         => !empty($row['is_required']),
             'notNull'          => !empty($row['not_null']),
-            'label'            => $row['name'],
+            'label'            => $row[$this->prepareKey('name', $row)],
             'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
@@ -69,7 +69,7 @@ class IntType extends AbstractFieldType
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
                 "type"                 => "link",
-                'label'                => "{$row['name']} " . $this->language->translate('unitPart'),
+                'label'                => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
                 "view"                 => "views/fields/unit-link",
                 "measureId"            => $row['measure_id'],
                 "entity"               => 'Unit',

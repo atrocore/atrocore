@@ -23,7 +23,7 @@ class RangeIntType extends AbstractFieldType
             'type'             => 'range' . ucfirst($this->type),
             'attributeValueId' => $id,
             'required'         => !empty($row['is_required']),
-            'label'            => $row['name'],
+            'label'            => $row[$this->prepareKey('name', $row)],
             'view'             => "views/fields/range-{$this->type}",
             'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
@@ -42,7 +42,7 @@ class RangeIntType extends AbstractFieldType
             'attributeValueId'     => $id,
             'type'                 => $this->type,
             'required'             => !empty($row['is_required']),
-            'label'                => $row['name'] . ' ' . $this->language->translate('From'),
+            'label'                => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('From'),
             'layoutDetailDisabled' => true
         ];
 
@@ -59,7 +59,7 @@ class RangeIntType extends AbstractFieldType
             'attributeValueId'     => $id,
             'type'                 => $this->type,
             'required'             => !empty($row['is_required']),
-            'label'                => $row['name'] . ' ' . $this->language->translate('To'),
+            'label'                => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('To'),
             'layoutDetailDisabled' => true
         ];
 
@@ -87,7 +87,7 @@ class RangeIntType extends AbstractFieldType
 
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'] = [
                 "type"                 => "link",
-                'label'                => "{$row['name']} " . $this->language->translate('unitPart'),
+                'label'                => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
                 "view"                 => "views/fields/unit-link",
                 "measureId"            => $row['measure_id'],
                 "entity"               => 'Unit',

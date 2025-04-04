@@ -32,7 +32,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'attributeValueId' => $id,
             'type'             => 'extensibleMultiEnum',
             'required'         => !empty($row['is_required']),
-            'label'            => $row['name'],
+            'label'            => $row[$this->prepareKey('name', $row)],
             'dropdown'         => !empty($row['dropdown']),
             'extensibleEnumId' => $row['extensible_enum_id'] ?? null,
             'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
