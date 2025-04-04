@@ -47,12 +47,18 @@ class MassDownload extends AbstractJob implements JobInterface
         };
 
         foreach ($files as $file) {
-            $path = $file->findOrCreateLocalFilePath($zipDir);
+            try {
+                $path = $file->findOrCreateLocalFilePath($zipDir);
 
-            if (!file_exists($path)) {
-                $GLOBALS['log']->error("File '{$path}' does not exist for file " . $file->id);
+                if (!file_exists($path)) {
+                    $GLOBALS['log']->error("File '{$path}' does not exist for file " . $file->id);
+                    continue;
+                }
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error("Error for file " . $file->id . " : " . $e->getMessage());
                 continue;
             }
+
 
             $zip->addFile($path, basename($path));
         }
