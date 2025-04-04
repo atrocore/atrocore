@@ -1111,7 +1111,7 @@ class Metadata extends AbstractListener
                     'emHidden'          => true,
                 ];
 
-                $metadata["entityDefs"][$scope]['fields']["attributeValues"] = [
+                $metadata["entityDefs"][$scope]['fields']["attributesDefs"] = [
                     "type"                        => "jsonObject",
                     "notStorable"                 => true,
                     "layoutDetailDisabled"        => true,

@@ -1963,18 +1963,24 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let layoutRow = [];
 
                 if (!this.model.isNew()) {
-                    (this.model.get('attributeValues') || []).forEach(item => {
-                        this.model.defs['fields'][item.name] = item;
-                        layoutRow.push({
-                            name: item.name,
-                            customLabel: item.label,
-                            fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(item.type)
-                        });
-                        if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
-                            layoutRows.push(layoutRow);
-                            layoutRow = [];
+                    $.each(this.model.get('attributesDefs') || {}, (name, defs) => {
+                        this.model.defs['fields'][name] = defs;
+                        if (!defs.layoutDetailDisabled) {
+                            let item = {
+                                name: name,
+                                customLabel: defs.label,
+                                fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
+                            }
+                            if (defs.layoutDetailView) {
+                                item.view = defs.layoutDetailView;
+                            }
+                            layoutRow.push(item);
+                            if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                                layoutRows.push(layoutRow);
+                                layoutRow = [];
+                            }
                         }
-                    })
+                    });
                 }
 
                 if (layoutRow.length > 0) {
