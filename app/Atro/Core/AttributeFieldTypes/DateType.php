@@ -13,7 +13,7 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Espo\ORM\IEntity;
 
-class DateType implements AttributeFieldTypeInterface
+class DateType extends AbstractFieldType
 {
     protected string $type = 'date';
     protected string $column = 'date_value';
@@ -35,8 +35,8 @@ class DateType implements AttributeFieldTypeInterface
             'type'             => $this->type,
             'required'         => !empty($row['is_required']),
             'label'            => $row['name'],
-            'tooltip'          => !empty($row['tooltip']),
-            'tooltipText'      => $row['tooltip']
+            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
     }
 }

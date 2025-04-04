@@ -11,19 +11,11 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
-use Atro\Core\Container;
-use Atro\Core\Utils\Language;
 use Espo\ORM\IEntity;
 
-class IntType implements AttributeFieldTypeInterface
+class IntType extends AbstractFieldType
 {
-    protected Language $language;
     protected string $type = 'int';
-
-    public function __construct(Container $container)
-    {
-        $this->language = $container->get('language');
-    }
 
     public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
     {
@@ -43,8 +35,8 @@ class IntType implements AttributeFieldTypeInterface
             'required'         => !empty($row['is_required']),
             'notNull'          => !empty($row['not_null']),
             'label'            => $row['name'],
-            'tooltip'          => !empty($row['tooltip']),
-            'tooltipText'      => $row['tooltip']
+            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
 
         if (isset($attributeData['min'])) {

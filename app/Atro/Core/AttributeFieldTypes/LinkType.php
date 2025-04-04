@@ -17,12 +17,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\IEntity;
 
-class LinkType implements AttributeFieldTypeInterface
+class LinkType extends AbstractFieldType
 {
     protected Connection $conn;
 
     public function __construct(Container $container)
     {
+        parent::__construct($container);
+
         $this->conn = $container->get('connection');
     }
 
@@ -52,8 +54,8 @@ class LinkType implements AttributeFieldTypeInterface
                 'entity'           => $attributeData['entityType'],
                 'required'         => !empty($row['is_required']),
                 'label'            => $row['name'],
-                'tooltip'          => !empty($row['tooltip']),
-                'tooltipText'      => $row['tooltip']
+                'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
+                'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
             ];
 
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));

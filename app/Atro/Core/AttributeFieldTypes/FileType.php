@@ -13,7 +13,7 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Espo\ORM\IEntity;
 
-class FileType implements AttributeFieldTypeInterface
+class FileType extends AbstractFieldType
 {
     public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
     {
@@ -43,8 +43,8 @@ class FileType implements AttributeFieldTypeInterface
             'type'             => 'file',
             'required'         => !empty($row['is_required']),
             'label'            => $row['name'],
-            'tooltip'          => !empty($row['tooltip']),
-            'tooltipText'      => $row['tooltip']
+            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
     }
 }

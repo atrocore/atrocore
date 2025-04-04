@@ -11,20 +11,11 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
-use Atro\Core\Container;
-use Atro\Core\Utils\Language;
 use Espo\ORM\IEntity;
 
-class RangeIntType implements AttributeFieldTypeInterface
+class RangeIntType extends AbstractFieldType
 {
-    protected Language $language;
-
     protected string $type = 'int';
-
-    public function __construct(Container $container)
-    {
-        $this->language = $container->get('language');
-    }
 
     public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
     {
@@ -34,8 +25,8 @@ class RangeIntType implements AttributeFieldTypeInterface
             'required'         => !empty($row['is_required']),
             'label'            => $row['name'],
             'view'             => "views/fields/range-{$this->type}",
-            'tooltip'          => !empty($row['tooltip']),
-            'tooltipText'      => $row['tooltip']
+            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
 
         $entity->fields[$name . 'From'] = [

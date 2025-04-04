@@ -13,7 +13,7 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Espo\ORM\IEntity;
 
-class ExtensibleMultiEnumType implements AttributeFieldTypeInterface
+class ExtensibleMultiEnumType extends AbstractFieldType
 {
     public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
     {
@@ -35,8 +35,8 @@ class ExtensibleMultiEnumType implements AttributeFieldTypeInterface
             'label'            => $row['name'],
             'dropdown'         => !empty($row['dropdown']),
             'extensibleEnumId' => $row['extensible_enum_id'] ?? null,
-            'tooltip'          => !empty($row['tooltip']),
-            'tooltipText'      => $row['tooltip']
+            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
         if (!empty($row['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";

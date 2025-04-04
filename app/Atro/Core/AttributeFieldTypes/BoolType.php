@@ -13,7 +13,7 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Espo\ORM\IEntity;
 
-class BoolType implements AttributeFieldTypeInterface
+class BoolType extends AbstractFieldType
 {
     public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
     {
@@ -33,8 +33,8 @@ class BoolType implements AttributeFieldTypeInterface
             'required'         => !empty($row['is_required']),
             'notNull'          => !empty($row['not_null']),
             'label'            => $row['name'],
-            'tooltip'          => !empty($row['tooltip']),
-            'tooltipText'      => $row['tooltip']
+            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
