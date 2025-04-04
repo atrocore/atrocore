@@ -48,7 +48,7 @@ class RangeIntType implements AttributeFieldTypeInterface
             'attributeValueId'     => $id,
             'type'                 => $this->type,
             'required'             => !empty($row['is_required']),
-            'label'                => $row['name'],
+            'label'                => $row['name'] . ' ' . $this->language->translate('From'),
             'layoutDetailDisabled' => true
         ];
 
@@ -61,11 +61,11 @@ class RangeIntType implements AttributeFieldTypeInterface
         ];
         $entity->set($name . 'To', $row[$entity->fields[$name . 'To']['column']] ?? null);
 
-        $attributesDefs[$name . 'To'] = $entity->entityDefs['fields'][$name . 'From'] = [
+        $attributesDefs[$name . 'To'] = $entity->entityDefs['fields'][$name . 'To'] = [
             'attributeValueId'     => $id,
             'type'                 => $this->type,
             'required'             => !empty($row['is_required']),
-            'label'                => $row['name'],
+            'label'                => $row['name'] . ' ' . $this->language->translate('To'),
             'layoutDetailDisabled' => true
         ];
 
