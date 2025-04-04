@@ -69,6 +69,7 @@
     "usage": {
       "type": "enum",
       "prohibitedEmptyValue": false,
+      "inlineEditDisabled": true,
       "optionsIds": [
         "entity",
         "record",
