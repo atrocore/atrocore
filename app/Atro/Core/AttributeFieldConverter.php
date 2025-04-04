@@ -40,19 +40,6 @@ class AttributeFieldConverter
             return;
         }
 
-//        $languages = [];
-//        if (!empty($this->config->get('isMultilangActive'))) {
-//            foreach ($this->config->get('inputLanguageList', []) as $code) {
-//                $languages[$code] = $code;
-//                foreach ($this->config->get('referenceData.Language', []) as $v) {
-//                    if ($code === $v['code']) {
-//                        $languages[$code] = $v['name'];
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-
         $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
 
         $select = 'a.*, av.id as av_id, av.bool_value, av.date_value, av.datetime_value, av.int_value, av.int_value1, av.float_value, av.float_value1, av.varchar_value, av.text_value, av.reference_value, av.json_value, f.name as file_name';
@@ -84,7 +71,11 @@ class AttributeFieldConverter
             $name = "attr_{$id}";
 
             $className = "\\Atro\\Core\\AttributeFieldTypes\\" . ucfirst($row['type']) . "Type";
-            if (class_exists($className) && is_a($className, AttributeFieldTypeInterface::class, true)) {
+            if (!class_exists($className)) {
+                $className = "\\Atro\\Core\\AttributeFieldTypes\\VarcharType";
+            }
+
+            if (is_a($className, AttributeFieldTypeInterface::class, true)) {
                 $this->container->get($className)->convert($entity, $id, $name, $row, $attributesDefs);
             }
 
@@ -141,16 +132,6 @@ class AttributeFieldConverter
 //
 //            if ($row['type'] === 'rangeFloat') {
 //                $attributeRow['view'] = 'views/fields/range-float';
-//            }
-//
-//            $attributeValues[] = $attributeRow;
-//            if (!empty($row['is_multilang'])) {
-//                foreach ($languages as $language => $languageName) {
-//                    $attributeValues[] = array_merge($attributeRow, [
-//                        'name'  => $row['id'] . ucfirst(Util::toCamelCase(strtolower($language))),
-//                        'label' => $row['name'] . ' / ' . $languageName
-//                    ]);
-//                }
 //            }
 //
 //            $entity->set('attributeValues', $attributeValues);
@@ -333,49 +314,6 @@ class AttributeFieldConverter
 ////                            // ignore all
 ////                        }
 ////                    }
-////                    break;
-////                case 'varchar':
-////                    $entity->fields[$name] = [
-////                        'type'             => 'varchar',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => "varchar_value",
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
-////
-////                    if (!empty($row['is_multilang'])) {
-////                        foreach ($languages as $language => $languageName) {
-////                            $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
-////                            $entity->fields[$lName] = [
-////                                'type'             => 'varchar',
-////                                'name'             => $name,
-////                                'attributeValueId' => $id,
-////                                'attributeId'      => $row['id'],
-////                                'attributeName'    => $row['name'] . ' / ' . $languageName,
-////                                'attributeType'    => $row['type'],
-////                                'column'           => "varchar_value_" . strtolower($language),
-////                                'required'         => !empty($row['is_required'])
-////                            ];
-////                            $entity->set($lName, $row[$entity->fields[$lName]['column']] ?? null);
-////                        }
-////                    }
-////                    break;
-////                default:
-////                    $entity->fields[$name] = [
-////                        'type'             => 'varchar',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => "varchar_value",
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 ////                    break;
 //            }
         }
