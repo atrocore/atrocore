@@ -257,29 +257,6 @@ class AttributeFieldConverter
 ////                    ];
 ////                    $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 ////                    break;
-////                case 'file':
-////                    $entity->fields[$name . 'Id'] = [
-////                        'type'             => 'varchar',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => 'reference_value',
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
-////
-////                    $entity->fields[$name . 'Name'] = [
-////                        'type'        => 'varchar',
-////                        'notStorable' => true
-////                    ];
-////                    $entity->fields[$name . 'PathsData'] = [
-////                        'type'        => 'jsonObject',
-////                        'notStorable' => true
-////                    ];
-////                    $entity->set($name . 'Name', $row['file_name'] ?? null);
-////                    break;
 //            }
         }
 

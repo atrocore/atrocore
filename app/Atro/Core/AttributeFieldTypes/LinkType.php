@@ -51,7 +51,6 @@ class LinkType implements AttributeFieldTypeInterface
                 'type'             => 'link',
                 'entity'           => $attributeData['entityType'],
                 'required'         => !empty($row['is_required']),
-                'notNull'          => !empty($row['not_null']),
                 'label'            => $row['name']
             ];
 
