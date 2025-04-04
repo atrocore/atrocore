@@ -51,7 +51,9 @@ class LinkType implements AttributeFieldTypeInterface
                 'type'             => 'link',
                 'entity'           => $attributeData['entityType'],
                 'required'         => !empty($row['is_required']),
-                'label'            => $row['name']
+                'label'            => $row['name'],
+                'tooltip'          => !empty($row['tooltip']),
+                'tooltipText'      => $row['tooltip']
             ];
 
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));

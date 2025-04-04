@@ -32,7 +32,9 @@ class BoolType implements AttributeFieldTypeInterface
             'type'             => 'bool',
             'required'         => !empty($row['is_required']),
             'notNull'          => !empty($row['not_null']),
-            'label'            => $row['name']
+            'label'            => $row['name'],
+            'tooltip'          => !empty($row['tooltip']),
+            'tooltipText'      => $row['tooltip']
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

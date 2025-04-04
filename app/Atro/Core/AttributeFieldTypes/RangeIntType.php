@@ -32,7 +32,9 @@ class RangeIntType implements AttributeFieldTypeInterface
             'type'     => 'range' . ucfirst($this->type),
             'required' => !empty($row['is_required']),
             'label'    => $row['name'],
-            'view'     => "views/fields/range-{$this->type}"
+            'view'     => "views/fields/range-{$this->type}",
+            'tooltip'          => !empty($row['tooltip']),
+            'tooltipText'      => $row['tooltip']
         ];
 
         $entity->fields[$name . 'From'] = [

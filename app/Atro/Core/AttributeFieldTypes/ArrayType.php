@@ -32,7 +32,9 @@ class ArrayType implements AttributeFieldTypeInterface
             'attributeValueId' => $id,
             'type'             => 'array',
             'required'         => !empty($row['is_required']),
-            'label'            => $row['name']
+            'label'            => $row['name'],
+            'tooltip'          => !empty($row['tooltip']),
+            'tooltipText'      => $row['tooltip']
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

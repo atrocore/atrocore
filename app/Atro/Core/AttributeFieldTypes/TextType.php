@@ -46,7 +46,9 @@ class TextType implements AttributeFieldTypeInterface
             'type'             => $this->type,
             'required'         => !empty($row['is_required']),
             'notNull'          => !empty($row['not_null']),
-            'label'            => $row['name']
+            'label'            => $row['name'],
+            'tooltip'          => !empty($row['tooltip']),
+            'tooltipText'      => $row['tooltip']
         ];
 
         if (!empty($attributeData['maxLength'])) {
@@ -82,8 +84,10 @@ class TextType implements AttributeFieldTypeInterface
                 $entity->set($lName, $row[$entity->fields[$lName]['column']] ?? null);
 
                 $entity->entityDefs['fields'][$lName] = array_merge($entity->entityDefs['fields'][$name], [
-                    'name'  => $lName,
-                    'label' => $row['name'] . ' / ' . $languageName
+                    'name'        => $lName,
+                    'label'       => $row['name'] . ' / ' . $languageName,
+                    'tooltip'     => !empty($row['tooltip_' . strtolower($language)]),
+                    'tooltipText' => $row['tooltip_' . strtolower($language)]
                 ]);
 
                 $attributesDefs[$lName] = $entity->entityDefs['fields'][$lName];

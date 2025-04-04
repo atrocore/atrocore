@@ -33,7 +33,9 @@ class ExtensibleEnumType implements AttributeFieldTypeInterface
             'label'                => $row['name'],
             'prohibitedEmptyValue' => !empty($row['prohibited_empty_value']),
             'dropdown'             => !empty($row['dropdown']),
-            'extensibleEnumId'     => $row['extensible_enum_id'] ?? null
+            'extensibleEnumId'     => $row['extensible_enum_id'] ?? null,
+            'tooltip'          => !empty($row['tooltip']),
+            'tooltipText'      => $row['tooltip']
         ];
         if (!empty($row['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-enum-dropdown";

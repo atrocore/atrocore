@@ -34,7 +34,9 @@ class DateType implements AttributeFieldTypeInterface
             'attributeValueId' => $id,
             'type'             => $this->type,
             'required'         => !empty($row['is_required']),
-            'label'            => $row['name']
+            'label'            => $row['name'],
+            'tooltip'          => !empty($row['tooltip']),
+            'tooltipText'      => $row['tooltip']
         ];
     }
 }

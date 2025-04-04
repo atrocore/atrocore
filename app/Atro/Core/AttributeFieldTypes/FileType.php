@@ -42,7 +42,9 @@ class FileType implements AttributeFieldTypeInterface
             'attributeValueId' => $id,
             'type'             => 'file',
             'required'         => !empty($row['is_required']),
-            'label'            => $row['name']
+            'label'            => $row['name'],
+            'tooltip'          => !empty($row['tooltip']),
+            'tooltipText'      => $row['tooltip']
         ];
     }
 }
