@@ -11,10 +11,6 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
-use Atro\Core\Container;
-use Atro\Core\Utils\Language;
-use Espo\ORM\IEntity;
-
 class RangeFloatType extends RangeIntType
 {
     protected string $type = 'float';
