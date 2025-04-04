@@ -69,6 +69,12 @@ class RangeIntType implements AttributeFieldTypeInterface
             'layoutDetailDisabled' => true
         ];
 
+        if ($this->type === 'float') {
+            $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'] = $row['amount_of_digits_after_comma'] ?? null;
+            $entity->entityDefs['fields'][$name . 'From']['amountOfDigitsAfterComma'] = $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'];
+            $entity->entityDefs['fields'][$name . 'To']['amountOfDigitsAfterComma'] = $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'];
+        }
+
         if (isset($row['measure_id'])) {
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
 

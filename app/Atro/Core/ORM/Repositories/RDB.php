@@ -245,7 +245,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function validateFieldsByType(Entity $entity): void
     {
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+        foreach ($entity->entityDefs['fields'] ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
             if (isset($fieldData['type'])) {
                 $method = "validate" . ucfirst($fieldData['type']);
                 if (method_exists($this, $method)) {
@@ -296,7 +296,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        $type = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $fieldData['mainField'], 'type']);
+        $type = $entity->entityDefs['fields'][$fieldData['mainField']]['type'] ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $fieldData['mainField'], 'type']);
         if (!in_array($type, ['rangeInt', 'rangeFloat'])) {
             return;
         }
@@ -552,7 +552,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
                 $mainField = $fieldData['mainField'];
 
-                $mainFieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $mainField]);
+                $mainFieldDefs = $entity->entityDefs['fields'][$mainField] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $mainField]);
                 switch ($mainFieldDefs['type']) {
                     case 'rangeInt':
                         $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'From'), $unit->get('measureId'), $unit->get('id'));
