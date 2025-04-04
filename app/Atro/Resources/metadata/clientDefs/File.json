@@ -18,8 +18,7 @@
     "plate": "views/file/plate"
   },
   "recordViews": {
-    "detail": "views/file/record/detail",
-    "list": "views/file/record/list"
+    "detail": "views/file/record/detail"
   },
   "modalViews": {
     "select": "views/file/modals/select-records"
@@ -27,22 +26,34 @@
   "additionalLayouts": {
     "upload": "detail"
   },
+  "massActionList": [
+    "download"
+  ],
+  "checkAllResultMassActionList": [
+    "download"
+  ],
+  "massActionDefs": {
+    "download": {
+      "url": "File/action/massDownload",
+      "successMessage": "downloadJobsCreated"
+    }
+  },
   "treeScopes": [
     "Folder"
   ],
-  "rightSidePanels":  [
-      {
-        "name": "sharing",
-        "label": "Sharing",
-        "view": "views/file/record/panels/side/sharing",
-        "aclScope": "Sharing"
-      },
-      {
-        "name": "customDownload",
-        "label": "customDownload",
-        "view": "views/file/record/panels/side/download/main"
-      }
-    ],
+  "rightSidePanels": [
+    {
+      "name": "sharing",
+      "label": "Sharing",
+      "view": "views/file/record/panels/side/sharing",
+      "aclScope": "Sharing"
+    },
+    {
+      "name": "customDownload",
+      "label": "customDownload",
+      "view": "views/file/record/panels/side/download/main"
+    }
+  ],
   "dynamicLogic": {
     "fields": {
       "storage": {

@@ -80,7 +80,7 @@ class File extends Base
             $entity->set('folderPath', $folderPath);
         }
 
-        if($entity->get('width') && $entity->get('height')) {
+        if ($entity->get('width') && $entity->get('height')) {
             $entity->set('size', $entity->get('width') . 'x' . $entity->get('height'));
             $entity->set('sizeUnitId', $entity->get('widthUnitId'));
             $entity->set('sizeUnitData', $entity->get('widthUnitData'));
@@ -220,20 +220,14 @@ class File extends Base
         return $result;
     }
 
-    public function massDownload(array $where): bool
+    public function massDownload(array $params): bool
     {
-        $selectParams = $this->getSelectParams(['where' => $where]);
+        $params['action'] = 'download';
+        $params['maxCountWithoutJob'] = 0;
+        $params['maxChunkSize'] = $this->getConfig()->get('massDownloadMaxChunkSize', 2);
+        $params['minChunkSize'] = $this->getConfig()->get('massDownloadMinChunkSize', 2);
 
-        $jobEntity = $this->getEntityManager()->getEntity('Job');
-        $jobEntity->set([
-            'name'     => 'Download Files',
-            'type'     => 'MassDownload',
-            'priority' => 200,
-            'payload'  => [
-                'selectParams' => $selectParams
-            ]
-        ]);
-        $this->getEntityManager()->saveEntity($jobEntity);
+        $this->executeMassAction($params);
 
         return true;
     }

@@ -598,7 +598,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                     this.collection.fetch().then(function () {
                         var message = this.translate(successMessage, 'messages', this.scope);
-                        if ('count' in result) {
+                        if (typeof result === 'object' && 'count' in result) {
                             message = message.replace('{count}', result.count);
                         }
                         Espo.Ui.success(message);

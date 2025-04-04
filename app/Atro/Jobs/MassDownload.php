@@ -29,7 +29,7 @@ class MassDownload extends AbstractJob implements JobInterface
 
         /* @var $service File */
         $service = $this->getServiceFactory()->create('File');
-        $files = $this->getEntityManager()->getRepository('File')->find($data['selectParams']);
+        $files = $this->getEntityManager()->getRepository('File')->findByIds($data['ids']);
 
         if (count($files) === 0) {
             throw new Exception("No Files to download");
@@ -39,7 +39,8 @@ class MassDownload extends AbstractJob implements JobInterface
         $zipDir = self::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'download' . DIRECTORY_SEPARATOR . $job->get('id');
         Util::createDir($zipDir);
         $date = (new \DateTime())->format('Y-m-d H-i-s');
-        $name = "download-files-$date.zip";
+        $part = $data['part'] ?? 0;
+        $name = "download-files-$date-$part.zip";
         $fileName = $zipDir . DIRECTORY_SEPARATOR . $name;
         if ($zip->open($fileName, \ZipArchive::CREATE) !== true) {
             throw new Exception("cannot open archive $fileName\n");
@@ -49,7 +50,8 @@ class MassDownload extends AbstractJob implements JobInterface
             $path = $file->findOrCreateLocalFilePath($zipDir);
 
             if (!file_exists($path)) {
-                throw new BadRequest("File '{$path}' does not exist.");
+                $GLOBALS['log']->error("File '{$path}' does not exist for file " . $file->id);
+                continue;
             }
 
             $zip->addFile($path, basename($path));
@@ -65,7 +67,9 @@ class MassDownload extends AbstractJob implements JobInterface
         Util::removeDir($zipDir);
 
         $message = sprintf($this->translate('zipDownloadNotification', 'labels', 'File'), $fileData['id']);
-
+        if ($data['totalChunks'] > 1) {
+            $message .= " (" . $data['part'] . "/" . $data['totalChunks'] . ")";
+        }
         $this->createNotification($job, $message);
     }
 
