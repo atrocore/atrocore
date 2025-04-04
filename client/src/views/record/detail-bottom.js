@@ -163,7 +163,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 sticked: false,
                 hidden: this.isPanelClosed('stream'),
                 order:  5,
-                expanded: false,
+                expanded: this.getStorage().get('streamCollapseState', this.scope) === 'expanded',
                 avoidLoadingOnCollapse: true
             });
         },
@@ -579,6 +579,11 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
                     view.render();
                 });
+                if(name === 'stream') {
+                    this.getStorage().set('streamCollapseState', this.scope, 'expanded')
+                }
+            }else if(panelBody.hasClass('in') && name === 'stream') {
+                this.getStorage().clear('streamCollapseState', this.scope)
             }
             panelBody.collapse(type ? type : 'toggle');
         },
