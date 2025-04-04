@@ -14,6 +14,8 @@ namespace Atro\Core\AttributeFieldTypes;
 use Atro\Core\Container;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Util;
+use Atro\Entities\User;
+use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
 
 class TextType implements AttributeFieldTypeInterface
@@ -21,14 +23,29 @@ class TextType implements AttributeFieldTypeInterface
     protected string $type = 'text';
     protected string $column = 'text_value';
     protected Config $config;
+    protected User $user;
+    protected EntityManager $em;
 
     public function __construct(Container $container)
     {
         $this->config = $container->get('config');
+        $this->user = $container->get('user');
+        $this->em = $container->get('entityManager');
     }
 
     public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
     {
+        $nameKey = 'name';
+        if (!empty($localeId = $this->user->get('localeId'))) {
+            $currentLocale = $this->em->getEntity('Locale', $localeId);
+            if (!empty($currentLocale)) {
+                $languageNameKey = $nameKey . '_' . strtolower($currentLocale->get('languageCode'));
+                if (!empty($row[$languageNameKey])) {
+                    $nameKey = $languageNameKey;
+                }
+            }
+        }
+
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name] = [
@@ -46,7 +63,7 @@ class TextType implements AttributeFieldTypeInterface
             'type'             => $this->type,
             'required'         => !empty($row['is_required']),
             'notNull'          => !empty($row['not_null']),
-            'label'            => $row['name'],
+            'label'            => $row[$nameKey],
             'tooltip'          => !empty($row['tooltip']),
             'tooltipText'      => $row['tooltip']
         ];
@@ -85,7 +102,7 @@ class TextType implements AttributeFieldTypeInterface
 
                 $entity->entityDefs['fields'][$lName] = array_merge($entity->entityDefs['fields'][$name], [
                     'name'        => $lName,
-                    'label'       => $row['name'] . ' / ' . $languageName,
+                    'label'       => $row[$nameKey] . ' / ' . $languageName,
                     'tooltip'     => !empty($row['tooltip_' . strtolower($language)]),
                     'tooltipText' => $row['tooltip_' . strtolower($language)]
                 ]);
