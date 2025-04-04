@@ -224,8 +224,8 @@ class File extends Base
     {
         $params['action'] = 'download';
         $params['maxCountWithoutJob'] = 0;
-        $params['maxChunkSize'] = $this->getConfig()->get('massDownloadMaxChunkSize', 2);
-        $params['minChunkSize'] = $this->getConfig()->get('massDownloadMinChunkSize', 2);
+        $params['maxChunkSize'] = $this->getConfig()->get('massDownloadMaxChunkSize', 1000);
+        $params['minChunkSize'] = $this->getConfig()->get('massDownloadMinChunkSize', 400);
 
         $this->executeMassAction($params);
 
