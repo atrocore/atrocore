@@ -280,41 +280,6 @@ class AttributeFieldConverter
 ////                    ];
 ////                    $entity->set($name . 'Name', $row['file_name'] ?? null);
 ////                    break;
-////                case 'link':
-////                    $entity->fields[$name . 'Id'] = [
-////                        'type'             => 'varchar',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => 'reference_value',
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
-////
-////                    if (!empty($attributeData['entityType'])) {
-////                        $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
-////                        try {
-////                            $referenceItem = $this->conn->createQueryBuilder()
-////                                ->select('id, name')
-////                                ->from($referenceTable)
-////                                ->where('id=:id')
-////                                ->andWhere('deleted=:false')
-////                                ->setParameter('id', $row['reference_value'])
-////                                ->setParameter('false', false, ParameterType::BOOLEAN)
-////                                ->fetchAssociative();
-////
-////                            $entity->fields[$name . 'Name'] = [
-////                                'type'        => 'varchar',
-////                                'notStorable' => true
-////                            ];
-////                            $entity->set($name . 'Name', $referenceItem['name'] ?? null);
-////                        } catch (\Throwable $e) {
-////                            // ignore all
-////                        }
-////                    }
-////                    break;
 //            }
         }
 
