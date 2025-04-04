@@ -231,32 +231,6 @@ class AttributeFieldConverter
 ////                    ];
 ////                    $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
 ////                    break;
-////                case 'date':
-////                    $entity->fields[$name] = [
-////                        'type'             => 'date',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => "date_value",
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
-////                    break;
-////                case 'datetime':
-////                    $entity->fields[$name] = [
-////                        'type'             => 'datetime',
-////                        'name'             => $name,
-////                        'attributeValueId' => $id,
-////                        'attributeId'      => $row['id'],
-////                        'attributeName'    => $row['name'],
-////                        'attributeType'    => $row['type'],
-////                        'column'           => "datetime_value",
-////                        'required'         => !empty($row['is_required'])
-////                    ];
-////                    $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
-////                    break;
 //            }
         }
 
