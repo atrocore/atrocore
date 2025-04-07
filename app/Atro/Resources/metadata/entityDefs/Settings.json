@@ -16,6 +16,9 @@
       "type": "bool",
       "default": true
     },
+    "onlyStableReleases": {
+      "type": "bool"
+    },
     "reportingEnabled": {
       "type": "bool",
       "default": true,

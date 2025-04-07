@@ -107,6 +107,19 @@ class Composer extends HasContainer
         return '-';
     }
 
+    public static function getMinimumStability(): string
+    {
+        return self::getComposerJson()['minimum-stability'] ?? 'stable';
+    }
+
+    public static function setMinimumStability(string $value): void
+    {
+        $data = self::getComposerJson();
+        $data['minimum-stability'] = $value;
+
+        self::setComposerJson($data);
+    }
+
     public function getReleaseNotes(string $id): string
     {
         $parts = explode('/', $this->getComposerName($id) ?? '');
