@@ -584,6 +584,7 @@
   },
   "streamMessages": {
     "post": "{user} залишив примітку до {entityType} {entity}",
+    "postInList": "{user} залишив примітку до {entityType}",
     "attach": "{user} прикріпив до {entityType} {entity}",
     "status": "{user} оновив {field} (чого) {entityType} {entity}",
     "update": "{user} оновив {entityType} {entity}",
