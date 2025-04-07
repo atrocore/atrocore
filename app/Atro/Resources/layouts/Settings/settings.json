@@ -46,7 +46,9 @@
         {
           "name": "fileNameRegexPattern"
         },
-        false
+        {
+          "name": "onlyStableReleases"
+        }
       ]
     ]
   },
