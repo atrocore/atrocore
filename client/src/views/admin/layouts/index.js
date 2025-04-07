@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-utils'], function (Dep, LayoutUtils) {
+Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-utils', 'lib!JsTree'], function (Dep, LayoutUtils) {
 
     return Dep.extend({
 
@@ -168,6 +168,23 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Layout Manager', 'labels', 'Admin'));
         },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+            new Svelte.TreePanel({
+                target: $(`${this.options.el} .content-wrapper`).get(0),
+                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
+                props: {
+                    scope: this.scope,
+                    model: this.model,
+                    mode: 'detail',
+                    isAdminPage: true,
+                    callbacks: {
+
+                    }
+                }
+            });
+        }
     });
 });
 

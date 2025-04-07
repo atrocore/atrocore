@@ -42,7 +42,6 @@
     let sortAsc = true;
     let sortBy = null;
     let sortFields = [];
-    let adminTreeData: [] = null;
 
     $: if (currentWidth) {
         if (callbacks?.treeWidthChanged) {
@@ -670,10 +669,6 @@
     }
 
     function getAdminTreeData() {
-        if(adminTreeData !== null) {
-            return adminTreeData
-        }
-
         let data = Metadata.get(['app', 'adminPanel']);
         let total = Object.keys(data).length;
         let result:[] = [];
@@ -712,7 +707,7 @@
             i++;
         });
 
-        return adminTreeData = result;
+        return result;
     }
 
     function loadLayout(callback) {
@@ -985,5 +980,10 @@
 
     .unset-selection i {
         font-size: 14px;
+    }
+
+    :global(ul.jqtree-tree .jqtree_common.disabled > div > span) {
+        color: #000;
+        font-weight: bold;
     }
 </style>
