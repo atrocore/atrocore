@@ -6,6 +6,7 @@
 
     import {fade} from 'svelte/transition';
     import {createEventDispatcher, onDestroy, onMount} from "svelte";
+    import {Language} from "../../utils/Language";
 
     export let className: string = '';
     export let isCollapsed: boolean = false;
@@ -168,9 +169,12 @@
     </div>
     <div class="collapse-strip" on:click|self="{toggleCollapse}">
         {#if !isMobile}
-            <button class="pin-button" type="button" on:click={togglePin}>
+            <button class="pin-button" type="button" on:click={togglePin} title={Language.translate(isPinned ? 'sidebarUnpin' : 'sidebarPin')}>
                 {@html isPinned ? UnpinIcon : PinIcon}
             </button>
+        {/if}
+        {#if isPinned && !isMobile}
+            <span class="collapse-text">{Language.translate(isCollapsed ? 'sidebarExpand' : 'sidebarCollapse')}</span>
         {/if}
         <button class="collapse-button" type="button" on:click={toggleCollapse}>
             {#if position === 'left'}
@@ -215,16 +219,61 @@
         right: 0;
     }
 
-    .sidebar > *:not(.sidebar-inner) {
+    .sidebar > * {
+        flex-shrink: 0;
         height: 100%;
     }
 
     .sidebar > .collapse-strip {
         position: sticky;
         top: 0;
-        width: 25px;
+        width: 20px;
         cursor: pointer;
         transition: background-color 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidebar.sidebar-right.pinned > .collapse-strip {
+        border-right: 1px dotted transparent;
+    }
+
+    .sidebar.sidebar-left.pinned > .collapse-strip {
+        border-left: 1px dotted transparent;
+    }
+
+    .sidebar.sidebar-left.pinned > .collapse-strip:hover,
+    .sidebar.sidebar-right.pinned > .collapse-strip:hover {
+        border-color: #cfcfcf;
+    }
+
+    .sidebar > .collapse-strip > .collapse-text {
+        color: #ccc;
+        font-size: 12px;
+        line-height: 1;
+        pointer-events: none;
+        display: none;
+    }
+
+    .sidebar > .collapse-strip:hover > .collapse-text {
+        display: inline;
+    }
+
+    .sidebar.sidebar-right > .collapse-strip > .collapse-text {
+        writing-mode: vertical-lr;
+    }
+
+    .sidebar.sidebar-left > .collapse-strip > .collapse-text {
+        writing-mode: sideways-lr;
+    }
+
+    .sidebar.sidebar-right:not(.collapsed) > .collapse-strip > .collapse-text {
+        transform: translateX(-3px);
+    }
+
+    .sidebar.sidebar-left:not(.collapsed) > .collapse-strip > .collapse-text {
+        transform: translateX(3px);
     }
 
     .sidebar > .collapse-strip > button {
@@ -233,7 +282,8 @@
         outline: 0;
         border: 0;
         line-height: 0;
-        width: 20px;
+        width: 18px;
+        color: var(--sidebar-icon-color, #999);
     }
 
     .sidebar > .collapse-strip > .pin-button {
@@ -242,6 +292,10 @@
         left: 50%;
         transform: translateX(-50%);
         width: 15px;
+    }
+
+    .sidebar > .collapse-strip > .pin-button:hover {
+        color: #333;
     }
 
     .sidebar > .collapse-strip > .collapse-button {
@@ -260,6 +314,9 @@
         padding-right: 20px;
         height: fit-content;
         min-height: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
 
     .sidebar.sidebar-left > .sidebar-inner {
@@ -307,6 +364,10 @@
         font-size: 18px;
     }
 
+    .sidebar.collapsed > .collapse-strip {
+        width: 25px;
+    }
+
     .sidebar.collapsed > .sidebar-inner {
         display: none;
     }
@@ -324,6 +385,10 @@
     }
 
     @media screen and (max-width: 768px) {
+        .sidebar > .collapse-strip > .collapse-text {
+            display: none;
+        }
+
         .sidebar:not(.collapsed) {
             position: absolute;
             top: 0;

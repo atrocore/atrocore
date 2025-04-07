@@ -290,6 +290,10 @@
                     return loadMore(node);
                 }
 
+                if (node.element) {
+                    appendUnsetButton(window.$(node.element));
+                }
+
                 let route = [];
                 while (node.parent.id) {
                     route.push(node.parent.id);
@@ -303,10 +307,6 @@
 
                 if (callbacks?.selectNode) {
                     callbacks.selectNode(data);
-                }
-
-                if (node.element) {
-                    appendUnsetButton(window.$(node.element));
                 }
             }
         });
@@ -1006,10 +1006,9 @@
     }
 
     :global(ul.jqtree-tree li.jqtree_common .reset-button) {
-        margin-top: 4px;
+        margin-top: 8px;
         position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+        top: 0;
         right: 0;
         cursor: pointer;
     }

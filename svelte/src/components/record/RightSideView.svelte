@@ -124,7 +124,6 @@
              bind:width={currentWidth} {minWidth} {maxWidth} on:sidebar-resize={onSidebarResize}
              on:sidebar-collapse={onSidebarCollapse} on:sidebar-pin={onSidebarPin}>
     <div class="content">
-
         <div class="btn-group">
             {#each items as item}
                 {#if item.name !== activeItem.name}

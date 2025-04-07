@@ -387,7 +387,11 @@
     "actionBookmark": "Click to bookmark",
     "actionUnbookmark": "Bookmarked, Click to unbookmark",
     "actionOpenFilter": "Open Filter",
-    "accessManagement": "Access Management"
+    "accessManagement": "Access Management",
+    "sidebarUnpin": "Automatic panel expansion is inactive",
+    "sidebarPin": "Automatic panel expansion is active",
+    "sidebarExpand": "Click to expand",
+    "sidebarCollapse": "Click to collapse"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
