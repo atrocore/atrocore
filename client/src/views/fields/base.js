@@ -653,11 +653,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initRemoveAttributeValue() {
-            if (!this.model.get('attributesDefs') || !this.name || !this.model.get('attributesDefs')[this.name] || !this.getAcl().check(this.model.name, 'edit')) {
+            const fieldName = this.originalName || this.name;
+
+            if (!this.model.get('attributesDefs') || !fieldName || !this.model.get('attributesDefs')[fieldName] || !this.getAcl().check(this.model.name, 'edit')) {
                 return;
             }
 
-            let attributeValueId = this.model.get('attributesDefs')[this.name]['attributeValueId'] || null;
+            let attributeValueId = this.model.get('attributesDefs')[fieldName]['attributeValueId'] || null;
             if (!attributeValueId) {
                 return;
             }
