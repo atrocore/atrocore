@@ -50,6 +50,14 @@ class IntType extends AbstractFieldType
 
         if ($this->type === 'float') {
             $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'] = $row['amount_of_digits_after_comma'] ?? null;
+
+            if ($entity->get($name) !== null) {
+                $entity->set($name, (float)$entity->get($name));
+            }
+        } else {
+            if ($entity->get($name) !== null) {
+                $entity->set($name, (int)$entity->get($name));
+            }
         }
 
         if (isset($row['measure_id'])) {

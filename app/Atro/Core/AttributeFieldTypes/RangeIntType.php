@@ -67,6 +67,20 @@ class RangeIntType extends AbstractFieldType
             $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'] = $row['amount_of_digits_after_comma'] ?? null;
             $entity->entityDefs['fields'][$name . 'From']['amountOfDigitsAfterComma'] = $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'];
             $entity->entityDefs['fields'][$name . 'To']['amountOfDigitsAfterComma'] = $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'];
+
+            if ($entity->get($name . 'From') !== null) {
+                $entity->set($name . 'From', (float)$entity->get($name . 'From'));
+            }
+            if ($entity->get($name . 'To') !== null) {
+                $entity->set($name . 'To', (float)$entity->get($name . 'To'));
+            }
+        } else {
+            if ($entity->get($name . 'From') !== null) {
+                $entity->set($name . 'From', (int)$entity->get($name . 'From'));
+            }
+            if ($entity->get($name . 'To') !== null) {
+                $entity->set($name . 'To', (int)$entity->get($name . 'To'));
+            }
         }
 
         if (isset($row['measure_id'])) {

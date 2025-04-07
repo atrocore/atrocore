@@ -27,6 +27,10 @@ class BoolType extends AbstractFieldType
 
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
+        if ($entity->get($name) !== null) {
+            $entity->set($name, !empty($entity->get($name)));
+        }
+
         $entity->entityDefs['fields'][$name] = [
             'attributeValueId' => $id,
             'type'             => 'bool',
