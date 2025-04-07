@@ -26,6 +26,10 @@ Espo.define('views/fields/extensible-enum-dropdown', 'views/fields/link-dropdown
                 extensibleEnumId = this.params.extensibleEnumId;
             }
 
+            if (!extensibleEnumId && this.model.get('attributesDefs')[this.name] && this.model.get('attributesDefs')[this.name]['extensibleEnumId']) {
+                extensibleEnumId = this.model.get('attributesDefs')[this.name]['extensibleEnumId'];
+            }
+
             return extensibleEnumId;
         },
 

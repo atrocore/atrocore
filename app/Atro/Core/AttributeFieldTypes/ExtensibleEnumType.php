@@ -37,7 +37,10 @@ class ExtensibleEnumType extends AbstractFieldType
             'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
-        if (!empty($row['dropdown'])) {
+
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+
+        if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-enum-dropdown";
         }
 

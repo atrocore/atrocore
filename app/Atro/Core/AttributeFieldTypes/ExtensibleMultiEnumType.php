@@ -45,6 +45,8 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             }
         }
 
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+
         $entity->entityDefs['fields'][$name] = [
             'attributeValueId' => $id,
             'type'             => 'extensibleMultiEnum',
@@ -55,7 +57,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
-        if (!empty($row['dropdown'])) {
+        if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";
         }
 

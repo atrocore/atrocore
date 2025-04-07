@@ -39,6 +39,8 @@ class IntType extends AbstractFieldType
             'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
         ];
 
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+
         if (isset($attributeData['min'])) {
             $entity->entityDefs['fields'][$name]['min'] = $attributeData['min'];
         }
