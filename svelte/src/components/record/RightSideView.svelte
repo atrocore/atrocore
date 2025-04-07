@@ -255,7 +255,7 @@
     }
 
     .activities :global(.panel-heading) {
-        display: none;
+        display: none !important;
     }
 
     .activities :global(table.table),
