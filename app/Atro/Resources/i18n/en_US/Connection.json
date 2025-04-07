@@ -42,7 +42,8 @@
     "smtpClientId": "Client ID",
     "smtpClientSecret": "Client Secret",
     "smtpAuthType": "Auth Type",
-    "dsn": "Dsn"
+    "dsn": "Dsn",
+    "server": "Server"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",

@@ -57,7 +57,7 @@
       ],
       [
         {"name":  "dsn"},
-        false
+        {"name":  "server"}
       ],
       [
         {

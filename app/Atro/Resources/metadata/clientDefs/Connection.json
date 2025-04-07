@@ -16,6 +16,19 @@
   },
   "dynamicLogic": {
     "fields": {
+      "server": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        }
+      },
       "dsn": {
         "visible": {
           "conditionGroup": [
