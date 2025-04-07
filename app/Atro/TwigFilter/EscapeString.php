@@ -33,6 +33,6 @@ class EscapeString extends AbstractTwigFilter
 
     protected function backslashNToBr(string $value): string
     {
-        return str_replace("\n", '<br>', $value);
+        return str_replace(["\r\n", "\r", "\n"], '<br>', $value);
     }
 }
