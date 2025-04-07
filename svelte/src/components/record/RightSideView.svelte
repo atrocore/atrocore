@@ -84,7 +84,7 @@
             currentWidth = parseInt(savedWidth) || minWidth;
         }
 
-        isCollapsed = (Storage.get('right-side-view-collapse', scopeKey) === 'collapsed') || window.innerWidth <= 768;
+        isCollapsed = (Storage.get('right-side-view-collapse', scopeKey) === 'collapsed') || window.innerWidth <= 768 || mode === 'list';
 
         isPin = Storage.get('right-side-view-pin', scopeKey) !== 'not-pinned';
 

@@ -50,7 +50,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         data: function () {
             var data = Dep.prototype.data.call(this);
-            data.postDisabled = this.postDisabled;
+            data.postDisabled = this.postDisabled || this.mode === 'list';
             data.placeholderText = this.placeholderText;
             return data;
         },
