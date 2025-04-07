@@ -72,7 +72,7 @@
     }
 
     function onSidebarCollapse(e: CustomEvent): void {
-        Storage.set('right-side-view-collapse', scopeKey, isCollapsed ? 'collapsed' : '');
+        Storage.set('right-side-view-collapse', scopeKey, isCollapsed ? 'collapsed' : 'expanded');
         if (activeItem.name === 'activities') {
             refreshActivities();
         }
@@ -84,7 +84,12 @@
             currentWidth = parseInt(savedWidth) || minWidth;
         }
 
-        isCollapsed = (Storage.get('right-side-view-collapse', scopeKey) === 'collapsed') || window.innerWidth <= 768 || mode === 'list';
+        let collapseState = Storage.get('right-side-view-collapse', scopeKey);
+        if((!collapseState && mode === 'list') ||  window.innerWidth <= 768) {
+            isCollapsed = true;
+        }else{
+            isCollapsed = (collapseState === 'collapsed');
+        }
 
         isPin = Storage.get('right-side-view-pin', scopeKey) !== 'not-pinned';
 
