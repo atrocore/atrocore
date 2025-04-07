@@ -277,23 +277,24 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             treeWidthChanged: (width) => {
                                 view.onTreeResize(width)
                             }
+                        },
+                        renderLayoutEditor: (container) => {
+                            if (this.getUser().isAdmin()) {
+                                this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
+                                    scope: this.scope,
+                                    viewType: 'leftSidebar',
+                                    layoutData: window.treePanelComponent.getLayoutData(),
+                                    el: container,
+                                }, (view) => {
+                                    view.on("refresh", () => {
+                                        window.treePanelComponent.refreshLayout()
+                                    })
+                                    view.render()
+                                })
+                            }
                         }
                     }
                 });
-
-                if (this.getUser().isAdmin()) {
-                    this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
-                        scope: this.scope,
-                        viewType: 'leftSidebar',
-                        layoutData: window.treePanelComponent.getLayoutData(),
-                        el: $(`${this.options.el} .content-wrapper .catalog-tree-panel .layout-editor-container`).get(0),
-                    }, (view) => {
-                        view.on("refresh", () => {
-                            window.treePanelComponent.refreshLayout()
-                        })
-                        view.render()
-                    })
-                }
 
                 view.onTreePanelRendered();
             }

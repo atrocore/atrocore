@@ -615,23 +615,24 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                         treeReset: (treeScope) => {
                             this.treeReset(treeScope)
                         }
+                    },
+                    renderLayoutEditor: container => {
+                        if (this.getUser().isAdmin()) {
+                            this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
+                                scope: this.scope,
+                                viewType: 'leftSidebar',
+                                layoutData: window.treePanelComponent.getLayoutData(),
+                                el: container,
+                            }, (view) => {
+                                view.on("refresh", () => {
+                                    window.treePanelComponent.refreshLayout()
+                                })
+                                view.render()
+                            })
+                        }
                     }
                 }
             });
-
-            if (this.getUser().isAdmin()) {
-                this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
-                    scope: this.scope,
-                    viewType: 'leftSidebar',
-                    layoutData: window.treePanelComponent.getLayoutData(),
-                    el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
-                }, (view) => {
-                    view.on("refresh", () => {
-                        window.treePanelComponent.refreshLayout()
-                    })
-                    view.render()
-                })
-            }
 
             this.listenTo(Backbone, 'after:search', collection => {
                 if (this.collection.name === collection.name) {

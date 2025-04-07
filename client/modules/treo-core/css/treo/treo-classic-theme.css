@@ -24,6 +24,7 @@ body {
     --panel-title-color: #000;
     --header-title-color: #000;
     --action-icon-color: #333;
+    --sidebar-icon-color: #999;
     --success: #dff0d8;
     --notice: #fcf8e3;
     --information: #e0efff;
@@ -15261,10 +15262,6 @@ table.table > thead th > div > a {
         padding-left: 20px;
     }
 
-    .catalog-tree-panel {
-        z-index: 3;
-    }
-
     #main main > .list-container > .list > table tr {
         position: relative;
     }
@@ -20029,55 +20026,7 @@ ul.dropdown-menu > li.checkbox {
     margin-right: -15px;
 }
 
-#main .side {
-    background-color: #fafafa;
-    height: 100%;
-}
-
-#main .catalog-tree-panel {
-    position: relative;
-    border-right: 1px solid #e8eced;
-    padding: 0 10px 0 20px;
-    float: left;
-    min-height: 35px;
-}
-
-#main .catalog-tree-panel,
-#main .catalog-tree-panel .panel,
-#main .catalog-tree-panel .category-search {
-    background-color: #fafafa;
-}
-
-#main .catalog-tree-panel + .list-container {
-    padding: 0;
-}
-
-#main .catalog-tree-panel + .list-container .list {
-    border-left: 1px solid #e8eced;
-}
-
-#main .catalog-tree-panel.catalog-tree-panel-hidden + .list-container {
-    margin-left: 25px;
-    width: calc(100% - 25px);
-}
-
-#main .catalog-tree-panel + .list-buttons-container::before,
-#main .catalog-tree-panel + .list-buttons-container::after {
-    content: '';
-    display: table;
-    clear: right;
-}
-
-#main .catalog-tree-panel > .category-panel {
-    padding: 0;
-    margin: 0;
-}
-
 @media screen and (min-width: 768px) {
-    #main .catalog-tree-panel > .category-panel {
-        min-height: 100%;
-    }
-
     .table > tbody > tr:not(:first-child) {
         border-top: 1px solid #e8eced;
     }
@@ -20085,74 +20034,6 @@ ul.dropdown-menu > li.checkbox {
     .table > tbody > tr.active {
         background: #e8eced;
     }
-}
-
-#main .catalog-tree-panel > .category-panel > .no-data {
-    padding: 7px 5px 5px 5px;
-}
-
-#main .catalog-tree-panel > button.collapse-panel {
-    position: absolute;
-    right: 10px;
-    height: 33px;
-    font-size: 10px;
-    padding: 0;
-    top: 1px;
-    border: 0;
-    z-index: 10;
-    background-color: transparent;
-}
-
-#main .catalog-tree-panel .btn-group.category-buttons {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-}
-
-.side > button.collapse-panel {
-    display: none;
-}
-
-@media screen and (max-width: 767px) {
-    #main .detail .side > button.collapse-panel,
-    #main .edit .side > button.collapse-panel {
-        display: none;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    #main .side > button.collapse-panel,
-    #main .side > button.collapse-panel {
-        position: absolute;
-        z-index: 100;
-        display: block;
-        right: 10px;
-        font-size: 10px;
-        padding: 0;
-        border: 0;
-        background-color: transparent;
-        color: #ccc;
-    }
-
-    #main .side > button.collapse-panel,
-    #main .side > button.collapse-panel {
-        top: 6px;
-    }
-
-    #main .side.collapsed,
-    #main .side.collapsed {
-        width: 0 !important;
-        padding: 0 8px 0 17px !important;
-    }
-
-    #main .side.collapsed > .panel,
-    #main .side.collapsed > .panel {
-        display: none !important;
-    }
-}
-
-#main .catalog-tree-panel > button.collapsed {
-    left: 9px;
 }
 
 #main .category-tree button.catalog-link {
@@ -20178,50 +20059,8 @@ ul.dropdown-menu > li.checkbox {
     top: 15px;
 }
 
-#main .catalog-tree-panel .field[data-name="category-search"] {
-    position: relative;
-}
-
-#main .catalog-tree-panel .field[data-name="category-search"] > input.category-search {
-    border: 0;
-    border-bottom: 1px solid #e8eced;
-    padding: 0 5px;
-}
-
-#main .catalog-tree-panel .field[data-name="category-search"] > button {
-    position: absolute;
-    top: 10px;
-    right: 5px;
-    border: none;
-    background: none;
-}
-
-#main .catalog-tree-panel .field[data-name="category-search"] > .reset-search-in-tree-button {
-    right: 30px;
-    top: 8.5px;
-}
-
-#main .catalog-tree-panel .field[data-name="category-search"] > input.category-search,
 #main .category-tree button.catalog-link {
     border-bottom: 1px solid #e8eced;
-}
-
-#main .catalog-tree-panel .btn.reset-tree-filter {
-    background: none;
-    color: #000;
-    border: 0;
-}
-
-#main .catalog-tree-panel .btn.reset-tree-filter.active {
-    color: #2895ea;
-}
-
-#main .catalog-tree-panel .category-buttons .btn + .btn {
-    border-left: 1px solid #e8eced;
-}
-
-#main .catalog-tree-panel > .category-panel {
-    position: relative;
 }
 
 .jqtree-tree .show-more {
@@ -20299,33 +20138,7 @@ button.category:focus {
     overflow-y: auto;
 }
 
-@media screen and (max-width: 768px) {
-    #main .catalog-tree-panel {
-        padding: 0 10px 10px 10px;
-    }
-}
-
 @media screen and (min-width: 768px) and (max-width: 1199px) {
-    #main .catalog-tree-panel {
-        min-height: 53px;
-    }
-
-    #main .catalog-tree-panel > .category-panel > .no-data {
-        padding: 10px 5px 5px 5px;
-    }
-
-    #main .catalog-tree-panel > button.collapse-panel {
-        top: 0;
-    }
-
-    #main .catalog-tree-panel.catalog-tree-panel-hidden {
-        border-right: 1px solid #e8eced;
-    }
-
-    #main .catalog-tree-panel + .list-container.hidden-catalog-tree-panel {
-        margin-left: 0;
-    }
-
     #main .search-container {
         margin-bottom: 9px;
     }
@@ -20611,33 +20424,6 @@ button.category:focus {
         height: 100%;
     }
 
-    #main .catalog-tree-panel {
-        height: 100%;
-    }
-
-    #main .catalog-tree-panel .category-panel-resizer {
-        width: 2px;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        right: -10px;
-        cursor: col-resize;
-    }
-
-
-    #main .catalog-tree-panel.catalog-tree-panel-hidden .category-panel-resizer {
-        cursor: default;
-    }
-
-    #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
-        width: 280px;
-    }
-
-    #main .catalog-tree-panel .bottom-collapse {
-        top: unset !important;
-        bottom: 0;
-    }
-
     #main main > .record > .detail > .detail-button-container.detail-tree-button-container:not(.stick-sub) {
         position: relative;
         padding-right: 15px;
@@ -20651,22 +20437,6 @@ button.category:focus {
 
     #main .page-header.collapsed .overview-filters-container {
         width: auto;
-    }
-
-    #main .catalog-tree-panel.catalog-tree-panel-hidden {
-        padding: 0 8px 0 17px;
-    }
-
-}
-
-@media screen and (min-width: 1200px) {
-    #main .detail .catalog-tree-panel.catalog-tree-panel-hidden + .overview {
-        width: calc(75% - 25px);
-    }
-
-    #main .detail .row > .overview.collapsed {
-        margin-left: 0;
-        width: 75%;
     }
 }
 
@@ -20706,10 +20476,6 @@ button.category:focus {
 
 #header .header-right > li > a {
     color: var(--nav-font-color);
-}
-
-#main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
-    overflow-y: auto;
 }
 
 @media screen and (max-width: 767px) {
@@ -20823,10 +20589,6 @@ button.category:focus {
 
     .list-container > .list > .table:not(.fixed-header-table) {
         width: auto;
-    }
-
-    #main .catalog-tree-panel.catalog-tree-panel-hidden + .list-container {
-        overflow: unset !important;
     }
 
     .list-container .list-buttons-container {
@@ -20957,128 +20719,6 @@ button.category:focus {
         width: 100% !important;
         font-size: 14px;
         line-height: 1.25;
-    }
-
-    #main .catalog-tree-panel + .list-container.hidden-catalog-tree-panel {
-        margin-left: 0;
-    }
-
-    #main .catalog-tree-panel-hidden > button.collapse-panel {
-        left: 20px;
-        bottom: 20px;
-        z-index: 999;
-        position: fixed;
-        right: auto;
-        top: auto;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: #fafafabf;
-        border: 1px solid #F0F0F0;
-        padding: 0;
-    }
-
-    #main .record .catalog-tree-panel-hidden > button.collapse-panel {
-        left: 8px;
-    }
-
-    #main .catalog-tree-panel {
-        width: 100%;
-        border: none;
-        float: none;
-        margin: 0;
-    }
-
-    #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
-        position: fixed;
-        top: 45px;
-        z-index: 1301;
-        bottom: 0;
-        left: 0;
-        width: 100% !important;
-    }
-
-    #main .catalog-tree-panel.catalog-tree-panel-hidden {
-        padding: 0;
-        width: 0 !important;
-        height: 0 !important;
-        flex-basis: 0;
-    }
-
-    #main .catalog-tree-panel button:active {
-        box-shadow: none;
-    }
-
-    #main .catalog-tree-panel.col-xs-12.col-lg-3 > .category-panel {
-        margin: 20px 0 10px 5px;
-        padding: 20px 10px 10px 10px;
-    }
-
-    #main .catalog-tree-panel.col-xs-12.col-lg-3 > button.collapse-panel {
-        top: 10px;
-        right: 10px;
-        width: 30px;
-        height: 30px;
-        z-index: 1;
-    }
-
-    #main .catalog-tree-panel.col-xs-12.col-lg-3 > button.collapse-panel::after,
-    #main .catalog-tree-panel.col-xs-12.col-lg-3 > button.collapse-panel::before {
-        content: "";
-        display: block;
-        width: 2px;
-        height: 20px;
-        background: #000;
-        position: absolute;
-        left: 50%;
-        top: 5px;
-    }
-
-    #main .catalog-tree-panel.col-xs-12.col-lg-3 > button.collapse-panel::after {
-        -webkit-transform: rotate(-45deg);
-        transform: rotate(-45deg);
-    }
-
-    #main .catalog-tree-panel.col-xs-12.col-lg-3 > button.collapse-panel::before {
-        -webkit-transform: rotate(45deg);
-        transform: rotate(45deg);
-    }
-
-    #main .catalog-tree-panel.col-xs-12.col-lg-3 > button.collapse-panel span {
-        display: none;
-    }
-
-    #main .catalog-tree-panel > .category-panel.hidden {
-        display: block !important;
-        -webkit-transform: translate(-150%, 0);
-        transform: translate(-150%, 0);
-        transition: .3s transform cubic-bezier(0.19, 1, .22, 1);
-        height: 0;
-        overflow: hidden;
-    }
-
-
-    #main .catalog-tree-panel > .category-panel {
-        -webkit-transform: translate(-150%, 0);
-        transform: translate(0, 0);
-        transition: .3s transform cubic-bezier(0.19, 1, .22, 1);
-    }
-
-    #main .catalog-tree-panel.col-xs-12.col-lg-3 {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1500;
-        height: 100vh;
-        overflow: auto;
-    }
-
-    #main .catalog-tree-panel-hidden {
-        background: #ffffff;
-        flex-basis: 100%;
-        min-height: auto;
     }
 
     .search-row > div .search-right-buttons-group button {
@@ -21479,7 +21119,8 @@ ul.jqtree-tree span.jqtree-border {
 
 ul.jqtree-tree li.jqtree-selected > .jqtree-element,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element .jqtree-toggler,
-ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
+ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover,
+ul.jqtree-tree li.jqtree-selected > .reset-button {
     color: #2895ea !important;
     background-color: transparent;
     border-color: transparent;
@@ -21959,11 +21600,13 @@ td[data-name="draggableIcon"] {
     width: 16px;
 }
 
-.panel-heading .btn[data-action="closePanel"] {
+.panel-heading .btn[data-action="closePanel"],
+.panel-heading .btn[data-action="changeHistory"] {
     width: 43px;
 }
 
-.panel-heading .btn[data-action="closePanel"] > span {
+.panel-heading .btn[data-action="closePanel"] > span,
+.panel-heading .btn[data-action="changeHistory"] > span {
     font-size: 14px;
 }
 
@@ -24182,10 +23825,20 @@ span[data-img-src]::after {
 .layout-editor-container {
     position: relative;
     text-align: center;
+    line-height: 1;
 }
 
-.layout-editor-container .btn-link{
-    color: #333;
+.layout-editor-container .btn-link {
+    color: #999;
+    display: inline-flex;
+    line-height: 1;
+    width: 18px;
+}
+
+.layout-editor-container .btn-link > svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
 }
 
 .add-attribute-value-container .btn-link {
@@ -24469,11 +24122,12 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .highlighted-qc {
     background-color: var(--highlighting-color-for-data-quality);
 }
+
 .panel-stream .header {
     width: 100%;
     border-bottom: 1px solid #e8eced;
     display: flex;
-    padding: 20px 0;
+    padding: 10px 0;
     justify-content: space-between;
     align-items: baseline;
     flex-wrap: wrap;
@@ -24482,17 +24136,15 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .panel-stream .header .filter {
     display: flex;
     flex-wrap: wrap;
-}
-
-.panel-stream .header a {
-    margin-top: 5px;
+    gap: 5px;
 }
 
 .panel-stream .header .filter .filter-item {
     border: 1px solid transparent;
     color: var(--primary-font-color);
-    margin-right: 10px;
     padding: 5px 10px;
+    font-size: 13px;
+    line-height: 1;
 }
 
 .panel-stream .header .filter .filter-item:hover,  .panel-stream .header .filter .filter-item:focus {
