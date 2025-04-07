@@ -18,6 +18,8 @@
 
     export let hasStream: boolean = false;
 
+    $: scopeKey = scope + mode;
+
     let isPin = true;
     let streamView: Object;
     let items: Item[] = [];
@@ -43,7 +45,7 @@
             refreshActivities()
         }
 
-        Storage.set('right-side-view-active-item', scope, activeItem.name);
+        Storage.set('right-side-view-active-item', scopeKey, activeItem.name);
     }
 
     function refreshActivities() {
@@ -62,29 +64,29 @@
     }
 
     function onSidebarResize(e: CustomEvent): void {
-        Storage.set('rightSideView', scope, currentWidth.toString());
+        Storage.set('rightSideView', scopeKey, currentWidth.toString());
     }
 
     function onSidebarPin(e: CustomEvent): void {
-        Storage.set('right-side-view-pin', scope, isPin ? 'pin' : 'not-pinned');
+        Storage.set('right-side-view-pin', scopeKey, isPin ? 'pin' : 'not-pinned');
     }
 
     function onSidebarCollapse(e: CustomEvent): void {
-        Storage.set('right-side-view-collapse', scope, isCollapsed ? 'collapsed' : '');
+        Storage.set('right-side-view-collapse', scopeKey, isCollapsed ? 'collapsed' : '');
         if (activeItem.name === 'activities') {
             refreshActivities();
         }
     }
 
     onMount(() => {
-        const savedWidth = Storage.get('rightSideView', scope);
+        const savedWidth = Storage.get('rightSideView', scopeKey);
         if (savedWidth) {
             currentWidth = parseInt(savedWidth) || minWidth;
         }
 
-        isCollapsed = (Storage.get('right-side-view-collapse', scope) === 'collapsed') || window.innerWidth <= 768;
+        isCollapsed = (Storage.get('right-side-view-collapse', scopeKey) === 'collapsed') || window.innerWidth <= 768;
 
-        isPin = Storage.get('right-side-view-pin', scope) !== 'not-pinned';
+        isPin = Storage.get('right-side-view-pin', scopeKey) !== 'not-pinned';
 
         if (mode !== 'list') {
             loadSummary();
@@ -99,7 +101,7 @@
                 }]
         }
 
-        let itemName = Storage.get('right-side-view-active-item', scope);
+        let itemName = Storage.get('right-side-view-active-item', scopeKey);
 
         if (itemName && items.map(i => i.name).includes(itemName)) {
 

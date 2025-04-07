@@ -182,7 +182,7 @@
                 }
 
                 if (activeItem.name === '_admin'
-                    && ((Metadata.get(['scopes', getHashScope()]) && node.id.includes('#' + getHashScope())) || node.id === window.location.hash)) {
+                    && ((Metadata.get(['scopes', getHashScope()]) && node.id.includes('#' + getHashScope()) && isLinkExistsOnce(getHashScope())) || node.id === window.location.hash)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
@@ -662,6 +662,9 @@
             let j = 0;
             let totalItem = v['itemList'].length;
             for (const item of v['itemList']) {
+                if(item.listDisabled) {
+                    continue;
+                }
                 const label = Language.translate(item['label'], 'labels', 'Admin');
                 if ((searchValue ?? '').length < 3 || (label.toLowerCase().includes(searchValue.toLowerCase()))) {
                     treeItem.children.push({
