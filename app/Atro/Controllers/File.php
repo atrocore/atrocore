@@ -108,12 +108,18 @@ class File extends Base
             throw new Forbidden();
         }
 
-        if (!property_exists($data, 'where')) {
-            throw new BadRequest();
+        $params = array();
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $where = json_decode(json_encode($data->where), true);
+            $params['where'] = $where;
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
+            }
+        }
+        if (property_exists($data, 'idList')) {
+            $params['ids'] = $data->idList;
         }
 
-        $where = $this->prepareWhereQuery(json_decode(json_encode($data->where), true));
-
-        return $this->getRecordService()->massDownload($where);
+        return $this->getRecordService()->massDownload($params);
     }
 }
