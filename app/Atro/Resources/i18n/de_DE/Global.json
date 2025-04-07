@@ -624,6 +624,7 @@
   "streamMessages": {
     "composerUpdateThis": "{user}",
     "post": "{user} notierte zu {entityType} {entity}",
+    "postInList": "{user} notierte zu {entityType}",
     "attach": "{user} fügte zu {entityType} {entity} hinzu",
     "status": "{user} aktualisierte {field} von {entityType} {entity}",
     "update": "{user} aktualisierte {entityType} {entity}",

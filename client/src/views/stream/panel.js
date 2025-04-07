@@ -59,31 +59,12 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             return  this.getMetadata().get(['scopes', this.scope, 'filterInNote']) || ['posts', 'updates']
         },
 
-        enablePostingMode: function () {
-            this.$el.find('.buttons-panel').removeClass('hide');
-
-            if (!this.postingMode) {
-                $('body').on('click.stream-panel', function (e) {
-                    var $target = $(e.target);
-                    if ($target.parent().hasClass('remove-attachment')) return;
-                    if ($.contains(this.$postContainer.get(0), e.target)) return;
-                    if ((this.seed.get('post') ?? '') !== '') return;
-                }.bind(this));
-            }
-
-            this.postingMode = true;
-        },
 
         disablePostingMode: function () {
-            this.postingMode = false;
-
             this.seed.set('post', '');
             if (this.hasView('attachments')) {
                 this.getView('attachments').empty();
             }
-            this.$el.find('.buttons-panel').addClass('hide');
-
-            $('body').off('click.stream-panel');
         },
 
         setup: function () {
@@ -249,10 +230,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                             textcomplete?.destroy();
                         }, this);
                     }
-                });
-
-                view.on('focus', (editor, e) => {
-                    this.enablePostingMode();
                 });
 
                 view.on('editor:keypress', (editor, e) => {
