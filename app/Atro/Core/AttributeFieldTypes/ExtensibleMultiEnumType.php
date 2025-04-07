@@ -28,6 +28,23 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
         $entity->set($name, is_array($value) ? $value : null);
 
+        $entity->fields[$name . 'Names'] = [
+            'type'        => 'jsonObject',
+            'notStorable' => true
+        ];
+
+        if (!empty($entity->get($name))) {
+            $options = $this->em
+                ->getRepository('ExtensibleEnumOption')
+                ->select(['id', 'name'])
+                ->where(['id' => $value])
+                ->find();
+
+            if (!empty($options)) {
+                $entity->set($name . 'Names', array_column($options->toArray(), 'name', 'id'));
+            }
+        }
+
         $entity->entityDefs['fields'][$name] = [
             'attributeValueId' => $id,
             'type'             => 'extensibleMultiEnum',
