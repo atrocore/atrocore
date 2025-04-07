@@ -9,7 +9,7 @@
 
     export let className: string = '';
     export let isCollapsed: boolean = false;
-    export let isPinned: boolean = false;
+    export let isPinned: boolean = true;
     export let minWidth: number = 250;
     export let maxWidth: number = 600;
     export let width: number = minWidth;
@@ -86,7 +86,8 @@
         if (!isDragging) return;
         e.preventDefault();
 
-        const panelWidth = startWidth + (e.pageX - startX);
+        const diffX = position == 'left' ? (e.pageX - startX) : (startX - e.pageX)
+        const panelWidth = startWidth + diffX;
         if (panelWidth >= minWidth && panelWidth <= maxWidth) {
             requestAnimationFrame(() => {
                 width = panelWidth;
@@ -166,9 +167,11 @@
         <slot/>
     </div>
     <div class="collapse-strip" on:click|self="{toggleCollapse}">
-        <button class="pin-button" type="button" on:click={togglePin}>
-            {@html isPinned ? UnpinIcon : PinIcon}
-        </button>
+        {#if !isMobile}
+            <button class="pin-button" type="button" on:click={togglePin}>
+                {@html isPinned ? UnpinIcon : PinIcon}
+            </button>
+        {/if}
         <button class="collapse-button" type="button" on:click={toggleCollapse}>
             {#if position === 'left'}
                 {@html isCollapsed ? ChevronRightIcon : ChevronLeftIcon}
@@ -184,10 +187,14 @@
 
 <style>
     .sidebar {
+        --sidebar-color: #fafafa;
+
         height: 100%;
-        background-color: #fafafa;
+        background-color: var(--sidebar-color);
         display: flex;
         align-items: stretch;
+        overflow-y: auto;
+        position: relative;
     }
 
     .sidebar.sidebar-left {
@@ -195,26 +202,29 @@
         border-right: 1px solid #e8eced;
     }
 
+    .sidebar.sidebar-left:not(.pinned):not(.collapsed) {
+        left: 0;
+    }
+
     .sidebar.sidebar-right {
         flex-direction: row-reverse;
         border-left: 1px solid #e8eced;
     }
 
-    .sidebar > * {
+    .sidebar.sidebar-right:not(.pinned):not(.collapsed) {
+        right: 0;
+    }
+
+    .sidebar > *:not(.sidebar-inner) {
         height: 100%;
     }
 
     .sidebar > .collapse-strip {
         position: sticky;
         top: 0;
-        width: 20px;
+        width: 25px;
         cursor: pointer;
         transition: background-color 0.2s;
-    }
-
-    .sidebar > .collapse-strip:hover,
-    .sidebar > .collapse-strip:hover ~ .sidebar-resizer {
-        background-color: #f0f0f0;
     }
 
     .sidebar > .collapse-strip > button {
@@ -243,11 +253,21 @@
     }
 
     .sidebar > .sidebar-inner {
-        /*overflow: auto;*/
-        background-color: inherit;
+        background-color: var(--sidebar-color);
         flex: 1;
+        padding-top: 10px;
         padding-left: 20px;
         padding-right: 20px;
+        height: fit-content;
+        min-height: 100%;
+    }
+
+    .sidebar.sidebar-left > .sidebar-inner {
+        padding-right: 0;
+    }
+
+    .sidebar.sidebar-right > .sidebar-inner {
+        padding-left: 3px;
     }
 
     .sidebar > .sidebar-resizer {
@@ -258,8 +278,33 @@
         transition: background-color 0.2s;
     }
 
+    .sidebar.sidebar-left > .sidebar-resizer {
+        right: 0;
+    }
+
+    .sidebar.sidebar-right > .sidebar-resizer {
+        left: 0;
+    }
+
     .sidebar > .sidebar-resizer:hover {
         background: rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar :global(.sidebar-header) {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: var(--sidebar-color);
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 10px 0;
+    }
+
+    .sidebar :global(.sidebar-header h5) {
+        margin: 0 10px 0 0;
+        font-weight: 700;
+        font-size: 18px;
     }
 
     .sidebar.collapsed > .sidebar-inner {
@@ -270,7 +315,61 @@
         display: none;
     }
 
-    .sidebar.collapsed > .collapse-strip {
-        width: 25px;
+    .sidebar.sidebar-left:not(.pinned):not(.collapsed) :global(~ main) {
+        margin-left: 26px;
+    }
+
+    :global(#main main:has(~ .sidebar.sidebar-right:not(.pinned):not(.collapsed))) {
+        margin-right: 26px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .sidebar:not(.collapsed) {
+            position: absolute;
+            top: 0;
+            z-index: 501;
+            bottom: 0;
+            left: 0;
+            width: 100% !important;
+        }
+
+        .sidebar.collapsed {
+            flex-basis: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .sidebar.collapsed .collapse-strip {
+            bottom: 20px;
+            z-index: 500;
+            position: fixed;
+            height: auto;
+        }
+
+        .sidebar.collapsed .collapse-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #fafafabf;
+            border: 1px solid #F0F0F0;
+            padding: 0;
+        }
+
+        .sidebar.sidebar-left.collapsed .collapse-strip {
+            left: 20px;
+        }
+
+        .sidebar.sidebar-right.collapsed .collapse-strip {
+            right: 20px;
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        .sidebar:not(.pinned):not(.collapsed) {
+            position: absolute;
+            z-index: 500;
+            top: 0;
+            box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .3);
+        }
     }
 </style>
