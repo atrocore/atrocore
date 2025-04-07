@@ -57,9 +57,14 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 detailFieldsArr.push(item);
             });
 
+            let fieldDefs = this.model.get('fieldDefs') || {};
             Object.keys(diff || {}).forEach(function (field) {
+                let label = this.translate(field, 'fields', this.model.get('parentType'));
+                if (fieldDefs[field] && fieldDefs[field]['label']) {
+                    label = fieldDefs[field]['label'];
+                }
                 diffArr.push({
-                    field: this.translate(field, 'fields', this.model.get('parentType')),
+                    field: label,
                     diff: diff[field]
                 })
             }, this);
