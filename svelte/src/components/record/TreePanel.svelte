@@ -42,7 +42,6 @@
     let sortAsc = true;
     let sortBy = null;
     let sortFields = [];
-    let adminTreeData: [] = null;
 
     $: if (currentWidth) {
         if (callbacks?.treeWidthChanged) {
