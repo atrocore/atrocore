@@ -42,8 +42,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         header: 'views/stream/header',
 
-        filterList: ['posts', 'updates', 'emails'],
-
         events: _.extend({
             'click button.post': function () {
                 this.post();
@@ -57,31 +55,16 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             return data;
         },
 
-        enablePostingMode: function () {
-            this.$el.find('.buttons-panel').removeClass('hide');
-
-            if (!this.postingMode) {
-                $('body').on('click.stream-panel', function (e) {
-                    var $target = $(e.target);
-                    if ($target.parent().hasClass('remove-attachment')) return;
-                    if ($.contains(this.$postContainer.get(0), e.target)) return;
-                    if ((this.seed.get('post') ?? '') !== '') return;
-                }.bind(this));
-            }
-
-            this.postingMode = true;
+        getFilterList: function () {
+            return  this.getMetadata().get(['scopes', this.scope, 'filterInNote']) || ['posts', 'updates']
         },
 
-        disablePostingMode: function () {
-            this.postingMode = false;
 
+        disablePostingMode: function () {
             this.seed.set('post', '');
             if (this.hasView('attachments')) {
                 this.getView('attachments').empty();
             }
-            this.$el.find('.buttons-panel').addClass('hide');
-
-            $('body').off('click.stream-panel');
         },
 
         setup: function () {
@@ -249,10 +232,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     }
                 });
 
-                view.on('focus', (editor, e) => {
-                    this.enablePostingMode();
-                });
-
                 view.on('editor:keypress', (editor, e) => {
                     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
                         this.post();
@@ -344,8 +323,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         prepareNoteForPost: function (model) {
-            model.set('parentId', this.model.id);
-            model.set('parentType', this.model.name);
+            model.set('parentId', this.model?.id);
+            model.set('parentType', this.scope ?? this.model.name);
         },
 
         getButtonList: function () {
@@ -354,7 +333,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
 
         getStoredFilter: function () {
-            return this.getStorage().get('state', 'streamPanelFilter') || this.filterList;
+            let lists =  this.getStorage().get('state', 'streamPanelFilter') || this.getFilterList();
+            return  lists.filter(v => this.getFilterList().includes(v));
         },
 
         storeFilter: function (filter) {
@@ -377,7 +357,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
               el: this.options.el + ' .header',
               scope: this.scope,
               model: this.model,
-              filterList: this.filterList,
+              mode: this.options.mode,
+              filterList: this.getFilterList(),
               activeFilters: this.getStoredFilter(),
               collection: this.collection,
           }, view => {

@@ -126,7 +126,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 this.disableSavePreset = this.options.disableSavePreset;
             }
 
-            if(!this.getAcl().check('SavedSearch', 'create')) {
+            if (!this.getAcl().check('SavedSearch', 'create')) {
                 this.disableSavePreset = true;
             }
 
@@ -174,7 +174,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 return true;
             }, this);
 
-            if(this.getAcl().check('SavedSearch', 'read')) {
+            if (this.getAcl().check('SavedSearch', 'read') && this.scope) {
                 this.ajaxGetRequest('SavedSearch', {
                     collectionOnly: true,
                     scope: this.scope
@@ -901,7 +901,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     this.updateCollection();
                 },
                 error: (e) => {
-                    this.notify((e.responseText !== null && e.responseText !== '') ? e.responseText:  e.statusText, 'danger')
+                    this.notify((e.responseText !== null && e.responseText !== '') ? e.responseText : e.statusText, 'danger')
                 }
             });
         },

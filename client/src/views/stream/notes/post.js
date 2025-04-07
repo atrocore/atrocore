@@ -69,8 +69,12 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
                 }
             }, this);
 
-            if (!this.model.get('parentId')) {
+            if (!this.model.get('parentId') && !this.model.get('parentType')) {
                 this.messageName = 'postTargetAll';
+            }
+
+            if (!this.model.get('parentId') && this.model.get('parentType')) {
+                this.messageName = 'postInList';
             }
 
             this.createMessage();

@@ -41,7 +41,7 @@
     let isHidden = false;
     let sortAsc = true;
     let sortBy = null;
-    let sortFields = []
+    let sortFields = [];
 
     $: if (currentWidth) {
         if (callbacks?.treeWidthChanged) {
@@ -631,10 +631,23 @@
         rebuildTree()
     }
 
+    function isLinkExistsOnce(scope: string) {
+        let count = 0;
+        for (const treeItem of getAdminTreeData()) {
+            for (const child of treeItem.children) {
+                if(child.id.includes('#'+scope)) {
+                    count += 1;
+                }
+            }
+        }
+
+        return count == 1;
+    }
+
     function getAdminTreeData() {
         let data = Metadata.get(['app', 'adminPanel']);
         let total = Object.keys(data).length;
-        let result = [];
+        let result:[] = [];
         let i = 0;
         Object.entries(data).forEach(([k, v]) => {
             let treeItem = {
@@ -996,5 +1009,10 @@
         transform: translateY(-50%);
         right: 0;
         cursor: pointer;
+    }
+
+    :global(ul.jqtree-tree .jqtree_common.disabled > div > span) {
+        color: #000;
+        font-weight: bold;
     }
 </style>

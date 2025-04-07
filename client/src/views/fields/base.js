@@ -85,12 +85,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         defaultFilterValue: null,
 
         translate: function (name, category, scope) {
-            if (category === 'fields' && scope === this.model.name) {
-                let preparedAttributeName = name.replace(/^unitAttr_/, "attr_");
-                let attributeLabel = this.model.getFieldParam(preparedAttributeName, 'label');
-                if (attributeLabel) {
-                    return attributeLabel;
-                }
+            if (category === 'fields' && scope === this.model.name && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
+                return this.model.get('attributesDefs')[name].label;
             }
 
             return Dep.prototype.translate.call(this, name, category, scope);
@@ -231,6 +227,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getTooltipText() {
+            if (this.model.get('attributesDefs')) {
+                return this.model.get('attributesDefs')[this.name]?.tooltipText;
+            }
+
             const tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
             const tooltipDefaultTranslate = this.translate(this.name, 'tooltips', this.model.name);
             const tooltipTextTranslate = this.translate(tooltipText, 'tooltips', this.model.name);
@@ -653,8 +653,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initRemoveAttributeValue() {
-            let name = this.name.replace(/^unitAttr_/, "attr_");
-            if (!this.model.getFieldParam(name, 'attributeId') || !this.getAcl().check(this.model.name, 'edit')) {
+            const fieldName = this.originalName || this.name;
+
+            if (!this.model.get('attributesDefs') || !fieldName || !this.model.get('attributesDefs')[fieldName] || !this.getAcl().check(this.model.name, 'edit')) {
+                return;
+            }
+
+            let attributeValueId = this.model.get('attributesDefs')[fieldName]['attributeValueId'] || null;
+            if (!attributeValueId) {
                 return;
             }
 
@@ -678,7 +684,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, () => {
                     const data = {
                         entityName: this.model.name,
-                        id: this.model.getFieldParam(name, 'id')
+                        id: attributeValueId
                     }
 
                     $.ajax({
