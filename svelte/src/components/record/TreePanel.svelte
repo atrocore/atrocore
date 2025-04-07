@@ -41,7 +41,8 @@
     let isHidden = false;
     let sortAsc = true;
     let sortBy = null;
-    let sortFields = []
+    let sortFields = [];
+    let adminTreeData: [] = null;
 
     $: if (currentWidth) {
         if (callbacks?.treeWidthChanged) {
@@ -162,7 +163,6 @@
             return;
         }
 
-
         if (activeItem.name === '_admin') {
             data = getAdminTreeData();
         }
@@ -238,7 +238,8 @@
                 }
 
                 if (activeItem.name === '_admin'
-                    && ((Metadata.get(['scopes', getHashScope()]) && node.id.includes('#' + getHashScope())) || node.id === window.location.hash)) {
+                    && ((Metadata.get(['scopes', getHashScope()]) && node.id.includes('#' + getHashScope()) && isLinkExistsOnce(getHashScope()))
+                        || node.id === window.location.hash)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
@@ -655,10 +656,27 @@
         rebuildTree()
     }
 
+    function isLinkExistsOnce(scope: string) {
+        let count = 0;
+        for (const treeItem of getAdminTreeData()) {
+            for (const child of treeItem.children) {
+                if(child.id.includes('#'+scope)) {
+                    count += 1;
+                }
+            }
+        }
+
+        return count == 1;
+    }
+
     function getAdminTreeData() {
+        if(adminTreeData !== null) {
+            return adminTreeData
+        }
+
         let data = Metadata.get(['app', 'adminPanel']);
         let total = Object.keys(data).length;
-        let result = [];
+        let result:[] = [];
         let i = 0;
         Object.entries(data).forEach(([k, v]) => {
             let treeItem = {
@@ -694,7 +712,7 @@
             i++;
         });
 
-        return result;
+        return adminTreeData = result;
     }
 
     function loadLayout(callback) {
