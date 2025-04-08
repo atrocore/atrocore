@@ -182,7 +182,9 @@
                 }
 
                 if (activeItem.name === '_admin'
-                    && ((Metadata.get(['scopes', getHashScope()]) && node.id.includes('#' + getHashScope()) && isLinkExistsOnce(getHashScope())) || node.id === window.location.hash)) {
+                    && ((Metadata.get(['scopes', getHashScope()])
+                        && (node.id.includes('#' + getHashScope()+'/'))
+                        && isLinkExistsOnce(getHashScope())) || node.id === window.location.hash)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
