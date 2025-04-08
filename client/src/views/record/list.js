@@ -388,6 +388,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         isAllowedSelectAllResult() {
+            if (this.options.allowSelectAllResult === false){
+                return false;
+            }
+
             if (this.getParentView() && this.getParentView().getParentView()) {
                 let view = this.getParentView().getParentView();
 

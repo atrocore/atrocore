@@ -124,6 +124,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 multiple: true,
                 createButton: false,
                 massRelateEnabled: false,
+                allowSelectAllResult: false,
                 boolFilterList: [
                     "fieldsFilter"
                 ],
@@ -156,7 +157,8 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 scope: 'Attribute',
                 multiple: true,
                 createButton: false,
-                massRelateEnabled: false
+                massRelateEnabled: false,
+                allowSelectAllResult: false
             }, dialog => {
                 dialog.render();
                 this.notify(false);
