@@ -659,8 +659,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
-            let attributeValueId = this.model.get('attributesDefs')[fieldName]['attributeValueId'] || null;
-            if (!attributeValueId) {
+            let attributeId = this.model.get('attributesDefs')[fieldName]['attributeId'] || null;
+            if (!attributeId) {
                 return;
             }
 
@@ -684,7 +684,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, () => {
                     const data = {
                         entityName: this.model.name,
-                        id: attributeValueId
+                        entityId: this.model.get('id'),
+                        attributeId: attributeId
                     }
 
                     $.ajax({

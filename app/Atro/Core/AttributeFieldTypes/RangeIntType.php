@@ -11,35 +11,39 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Espo\ORM\IEntity;
 
 class RangeIntType extends AbstractFieldType
 {
     protected string $type = 'int';
 
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
+        $id = $row['id'];
+        $name = AttributeFieldConverter::prepareFieldName($id);
+
         $entity->entityDefs['fields'][$name] = [
-            'type'             => 'range' . ucfirst($this->type),
-            'attributeValueId' => $id,
-            'required'         => !empty($row['is_required']),
-            'label'            => $row[$this->prepareKey('name', $row)],
-            'view'             => "views/fields/range-{$this->type}",
-            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
+            'type'        => 'range' . ucfirst($this->type),
+            'attributeId' => $id,
+            'required'    => !empty($row['is_required']),
+            'label'       => $row[$this->prepareKey('name', $row)],
+            'view'        => "views/fields/range-{$this->type}",
+            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
         ];
 
         $entity->fields[$name . 'From'] = [
-            'type'             => $this->type,
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => "{$this->type}_value",
-            'required'         => !empty($row['is_required'])
+            'type'        => $this->type,
+            'name'        => $name,
+            'attributeId' => $id,
+            'column'      => "{$this->type}_value",
+            'required'    => !empty($row['is_required'])
         ];
         $entity->set($name . 'From', $row[$entity->fields[$name . 'From']['column']] ?? null);
 
         $attributesDefs[$name . 'From'] = $entity->entityDefs['fields'][$name . 'From'] = [
-            'attributeValueId'     => $id,
+            'attributeId'          => $id,
             'type'                 => $this->type,
             'required'             => !empty($row['is_required']),
             'label'                => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('From'),
@@ -47,16 +51,16 @@ class RangeIntType extends AbstractFieldType
         ];
 
         $entity->fields[$name . 'To'] = [
-            'type'             => $this->type,
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => "{$this->type}_value1",
-            'required'         => !empty($row['is_required'])
+            'type'        => $this->type,
+            'name'        => $name,
+            'attributeId' => $id,
+            'column'      => "{$this->type}_value1",
+            'required'    => !empty($row['is_required'])
         ];
         $entity->set($name . 'To', $row[$entity->fields[$name . 'To']['column']] ?? null);
 
         $attributesDefs[$name . 'To'] = $entity->entityDefs['fields'][$name . 'To'] = [
-            'attributeValueId'     => $id,
+            'attributeId'          => $id,
             'type'                 => $this->type,
             'required'             => !empty($row['is_required']),
             'label'                => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('To'),
@@ -87,11 +91,11 @@ class RangeIntType extends AbstractFieldType
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
 
             $entity->fields[$name . 'UnitId'] = [
-                'type'             => 'varchar',
-                'name'             => $name,
-                'attributeValueId' => $id,
-                'column'           => 'reference_value',
-                'required'         => !empty($row['is_required'])
+                'type'        => 'varchar',
+                'name'        => $name,
+                'attributeId' => $id,
+                'column'      => 'reference_value',
+                'required'    => !empty($row['is_required'])
             ];
             $entity->fields[$name . 'UnitName'] = [
                 'type'        => 'varchar',

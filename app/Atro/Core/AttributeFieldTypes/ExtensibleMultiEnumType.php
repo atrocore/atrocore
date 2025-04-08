@@ -11,18 +11,21 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Espo\ORM\IEntity;
 
 class ExtensibleMultiEnumType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
         $entity->fields[$name] = [
-            'type'             => 'jsonArray',
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => "json_value",
-            'required'         => !empty($row['is_required'])
+            'type'        => 'jsonArray',
+            'name'        => $name,
+            'attributeId' => $row['id'],
+            'column'      => "json_value",
+            'required'    => !empty($row['is_required'])
         ];
 
         $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
@@ -48,7 +51,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeValueId' => $id,
+            'attributeId'      => $row['id'],
             'type'             => 'extensibleMultiEnum',
             'required'         => !empty($row['is_required']),
             'label'            => $row[$this->prepareKey('name', $row)],

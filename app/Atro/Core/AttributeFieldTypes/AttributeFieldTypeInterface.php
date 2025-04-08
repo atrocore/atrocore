@@ -15,5 +15,5 @@ use Espo\ORM\IEntity;
 
 interface AttributeFieldTypeInterface
 {
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void;
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void;
 }

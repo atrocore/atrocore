@@ -222,9 +222,18 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                         models = dialog.collection.models;
                     }
 
+                    let attributesIds = [];
+                    models.forEach(model => {
+                        attributesIds.push(model.get('id'));
+                    });
                     this.notify('Loading...');
+                    this.ajaxGetRequest('Attribute/action/attributesDefs', {attributesIds: attributesIds, entityName: this.model.name}).success(res => {
+                        console.log(res);
+                    })
 
-                    console.log(models)
+                    // console.log(models)
+
+                    // this.model.defs['fields'][name] = defs;
 
                     // models.forEach(model => {
                     //     let name = model.get('code');

@@ -11,6 +11,7 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Espo\ORM\IEntity;
 
 class DateType extends AbstractFieldType
@@ -18,25 +19,27 @@ class DateType extends AbstractFieldType
     protected string $type = 'date';
     protected string $column = 'date_value';
 
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
         $entity->fields[$name] = [
-            'type'             => $this->type,
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => $this->column,
-            'required'         => !empty($row['is_required'])
+            'type'        => $this->type,
+            'name'        => $name,
+            'attributeId' => $row['id'],
+            'column'      => $this->column,
+            'required'    => !empty($row['is_required'])
         ];
 
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
-            'attributeValueId' => $id,
-            'type'             => $this->type,
-            'required'         => !empty($row['is_required']),
-            'label'            => $row[$this->prepareKey('name', $row)],
-            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
+            'attributeId' => $row['id'],
+            'type'        => $this->type,
+            'required'    => !empty($row['is_required']),
+            'label'       => $row[$this->prepareKey('name', $row)],
+            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
         ];
     }
 }

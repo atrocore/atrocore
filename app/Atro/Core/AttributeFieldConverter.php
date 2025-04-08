@@ -35,6 +35,11 @@ class AttributeFieldConverter
         $this->container = $container;
     }
 
+    public static function prepareFieldName(string $id): string
+    {
+        return "attr_{$id}_attr";
+    }
+
     public function putAttributesToEntity(IEntity $entity): void
     {
         if (!$this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
@@ -45,7 +50,6 @@ class AttributeFieldConverter
 
         $select = [
             'a.*',
-            "av.{$tableName}_id as entity_id",
             'av.bool_value',
             'av.date_value',
             'av.datetime_value',
@@ -84,7 +88,7 @@ class AttributeFieldConverter
         // it needs because we should be able to create attribute value on entity update
         if (!empty($entity->_originalInput)) {
             foreach ($entity->_originalInput as $field => $value) {
-                if (preg_match('/^attr_(.*)_(.*)_attr/', $field, $matches)) {
+                if (preg_match('/^attr_(.*)_attr/', $field, $matches)) {
                     if (in_array($matches[1], array_column($res, 'id'))) {
                         continue;
                     }
@@ -104,17 +108,16 @@ class AttributeFieldConverter
         $attributesDefs = [];
 
         foreach ($res as $row) {
-            $id = "{$row['id']}_{$row['entity_id']}";
-            $name = "attr_{$id}_attr";
-
-            $this->getFieldType($row['type'])->convert($entity, $id, $name, $row, $attributesDefs);
+            $this
+                ->getFieldType($row['type'])
+                ->convert($entity, $row, $attributesDefs);
         }
 
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAsFetched();
     }
 
-    protected function getFieldType(string $type): AttributeFieldTypeInterface
+    public function getFieldType(string $type): AttributeFieldTypeInterface
     {
         $className = "\\Atro\\Core\\AttributeFieldTypes\\" . ucfirst($type) . "Type";
         if (!class_exists($className)) {

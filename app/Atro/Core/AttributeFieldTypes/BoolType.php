@@ -11,18 +11,21 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Espo\ORM\IEntity;
 
 class BoolType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
         $entity->fields[$name] = [
-            'type'             => 'bool',
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => "bool_value",
-            'required'         => !empty($row['is_required'])
+            'type'        => 'bool',
+            'name'        => $name,
+            'attributeId' => $row['id'],
+            'column'      => "bool_value",
+            'required'    => !empty($row['is_required'])
         ];
 
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
@@ -32,13 +35,13 @@ class BoolType extends AbstractFieldType
         }
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeValueId' => $id,
-            'type'             => 'bool',
-            'required'         => !empty($row['is_required']),
-            'notNull'          => !empty($row['not_null']),
-            'label'            => $row[$this->prepareKey('name', $row)],
-            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
+            'attributeId' => $row['id'],
+            'type'        => 'bool',
+            'required'    => !empty($row['is_required']),
+            'notNull'     => !empty($row['not_null']),
+            'label'       => $row[$this->prepareKey('name', $row)],
+            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

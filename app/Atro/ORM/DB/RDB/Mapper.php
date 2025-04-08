@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB;
 
-use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Utils\Config;
 use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
@@ -610,11 +609,6 @@ class Mapper implements MapperInterface
                     $value = json_encode($value);
                 }
 
-                $parts = explode('_', $entity->fields[$key]['attributeValueId']);
-
-                $attributeId = $parts[0];
-                $entityId = $parts[1];
-
                 try {
                     $this->connection->createQueryBuilder()
                         ->insert("{$name}_attribute_value")
@@ -623,8 +617,8 @@ class Mapper implements MapperInterface
                         ->setValue("{$name}_id", ':entityId')
                         ->setValue($entity->fields[$key]['column'], ':value')
                         ->setParameter('id', Util::generateId())
-                        ->setParameter('attributeId', $attributeId)
-                        ->setParameter('entityId', $entityId)
+                        ->setParameter('attributeId', $entity->fields[$key]['attributeId'])
+                        ->setParameter('entityId', $entity->id)
                         ->setParameter('value', $value, self::getParameterType($value))
                         ->executeQuery();
                 } catch (UniqueConstraintViolationException $e) {
@@ -634,8 +628,8 @@ class Mapper implements MapperInterface
                         ->where('attribute_id=:attributeId')
                         ->andWhere("{$name}_id=:entityId")
                         ->setParameter('value', $value, self::getParameterType($value))
-                        ->setParameter('attributeId', $attributeId)
-                        ->setParameter('entityId', $entityId)
+                        ->setParameter('attributeId', $entity->fields[$key]['attributeId'])
+                        ->setParameter('entityId', $entity->id)
                         ->executeQuery();
                 }
             }

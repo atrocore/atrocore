@@ -11,6 +11,7 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
@@ -28,16 +29,18 @@ class LinkType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
+        $id = $row['id'];
+        $name = AttributeFieldConverter::prepareFieldName($id);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name . 'Id'] = [
-            'type'             => 'varchar',
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => 'reference_value',
-            'required'         => !empty($row['is_required'])
+            'type'        => 'varchar',
+            'name'        => $name,
+            'attributeId' => $id,
+            'column'      => 'reference_value',
+            'required'    => !empty($row['is_required'])
         ];
 
         $entity->fields[$name . 'Name'] = [
@@ -49,13 +52,13 @@ class LinkType extends AbstractFieldType
 
         if (!empty($attributeData['entityType'])) {
             $entity->entityDefs['fields'][$name] = [
-                'attributeValueId' => $id,
-                'type'             => 'link',
-                'entity'           => $attributeData['entityType'],
-                'required'         => !empty($row['is_required']),
-                'label'            => $row[$this->prepareKey('name', $row)],
-                'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
-                'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
+                'attributeId' => $id,
+                'type'        => 'link',
+                'entity'      => $attributeData['entityType'],
+                'required'    => !empty($row['is_required']),
+                'label'       => $row[$this->prepareKey('name', $row)],
+                'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
+                'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
             ];
 
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));

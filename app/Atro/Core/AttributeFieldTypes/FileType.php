@@ -11,18 +11,21 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Espo\ORM\IEntity;
 
 class FileType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
         $entity->fields[$name . 'Id'] = [
-            'type'             => 'varchar',
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => 'reference_value',
-            'required'         => !empty($row['is_required'])
+            'type'        => 'varchar',
+            'name'        => $name,
+            'attributeId' => $row['id'],
+            'column'      => 'reference_value',
+            'required'    => !empty($row['is_required'])
         ];
 
         $entity->fields[$name . 'Name'] = [
@@ -39,12 +42,12 @@ class FileType extends AbstractFieldType
         $entity->set($name . 'Name', $row['file_name'] ?? null);
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
-            'attributeValueId' => $id,
-            'type'             => 'file',
-            'required'         => !empty($row['is_required']),
-            'label'            => $row[$this->prepareKey('name', $row)],
-            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
+            'attributeId' => $row['id'],
+            'type'        => 'file',
+            'required'    => !empty($row['is_required']),
+            'label'       => $row[$this->prepareKey('name', $row)],
+            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
         ];
     }
 }
