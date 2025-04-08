@@ -147,7 +147,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
                         if (!this.fieldList.includes(name)) {
                             let label = this.translate(name, 'fields', this.scope);
-                            let html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><label class="control-label">' + label + '</label><div class="field" data-name="' + name + '" /></div>';
+                            let html = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
                             this.$el.find('.fields-container').append(html);
 
                             let type = this.model.getFieldType(name);
@@ -164,16 +164,46 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                                 mode: 'edit'
                             }, view => {
                                 this.fieldList.push(name);
-                                view.render();
+                                view.render(() => {
+                                    this.initRemoveField(view);
+                                    this.enableButton('update');
+                                });
                             });
                         }
                     })
                     this.notify(false);
+                });
+            });
+        },
 
-                    if (this.fieldList.length > 0) {
-                        this.enableButton('update');
+        initRemoveField(view) {
+            const $cell = view.$el.parent();
+            const $inlineActions = $cell.find('.inline-actions');
+            $cell.find('.fa fa-times').parent().remove();
+
+            const $link = $(`<a href="javascript:" title="${this.translate('Cancel')}"><span class="fa fa-times fa-sm"></span></a>`);
+
+            $inlineActions.prepend($link);
+
+            $link.on('click', () => {
+                console.log(view)
+
+                this.clearView(view);
+                this.$el.find('.cell[data-name="' + view.name + '"]').remove();
+
+                this.model.unset(view.name);
+
+                let fieldList = [];
+                this.fieldList.forEach(field => {
+                    if (field !== view.name) {
+                        fieldList.push(field);
                     }
                 });
+                this.fieldList = fieldList;
+
+                if (this.fieldList.length === 0) {
+                    this.disableButton('update');
+                }
             });
         },
 
