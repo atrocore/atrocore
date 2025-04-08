@@ -43,16 +43,32 @@ class AttributeFieldConverter
 
         $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
 
-        $select = 'a.*, av.id as av_id, av.bool_value, av.date_value, av.datetime_value, av.int_value, av.int_value1, av.float_value, av.float_value1, av.varchar_value, av.text_value, av.reference_value, av.json_value, f.name as file_name';
+        $select = [
+            'a.*',
+            "av.{$tableName}_id as entity_id",
+            'av.bool_value',
+            'av.date_value',
+            'av.datetime_value',
+            'av.int_value',
+            'av.int_value1',
+            'av.float_value',
+            'av.float_value1',
+            'av.varchar_value',
+            'av.text_value',
+            'av.reference_value',
+            'av.json_value',
+            'f.name as file_name'
+        ];
+
         if (!empty($this->config->get('isMultilangActive'))) {
             foreach ($this->config->get('inputLanguageList', []) as $code) {
-                $select .= ',av.varchar_value_' . strtolower($code);
-                $select .= ',av.text_value_' . strtolower($code);
+                $select[] = 'av.varchar_value_' . strtolower($code);
+                $select[] = 'av.text_value_' . strtolower($code);
             }
         }
 
         $res = $this->conn->createQueryBuilder()
-            ->select($select)
+            ->select(implode(',', $select))
             ->from("{$tableName}_attribute_value", 'av')
             ->leftJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
             ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType')
@@ -68,7 +84,7 @@ class AttributeFieldConverter
         $attributesDefs = [];
 
         foreach ($res as $row) {
-            $id = $row['av_id'];
+            $id = $row['id'] . '_' . $row['entity_id'];
             $name = "attr_{$id}";
 
             $this->getFieldType($row['type'])->convert($entity, $id, $name, $row, $attributesDefs);

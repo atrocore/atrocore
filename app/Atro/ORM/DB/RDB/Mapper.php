@@ -19,6 +19,7 @@ use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -612,13 +613,35 @@ class Mapper implements MapperInterface
                 if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
                     $value = json_encode($value);
                 }
-                $this->connection->createQueryBuilder()
-                    ->update("{$name}_attribute_value")
-                    ->set($entity->fields[$key]['column'], ':value')
-                    ->where('id=:id')
-                    ->setParameter('value', $value, self::getParameterType($value))
-                    ->setParameter('id', $entity->fields[$key]['attributeValueId'])
-                    ->executeQuery();
+
+                $parts = explode('_', $entity->fields[$key]['attributeValueId']);
+
+                $attributeId = $parts[0];
+                $entityId = $parts[1];
+
+                try {
+                    $this->connection->createQueryBuilder()
+                        ->insert("{$name}_attribute_value")
+                        ->setValue('id', ':id')
+                        ->setValue('attribute_id', ':attributeId')
+                        ->setValue("{$name}_id", ':entityId')
+                        ->setValue($entity->fields[$key]['column'], ':value')
+                        ->setParameter('id', Util::generateId())
+                        ->setParameter('attributeId', $attributeId)
+                        ->setParameter('entityId', $entityId)
+                        ->setParameter('value', $value, self::getParameterType($value))
+                        ->executeQuery();
+                } catch (UniqueConstraintViolationException $e) {
+                    $this->connection->createQueryBuilder()
+                        ->update("{$name}_attribute_value")
+                        ->set($entity->fields[$key]['column'], ':value')
+                        ->where('attribute_id=:attributeId')
+                        ->andWhere("{$name}_id=:entityId")
+                        ->setParameter('value', $value, self::getParameterType($value))
+                        ->setParameter('attributeId', $attributeId)
+                        ->setParameter('entityId', $entityId)
+                        ->executeQuery();
+                }
             }
         }
 

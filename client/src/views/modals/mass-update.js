@@ -208,45 +208,56 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         },
 
         selectAttribute() {
-            alert('select attribute')
+            this.notify('Loading...');
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'Attribute',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', models => {
+                    if (models.massRelate) {
+                        models = dialog.collection.models;
+                    }
 
-            // this.notify('Loading...');
-            // this.createView('dialog', 'views/modals/select-records', {
-            //     scope: 'EntityField',
-            //     multiple: false,
-            //     createButton: false,
-            //     massRelateEnabled: false,
-            //     // boolFilterList: boolFilterList,
-            //     // boolFilterData: boolFilterData,
-            // }, dialog => {
-            //     dialog.render();
-            //     this.notify(false);
-            //     dialog.once('select', selectObj => {
-            //         console.log(selectObj)
-            //
-            //         // this.notify('Loading...');
-            //         // const data = {
-            //         //     entityName: this.model.name,
-            //         //     entityId: this.model.get('id'),
-            //         // }
-            //         // if (Array.isArray(selectObj)) {
-            //         //     data.ids = selectObj.map(o => o.id)
-            //         // } else {
-            //         //     data.where = selectObj.where
-            //         // }
-            //         // $.ajax({
-            //         //     url: `Attribute/action/addAttributeValue`,
-            //         //     type: 'POST',
-            //         //     data: JSON.stringify(data),
-            //         //     contentType: 'application/json',
-            //         //     success: () => {
-            //         //         this.model.fetch().then(() => {
-            //         //             this.notify('Saved', 'success');
-            //         //         });
-            //         //     }
-            //         // });
-            //     });
-            // });
+                    this.notify('Loading...');
+
+                    console.log(models)
+
+                    // models.forEach(model => {
+                    //     let name = model.get('code');
+                    //
+                    //     if (!this.fieldList.includes(name)) {
+                    //         let label = this.translate(name, 'fields', this.scope);
+                    //         let html = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
+                    //         this.$el.find('.fields-container').append(html);
+                    //
+                    //         let type = this.model.getFieldType(name);
+                    //
+                    //         let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+                    //
+                    //         this.createView(name, viewName, {
+                    //             model: this.model,
+                    //             el: this.getSelector() + ' .field[data-name="' + name + '"]',
+                    //             defs: {
+                    //                 name: name,
+                    //                 isMassUpdate: true
+                    //             },
+                    //             mode: 'edit'
+                    //         }, view => {
+                    //             this.fieldList.push(name);
+                    //             view.render(() => {
+                    //                 this.initRemoveField(view);
+                    //                 this.enableButton('update');
+                    //             });
+                    //         });
+                    //     }
+                    // })
+                    this.notify(false);
+                });
+            });
         },
 
         // addField: function (name) {
