@@ -85,8 +85,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         defaultFilterValue: null,
 
         translate: function (name, category, scope) {
-            if (category === 'fields' && scope === this.model.name && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
-                return this.model.get('attributesDefs')[name].label;
+            if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
+                return this.model.getFieldParam(name, 'label');
             }
 
             return Dep.prototype.translate.call(this, name, category, scope);

@@ -144,32 +144,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
                     models.forEach(model => {
                         let name = model.get('code');
-
-                        if (!this.fieldList.includes(name)) {
-                            let label = this.translate(name, 'fields', this.scope);
-                            let html = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
-                            this.$el.find('.fields-container').append(html);
-
-                            let type = this.model.getFieldType(name);
-
-                            let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
-
-                            this.createView(name, viewName, {
-                                model: this.model,
-                                el: this.getSelector() + ' .field[data-name="' + name + '"]',
-                                defs: {
-                                    name: name,
-                                    isMassUpdate: true
-                                },
-                                mode: 'edit'
-                            }, view => {
-                                this.fieldList.push(name);
-                                view.render(() => {
-                                    this.initRemoveField(view);
-                                    this.enableButton('update');
-                                });
-                            });
-                        }
+                        this.addField(name, this.translate(name, 'fields', this.scope));
                     })
                     this.notify(false);
                 });
@@ -186,8 +161,6 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             $inlineActions.prepend($link);
 
             $link.on('click', () => {
-                console.log(view)
-
                 this.clearView(view);
                 this.$el.find('.cell[data-name="' + view.name + '"]').remove();
 
@@ -227,82 +200,50 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                         attributesIds.push(model.get('id'));
                     });
                     this.notify('Loading...');
-                    this.ajaxGetRequest('Attribute/action/attributesDefs', {attributesIds: attributesIds, entityName: this.model.name}).success(res => {
-                        console.log(res);
+                    let data = {
+                        attributesIds: attributesIds,
+                        entityName: this.model.name
+                    };
+                    this.ajaxGetRequest('Attribute/action/attributesDefs', data).success(res => {
+                        $.each(res, (name, defs) => {
+                            if (!defs.layoutDetailDisabled) {
+                                this.model.defs['fields'][name] = defs;
+                                this.addField(name, defs.label);
+                            }
+                        })
                     })
-
-                    // console.log(models)
-
-                    // this.model.defs['fields'][name] = defs;
-
-                    // models.forEach(model => {
-                    //     let name = model.get('code');
-                    //
-                    //     if (!this.fieldList.includes(name)) {
-                    //         let label = this.translate(name, 'fields', this.scope);
-                    //         let html = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
-                    //         this.$el.find('.fields-container').append(html);
-                    //
-                    //         let type = this.model.getFieldType(name);
-                    //
-                    //         let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
-                    //
-                    //         this.createView(name, viewName, {
-                    //             model: this.model,
-                    //             el: this.getSelector() + ' .field[data-name="' + name + '"]',
-                    //             defs: {
-                    //                 name: name,
-                    //                 isMassUpdate: true
-                    //             },
-                    //             mode: 'edit'
-                    //         }, view => {
-                    //             this.fieldList.push(name);
-                    //             view.render(() => {
-                    //                 this.initRemoveField(view);
-                    //                 this.enableButton('update');
-                    //             });
-                    //         });
-                    //     }
-                    // })
                     this.notify(false);
                 });
             });
         },
 
-        // addField: function (name) {
-        //     this.enableButton('update');
-        //
-        //     this.$el.find('[data-action="reset"]').removeClass('hidden');
-        //
-        //     this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
-        //
-        //     if (this.$el.find('ul.filter-list li:not(.hidden)').size() == 0) {
-        //         this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
-        //     }
-        //
-        //     this.notify('Loading...');
-        //     var label = this.translate(name, 'fields', this.scope);
-        //     var html = '<div class="cell form-group col-sm-6" data-name="'+name+'"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
-        //     this.$el.find('.fields-container').append(html);
-        //
-        //     var type = this.model.getFieldType(name);
-        //
-        //     var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
-        //
-        //     this.createView(name, viewName, {
-        //         model: this.model,
-        //         el: this.getSelector() + ' .field[data-name="' + name + '"]',
-        //         defs: {
-        //             name: name,
-        //             isMassUpdate: true
-        //         },
-        //         mode: 'edit'
-        //     }, function (view) {
-        //         this.fieldList.push(name);
-        //         view.render();
-        //         view.notify(false);
-        //     }.bind(this));
-        // },
+        addField(name, label) {
+            if (this.fieldList.includes(name)) {
+                return;
+            }
+            let html = `<div class="cell form-group col-sm-6" data-name="${name}"><div class="pull-right inline-actions"></div><label class="control-label">${label}</label><div class="field" data-name="${name}" /></div>`;
+            this.$el.find('.fields-container').append(html);
+
+            let type = this.model.getFieldType(name);
+
+            let viewName = this.model.getFieldParam(name, 'view') || this.model.getFieldParam(name, 'layoutDetailView') || this.getFieldManager().getViewName(type);
+
+            this.createView(name, viewName, {
+                model: this.model,
+                el: this.getSelector() + ' .field[data-name="' + name + '"]',
+                defs: {
+                    name: name,
+                    isMassUpdate: true
+                },
+                mode: 'edit'
+            }, view => {
+                this.fieldList.push(name);
+                view.render(() => {
+                    this.initRemoveField(view);
+                    this.enableButton('update');
+                });
+            });
+        },
 
         actionUpdate: function () {
             this.disableButton('update');
