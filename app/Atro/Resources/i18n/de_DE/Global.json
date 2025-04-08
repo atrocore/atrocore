@@ -353,7 +353,11 @@
     "Activities": "Aktivitäten",
     "enableAutomaticClosing": "Aktivieren  des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
     "disableAutomaticClosing": "Deaktivieren des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
-    "accessManagement": "Zugangsverwaltung"
+    "accessManagement": "Zugangsverwaltung",
+    "sidebarUnpin": "Automatische Erweiterung des Panels ist inaktiv",
+    "sidebarPin": "Automatische Erweiterung des Panels ist aktiv",
+    "sidebarExpand": "Zum Erweitern anklicken",
+    "sidebarCollapse": "Zum Verkleinern anklicken"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
