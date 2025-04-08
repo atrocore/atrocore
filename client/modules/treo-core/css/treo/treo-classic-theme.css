@@ -6634,6 +6634,13 @@ button.close {
     margin-left: -1px
 }
 
+.modal-footer .btn-group .btn-select-field {
+    margin-left: 20px !important;
+}
+.modal-footer .btn-group .btn-select-attribute {
+    margin-left: 5px !important;
+}
+
 .modal-footer .btn-block + .btn-block {
     margin-left: 0
 }

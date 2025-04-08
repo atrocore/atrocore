@@ -53,9 +53,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             'click button[data-action="update"]': function () {
                 this.update();
             },
-            'click a[data-action="add-field"]': function (e) {
-                var field = $(e.currentTarget).data('name');
-                this.addField(field);
+            'click .btn-select-field': function (e) {
+                this.selectField();
+            },
+            'click .btn-select-attribute': function (e) {
+                this.selectAttribute();
             },
             'click button[data-action="reset"]': function (e) {
                 this.reset();
@@ -73,6 +75,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 {
                     name: 'cancel',
                     label: 'Cancel'
+                },
+                {
+                    name: 'selectField',
+                    label: 'Select Field',
+                    className: 'btn-select-field'
                 }
             ];
 
@@ -83,6 +90,14 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.byWhere = this.options.byWhere;
 
             this.header = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
+
+            if (this.getMetadata().get(`scopes.${this.scope}.hasAttribute`)) {
+                this.buttonList.push({
+                    name: 'selectAttribute',
+                    label: 'Select Attribute',
+                    className: 'btn-select-attribute'
+                });
+            }
 
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
@@ -102,40 +117,142 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.fieldList = [];
         },
 
-        addField: function (name) {
-            this.enableButton('update');
-
-            this.$el.find('[data-action="reset"]').removeClass('hidden');
-
-            this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
-
-            if (this.$el.find('ul.filter-list li:not(.hidden)').size() == 0) {
-                this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
-            }
-
+        selectField() {
             this.notify('Loading...');
-            var label = this.translate(name, 'fields', this.scope);
-            var html = '<div class="cell form-group col-sm-6" data-name="'+name+'"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
-            this.$el.find('.fields-container').append(html);
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'EntityField',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false,
+                boolFilterList: [
+                    "fieldsFilter"
+                ],
+                boolFilterData: {
+                    fieldsFilter: {
+                        entityId: this.scope
+                    }
+                }
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', models => {
+                    if (models.massRelate) {
+                        models = dialog.collection.models;
+                    }
 
-            var type = this.model.getFieldType(name);
+                    this.notify('Loading...');
 
-            var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+                    models.forEach(model => {
+                        let name = model.get('code');
 
-            this.createView(name, viewName, {
-                model: this.model,
-                el: this.getSelector() + ' .field[data-name="' + name + '"]',
-                defs: {
-                    name: name,
-                    isMassUpdate: true
-                },
-                mode: 'edit'
-            }, function (view) {
-                this.fieldList.push(name);
-                view.render();
-                view.notify(false);
-            }.bind(this));
+                        if (!this.fieldList.includes(name)) {
+                            let label = this.translate(name, 'fields', this.scope);
+                            let html = '<div class="cell form-group col-sm-6" data-name="' + name + '"><label class="control-label">' + label + '</label><div class="field" data-name="' + name + '" /></div>';
+                            this.$el.find('.fields-container').append(html);
+
+                            let type = this.model.getFieldType(name);
+
+                            let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+
+                            this.createView(name, viewName, {
+                                model: this.model,
+                                el: this.getSelector() + ' .field[data-name="' + name + '"]',
+                                defs: {
+                                    name: name,
+                                    isMassUpdate: true
+                                },
+                                mode: 'edit'
+                            }, view => {
+                                this.fieldList.push(name);
+                                view.render();
+                            });
+                        }
+                    })
+                    this.notify(false);
+
+                    if (this.fieldList.length > 0) {
+                        this.enableButton('update');
+                    }
+                });
+            });
         },
+
+        selectAttribute() {
+            alert('select attribute')
+
+            // this.notify('Loading...');
+            // this.createView('dialog', 'views/modals/select-records', {
+            //     scope: 'EntityField',
+            //     multiple: false,
+            //     createButton: false,
+            //     massRelateEnabled: false,
+            //     // boolFilterList: boolFilterList,
+            //     // boolFilterData: boolFilterData,
+            // }, dialog => {
+            //     dialog.render();
+            //     this.notify(false);
+            //     dialog.once('select', selectObj => {
+            //         console.log(selectObj)
+            //
+            //         // this.notify('Loading...');
+            //         // const data = {
+            //         //     entityName: this.model.name,
+            //         //     entityId: this.model.get('id'),
+            //         // }
+            //         // if (Array.isArray(selectObj)) {
+            //         //     data.ids = selectObj.map(o => o.id)
+            //         // } else {
+            //         //     data.where = selectObj.where
+            //         // }
+            //         // $.ajax({
+            //         //     url: `Attribute/action/addAttributeValue`,
+            //         //     type: 'POST',
+            //         //     data: JSON.stringify(data),
+            //         //     contentType: 'application/json',
+            //         //     success: () => {
+            //         //         this.model.fetch().then(() => {
+            //         //             this.notify('Saved', 'success');
+            //         //         });
+            //         //     }
+            //         // });
+            //     });
+            // });
+        },
+
+        // addField: function (name) {
+        //     this.enableButton('update');
+        //
+        //     this.$el.find('[data-action="reset"]').removeClass('hidden');
+        //
+        //     this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
+        //
+        //     if (this.$el.find('ul.filter-list li:not(.hidden)').size() == 0) {
+        //         this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
+        //     }
+        //
+        //     this.notify('Loading...');
+        //     var label = this.translate(name, 'fields', this.scope);
+        //     var html = '<div class="cell form-group col-sm-6" data-name="'+name+'"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
+        //     this.$el.find('.fields-container').append(html);
+        //
+        //     var type = this.model.getFieldType(name);
+        //
+        //     var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+        //
+        //     this.createView(name, viewName, {
+        //         model: this.model,
+        //         el: this.getSelector() + ' .field[data-name="' + name + '"]',
+        //         defs: {
+        //             name: name,
+        //             isMassUpdate: true
+        //         },
+        //         mode: 'edit'
+        //     }, function (view) {
+        //         this.fieldList.push(name);
+        //         view.render();
+        //         view.notify(false);
+        //     }.bind(this));
+        // },
 
         actionUpdate: function () {
             this.disableButton('update');
@@ -175,7 +292,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         reset: function () {
             this.fieldList.forEach(function (field) {
                 this.clearView(field);
-                this.$el.find('.cell[data-name="'+field+'"]').remove();
+                this.$el.find('.cell[data-name="' + field + '"]').remove();
             }, this);
 
             this.fieldList = [];
@@ -210,17 +327,17 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             return notValid;
         },
 
-        getWhere(){
+        getWhere() {
             let where = this.options.where;
             let cleanWhere = (where) => {
                 where.forEach(wherePart => {
-                    if(['in', 'notIn'].includes(wherePart['type'])) {
-                        if ('value' in wherePart && !(wherePart['value'] ?? []).length){
+                    if (['in', 'notIn'].includes(wherePart['type'])) {
+                        if ('value' in wherePart && !(wherePart['value'] ?? []).length) {
                             delete wherePart['value']
                         }
                     }
 
-                    if(['and', 'or'].includes(wherePart['type']) && Array.isArray(wherePart['value'] ?? [])){
+                    if (['and', 'or'].includes(wherePart['type']) && Array.isArray(wherePart['value'] ?? [])) {
                         cleanWhere(wherePart['value'] ?? [])
                     }
                 })
