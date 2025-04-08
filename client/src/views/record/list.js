@@ -2411,6 +2411,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     relatedScope: this.options.layoutRelatedScope,
                     layoutData: this.layoutData,
                     el: el,
+                    alignRight: true
                 }, (view) => {
                     view.on("refresh", () => {
                         if (this.options.disableRefreshLayout) {

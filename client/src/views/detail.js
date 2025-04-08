@@ -376,6 +376,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 viewType: 'relationships',
                 layoutData: bottomView.layoutData,
                 el: el + ' .panel-navigation .layout-editor-container',
+                alignRight: true,
             }, (view) => {
                 view.on("refresh", () => {
                     recordView.createBottomView(view => {

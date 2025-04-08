@@ -174,7 +174,7 @@
             </button>
         {/if}
         {#if isPinned && !isMobile}
-            <span class="collapse-text">{Language.translate(isCollapsed ? 'sidebarExpand' : 'sidebarCollapse')}</span>
+            <span class="collapse-text">&#10229; {Language.translate(isCollapsed ? 'sidebarExpand' : 'sidebarCollapse')} &#10230;</span>
         {/if}
         <button class="collapse-button" type="button" on:click={toggleCollapse}>
             {#if position === 'left'}
@@ -193,6 +193,7 @@
     .sidebar {
         --sidebar-color: #fafafa;
 
+        width: 300px;
         height: 100%;
         background-color: var(--sidebar-color);
         display: flex;
@@ -233,19 +234,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-
-    .sidebar.sidebar-right.pinned > .collapse-strip {
-        border-right: 1px dotted transparent;
-    }
-
-    .sidebar.sidebar-left.pinned > .collapse-strip {
-        border-left: 1px dotted transparent;
-    }
-
-    .sidebar.sidebar-left.pinned > .collapse-strip:hover,
-    .sidebar.sidebar-right.pinned > .collapse-strip:hover {
-        border-color: #cfcfcf;
     }
 
     .sidebar > .collapse-strip > .collapse-text {

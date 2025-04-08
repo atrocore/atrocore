@@ -749,7 +749,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         onTreeResize(width) {
-
+            window.dispatchEvent(new CustomEvent('tree-width-changed', {detail: {width}}));
         },
 
         reloadBookmarks() {

@@ -891,7 +891,7 @@
                                         on:click={onSortAscChange}>
                                     <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
                                 </button>
-                                <select class="form-control" style="width: auto;max-width: 120px;" bind:value={sortBy}
+                                <select class="form-control" style="width: auto;" bind:value={sortBy}
                                         on:change={onSortByChange}>
                                     {#each sortFields as field }
                                         <option value="{field.name}">
