@@ -81,11 +81,31 @@ class AttributeFieldConverter
             ->setParameter('fileType', 'file')
             ->fetchAllAssociative();
 
+        // it needs because we should be able to create attribute value on entity update
+        if (!empty($entity->_originalInput)) {
+            foreach ($entity->_originalInput as $field => $value) {
+                if (preg_match('/^attr_(.*)_(.*)_attr/', $field, $matches)) {
+                    if (in_array($matches[1], array_column($res, 'id'))) {
+                        continue;
+                    }
+                    $attr = $this->conn->createQueryBuilder()
+                        ->select('*')
+                        ->from($this->conn->quoteIdentifier('attribute'))
+                        ->where('id=:id')
+                        ->setParameter('id', $matches[1])
+                        ->fetchAssociative();
+                    if (!empty($attr)) {
+                        $res[] = array_merge($attr, ['entity_id' => $matches[2]]);
+                    }
+                }
+            }
+        }
+
         $attributesDefs = [];
 
         foreach ($res as $row) {
-            $id = $row['id'] . '_' . $row['entity_id'];
-            $name = "attr_{$id}";
+            $id = "{$row['id']}_{$row['entity_id']}";
+            $name = "attr_{$id}_attr";
 
             $this->getFieldType($row['type'])->convert($entity, $id, $name, $row, $attributesDefs);
         }

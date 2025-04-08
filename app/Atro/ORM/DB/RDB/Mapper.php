@@ -34,15 +34,13 @@ class Mapper implements MapperInterface
     protected EntityFactory $entityFactory;
     protected Metadata $metadata;
     protected QueryConverter $queryConverter;
-    protected AttributeFieldConverter $attributeFieldConverter;
     private array $singleParentHierarchy = [];
 
-    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata, AttributeFieldConverter $attributeFieldConverter)
+    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata)
     {
         $this->connection = $connection;
         $this->entityFactory = $entityFactory;
         $this->metadata = $metadata;
-        $this->attributeFieldConverter = $attributeFieldConverter;
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
@@ -59,8 +57,6 @@ class Mapper implements MapperInterface
 
         $entity->set($row);
         $entity->setAsFetched();
-
-        $this->attributeFieldConverter->putAttributesToEntity($entity);
 
         return $entity;
     }
