@@ -101,11 +101,11 @@
             if (typeof item === 'string' || item instanceof String) {
                 o = {
                     name: item,
-                    label: options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(item, 'links', params.scope)
+                    label: options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(item, 'fields', params.scope)
                 };
             } else {
                 o = item;
-                o.label = options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(o.name, 'links', params.scope);
+                o.label = options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(o.name, 'fields', params.scope);
 
             }
 
@@ -127,8 +127,7 @@
                 let options = bottomPanels.find(panel => panel.name === field);
                 group.fields.push({
                     name: field,
-                    label: options ? Language.translate(options.label, 'labels', params.scope) :
-                        (Language.translate(field, 'fields', params.scope) || Language.translate(field, 'links', params.scope))
+                    label: options ? Language.translate(options.label, 'labels', params.scope) : Language.translate(field, 'fields', params.scope)
                 });
             }
         }
