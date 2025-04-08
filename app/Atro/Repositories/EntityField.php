@@ -95,7 +95,14 @@ class EntityField extends ReferenceData
     {
         $entities = [];
 
-        $entityName = $params['whereClause'][0]['entityId='] ?? $params['whereClause'][0]['entityId'] ?? null;
+        $entityName = null;
+        foreach ($params['whereClause'] ?? [] as $item) {
+            if (!empty($item['entityId='])) {
+                $entityName = $item['entityId='];
+            } elseif (!empty($item['entityId'])) {
+                $entityName = $item['entityId'];
+            }
+        }
 
         if (!empty($entityName)) {
             $entities[] = $entityName;
