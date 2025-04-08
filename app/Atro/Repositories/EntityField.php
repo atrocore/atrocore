@@ -231,7 +231,6 @@ class EntityField extends ReferenceData
 
         $loadedData = json_decode(json_encode($this->getMetadata()->loadData()), true);
 
-        $entity->set('isCustom', true);
         $this->updateField($entity, $loadedData);
 
         return true;
@@ -410,9 +409,6 @@ class EntityField extends ReferenceData
 
     public function deleteEntity(OrmEntity $entity): bool
     {
-        if (empty($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.isCustom"))) {
-            return true;
-        }
 
         $this->deleteFromMetadata($entity);
         $this->getMetadata()->save();
@@ -426,9 +422,6 @@ class EntityField extends ReferenceData
         $scope = $entity->get('entityId');
         $name = $entity->get('code');
 
-        if (empty($this->getMetadata()->get("entityDefs.$scope.fields.$name.isCustom"))) {
-            return;
-        }
 
         $foreignScope = $this->getMetadata()->get("entityDefs.$scope.links.$name.entity");
         if (!empty($foreignScope)) {
