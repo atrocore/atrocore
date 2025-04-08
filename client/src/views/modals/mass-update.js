@@ -141,42 +141,12 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     }
 
                     this.notify('Loading...');
-
                     models.forEach(model => {
                         let name = model.get('code');
                         this.addField(name, this.translate(name, 'fields', this.scope));
                     })
                     this.notify(false);
                 });
-            });
-        },
-
-        initRemoveField(view) {
-            const $cell = view.$el.parent();
-            const $inlineActions = $cell.find('.inline-actions');
-            $cell.find('.fa fa-times').parent().remove();
-
-            const $link = $(`<a href="javascript:" title="${this.translate('Cancel')}"><span class="fa fa-times fa-sm"></span></a>`);
-
-            $inlineActions.prepend($link);
-
-            $link.on('click', () => {
-                this.clearView(view);
-                this.$el.find('.cell[data-name="' + view.name + '"]').remove();
-
-                this.model.unset(view.name);
-
-                let fieldList = [];
-                this.fieldList.forEach(field => {
-                    if (field !== view.name) {
-                        fieldList.push(field);
-                    }
-                });
-                this.fieldList = fieldList;
-
-                if (this.fieldList.length === 0) {
-                    this.disableButton('update');
-                }
             });
         },
 
@@ -242,6 +212,35 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     this.initRemoveField(view);
                     this.enableButton('update');
                 });
+            });
+        },
+
+        initRemoveField(view) {
+            const $cell = view.$el.parent();
+            const $inlineActions = $cell.find('.inline-actions');
+            $cell.find('.fa fa-times').parent().remove();
+
+            const $link = $(`<a href="javascript:" title="${this.translate('Cancel')}"><span class="fa fa-times fa-sm"></span></a>`);
+
+            $inlineActions.prepend($link);
+
+            $link.on('click', () => {
+                this.clearView(view);
+                this.$el.find('.cell[data-name="' + view.name + '"]').remove();
+
+                this.model.unset(view.name);
+
+                let fieldList = [];
+                this.fieldList.forEach(field => {
+                    if (field !== view.name) {
+                        fieldList.push(field);
+                    }
+                });
+                this.fieldList = fieldList;
+
+                if (this.fieldList.length === 0) {
+                    this.disableButton('update');
+                }
             });
         },
 
