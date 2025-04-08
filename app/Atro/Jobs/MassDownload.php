@@ -15,6 +15,7 @@ namespace Atro\Jobs;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Exception;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Entities\Job;
 use Atro\Services\File;
 use Atro\Core\Utils\Util;
@@ -69,6 +70,7 @@ class MassDownload extends AbstractJob implements JobInterface
         $input->hidden = true;
         $input->folderId = $this->getZipFolderEntity()->get('id');
 
+        $this->getMemoryStorage()->set('disableFileTransactions', true);
         $fileData = $service->moveLocalFileToFileEntity($input, $fileName);
         Util::removeDir($zipDir);
 
@@ -101,4 +103,10 @@ class MassDownload extends AbstractJob implements JobInterface
     {
         Util::removeDir(self::ZIP_TMP_DIR);
     }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getEntityManager()->getMemoryStorage();
+    }
+
 }
