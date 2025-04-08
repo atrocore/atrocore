@@ -27,6 +27,17 @@
               ]
             }
           ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
         }
       },
       "dbName": {
