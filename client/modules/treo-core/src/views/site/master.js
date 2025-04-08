@@ -47,21 +47,36 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                 }
             }
 
-            const initializeTooltips = () => {
-                document.querySelectorAll('[title]').forEach(el => {
-                    if (!el.dataset.tippy) {
+            const getTooltipContent = (el) => {
+                const titleText = el.getAttribute('data-original-title') || el.getAttribute('title');
+                let content = `<div>${titleText}</div>`;
+
+                const titleLink = el.getAttribute('data-original-title-link') || el.getAttribute('data-title-link');
+                if (titleLink) {
+                    content += `<div class="tippy-footer"><a href="${titleLink}" target="_blank"><u>Read more</u></a></div>`;
+                }
+                return content;
+            };
+
+            const initializeTooltips = (node = document) => {
+                node.querySelectorAll('[title]').forEach(el => {
+                    if (!el.getAttribute('data-original-title')) {
+                        el.setAttribute('data-original-title', el.getAttribute('title'));
+                    }
+
+                    if (el.getAttribute('data-title-link') && !el.getAttribute('data-original-title-link')) {
+                        el.setAttribute('data-original-title-link', el.getAttribute('data-title-link'));
+                    }
+
+                    if (el.dataset.tippy) {
+                        if (el._tippy) {
+                            el._tippy.setContent(getTooltipContent(el));
+                        }
+                    } else {
                         window.tippy(el, {
                             appendTo: () => document.body,
                             maxWidth: 350,
-                            content: ref => {
-                                let html = `<div>${ref.getAttribute('title')}</div>`;
-
-                                if (ref.getAttribute('data-title-link')) {
-                                    html += `<div class="tippy-footer"><a href="${ref.getAttribute('data-title-link')}" target="_blank"><u>${this.translate('Read more')}</u></a></div>`;
-                                }
-
-                                return html;
-                            },
+                            content: getTooltipContent(el),
                             allowHTML: true,
                             trigger: 'mouseenter',
                             delay: [500, 0],
@@ -85,8 +100,32 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
             initializeTooltips();
 
-            const observer = new MutationObserver(initializeTooltips);
-            observer.observe(document.body, { childList: true, subtree: true });
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    const el = mutation.target;
+
+                    if (el.getAttribute('title')) {
+                        el.setAttribute('data-original-title', el.getAttribute('title'));
+                    }
+                    if (el.getAttribute('data-title-link')) {
+                        el.setAttribute('data-original-title-link', el.getAttribute('data-title-link'));
+                    }
+                    if (el.dataset.tippy && el._tippy) {
+                        el._tippy.setContent(getTooltipContent(el));
+                        el.removeAttribute('title');
+                        el.removeAttribute('data-title-link');
+                    } else {
+                        initializeTooltips(el);
+                    }
+                });
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['title', 'data-title-link']
+            });
         }
 
     })
