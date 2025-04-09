@@ -1041,5 +1041,8 @@
       "datetime_exceed_min": "Muss nach dem {0} sein",
       "datetime_exceed_max": "Muss vor dem {0} sein"
     }
+  },
+  "confirmations": {
+    "someFieldsEmptyOnMassUpdate": "Sie werden einen oder mehrere Werte durch einen leeren Wert ersetzen. Sind Sie sicher?"
   }
 }

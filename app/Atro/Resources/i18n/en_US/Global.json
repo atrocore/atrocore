@@ -1154,5 +1154,8 @@
   "twigVariables": {
     "entity": "Entity to check",
     "config": "Configuration object of the system"
+  },
+  "confirmations": {
+    "someFieldsEmptyOnMassUpdate": "You are going to replace one or more values with an empty value. Are you sure?"
   }
 }

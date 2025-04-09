@@ -58,9 +58,6 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             },
             'click .btn-select-attribute': function (e) {
                 this.selectAttribute();
-            },
-            'click button[data-action="reset"]': function (e) {
-                this.reset();
             }
         },
 
@@ -264,60 +261,55 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         },
 
         actionUpdate: function () {
-            this.disableButton('update');
-
-            var self = this;
-
-            var attributes = this.prepareData();
-
+            let attributes = this.prepareData();
             this.model.set(attributes);
-
             if (!this.isValid()) {
-                self.notify('Saving...');
-                $.ajax({
-                    url: this.scope + '/action/massUpdate',
-                    type: 'PUT',
-                    data: JSON.stringify({
-                        attributes: attributes,
-                        ids: self.ids || null,
-                        where: (!self.ids || self.ids.length == 0) ? self.options.where : null,
-                        selectData: (!self.ids || self.ids.length == 0) ? self.options.selectData : null,
-                        byWhere: this.byWhere
-                    }),
-                    success: function (result) {
-                        self.trigger('after:update', result);
-                    },
-                    error: function () {
-                        self.notify('Error occurred', 'error');
-                        self.enableButton('update');
+                this.notify('Saving...');
+                let toConfirm = false;
+                $.each(attributes, (field, value) => {
+                    if (value === '' || value === null) {
+                        toConfirm = true;
                     }
-                });
+                })
+
+                if (toConfirm) {
+                    this.confirm(this.translate('someFieldsEmptyOnMassUpdate', 'confirmations'), () => {
+                        this.massUpdate(attributes);
+                    });
+                } else {
+                    this.massUpdate(attributes);
+                }
             } else {
                 this.notify('Not valid', 'error');
                 this.enableButton('update');
             }
         },
 
-        reset: function () {
-            this.fieldList.forEach(function (field) {
-                this.clearView(field);
-                this.$el.find('.cell[data-name="' + field + '"]').remove();
-            }, this);
-
-            this.fieldList = [];
-
-            this.model.clear();
-
-            this.$el.find('[data-action="reset"]').addClass('hidden');
-
-            this.$el.find('button.select-field').removeClass('disabled').removeAttr('disabled');
-            this.$el.find('ul.filter-list').find('li').removeClass('hidden');
-
-            this.disableButton('update');
-        },
-
         ucfirst(val) {
             return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+        },
+
+        massUpdate(attributes) {
+            this.disableButton('update');
+            let self = this;
+            $.ajax({
+                url: this.scope + '/action/massUpdate',
+                type: 'PUT',
+                data: JSON.stringify({
+                    attributes: attributes,
+                    ids: self.ids || null,
+                    where: (!self.ids || self.ids.length == 0) ? self.options.where : null,
+                    selectData: (!self.ids || self.ids.length == 0) ? self.options.selectData : null,
+                    byWhere: this.byWhere
+                }),
+                success: function (result) {
+                    self.trigger('after:update', result);
+                },
+                error: function () {
+                    self.notify('Error occurred', 'error');
+                    self.enableButton('update');
+                }
+            });
         },
 
         prepareData() {
