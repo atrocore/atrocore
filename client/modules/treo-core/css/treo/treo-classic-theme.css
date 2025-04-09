@@ -3513,9 +3513,6 @@ textarea.input-lg, select[multiple].input-lg {
 .btn:active, .btn.active {
     outline: 0;
     background-image: none;
-    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125)
 }
 
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn {
@@ -3559,10 +3556,15 @@ a.btn.disabled, fieldset[disabled] a.btn {
     border-color: #adadad
 }
 
-.btn-default:active:hover, .btn-default.active:hover, .open > .dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open > .dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open > .dropdown-toggle.btn-default.focus {
+.btn-default:active:hover, .btn-default.active:hover,
+.btn-default:active:focus, .btn-default.active:focus,
+.btn-default:active.focus, .btn-default.active.focus,
+.open > .dropdown-toggle.btn-default:hover,
+.open > .dropdown-toggle.btn-default:focus,
+.open > .dropdown-toggle.btn-default.focus {
     color: #333;
-    background-color: #ccc;
-    border-color: #8c8c8c
+    background-color: #e7f1fc;
+    border-color: #8c8c8c;
 }
 
 .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
@@ -3578,52 +3580,6 @@ a.btn.disabled, fieldset[disabled] a.btn {
     color: #f7f7f7;
     background-color: #333
 }
-
-/*
-.btn-primary {
-    color: #fff;
-    background-color: #537898;
-    border-color: #537898
-}
-
-.btn-primary:focus, .btn-primary.focus {
-    color: #fff;
-    background-color: #415e77;
-    border-color: #263746
-}
-
-.btn-primary:hover {
-    color: #fff;
-    background-color: #415e77;
-    border-color: #3d5970
-}
-
-.btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-    color: #fff;
-    background-color: #415e77;
-    border-color: #3d5970
-}
-
-.btn-primary:active:hover, .btn-primary.active:hover, .open > .dropdown-toggle.btn-primary:hover, .btn-primary:active:focus, .btn-primary.active:focus, .open > .dropdown-toggle.btn-primary:focus, .btn-primary:active.focus, .btn-primary.active.focus, .open > .dropdown-toggle.btn-primary.focus {
-    color: #fff;
-    background-color: #344c60;
-    border-color: #263746
-}
-
-.btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-    background-image: none
-}
-
-.btn-primary.disabled:hover, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus, .btn-primary.disabled.focus, .btn-primary[disabled].focus, fieldset[disabled] .btn-primary.focus {
-    background-color: #537898;
-    border-color: #537898
-}
-
-.btn-primary .badge {
-    color: #537898;
-    background-color: #fff
-}
-*/
 
 .btn-success {
     color: #fff;
@@ -4160,12 +4116,6 @@ tbody.collapse.in {
 .btn-group > .btn-lg + .dropdown-toggle {
     padding-left: 12px;
     padding-right: 12px
-}
-
-.btn-group.open .dropdown-toggle {
-    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125)
 }
 
 .btn-group.open .dropdown-toggle.btn-link {
@@ -19285,8 +19235,13 @@ a:hover, a:focus {
     border-color: #e0e0e0
 }
 
+.btn-default:active {
+    background-color: #e7f1fc;
+}
+
+.btn-default:focus,
 .btn-default:hover {
-    background-color: #e0e0e0
+    background-color: #f3f8fd;
 }
 
 .panel {
@@ -23781,13 +23736,35 @@ span[data-img-src]::after {
     color: #999;
     display: inline-flex;
     line-height: 1;
-    width: 18px;
+    width: 17px;
 }
 
 .layout-editor-container .btn-link > svg {
     width: 100%;
     height: 100%;
     fill: currentColor;
+}
+
+@media screen and (min-width: 768px) {
+    .layout-editor-container {
+        display: none;
+    }
+
+    .layout-editor-container.open {
+        display: block !important;
+    }
+
+    table thead:hover .layout-editor-container {
+        display: block;
+    }
+
+    .panel-heading:hover .layout-editor-container {
+        display: block;
+    }
+
+    .anchor-nav-container .layout-editor-container {
+        display: block;
+    }
 }
 
 .add-attribute-value-container .btn-link {
