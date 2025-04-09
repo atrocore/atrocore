@@ -302,7 +302,7 @@
         padding-right: 20px;
         height: fit-content;
         min-height: 100%;
-        max-width: 100%;
+        max-width: calc(100% - 22px);
         box-sizing: border-box;
     }
 
