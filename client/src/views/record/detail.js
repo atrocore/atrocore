@@ -180,7 +180,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        refreshLayout() {
+        refreshLayout(middleOnly = false) {
             this.detailLayout = null
             this.gridLayout = null
             this.notify('Loading...')
@@ -190,8 +190,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (middle) {
                     middle._layout = layout
                     middle._loadNestedViews(() => {
-                        // middle.reRender()
-                        this.reRender();
+                        if (middleOnly) {
+                            middle.reRender()
+                        } else {
+                            this.reRender();
+                        }
                     })
 
                     // update panel navigation
@@ -291,7 +294,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionDynamicAction: function (data) {
             let defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
-            if(!defs) {
+            if (!defs) {
                 defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicFieldActions']) || []).find(defs => defs.id === data.id)
             }
 
@@ -1232,7 +1235,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.listenTo(this.model, 'sync', () => {
                     if (this.layoutHasActionFields()) {
                         this.fetchDynamicFieldActions(() => {
-                            this.refreshLayout();
+                            this.refreshLayout(true);
                         })
                     } else {
                         this.refreshLayout();
