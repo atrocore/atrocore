@@ -8,9 +8,19 @@
     export let params: ActionParams;
     export let className: string = '';
 
+    const styles: string[] = ['default', 'primary', 'success', 'warning', 'danger']
+
     let computedClassNames: string;
     $: {
-        computedClassNames = `btn btn-${params.style ?? 'default'} action`;
+        computedClassNames = `action btn`;
+        (params.style ?? 'default').split(' ').forEach(style => {
+            if (styles.includes(style)) {
+                computedClassNames += ` btn-${style}`;
+            } else {
+                computedClassNames += ` ${style}`;
+            }
+        });
+
         if (className) {
             computedClassNames += ` ${className}`;
         }

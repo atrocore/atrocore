@@ -3759,8 +3759,8 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-danger {
     color: #fff;
-    background-color: #cf605d;
-    border-color: #cf605d
+    background-color: #ef4944;
+    border-color: #ef4944;
 }
 
 .btn-danger:focus, .btn-danger.focus {
@@ -4807,6 +4807,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     font-size: 14px;
 }
 
+.navbar-right .fa,
 .navbar-right .fas,
 .navbar-right .fas .far {
     color: var(--nav-font-color);
@@ -6014,7 +6015,7 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 }
 
 .panel {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     background-color: #fff;
     border: 1px solid transparent;
     border-radius: 0;
@@ -19832,7 +19833,7 @@ ul.dropdown-menu > li.checkbox {
     top: 0;
     left: 0;
     z-index: 101;
-    background-color: #fafafa;
+    background-color: #fff;
     padding: 10px 20px 0;
     border-bottom: 1px solid #dedede;
 }
@@ -23990,6 +23991,15 @@ span[data-img-src]::after {
 
 .favorites-dropdown .divider {
     margin: 7px -15px 10px;
+}
+
+.favorites-wrapper > ul.favorites-items:before,
+.favorites-wrapper > ul.favorites-items:after {
+    content: none;
+}
+
+.favorites-wrapper:empty + .favorite-arrow {
+    display: none;
 }
 
 @media (max-width: 768px) {

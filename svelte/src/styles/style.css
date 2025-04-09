@@ -3,3 +3,53 @@ button > svg {
     height: 100%;
     fill: currentColor;
 }
+
+button > *, .btn > * {
+    font-size: inherit;
+}
+
+.btn-primary.outline,
+.btn-warning.outline,
+.btn-success.outline,
+.btn-danger.outline {
+    background-color: var(--primary-color);
+}
+
+.btn-primary.outline:hover,
+.btn-warning.outline:hover,
+.btn-success.outline:hover,
+.btn-danger.outline:hover {
+    background-color: #eee;
+}
+
+.btn-primary.outline {
+    color: #06c;
+}
+
+.btn-primary.outline:hover {
+    color: #1a75d1;
+}
+
+.btn-danger.outline {
+    color: #ef4944;
+}
+
+.btn-danger.outline:hover {
+    color: #b83a37;
+}
+
+.btn-warning.outline {
+    color: #ef990e;
+}
+
+.btn-warning.outline:hover {
+    color: #b5740b;
+}
+
+.btn-success.outline {
+    color: #47682f;
+}
+
+.btn-success.outline:hover {
+    color: #679643;
+}

@@ -119,9 +119,8 @@
         {{/if}}
 
         <div class="nav navbar-nav navbar-left navbar-favorites">
-            <div class="favorites-wrapper">
-                {{{favoritesToolbar}}}
-            </div>
+            <div class="favorites-wrapper">{{{favoritesToolbar}}}</div>
+            <a class="favorite favorite-arrow" type="button" href="javascript:" data-action="openFavoritesDropdown" style="padding: 5px;" >&#10230;</a>
         </div>
 
         <ul class="nav navbar-nav navbar-right navbar-dropdowns">
@@ -153,7 +152,7 @@
             {{/if}}
             <li class="dropdown hidden-xs favorites">
                 <a href="javascript:" type="button" class="favorite show-more-button favorites-dropdown-btn dropdown-toggle" data-toggle="dropdown">
-                    <span class="fas fa-star"></span>
+                    <span class="fa fa-thumb-tack"></span>
                 </a>
                 <div class="dropdown-menu favorites-dropdown">
                     <div class="header">
