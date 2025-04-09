@@ -193,12 +193,12 @@
     .sidebar {
         --sidebar-color: #fafafa;
 
-        width: 300px;
         height: 100%;
         background-color: var(--sidebar-color);
         display: flex;
         align-items: stretch;
         overflow-y: auto;
+        overflow-x: clip;
         position: relative;
     }
 
@@ -304,7 +304,6 @@
         min-height: 100%;
         max-width: 100%;
         box-sizing: border-box;
-        overflow-x: hidden;
     }
 
     .sidebar.sidebar-left > .sidebar-inner {
@@ -423,6 +422,10 @@
             z-index: 500;
             top: 0;
             box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .3);
+        }
+
+        .sidebar:not(.collapsed) {
+            min-width: 300px;
         }
     }
 </style>
