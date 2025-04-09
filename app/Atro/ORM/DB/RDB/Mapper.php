@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB;
 
-use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Utils\Config;
 use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -33,15 +33,13 @@ class Mapper implements MapperInterface
     protected EntityFactory $entityFactory;
     protected Metadata $metadata;
     protected QueryConverter $queryConverter;
-    protected AttributeFieldConverter $attributeFieldConverter;
     private array $singleParentHierarchy = [];
 
-    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata, AttributeFieldConverter $attributeFieldConverter)
+    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata)
     {
         $this->connection = $connection;
         $this->entityFactory = $entityFactory;
         $this->metadata = $metadata;
-        $this->attributeFieldConverter = $attributeFieldConverter;
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
@@ -58,8 +56,6 @@ class Mapper implements MapperInterface
 
         $entity->set($row);
         $entity->setAsFetched();
-
-        $this->attributeFieldConverter->putAttributesToEntity($entity);
 
         return $entity;
     }
@@ -612,13 +608,30 @@ class Mapper implements MapperInterface
                 if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
                     $value = json_encode($value);
                 }
-                $this->connection->createQueryBuilder()
-                    ->update("{$name}_attribute_value")
-                    ->set($entity->fields[$key]['column'], ':value')
-                    ->where('id=:id')
-                    ->setParameter('value', $value, self::getParameterType($value))
-                    ->setParameter('id', $entity->fields[$key]['attributeValueId'])
-                    ->executeQuery();
+
+                try {
+                    $this->connection->createQueryBuilder()
+                        ->insert("{$name}_attribute_value")
+                        ->setValue('id', ':id')
+                        ->setValue('attribute_id', ':attributeId')
+                        ->setValue("{$name}_id", ':entityId')
+                        ->setValue($entity->fields[$key]['column'], ':value')
+                        ->setParameter('id', Util::generateId())
+                        ->setParameter('attributeId', $entity->fields[$key]['attributeId'])
+                        ->setParameter('entityId', $entity->id)
+                        ->setParameter('value', $value, self::getParameterType($value))
+                        ->executeQuery();
+                } catch (UniqueConstraintViolationException $e) {
+                    $this->connection->createQueryBuilder()
+                        ->update("{$name}_attribute_value")
+                        ->set($entity->fields[$key]['column'], ':value')
+                        ->where('attribute_id=:attributeId')
+                        ->andWhere("{$name}_id=:entityId")
+                        ->setParameter('value', $value, self::getParameterType($value))
+                        ->setParameter('attributeId', $entity->fields[$key]['attributeId'])
+                        ->setParameter('entityId', $entity->id)
+                        ->executeQuery();
+                }
             }
         }
 

@@ -85,8 +85,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         defaultFilterValue: null,
 
         translate: function (name, category, scope) {
-            if (category === 'fields' && scope === this.model.name && this.model.get('attributesDefs') && this.model.get('attributesDefs')[name]) {
-                return this.model.get('attributesDefs')[name].label;
+            if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
+                return this.model.getFieldParam(name, 'label');
             }
 
             return Dep.prototype.translate.call(this, name, category, scope);
@@ -659,8 +659,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
-            let attributeValueId = this.model.get('attributesDefs')[fieldName]['attributeValueId'] || null;
-            if (!attributeValueId) {
+            let attributeId = this.model.get('attributesDefs')[fieldName]['attributeId'] || null;
+            if (!attributeId) {
                 return;
             }
 
@@ -684,7 +684,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, () => {
                     const data = {
                         entityName: this.model.name,
-                        id: attributeValueId
+                        entityId: this.model.get('id'),
+                        attributeId: attributeId
                     }
 
                     $.ajax({

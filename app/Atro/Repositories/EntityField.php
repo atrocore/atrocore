@@ -80,10 +80,15 @@ class EntityField extends ReferenceData
             $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
         }
 
+        $label = $this->translate($fieldName, 'fields', $entityName);
+        if (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) && !empty($fieldDefs['measureId'])) {
+            $label = $this->translate('unit' . ucfirst($fieldName), 'fields', $entityName);
+        }
+
         return array_merge($fieldDefs, [
             'id'             => "{$entityName}_{$fieldName}",
             'code'           => $fieldName,
-            'name'           => $this->translate($fieldName, 'fields', $entityName),
+            'name'           => $label,
             'entityId'       => $entityName,
             'entityName'     => $this->translate($entityName, 'scopeNames'),
             'tooltipText'    => $this->translate($fieldName, 'tooltips', $entityName),
@@ -95,7 +100,18 @@ class EntityField extends ReferenceData
     {
         $entities = [];
 
-        $entityName = $params['whereClause'][0]['entityId='] ?? $params['whereClause'][0]['entityId'] ?? null;
+        $entityName = null;
+        $skipLingual = false;
+        foreach ($params['whereClause'] ?? [] as $item) {
+            if (!empty($item['entityId='])) {
+                $entityName = $item['entityId='];
+            } elseif (!empty($item['entityId'])) {
+                $entityName = $item['entityId'];
+            }
+            if (array_key_exists('multilangField', $item) && $item['multilangField'] === null) {
+                $skipLingual = true;
+            }
+        }
 
         if (!empty($entityName)) {
             $entities[] = $entityName;
@@ -119,6 +135,10 @@ class EntityField extends ReferenceData
         foreach ($entities as $entityName) {
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
                 if (is_array($types) && !in_array($fieldDefs['type'], $types)) {
+                    continue;
+                }
+
+                if ($skipLingual && !empty($fieldDefs['multilangField'])){
                     continue;
                 }
 

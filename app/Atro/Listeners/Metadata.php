@@ -1154,9 +1154,6 @@ class Metadata extends AbstractListener
                             "type"     => "link",
                             "required" => true
                         ],
-                        "attributeType"  => [
-                            "type" => "varchar"
-                        ],
                         "boolValue"      => [
                             "type"    => "bool",
                             "notNull" => false

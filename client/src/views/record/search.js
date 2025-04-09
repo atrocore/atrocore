@@ -93,7 +93,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 queryBuilderFilterAvailable: !!(this.getConfig().get('hasQueryBuilderFilter')),
                 queryBuilderFilter: !!(this.model.get('hasQueryBuilderFilter')),
                 hasAttributeButton: this.model.urlRoot === 'Product',
-                filtersDisabled: this.getMetadata().get(['scopes', this.model.urlRoot, 'type']) === 'ReferenceData'
+                filtersDisabled: this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData'
             };
 
             data.boolFilterListLength = 0;
@@ -984,9 +984,11 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 return
             }
 
-            $button.removeClass('disabled');
-            if (selectedViewType === 'tree') {
-                $button.addClass('disabled');
+            if (!$button.hasClass('filter-disabled')) {
+                $button.removeClass('disabled');
+                if (selectedViewType === 'tree') {
+                    $button.addClass('disabled');
+                }
             }
         },
 

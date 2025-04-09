@@ -9,11 +9,18 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\AttributeFieldTypes;
+declare(strict_types=1);
 
-use Espo\ORM\IEntity;
+namespace Atro\SelectManagers;
 
-interface AttributeFieldTypeInterface
+use Espo\Core\SelectManagers\Base;
+
+class EntityField extends Base
 {
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void;
+    protected function boolFilterNotLingual(&$result)
+    {
+        $result['whereClause'][] = [
+            'multilangField' => null
+        ];
+    }
 }

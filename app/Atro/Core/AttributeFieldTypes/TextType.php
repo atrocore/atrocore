@@ -11,6 +11,7 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Utils\Util;
 use Espo\ORM\IEntity;
 
@@ -19,28 +20,30 @@ class TextType extends AbstractFieldType
     protected string $type = 'text';
     protected string $column = 'text_value';
 
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
+        $id = $row['id'];
+        $name = AttributeFieldConverter::prepareFieldName($id);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name] = [
-            'type'             => $this->type,
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => $this->column,
-            'required'         => !empty($row['is_required'])
+            'type'        => $this->type,
+            'name'        => $name,
+            'attributeId' => $id,
+            'column'      => $this->column,
+            'required'    => !empty($row['is_required'])
         ];
 
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeValueId' => $id,
-            'type'             => $this->type,
-            'required'         => !empty($row['is_required']),
-            'notNull'          => !empty($row['not_null']),
-            'label'            => $row[$this->prepareKey('name', $row)],
-            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
+            'attributeId' => $id,
+            'type'        => $this->type,
+            'required'    => !empty($row['is_required']),
+            'notNull'     => !empty($row['not_null']),
+            'label'       => $row[$this->prepareKey('name', $row)],
+            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
         ];
 
         if (!empty($attributeData['maxLength'])) {

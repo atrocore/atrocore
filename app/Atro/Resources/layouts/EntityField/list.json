@@ -1,16 +1,19 @@
 [
   {
-    "name": "code",
+    "name": "name",
     "link": true
   },
   {
-    "name": "name"
+    "name": "code"
   },
   {
     "name": "type"
   },
   {
     "name": "required"
+  },
+  {
+    "name": "readOnly"
   },
   {
     "name": "tooltip"

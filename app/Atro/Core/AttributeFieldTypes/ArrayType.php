@@ -11,30 +11,33 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
+use Atro\Core\AttributeFieldConverter;
 use Espo\ORM\IEntity;
 
 class ArrayType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, string $id, string $name, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
         $entity->fields[$name] = [
-            'type'             => 'jsonArray',
-            'name'             => $name,
-            'attributeValueId' => $id,
-            'column'           => "json_value",
-            'required'         => !empty($row['is_required'])
+            'type'        => 'jsonArray',
+            'name'        => $name,
+            'attributeId' => $row['id'],
+            'column'      => "json_value",
+            'required'    => !empty($row['is_required'])
         ];
 
         $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
         $entity->set($name, is_array($value) ? $value : null);
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeValueId' => $id,
-            'type'             => 'array',
-            'required'         => !empty($row['is_required']),
-            'label'            => $row[$this->prepareKey('name', $row)],
-            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
+            'attributeId' => $row['id'],
+            'type'        => 'array',
+            'required'    => !empty($row['is_required']),
+            'label'       => $row[$this->prepareKey('name', $row)],
+            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
