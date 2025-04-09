@@ -676,12 +676,19 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 }
             }).error(function (xhr) {
                 let statusReason = xhr.responseText || '';
+                try{
+                    let jsonResponse = JSON.parse(xhr.responseText);
+                    if (jsonResponse && jsonResponse.reason){
+                        statusReason = jsonResponse.reason;
+                    }
+                }catch(err) {}
+
                 xhr.errorIsHandled = true;
                 if (xhr.status === 409) {
                     self.notify(false);
                     self.enableButtons();
                     self.trigger('cancel:save');
-                    Espo.Ui.confirm(statusReason, {
+                    Espo.Ui.confirm(this.translate('unableToDuplicateRecord', 'messages'), {
                         confirmText: self.translate('Apply'),
                         cancelText: self.translate('Cancel')
                     }, function () {

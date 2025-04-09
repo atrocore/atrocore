@@ -454,7 +454,8 @@
     "badTokenInstance": "Schlechtes Autorisierungs-Token zum Beispiel",
     "dontHaveAccessInInstance": "Sie haben keinen Zugriff auf diesen Datensatz auf der Instanz",
     "selectNoMoreThan": "Nicht mehr als {count} Datensätze auswählen",
-    "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus."
+    "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus.",
+    "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits."
   },
   "unit Length": {
     "mm": "mm",

@@ -489,7 +489,8 @@
     "badTokenInstance": "Bad authorization token for instance",
     "dontHaveAccessInInstance": "You don't have access to this record on instance",
     "selectNoMoreThan": "Select not more than {count} records",
-    "fillEmptyFieldBeforeMerging": "Some empty fields are required, please fill them before merging."
+    "fillEmptyFieldBeforeMerging": "Some empty fields are required, please fill them before merging.",
+    "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists."
   },
   "boolFilters": {
     "onlyActive": "Active",
