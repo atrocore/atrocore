@@ -145,7 +145,15 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     this.notify('Loading...');
                     models.forEach(model => {
                         let name = model.get('code');
-                        this.addField(name, this.translate(name, 'fields', this.scope));
+                        let type = model.get('type');
+                        let label = this.translate(name, 'fields', this.scope);
+
+                        if (['int', 'float', 'varchar'].includes(type) && this.model.getFieldParam(name, 'measureId')) {
+                            label = this.translate('unit' + this.ucfirst(name), 'fields', this.scope);
+                            this.model.defs['fields'][name]['view'] = `views/fields/unit-${type}`;
+                        }
+
+                        this.addField(name, label);
 
                         if (model.get('isMultilang')) {
                             $.each(this.getMetadata().get(`entityDefs.${this.scope}.fields`) || {}, (field, fieldDefs) => {
@@ -306,6 +314,10 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.$el.find('ul.filter-list').find('li').removeClass('hidden');
 
             this.disableButton('update');
+        },
+
+        ucfirst(val) {
+            return String(val).charAt(0).toUpperCase() + String(val).slice(1);
         },
 
         prepareData() {

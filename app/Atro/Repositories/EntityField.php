@@ -80,10 +80,15 @@ class EntityField extends ReferenceData
             $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
         }
 
+        $label = $this->translate($fieldName, 'fields', $entityName);
+        if (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) && !empty($fieldDefs['measureId'])) {
+            $label = $this->translate('unit' . ucfirst($fieldName), 'fields', $entityName);
+        }
+
         return array_merge($fieldDefs, [
             'id'             => "{$entityName}_{$fieldName}",
             'code'           => $fieldName,
-            'name'           => $this->translate($fieldName, 'fields', $entityName),
+            'name'           => $label,
             'entityId'       => $entityName,
             'entityName'     => $this->translate($entityName, 'scopeNames'),
             'tooltipText'    => $this->translate($fieldName, 'tooltips', $entityName),
