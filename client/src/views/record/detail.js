@@ -1506,7 +1506,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         relatedScope: this.options.layoutRelatedScope,
                         el: this.getSelector() + '.panel-heading .layout-editor-container',
                     }, (view) => {
-                        view.on("refresh", () => this.refreshLayout())
+                        view.on("refresh", () => this.refreshLayout(true))
                         view.render()
                     })
                 }
