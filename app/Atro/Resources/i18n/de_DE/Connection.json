@@ -13,7 +13,8 @@
     "smtpUsername": "Benutzername",
     "smtpPassword": "Passwort",
     "outboundEmailFromName": "Absendername",
-    "outboundEmailFromAddress": "Absenderadresse"
+    "outboundEmailFromAddress": "Absenderadresse",
+    "server": "Server"
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",

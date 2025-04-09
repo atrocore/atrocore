@@ -13,7 +13,8 @@
     "smtpPassword": "Пароль",
     "outboundEmailFromName": "Ім'я відправника",
     "outboundEmailFromAddress": "Адреса відправника",
-    "dsn": "Dsn"
+    "dsn": "Dsn",
+    "server": "Сервер"
   },
   "labels": {
     "connectionSuccess": "З'єднання успішно встановлено",
