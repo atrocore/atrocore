@@ -146,6 +146,14 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     models.forEach(model => {
                         let name = model.get('code');
                         this.addField(name, this.translate(name, 'fields', this.scope));
+
+                        if (model.get('isMultilang')) {
+                            $.each(this.getMetadata().get(`entityDefs.${this.scope}.fields`) || {}, (field, fieldDefs) => {
+                                if (fieldDefs.multilangField === name) {
+                                    this.addField(field, this.translate(field, 'fields', this.scope));
+                                }
+                            })
+                        }
                     })
                     this.notify(false);
                 });
