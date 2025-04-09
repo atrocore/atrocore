@@ -676,13 +676,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 }
             }).error(function (xhr) {
                 let statusReason = xhr.responseText || '';
-                try{
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    if (jsonResponse && jsonResponse.reason){
-                        statusReason = jsonResponse.reason;
-                    }
-                }catch(err) {}
-
+                if (xhr.responseJSON && xhr.responseJSON.reason) {
+                    statusReason = xhr.responseJSON.reason;
+                }
                 xhr.errorIsHandled = true;
                 if (xhr.status === 409) {
                     self.notify(false);
