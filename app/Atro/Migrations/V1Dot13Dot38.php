@@ -45,21 +45,26 @@ class V1Dot13Dot38 extends Base
                         if (empty($filter['id']) || empty($filter['label']) || empty($filter['data']) || !array_key_exists('primary', $filter)) {
                             continue;
                         }
-                        $this->getConnection()->createQueryBuilder()
-                            ->insert('saved_search')
-                            ->setValue('id', ':id')
-                            ->setValue('name', ':name')
-                            ->setValue('entity_type', ':entityType')
-                            ->setValue('user_id', ':userId')
-                            ->setValue('data', ':data')
-                            ->setValue($this->getConnection()->quoteIdentifier('primary'), ':primary')
-                            ->setParameter('id', $filter['id'])
-                            ->setParameter('name', $filter['label'])
-                            ->setParameter('entityType', $scope)
-                            ->setParameter('userId', $userId)
-                            ->setParameter('data', json_encode($filter['data']))
-                            ->setParameter('primary', $filter['primary'], Mapper::getParameterType($filter['primary']))
-                            ->executeStatement();
+                        try {
+                            $this->getConnection()->createQueryBuilder()
+                                ->insert('saved_search')
+                                ->setValue('id', ':id')
+                                ->setValue('name', ':name')
+                                ->setValue('entity_type', ':entityType')
+                                ->setValue('user_id', ':userId')
+                                ->setValue('data', ':data')
+                                ->setValue($this->getConnection()->quoteIdentifier('primary'), ':primary')
+                                ->setParameter('id', $filter['id'])
+                                ->setParameter('name', $filter['label'])
+                                ->setParameter('entityType', $scope)
+                                ->setParameter('userId', $userId)
+                                ->setParameter('data', json_encode($filter['data']))
+                                ->setParameter('primary', $filter['primary'], Mapper::getParameterType($filter['primary']))
+                                ->executeStatement();
+                        }catch (\Throwable $e){
+                            
+                        }
+
                     }
                 }
             }
