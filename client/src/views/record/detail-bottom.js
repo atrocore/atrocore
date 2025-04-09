@@ -58,6 +58,15 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             };
         },
 
+        afterRender: function () {
+            this.panelList.forEach(panel => {
+                const view = this.getView(panel.name)
+                if (view && view.collection && view.collection.length > 0) {
+                    view.collection.trigger('update-total')
+                }
+            })
+        },
+
         events: {
             'click .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -162,7 +171,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 view: "views/stream/panel",
                 sticked: false,
                 hidden: this.isPanelClosed('stream'),
-                order:  5,
+                order: 5,
                 expanded: this.getStorage().get('streamCollapseState', this.scope) === 'expanded',
                 avoidLoadingOnCollapse: true
             });
@@ -465,7 +474,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
         createPanelViews() {
             this.panelList.filter(p => {
-                return !p.hidden &&  (p.expanded || !p.avoidLoadingOnCollapse);
+                return !p.hidden && (p.expanded || !p.avoidLoadingOnCollapse);
             }).forEach(p => {
                 this.createPanelView(p);
             });
@@ -568,21 +577,21 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             let panelIndex = this.panelList.findIndex(panel => panel.name === name);
             let panel = this.panelList[panelIndex];
 
-            if(!panel.alreadyLoaded && panel.avoidLoadingOnCollapse  && !panelBody.hasClass('in')) {
+            if (!panel.alreadyLoaded && panel.avoidLoadingOnCollapse && !panelBody.hasClass('in')) {
                 panelBody.html('<img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg">');
                 panel.alreadyLoaded = true;
-                this.createPanelView(panel,(view, _) => {
+                this.createPanelView(panel, (view, _) => {
                     if ('getActionList' in view) {
-                       panel.actionList = this.filterActions(view.getActionList());
+                        panel.actionList = this.filterActions(view.getActionList());
                     }
                     this.rebuildPanelHeading(panel);
 
                     view.render();
                 });
-                if(name === 'stream') {
+                if (name === 'stream') {
                     this.getStorage().set('streamCollapseState', this.scope, 'expanded')
                 }
-            }else if(panelBody.hasClass('in') && name === 'stream') {
+            } else if (panelBody.hasClass('in') && name === 'stream') {
                 this.getStorage().clear('streamCollapseState', this.scope)
             }
             panelBody.collapse(type ? type : 'toggle');
