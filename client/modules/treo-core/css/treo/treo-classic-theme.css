@@ -33,6 +33,15 @@ body {
     --highlighting-color-for-data-quality: #fff8B8;
 }
 
+* {
+    scrollbar-color: #ddd #fcfcfc;
+    scrollbar-arrow-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #ddd;
+}
+
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
     display: block
 }
@@ -22337,74 +22346,6 @@ ins.diffins, ins.diffmod {
 }
 
 
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-    background: #efefef;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #bbb;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
-}
-
-/* Scrollbar Buttons */
-::-webkit-scrollbar-button:single-button {
-    background-color: #efefef;
-    display: block;
-    border-style: solid;
-    height: 10px;
-    width: 10px;
-}
-
-/* Up */
-::-webkit-scrollbar-button:vertical:single-button:decrement {
-    border-width: 0 5px 5px 5px;
-    border-color: transparent transparent #bbb transparent;
-}
-
-::-webkit-scrollbar-button:vertical:single-button:decrement:hover {
-    border-color: transparent transparent #aaa transparent;
-    background-color: #efefef;
-}
-
-/* Down */
-::-webkit-scrollbar-button:vertical:single-button:increment {
-    border-width: 5px 5px 0 5px;
-    border-color: #bbb transparent transparent transparent;
-}
-
-::-webkit-scrollbar-button:vertical:single-button:increment:hover {
-    border-color: #aaa transparent transparent transparent;
-    background-color: #efefef;
-}
-
-::-webkit-scrollbar-button:horizontal:single-button:decrement {
-    border-width: 5px 5px 5px 0;
-    border-color: transparent #bbb transparent transparent;
-}
-
-::-webkit-scrollbar-button:horizontal:single-button:decrement:hover {
-    border-color: transparent #aaa transparent transparent;
-    background-color: #efefef;
-}
-
-::-webkit-scrollbar-button:horizontal:single-button:increment {
-    border-width: 5px 0 5px 5px;
-    border-color: transparent transparent transparent #bbb;
-}
-
-::-webkit-scrollbar-button:horizontal:single-button:increment:hover {
-    border-color: transparent transparent transparent #aaa;
-    background-color: #efefef;
-}
 
 .button-container {
     padding: 0 0 10px;

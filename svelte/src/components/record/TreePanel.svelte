@@ -884,14 +884,14 @@
                         <button on:click={applySearch} class="fas fa-search search-in-tree-button"></button>
                     </div>
                     {#if activeItem.name !== '_admin' }
-                        <div style="margin-top: 20px;display: flex; justify-content: space-between;flex-wrap: wrap">
-                            <div class="btn-group">
+                        <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
+                            <div class="btn-group" style="display:flex; align-items: stretch;">
                                 <button type="button" class="btn btn-default sort-btn" data-tippy="true"
                                         title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
                                         on:click={onSortAscChange}>
                                     <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
                                 </button>
-                                <select class="form-control" style="width: auto;" bind:value={sortBy}
+                                <select class="form-control" style="max-width: 300px; flex: 1;" bind:value={sortBy}
                                         on:change={onSortByChange}>
                                     {#each sortFields as field }
                                         <option value="{field.name}">

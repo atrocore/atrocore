@@ -246,8 +246,7 @@
         overflow-x: visible;
     }
 
-    .activities :global(.panel-body .list-group-item),
-    .summary :global(.panel-body .list-group-item) {
+    .activities :global(.panel-body .list-group-item) {
         background-color: transparent;
         padding-left: 0;
         padding-right: 0;
