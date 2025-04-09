@@ -84,6 +84,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         defaultFilterValue: null,
 
+        translate: function (name, category, scope) {
+            if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
+                return this.model.getFieldParam(name, 'label');
+            }
+
+            return Dep.prototype.translate.call(this, name, category, scope);
+        },
+
         isRequired: function () {
             return this.params.required;
         }, /**
@@ -219,6 +227,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getTooltipText() {
+            if (this.model.get('attributesDefs')) {
+                return this.model.get('attributesDefs')[this.name]?.tooltipText;
+            }
+
             const tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
             const tooltipDefaultTranslate = this.translate(this.name, 'tooltips', this.model.name);
             const tooltipTextTranslate = this.translate(tooltipText, 'tooltips', this.model.name);
@@ -394,6 +406,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.listenTo(this, 'after:render', () => {
                 this.initStatusContainer();
                 this.initRemoveAttributeValue();
+                this.initDynamicFieldActions();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
                 }
@@ -408,6 +421,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, this);
             }
         },
+
 
         showRequiredSign: function () {
             this.initStatusContainer();
@@ -589,9 +603,64 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }.bind(this));
         },
 
+        getRecordView() {
+            return this.getParentView()?.getParentView();
+        },
+
+        initDynamicFieldActions() {
+            const recordView = this.getRecordView();
+            let dynamicActions = recordView?.dynamicFieldActions || [];
+            dynamicActions = dynamicActions.filter(action => action.displayField === this.name)
+
+            if (!dynamicActions.length) {
+                return;
+            }
+
+            const $cell = this.getCellElement();
+            const inlineActions = this.getInlineActionsContainer();
+
+            $cell.find('.dynamic-action').remove();
+
+            dynamicActions.forEach(action => {
+                const $button = $(`<a href="javascript:" class="dynamic-action hidden" style="margin-left: 3px" title="${action.label}">${action.label}</a>`);
+
+                if (inlineActions.size()) {
+                    inlineActions.prepend($button);
+                } else {
+                    $cell.prepend($button);
+                }
+
+                $button.on('click', () => {
+                    recordView.actionDynamicAction({id: action.data.action_id})
+                });
+            })
+
+
+            $cell.on('mouseenter', e => {
+                e.stopPropagation();
+                if (this.disabled || this.readOnly) {
+                    return;
+                }
+                if (this.mode === 'detail') {
+                    $cell.find('.dynamic-action').removeClass('hidden');
+                }
+            }).on('mouseleave', e => {
+                e.stopPropagation();
+                if (this.mode === 'detail') {
+                    $cell.find('.dynamic-action').addClass('hidden');
+                }
+            });
+        },
+
         initRemoveAttributeValue() {
-            let name = this.name.replace(/^unitAttr_/, "attr_");
-            if (!this.model.getFieldParam(name, 'attributeId') || !this.getAcl().check(this.model.name, 'edit')) {
+            const fieldName = this.originalName || this.name;
+
+            if (!this.model.get('attributesDefs') || !fieldName || !this.model.get('attributesDefs')[fieldName] || !this.getAcl().check(this.model.name, 'edit')) {
+                return;
+            }
+
+            let attributeId = this.model.get('attributesDefs')[fieldName]['attributeId'] || null;
+            if (!attributeId) {
                 return;
             }
 
@@ -615,7 +684,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, () => {
                     const data = {
                         entityName: this.model.name,
-                        id: this.model.getFieldParam(name, 'id')
+                        entityId: this.model.get('id'),
+                        attributeId: attributeId
                     }
 
                     $.ajax({
@@ -950,7 +1020,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     maxSize: 100,
                 };
 
-                if(customOptions) {
+                if (customOptions) {
                     options = {...options, ...customOptions}
                 }
 

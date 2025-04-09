@@ -183,6 +183,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             this.listenTo(this.model, 'after:change-mode', (mode) => {
                 this.mode = mode;
+                $('#main main').attr('data-mode', mode);
                 window.dispatchEvent(new CustomEvent('record-mode:changed', { detail: mode }));
             });
         },
@@ -248,6 +249,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             $('.page-header').addClass('detail-page-header');
             Dep.prototype.afterRender.call(this);
 
+            $('#main main').attr('data-mode', this.mode);
+
             this.setupHeader();
 
             const view = this.getView('record');
@@ -274,49 +277,40 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             treeWidthChanged: (width) => {
                                 view.onTreeResize(width)
                             }
+                        },
+                        renderLayoutEditor: (container) => {
+                            if (this.getUser().isAdmin()) {
+                                this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
+                                    scope: this.scope,
+                                    viewType: 'leftSidebar',
+                                    layoutData: window.treePanelComponent.getLayoutData(),
+                                    el: container,
+                                }, (view) => {
+                                    view.on("refresh", () => {
+                                        window.treePanelComponent.refreshLayout()
+                                    })
+                                    view.render()
+                                })
+                            }
                         }
                     }
                 });
 
-                if (this.getUser().isAdmin()) {
-                    this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
-                        scope: this.scope,
-                        viewType: 'leftSidebar',
-                        layoutData: window.treePanelComponent.getLayoutData(),
-                        el: $(`${this.options.el} .content-wrapper .catalog-tree-panel .layout-editor-container`).get(0),
-                    }, (view) => {
-                        view.on("refresh", () => {
-                            window.treePanelComponent.refreshLayout()
-                        })
-                        view.render()
-                    })
-                }
-
                 view.onTreePanelRendered();
             }
 
-            this.loadRightSideView()
+            this.setupRightSideView();
 
             let isScrolledMore = false;
-            const breadcrumbs = document.querySelector('.detail-page-header .header-breadcrumbs');
-
             $('#main main').on('scroll', (e) => {
-                const prevHeight = breadcrumbs.offsetHeight;
-                const newScrolledState = e.target.scrollTop > prevHeight;
+                const newScrolledState = e.target.scrollTop > 0;
 
                 if (newScrolledState !== isScrolledMore) {
                     isScrolledMore = newScrolledState;
 
-                    window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', { detail: !isScrolledMore }));
-
-                    setTimeout(() => {
-                        const newHeight = breadcrumbs.offsetHeight;
-                        const heightDiff = newHeight - prevHeight;
-
-                        if (heightDiff !== 0) {
-                            e.target.scrollTop -= heightDiff + 10;
-                        }
-                    }, 0);
+                    requestAnimationFrame(() => {
+                        window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', { detail: !isScrolledMore }));
+                    });
                 }
             });
         },
@@ -382,6 +376,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 viewType: 'relationships',
                 layoutData: bottomView.layoutData,
                 el: el + ' .panel-navigation .layout-editor-container',
+                alignRight: true,
             }, (view) => {
                 view.on("refresh", () => {
                     recordView.createBottomView(view => {

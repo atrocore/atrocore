@@ -25,7 +25,7 @@
     "retry": "Retry?",
     "uploaded": "uploaded",
     "putUploadUrl": "Specify the URL to the file if you want to upload via URL",
-    "zipDownloadNotification": "You can <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">download</a> the file."
+    "zipDownloadNotification": "You can <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">download</a> the zip file"
   },
   "messages": {
     "notAllFilesWereUploaded": "XX of YY files were not uploaded.",
@@ -33,7 +33,8 @@
     "fileHasDuplicate": "There is already at least one <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplicate</a> of this file.",
     "cannotDefineFileName": "The system cannot recognize the file name from the URL.",
     "urlExpected": "Incorrect URL was given",
-    "fileExtensionCorrectedAutomatically": "File extension was corrected automatically."
+    "fileExtensionCorrectedAutomatically": "File extension was corrected automatically.",
+    "downloadJobsCreated": "Job has been created to prepare your zip file"
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",

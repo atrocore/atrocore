@@ -2,12 +2,12 @@
     <div class="text-container field">
         {{{post}}}
     </div>
-    <div class="buttons-panel margin hide floated-row clearfix">
-        <div>
-            <button class="btn btn-primary post" title="{{ translate 'streamPostInfo' category='messages' }}">{{translate 'Post'}}</button>
-        </div>
+    <div class="buttons-panel margin  floated-row clearfix">
         <div class="attachments-container field">
             {{{attachments}}}
+        </div>
+        <div>
+            <button class="btn btn-primary post" title="{{ translate 'streamPostInfo' category='messages' }}">{{translate 'Post'}}</button>
         </div>
     </div>
 </div>
@@ -16,3 +16,8 @@
     {{{list}}}
 </div>
 
+<style>
+    .buttons-panel > div {
+        margin-top: 10px;
+    }
+</style>

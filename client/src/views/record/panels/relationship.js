@@ -361,14 +361,13 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         setupTotal() {
-            let $btnGroup = this.$el.parent().find('.panel-heading .btn-group');
-            $btnGroup.find('.list-total').remove();
-
-            const $buttonHtml = $('<button type="button" style="width: auto" class="btn btn-default btn-sm action list-total"><span style="line-height: 0px"></span></button>');
-            $btnGroup.prepend($buttonHtml);
-            $buttonHtml.hide()
-
             this.listenTo(this.collection, 'update update-total', () => {
+                let $btnGroup = this.$el.parent().find('.panel-heading .btn-group');
+                $btnGroup.find('.list-total').remove();
+
+                const $buttonHtml = $('<button type="button" style="width: auto" class="btn btn-default btn-sm action list-total"><span style="line-height: 0px"></span></button>');
+                $btnGroup.prepend($buttonHtml);
+
                 const total = this.collection.totalIsLenght ? this.collection.length : this.collection.total
                 if (total == null) {
                     $buttonHtml.find('span').html('<img class="preloader" style="height:12px;" src="client/img/atro-loader.svg" />')
@@ -376,7 +375,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     $buttonHtml.attr('title', `${this.translate('Shown', 'labels', 'Global')}: ${this.collection.length} / ${this.translate('Total', 'labels', 'Global')}: ${total}`)
                     $buttonHtml.find('span').html(`${this.collection.length} / ${total}`);
                 }
-                $buttonHtml.show();
             })
         },
 

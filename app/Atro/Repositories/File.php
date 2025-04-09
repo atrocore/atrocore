@@ -91,7 +91,7 @@ class File extends Base
             // assign the file type automatically
             $this->assignTheFileTypeAutomatically($entity);
 
-            if($this->getConfig()->get('automaticFileExtensionCorrection')){
+            if ($this->getConfig()->get('automaticFileExtensionCorrection')) {
                 $this->automaticallyCorrectExtension($entity);
             }
 
@@ -115,7 +115,7 @@ class File extends Base
     {
         $inTransaction = false;
 
-        if (empty($this->getMemoryStorage()->get('exportJobId')) && !$this->getPDO()->inTransaction()) {
+        if (empty($this->getMemoryStorage()->get('exportJobId')) && empty($this->getMemoryStorage()->get('disableFileTransactions')) && !$this->getPDO()->inTransaction()) {
             $this->getPDO()->beginTransaction();
             $inTransaction = true;
         }
@@ -460,47 +460,47 @@ class File extends Base
         return $url;
     }
 
-    public function addDimensions(FileEntity $file):void
+    public function addDimensions(FileEntity $file): void
     {
-        if(!$file->isImage() && !$file->isPdf()) {
+        if (!$file->isImage() && !$file->isPdf()) {
             return;
         }
 
-       if($this->getStorage($file) instanceof LocalFileStorageInterface) {
-           $filePath = $this->getFilePath($file);
-       }else{
-           $filePath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . $file->get('name');
-           if(!is_dir(LocalStorage::TMP_DIR)){
-               @mkdir(LocalStorage::TMP_DIR, 0777, true);
-           }
-           $this->getFileManager()->putContents($filePath, $file->getContents());
-           $isTempFile = true;
-       }
+        if ($this->getStorage($file) instanceof LocalFileStorageInterface) {
+            $filePath = $this->getFilePath($file);
+        } else {
+            $filePath = LocalStorage::TMP_DIR . DIRECTORY_SEPARATOR . $file->get('name');
+            if (!is_dir(LocalStorage::TMP_DIR)) {
+                @mkdir(LocalStorage::TMP_DIR, 0777, true);
+            }
+            $this->getFileManager()->putContents($filePath, $file->getContents());
+            $isTempFile = true;
+        }
 
-       if($file->isImage()) {
-           $this->addDimensionFromImage($file, $filePath);
-       }
+        if ($file->isImage()) {
+            $this->addDimensionFromImage($file, $filePath);
+        }
 
-       if($file->isPdf()) {
-           if(!is_dir(LocalStorage::TMP_DIR)){
-               @mkdir(LocalStorage::TMP_DIR, 0777, true);
-           }
+        if ($file->isPdf()) {
+            if (!is_dir(LocalStorage::TMP_DIR)) {
+                @mkdir(LocalStorage::TMP_DIR, 0777, true);
+            }
 
-           $firstPagePath = LocalStorage::TMP_DIR . '/page-1.png';
-           $pdflib = new PDFLib($this->getConfig());
-           $pdflib->setPdfPath($filePath);
-           $pdflib->setOutputPath(LocalStorage::TMP_DIR);
-           $pdflib->setImageFormat(PDFLib::$IMAGE_FORMAT_PNG);
-           $pdflib->setPageRange(1, 1);
-           $pdflib->setFilePrefix('page-');
-           $pdflib->convert();
-           $this->addDimensionFromImage($file, $firstPagePath);
-           $this->getFileManager()->removeFile([$firstPagePath]);
-       }
+            $firstPagePath = LocalStorage::TMP_DIR . '/page-1.png';
+            $pdflib = new PDFLib($this->getConfig());
+            $pdflib->setPdfPath($filePath);
+            $pdflib->setOutputPath(LocalStorage::TMP_DIR);
+            $pdflib->setImageFormat(PDFLib::$IMAGE_FORMAT_PNG);
+            $pdflib->setPageRange(1, 1);
+            $pdflib->setFilePrefix('page-');
+            $pdflib->convert();
+            $this->addDimensionFromImage($file, $firstPagePath);
+            $this->getFileManager()->removeFile([$firstPagePath]);
+        }
 
-       if(!empty($isTempFile)) {
-           $this->getFileManager()->removeFile([$filePath]);
-       }
+        if (!empty($isTempFile)) {
+            $this->getFileManager()->removeFile([$filePath]);
+        }
     }
 
     public function getLargeThumbnailUrl(FileEntity $file): ?string
@@ -565,27 +565,27 @@ class File extends Base
 
         $allowFileTypesIds = $this->getMetadata()->get(['entityDefs', $file->_input->_uploadForEntityData->scope, 'fields', $file->_input->_uploadForEntityData->link, 'fileTypes']);
 
-        if(empty($allowFileTypesIds)) {
+        if (empty($allowFileTypesIds)) {
             return;
         }
 
         $isValid = false;
         $message = "";
-        foreach ($allowFileTypesIds as $typeId){
-            try{
+        foreach ($allowFileTypesIds as $typeId) {
+            try {
                 $fileType = $this->getEntityManager()->getRepository('FileType')->get($typeId);
                 $this->getFileValidator()->validateFile($fileType, $file, true);
                 $isValid = true;
                 break;
-            }catch (\Throwable $e){
-                if(!empty($message)){
+            } catch (\Throwable $e) {
+                if (!empty($message)) {
 
-                    $message .= ' | ' ;
+                    $message .= ' | ';
                 }
                 $message .= $e->getMessage();
             }
         }
-        if(!$isValid) {
+        if (!$isValid) {
             throw new BadRequest($message);
         }
     }
@@ -608,34 +608,34 @@ class File extends Base
 
     protected function automaticallyCorrectExtension(Entity $entity): void
     {
-        if(empty($entity->_input->fromApi)) {
+        if (empty($entity->_input->fromApi)) {
             return;
         }
 
-        if(!empty($entity->_input->shouldAvoidAutomaticalExtensionUpdate )) {
+        if (!empty($entity->_input->shouldAvoidAutomaticalExtensionUpdate)) {
             return;
         }
 
         $mimes = $this->getMetadata()->get(['app', 'mimeTypeToExtensions'], []);
-        if(empty($mimes[$entity->get('mimeType')]) or !is_array($mimes[$entity->get('mimeType')])) {
+        if (empty($mimes[$entity->get('mimeType')]) or !is_array($mimes[$entity->get('mimeType')])) {
             return;
         }
 
         $realExtension = $mimes[$entity->get('mimeType')];
         $nameParts = explode('.', $entity->get('name'));
 
-        if(count($nameParts) === 1){
+        if (count($nameParts) === 1) {
             $nameParts[2] = $realExtension[0];
         }
 
-        if(!in_array($nameParts[count($nameParts) - 1], $realExtension)) {
+        if (!in_array($nameParts[count($nameParts) - 1], $realExtension)) {
             $nameParts[count($nameParts) - 1] = $realExtension[0];
             $entity->set('extensionCorrected', true);
         }
 
         $entity->set('name', join('.', $nameParts));
 
-        if(empty($entity->_input->typeId)){
+        if (empty($entity->_input->typeId)) {
             $entity->set('typeId', null);
             $this->assignTheFileTypeAutomatically($entity);
         }

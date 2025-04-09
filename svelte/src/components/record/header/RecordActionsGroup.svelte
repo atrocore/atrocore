@@ -76,7 +76,7 @@
         }
 
         try {
-            const response = await fetch(`/api/v1/Action/${scope}/${id}/dynamicActions`, {
+            const response = await fetch(`/api/v1/Action/${scope}/${id}/dynamicActions?type=record`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,12 +85,12 @@
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                return [];
             }
 
             return await response.json();
         } catch (error) {
-            console.error('Error:', error);
+            console.error(error);
             return [];
         }
     }

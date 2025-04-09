@@ -388,6 +388,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         isAllowedSelectAllResult() {
+            if (this.options.allowSelectAllResult === false){
+                return false;
+            }
+
             if (this.getParentView() && this.getParentView().getParentView()) {
                 let view = this.getParentView().getParentView();
 
@@ -598,7 +602,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                     this.collection.fetch().then(function () {
                         var message = this.translate(successMessage, 'messages', this.scope);
-                        if ('count' in result) {
+                        if (typeof result === 'object' && 'count' in result) {
                             message = message.replace('{count}', result.count);
                         }
                         Espo.Ui.success(message);
@@ -2411,6 +2415,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     relatedScope: this.options.layoutRelatedScope,
                     layoutData: this.layoutData,
                     el: el,
+                    alignRight: true
                 }, (view) => {
                     view.on("refresh", () => {
                         if (this.options.disableRefreshLayout) {

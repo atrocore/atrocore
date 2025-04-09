@@ -6,6 +6,7 @@
     "locale": "Standard-Locale",
     "appId": "ID",
     "useCache": "Cache nutzen",
+    "onlyStableReleases": "Nur stabile Releases verwenden",
     "companyLogo": "Header-Logo",
     "favicon": "Favicon",
     "notificationSmtpConnection": "Verbindung für E-Mail Benachrichtigungenphp",

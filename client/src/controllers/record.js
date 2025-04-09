@@ -159,7 +159,11 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     this.hideLoadingNotification();
                 }, this);
                 this.showLoadingNotification();
-                model.fetch();
+                model.fetch({
+                    headers: {
+                        'Entity-History': 'true',
+                    }
+                });
 
                 this.listenToOnce(this.baseController, 'action', function () {
                     model.abortLastFetch();
@@ -172,7 +176,12 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     this.listenToOnce(model, 'sync', function () {
                         createView(model);
                     }, this);
-                    model.fetch({main: true});
+                    model.fetch({
+                        main: true,
+                        headers: {
+                            'Entity-History': 'true',
+                        }
+                    });
 
                     this.listenToOnce(this.baseController, 'action', function () {
                         model.abortLastFetch();

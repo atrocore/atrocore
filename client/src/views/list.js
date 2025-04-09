@@ -438,6 +438,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                 }
             });
             observer.observe($('#content').get(0));
+
+            this.setupRightSideView();
         },
 
         loadList: function () {
@@ -499,7 +501,11 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
-                        this.collection.fetch();
+                        this.collection.fetch({
+                            headers: {
+                                'Entity-History': 'true'
+                            }
+                        });
                     }.bind(this));
                 } else {
                     view.render();
@@ -609,23 +615,24 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
                         treeReset: (treeScope) => {
                             this.treeReset(treeScope)
                         }
+                    },
+                    renderLayoutEditor: container => {
+                        if (this.getUser().isAdmin()) {
+                            this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
+                                scope: this.scope,
+                                viewType: 'leftSidebar',
+                                layoutData: window.treePanelComponent.getLayoutData(),
+                                el: container,
+                            }, (view) => {
+                                view.on("refresh", () => {
+                                    window.treePanelComponent.refreshLayout()
+                                })
+                                view.render()
+                            })
+                        }
                     }
                 }
             });
-
-            if (this.getUser().isAdmin()) {
-                this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
-                    scope: this.scope,
-                    viewType: 'leftSidebar',
-                    layoutData: window.treePanelComponent.getLayoutData(),
-                    el: $(`${this.options.el} .catalog-tree-panel .layout-editor-container`).get(0),
-                }, (view) => {
-                    view.on("refresh", () => {
-                        window.treePanelComponent.refreshLayout()
-                    })
-                    view.render()
-                })
-            }
 
             this.listenTo(Backbone, 'after:search', collection => {
                 if (this.collection.name === collection.name) {
@@ -742,14 +749,20 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         onTreeResize(width) {
-
+            window.dispatchEvent(new CustomEvent('tree-width-changed', {detail: {width}}));
         },
 
         reloadBookmarks() {
             if (window.treePanelComponent) {
                 window.treePanelComponent.reloadBookmarks()
             }
-        }
+        },
 
+        shouldSetupRightSideView() {
+            let streamAllowed = this.model
+                ? this.getAcl().checkModel(this.model, 'stream', true)
+                : this.getAcl().check(this.scope, 'stream');
+            return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed;
+        }
     });
 });

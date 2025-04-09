@@ -164,7 +164,7 @@ class Note
 
             $systemFields = ['id', 'deleted', 'createdAt', 'modifiedAt', 'createdBy'];
 
-            $fields = $this->getMetadata()->get('entityDefs.' . $entityType . '.fields');
+            $fields = $entity->entityDefs['fields'] ?? $this->getMetadata()->get("entityDefs.{$entityType}.fields", []);
 
             $auditedFields = [];
             foreach ($fields as $field => $d) {
@@ -174,11 +174,12 @@ class Note
                 }
 
                 if (!empty($d['type']) && in_array($d['type'], $auditableTypes) && !in_array($field, $systemFields) && empty($d['notStorable'])) {
-                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
-                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field, $entity);
+                    $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field, $entity);
                     $auditedFields[$field]['fieldType'] = $d['type'];
                 }
             }
+
             $this->auditedFieldsCache[$entityType] = $auditedFields;
         }
 

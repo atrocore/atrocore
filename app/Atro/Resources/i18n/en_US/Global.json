@@ -387,7 +387,11 @@
     "actionBookmark": "Click to bookmark",
     "actionUnbookmark": "Bookmarked, Click to unbookmark",
     "actionOpenFilter": "Open Filter",
-    "accessManagement": "Access Management"
+    "accessManagement": "Access Management",
+    "sidebarUnpin": "Automatic panel expansion is inactive",
+    "sidebarPin": "Automatic panel expansion is active",
+    "sidebarExpand": "Click to expand",
+    "sidebarCollapse": "Click to collapse"
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",
@@ -624,6 +628,7 @@
   "streamMessages": {
     "composerUpdateThis": "{user}",
     "post": "{user} posted on {entityType} {entity}",
+    "postInList": "{user} posted on {entityType}",
     "attach": "{user} attached on {entityType} {entity}",
     "status": "{user} updated {field} of {entityType} {entity}",
     "update": "{user} updated {entityType} {entity}",
@@ -686,7 +691,11 @@
     "updateOneIn": "{user} in {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
     "updateFromTo": "{user} in {entityType} {entity} updated",
     "updateFromToIn": "{user} in {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
-    "changed": "was changed"
+    "changed": "was changed",
+    "from": "from",
+    "to": "to",
+    "was": "was",
+    "become": "become"
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",
@@ -1149,5 +1158,8 @@
   "twigVariables": {
     "entity": "Entity to check",
     "config": "Configuration object of the system"
+  },
+  "confirmations": {
+    "someFieldsEmptyOnMassUpdate": "You are going to replace one or more values with an empty value. Are you sure?"
   }
 }

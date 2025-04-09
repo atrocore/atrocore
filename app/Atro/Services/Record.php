@@ -119,7 +119,7 @@ class Record extends RecordService
             ->getArgument('res');
     }
 
-    public function executeMassAction(array $params, \Closure $actionOperation): array
+    public function executeMassAction(array $params, ?\Closure $actionOperation = null): array
     {
         if (empty($params['action']) || !is_int($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
             return [];
@@ -131,7 +131,7 @@ class Record extends RecordService
         $minChunkSize = $params['minChunkSize'];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        if (!in_array($action, ['restore', 'delete', 'update', 'action'])) {
+        if (!in_array($action, ['restore', 'delete', 'update', 'action','download'])) {
             return [];
         }
 
@@ -165,7 +165,7 @@ class Record extends RecordService
 
         $sync = true;
 
-        if ($total <= $maxCountWithoutJob) {
+        if ($total <= $maxCountWithoutJob && !empty($actionOperation)) {
             if ($byWhere) {
                 $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
                 $ids = array_column($collection->toArray(), 'id');
@@ -191,6 +191,7 @@ class Record extends RecordService
                     $chunkSize = $maxChunkSize;
                 }
             }
+
 
             $sync = false;
 
@@ -409,6 +410,15 @@ class Record extends RecordService
         $this->afterMerge($entity, $sourceList, $attributes);
 
         return true;
+    }
+
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    {
+        parent::duplicateLinks($entity, $duplicatingEntity);
+
+        if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.hasAttribute")) {
+            $this->getRepository()->duplicateAttributeValues($entity, $duplicatingEntity);
+        }
     }
 
     protected function getMandatoryLinksToMerge(): array

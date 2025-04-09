@@ -6,6 +6,12 @@
     "list": "views/admin/field-manager/record/list",
     "detail": "views/admin/field-manager/record/detail"
   },
+  "boolFilterList": [
+    "notLingual"
+  ],
+  "hiddenBoolFilterList": [
+    "notLingual"
+  ],
   "dynamicLogic": {
     "fields": {
       "type": {

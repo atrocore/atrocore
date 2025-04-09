@@ -42,8 +42,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         header: 'views/stream/header',
 
-        filterList: ['posts', 'updates', 'emails'],
-
         events: _.extend({
             'click button.post': function () {
                 this.post();
@@ -52,49 +50,34 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         data: function () {
             var data = Dep.prototype.data.call(this);
-            data.postDisabled = this.postDisabled;
+            data.postDisabled = this.postDisabled || this.mode === 'list';
             data.placeholderText = this.placeholderText;
             return data;
         },
 
-        enablePostingMode: function () {
-            this.$el.find('.buttons-panel').removeClass('hide');
-
-            if (!this.postingMode) {
-                $('body').on('click.stream-panel', function (e) {
-                    var $target = $(e.target);
-                    if ($target.parent().hasClass('remove-attachment')) return;
-                    if ($.contains(this.$postContainer.get(0), e.target)) return;
-                    if ((this.seed.get('post') ?? '') !== '') return;
-                }.bind(this));
-            }
-
-            this.postingMode = true;
+        getFilterList: function () {
+            return  this.getMetadata().get(['scopes', this.scope, 'filterInNote']) || ['posts', 'updates']
         },
 
-        disablePostingMode: function () {
-            this.postingMode = false;
 
+        disablePostingMode: function () {
             this.seed.set('post', '');
             if (this.hasView('attachments')) {
                 this.getView('attachments').empty();
             }
-            this.$el.find('.buttons-panel').addClass('hide');
-
-            $('body').off('click.stream-panel');
         },
 
         setup: function () {
             this.title = this.translate('Activities');
 
-            this.scope = this.model.name;
+            this.scope = this.options.defs.scope ?? this.model.name;
 
             this.filter = this.getStoredFilter();
 
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
 
-            this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
-            this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
+            this.storageTextKey = 'stream-post-' + this.scope + '-' + this.model?.id;
+            this.storageAttachmentsKey = 'stream-post-attachments-' + this.scope + '-' + this.model?.id;
 
             this.on('remove', function () {
                 this.storeControl();
@@ -158,7 +141,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         createCollection: function (callback, context) {
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
-                collection.url = this.model.name + '/' + this.model.id + '/stream';
+                if(this.mode === 'list') {
+                    collection.url = 'Stream' + '/' + this.scope
+                }else{
+                    collection.url = this.model.name + '/' + this.model.id + '/stream';
+                }
                 collection.sortBy = 'createdAt';
                 collection.asc = false;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
@@ -169,13 +156,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            const streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
-            if (!streamAllowed) {
-                this.$el.parent().hide();
-                return;
-            } else {
-                this.$el.parent().show();
-            }
 
             this.$postContainer = this.$el.find('.post-container');
 
@@ -252,10 +232,6 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     }
                 });
 
-                view.on('focus', (editor, e) => {
-                    this.enablePostingMode();
-                });
-
                 view.on('editor:keypress', (editor, e) => {
                     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
                         this.post();
@@ -273,7 +249,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 this.createView('list', 'views/stream/record/list', {
                     el: this.options.el + ' .list-container',
                     collection: collection,
-                    model: this.model
+                    model: this.model,
+                    isUserStream: !this.model
                 }, function (view) {
                     view.render();
                 });
@@ -346,8 +323,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         prepareNoteForPost: function (model) {
-            model.set('parentId', this.model.id);
-            model.set('parentType', this.model.name);
+            model.set('parentId', this.model?.id);
+            model.set('parentType', this.scope ?? this.model.name);
         },
 
         getButtonList: function () {
@@ -356,7 +333,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
 
         getStoredFilter: function () {
-            return this.getStorage().get('state', 'streamPanelFilter') || this.filterList;
+            let lists =  this.getStorage().get('state', 'streamPanelFilter') || this.getFilterList();
+            return  lists.filter(v => this.getFilterList().includes(v));
         },
 
         storeFilter: function (filter) {
@@ -379,18 +357,16 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
               el: this.options.el + ' .header',
               scope: this.scope,
               model: this.model,
-              filterList: this.filterList,
+              mode: this.options.mode,
+              filterList: this.getFilterList(),
               activeFilters: this.getStoredFilter(),
               collection: this.collection,
           }, view => {
-              this.listenTo(this.collection, 'sync', function () {
-                  view.enableButtons()
-              });
               this.listenTo(view, 'filter-update', (activeFilter) => {
                   this.storeFilter(activeFilter);
                   this.setFilter(activeFilter);
                   this.collection.abortLastFetch();
-                 this.fetchCollection();
+                  this.fetchCollection();
               })
           })
         },
@@ -406,7 +382,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 this.collection.reset();
                 this.collection.fetch();
             }else{
-                this.$el.find('.list-container').html('<div class="no-data">No Data</div>')
+                this.$el.find('.list-container').html('<span >No Data</span>')
             }
         }
 

@@ -69,19 +69,27 @@
     "usage": {
       "type": "enum",
       "prohibitedEmptyValue": false,
+      "inlineEditDisabled": true,
       "optionsIds": [
         "entity",
-        "record"
+        "record",
+        "field"
       ],
       "options": [
         "entity",
-        "record"
+        "record",
+        "field"
       ],
       "tooltip": true
     },
-    "display": {
+    "displayField": {
       "type": "enum",
       "prohibitedEmptyValue": false,
+      "view": "views/fields/entity-field",
+      "entityField": "sourceEntity"
+    },
+    "display": {
+      "type": "enum",
       "optionsIds": [
         "dropdown",
         "single"

@@ -245,8 +245,8 @@
         overflow: hidden;
     }
 
-    .panel-navigation > .layout-editor-container > a {
-        font-size: 13px;
+    .panel-navigation > .layout-editor-container :global(> a) {
+        width: 18px;
     }
 
     .nav-pills {

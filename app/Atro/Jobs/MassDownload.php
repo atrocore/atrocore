@@ -15,6 +15,7 @@ namespace Atro\Jobs;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Exception;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Entities\Job;
 use Atro\Services\File;
 use Atro\Core\Utils\Util;
@@ -29,7 +30,7 @@ class MassDownload extends AbstractJob implements JobInterface
 
         /* @var $service File */
         $service = $this->getServiceFactory()->create('File');
-        $files = $this->getEntityManager()->getRepository('File')->find($data['selectParams']);
+        $files = $this->getEntityManager()->getRepository('File')->findByIds($data['ids']);
 
         if (count($files) === 0) {
             throw new Exception("No Files to download");
@@ -39,18 +40,26 @@ class MassDownload extends AbstractJob implements JobInterface
         $zipDir = self::ZIP_TMP_DIR . DIRECTORY_SEPARATOR . 'download' . DIRECTORY_SEPARATOR . $job->get('id');
         Util::createDir($zipDir);
         $date = (new \DateTime())->format('Y-m-d H-i-s');
-        $name = "download-files-$date.zip";
+        $part = $data['part'] ?? 0;
+        $name = "download-files-$date-$part.zip";
         $fileName = $zipDir . DIRECTORY_SEPARATOR . $name;
         if ($zip->open($fileName, \ZipArchive::CREATE) !== true) {
             throw new Exception("cannot open archive $fileName\n");
         };
 
         foreach ($files as $file) {
-            $path = $file->findOrCreateLocalFilePath($zipDir);
+            try {
+                $path = $file->findOrCreateLocalFilePath($zipDir);
 
-            if (!file_exists($path)) {
-                throw new BadRequest("File '{$path}' does not exist.");
+                if (!file_exists($path)) {
+                    $GLOBALS['log']->error("File '{$path}' does not exist for file " . $file->id);
+                    continue;
+                }
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error("Error for file " . $file->id . " : " . $e->getMessage());
+                continue;
             }
+
 
             $zip->addFile($path, basename($path));
         }
@@ -61,11 +70,14 @@ class MassDownload extends AbstractJob implements JobInterface
         $input->hidden = true;
         $input->folderId = $this->getZipFolderEntity()->get('id');
 
+        $this->getMemoryStorage()->set('disableFileTransactions', true);
         $fileData = $service->moveLocalFileToFileEntity($input, $fileName);
         Util::removeDir($zipDir);
 
         $message = sprintf($this->translate('zipDownloadNotification', 'labels', 'File'), $fileData['id']);
-
+        if ($data['totalChunks'] > 1) {
+            $message .= " (" . $data['part'] . "/" . $data['totalChunks'] . ")";
+        }
         $this->createNotification($job, $message);
     }
 
@@ -91,4 +103,10 @@ class MassDownload extends AbstractJob implements JobInterface
     {
         Util::removeDir(self::ZIP_TMP_DIR);
     }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getEntityManager()->getMemoryStorage();
+    }
+
 }

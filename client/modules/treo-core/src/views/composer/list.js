@@ -67,6 +67,20 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                     alertEl.addClass('text-alert');
                 }
             });
+
+            new Svelte.TreePanel({
+                target: $(`${this.options.el} .content-wrapper`).get(0),
+                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
+                props: {
+                    scope: 'Settings',
+                    model: this.model,
+                    mode: 'detail',
+                    isAdminPage: true,
+                    callbacks: {
+
+                    }
+                }
+            });
         },
 
         loadList() {

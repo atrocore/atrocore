@@ -14,6 +14,8 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
 
         template: 'record/layout-configurator',
 
+        alignRight: false,
+
         events: {
             'click .layout-editor': function (e) {
                 // open modal view
@@ -35,6 +37,10 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
             this.scope = this.options.scope
             this.viewType = this.options.viewType
             this.relatedScope = this.options.relatedScope
+
+            if (this.options.alignRight && typeof this.options.alignRight === 'boolean') {
+                this.alignRight = this.options.alignRight;
+            }
         },
 
         data: function () {
@@ -48,7 +54,8 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
                 canConfigure: canConfigure,
                 storedProfiles: layoutProfiles,
                 selectedProfileId: this.layoutData?.selectedProfileId,
-                linkClass: this.options.linkClass ?? ''
+                linkClass: this.options.linkClass ?? '',
+                alignRight: this.alignRight,
             };
         },
 

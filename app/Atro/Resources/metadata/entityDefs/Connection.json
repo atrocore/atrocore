@@ -6,6 +6,7 @@
       "prohibitedEmptyValue": true,
       "optionsIds": [
         "atrocore",
+        "pdoSql",
         "mysql",
         "psql",
         "msql",
@@ -19,6 +20,7 @@
       ],
       "options": [
         "atrocore",
+        "pdoSql",
         "mysql",
         "psql",
         "msql",
@@ -379,6 +381,29 @@
       "type": "text",
       "notStorable": true,
       "dataField": true
+    },
+    "dsn": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "trim": true
+    },
+    "server": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": true,
+      "notStorable": true,
+      "dataField": true,
+      "optionsIds": [
+        "mysql",
+        "psql",
+        "msql"
+      ],
+      "options": [
+        "mysql",
+        "psql",
+        "msql"
+      ]
     }
   },
   "links": {

@@ -19,9 +19,6 @@ Espo.define('views/stream/header', 'view', function (Dep) {
         events: {
             'click a[data-action="filter"]': function (e) {
                 e.preventDefault();
-                if(this.disabled) {
-                    return;
-                }
                 let name = $(e.target).data('name')
                 if ($(e.target).hasClass('active')) {
                     $(e.target).removeClass('active');
@@ -33,6 +30,7 @@ Espo.define('views/stream/header', 'view', function (Dep) {
                     }
                 }
 
+                this.activeFilters = this.activeFilters.filter(v => this.options.filterList.includes(v));
                 this.trigger('filter-update', this.activeFilters);
             }
         },
@@ -62,16 +60,6 @@ Espo.define('views/stream/header', 'view', function (Dep) {
             return {
                 filterList: this.filterList
             }
-        },
-
-        enableButtons: function () {
-            this.disabled = false;
-            $('a[data-action="filter"]').removeClass('disabled');
-        },
-
-        disableButtons: function () {
-            this.disabled = true;
-            $('a[data-action="filter"]').addClass('disabled');
         }
     })
 });

@@ -15,7 +15,7 @@ Espo.define('views/admin/field-manager/record/detail', 'views/record/detail', De
         setup: function () {
             if (
                 !this.getMetadata().get(`scopes.${this.model.get('entityId')}.isCustom`)
-                && !this.getMetadata().get(`entityDefs.${this.model.get('entityId')}.fields.${this.model.get('code')}.isCustom`)
+                && !this.model.get('isCustom')
             ) {
                 this.buttonList.push({
                     name: "resetToDefault",
@@ -26,7 +26,7 @@ Espo.define('views/admin/field-manager/record/detail', 'views/record/detail', De
 
             Dep.prototype.setup.call(this);
 
-            if (!this.getMetadata().get(`entityDefs.${this.model.get('entityId')}.fields.${this.model.get('code')}.isCustom`)) {
+            if (!this.model.get('isCustom')) {
                 this.removeButton('delete');
             }
         },

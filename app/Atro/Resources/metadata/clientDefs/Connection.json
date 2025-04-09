@@ -16,6 +16,43 @@
   },
   "dynamicLogic": {
     "fields": {
+      "server": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        }
+      },
+      "dsn": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        }
+      },
       "dbName": {
         "visible": {
           "conditionGroup": [
@@ -103,7 +140,8 @@
                 "msql",
                 "ftp",
                 "sftp",
-                "cookie"
+                "cookie",
+                "pdoSql"
               ]
             }
           ]
@@ -121,7 +159,8 @@
                 "msql",
                 "ftp",
                 "sftp",
-                "cookie"
+                "cookie",
+                "pdoSql"
               ]
             }
           ]

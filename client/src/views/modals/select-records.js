@@ -316,7 +316,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 layoutName: this.layoutName,
                 searchManager: this.searchManager,
                 buttonsDisabled: true,
-                skipBuildRows: true
+                skipBuildRows: true,
+                allowSelectAllResult: !!(this.options.allowSelectAllResult)
             }, function (view) {
                 this.listenTo(view, 'select', function (model) {
                     this.trigger('select', model);

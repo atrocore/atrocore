@@ -357,8 +357,11 @@
     "Activities": "Діяльність",
     "enableAutomaticClosing": "Увімкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "disableAutomaticClosing": "вимкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
-    "accessManagement": "Керування доступом"
-
+    "accessManagement": "Керування доступом",
+    "sidebarUnpin": "Автоматичне розкриття панелі неактивне",
+    "sidebarPin": "Автоматичне розкриття панелі активне",
+    "sidebarExpand": "Натисніть, щоб розгорнути",
+    "sidebarCollapse": "Натисніть, щоб згорнути"
   },
   "messages": {
     "actionExecuted": "Дію \"%s\" успішно виконано",
@@ -584,6 +587,7 @@
   },
   "streamMessages": {
     "post": "{user} залишив примітку до {entityType} {entity}",
+    "postInList": "{user} залишив примітку до {entityType}",
     "attach": "{user} прикріпив до {entityType} {entity}",
     "status": "{user} оновив {field} (чого) {entityType} {entity}",
     "update": "{user} оновив {entityType} {entity}",
@@ -1056,5 +1060,8 @@
       "operator_not_multiple": "Оператор \"{1}\" не підтримує багато значень"
     },
     "invert": "інвертувати"
+  },
+  "confirmations": {
+    "someFieldsEmptyOnMassUpdate": "Ви збираєтеся замінити одне або декілька значень на порожнє. Ви впевнені?"
   }
 }

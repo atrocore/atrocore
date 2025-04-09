@@ -353,7 +353,11 @@
     "Activities": "Aktivitäten",
     "enableAutomaticClosing": "Aktivieren  des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
     "disableAutomaticClosing": "Deaktivieren des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
-    "accessManagement": "Zugangsverwaltung"
+    "accessManagement": "Zugangsverwaltung",
+    "sidebarUnpin": "Automatische Erweiterung des Panels ist inaktiv",
+    "sidebarPin": "Automatische Erweiterung des Panels ist aktiv",
+    "sidebarExpand": "Zum Erweitern anklicken",
+    "sidebarCollapse": "Zum Verkleinern anklicken"
   },
   "messages": {
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
@@ -624,6 +628,7 @@
   "streamMessages": {
     "composerUpdateThis": "{user}",
     "post": "{user} notierte zu {entityType} {entity}",
+    "postInList": "{user} notierte zu {entityType}",
     "attach": "{user} fügte zu {entityType} {entity} hinzu",
     "status": "{user} aktualisierte {field} von {entityType} {entity}",
     "update": "{user} aktualisierte {entityType} {entity}",
@@ -1040,5 +1045,8 @@
       "datetime_exceed_min": "Muss nach dem {0} sein",
       "datetime_exceed_max": "Muss vor dem {0} sein"
     }
+  },
+  "confirmations": {
+    "someFieldsEmptyOnMassUpdate": "Sie werden einen oder mehrere Werte durch einen leeren Wert ersetzen. Sind Sie sicher?"
   }
 }

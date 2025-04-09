@@ -86,6 +86,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 'chunkSize'   => count($collectionIds),
                 'totalChunks' => $totalChunks,
                 'ids'         => $collectionIds,
+                'part'        => $part + 1,
             ]);
 
             if ($action === 'delete' && !empty($data['params']['permanently'])) {

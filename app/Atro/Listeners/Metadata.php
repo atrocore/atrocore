@@ -281,28 +281,31 @@ class Metadata extends AbstractListener
 
         foreach ($actions ?? [] as $action) {
             if (in_array($action['type'], ['webhook', 'set'])) {
-                if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = [
-                        'id'         => $action['id'],
-                        'name'       => $action['name'],
-                        'display'    => $action['display'],
+                $params = [
+                    'id'         => $action['id'],
+                    'name'       => $action['name'],
+                    'display'    => $action['display'],
+                    'acl'        => [
+                        'scope'  => $action['source_entity'],
+                        'action' => 'read',
+                    ]
+                ];
+
+                if ($action['usage'] === 'record' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
                         'massAction' => !empty($action['mass_action']),
-                        'acl'        => [
-                            'scope'  => $action['source_entity'],
-                            'action' => 'read',
-                        ]
-                    ];
+                    ]);
                 }
-                if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = [
-                        'id'      => $action['id'],
-                        'name'    => $action['name'],
-                        'display' => $action['display'],
-                        'acl'     => [
-                            'scope'  => $action['source_entity'],
-                            'action' => 'read',
-                        ]
-                    ];
+
+                if ($action['usage'] === 'entity' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
+                }
+
+                if ($action['usage'] === 'field' && !empty($action['source_entity']) && !empty($action['display_field'])) {
+                    $data['clientDefs'][$action['source_entity']]['dynamicFieldActions'][] = array_merge($params, [
+                        'displayField' => $action['display_field'],
+                        'massAction'   => !empty($action['mass_action']),
+                    ]);
                 }
             }
         }
@@ -1108,7 +1111,7 @@ class Metadata extends AbstractListener
                     'emHidden'          => true,
                 ];
 
-                $metadata["entityDefs"][$scope]['fields']["attributeValues"] = [
+                $metadata["entityDefs"][$scope]['fields']["attributesDefs"] = [
                     "type"                        => "jsonObject",
                     "notStorable"                 => true,
                     "layoutDetailDisabled"        => true,
@@ -1150,9 +1153,6 @@ class Metadata extends AbstractListener
                         "attribute"      => [
                             "type"     => "link",
                             "required" => true
-                        ],
-                        "attributeType"  => [
-                            "type" => "varchar"
                         ],
                         "boolValue"      => [
                             "type"    => "bool",
@@ -1270,12 +1270,6 @@ class Metadata extends AbstractListener
                         "referenceValue" => [
                             "columns" => [
                                 "referenceValue",
-                                "deleted"
-                            ]
-                        ],
-                        "jsonValue"      => [
-                            "columns" => [
-                                "jsonValue",
                                 "deleted"
                             ]
                         ]

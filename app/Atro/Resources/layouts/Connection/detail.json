@@ -56,6 +56,10 @@
         }
       ],
       [
+        {"name":  "dsn"},
+        {"name":  "server"}
+      ],
+      [
         {
           "name": "user"
         },

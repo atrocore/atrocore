@@ -57,6 +57,13 @@ Espo.define('views/ui-handler/fields/target-fields', ['views/fields/entity-field
                 } else {
                     this.$el.parent().hide();
                 }
+
+                const $label = $(this.$el).closest('.cell').find('.control-label .label-text')
+                if (['ui_disable_options', 'ui_update_by_ai'].includes(this.model.get('type'))) {
+                    $label.text(this.translate('targetField', 'labels', 'UiHandler'));
+                } else {
+                    $label.text(this.translate('fields', 'fields', 'UiHandler'));
+                }
             }
         },
 

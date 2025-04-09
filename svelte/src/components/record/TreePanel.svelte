@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {createEventDispatcher, onMount, tick} from 'svelte';
+    import {onMount, tick} from 'svelte';
     import {fade} from 'svelte/transition';
     import {Storage} from "../../utils/Storage";
     import {LayoutManager} from "../../utils/LayoutManager";
@@ -8,28 +8,28 @@
     import {Config} from "../../utils/Config.js";
     import {Notifier} from "../../utils/Notifier";
     import {UserData} from "../../utils/UserData";
+    import Preloader from "../icons/loading/Preloader.svelte";
+    import BaseSidebar from "./BaseSidebar.svelte";
 
     export let scope: string;
     export let model;
     export let collection;
     export let callbacks: object;
-    export let minWidth: number = 220;
+    export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let isCollapsed: boolean = false;
-    export let mode;
+    export let mode: string;
     export let maxSize: number = Config.get('recordsPerPageSmall') || 20;
 
     export let renderLayoutEditor;
 
-    const dispatch = createEventDispatcher();
+    export let isAdminPage: boolean = false;
 
+    let isPinned: boolean = true;
     let treeElement: HTMLElement;
     let layoutEditorElement: HTMLElement;
     let searchInputElement: HTMLInputElement;
-    let isDragging: boolean = false;
-    let startX: number;
-    let startWidth: number;
     let treeItems: [] = [];
     let activeItem: object;
     let layoutLoading = false;
@@ -41,7 +41,7 @@
     let isHidden = false;
     let sortAsc = true;
     let sortBy = null;
-    let sortFields = []
+    let sortFields = [];
 
     $: if (currentWidth) {
         if (callbacks?.treeWidthChanged) {
@@ -49,9 +49,8 @@
         }
     }
 
-    $: treePanelWidth = isCollapsed ? 'auto' : `${currentWidth}px`;
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
-    $: isSelectionEnabled = activeItem && (!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list'
+    $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
     $: {
         if (!treeScope) {
             sortFields = []
@@ -77,60 +76,6 @@
         }
     }
 
-    function handleCollapsePanel() {
-        isCollapsed = !isCollapsed;
-
-        if (isCollapsed) {
-            window.$('.page-header').addClass('collapsed').removeClass('not-collapsed');
-            window.$('#tree-list-table').addClass('collapsed');
-        } else {
-            window.$('.page-header').removeClass('collapsed').addClass('not-collapsed');
-            window.$('#tree-list-table').removeClass('collapsed');
-        }
-        // dispatch('collapse-panel', {isCollapsed});
-        Storage.set('catalog-tree-panel', scope, isCollapsed ? 'collapsed' : '');
-
-        if (!isCollapsed) {
-            rebuildTree()
-        }
-    }
-
-    function handleResize(e: MouseEvent) {
-        if (!isDragging) return;
-        e.preventDefault();
-
-        const width = startWidth + (e.pageX - startX);
-        if (width >= minWidth && width <= maxWidth) {
-            currentWidth = width;
-        }
-    }
-
-    function startResize(e: MouseEvent) {
-        isDragging = true;
-        startX = e.pageX;
-        startWidth = currentWidth;
-
-        // Add the event listeners to document instead of window
-        document.addEventListener('mousemove', handleResize);
-        document.addEventListener('mouseup', stopResize, {once: true});
-
-        // Prevent text selection during drag
-        document.body.style.userSelect = 'none';
-    }
-
-    function stopResize() {
-        if (!isDragging) return;
-
-        isDragging = false;
-        Storage.set('panelWidth', scope, currentWidth.toString());
-
-        // Remove event listeners
-        document.removeEventListener('mousemove', handleResize);
-
-        // Restore text selection
-        document.body.style.userSelect = '';
-    }
-
     //region Tree methods
     export function rebuildTree() {
         destroyTree();
@@ -152,20 +97,28 @@
         return whereData
     }
 
+    function getHashScope() {
+        let locationHash = window.location.hash;
+        return locationHash.split('/').shift().replace('#', '');
+    }
+
     function buildTree(data = null): void {
         if (!activeItem) {
             return;
         }
 
-
+        if (activeItem.name === '_admin') {
+            data = getAdminTreeData();
+        }
         let $tree = window.$(treeElement);
-        let whereData = getWhereData()
+        let whereData = getWhereData();
 
-        if (data === null && searchValue &&
-            Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
-            !Metadata.get(['scopes', treeScope, 'hierarchyDisabled'])) {
-            treeLoading = true
-            whereData.push({"type": "textFilter", "value": searchValue})
+        if (
+            data === null && searchValue && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
+            !Metadata.get(['scopes', treeScope, 'hierarchyDisabled'])
+        ) {
+            treeLoading = true;
+            whereData.push({"type": "textFilter", "value": searchValue});
             Espo.ajax.getRequest(`${treeScope}/action/TreeData`, {
                 "where": whereData,
                 "scope": scope,
@@ -175,14 +128,13 @@
             }).then(response => {
                 buildTree(response.tree);
             });
+
             return;
         }
 
         let treeData = {
             dataUrl: generateUrl(),
-            dataFilter: function (response) {
-                return filterResponse(response);
-            }.bind(this),
+            dataFilter: response => filterResponse(response),
             selectable: true,
             saveState: false,
             autoOpen: false,
@@ -223,21 +175,28 @@
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
+
                 if (!['_self', '_bookmark'].includes(activeItem.name) && selectNodeId === node.id) {
+                    $tree.tree('addToSelection', node);
+                    $li.addClass('jqtree-selected');
+                }
+
+                if (activeItem.name === '_admin'
+                    && ((Metadata.get(['scopes', getHashScope()])
+                        && (node.id.includes('#' + getHashScope()+'/'))
+                        && isLinkExistsOnce(getHashScope())) || node.id === window.location.hash)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
 
                 $title.attr('data-id', node.id);
 
-                if (treeData.dragAndDrop && !node.showMoreDirection) {
-                    $title.attr('title', Language.translate("useDragAndDrop"));
-                }
-
                 if (node.showMoreDirection) {
                     $li.addClass('show-more');
                     $li.addClass('show-more-' + node.showMoreDirection);
                     $li.find('.jqtree-title').addClass('more-label');
+                } else {
+                    $title.attr('title', node.name);
                 }
             }.bind(this)
         };
@@ -259,6 +218,17 @@
             }
         })
         $tree.on('tree.refresh', e => {
+            if (activeItem.name === '_admin') {
+                let hashScope = getHashScope();
+                if (Metadata.get(['scopes', hashScope])) {
+                    selectTreeNode(hashScope, [])
+                    if (callbacks?.selectNode) {
+                        callbacks.selectNode({id: hashScope}, true);
+                    }
+                }
+                return;
+            }
+
             if (Storage.get('selectedNodeId', scope) && mode === 'list') {
                 const id = Storage.get('selectedNodeId', scope);
                 const route = Storage.get('selectedNodeRoute', scope);
@@ -304,6 +274,12 @@
         })
         $tree.on('tree.click', e => {
             e.preventDefault();
+
+            if (activeItem.name === '_admin' && !e.node.disabled) {
+                window.location.href = e.node.id;
+                return;
+            }
+
             if (e.node.disabled) {
                 return false;
             }
@@ -314,6 +290,10 @@
 
                 if (node.showMoreDirection) {
                     return loadMore(node);
+                }
+
+                if (node.element) {
+                    appendUnsetButton(window.$(node.element));
                 }
 
                 let route = [];
@@ -332,6 +312,28 @@
                 }
             }
         });
+    }
+
+    function appendUnsetButton($el): void {
+        if ($el && $el.length) {
+            removeUnsetButton($el);
+
+            if (selectNodeId && isSelectionEnabled) {
+                const button = document.createElement('span');
+                button.classList.add('reset-button', 'fa', 'fa-times', 'pull-right');
+                button.addEventListener('click', () => {
+                    removeUnsetButton($el);
+                    callUnselectNode();
+                });
+                $el.append(button);
+            }
+        }
+    }
+
+    function removeUnsetButton($el): void {
+        if ($el && $el.length) {
+            $el.find('.reset-button').remove();
+        }
     }
 
     function parseRoute(routeStr) {
@@ -441,14 +443,19 @@
                 if (el.data('id') !== id && $tree.tree('getNodeById', el.data('id'))) {
                     $tree.tree('removeFromSelection', $tree.tree('getNodeById', el.data('id')));
                     li.removeClass('jqtree-selected');
+                    removeUnsetButton(li);
+                    return;
                 } else if (!li.hasClass('jqtree-selected')) {
                     li.addClass('jqtree-selected');
+                }
+
+                if (li.hasClass('jqtree-selected')) {
+                    appendUnsetButton(li);
                 }
             });
         }
 
-        openNodes($tree, ids, onFinished)
-
+        openNodes($tree, ids, onFinished);
     }
 
     function callUnselectNode() {
@@ -463,6 +470,10 @@
         selectNodeId = null;
 
         if (node) {
+            if (node.element) {
+                removeUnsetButton(window.$(node.element));
+            }
+
             $tree.tree('removeFromSelection', node);
         }
     }
@@ -555,6 +566,7 @@
         searchValue = ''
         searchInputElement.value = ''
         Storage.clear('treeSearchValue', treeScope)
+        Storage.clear('treeSearchValue', '_admin')
 
         if (mode === 'list') {
             if (selectNodeId) {
@@ -586,10 +598,13 @@
 
     function applySearch() {
         searchValue = searchInputElement.value
-        if (searchValue) {
+        if (searchValue && activeItem.name === '_admin') {
+            Storage.set('treeSearchValue', '_admin', searchValue)
+        } else if (searchValue) {
             Storage.set('treeSearchValue', scope, searchValue)
         } else {
             Storage.clear('treeSearchValue', scope)
+            Storage.clear('treeSearchValue', '_admin')
         }
         Notifier.notify('Loading...')
         rebuildTree()
@@ -618,46 +633,119 @@
         rebuildTree()
     }
 
-    function loadLayout(callback) {
-        LayoutManager.get(scope, 'leftSidebar', null, null, (data) => {
-            layoutData = data
-            treeItems = data.layout.map(item => {
-                const type = Metadata.get(['entityDefs', scope, 'fields', item.name, 'type'])
-                let label = ''
-                if (item.name === '_self') {
-                    label = Language.get('Global', 'scopeNamesPlural', scope)
-                } else if (item.name === '_bookmark') {
-                    label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
-                } else {
-                    if (type == 'link') {
-                        const itemScope = getLinkScope(item.name)
-                        label = Language.get('Global', 'scopeNamesPlural', itemScope)
-                    }
-
-                    if (!label) {
-                        label = Language.get(scope, 'links', item.name) || Language.get(scope, 'fields', item.name) || Language.get('Global', 'fields', item.name)
-                    }
+    function isLinkExistsOnce(scope: string) {
+        let count = 0;
+        for (const treeItem of getAdminTreeData()) {
+            for (const child of treeItem.children) {
+                if(child.id.includes('#'+scope)) {
+                    count += 1;
                 }
-
-
-                return {
-                    name: item.name,
-                    label: label
-                }
-            })
-            const treeItem = Storage.get('treeItem', scope);
-            if (treeItems.length > 0) {
-                if (!treeItem || !treeItems.find(ti => ti.name === treeItem)) {
-                    Storage.set('treeItem', scope, treeItems[0].name);
-                    activeItem = treeItems[0]
-                } else {
-                    activeItem = treeItems.find(ti => ti.name === treeItem);
-                }
-                initSorting(true)
             }
+        }
 
+        return count == 1;
+    }
+
+    function getAdminTreeData() {
+        let data = Metadata.get(['app', 'adminPanel']);
+        let total = Object.keys(data).length;
+        let result:[] = [];
+        let i = 0;
+        Object.entries(data).forEach(([k, v]) => {
+            let treeItem = {
+                id: k,
+                name: Language.get('Admin', 'labels', v['label']) ?? v['label'],
+                offset: i,
+                total: total,
+                disabled: true,
+                load_on_demand: false,
+                children: []
+            }
+            let j = 0;
+            let totalItem = v['itemList'].length;
+            for (const item of v['itemList']) {
+                if(item.listDisabled) {
+                    continue;
+                }
+                const label = Language.translate(item['label'], 'labels', 'Admin');
+                if ((searchValue ?? '').length < 3 || (label.toLowerCase().includes(searchValue.toLowerCase()))) {
+                    treeItem.children.push({
+                        id: item['url'],
+                        name: label,
+                        offset: j,
+                        total: totalItem,
+                        disabled: false,
+                        load_on_demand: false,
+                    });
+                    j++;
+                }
+
+            }
+            if (treeItem.children.length === 0) {
+                return;
+            }
+            result.push(treeItem);
+            i++;
+        });
+
+        return result;
+    }
+
+    function loadLayout(callback) {
+        if(isAdminPage) {
+            activeItem = {
+                name: '_admin',
+                label: Language.get('Global', 'labels', 'Administration')
+            }
+            treeItems = [activeItem];
             callback()
-        })
+        }else{
+            LayoutManager.get(scope, 'leftSidebar', null, null, (data) => {
+                layoutData = data
+                treeItems = data.layout.map(item => {
+                    const type = Metadata.get(['entityDefs', scope, 'fields', item.name, 'type'])
+                    let label = ''
+                    if (item.name === '_self') {
+                        label = Language.get('Global', 'scopeNamesPlural', scope)
+                    } else if (item.name === '_bookmark') {
+                        label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
+                    } else if (item.name === '_admin') {
+                        label = Language.get('Global', 'labels', 'Administration')
+                    } else {
+                        if (type == 'link') {
+                            const itemScope = getLinkScope(item.name)
+                            label = Language.get('Global', 'scopeNamesPlural', itemScope)
+                        }
+
+                        if (!label) {
+                            label = Language.get(scope, 'links', item.name) || Language.get(scope, 'fields', item.name) || Language.get('Global', 'fields', item.name)
+                        }
+                    }
+
+
+                    return {
+                        name: item.name,
+                        label: label
+                    }
+                })
+                let treeItem = Storage.get('treeItem', scope);
+                // admin should always be the selected one
+                if (getHashScope() === scope) {
+                    treeItem = '_admin';
+                }
+                if (treeItems.length > 0) {
+                    if (!treeItem || !treeItems.find(ti => ti.name === treeItem)) {
+                        Storage.set('treeItem', scope, treeItems[0].name);
+                        activeItem = treeItems[0]
+                    } else {
+                        activeItem = treeItems.find(ti => ti.name === treeItem);
+                    }
+                    initSorting(true)
+                }
+
+                callback()
+            })
+        }
     }
 
     function initSorting(useCache) {
@@ -711,6 +799,7 @@
             isCollapsed = true;
         }
 
+        isPinned = Storage.get('catalog-tree-panel-pin', scope) !== 'not-pinned';
         loadLayout(() => {
             if (treeItems.length === 0) {
                 isCollapsed = true
@@ -720,63 +809,71 @@
                 }
             }
             tick().then(() => {
-                searchValue = Storage.get('treeSearchValue', scope) || null;
+                if (activeItem.name === '_admin') {
+                    searchValue = Storage.get('treeSearchValue', '_admin') || null;
+                } else {
+                    searchValue = Storage.get('treeSearchValue', scope) || null;
+                }
                 if (searchValue) {
-                    searchInputElement.value = searchValue
+                    searchInputElement.value = searchValue;
                 }
 
                 if (!isCollapsed) {
-                    buildTree()
+                    buildTree();
+                }
+
+                if (renderLayoutEditor) {
+                    renderLayoutEditor(layoutEditorElement);
                 }
             })
-            if (renderLayoutEditor) {
-                renderLayoutEditor(layoutEditorElement)
-            }
-        })
-
-        return () => {
-            // Cleanup any remaining event listeners
-            if (isDragging) {
-                stopResize();
-            }
-        };
+        });
     });
+
+    function onSidebarResize(e: CustomEvent): void {
+        Storage.set('panelWidth', scope, currentWidth.toString());
+    }
+
+    function onSidebarCollapse(e: CustomEvent): void {
+        Storage.set('catalog-tree-panel', scope, isCollapsed ? 'collapsed' : '');
+
+        if (!isCollapsed) {
+            rebuildTree();
+        }
+    }
+
+    function onSidebarPin(e: CustomEvent): void {
+        Storage.set('catalog-tree-panel-pin', scope, isPinned ? 'pin' : 'not-pinned');
+    }
 </script>
 
-<aside class="catalog-tree-panel" class:collapsed={isCollapsed} class:catalog-tree-panel-hidden={isCollapsed}
-       transition:fade class:hidden={isHidden}
-       style="width: {treePanelWidth}">
-    <button type="button"
-            class="btn btn-link collapse-panel"
-            class:collapsed={isCollapsed}
-            on:click={handleCollapsePanel}>
-        <svg class="icon toggle-icon-left" class:hidden={isCollapsed}><use href="client/img/icons/icons.svg#angle-left"></use></svg>
-        <svg class="icon toggle-icon-right" class:hidden={!isCollapsed}><use href="client/img/icons/icons.svg#angle-right"></use></svg>
-    </button>
+<BaseSidebar className="catalog-tree-panel" position="left" bind:width={currentWidth} bind:isCollapsed={isCollapsed}
+             bind:isPinned={isPinned} {minWidth} {maxWidth} on:sidebar-resize={onSidebarResize}
+             on:sidebar-collapse={onSidebarCollapse} on:sidebar-pin={onSidebarPin}>
     <div class="category-panel" class:hidden={isCollapsed}>
-        <div style="display: flex;flex-direction: row-reverse;align-items: center;height: 35px">
-            <div style="margin-right: 20px" bind:this={layoutEditorElement} class="layout-editor-container"></div>
-        </div>
-
         {#if layoutLoading}
             <div class="text-center">
-                <img class="preloader" style="height:12px;" src="client/img/atro-loader.svg">
+                <Preloader heightPx={12} />
             </div>
         {:else if treeItems.length > 0 }
-            <div class="panel-group" style="margin-bottom: 10px; margin-top: -10px;">
+            <div class="panel-group" style="margin-bottom: 10px;">
                 <div class="btn-group">
                     {#each treeItems as treeItem}
-                        <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
-                            {treeItem.label}
-                        </a>
+                        {#if treeItem.name !== activeItem.name}
+                            <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
+                               class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
+                                {treeItem.label}
+                            </a>
+                        {/if}
                     {/each}
+                    <span bind:this={layoutEditorElement} class="btn layout-editor-container"></span>
                 </div>
             </div>
-            <hr style="margin: 0 -10px">
             {#if activeItem}
+                <div class="sidebar-header">
+                    <h5>{activeItem.label}</h5>
+                </div>
+
                 <div class="panel-group category-search" style="margin-bottom: 20px">
-                    <h5 style="margin: 20px 0;font-weight: bold; font-size: 16px;">{activeItem.label}</h5>
                     <div class="field" data-name="category-search">
                         <input type="text" bind:this={searchInputElement}
                                on:keydown={(e) => e.key === 'Enter' && applySearch()}
@@ -788,62 +885,65 @@
                             <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
                         </button>
                     </div>
-                    <div style="margin-top: 20px;display: flex; justify-content: space-between;flex-wrap: wrap">
-                        <button on:click={callUnselectNode} type="button" style="margin-bottom: 5px"
-                                disabled="{!selectNodeId || !isSelectionEnabled}"
-                                class="btn btn-default">
-                            Unset selection
-                        </button>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default sort-btn" data-tippy="true"
-                                    title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
-                                    on:click={onSortAscChange}>
-                                <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
-                            </button>
-                            <select class="form-control" style="width: auto;max-width: 120px"
-                                    on:change={onSortByChange} bind:value={sortBy}>
-                                {#each sortFields as field }
-                                    <option value="{field.name}">
-                                        {field.label}
-                                    </option>
-                                {/each}
-                            </select>
+                    {#if activeItem.name !== '_admin' }
+                        <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
+                            <div class="btn-group" style="display:flex; align-items: stretch;">
+                                <button type="button" class="btn btn-default sort-btn" data-tippy="true"
+                                        title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
+                                        on:click={onSortAscChange}>
+                                    <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
+                                </button>
+                                <select class="form-control" style="max-width: 300px; flex: 1;" bind:value={sortBy}
+                                        on:change={onSortByChange}>
+                                    {#each sortFields as field }
+                                        <option value="{field.name}">
+                                            {field.label}
+                                        </option>
+                                    {/each}
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    {/if}
                 </div>
 
                 <div class="panel-group category-tree" bind:this={treeElement}>
                 </div>
             {/if}
         {/if}
-
-
-        {#if !isCollapsed}
-            <div
-                    class="category-panel-resizer"
-                    on:mousedown={startResize}
-            ></div>
-        {/if}
     </div>
-</aside>
+</BaseSidebar>
 
 <style>
-    .category-panel-resizer {
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 5px;
-        height: 100%;
-        cursor: ew-resize;
-        background: transparent;
+    .field[data-name="category-search"] {
+        position: relative;
     }
 
-    .category-panel-resizer:hover {
-        background: rgba(0, 0, 0, 0.1);
+    .field[data-name="category-search"] > input.category-search {
+        border: 0;
+        border-bottom: 1px solid #e8eced;
+        background-color: transparent;
+        padding: 0 5px;
+    }
+
+    .field[data-name="category-search"] > button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        border: none;
+        background: none;
+    }
+
+    .field[data-name="category-search"] > .reset-search-in-tree-button {
+        right: 30px;
+        top: 8.5px;
+    }
+
+    .field[data-name="category-search"] > input.category-search {
+        border-bottom: 1px solid #e8eced;
     }
 
     .tree-item {
-        padding: 6px 20px 6px 0;
+        padding: 4px 20px 4px 0;
         color: #333;
         text-decoration: underline;
     }
@@ -867,11 +967,58 @@
         background: white;
     }
 
+    .sort-btn + select {
+        border-left: 0;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+
+    .sort-btn + select,
+    .sort-btn + select:focus {
+        border-color: #e0e0e0;
+    }
+
     .unset-selection i {
         font-size: 14px;
     }
 
-    .search-in-tree-button {
-        margin-top: -5px;
+    .layout-editor-container:empty {
+        display: none;
+    }
+
+    .layout-editor-container:not(:empty) {
+        padding: 4px 0;
+        line-height: 0;
+    }
+
+    .layout-editor-container:not(:empty):active {
+        box-shadow: none;
+    }
+
+    :global(ul.jqtree-tree .jqtree-element:not(.btn)) {
+        display: -webkit-box;
+        line-clamp: 1;
+        -webkit-line-clamp: 1;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        overflow-y: clip;
+        line-height: normal;
+    }
+
+    :global(ul.jqtree-tree li.jqtree_common) {
+        position: relative;
+    }
+
+    :global(ul.jqtree-tree li.jqtree_common .reset-button) {
+        margin-top: 8px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+    }
+
+    :global(ul.jqtree-tree .jqtree_common.disabled > div > span) {
+        color: #000;
+        font-weight: bold;
     }
 </style>

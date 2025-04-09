@@ -1,66 +1,65 @@
-<main class="composer">
-    <div class="page-header">{{{header}}}</div>
-    <div class="detail-button-container button-container record-buttons clearfix">
-        <div class="btn-group pull-left" role="group">
-            <button class="btn btn-primary action composer-action last" data-action="runUpdate" type="button" disabled>{{translate 'Run Update' scope='Composer' category='labels'}}</button>
-            <button class="btn btn-default action composer-action" data-action="cancelUpdate" type="button" disabled style="display: none;">{{translate 'Cancel'}}</button>
-        </div>
-        <div class="progress-log-wrapper">
-            <div class="spinner{{#unless hideLoader}} hidden{{/unless}}">
-                <div class="bounce1"></div>
-                <div class="bounce2"></div>
-                <div class="bounce3"></div>
+<div class="content-wrapper">
+    <aside class="tree-panel-anchor"></aside>
+    <main class="composer">
+        <div class="page-header">{{{header}}}</div>
+        <div class="detail-button-container button-container record-buttons clearfix">
+            <div class="btn-group pull-left" role="group">
+                <button class="btn btn-primary action composer-action last" data-action="runUpdate" type="button" disabled>{{translate 'Run Update' scope='Composer' category='labels'}}</button>
+                <button class="btn btn-default action composer-action" data-action="cancelUpdate" type="button" disabled style="display: none;">{{translate 'Cancel'}}</button>
             </div>
-        </div>
-        <span class="progress-status"></span>
-        <div class="clearfix"></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-9 col-xs-12">
-            <div class="module-list-container">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="pull-right btn-group">
-                            <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="installed" title="{{translate 'clickToRefresh' category='messages'}}">
-                                <svg class="icon icon-small"><use href="client/img/icons/icons.svg#sync"></use></svg>
-                            </button>
-                        </div>
-                        <h4 class="panel-title">
-                            <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-collection="installed">{{translate 'Installed' scope='Composer' category='labels'}}</span>
-                        </h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="list-container modules-installed">{{{list}}}</div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="pull-right btn-group">
-                            <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="store" title="{{translate 'clickToRefresh' category='messages'}}">
-                                <svg class="icon icon-small"><use href="client/img/icons/icons.svg#sync"></use></svg>
-                            </button>
-                        </div>
-                        <h4 class="panel-title">
-                            <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-collection="store">{{translate 'Store' scope='Composer' category='labels'}}</span>
-                        </h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="list-container modules-store">{{{listStore}}}</div>
-                    </div>
+            <div class="progress-log-wrapper">
+                <div class="spinner{{#unless hideLoader}} hidden{{/unless}}">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
                 </div>
             </div>
+            <span class="progress-status"></span>
+            <div class="clearfix"></div>
         </div>
-        <div class="col-sm-3 col-xs-12">
-            <div class="log-list-container">{{{logList}}}</div>
+        <div class="row">
+            <div class="col-sm-9 col-xs-12">
+                <div class="module-list-container">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="pull-right btn-group">
+                                <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="installed" title="{{translate 'clickToRefresh' category='messages'}}">
+                                    <span class="fas fa-sync"></span>
+                                </button>
+                            </div>
+                            <h4 class="panel-title">
+                                <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-collection="installed">{{translate 'Installed' scope='Composer' category='labels'}}</span>
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-container modules-installed">{{{list}}}</div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="pull-right btn-group">
+                                <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="store" title="{{translate 'clickToRefresh' category='messages'}}">
+                                    <span class="fas fa-sync"></span>
+                                </button>
+                            </div>
+                            <h4 class="panel-title">
+                                <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-collection="store">{{translate 'Store' scope='Composer' category='labels'}}</span>
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-container modules-store">{{{listStore}}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-12">
+                <div class="log-list-container">{{{logList}}}</div>
+            </div>
         </div>
-    </div>
-</main>
+    </main>
+</div>
 
 <style>
-    main.composer {
-        margin: 0 -20px;
-    }
-
     main.composer .row {
         display: flex;
         align-content: stretch;
