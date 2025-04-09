@@ -96,11 +96,15 @@ class EntityField extends ReferenceData
         $entities = [];
 
         $entityName = null;
+        $skipLingual = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['entityId='])) {
                 $entityName = $item['entityId='];
             } elseif (!empty($item['entityId'])) {
                 $entityName = $item['entityId'];
+            }
+            if (array_key_exists('multilangField', $item) && $item['multilangField'] === null) {
+                $skipLingual = true;
             }
         }
 
@@ -126,6 +130,10 @@ class EntityField extends ReferenceData
         foreach ($entities as $entityName) {
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
                 if (is_array($types) && !in_array($fieldDefs['type'], $types)) {
+                    continue;
+                }
+
+                if ($skipLingual && !empty($fieldDefs['multilangField'])){
                     continue;
                 }
 

@@ -126,7 +126,8 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 massRelateEnabled: false,
                 allowSelectAllResult: false,
                 boolFilterList: [
-                    "fieldsFilter"
+                    "fieldsFilter",
+                    "notLingual"
                 ],
                 boolFilterData: {
                     fieldsFilter: {
