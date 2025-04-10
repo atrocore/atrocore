@@ -23729,11 +23729,11 @@ span[data-img-src]::after {
 .layout-editor-container {
     position: relative;
     text-align: center;
-    line-height: 1;
+    line-height: 0;
 }
 
 .layout-editor-container .btn-link {
-    color: #999;
+    color: var(--action-icon-color);
     display: inline-flex;
     line-height: 1;
     width: 17px;
@@ -23759,6 +23759,14 @@ span[data-img-src]::after {
     }
 
     .panel-heading:hover .layout-editor-container {
+        display: block;
+    }
+
+    .sidebar .panel-group:hover .layout-editor-container {
+        display: block;
+    }
+
+    .sidebar-header:hover .layout-editor-container {
         display: block;
     }
 
