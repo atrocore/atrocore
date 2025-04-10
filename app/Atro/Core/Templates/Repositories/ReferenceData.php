@@ -326,10 +326,10 @@ class ReferenceData extends Repository implements Injectable
         $entityType = $entity->getRelationParam($link, 'entity');
 
         if ($relationType === IEntity::HAS_MANY) {
-            $idsFields = $link . 'Ids';
-            if (!empty($entity->get($idsFields))) {
+            $idsField = $link . 'Ids';
+            if (!empty($entity->get($idsField))) {
                 return $this->getEntityManager()->getrepository($entityType)
-                    ->where(['id' => $entity->get($idsFields)])->find($selectParams);
+                    ->where(['id' => $entity->get($idsField)])->find($selectParams);
             }
         }
 
