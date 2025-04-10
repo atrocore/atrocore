@@ -342,7 +342,7 @@ Espo.define('views/main', 'view', function (Dep) {
                                     } else {
                                         view.setDetailMode()
                                     }
-                                })
+                                });
                                 if (this.getUser().isAdmin()) {
                                     if (this.mode === 'detail') {
                                         this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
