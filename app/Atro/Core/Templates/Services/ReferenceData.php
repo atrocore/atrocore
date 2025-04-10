@@ -13,6 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Services\Record;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class ReferenceData extends Record
 {
@@ -34,7 +39,7 @@ class ReferenceData extends Record
             $idsField = $link . 'Ids';
             $namesField = $link . 'Names';
 
-            $value = $entity->get($idsField) ?? [];
+            $value = array_values($entity->get($idsField) ?? []);
             $value[] = $foreignId;
             $valueNames = $entity->get($namesField) ?? new \stdClass();
             $valueNames->{$foreignId} = $foreign->get('name');
@@ -71,11 +76,12 @@ class ReferenceData extends Record
             $index = array_search($foreignId, $value);
             if ($index !== false) {
                 unset($value[$index]);
+                $value = array_values($value);
             }
 
             $entity->set($idsField, $value);
-            if (!empty($valueNames = $entity->get($namesField))) {
-                unset($valueNames[$foreignId]);
+            if (!empty($valueNames = $entity->get($namesField)) && is_object($valueNames)) {
+                unset($valueNames->{$foreignId});
                 $entity->set($namesField, $valueNames);
             }
             $this->getRepository()->save($entity);
