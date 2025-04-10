@@ -37,21 +37,6 @@ class ReferenceData extends AbstractRecordController
         throw new BadRequest();
     }
 
-    public function actionCreateLink($params, $data, $request)
-    {
-        throw new BadRequest();
-    }
-
-    public function actionRemoveLink($params, $data, $request)
-    {
-        throw new BadRequest();
-    }
-
-    public function actionUnlinkAll($params, $data, $request)
-    {
-        throw new BadRequest();
-    }
-
     public function actionFollow($params, $data, $request)
     {
         throw new BadRequest();
