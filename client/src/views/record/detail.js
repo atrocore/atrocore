@@ -832,17 +832,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }.bind(this));
 
-            const treePanel = this.getView('treePanel');
-
-            let observer = new ResizeObserver(() => {
-                if (treePanel && treePanel.$el) {
-                    this.onTreeResize();
-                }
-
-                observer.unobserve($('#content').get(0));
-            });
-            observer.observe($('#content').get(0));
-
             this.$el.find('.panel-heading').each((k, el) => {
                 let $el = $(el);
                 let isAttributeValuePanel = $el.parent().find('.remove-attribute-value').length > 0;
