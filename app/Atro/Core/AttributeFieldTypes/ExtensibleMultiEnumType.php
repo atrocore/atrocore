@@ -20,6 +20,8 @@ class ExtensibleMultiEnumType extends AbstractFieldType
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+
         $entity->fields[$name] = [
             'type'        => 'jsonArray',
             'name'        => $name,
@@ -29,7 +31,12 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         ];
 
         $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
-        $entity->set($name, is_array($value) ? $value : []);
+
+        if (!empty($attributeData['dropdown'])) {
+            $entity->set($name, is_array($value) ? $value : []);
+        } else {
+            $entity->set($name, !empty($value) ? $value : null);
+        }
 
         $entity->fields[$name . 'Names'] = [
             'type'        => 'jsonObject',
@@ -47,8 +54,6 @@ class ExtensibleMultiEnumType extends AbstractFieldType
                 $entity->set($name . 'Names', array_column($options->toArray(), 'name', 'id'));
             }
         }
-
-        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId'      => $row['id'],
