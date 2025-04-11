@@ -16802,7 +16802,7 @@ stream-head-text-container .span {
 }
 
 .complex-text a {
-    word-wrap: break-word
+    overflow-wrap: anywhere;
 }
 
 table.table td.cell .complex-text {
