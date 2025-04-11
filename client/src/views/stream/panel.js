@@ -50,7 +50,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         data: function () {
             var data = Dep.prototype.data.call(this);
-            data.postDisabled = this.postDisabled || this.mode === 'list';
+            data.postDisabled = this.postDisabled || this.mode !== 'detail';
             data.placeholderText = this.placeholderText;
             return data;
         },
@@ -141,10 +141,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         createCollection: function (callback, context) {
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
-                if(this.mode === 'list') {
-                    collection.url = 'Stream' + '/' + this.scope
-                }else{
+                if(this.mode === 'detail') {
                     collection.url = this.model.name + '/' + this.model.id + '/stream';
+                }else{
+                    collection.url = 'Stream' + '/' + this.scope
                 }
                 collection.sortBy = 'createdAt';
                 collection.asc = false;
