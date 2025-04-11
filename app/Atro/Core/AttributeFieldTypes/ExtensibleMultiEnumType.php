@@ -29,7 +29,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         ];
 
         $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
-        $entity->set($name, !empty($value) ? $value : null);
+        $entity->set($name, is_array($value) ? $value : []);
 
         $entity->fields[$name . 'Names'] = [
             'type'        => 'jsonObject',
