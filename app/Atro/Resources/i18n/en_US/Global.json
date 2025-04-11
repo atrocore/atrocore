@@ -683,7 +683,7 @@
     "emailSent": "{user} successfully sent e-mail with the subject '{subject}' to '{emailTo}' on '{createdAt}', related to {entityType} {entity}",
     "emailSentThis": "{user} successfully sent e-mail with the subject '{subject}' to '{emailTo}' on '{createdAt}'",
     "unrelate": "{user} unlinked {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
-    "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} with this {entityType}",
+    "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} from this {entityType}",
     "updateOneThis": "{user} in this {entityType} updated",
     "updateOneInThis": "{user} in this {entityType} updated in {relatedEntityType} {relatedEntity}",
     "updateFromToThis": "{user} in this {entityType} updated",
