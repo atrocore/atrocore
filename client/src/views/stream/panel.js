@@ -146,7 +146,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }else{
                     collection.url = 'Stream' + '/' + this.scope
                 }
-                collection.sortBy = 'createdAt';
+                collection.sortBy = 'id';
                 collection.asc = false;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
                 this.setFilter(this.filter);
