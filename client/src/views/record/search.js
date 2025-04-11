@@ -248,7 +248,9 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.listenTo(this.model, 'rulesChanged', () => {
                 try {
                     const rules = this.$el.find('.query-builder').queryBuilder('getRules');
-                    this.getStorage().set('queryBuilderRules', this.model.urlRoot, rules);
+                    if(rules) {
+                        this.getStorage().set('queryBuilderRules', this.model.urlRoot, rules);
+                    }
                 } catch (err) {
                 }
             })
@@ -349,7 +351,8 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     sortable: {
                         icon: 'fas fa-sort'
                     }
-                }
+                },
+
             });
 
             this.model.trigger('afterInitQueryBuilder');

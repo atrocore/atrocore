@@ -3014,7 +3014,7 @@ output {
     color: #555
 }
 
-.form-control {
+.form-control, .query-builder .form-select {
     display: block;
     width: 100%;
     height: 33px;
@@ -22698,6 +22698,116 @@ div.list-kanban > div > table .item .panel .form-group {
     border: 1px dashed #bbb;
     opacity: .7
 }
+
+.query-builder, .query-builder * {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.query-builder {
+    font-family: sans-serif;
+}
+
+.query-builder .hide {
+    display: none;
+}
+
+.query-builder .pull-right, .query-builder .float-end {
+    float: right !important;
+}
+
+
+.query-builder .btn.focus, .query-builder .btn:focus, .query-builder .btn:hover {
+    color: #333;
+    text-decoration: none;
+}
+
+.query-builder .btn.active, .query-builder .btn:active {
+    background-image: none;
+    outline: 0px none;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.125) inset;
+}
+
+.query-builder .btn-success {
+    color: #FFF;
+    background-color: #5CB85C;
+    border-color: #4CAE4C;
+}
+
+.query-builder .btn-primary {
+    color: #FFF;
+    background-color: #337AB7;
+    border-color: #2E6DA4;
+}
+
+.query-builder .btn-danger {
+    color: #FFF;
+    background-color: #D9534F;
+    border-color: #D43F3A;
+}
+
+.query-builder .btn-success.active, .query-builder .btn-success.focus,
+.query-builder .btn-success:active, .query-builder .btn-success:focus,
+.query-builder .btn-success:hover {
+    color: #FFF;
+    background-color: #449D44;
+    border-color: #398439;
+}
+
+.query-builder .btn-primary.active, .query-builder .btn-primary.focus,
+.query-builder .btn-primary:active, .query-builder .btn-primary:focus,
+.query-builder .btn-primary:hover {
+    color: #FFF;
+    background-color: #286090;
+    border-color: #204D74;
+}
+
+.query-builder .btn-danger.active, .query-builder .btn-danger.focus,
+.query-builder .btn-danger:active, .query-builder .btn-danger:focus,
+.query-builder .btn-danger:hover {
+    color: #FFF;
+    background-color: #C9302C;
+    border-color: #AC2925;
+}
+
+.query-builder .btn-group {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.query-builder .btn-group > .btn {
+    position: relative;
+    float: left;
+}
+
+.query-builder .btn-group > .btn:first-child {
+    margin-left: 0px;
+}
+
+.query-builder .btn-group > .btn:first-child:not(:last-child) {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.query-builder .btn-group > .btn:last-child:not(:first-child) {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.query-builder .btn-group .btn + .btn, .query-builder .btn-group .btn + .btn-group,
+.query-builder .btn-group .btn-group + .btn, .query-builder .btn-group .btn-group + .btn-group {
+    margin-left: -1px;
+}
+
+.query-builder .btn-xs, .query-builder .btn-group-xs > .btn {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+
 
 .text-gray {
     color: #999;

@@ -4,6 +4,7 @@
     import {Language} from "../../utils/Language";
     import Item from './interfaces/Item'
     import BaseSidebar from "./BaseSidebar.svelte";
+    import QueryBuillder from "./search-filter/QueryBuillder.svelte";
 
     export let scope: string;
     export let mode: string;
@@ -17,6 +18,9 @@
     export let isCollapsed: boolean = false;
 
     export let hasStream: boolean = false;
+
+    export let collection;
+    export let createView;
 
     $: scopeKey = scope + mode;
 
@@ -85,9 +89,9 @@
         }
 
         let collapseState = Storage.get('right-side-view-collapse', scopeKey);
-        if((!collapseState && mode === 'list') ||  window.innerWidth <= 768) {
+        if ((!collapseState && mode === 'list') || window.innerWidth <= 768) {
             isCollapsed = true;
-        }else{
+        } else {
             isCollapsed = (collapseState === 'collapsed');
         }
 
@@ -95,6 +99,16 @@
 
         if (mode !== 'list') {
             loadSummary();
+        }
+
+        if (mode === 'list') {
+            items = [
+                ...items,
+                {
+                    name: "filter",
+                    label: Language.translate('filter')
+                }
+            ]
         }
 
         if (hasStream) {
@@ -109,11 +123,10 @@
         let itemName = Storage.get('right-side-view-active-item', scopeKey);
 
         if (itemName && items.map(i => i.name).includes(itemName)) {
-
             setActiveItem(items.find(i => i.name === itemName));
         }
 
-        if(!activeItem) {
+        if (!activeItem) {
             setActiveItem(items[0]);
         }
     });
@@ -140,6 +153,10 @@
             <div class="layout-editor-container" class:hidden={activeItem?.name !== 'summary'}></div>
         </div>
 
+
+        <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
+            <QueryBuillder scope={scope} collection={collection} createView={createView}></QueryBuillder>
+        </div>
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
 
