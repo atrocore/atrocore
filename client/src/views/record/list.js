@@ -2088,7 +2088,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 var item = {
                     name: this.listLayout[i].name,
-                    sortable: !(this.listLayout[i].notSortable || false),
+                    sortable: !(this.listLayout[i].notSortable || false) && !this.options.disableSorting,
                     width: width,
                     align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false,
                 };
