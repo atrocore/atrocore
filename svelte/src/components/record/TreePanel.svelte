@@ -927,15 +927,15 @@
     }
 
     .field[data-name="category-search"] > input.category-search.search-enabled {
-        padding-right: 70px;
+        padding-right: 58px;
     }
 
     .field[data-name="category-search"] .button-container {
         position: absolute;
         top: 50%;
-        right: 8px;
+        right: 12px;
         display: flex;
-        gap: 8px;
+        gap: 10px;
         align-items: center;
         transform: translateY(-50%);
         padding: 0;
@@ -944,6 +944,7 @@
     .field[data-name="category-search"] button {
         border: none;
         background: none;
+        padding: 0;
     }
 
     .field[data-name="category-search"] > input.category-search {
