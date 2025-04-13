@@ -37,7 +37,7 @@ class AttributeFieldConverter
 
     public static function prepareFieldName(string $id): string
     {
-        return "attr_{$id}_attr";
+        return $id;
     }
 
     public function putAttributesToEntity(IEntity $entity): void
