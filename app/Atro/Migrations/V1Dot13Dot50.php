@@ -10,7 +10,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Random;
 
-class V1Dot13Dot49 extends Base
+class V1Dot13Dot50 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
