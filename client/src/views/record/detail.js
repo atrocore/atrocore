@@ -436,6 +436,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.removeButton('delete');
             }
 
+            if (!this.getAcl().check(this.entityType, 'delete')) {
+                this.removeButton('delete');
+            }
+
             if (this.duplicateAction) {
                 if (this.getAcl().check(this.entityType, 'create')) {
                     this.dropdownItemList.push({
