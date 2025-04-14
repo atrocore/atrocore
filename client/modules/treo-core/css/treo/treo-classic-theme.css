@@ -15259,7 +15259,7 @@ table.table > thead th > div > a {
     .fixed-scrollbar {
         display: none;
         position: fixed;
-        overflow-x: scroll;
+        overflow-x: auto;
         bottom: 0;
     }
 
@@ -15298,12 +15298,11 @@ table.table > thead th > div > a {
 }
 
 .panel-scroll {
-    height: 11px;
-    overflow: auto;
+    overflow-x: auto;
 }
 
 .panel-scroll > div {
-    height: 100%;
+    height: 1px;
 }
 
 .list-container > .list > .table thead th:not([data-name="r-checkbox"]):not([width]) > div:not(:empty) {

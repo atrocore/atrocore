@@ -852,12 +852,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return data
             }
 
-            if (this.hasView('side')) {
-                var view = this.getView('side');
-                if ('fetch' in view) {
-                    data = _.extend(data, view.fetch());
-                }
-            }
             if (this.hasView('bottom')) {
                 var view = this.getView('bottom');
                 if ('fetch' in view) {
@@ -869,8 +863,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         setEditMode: function () {
             this.trigger('before:set-edit-mode');
-            this.$el.find('.record-buttons').addClass('hidden');
-            this.$el.find('.edit-buttons').removeClass('hidden');
             this.disableButtons();
 
             var fields = this.getFieldViews(true);
@@ -1998,6 +1990,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         layoutHasActionFields() {
             if (this.getMetadata().get(['scopes', this.model.name, 'actionDisabled'])) {
+                return false;
+            }
+            if (!this.model.id) {
                 return false;
             }
             const fieldActions = this.getMetadata().get(['clientDefs', this.scope, 'dynamicFieldActions']) || []
