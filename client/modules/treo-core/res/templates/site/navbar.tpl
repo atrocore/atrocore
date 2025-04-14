@@ -41,7 +41,7 @@
             <li class="header">
                 <span>{{translate "Navigation Menu"}}</span>
                 {{#if canConfigureMenu}}
-                <svg class="icon cursor-pointer"><use href="client/img/icons/icons.svg#cog"></use></svg>
+                <svg data-action="configureMenu" class="icon cursor-pointer"><use href="client/img/icons/icons.svg#cog"></use></svg>
                 {{/if}}
             </li>
             {{#each tabDefsList}}
@@ -59,7 +59,7 @@
                             {{/if}}
                         {{/if}}
                     </span>
-                    <span class="full-label">{{label}} <span class="fas fa-angle-down"></span></span>
+                    <span class="full-label">{{label}} <svg class="icon" style="margin: 0"><use href="client/img/icons/icons.svg#angle-down"></use></svg></span>
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown-{{id}}">
                     {{#each items}}

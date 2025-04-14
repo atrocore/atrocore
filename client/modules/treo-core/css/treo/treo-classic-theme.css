@@ -3490,7 +3490,7 @@ textarea.input-lg, select[multiple].input-lg {
     background-image: none;
     border: 1px solid transparent;
     white-space: nowrap;
-    padding: 6px 10px;
+    padding: 5px 10px;
     font-size: 14px;
     line-height: 1.36;
     border-radius: 0;
@@ -24008,6 +24008,10 @@ span[data-img-src]::after {
 
 .anchor-nav-container .cursor-pointer {
     margin-top: -5px;
+}
+
+.navbar .cursor-pointer {
+    cursor: pointer;
 }
 
 .favorites-dropdown .divider {

@@ -31,7 +31,7 @@
 
     {#if hasMoreButton && (dropdownActions.length > 0 || dynamicActionsDropdown.length > 0)}
         <button type="button" class="btn btn-default dropdown-toggle more-button" data-toggle="dropdown" aria-haspopup="true" >
-            {Language.translate('More')} <span class="fa fa-chevron-down more-arrow"></span>
+            {Language.translate('More')} <svg class="icon more-arrow"><use href="client/img/icons/icons.svg#angle-down"></use></svg>
         </button>
     {:else if dropdownActions.length > 0 || dynamicActionsDropdown.length > 0}
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" >
