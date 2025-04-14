@@ -1243,17 +1243,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.fullTableScroll();
-            $(window).on("resize.fixed-scrollbar tree-width-changed tree-width-unset", function () {
-                this.fullTableScroll();
-
-                if (list) {
-                    if (!this.hasHorizontalScroll() || $(window).width() < 768) {
-                        $('.fixed-scrollbar').css('display', 'none');
-                    } else {
-                        $('.fixed-scrollbar').css('display', 'block');
-                    }
-                }
-            }.bind(this));
 
             if (this.enabledFixedHeader) {
                 this.fixedTableHead()
@@ -1594,9 +1583,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
         fixedTableHead() {
             let $window = $(window),
                 content = $('#main main'),
+                list = $('#main main .list'),
                 fixedTable = this.$el.find('.fixed-header-table'),
                 fullTable = this.$el.find('.full-table'),
                 navBarRight = $('.navbar-right'),
+                fixedScroll = this.$el.find('.fixed-scrollbar'),
                 posLeftTable = 0,
                 navBarHeight = 0,
 
@@ -1626,6 +1617,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                         fixedTable.find('th').eq(i).css('width', width);
                     });
+
+                    fixedScroll.width(list.width()).children('div').height(1).width(list[0].scrollWidth);
                 },
                 toggleClass = () => {
                     let showPosition = fullTable.offset().top;
@@ -1655,6 +1648,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 let observer = new ResizeObserver(() => {
                     this.fullTableScroll();
+
+                    if (list) {
+                        if (!this.hasHorizontalScroll() || $(window).width() < 768) {
+                            this.$el.find('.fixed-scrollbar').css('display', 'none');
+                        } else {
+                            this.$el.find('.fixed-scrollbar').css('display', 'block');
+                        }
+                    }
+
                     setPosition();
                     setWidth();
                 });
@@ -1678,6 +1680,22 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     if (scroll.length) {
                         scroll.scrollLeft(0);
                         scroll.addClass('hidden');
+                    }
+
+                    let $bar = this.$el.find('.fixed-scrollbar');
+                    if ($bar.length === 0) {
+                        $bar = $('<div class="fixed-scrollbar" style="display: none"><div></div></div>').appendTo(list).css({
+                            width: list.outerWidth()
+                        });
+
+                        $bar.scroll(function () {
+                            list.scrollLeft($bar.scrollLeft());
+                        });
+                    }
+
+                    $bar.data("status", "off");
+                    if (this.hasHorizontalScroll() && $(window).width() >= 768) {
+                        $bar.css('display', 'block');
                     }
 
                     fullTable.find('thead').find('th').each(function (i, elem) {
