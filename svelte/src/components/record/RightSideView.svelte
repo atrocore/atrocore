@@ -4,7 +4,7 @@
     import {Language} from "../../utils/Language";
     import Item from './interfaces/Item'
     import BaseSidebar from "./BaseSidebar.svelte";
-    import QueryBuillder from "./search-filter/QueryBuillder.svelte";
+    import QueryBuilder from "./search-filter/QueryBuilder.svelte";
 
     export let scope: string;
     export let mode: string;
@@ -101,6 +101,16 @@
             loadSummary();
         }
 
+        if (['list','plate', 'kanban'].includes(mode)) {
+            items = [
+                ...items,
+                {
+                    name: "filter",
+                    label: Language.translate('filter')
+                }
+            ]
+        }
+
         if (hasStream) {
             items = [
                 ...items,
@@ -145,7 +155,7 @@
 
 
         <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
-            <QueryBuillder scope={scope} collection={collection} createView={createView}></QueryBuillder>
+            <QueryBuilder scope={scope} collection={collection} createView={createView}></QueryBuilder>
         </div>
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>

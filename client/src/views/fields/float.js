@@ -142,7 +142,19 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                     'is_not_null'
                 ],
                 input: this.filterInput.bind(this),
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+//                 validation: {
+//                     allow_empty_value: false,
+//                     callback: function (value, rule) {
+//                         let res = this.validateFloatByValue(value);
+// debugger
+//                         if (res.invalid) {
+//                             return res.message;
+//                         }
+//
+//                         return true;
+//                     }.bind(this),
+//                 }
             };
         },
 
