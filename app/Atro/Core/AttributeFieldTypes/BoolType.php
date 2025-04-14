@@ -51,5 +51,8 @@ class BoolType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
+        $qb->addSelect("{$alias}.bool_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
 }
