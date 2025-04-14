@@ -29,7 +29,7 @@
     let items: Item[] = [];
     let activeItem: Item;
 
-    if (mode !== 'list') {
+    if (['detail', 'edit'].includes(mode)) {
         items.push({
             name: "summary",
             label: Language.translate('Summary'),
@@ -89,26 +89,16 @@
         }
 
         let collapseState = Storage.get('right-side-view-collapse', scopeKey);
-        if ((!collapseState && mode === 'list') || window.innerWidth <= 768) {
+        if((!collapseState && !['detail', 'edit'].includes(mode)) ||  window.innerWidth <= 768) {
             isCollapsed = true;
-        } else {
+        }else{
             isCollapsed = (collapseState === 'collapsed');
         }
 
         isPin = Storage.get('right-side-view-pin', scopeKey) !== 'not-pinned';
 
-        if (mode !== 'list') {
+        if (['detail', 'edit'].includes(mode)) {
             loadSummary();
-        }
-
-        if (mode === 'list') {
-            items = [
-                ...items,
-                {
-                    name: "filter",
-                    label: Language.translate('filter')
-                }
-            ]
         }
 
         if (hasStream) {
