@@ -57,7 +57,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 e.preventDefault();
 
                 var id = this.model.get(this.idName);
-                this.createView('preview', 'views/modals/image-preview', {
+                this.createView('preview', 'views/modals/gallery', {
                     id: id,
                     model: this.model,
                     name: this.model.get(this.nameName),

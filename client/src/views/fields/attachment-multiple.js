@@ -130,7 +130,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     });
                 }, this);
 
-                this.createView('preview', 'views/modals/image-preview', {
+                this.createView('preview', 'views/modals/gallery', {
                     id: id,
                     model: this.model,
                     name: this.nameHash[id],
