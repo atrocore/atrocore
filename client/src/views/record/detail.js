@@ -2000,6 +2000,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.getMetadata().get(['scopes', this.model.name, 'actionDisabled'])) {
                 return false;
             }
+            if (!this.model.id) {
+                return false;
+            }
             const fieldActions = this.getMetadata().get(['clientDefs', this.scope, 'dynamicFieldActions']) || []
             let layoutHasActionFields = false
 
