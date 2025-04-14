@@ -366,11 +366,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!Qu
 
             this.getStorage().clear('selectedNodeId', this.scope);
             this.getStorage().clear('selectedNodeRoute', this.scope);
-
-            let treeView = this.getView('treePanel');
-            if (treeView) {
-                treeView.rebuildTree();
-            }
         },
 
         getSearchDefaultData: function () {
@@ -430,14 +425,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!Qu
             if (!this.hasView('list')) {
                 this.loadList();
             }
-
-            let observer = new ResizeObserver(() => {
-                if (treePanelView && this.previousWidth !== $('#content').width()) {
-                    this.previousWidth = $('#content').width();
-                    this.onTreeResize(treePanelView.$el.outerWidth());
-                }
-            });
-            observer.observe($('#content').get(0));
 
             this.setupRightSideView();
         },

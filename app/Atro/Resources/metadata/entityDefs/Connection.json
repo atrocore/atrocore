@@ -386,11 +386,12 @@
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "trim": true
+      "trim": true,
+      "required": false
     },
     "server": {
       "type": "enum",
-      "required": true,
+      "required": false,
       "prohibitedEmptyValue": true,
       "notStorable": true,
       "dataField": true,

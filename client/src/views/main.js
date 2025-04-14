@@ -337,6 +337,14 @@ Espo.define('views/main', 'view', function (Dep) {
                                 model: this.model
                             }, view => {
                                 view.render();
+                                this.listenTo(view, 'after:render', () => {
+                                    let mode = this.mode ?? this.viewMode;
+                                    if (mode === 'edit') {
+                                        view.setEditMode();
+                                    } else {
+                                        view.setDetailMode()
+                                    }
+                                });
                                 if (this.getUser().isAdmin()) {
                                     if (this.mode === 'detail') {
                                         this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {

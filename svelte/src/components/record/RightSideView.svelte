@@ -159,16 +159,20 @@
         </div>
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
-
+            <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
         </div>
 
         <div class="activities" class:hidden={activeItem?.name !== 'activities'}>
-
+            <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
         </div>
     </div>
 </BaseSidebar>
 
 <style>
+    .preloader {
+        height: 12px;
+        margin-top: 5px;
+    }
     .content .btn-group {
         display: flex;
     }

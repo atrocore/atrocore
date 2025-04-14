@@ -92,6 +92,7 @@
         if (panelWidth >= minWidth && panelWidth <= maxWidth) {
             requestAnimationFrame(() => {
                 width = panelWidth;
+                dispatch('sidebar-resize', { width });
             });
         }
     }
@@ -200,6 +201,7 @@
         overflow-y: auto;
         overflow-x: clip;
         position: relative;
+        z-index: 2;
     }
 
     .sidebar.sidebar-left {
