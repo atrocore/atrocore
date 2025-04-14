@@ -94,5 +94,15 @@ class TextType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
+        $qb->addSelect("{$alias}.{$this->column} as " . $mapper->getQueryConverter()->fieldToAlias($name));
+
+        if (!empty($this->config->get('isMultilangActive')) && !empty($row['is_multilang'])) {
+            foreach ($this->config->get('inputLanguageList', []) as $code) {
+                $lName = $name . ucfirst(Util::toCamelCase(strtolower($code)));
+                $qb->addSelect("{$alias}.{$this->column}_" . strtolower($code) . " as " . $mapper->getQueryConverter()->fieldToAlias($lName));
+            }
+        }
     }
 }
