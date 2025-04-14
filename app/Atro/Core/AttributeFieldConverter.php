@@ -16,8 +16,10 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class AttributeFieldConverter
@@ -38,6 +40,34 @@ class AttributeFieldConverter
     public static function prepareFieldName(string $id): string
     {
         return $id;
+    }
+
+    public function putAttributesToSelect(QueryBuilder $qb, IEntity $entity, array $params, Mapper $mapper): void
+    {
+        if (empty($params['attributesIds'])){
+            return;
+        }
+
+//        $attributes = $this->conn->createQueryBuilder()
+//            ->select('*')
+//            ->from($this->conn->quoteIdentifier('attribute'))
+//            ->where('id IN (:ids)')
+//            ->setParameter('ids', $params['attributesIds'], Connection::PARAM_STR_ARRAY)
+//            ->fetchAllAssociative();
+//
+//        $alias = $mapper->getQueryConverter()::TABLE_ALIAS;
+//        $qb->leftJoin($alias, 'foo_attribute_value', 'fav', "fav.foo_id={$alias}.id AND fav.deleted=:false AND fav.attribute_id=:attributeId");
+//        $qb->setParameter('attributeId', 'z66c6f6a2a003f247');
+//        $qb->addSelect("fav.int_value as " . $mapper->getQueryConverter()->fieldToAlias('z66c6f6a2a003f247'));
+//        $qb->addSelect("fav.reference_value as " . $mapper->getQueryConverter()->fieldToAlias('z66c6f6a2a003f247UnitId'));
+//
+//        $attributesDefs = [];
+//
+//        $this
+//            ->getFieldType($attributes[0]['type'])
+//            ->convert($entity, $attributes[0], $attributesDefs);
+//
+//        $entity->set('attributesDefs', $attributesDefs);
     }
 
     public function putAttributesToEntity(IEntity $entity): void
