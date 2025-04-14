@@ -21308,6 +21308,13 @@ td[data-name="draggableIcon"] {
     padding: 0;
 }
 
+.full-page-modal .modal-content {
+    margin: 30px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
 .full-page-modal .header-container {
     padding: 14px 44px 30px 14px;
     border-bottom: 1px solid #d8d8d8;
@@ -21343,20 +21350,25 @@ td[data-name="draggableIcon"] {
     background-color: #f2f2f2
 }
 
-.full-page-modal .html-preview {
+.full-page-modal .html-preview,
+.full-page-modal .gallery {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-.full-page-modal .html-preview .body-container {
+.full-page-modal .html-preview .body-container,
+.full-page-modal .gallery .body-container {
     flex: 0 1 auto;
     height: 100%;
     display: flex;
     align-items: stretch;
     overflow: hidden;
-    margin-right: -14px;
     position: relative;
+}
+
+.full-page-modal .html-preview .body-container {
+    margin-right: -20px;
 }
 
 .full-page-modal .html-preview .body-container .main-container {
