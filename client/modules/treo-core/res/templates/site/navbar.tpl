@@ -152,7 +152,7 @@
             {{/if}}
             <li class="dropdown hidden-xs favorites">
                 <a href="javascript:" type="button" class="favorite show-more-button favorites-dropdown-btn dropdown-toggle" data-toggle="dropdown">
-                    <span class="fa fa-thumb-tack"></span>
+                    <span class="fas fa-star"></span>
                 </a>
                 <div class="dropdown-menu favorites-dropdown">
                     <div class="header">
