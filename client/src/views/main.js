@@ -347,21 +347,21 @@ Espo.define('views/main', 'view', function (Dep) {
                                         view.setDetailMode()
                                     }
                                 });
-                                if (this.getUser().isAdmin()) {
-                                    if (this.mode === 'detail') {
-                                        this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
-                                            scope: this.scope,
-                                            viewType: 'rightSideView',
-                                            layoutData: view.layoutData,
-                                            el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
-                                        }, (v) => {
-                                            v.on("refresh", () => {
-                                                view.refreshLayout()
-                                            })
-                                            v.render()
+
+                                if (this.getUser().isAdmin() && this.mode === 'detail') {
+                                    this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                                        scope: this.scope,
+                                        viewType: 'rightSideView',
+                                        layoutData: view.layoutData,
+                                        el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
+                                    }, (v) => {
+                                        v.on("refresh", () => {
+                                            view.refreshLayout()
                                         })
-                                    }
+                                        v.render()
+                                    })
                                 }
+
                             });
                         },
                         loadActivities: (callback) => {
