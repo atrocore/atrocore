@@ -348,7 +348,7 @@ Espo.define('views/main', 'view', function (Dep) {
                                     }
                                 });
 
-                                if (this.getUser().isAdmin() && this.mode === 'detail') {
+                                if (this.getUser().isAdmin() && this.getMode() === 'detail') {
                                     this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
                                         scope: this.scope,
                                         viewType: 'rightSideView',
