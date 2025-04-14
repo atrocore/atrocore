@@ -109,7 +109,6 @@
         let itemName = Storage.get('right-side-view-active-item', scopeKey);
 
         if (itemName && items.map(i => i.name).includes(itemName)) {
-
             setActiveItem(items.find(i => i.name === itemName));
         }
 
