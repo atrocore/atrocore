@@ -13,6 +13,8 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class TextType extends AbstractFieldType
@@ -88,5 +90,9 @@ class TextType extends AbstractFieldType
                 $attributesDefs[$lName] = $entity->entityDefs['fields'][$lName];
             }
         }
+    }
+
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
     }
 }

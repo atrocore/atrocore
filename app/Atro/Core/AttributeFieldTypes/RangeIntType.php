@@ -12,6 +12,8 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class RangeIntType extends AbstractFieldType
@@ -117,5 +119,9 @@ class RangeIntType extends AbstractFieldType
         }
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+    }
+
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
     }
 }
