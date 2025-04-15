@@ -317,6 +317,10 @@ Espo.define('views/main', 'view', function (Dep) {
             return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed
         },
 
+        getMode: function () {
+            return this.mode ?? this.viewMode;
+        },
+
         setupRightSideView: function() {
             if(this.shouldSetupRightSideView()) {
                 let recordView = this.getMainRecord();
@@ -325,7 +329,7 @@ Espo.define('views/main', 'view', function (Dep) {
                     props: {
                         scope: this.scope,
                         model: this.model,
-                        mode: this.mode ?? this.viewMode,
+                        mode: this.getMode(),
                         hasStream: this.canLoadActivities(),
                         collection: this.collection,
                         createView: this.createView.bind(this),
@@ -333,33 +337,33 @@ Espo.define('views/main', 'view', function (Dep) {
                             this.createView('rightSideView', this.rightSideView, {
                                 el: this.options.el + ' .right-side-view .summary',
                                 scope: this.scope,
-                                mode: this.mode ?? this.viewMode,
+                                mode: this.getMode(),
                                 model: this.model
                             }, view => {
                                 view.render();
                                 this.listenTo(view, 'after:render', () => {
-                                    let mode = this.mode ?? this.viewMode;
+                                    let mode = this.getMode();
                                     if (mode === 'edit') {
                                         view.setEditMode();
                                     } else {
                                         view.setDetailMode()
                                     }
                                 });
-                                if (this.getUser().isAdmin()) {
-                                    if (this.mode === 'detail') {
-                                        this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
-                                            scope: this.scope,
-                                            viewType: 'rightSideView',
-                                            layoutData: view.layoutData,
-                                            el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
-                                        }, (v) => {
-                                            v.on("refresh", () => {
-                                                view.refreshLayout()
-                                            })
-                                            v.render()
+
+                                if (this.getUser().isAdmin() && this.getMode() === 'detail') {
+                                    this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                                        scope: this.scope,
+                                        viewType: 'rightSideView',
+                                        layoutData: view.layoutData,
+                                        el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
+                                    }, (v) => {
+                                        v.on("refresh", () => {
+                                            view.refreshLayout()
                                         })
-                                    }
+                                        v.render()
+                                    })
                                 }
+
                             });
                         },
                         loadActivities: (callback) => {

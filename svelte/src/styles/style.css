@@ -3,3 +3,70 @@ button > svg {
     height: 100%;
     fill: currentColor;
 }
+
+button > *, .btn > * {
+    font-size: inherit;
+}
+
+.btn-primary.outline,
+.btn-warning.outline,
+.btn-success.outline,
+.btn-danger.outline {
+    background-color: var(--primary-color);
+}
+
+.btn-primary.outline {
+    color: #06c;
+}
+
+.btn-primary.outline:active {
+    background-color: #cee3f9;
+}
+
+.btn-primary.outline:focus,
+.btn-primary.outline:hover {
+    background-color: #f3f8fd;
+    color: #1a75d1;
+}
+
+.btn-danger.outline {
+    color: #ef4944;
+}
+
+.btn-danger.outline:active {
+    background-color: #fcdbda;
+}
+
+.btn-danger.outline:focus,
+.btn-danger.outline:hover {
+    background-color: #fef6f6;
+    color: #b83a37;
+}
+
+.btn-warning.outline {
+    color: #ef990e;
+}
+
+.btn-warning.outline:active {
+    background-color: #fcebce;
+}
+
+.btn-warning.outline:focus,
+.btn-warning.outline:hover {
+    background-color: #fefaf3;
+    color: #b5740b;
+}
+
+.btn-success.outline {
+    color: #47682f;
+}
+
+.btn-success.outline:active {
+    background-color: #d9e9ce;
+}
+
+.btn-success.outline:focus,
+.btn-success.outline:hover {
+    background-color: #f5f9f3;
+    color: #679643;
+}
