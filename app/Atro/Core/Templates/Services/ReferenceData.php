@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Services\Record;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -22,12 +23,73 @@ class ReferenceData extends Record
 {
     public function linkEntity($id, $link, $foreignId)
     {
-        throw new BadRequest();
+        $defs = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link]);
+        $entity = $this->getEntity($id);
+
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!empty($defs) && !empty($defs['entity']) && $defs['type'] === 'hasMany') {
+            $foreign = $this->getEntityManager()->getEntity($defs['entity'], $foreignId);
+            if (empty($foreign)) {
+                throw new NotFound();
+            }
+
+            $idsField = $link . 'Ids';
+            $namesField = $link . 'Names';
+
+            $value = array_values($entity->get($idsField) ?? []);
+            $value[] = $foreignId;
+            $valueNames = $entity->get($namesField) ?? new \stdClass();
+            $valueNames->{$foreignId} = $foreign->get('name');
+
+            $entity->set($idsField, $value);
+            $entity->set($namesField, $valueNames);
+            $this->getRepository()->save($entity);
+
+            return true;
+        }
+
+        throw new BadRequest('Not implemented');
     }
 
     public function unlinkEntity($id, $link, $foreignId)
     {
-        throw new BadRequest();
+        $defs = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link]);
+        $entity = $this->getEntity($id);
+
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!empty($defs) && !empty($defs['entity']) && $defs['type'] === 'hasMany') {
+            $foreign = $this->getEntityManager()->getEntity($defs['entity'], $foreignId);
+            if (empty($foreign)) {
+                throw new NotFound();
+            }
+
+            $idsField = $link . 'Ids';
+            $namesField = $link . 'Names';
+
+            $value = $entity->get($idsField) ?? [];
+            $index = array_search($foreignId, $value);
+            if ($index !== false) {
+                unset($value[$index]);
+                $value = array_values($value);
+            }
+
+            $entity->set($idsField, $value);
+            if (!empty($valueNames = $entity->get($namesField)) && is_object($valueNames)) {
+                unset($valueNames->{$foreignId});
+                $entity->set($namesField, $valueNames);
+            }
+            $this->getRepository()->save($entity);
+
+            return true;
+        }
+
+        throw new BadRequest('Not implemented');
     }
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
@@ -37,7 +99,22 @@ class ReferenceData extends Record
 
     public function unlinkAll(string $id, string $link): bool
     {
-        throw new BadRequest();
+        $defs = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link]);
+        $entity = $this->getEntity($id);
+
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!empty($defs) && !empty($defs['entity']) && $defs['type'] === 'hasMany') {
+            $entity->set($link . 'Ids', []);
+            $entity->set($link . 'Names', []);
+            $this->getRepository()->save($entity);
+
+            return true;
+        }
+
+        throw new BadRequest('Not implemented');
     }
 
     public function massUpdate($data, array $params)

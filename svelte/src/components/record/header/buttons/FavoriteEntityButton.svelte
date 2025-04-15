@@ -11,10 +11,10 @@
     let style: string = 'default';
 
     $: {
-        style = active ? 'primary' : 'default';
+        style = active ? 'primary outline' : 'default';
         params = {
             action: "favorite",
-            html: `<span class="fa fa-thumb-tack"></span>`,
+            html: `<span class="fas fa-star"></span>`,
             style: style
         } as ActionParams;
     }

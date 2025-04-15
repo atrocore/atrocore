@@ -92,6 +92,7 @@
         if (panelWidth >= minWidth && panelWidth <= maxWidth) {
             requestAnimationFrame(() => {
                 width = panelWidth;
+                dispatch('sidebar-resize', { width });
             });
         }
     }
@@ -200,6 +201,7 @@
         overflow-y: auto;
         overflow-x: clip;
         position: relative;
+        z-index: 2;
     }
 
     .sidebar.sidebar-left {
@@ -392,13 +394,17 @@
         }
 
         .sidebar.collapsed .collapse-strip {
+            top: auto;
             bottom: 20px;
             z-index: 500;
             position: fixed;
             height: auto;
+            width: auto;
         }
 
         .sidebar.collapsed .collapse-button {
+            position: static;
+            transform: none;
             width: 30px;
             height: 30px;
             border-radius: 50%;

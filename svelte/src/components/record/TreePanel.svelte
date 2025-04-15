@@ -43,12 +43,6 @@
     let sortBy = null;
     let sortFields = [];
 
-    $: if (currentWidth) {
-        if (callbacks?.treeWidthChanged) {
-            callbacks.treeWidthChanged(currentWidth);
-        }
-    }
-
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
     $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
     $: {
@@ -831,6 +825,10 @@
 
     function onSidebarResize(e: CustomEvent): void {
         Storage.set('panelWidth', scope, currentWidth.toString());
+
+        if (callbacks?.treeWidthChanged) {
+            callbacks.treeWidthChanged(currentWidth);
+        }
     }
 
     function onSidebarCollapse(e: CustomEvent): void {

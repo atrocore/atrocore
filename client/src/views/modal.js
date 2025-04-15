@@ -95,7 +95,7 @@ Espo.define('views/modal', 'view', function (Dep) {
             // TODO remove it as depricated
             this.buttons = Espo.Utils.cloneDeep(this.buttons);
 
-            this.on('render', function () {
+            this.once('render', function () {
                 if (this.dialog) {
                     this.dialog.close();
                 }

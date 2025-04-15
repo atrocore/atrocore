@@ -25,7 +25,7 @@
     let items: Item[] = [];
     let activeItem: Item;
 
-    if (mode !== 'list') {
+    if (['detail', 'edit'].includes(mode)) {
         items.push({
             name: "summary",
             label: Language.translate('Summary'),
@@ -85,7 +85,7 @@
         }
 
         let collapseState = Storage.get('right-side-view-collapse', scopeKey);
-        if((!collapseState && mode === 'list') ||  window.innerWidth <= 768) {
+        if((!collapseState && !['detail', 'edit'].includes(mode)) ||  window.innerWidth <= 768) {
             isCollapsed = true;
         }else{
             isCollapsed = (collapseState === 'collapsed');
@@ -93,7 +93,7 @@
 
         isPin = Storage.get('right-side-view-pin', scopeKey) !== 'not-pinned';
 
-        if (mode !== 'list') {
+        if (['detail', 'edit'].includes(mode)) {
             loadSummary();
         }
 
@@ -109,7 +109,6 @@
         let itemName = Storage.get('right-side-view-active-item', scopeKey);
 
         if (itemName && items.map(i => i.name).includes(itemName)) {
-
             setActiveItem(items.find(i => i.name === itemName));
         }
 
@@ -142,16 +141,20 @@
 
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
-
+            <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
         </div>
 
         <div class="activities" class:hidden={activeItem?.name !== 'activities'}>
-
+            <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
         </div>
     </div>
 </BaseSidebar>
 
 <style>
+    .preloader {
+        height: 12px;
+        margin-top: 5px;
+    }
     .content .btn-group {
         display: flex;
     }

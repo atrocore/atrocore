@@ -307,7 +307,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.createView('list', viewName, {
                         collection: collection,
                         layoutName: layoutName,
-                        layoutRelatedScope: this.model.name + '.' + this.link,
+                        layoutRelatedScope: this.getLayoutRelatedScope(),
                         listLayout: listLayout,
                         checkboxes: false,
                         rowActionsView: (this.defs.readOnly || this.readOnly) ? false : (this.defs.rowActionsView || this.rowActionsView),
@@ -358,6 +358,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             this.listenTo(this.model, 'after:change-mode', (mode) => this.mode = mode)
+        },
+
+        getLayoutRelatedScope() {
+            return this.model.name + '.' + this.link
         },
 
         setupTotal() {
@@ -654,7 +658,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', () => {
                     this.model.trigger('updateRelationshipPanel', link);
-                    this.collection.fetch();
                     if (this.mode !== 'edit') {
                         this.model.trigger('after:relate', link);
                     }

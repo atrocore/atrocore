@@ -24,20 +24,24 @@ use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
 use Atro\Core\Utils\Metadata;
+use Pim\Repositories\Attribute;
 
 class Mapper implements MapperInterface
 {
+    protected EntityManager $em;
     protected Connection $connection;
     protected EntityFactory $entityFactory;
     protected Metadata $metadata;
     protected QueryConverter $queryConverter;
     private array $singleParentHierarchy = [];
 
-    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata)
+    public function __construct(EntityManager $entityManager, EntityFactory $entityFactory, Metadata $metadata)
     {
-        $this->connection = $connection;
+        $this->em = $entityManager;
+        $this->connection = $entityManager->getConnection();
         $this->entityFactory = $entityFactory;
         $this->metadata = $metadata;
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
@@ -602,36 +606,25 @@ class Mapper implements MapperInterface
             throw $e;
         }
 
-        if ($this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
-            $name = $this->toDb(lcfirst($entity->getEntityType()));
+        if ($this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute") && class_exists(Attribute::class)) {
+            /** @var Attribute $attributeRepository */
+            $attributeRepository = $this->em->getRepository('Attribute');
             foreach ($attrs as $key => $value) {
                 if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
                     $value = json_encode($value);
                 }
 
                 try {
-                    $this->connection->createQueryBuilder()
-                        ->insert("{$name}_attribute_value")
-                        ->setValue('id', ':id')
-                        ->setValue('attribute_id', ':attributeId')
-                        ->setValue("{$name}_id", ':entityId')
-                        ->setValue($entity->fields[$key]['column'], ':value')
-                        ->setParameter('id', Util::generateId())
-                        ->setParameter('attributeId', $entity->fields[$key]['attributeId'])
-                        ->setParameter('entityId', $entity->id)
-                        ->setParameter('value', $value, self::getParameterType($value))
-                        ->executeQuery();
+                    $attributeRepository->addAttributeValue(
+                        $entity->getEntityType(),
+                        $entity->id,
+                        $entity->fields[$key]['attributeId']
+                    );
                 } catch (UniqueConstraintViolationException $e) {
-                    $this->connection->createQueryBuilder()
-                        ->update("{$name}_attribute_value")
-                        ->set($entity->fields[$key]['column'], ':value')
-                        ->where('attribute_id=:attributeId')
-                        ->andWhere("{$name}_id=:entityId")
-                        ->setParameter('value', $value, self::getParameterType($value))
-                        ->setParameter('attributeId', $entity->fields[$key]['attributeId'])
-                        ->setParameter('entityId', $entity->id)
-                        ->executeQuery();
+                    // ignore
                 }
+
+                $attributeRepository->updateAttributeValue($entity, $key, $value);
             }
         }
 

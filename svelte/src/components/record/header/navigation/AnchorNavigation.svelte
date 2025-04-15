@@ -18,12 +18,16 @@
     let prevTranslate: number = 0;
     let lastTime: number = 0;
     let velocity: number = 0;
-    let momentumID: number | null;
+    let momentumID: number | null = null;
 
     let containerWidth: number = 0;
     let contentWidth: number = 0;
     let maxTranslate: number = 0;
     const dragThreshold: number = 5;
+
+    $: canScroll = contentWidth > containerWidth;
+    $: showLeft = canScroll && currentTranslate < 0;
+    $: showRight = canScroll && currentTranslate > maxTranslate;
 
     async function updateDimensions() {
         await tick();
@@ -204,7 +208,7 @@
 
 <div class="panel-navigation">
     {#if items}
-        <div class="items-container"
+        <div class="items-container" class:has-left-scroll={showLeft} class:has-right-scroll={showRight}
              bind:this={container}
              on:mousedown={handleMouseDown}
              on:mousemove={handleMouseMove}
@@ -241,8 +245,32 @@
     }
 
     .items-container {
+        position: relative;
         display: flex;
         overflow: hidden;
+    }
+
+    .items-container:before,
+    .items-container:after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 25px;
+        pointer-events: none;
+        display: block;
+    }
+
+    .items-container.has-left-scroll:before {
+        content: '';
+        left: 0;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+    }
+
+    .items-container.has-right-scroll:after {
+        content: '';
+        right: 0;
+        background: linear-gradient(to left, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
     }
 
     .panel-navigation > .layout-editor-container :global(> a) {
