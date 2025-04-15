@@ -114,7 +114,7 @@ class User extends RDB
         }
 
         if ($entity->isAttributeChanged('isActive')
-        |  $entity->isAttributeChanged('receiveNotifications')
+        ||  $entity->isAttributeChanged('receiveNotifications')
         || $entity->isAttributeChanged('notificationProfileId')) {
             $this->getEntityManager()->getRepository('NotificationRule')->deleteCacheFile();
         }
