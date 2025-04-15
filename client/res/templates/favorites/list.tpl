@@ -17,8 +17,4 @@
             </li>
         {{/each}}
     </ul>
-{{else}}
-    {{#if showEmptyPlaceholder}}
-        {{translate 'noData'}}
-    {{/if}}
-{{/if}}
+{{else}}{{#if showEmptyPlaceholder}}{{translate 'noData'}}{{/if}}{{/if}}
