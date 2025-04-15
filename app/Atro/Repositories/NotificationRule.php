@@ -149,8 +149,6 @@ class NotificationRule extends Base
 
             $this->getConfig()->remove('cacheTimestamp');
             $this->getConfig()->save();
-
-            DataManager::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
         }
     }
 
