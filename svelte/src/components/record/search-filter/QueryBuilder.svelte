@@ -8,11 +8,15 @@
     export let collection: any;
     export let createView: Function;
 
+    export let parentWidth;
+
     let filters: [];
 
     let queryBuilderElement: HTMLElement
 
     let model = new collection.model();
+
+    $: console.log('parentWidth', parentWidth);
 
     function camelCaseToHyphen(str: string) {
         return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();

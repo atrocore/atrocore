@@ -24,6 +24,7 @@
 
     $: scopeKey = scope + mode;
 
+
     let isPin = true;
     let streamView: Object;
     let items: Item[] = [];
@@ -155,7 +156,7 @@
 
 
         <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
-            <QueryBuilder scope={scope} collection={collection} createView={createView}></QueryBuilder>
+            <QueryBuilder scope={scope} collection={collection} createView={createView} parentWidth="{currentWidth}"></QueryBuilder>
         </div>
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>

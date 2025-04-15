@@ -22507,8 +22507,8 @@ div.list-kanban > div > table .item .panel .form-group {
 
 .query-builder .drag-handle, .query-builder .error-container, .query-builder .rule-container .rule-filter-container, .query-builder .rule-container .rule-operator-container, .query-builder .rule-container .rule-value-container {
     display: inline-block;
-    margin: 0 5px 0 0;
-    vertical-align: middle
+    margin: 10px 5px 0 0;
+    vertical-align: middle;
 }
 
 .query-builder .rules-group-container {
@@ -22538,6 +22538,10 @@ div.list-kanban > div > table .item .panel .form-group {
     border-radius: 3px
 }
 
+.query-builder .group-conditions .btn, .query-builder .group-actions .btn, .query-builder .rule-actions .btn{
+    font-size: 10px;
+}
+
 .query-builder .rules-list {
     list-style: none;
     padding: 0 0 0 15px;
@@ -22546,7 +22550,7 @@ div.list-kanban > div > table .item .panel .form-group {
 
 .query-builder .rule-value-container {
     border-left: 1px solid #ddd;
-    padding-left: 5px
+    padding-left: 0;
 }
 
 .query-builder .rule-value-container label {

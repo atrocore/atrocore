@@ -143,6 +143,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 ],
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
+                optgroup: 'Fields'
 //                 validation: {
 //                     allow_empty_value: false,
 //                     callback: function (value, rule) {
