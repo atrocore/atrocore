@@ -116,6 +116,9 @@ abstract class AbstractNotificationTransport
 
         $tmpEntity = $this->getEntityManager()->getEntity('Note');
 
+        $tmpEntity->set('parentType', $entity->getEntityType());
+        $tmpEntity->set('parentId', $entity->id);
+
         $this->container->get('serviceFactory')->create('Stream')->handleChangedData($data, $tmpEntity, $entity->getEntityType());
 
         $data = json_decode(json_encode($data), true);
