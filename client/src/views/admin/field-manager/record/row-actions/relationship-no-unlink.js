@@ -16,8 +16,10 @@ Espo.define('views/admin/field-manager/record/row-actions/relationship-no-unlink
             let list = [];
 
             Dep.prototype.getActionList.call(this).forEach(item => {
-                if (item.action !== 'removeRelated' || (item.action === 'removeRelated' && this.model.get('isCustom'))) {
-                    list.push(item);
+                if (this.model.get('code') !== 'id') {
+                    if (item.action !== 'removeRelated' || (item.action === 'removeRelated' && this.model.get('isCustom'))) {
+                        list.push(item);
+                    }
                 }
             });
 
