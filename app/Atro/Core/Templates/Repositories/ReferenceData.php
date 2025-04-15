@@ -24,6 +24,7 @@ use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\IEntity;
 use Espo\ORM\Repository;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
@@ -321,6 +322,17 @@ class ReferenceData extends Repository implements Injectable
 
     public function findRelated(Entity $entity, string $link, array $selectParams): EntityCollection
     {
+        $relationType = $entity->getRelationType($link);
+        $entityType = $entity->getRelationParam($link, 'entity');
+
+        if ($relationType === IEntity::HAS_MANY) {
+            $idsField = $link . 'Ids';
+            if (!empty($entity->get($idsField))) {
+                return $this->getEntityManager()->getrepository($entityType)
+                    ->where(['id' => $entity->get($idsField)])->find($selectParams);
+            }
+        }
+
         return new EntityCollection();
     }
 
