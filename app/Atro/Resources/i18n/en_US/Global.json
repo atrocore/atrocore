@@ -397,7 +397,9 @@
     "General Filters": "General Filters",
     "Attributes": "Attributes",
     "Fields": "Fields",
-    "Advanced Filters": "Advanced Filters"
+    "Advanced Filters": "Advanced Filters",
+    "Unset": "Unset",
+    "Unset All": "Unset All"
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",

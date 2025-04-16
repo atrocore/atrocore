@@ -392,6 +392,7 @@
         }
     }
 
+
     function handleGeneralFilterChecked(e, filter) {
         let isChecked = e.target.checked;
         if(isChecked) {
@@ -405,6 +406,11 @@
         updateCollection()
     }
 
+    function unsetAll() {
+        resetFilter();
+        selectedFilterList = [];
+        Storage.clear('selectedFilterList', scope)
+    }
 
     onMount(() => {
         boolFilterList = (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
@@ -472,6 +478,12 @@
     })
 </script>
 <div>
+    <div class="row">
+        <button  class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
+            <span class="fas fa-times fa-sm"></span>
+            {Language.translate('Unset All')}
+        </button>
+    </div>
     {#if boolFilterList?.length > 0}
         <h5>{Language.translate('General Filters')}</h5>
         <ul>
@@ -487,11 +499,11 @@
     {/if}
     <h5>{Language.translate('Advanced Filters')}</h5>
     <div class="row filter-action">
-        <button  class="filter-item" data-action="filter" data-name="posts" on:click={applyFilter}>
+        <button  class="filter-item" data-action="filter" on:click={applyFilter}>
             <span class="fas fa-check fa-sm"></span>
-            {Language.translate('apply')}
+            {Language.translate('Apply')}
         </button>
-        <button  class="filter-item" data-action="filter" data-name="posts" on:click={resetFilter}>
+        <button  class="filter-item" data-action="filter"  on:click={resetFilter}>
             <span class="fas fa-times fa-sm"></span>
             {Language.translate('Unset')}
         </button>
@@ -501,7 +513,7 @@
 </div>
 
 <style>
-    .filter-action .filter-item {
+    .filter-item {
         border: 1px solid rgb(126 183 241);
         border-radius: 5px;
         background-color: rgba(126, 183, 241, 0.25);
@@ -510,7 +522,9 @@
         font-size: 13px;
         line-height: 1;
         margin-left:  5px;
-        float: right;
+    }
+    .filter-action .filter-item {
+        float: right
     }
 
     .filter-item:hover {

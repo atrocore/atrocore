@@ -363,7 +363,9 @@
     "General Filters": "Allgemeine Filter",
     "Attributes": "Attribute",
     "Fields": "Felder",
-    "Advanced Filters": "Erweiterte Filter"
+    "Advanced Filters": "Erweiterte Filter",
+    "Unset": "Nicht eingestellt",
+    "Unset All": "Alle zurücksetzen"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

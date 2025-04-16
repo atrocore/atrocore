@@ -367,7 +367,9 @@
     "General Filters": "Загальні фільтри",
     "Attributes": "Атрибути",
     "Fields": "Поля",
-    "Advanced Filters": "Розширені фільтри"
+    "Advanced Filters": "Розширені фільтри",
+    "Unset": "Не встановлено",
+    "Unset All": "Скинути все"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
