@@ -18,6 +18,8 @@ Espo.define('views/favorites/list', 'view', function (Dep) {
 
         showEmptyPlaceholder: false,
 
+        hasArrow: false,
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -25,6 +27,10 @@ Espo.define('views/favorites/list', 'view', function (Dep) {
 
             if (typeof this.options.showEmptyPlaceholder === 'boolean') {
                 this.showEmptyPlaceholder = this.options.showEmptyPlaceholder;
+            }
+
+            if (typeof this.options.hasArrow === 'boolean') {
+                this.hasArrow = this.options.hasArrow;
             }
 
             this.listenTo(this.model, 'favorites:update', () => {
@@ -38,7 +44,8 @@ Espo.define('views/favorites/list', 'view', function (Dep) {
                 hasIcons: !this.getConfig().get('favoritesIconsDisabled'),
                 favoritesList: this.getFavoritesList().map(tab => this.getParentView().getTabDefs(tab) ?? tab),
                 showEmptyPlaceholder: this.showEmptyPlaceholder,
-                activeTab: this.getRouter().getLast().controller
+                activeTab: this.getRouter().getLast().controller,
+                hasArrow: this.hasArrow,
             }
         },
 

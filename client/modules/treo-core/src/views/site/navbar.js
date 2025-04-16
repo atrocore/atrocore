@@ -96,6 +96,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.createView('favoritesToolbar', 'views/favorites/list', {
                 model: this.getPreferences(),
                 class: 'nav navbar-nav favorites-items',
+                hasArrow: true,
                 el: this.options.el + ' .navbar-favorites .favorites-wrapper'
             });
 
