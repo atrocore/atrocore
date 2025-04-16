@@ -41,7 +41,13 @@ Espo.define('views/modals/gallery', 'views/modal', function (Dep) {
         },
 
         afterRender: function () {
-            // TODO: render svelte component
+            new Svelte.Gallery({
+                target: document.querySelector('.modal .gallery-container'),
+                props: {
+                    mediaList: this.options.mediaList ?? [],
+                    currentMediaId: this.options.id ?? null
+                }
+            });
         },
     });
 });

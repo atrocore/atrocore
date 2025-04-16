@@ -21285,6 +21285,7 @@ td[data-name="draggableIcon"] {
     position: absolute;
     right: 15px;
     top: 8px;
+    z-index: 2;
     font-size: 31px;
 }
 
@@ -21307,14 +21308,14 @@ td[data-name="draggableIcon"] {
 }
 
 .full-page-modal .html-preview,
-.full-page-modal .gallery {
+.full-page-modal .gallery-container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    max-height: 100%;
 }
 
-.full-page-modal .html-preview .body-container,
-.full-page-modal .gallery .body-container {
+.full-page-modal .html-preview .body-container {
     flex: 0 1 auto;
     height: 100%;
     display: flex;
