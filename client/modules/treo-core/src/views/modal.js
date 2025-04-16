@@ -44,7 +44,11 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                        cssParams.maxHeight = 'none';
                        cssParams.height = 'none';
                    } else if (this.dialog.options.fullHeight) {
-                       cssParams.height = (windowHeight - diffHeight - 60) + 'px';
+                       let height = windowHeight - diffHeight;
+                       if (this.dialog.$el.hasClass('full-page-modal')) {
+                           height -= 50;
+                       }
+                       cssParams.height = height + 'px';
                    } else {
                        if (windowWidth <= this.dialog.options.screenWidthXs) {
                            cssParams.maxHeight = 'none';
