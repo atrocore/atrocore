@@ -48,13 +48,7 @@ class AttributeFieldConverter
             return;
         }
 
-        $attributes = $this->conn->createQueryBuilder()
-            ->select('*')
-            ->from($this->conn->quoteIdentifier('attribute'))
-            ->where('id IN (:ids)')
-            ->setParameter('ids', $params['attributesIds'], Connection::PARAM_STR_ARRAY)
-            ->fetchAllAssociative();
-
+        $attributes = $this->getAttributesRowsByIds($params['attributesIds']);
         if (empty($attributes)) {
             return;
         }
@@ -74,10 +68,8 @@ class AttributeFieldConverter
             $qb->setParameter("{$attributeAlias}AttributeId", $attribute['id']);
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
 
-            $fieldConverter = $this->getFieldType($attribute['type']);
-
-            $fieldConverter->select($attribute, $attributeAlias, $qb, $mapper);
-            $fieldConverter->convert($entity, $attribute, $attributesDefs);
+            $this->prepareSelect($attribute, $attributeAlias, $qb, $mapper);
+            $this->convert($entity, $attribute, $attributesDefs);
         }
 
         $entity->set('attributesDefs', $attributesDefs);
@@ -151,13 +143,33 @@ class AttributeFieldConverter
         $attributesDefs = [];
 
         foreach ($res as $row) {
-            $this
-                ->getFieldType($row['type'])
-                ->convert($entity, $row, $attributesDefs);
+            $this->convert($entity, $row, $attributesDefs);
         }
 
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAsFetched();
+    }
+
+    public function getAttributesRowsByIds(array $attributesIds): array
+    {
+        return $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from($this->conn->quoteIdentifier('attribute'))
+            ->where('id IN (:ids)')
+            ->andWhere('deleted=:false')
+            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+    }
+
+    public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
+        $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper);
+    }
+
+    public function convert(IEntity $entity, array $attribute, array &$attributesDefs): void
+    {
+        $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs);
     }
 
     public function getFieldType(string $type): AttributeFieldTypeInterface
