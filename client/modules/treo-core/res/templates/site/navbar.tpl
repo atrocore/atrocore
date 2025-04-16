@@ -120,7 +120,6 @@
 
         <div class="nav navbar-nav navbar-left navbar-favorites">
             <div class="favorites-wrapper">{{{favoritesToolbar}}}</div>
-            <a class="favorite favorite-arrow" type="button" href="javascript:" data-action="openFavoritesDropdown" style="padding: 5px;" >&#10230;</a>
         </div>
 
         <ul class="nav navbar-nav navbar-right navbar-dropdowns">

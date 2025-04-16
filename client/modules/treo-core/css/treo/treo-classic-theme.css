@@ -15663,10 +15663,6 @@ ul.dropdown-menu > li > a > .check-icon + div {
     .modal-dialog {
         width: 740px
     }
-
-    .bottom {
-        overflow-x: hidden;
-    }
 }
 
 @media screen and (min-width: 992px) {
@@ -23995,7 +23991,7 @@ span[data-img-src]::after {
     content: none;
 }
 
-.favorites-wrapper:empty + .favorite-arrow {
+.favorites-wrapper .favorite-arrow:first-child {
     display: none;
 }
 

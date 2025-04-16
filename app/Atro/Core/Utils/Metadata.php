@@ -290,7 +290,10 @@ class Metadata
                 case 'readOnly':
                 case 'visible':
                 case 'required':
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
+                    $row['targetFields'] = [];
+                    if (!empty($v['fields'])) {
+                        $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
+                    }
                     $row['targetPanels'] = [];
                     if (!empty($v['relationships'])) {
                         $row['targetPanels'] = is_array($v['relationships']) ? $v['relationships'] : @json_decode((string)$v['relationships'], true);
