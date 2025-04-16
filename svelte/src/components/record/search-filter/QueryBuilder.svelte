@@ -521,11 +521,9 @@
     }
 
     .filter-action{
-        margin-bottom: 5px;
-    }
-
-    .row {
-        margin: 0;
+        margin-bottom: 10px;
+        margin-left:  0;
+        margin-right:  0;
     }
 
     ul {
