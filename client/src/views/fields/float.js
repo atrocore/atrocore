@@ -130,6 +130,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'double',
+                optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'equal',
                     'not_equal',
@@ -143,7 +144,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 ],
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
-                optgroup: 'Fields'
 //                 validation: {
 //                     allow_empty_value: false,
 //                     callback: function (value, rule) {

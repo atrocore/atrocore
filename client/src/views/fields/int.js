@@ -302,7 +302,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'integer',
-                optgroup: 'test',
+                optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'equal',
                     'not_equal',

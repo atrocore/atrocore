@@ -3038,6 +3038,10 @@ output {
     transition: all border-color ease-in-out .15s, box-shadow ease-in-out .15s ease-out
 }
 
+.query-builder .d-none {
+    display: none;
+}
+
 .form-control:focus {
     border-color: #66afe9;
     outline: 0;
@@ -22511,6 +22515,11 @@ div.list-kanban > div > table .item .panel .form-group {
     vertical-align: middle;
 }
 
+.query-builder .rule-actions {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
 .query-builder .rules-group-container {
     padding: 10px;
     padding-bottom: 6px;
@@ -22549,7 +22558,7 @@ div.list-kanban > div > table .item .panel .form-group {
 }
 
 .query-builder .rule-value-container {
-    border-left: 1px solid #ddd;
+    border-left: 1px solid transparent;
     padding-left: 0;
 }
 
@@ -22679,10 +22688,9 @@ div.list-kanban > div > table .item .panel .form-group {
     text-transform: none;
     display: inline-block;
     padding: 6px 12px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     font-size: 14px;
     font-weight: 400;
-    line-height: 1.42857;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
@@ -22690,7 +22698,6 @@ div.list-kanban > div > table .item .panel .form-group {
     cursor: pointer;
     user-select: none;
     background-image: none;
-    border: 1px solid transparent;
     border-radius: 4px;
 }
 

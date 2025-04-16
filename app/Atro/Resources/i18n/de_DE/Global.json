@@ -357,9 +357,16 @@
     "sidebarUnpin": "Automatische Erweiterung des Panels ist inaktiv",
     "sidebarPin": "Automatische Erweiterung des Panels ist aktiv",
     "sidebarExpand": "Zum Erweitern anklicken",
-    "sidebarCollapse": "Zum Verkleinern anklicken"
+    "sidebarCollapse": "Zum Verkleinern anklicken",
+    "addAttribute": "Attribut hinzufügen",
+    "filterPlaceHolder": "Filter / Attribute / Feld",
+    "General Filters": "Allgemeine Filter",
+    "Attributes": "Attribute",
+    "Fields": "Felder",
+    "Advanced Filters": "Erweiterte Filter"
   },
   "messages": {
+    "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
     "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
     "confirmInheritAllFromParent": "Sind Sie sicher, dass Sie wollen, dass alle Elemente Feld- (und Attribut-) Werte sowie Beziehungen von Elementen des übergeordneten Datensatzes erben? Vorhandene Werte werden nicht ersetzt.",

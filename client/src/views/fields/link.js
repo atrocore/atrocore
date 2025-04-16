@@ -826,6 +826,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         mode: 'edit',
                         foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                     }, view => {
+                        this.listenTo(view, 'after:render', () => {
+                            view.$el.find('[data-action="createLink"]').hide()
+                        })
                         this.listenTo(view, 'change', () => {
                             this.filterValue = model.get('valueIds');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
@@ -844,6 +847,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 id: this.name + 'Id',
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
+                optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'in',
                     'not_in',
