@@ -181,7 +181,6 @@
 
             try {
                 const rules = $queryBuilder.queryBuilder('getRules');
-                console.log('rules', rules, 'e', e, 'rule', rule);
                 if (rules) {
                     Storage.set('queryBuilderRules', scope, rules);
                 }

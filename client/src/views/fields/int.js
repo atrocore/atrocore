@@ -315,7 +315,15 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                     'is_not_null'
                 ],
                 input: this.filterInput.bind(this),
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                validation: {
+                    callback: function (value, rule) {
+                        if(isNaN(value) || value === null) {
+                            return 'bad int';
+                        }
+                        return true;
+                    }.bind(this),
+                }
             };
         },
 
