@@ -658,7 +658,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', () => {
                     this.model.trigger('updateRelationshipPanel', link);
-                    this.collection.fetch();
                     if (this.mode !== 'edit') {
                         this.model.trigger('after:relate', link);
                     }

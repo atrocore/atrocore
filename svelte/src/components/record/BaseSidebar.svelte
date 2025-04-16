@@ -394,13 +394,17 @@
         }
 
         .sidebar.collapsed .collapse-strip {
+            top: auto;
             bottom: 20px;
             z-index: 500;
             position: fixed;
             height: auto;
+            width: auto;
         }
 
         .sidebar.collapsed .collapse-button {
+            position: static;
+            transform: none;
             width: 30px;
             height: 30px;
             border-radius: 50%;

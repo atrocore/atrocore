@@ -306,7 +306,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
                 'views/record/list';
 
-            this.createView('list', viewName, {
+            const options = {
                 collection: this.collection,
                 el: this.containerSelector + ' .list-container',
                 selectable: true,
@@ -316,9 +316,14 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 layoutName: this.layoutName,
                 searchManager: this.searchManager,
                 buttonsDisabled: true,
-                skipBuildRows: true,
-                allowSelectAllResult: !!(this.options.allowSelectAllResult)
-            }, function (view) {
+                skipBuildRows: true
+            }
+
+            if (typeof this.options.allowSelectAllResult === 'boolean') {
+                options.allowSelectAllResult = this.options.allowSelectAllResult;
+            }
+
+            this.createView('list', viewName, options, function (view) {
                 this.listenTo(view, 'select', function (model) {
                     this.trigger('select', model);
                     this.close();

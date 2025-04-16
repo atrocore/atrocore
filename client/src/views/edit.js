@@ -159,6 +159,10 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         canLoadActivities: function () {
             return false;
+        },
+
+        getMode() {
+            return 'edit';
         }
     });
 });

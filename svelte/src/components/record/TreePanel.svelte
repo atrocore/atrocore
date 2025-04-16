@@ -134,8 +134,8 @@
             autoOpen: false,
             dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']) && sortBy === 'sortOrder',
             useContextMenu: false,
-            closedIcon: window.$('<i class="fa fa-angle-right"></i>'),
-            openedIcon: window.$('<i class="fa fa-angle-down"></i>'),
+            closedIcon: window.$('<svg class="icon"><use href="client/img/icons/icons.svg#angle-up"></use></svg>'),
+            openedIcon: window.$('<svg class="icon"><use href="client/img/icons/icons.svg#angle-down"></use></svg>'),
             onCreateLi: function (node, $li, is_selected) {
                 if (node.disabled) {
                     $li.addClass('disabled');
@@ -874,14 +874,17 @@
                 <div class="panel-group category-search" style="margin-bottom: 20px">
                     <div class="field" data-name="category-search">
                         <input type="text" bind:this={searchInputElement}
-                               on:keydown={(e) => e.key === 'Enter' && applySearch()}
-                               class="form-control category-search search-in-tree-input" tabindex="1"
-                               placeholder="Type and press Enter...">
-                        <button on:click={treeReset} class="fas fa-times reset-search-in-tree-button"
-                                class:hidden={!searchValue}></button>
-                        <button on:click={applySearch} class="search-in-tree-button">
-                            <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
-                        </button>
+                               on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"
+                               class="form-control category-search" class:search-enabled={!!searchValue}
+                               placeholder={Language.translate('typeToSearch')}>
+                        <div class="button-container">
+                            {#if searchValue}
+                                <button on:click={treeReset} class="fas fa-times reset-search-in-tree-button"></button>
+                            {/if}
+                            <button on:click={applySearch} class="search-in-tree-button">
+                                <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
+                            </button>
+                        </div>
                     </div>
                     {#if activeItem.name !== '_admin' }
                         <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
@@ -920,20 +923,28 @@
         border: 0;
         border-bottom: 1px solid #e8eced;
         background-color: transparent;
-        padding: 0 5px;
+        padding: 8px 36px 8px 12px;
     }
 
-    .field[data-name="category-search"] > button {
+    .field[data-name="category-search"] > input.category-search.search-enabled {
+        padding-right: 58px;
+    }
+
+    .field[data-name="category-search"] .button-container {
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 50%;
+        right: 12px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        transform: translateY(-50%);
+        padding: 0;
+    }
+
+    .field[data-name="category-search"] button {
         border: none;
         background: none;
-    }
-
-    .field[data-name="category-search"] > .reset-search-in-tree-button {
-        right: 30px;
-        top: 8.5px;
+        padding: 0;
     }
 
     .field[data-name="category-search"] > input.category-search {

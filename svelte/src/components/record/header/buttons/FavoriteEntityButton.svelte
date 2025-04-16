@@ -11,10 +11,10 @@
     let style: string = 'default';
 
     $: {
-        style = active ? 'primary' : 'default';
+        style = active ? 'primary outline' : 'default';
         params = {
             action: "favorite",
-            html: `<svg class="icon"><use href="client/img/icons/icons.svg#thumb-tack"></use></svg>`,
+            html: `<svg class="icon"><use href="client/img/icons/icons.svg#star"></use></svg>`,
             style: style
         } as ActionParams;
     }

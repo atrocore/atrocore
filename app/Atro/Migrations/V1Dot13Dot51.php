@@ -10,11 +10,11 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Random;
 
-class V1Dot13Dot50 extends Base
+class V1Dot13Dot51 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-04-14 16:00:00');
+        return new \DateTime('2025-04-17 12:00:00');
     }
 
     public function up(): void

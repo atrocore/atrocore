@@ -250,7 +250,7 @@
                                         <a href="javascript:" data-action="removeField" class="remove-field"
                                            on:click={()=>removeItem(item)}
                                         >
-                                            <i class="fas fa-times"></i>
+                                            <svg class="icon icon-small" style="fill: var(--link-color)"><use href="client/img/icons/icons.svg#close"></use></svg>
                                         </a>
                                     {/if}
                                 </div>

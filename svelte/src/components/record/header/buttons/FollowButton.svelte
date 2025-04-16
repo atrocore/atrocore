@@ -18,7 +18,7 @@
     $: {
         const userId = UserData.get()?.user.id ?? null;
         isFollowed = userId ? !!followers[userId] : false;
-        style = isFollowed ? 'primary' : 'default';
+        style = isFollowed ? 'primary outline' : 'default';
         params = {
             name: 'following',
             action: isFollowed ? 'unfollow' : 'follow',

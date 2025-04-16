@@ -119,9 +119,7 @@
         {{/if}}
 
         <div class="nav navbar-nav navbar-left navbar-favorites">
-            <div class="favorites-wrapper">
-                {{{favoritesToolbar}}}
-            </div>
+            <div class="favorites-wrapper">{{{favoritesToolbar}}}</div>
         </div>
 
         <ul class="nav navbar-nav navbar-right navbar-dropdowns">

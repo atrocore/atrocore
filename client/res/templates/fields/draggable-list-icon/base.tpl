@@ -1,1 +1,1 @@
-<span class="flaticon flaticon-move-arrows" style="font-size: 12px;" data-id="{{model.id}}"></span>
+<svg class="icon icon-small" data-id="{{model.id}}" style="fill: #999; margin-top: -3px"><use href="client/img/icons/icons.svg#move-arrows"></use></svg>

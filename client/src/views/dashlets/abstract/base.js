@@ -136,7 +136,7 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             {
                 name: 'remove',
                 label: 'Remove',
-                iconHtml: '<span class="fas fa-times"></span>',
+                iconHtml: '<svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>',
             }
         ],
 

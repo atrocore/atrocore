@@ -35,6 +35,14 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     });
                 },
 
+                'click [data-action=openFavoritesDropdown]': function (e) {
+                    e.preventDefault();
+
+                    setTimeout(() => {
+                        $('#navbar .dropdown.favorites').addClass('open');
+                    }, 10);
+                },
+
                 'click #global-search-panel a': function () {
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
                 }
@@ -88,6 +96,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.createView('favoritesToolbar', 'views/favorites/list', {
                 model: this.getPreferences(),
                 class: 'nav navbar-nav favorites-items',
+                hasArrow: true,
                 el: this.options.el + ' .navbar-favorites .favorites-wrapper'
             });
 
