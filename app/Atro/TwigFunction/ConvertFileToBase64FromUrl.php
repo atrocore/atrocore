@@ -17,28 +17,32 @@ use Atro\Core\Twig\AbstractTwigFunction;
 
 class ConvertFileToBase64FromUrl extends AbstractTwigFunction
 {
-    public function run(string $url, ?string $type = null)
+    public function run(string $urlOrPath, ?string $type = null)
     {
-        $normalizeUrl = $this->normalizeUrl($url);
-        if(!$normalizeUrl){
-            return false;
+        if (file_exists($urlOrPath)) {
+            $content = file_get_contents($urlOrPath);
+        } else {
+            $normalizeUrl = $this->normalizeUrl($urlOrPath);
+            if (!$normalizeUrl) {
+                return false;
+            }
+            $content = file_get_contents($normalizeUrl);
         }
-        $content = file_get_contents($normalizeUrl);
 
-        if(empty($content)){
+        if (empty($content)) {
             return false;
         }
 
         $data = base64_encode($content);
 
-        if($type){
-            $data = 'data:'. $type . ';base64,' . $data;
+        if ($type) {
+            $data = 'data:' . $type . ';base64,' . $data;
         }
 
         return $data;
     }
 
-    protected  function normalizeUrl(string $url): string|bool
+    protected function normalizeUrl(string $url): string|bool
     {
         // Parse the URL
         $parts = parse_url($url);

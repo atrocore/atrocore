@@ -15667,10 +15667,6 @@ ul.dropdown-menu > li > a > .check-icon + div {
     .modal-dialog {
         width: 740px
     }
-
-    .bottom {
-        overflow-x: hidden;
-    }
 }
 
 @media screen and (min-width: 992px) {

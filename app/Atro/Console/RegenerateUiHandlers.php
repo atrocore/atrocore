@@ -46,11 +46,11 @@ class RegenerateUiHandlers extends AbstractConsole
         }
 
         foreach ($clientDefsData as $entityType => $clientDefs) {
-            if (empty($clientDefs['dynamicLogic']['fields'])) {
+            if (empty($clientDefs['dynamicLogic']['fields']) && empty($clientDefs['dynamicLogic']['relationships'])) {
                 continue;
             }
 
-            foreach ($clientDefs['dynamicLogic']['fields'] as $field => $fieldConditions) {
+            foreach ($clientDefs['dynamicLogic']['fields'] ?? [] as $field => $fieldConditions) {
                 foreach ($fieldConditions as $type => $fieldData) {
                     if (empty($fieldData['conditionGroup'])) {
                         continue;
@@ -101,6 +101,38 @@ class RegenerateUiHandlers extends AbstractConsole
                     if ($typeId === 'ui_disable_options') {
                         $data[$code]['disabledOptions'] = $fieldData['disabledOptions'];
                     }
+                }
+            }
+
+            foreach ($clientDefs['dynamicLogic']['relationships'] ?? [] as $relationship => $relationshipConditions) {
+                foreach ($relationshipConditions as $type => $relationshipData) {
+                    if (empty($fieldData['conditionGroup'])) {
+                        continue;
+                    }
+
+                    if ($type !== 'visible') {
+                        continue;
+                    }
+
+                    $typeId = 'ui_visible';
+
+
+                    $code = md5("Relationship-{$entityType}{$relationship}{$type}");
+                    $data[$code] = [
+                        'id'             => Util::generateId(),
+                        'name'           => "Make panel '{$relationship}' {$type}",
+                        'code'           => md5("Relationship-{$entityType}{$relationship}{$type}"),
+                        'entityType'     => $entityType,
+                        'relationships'  => [$relationship],
+                        'triggerAction'  => 'ui_on_change',
+                        'type'           => $typeId,
+                        'conditionsType' => 'basic',
+                        'conditions'     => json_encode($relationshipData),
+                        'isActive'       => true,
+                        'system'         => true,
+                        'createdAt'      => date('Y-m-d H:i:s'),
+                        'createdById'    => 'system',
+                    ];
                 }
             }
         }
