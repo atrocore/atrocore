@@ -520,6 +520,10 @@
         background-color: rgba(126, 183, 241, 0.1);
     }
 
+    .filter-action{
+        margin-bottom: 5px;
+    }
+
     .row {
         margin: 0;
     }
