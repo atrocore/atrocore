@@ -478,7 +478,7 @@
     })
 </script>
 <div>
-    <div class="row">
+    <div>
         <button  class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
             <span class="fas fa-times fa-sm"></span>
             {Language.translate('Unset All')}
@@ -521,10 +521,7 @@
         padding: 5px 10px;
         font-size: 13px;
         line-height: 1;
-        margin-left:  5px;
-    }
-    .filter-action .filter-item {
-        float: right
+        margin-right:  5px;
     }
 
     .filter-item:hover {
