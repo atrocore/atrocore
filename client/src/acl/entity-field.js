@@ -13,7 +13,9 @@ Espo.define('acl/entity-field', 'acl', Dep => {
     return Dep.extend({
 
         checkModel(model, data, action, precise) {
-            if (model.get('entityData').customizable === false) {
+            let entityData = model.get('entityData') || {};
+
+            if (entityData && 'customizable' in entityData && entityData.customizable === false) {
                 return false;
             }
 
