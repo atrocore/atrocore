@@ -46,7 +46,7 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                    } else if (this.dialog.options.fullHeight) {
                        let height = windowHeight - diffHeight;
                        if (this.dialog.$el.hasClass('full-page-modal')) {
-                           height -= 50;
+                           height -= 70;
                        }
                        cssParams.height = height + 'px';
                    } else {

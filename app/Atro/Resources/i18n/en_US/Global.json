@@ -391,7 +391,10 @@
     "sidebarUnpin": "Automatic panel expansion is inactive",
     "sidebarPin": "Automatic panel expansion is active",
     "sidebarExpand": "Click to expand",
-    "sidebarCollapse": "Click to collapse"
+    "sidebarCollapse": "Click to collapse",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "doubleClickZoom": "Press the button or double click the image to toggle a zoom."
   },
   "messages": {
     "actionExecuted": "Action \"%s\" was successfully executed",

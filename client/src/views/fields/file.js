@@ -57,17 +57,14 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 e.preventDefault();
 
                 let items = [];
-                if (this.model.collection && this.model.collection.models) {
+                if (this.model.collection && this.model.collection.models && this.model.collection.name === 'File') {
                     items = this.model.collection.models
                         .filter(item => this.hasPreview(item.get(this.nameName)))
-                        .map(item => ({
-                            id: item.get(this.idName),
-                            name: item.get(this.nameName),
-                            url: this.getFilePathsData(item).download,
-                            smallThumbnail: this.getFilePathsData(item).thumbnails.small,
-                            largeThumbnail: this.getFilePathsData(item).thumbnails.large,
-                            isImage: item.get('fileTypeId') !== 'a_document',
-                        }));
+                        .map(item => this.prepareMediaFromModel(item));
+
+
+                } else {
+                    items = [this.prepareMediaFromModel(this.model)];
                 }
 
                 this.createView('preview', 'views/modals/gallery', {
@@ -331,6 +328,17 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
             return res;
         },
+
+        prepareMediaFromModel: function (model) {
+            return {
+                id: model.get(this.idName),
+                name: model.get(this.nameName),
+                url: this.getFilePathsData(model).download,
+                smallThumbnail: this.getFilePathsData(model).thumbnails.small,
+                largeThumbnail: this.getFilePathsData(model).thumbnails.large,
+                isImage: model.get('typeId') !== 'a_document',
+            };
+        }
 
     });
 });
