@@ -348,6 +348,10 @@ Espo.define('views/main', 'view', function (Dep) {
                                     }
                                 });
 
+                                this.listenTo(this.model, 'sync', () => {
+                                    view.reRender();
+                                });
+
                                 if (this.getUser().isAdmin() && this.getMode() === 'detail') {
                                     this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
                                         scope: this.scope,
