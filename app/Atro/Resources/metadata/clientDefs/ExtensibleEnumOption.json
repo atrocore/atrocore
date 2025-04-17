@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-list",
+  "iconClass": "tv_options_edit_channels",
   "boolFilterList": [
     "defaultOption",
     "onlyForExtensibleEnum",

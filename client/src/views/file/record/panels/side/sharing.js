@@ -22,7 +22,7 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
                 title: 'create',
                 acl: 'create',
                 aclScope: 'Sharing',
-                html: '<span class="fas fa-plus"></span>',
+                html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>',
             }
         ],
 

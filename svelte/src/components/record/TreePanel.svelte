@@ -134,8 +134,8 @@
             autoOpen: false,
             dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']) && sortBy === 'sortOrder',
             useContextMenu: false,
-            closedIcon: window.$('<i class="fa fa-angle-right"></i>'),
-            openedIcon: window.$('<i class="fa fa-angle-down"></i>'),
+            closedIcon: window.$('<svg class="icon"><use href="client/img/icons/icons.svg#angle-up"></use></svg>'),
+            openedIcon: window.$('<svg class="icon"><use href="client/img/icons/icons.svg#angle-down"></use></svg>'),
             onCreateLi: function (node, $li, is_selected) {
                 if (node.disabled) {
                     $li.addClass('disabled');
@@ -881,7 +881,9 @@
                             {#if searchValue}
                                 <button on:click={treeReset} class="fas fa-times reset-search-in-tree-button"></button>
                             {/if}
-                            <button on:click={applySearch} class="fas fa-search search-in-tree-button"></button>
+                            <button on:click={applySearch} class="search-in-tree-button">
+                                <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
+                            </button>
                         </div>
                     </div>
                     {#if activeItem.name !== '_admin' }

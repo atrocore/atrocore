@@ -23,7 +23,7 @@
                 {{/if}}
                 {{#if canClose }}
                     <button type="button" class="btn btn-default btn-sm" data-action="closePanel" data-panel="{{name}}">
-                        <span class="fas fa-times"></span>
+                        <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
                     </button>
                 {{/if}}
             </div>

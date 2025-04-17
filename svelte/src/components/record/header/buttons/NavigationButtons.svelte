@@ -15,14 +15,14 @@
             {
                 name: 'navigation',
                 action: 'previous',
-                html: '<span class="fas fa-chevron-left"></span>',
+                html: '<svg class="icon"><use href="client/img/icons/icons.svg#angle-left"></use></svg>',
                 tooltip: Language.translate('Previous Entry'),
                 disabled: !hasPrevious || navigating
             },
             {
                 name: 'navigation',
                 action: 'next',
-                html: '<span class="fas fa-chevron-right"></span>',
+                html: '<svg class="icon"><use href="client/img/icons/icons.svg#angle-right"></use></svg>',
                 tooltip: Language.translate('Next Entry'),
                 disabled: !hasNext || navigating
             }

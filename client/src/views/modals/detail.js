@@ -101,7 +101,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
                 this.buttonList.push({
                     name: 'previous',
-                    html: '<span class="fas fa-chevron-left"></span>',
+                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#angle-left"></use></svg>',
                     title: this.translate('Previous Entry'),
                     pullLeft: true,
                     className: 'btn-icon',
@@ -109,7 +109,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 });
                 this.buttonList.push({
                     name: 'next',
-                    html: '<span class="fas fa-chevron-right"></span>',
+                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#angle-right"></use></svg>',
                     title: this.translate('Next Entry'),
                     pullLeft: true,
                     className: 'btn-icon',

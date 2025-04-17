@@ -5,7 +5,7 @@
     <ul class="dropdown-menu {{#if alignRight}}pull-right{{/if}}">
         {{#each storedProfiles}}
             <li><a href="javascript:" class="layout-profile-item" data-id="{{id}}">{{ name }} {{#if isSelected }}
-                <span class="fas fa-check pull-right" style="font-size: 1em;"></span> {{/if}}</a></li>
+                <svg class="icon pull-right"><use href="client/img/icons/icons.svg#check"></use></svg> {{/if}}</a></li>
         {{/each}}
         {{#if canConfigure }}
             {{#if storedProfiles.length }}

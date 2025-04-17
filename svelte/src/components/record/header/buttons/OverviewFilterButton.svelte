@@ -13,7 +13,7 @@
         style = filterApplied ? 'danger' : 'default';
         params = {
             action: 'openOverviewFilter',
-            html: '<span class="fas fa-filter"></span>',
+            html: '<svg class="icon"><use href="client/img/icons/icons.svg#filter"></use></svg>',
             style: style,
             tooltip: Language.translate('actionOpenFilter')
         } as ActionParams;
