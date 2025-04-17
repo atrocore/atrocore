@@ -16,8 +16,10 @@ Espo.define('views/admin/field-manager/record/row-actions/default', 'views/recor
             let list = [];
 
             Dep.prototype.getActionList.call(this).forEach(item => {
-                if (item.action !== 'quickRemove' || (item.action === 'quickRemove' && this.model.get('isCustom'))) {
-                    list.push(item);
+                if (this.model.get('code') !== 'id') {
+                    if (item.action !== 'quickRemove' || (item.action === 'quickRemove' && this.model.get('isCustom'))) {
+                        list.push(item);
+                    }
                 }
             });
 

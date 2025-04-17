@@ -16,8 +16,10 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class AttributeFieldConverter
@@ -38,6 +40,39 @@ class AttributeFieldConverter
     public static function prepareFieldName(string $id): string
     {
         return $id;
+    }
+
+    public function putAttributesToSelect(QueryBuilder $qb, IEntity $entity, array $params, Mapper $mapper): void
+    {
+        if (!empty($params['aggregation']) || empty($params['attributesIds'])) {
+            return;
+        }
+
+        $attributes = $this->getAttributesRowsByIds($params['attributesIds']);
+        if (empty($attributes)) {
+            return;
+        }
+
+        $attributesDefs = [];
+
+        $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
+        $alias = $mapper->getQueryConverter()::TABLE_ALIAS;
+        foreach ($attributes as $attribute) {
+            $attributeAlias = "a_{$attribute['id']}";
+            $qb->leftJoin(
+                $alias,
+                "{$tableName}_attribute_value",
+                $attributeAlias,
+                "{$attributeAlias}.{$tableName}_id={$alias}.id AND {$attributeAlias}.deleted=:false AND {$attributeAlias}.attribute_id=:{$attributeAlias}AttributeId"
+            );
+            $qb->setParameter("{$attributeAlias}AttributeId", $attribute['id']);
+            $qb->setParameter('false', false, ParameterType::BOOLEAN);
+
+            $this->prepareSelect($attribute, $attributeAlias, $qb, $mapper);
+            $this->convert($entity, $attribute, $attributesDefs);
+        }
+
+        $entity->set('attributesDefs', $attributesDefs);
     }
 
     public function putAttributesToEntity(IEntity $entity): void
@@ -108,13 +143,33 @@ class AttributeFieldConverter
         $attributesDefs = [];
 
         foreach ($res as $row) {
-            $this
-                ->getFieldType($row['type'])
-                ->convert($entity, $row, $attributesDefs);
+            $this->convert($entity, $row, $attributesDefs);
         }
 
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAsFetched();
+    }
+
+    public function getAttributesRowsByIds(array $attributesIds): array
+    {
+        return $this->conn->createQueryBuilder()
+            ->select('*')
+            ->from($this->conn->quoteIdentifier('attribute'))
+            ->where('id IN (:ids)')
+            ->andWhere('deleted=:false')
+            ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+    }
+
+    public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
+        $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper);
+    }
+
+    public function convert(IEntity $entity, array $attribute, array &$attributesDefs): void
+    {
+        $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs);
     }
 
     public function getFieldType(string $type): AttributeFieldTypeInterface

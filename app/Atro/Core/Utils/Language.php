@@ -132,6 +132,9 @@ class Language
     public function get($key = null, $returns = null)
     {
         $data = $this->getData();
+        if (!empty($this->changedData)) {
+            $data = Util::merge($data, $this->changedData);
+        }
 
         if (!isset($data) || $data === false) {
             return null;

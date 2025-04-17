@@ -12,6 +12,8 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class IntType extends AbstractFieldType
@@ -67,6 +69,8 @@ class IntType extends AbstractFieldType
         if (isset($row['measure_id'])) {
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
             $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
+            $entity->entityDefs['fields'][$name]['detailViewLabel'] = $entity->entityDefs['fields'][$name]['label'];
+            $entity->entityDefs['fields'][$name]['label'] = "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate("{$this->type}Part");
 
             $entity->fields[$name . 'UnitId'] = [
                 'type'        => 'varchar',
@@ -82,7 +86,7 @@ class IntType extends AbstractFieldType
             $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
-                "type"                 => "link",
+                "type"                 => "measure",
                 'label'                => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
                 "view"                 => "views/fields/unit-link",
                 "measureId"            => $row['measure_id'],
@@ -96,5 +100,13 @@ class IntType extends AbstractFieldType
         }
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+    }
+
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
+        $qb->addSelect("{$alias}.{$this->type}_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
+        $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
     }
 }
