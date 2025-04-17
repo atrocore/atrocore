@@ -1,7 +1,7 @@
 <div>
     <span style="vertical-align: middle;">
         {{#if value}}
-        <span class="{{value}}"></span>
+		<img src="{{value}}" alt="icon">
         {{else}}
         {{translate 'None'}}
         {{/if}}

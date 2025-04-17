@@ -21,7 +21,7 @@ class SystemIcon extends ReferenceData
     public function insertEntity(Entity $entity): bool
     {
         if (!empty($image = $entity->get('image'))) {
-            $entity->set('imagePathsData', $image->getPathsData());
+            $entity->set('path', $image->getFilePath());
         }
 
         return parent::insertEntity($entity);
@@ -30,7 +30,7 @@ class SystemIcon extends ReferenceData
     public function updateEntity(Entity $entity): bool
     {
         if (!empty($image = $entity->get('image'))) {
-            $entity->set('imagePathsData', $image->getPathsData());
+            $entity->set('path', $image->getFilePath());
         }
 
         return parent::updateEntity($entity);

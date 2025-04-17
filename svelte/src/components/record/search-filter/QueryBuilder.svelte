@@ -43,7 +43,7 @@
                 return;
             }
             for (const element of elements) {
-                if( element.style.display === 'none') {
+                if (element.style.display === 'none') {
                     continue;
                 }
                 if (parentWidth < 450) {
@@ -108,7 +108,7 @@
             });
         }
 
-        if(hasAttribute()) {
+        if (hasAttribute()) {
             let attributeButton = {
                 id: emptyAttribute,
                 label: `[${Language.translate('addAttribute')}]`,
@@ -310,7 +310,7 @@
         collection.reset();
         Notifier.notify('Please wait...');
         let where = [Storage.get('queryBuilderRules', scope)];
-        if(selectedFilterList.length || mandatoryBoolFilter.length) {
+        if (selectedFilterList.length || mandatoryBoolFilter.length) {
             where.push({'type': 'bool', value: [...selectedFilterList, ...mandatoryBoolFilter]})
         }
 
@@ -353,51 +353,48 @@
     }
 
     function hasAttribute() {
-        return Metadata.get(['scopes', scope, 'hasAttribute']) || scope === 'Product';
+        return Acl.check('Attribute', 'read') && Metadata.get(['scopes', scope, 'hasAttribute']) || scope === 'Product';
     }
 
     function addAttributeFilter(callback) {
         const attributeScope = 'Attribute';
-        if (Acl.check(scope, 'read')) {
-            const viewName = Metadata.get(['clientDefs', attributeScope, 'modalViews', 'select']) || 'views/modals/select-records';
-            Notifier.notify('Loading...');
-            createView('dialog', viewName, {
-                scope: attributeScope,
-                multiple: false,
-                createButton: false,
-                massRelateEnabled: false,
-                allowSelectAllResult: false
-            }, dialog => {
-                dialog.render();
-                Notifier.notify(false);
-                dialog.dialog.$el.on('hidden.bs.modal', (e) => {
+        const viewName = Metadata.get(['clientDefs', attributeScope, 'modalViews', 'select']) || 'views/modals/select-records';
+        Notifier.notify('Loading...');
+        createView('dialog', viewName, {
+            scope: attributeScope,
+            multiple: false,
+            createButton: false,
+            massRelateEnabled: false,
+            allowSelectAllResult: false
+        }, dialog => {
+            dialog.render();
+            Notifier.notify(false);
+            dialog.dialog.$el.on('hidden.bs.modal', (e) => {
+                if (callback) {
+                    callback(false)
+                }
+            });
+            dialog.listenTo(dialog, 'cancel, close', () => {
+                if (callback) {
+                    callback(false)
+                }
+            })
+            dialog.once('select', attribute => {
+                pushAttributeFilter(attribute.attributes, (pushed, filter) => {
                     if (callback) {
-                        callback(false)
-                    }
-                });
-                dialog.listenTo(dialog, 'cancel, close', () => {
-                    if (callback) {
-                        callback(false)
+                        callback(pushed, filter);
                     }
                 })
-                dialog.once('select', attribute => {
-                    pushAttributeFilter(attribute.attributes, (pushed, filter) => {
-                        if (callback) {
-                            callback(pushed, filter);
-                        }
-                    })
 
-                });
             });
-        }
+        });
     }
-
 
     function handleGeneralFilterChecked(e, filter) {
         let isChecked = e.target.checked;
-        if(isChecked) {
+        if (isChecked) {
             selectedFilterList = [...selectedFilterList, filter]
-        }else{
+        } else {
             selectedFilterList = [...selectedFilterList.filter(v => v !== filter)];
         }
 
@@ -435,7 +432,9 @@
 
         selectedFilterList = Storage.get('selectedFilterList', scope) ?? [];
 
-        selectedFilterList = selectedFilterList.filter(function (item) { return boolFilterList.includes(item)})
+        selectedFilterList = selectedFilterList.filter(function (item) {
+            return boolFilterList.includes(item)
+        })
 
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('where')) {
@@ -452,14 +451,14 @@
 
         let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
         window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
-            if (rule.filter.id === 'emptyAttributeRule') {
+            if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
                 addAttributeFilter((pushed, filter) => {
                     if (pushed) {
                         this.setFilters(filters)
                         rule.filter = filter;
                         originalUpdateRuleFilter.call(this, rule, previousFilter);
-                    }else{
-                        if(rule.filter.id === 'emptyAttributeRule') {
+                    } else {
+                        if (rule.filter.id === 'emptyAttributeRule') {
                             rule.filter = previousFilter;
                         }
                         originalUpdateRuleFilter.call(this, rule, previousFilter);
@@ -479,7 +478,7 @@
 </script>
 <div>
     <div>
-        <button  class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
+        <button class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
             <span class="fas fa-times fa-sm"></span>
             {Language.translate('Unset All')}
         </button>
@@ -490,7 +489,8 @@
             {#each boolFilterList as filter}
                 <li class="checkbox">
                     <label class:active={selectedFilterList.includes(filter)}>
-                    <input type="checkbox" checked={selectedFilterList.includes(filter)} on:change={(e) => handleGeneralFilterChecked(e, filter)} name="{filter}">
+                        <input type="checkbox" checked={selectedFilterList.includes(filter)}
+                               on:change={(e) => handleGeneralFilterChecked(e, filter)} name="{filter}">
                         {Language.translate(filter, 'boolFilters', scope)}
                     </label>
                 </li>
@@ -499,11 +499,11 @@
     {/if}
     <h5>{Language.translate('Advanced Filters')}</h5>
     <div class="row filter-action">
-        <button  class="filter-item" data-action="filter" on:click={applyFilter}>
+        <button class="filter-item" data-action="filter" on:click={applyFilter}>
             <span class="fas fa-check fa-sm"></span>
             {Language.translate('Apply')}
         </button>
-        <button  class="filter-item" data-action="filter"  on:click={resetFilter}>
+        <button class="filter-item" data-action="filter" on:click={resetFilter}>
             <span class="fas fa-times fa-sm"></span>
             {Language.translate('Unset')}
         </button>
@@ -521,7 +521,7 @@
         padding: 5px 10px;
         font-size: 13px;
         line-height: 1;
-        margin-right:  5px;
+        margin-right: 5px;
     }
 
     .filter-item:hover {
@@ -530,10 +530,10 @@
         background-color: rgba(126, 183, 241, 0.1);
     }
 
-    .filter-action{
+    .filter-action {
         margin-bottom: 10px;
-        margin-left:  0;
-        margin-right:  0;
+        margin-left: 0;
+        margin-right: 0;
     }
 
     ul {

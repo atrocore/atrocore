@@ -10,8 +10,8 @@
             {{#unless layoutReadOnly}}
             <div class="btn-group pull-right dashboard-buttons">
                 <button class="btn btn-default " data-action="reset" style="margin: 0 10px">{{translate 'Reset'}}</button>
-                <button class="btn btn-default btn-icon" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><span class="fas fa-pencil-alt fa-sm"></span></button>
-                <button class="btn btn-default btn-icon" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><span class="fas fa-plus"></span></button>
+                <button class="btn btn-default btn-icon" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg></button>
+                <button class="btn btn-default btn-icon" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><svg class="icon icon-small"><use href="client/img/icons/icons.svg#plus"></use></svg></button>
             </div>
             {{/unless}}
             {{#ifNotEqual dashboardLayout.length 1}}

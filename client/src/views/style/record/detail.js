@@ -16,6 +16,8 @@ Espo.define('views/style/record/detail', 'views/record/detail', Dep => {
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'after:save', () => {
+                this.getStorage().clear('icons', 'navigationIconColor');
+
                 setTimeout(() => {
                     this.showReloadPageMessage()
                 }, 2000);
