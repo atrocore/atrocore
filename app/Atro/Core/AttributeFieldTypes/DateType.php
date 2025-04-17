@@ -12,6 +12,8 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class DateType extends AbstractFieldType
@@ -41,5 +43,12 @@ class DateType extends AbstractFieldType
             'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
         ];
+    }
+
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
+        $qb->addSelect("{$alias}.{$this->column} as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
 }

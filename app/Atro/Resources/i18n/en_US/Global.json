@@ -397,9 +397,10 @@
     "General Filters": "General Filters",
     "Attributes": "Attributes",
     "Fields": "Fields",
-    "Advanced Filters": "Advanced Filters",
+    "Advanced Filter": "Advanced Filter",
     "Unset": "Unset",
-    "Unset All": "Unset All"
+    "Unset All": "Unset All",
+    "Cancel Edit": "Cancel Edit"
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",
@@ -499,7 +500,9 @@
     "dontHaveAccessInInstance": "You don't have access to this record on instance",
     "selectNoMoreThan": "Select not more than {count} records",
     "fillEmptyFieldBeforeMerging": "Some empty fields are required, please fill them before merging.",
-    "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists."
+    "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists.",
+    "youHaveErrorsInFilter": "The filter have some errors.",
+    "theSavedFilterMightBeCorrupt": "The Saved Filter might be corrupt."
   },
   "boolFilters": {
     "onlyActive": "Active",

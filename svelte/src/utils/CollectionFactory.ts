@@ -8,8 +8,8 @@ const data = writable<CollectionFactoryInterface>();
 
 export const CollectionFactory = {
 
-    setCollectionFactory(modelFactory: CollectionFactoryInterface): void {
-        data.set(modelFactory);
+    setCollectionFactory(collectionFactory: CollectionFactoryInterface): void {
+        data.set(collectionFactory);
     },
     create(modelName: string, callback: Function): void {
         let res = null

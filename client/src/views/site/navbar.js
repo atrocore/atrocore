@@ -9,7 +9,7 @@
  */
 
 
-Espo.define('views/site/navbar', 'view', function (Dep) {
+Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, ColorConverter) {
 
     return Dep.extend({
 
@@ -278,7 +278,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             let tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
             if (Espo.Utils.isObject(tab)) {
                 if (!colorsDisabled) {
-                    color = tab.color || 'inherit';
+                    color = tab.color || null;
                 }
                 if (!tabIconsDisabled) {
                     iconClass = tab.iconClass;
@@ -290,9 +290,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 items = tab.items.map(item => this.getTabDefs(item));
                 link = 'javascript:';
             } else {
-                if (!colorsDisabled) {
-                    color = this.getMetadata().get(['clientDefs', tab, 'color']) || 'inherit';
-                }
                 if (!tabIconsDisabled) {
                     iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass']);
                 }
@@ -312,20 +309,41 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 name: name,
                 items: items,
                 group: group,
-                color: color,
-                iconClass: iconClass
             };
-            if (!iconClass && result.name) {
-                result.iconSrc = this.getDefaultTabIcon(result.name);
+
+            if (iconClass) {
+                const referenceData = this.getConfig().get('referenceData');
+
+                if (referenceData && referenceData['SystemIcon'] && iconClass in referenceData['SystemIcon']) {
+                    const path = referenceData['SystemIcon'][iconClass].path || null;
+
+                    if (path) {
+                        result.iconSrc = referenceData['SystemIcon'][iconClass].path;
+                    }
+                }
             }
+
+            if (!result.iconSrc && result.name) {
+                result.defaultIconSrc = this.getDefaultTabIcon(result.name);
+            }
+
+            let filter = null;
+            if (this.getStorage().get('icons', 'navigationIconColor')) {
+                filter = this.getStorage().get('icons', 'navigationIconColor');
+            } else {
+                let style = this.getThemeManager().getStyle();
+
+                if (style && style['navigationIconColor']) {
+                    let colorConverter = new ColorConverter(style['navigationIconColor']);
+
+                    filter = colorConverter.solve().filter;
+                    this.getStorage().set('icons', 'navigationIconColor', filter)
+                }
+            }
+
+            result.colorFilter = filter;
+
             return result;
-        },
-
-        getDefaultTabIcon(name) {
-            let firstLetter = name.match(/\p{L}/u)?.[0] || "A",
-                key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
-
-            return 'client/img/icons/default/' + key;
         },
 
         getMenuDataList: function () {
@@ -356,7 +374,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
 
                 list.push({
                     action: 'composerUpdate',
-                    html: this.getLanguage().translate('Run Update', 'labels', 'Composer') + ' <span id="composer-update" class="fas fa-arrow-alt-circle-down"></span>'
+                    html: this.getLanguage().translate('Run Update', 'labels', 'Composer') + ' <svg id="composer-update" class="icon"><use href="client/img/icons/icons.svg#arrow-alt-circle-down"></use></svg>'
                 });
             }
 

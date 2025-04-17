@@ -12,10 +12,23 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Container;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class FileType extends AbstractFieldType
 {
+    protected Connection $conn;
+
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+
+        $this->conn = $container->get('connection');
+    }
+
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
@@ -49,5 +62,16 @@ class FileType extends AbstractFieldType
             'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
         ];
+    }
+
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
+        $fileAlias = "{$alias}file";
+        $qb->leftJoin($alias, $this->conn->quoteIdentifier('file'), $fileAlias, "{$fileAlias}.id={$alias}.reference_value AND {$fileAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
+
+        $qb->addSelect("{$fileAlias}.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
+        $qb->addSelect("{$fileAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
     }
 }

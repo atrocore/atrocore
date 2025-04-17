@@ -23,6 +23,7 @@ body {
     --secondary-border-color: #f5f5f5;
     --panel-title-color: #000;
     --header-title-color: #000;
+    --status-icon-color: #333;
     --action-icon-color: #333;
     --sidebar-icon-color: #999;
     --success: #dff0d8;
@@ -3493,7 +3494,7 @@ textarea.input-lg, select[multiple].input-lg {
     background-image: none;
     border: 1px solid transparent;
     white-space: nowrap;
-    padding: 6px 10px;
+    padding: 5px 10px;
     font-size: 14px;
     line-height: 1.36;
     border-radius: 0;
@@ -3886,6 +3887,11 @@ tbody.collapse.in {
 
 .dropdown-toggle:focus {
     outline: 0
+}
+
+.dropdown-toggle .icon {
+    margin-left: -7px;
+    margin-top: -2px;
 }
 
 .dropdown-menu {
@@ -14630,9 +14636,24 @@ body > #header .navbar-brand span.home-icon {
     border-color: transparent
 }
 
-#header .navbar .default-icon {
+.default-icon, .icon {
     width: 20px;
-    height: auto;
+    height: 20px;
+    display: inline;
+    vertical-align: middle;
+}
+
+.icon-small {
+    width: 16px;
+    height: 16px;
+}
+
+.status-icons .icon {
+    fill: var(--status-icon-color);
+}
+
+.inline-actions .icon {
+    fill: var(--action-icon-color);
 }
 
 #header .navbar li.tab > a > span.full-label {
@@ -14725,7 +14746,9 @@ body > #header .navbar-brand span.home-icon {
 
     #header .navbar-right > li > a {
         color: #424242;
-        padding: 5px 10px
+        padding: 5px 10px;
+        width: 40px;
+        text-align: right;
     }
 
     #header .navbar-right .notifications-badge-container {
@@ -19549,10 +19572,6 @@ input#sn-checkbox-open-in-new-window {
     padding: 0;
 }
 
-.list-row-buttons > button > span {
-    color: var(--action-icon-color);
-}
-
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-group-panel {
     box-shadow: none;
     border: 0;
@@ -19614,7 +19633,6 @@ ul.dropdown-menu > li.checkbox {
     color: #333;
     border: 0;
     margin-left: -2px;
-    margin-bottom: -1px;
 }
 
 .search-row .text-filter + .input-group-btn .search {
@@ -21208,7 +21226,6 @@ tr.list-row.main-category > .cell:first-child {
 
 .search-row .btn-default {
     border: 0;
-    margin-bottom: -1px;
 }
 
 .search-row .filters-button:hover,
@@ -22084,8 +22101,9 @@ select {
 
 .info-field-icon.inherited,
 .info-field-icon.not-inherited,
+.status-icons .icon,
 .lock-link {
-    padding-left: 5px;
+    padding-left: 5px !important;
     text-align: center;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -22787,7 +22805,25 @@ div.list-kanban > div > table .item .panel .form-group {
     border-radius: 3px;
 }
 
+.query-builder-container .checkboxes-filter > ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
 
+.query-builder-container .checkboxes-filter li label {
+    color: var(--primary-font-color);
+    padding-left: 0;
+}
+
+.query-builder-container .checkboxes-filter li label.active {
+    color: #06c;
+}
+
+.query-builder-container .checkbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 .text-gray {
     color: #999;
@@ -24106,6 +24142,14 @@ span[data-img-src]::after {
 .favorites-dropdown .header .configure-btn {
     cursor: pointer;
     font-size: 1em;
+}
+
+.anchor-nav-container .cursor-pointer {
+    margin-top: -5px;
+}
+
+.navbar .cursor-pointer {
+    cursor: pointer;
 }
 
 .favorites-dropdown .divider {

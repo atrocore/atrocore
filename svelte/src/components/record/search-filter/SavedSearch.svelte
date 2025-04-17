@@ -1,54 +1,90 @@
 <script lang="ts">
     import {createEventDispatcher, onMount} from "svelte";
-    import {CollectionFactory} from "../../../utils/CollectionFactory";
     import {Language} from "../../../utils/Language";
-    import {Storage} from "../../../utils/Storage";
+    import {Acl} from "../../../utils/Acl";
 
     export let scope: string;
-    let loading: boolean = true;
-    let savedSearchList: Array<any> = [];
-    let selectedSavedSearches: Array<any> = [];
+    export let savedSearchList: Array<any> = [];
+    export let loading: boolean = true;
+
+    export let editingItem: any = null;
+
+    export let edit = (item) => {};
+    export let rename = (item) => {};
+    export let remove = (item) => {};
+    export let cancel = () => {}
+
+    export let selectedSavedSearchIds: Array<any> = [];
 
     let dispatch = createEventDispatcher();
     function handleSavedSearchChecked(e, item) {
         let isChecked = e.target.checked;
         if(isChecked) {
-            selectedSavedSearches = [...selectedSavedSearches, item.id]
+            selectedSavedSearchIds = [...selectedSavedSearchIds, item.id]
         }else{
-            selectedSavedSearches = [...selectedSavedSearches.filter(v => v !== item.id)];
+            selectedSavedSearchIds = [...selectedSavedSearchIds.filter(v => v !== item.id)];
         }
-        Storage.set('selectedSavedSearches', scope, selectedSavedSearches);
-        dispatch('change', {savedSearches: savedSearchList.filter(v => selectedSavedSearches.includes(v.id))});
+        dispatch('change', {selectedSavedSearchIds: selectedSavedSearchIds});
     }
 
-    onMount(() =>{
-        CollectionFactory.create('SavedSearch', (collection) => {
-            collection.url = `SavedSearch`;
-            collection.data.scope = scope;
-            collection.fetch().then((data) => {
-                savedSearchList = data.list;
-                loading = false;
-            })
-        });
-    })
 </script>
 
-<ul>
-    {#if loading}
+
+<div class="checkboxes-filter">
+    {#if loading }
         <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
-    {:else}
+    {:else if savedSearchList.length > 0}
         <h5>{Language.translate('Saved Filters')}</h5>
         <ul>
             {#each savedSearchList as item}
-
                 <li class="checkbox">
-                    <label class:active={selectedSavedSearches.includes(item.id)}>
-                        <input type="checkbox" checked={selectedSavedSearches.includes(item.id)} on:change={(e) => handleSavedSearchChecked(e, item)} name="{filter}">
+                    <label class:active={selectedSavedSearchIds.includes(item.id)}>
+                        <input type="checkbox" checked={selectedSavedSearchIds.includes(item.id)} on:change={(e) => handleSavedSearchChecked(e, item)} name="{item.id}">
                         {item.name}
+                        <svg class="icon visibility"><use href={item.isPublic ? 'client/img/icons/icons.svg#group': 'client/img/icons/icons.svg#shield'}></use></svg>
                     </label>
+                    {#if Acl.check('SavedSearch', 'edit') ||  Acl.check('SavedSearch', 'delete')}
+                        <div class="list-row-buttons btn-group">
+                            {#if editingItem?.id === item.id}
+                                <span style="position:absolute; right: 15px"><svg class="icon"><use href="client/img/icons/icons.svg#edit"></use></svg></span>
+                            {/if}
+                            <a  style="cursor: pointer" class="dropdown-toggle" data-toggle="dropdown">
+                                <svg class="icon"><use href="client/img/icons/icons.svg#dots"></use></svg>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                {#if Acl.check('SavedSearch', 'edit')}
+                                    {#if editingItem?.id === item.id}
+                                        <li><a on:click={cancel}>{Language.translate('Cancel Edit')}</a></li>
+                                    {:else}
+                                        <li><a on:click={() => {edit(item)}}>{Language.translate('Edit')}</a></li>
+                                    {/if}
+                                    <li><a on:click={() => rename(item)}>{Language.translate('Rename')}</a></li>
+                                {/if}
+                                {#if Acl.check('SavedSearch', 'delete')}
+                                    <li><a on:click={() => remove(item)}>{Language.translate('Remove')}</a></li>
+                                {/if}
+                            </ul>
+                        </div>
+                    {/if}
                 </li>
             {/each}
         </ul>
     {/if}
-</ul>
+</div>
+
+<style>
+    .preloader {
+        height: 12px;
+        margin-top: 5px;
+    }
+
+    .visibility {
+        position: absolute;
+        top: -5px;
+        width: 15px;
+        height: 15px;
+        margin-left: 5px;
+    }
+
+</style>
 

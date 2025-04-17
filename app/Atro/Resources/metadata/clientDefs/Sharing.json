@@ -1,4 +1,4 @@
 {
-  "iconClass": "fas fa-share-alt",
+  "iconClass": "share",
   "controller": "controllers/record"
 }

@@ -46,14 +46,33 @@ Espo.define('views/admin/entity-manager/fields/icon-class', 'views/fields/base',
             };
         },
 
+        data: function () {
+            let data = Dep.prototype.data.call(this),
+                value = this.model.get(this.name);
+
+            if (value) {
+                const referenceData = this.getConfig().get('referenceData');
+
+                if (referenceData && referenceData['SystemIcon'] && value in referenceData['SystemIcon']) {
+                    data.value = referenceData['SystemIcon'][value].path;
+                }
+            }
+
+            return data;
+        },
+
         selectIcon: function () {
-            this.createView('dialog', 'views/admin/entity-manager/modals/select-icon', {}, function (view) {
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'SystemIcon',
+                createButton: false,
+                multiple: false
+            }, function (view) {
                 view.render();
-                this.listenToOnce(view, 'select', function (value) {
-                    this.model.set(this.name, value);
-                    view.close();
-                }, this);
-            });
+                this.notify(false);
+                this.listenToOnce(view, 'select', function (model) {
+                    this.model.set(this.name, model.get('code'));
+                });
+            }, this);
         },
 
         fetch: function () {

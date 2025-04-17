@@ -7,6 +7,8 @@
     import {Language} from "../../../utils/Language";
     import {Notifier} from "../../../utils/Notifier";
     import {UserData} from "../../../utils/UserData";
+    import SavedSearch from "./SavedSearch.svelte";
+    import {CollectionFactory} from "../../../utils/CollectionFactory";
 
     export let scope: string;
     export let collection: any;
@@ -16,7 +18,7 @@
 
     export let parentWidth: number;
 
-    let filters: [];
+    let filters: Array<any> = [];
 
     let boolFilterList: [];
 
@@ -25,6 +27,20 @@
     let queryBuilderElement: HTMLElement
 
     let model = new collection.model();
+    
+    let advancedFilterChecked = false;
+
+    let savedSearchList: Array<any> = [];
+
+    let loadingSavedSearch: boolean = true;
+
+    let savedSearchCollection: any = null;
+
+    let editingSavedSearch: any = null;
+
+    let oldAdvancedFilter: any = null;
+
+    let selectedSaveSearches: Array<any> = [];
 
     $: {
         updateStyle(parentWidth);
@@ -43,7 +59,7 @@
                 return;
             }
             for (const element of elements) {
-                if( element.style.display === 'none') {
+                if (element.style.display === 'none') {
                     continue;
                 }
                 if (parentWidth < 450) {
@@ -108,7 +124,7 @@
             });
         }
 
-        if(hasAttribute()) {
+        if (hasAttribute()) {
             let attributeButton = {
                 id: emptyAttribute,
                 label: `[${Language.translate('addAttribute')}]`,
@@ -175,9 +191,10 @@
         model.trigger('afterInitQueryBuilder');
         updateStyle(parentWidth);
         $queryBuilder.on('rulesChanged.queryBuilder', (e, rule) => {
+            advancedFilterChecked = false;
             setTimeout(() => {
                 updateStyle(parentWidth);
-            }, 500)
+            }, 250)
 
             try {
                 const rules = $queryBuilder.queryBuilder('getRules');
@@ -193,6 +210,10 @@
             model.trigger('afterUpdateRuleOperator', rule);
         });
 
+        $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
+            model.trigger('afterInitQueryBuilder');
+        });
+
         $queryBuilder.on('afterAddGroup.queryBuilder', (e, rule) => {
             model.trigger('afterAddGroup', rule);
             updateStyle(parentWidth);
@@ -201,14 +222,14 @@
         $queryBuilder.on('afterAddRule.queryBuilder', (e, rule) => {
             setTimeout(() => {
                 updateStyle(parentWidth);
-            }, 500)
+            }, 250)
             model.trigger('afterAddRule', rule);
         });
     }
 
     function prepareFilters(callback: Function) {
 
-        filters = [];
+        filters = filters.filter(item => item.id.includes('attr'));
 
         let promiseList: Promise[] = [];
 
@@ -292,14 +313,6 @@
         });
     }
 
-    function applyFilter() {
-        let validation = window.$(queryBuilderElement).queryBuilder('validate');
-        if (!validation) {
-            Notifier.notify(Language.translate('They are some errors on your query'), 'error')
-        } else {
-            updateCollection();
-        }
-    }
 
     function resetFilter() {
         Storage.set('queryBuilderRules', scope, []);
@@ -308,10 +321,22 @@
 
     function updateCollection() {
         collection.reset();
-        Notifier.notify('Please wait...');
-        let where = [Storage.get('queryBuilderRules', scope)];
-        if(selectedFilterList.length || mandatoryBoolFilter.length) {
+        Notifier.notify(Language.translate('pleaseWait', 'messages'));
+        let where = [];
+        if(advancedFilterChecked) {
+            where.push(Storage.get('queryBuilderRules', scope));
+        }
+
+        if (selectedFilterList.length || mandatoryBoolFilter.length) {
             where.push({'type': 'bool', value: [...selectedFilterList, ...mandatoryBoolFilter]})
+        }
+
+       let selectedSavedSearches = Storage.get('selectedSavedSearches', scope);
+
+        if(selectedSavedSearches && selectedSavedSearches.length) {
+            for (const selectedSavedSearch of selectedSavedSearches) {
+                where.push(selectedSavedSearch.data);
+            }
         }
 
         collection.where = where;
@@ -353,51 +378,48 @@
     }
 
     function hasAttribute() {
-        return Metadata.get(['scopes', scope, 'hasAttribute']) || scope === 'Product';
+        return Acl.check('Attribute', 'read') && Metadata.get(['scopes', scope, 'hasAttribute']) || scope === 'Product';
     }
 
     function addAttributeFilter(callback) {
         const attributeScope = 'Attribute';
-        if (Acl.check(scope, 'read')) {
-            const viewName = Metadata.get(['clientDefs', attributeScope, 'modalViews', 'select']) || 'views/modals/select-records';
-            Notifier.notify('Loading...');
-            createView('dialog', viewName, {
-                scope: attributeScope,
-                multiple: false,
-                createButton: false,
-                massRelateEnabled: false,
-                allowSelectAllResult: false
-            }, dialog => {
-                dialog.render();
-                Notifier.notify(false);
-                dialog.dialog.$el.on('hidden.bs.modal', (e) => {
+        const viewName = Metadata.get(['clientDefs', attributeScope, 'modalViews', 'select']) || 'views/modals/select-records';
+        Notifier.notify('Loading...');
+        createView('dialog', viewName, {
+            scope: attributeScope,
+            multiple: false,
+            createButton: false,
+            massRelateEnabled: false,
+            allowSelectAllResult: false
+        }, dialog => {
+            dialog.render();
+            Notifier.notify(false);
+            dialog.dialog.$el.on('hidden.bs.modal', (e) => {
+                if (callback) {
+                    callback(false)
+                }
+            });
+            dialog.listenTo(dialog, 'cancel, close', () => {
+                if (callback) {
+                    callback(false)
+                }
+            })
+            dialog.once('select', attribute => {
+                pushAttributeFilter(attribute.attributes, (pushed, filter) => {
                     if (callback) {
-                        callback(false)
-                    }
-                });
-                dialog.listenTo(dialog, 'cancel, close', () => {
-                    if (callback) {
-                        callback(false)
+                        callback(pushed, filter);
                     }
                 })
-                dialog.once('select', attribute => {
-                    pushAttributeFilter(attribute.attributes, (pushed, filter) => {
-                        if (callback) {
-                            callback(pushed, filter);
-                        }
-                    })
 
-                });
             });
-        }
+        });
     }
-
 
     function handleGeneralFilterChecked(e, filter) {
         let isChecked = e.target.checked;
-        if(isChecked) {
+        if (isChecked) {
             selectedFilterList = [...selectedFilterList, filter]
-        }else{
+        } else {
             selectedFilterList = [...selectedFilterList.filter(v => v !== filter)];
         }
 
@@ -409,10 +431,163 @@
     function unsetAll() {
         resetFilter();
         selectedFilterList = [];
+        selectedSaveSearches = [];
         Storage.clear('selectedFilterList', scope)
+        Storage.clear('selectedSavedSearches', scope)
+    }
+
+    function handleAdvancedFilterChecked() {
+        if(advancedFilterChecked) {
+            let validation = window.$(queryBuilderElement).queryBuilder('validate');
+            if (!validation) {
+                Notifier.notify(Language.translate('youHaveErrorsInFilter', 'messages'), 'error');
+                advancedFilterChecked = false;
+                return;
+            }
+        }
+
+        Storage.set('queryBuilderRulesApplied', scope, advancedFilterChecked ? 'apply' : 'no');
+        updateCollection();
+    }
+
+    async function saveSaveSearch(data, id = null): Promise<void> {
+        const userData = UserData.get();
+        if (!userData) {
+            return;
+        }
+
+
+        Notifier.notify(Language.translate('pleaseWait', 'messages'));
+
+        try {
+            const response = await fetch( id ? `/api/v1/SavedSearch/${id}` :  '/api/v1/SavedSearch', {
+                'method': id ? 'PUT': 'POST',
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
+                },
+                'body': JSON.stringify(data),
+            })
+
+            if (response.ok) {
+                Notifier.notify(Language.translate('Done'), 'success');
+                const data = await response.json();
+                return data;
+            }
+        } catch (e) {
+            console.error('Error on saving saveSearch', e);
+        } finally {
+            Notifier.notify(false)
+        }
+    }
+
+    function saveFilter() {
+        let validation = window.$(queryBuilderElement).queryBuilder('validate');
+        if (!validation) {
+            Notifier.notify(Language.translate('youHaveErrorsInFilter', 'messages'), 'error');
+            return;
+        }
+
+        if(editingSavedSearch !== null) {
+            saveSaveSearch({
+                data: window.$(queryBuilderElement).queryBuilder('getRules')
+            }, editingSavedSearch.id);
+            return;
+        }
+
+        createView('savePreset', 'views/modals/save-filters', {}, function (view) {
+            view.render();
+            view.listenToOnce(view, 'save', (params) =>{
+                saveSaveSearch({
+                    entityType: scope,
+                    name: params.name,
+                    data:  Storage.get('queryBuilderRules', scope),
+                    isPublic: params.isPublic
+                }).then(data => {
+                    savedSearchList = [...savedSearchList, data];
+                })
+                view.close();
+            });
+        });
+    }
+
+    function handleSelectedSaveSearch(e) {
+        Storage.set('selectedSavedSearches', scope, savedSearchList.filter(v => e.detail.selectedSavedSearchIds.includes(v.id)));
+        updateCollection();
+    }
+
+    function renameSaveSearch(item) {
+        createView('savePreset', 'views/modals/save-filters', {
+            name: item.name,
+            isPublic: item.isPublic
+        }, function (view) {
+            view.render();
+            view.listenToOnce(view, 'save', (params) =>{
+                saveSaveSearch({
+                    name: params.name,
+                    isPublic: params.isPublic
+                }, item.id).then(data => {
+                    savedSearchList = savedSearchList.map(item => {
+                       return item.id === data.id ?  data : item;
+                    });
+                });
+                view.close();
+            });
+        });
+    }
+    
+  async  function removeSaveSearch(item) {
+        const userData = UserData.get();
+        if (!userData) {
+            return;
+        }
+
+        Notifier.notify(Language.translate('pleaseWait', 'messages'));
+
+        try {
+            const response = await fetch( `/api/v1/SavedSearch/${item.id}`,  {
+                'method': 'DELETE',
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
+                },
+            })
+
+            if (response.ok) {
+                Notifier.notify(Language.translate('Done'), 'success');
+                savedSearchList = savedSearchList.filter(i => i.id !== item.id);
+            }
+        } catch (e) {
+            console.error('Error on deleting saveSearch', e);
+        } finally {
+            Notifier.notify(false)
+        }
+    }
+
+    function editSaveSearchQuery(item) {
+        prepareFilters(() => {
+            const $queryBuilder = window.$(queryBuilderElement)
+            try{
+                oldAdvancedFilter = oldAdvancedFilter ??  Storage.get('queryBuilderRules', scope);
+                $queryBuilder.queryBuilder('setFilters', filters)
+                $queryBuilder.queryBuilder('setRules', item.data)
+                editingSavedSearch = item;
+            }catch (e) {
+                Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt'), 'error')
+            }
+        });
+    }
+
+    function cancelEditSearchQuery() {
+        const $queryBuilder = window.$(queryBuilderElement)
+        $queryBuilder.queryBuilder('setRules', oldAdvancedFilter ?? []);
+        oldAdvancedFilter = null;
+        editingSavedSearch = null;
     }
 
     onMount(() => {
+
+        // load boolFilters
         boolFilterList = (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
             if (typeof item === 'string') return true;
             item = item || {};
@@ -429,37 +604,44 @@
         });
 
         let hiddenBoolFilterList = Metadata.get(['clientDefs', scope, 'hiddenBoolFilterList']) || [];
+
         boolFilterList = boolFilterList.filter(function (item) {
             return !hiddenBoolFilterList.includes(item)
         });
 
         selectedFilterList = Storage.get('selectedFilterList', scope) ?? [];
 
-        selectedFilterList = selectedFilterList.filter(function (item) { return boolFilterList.includes(item)})
+        selectedFilterList = selectedFilterList.filter(function (item) {
+            return boolFilterList.includes(item)
+        });
 
+
+        // load where params
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('where')) {
             const where = JSON.parse(urlParams.get('where'));
             if (where) {
                 Storage.set('queryBuilderRules', scope, where);
-                applyFilter();
                 window.history.replaceState({}, document.title, window.location.origin + '#' + scope);
+                updateCollection()
             }
         }
 
         // set translates
         window.$.fn.queryBuilder.regional['main'] = Language.getData().Global.queryBuilderFilter;
+        window.$.fn.queryBuilder.defaults({lang_code: 'main'});
 
+        // override updateRuleFilter
         let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
         window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
-            if (rule.filter.id === 'emptyAttributeRule') {
+            if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
                 addAttributeFilter((pushed, filter) => {
                     if (pushed) {
                         this.setFilters(filters)
                         rule.filter = filter;
                         originalUpdateRuleFilter.call(this, rule, previousFilter);
-                    }else{
-                        if(rule.filter.id === 'emptyAttributeRule') {
+                    } else {
+                        if (rule.filter.id === 'emptyAttributeRule') {
                             rule.filter = previousFilter;
                         }
                         originalUpdateRuleFilter.call(this, rule, previousFilter);
@@ -469,47 +651,85 @@
                 originalUpdateRuleFilter.call(this, rule, previousFilter);
             }
         }
-        window.$.fn.queryBuilder.defaults({lang_code: 'main'});
 
+        advancedFilterChecked = Storage.get('queryBuilderRulesApplied', scope) === 'apply'
+
+        // load Saved Search
+        CollectionFactory.create('SavedSearch', (collection) => {
+            savedSearchCollection = collection;
+            collection.url = `SavedSearch`;
+            collection.data.scope = scope;
+            collection.fetch().then((data) => {
+                savedSearchList = data.list;
+                loadingSavedSearch = false;
+            })
+        });
+
+        // load select saved search
+        selectedSaveSearches = Storage.get('selectedSavedSearches', scope) || [];
 
         prepareFilters(() => {
             initQueryBuilderFilter();
         });
     })
 </script>
-<div>
+
+<div class="query-builder-container">
     <div>
-        <button  class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
-            <span class="fas fa-times fa-sm"></span>
+        <button class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
+            <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
             {Language.translate('Unset All')}
         </button>
     </div>
-    {#if boolFilterList?.length > 0}
-        <h5>{Language.translate('General Filters')}</h5>
-        <ul>
-            {#each boolFilterList as filter}
-                <li class="checkbox">
-                    <label class:active={selectedFilterList.includes(filter)}>
-                    <input type="checkbox" checked={selectedFilterList.includes(filter)} on:change={(e) => handleGeneralFilterChecked(e, filter)} name="{filter}">
-                        {Language.translate(filter, 'boolFilters', scope)}
-                    </label>
-                </li>
-            {/each}
-        </ul>
+   <div class="checkboxes-filter">
+       {#if boolFilterList?.length > 0}
+           <h5>{Language.translate('General Filters')}</h5>
+           <ul>
+               {#each boolFilterList as filter}
+                   <li class="checkbox">
+                       <label class:active={selectedFilterList.includes(filter)}>
+                           <input type="checkbox" checked={selectedFilterList.includes(filter)}
+                                  on:change={(e) => handleGeneralFilterChecked(e, filter)} name="{filter}">
+                           {Language.translate(filter, 'boolFilters', scope)}
+                       </label>
+                   </li>
+               {/each}
+           </ul>
+       {/if}
+   </div>
+    {#if Acl.check('SavedSearch', 'read')}
+        <SavedSearch
+                scope={scope}
+                savedSearchList={savedSearchList}
+                loading={loadingSavedSearch}
+                editingItem={editingSavedSearch}
+                selectedSavedSearchIds={selectedSaveSearches.map(i => i.id)}
+                rename={renameSaveSearch}
+                remove={removeSaveSearch}
+                edit={editSaveSearchQuery}
+                cancel={cancelEditSearchQuery}
+                on:change={handleSelectedSaveSearch}
+        />
     {/if}
-    <h5>{Language.translate('Advanced Filters')}</h5>
-    <div class="row filter-action">
-        <button  class="filter-item" data-action="filter" on:click={applyFilter}>
-            <span class="fas fa-check fa-sm"></span>
-            {Language.translate('Apply')}
-        </button>
-        <button  class="filter-item" data-action="filter"  on:click={resetFilter}>
-            <span class="fas fa-times fa-sm"></span>
-            {Language.translate('Unset')}
-        </button>
 
+    <div class="advanced-filters">
+        <h5>
+            <input type="checkbox" bind:checked={advancedFilterChecked} on:change={handleAdvancedFilterChecked} >
+            <span>{Language.translate('Advanced Filter')}</span></h5>
+        <div class="row filter-action">
+            <button class="filter-item" on:click={resetFilter}>
+                <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
+                {Language.translate('Unset')}
+            </button>
+            {#if Acl.check('SavedSearch', 'create')}
+                <button class="filter-item save"  on:click={saveFilter}>
+                    <span><svg class="icon"><use href="client/img/icons/icons.svg#save"></use></svg></span>
+                    {Language.translate('Save')}
+                </button>
+            {/if}
+        </div>
+        <div class="query-builder" bind:this={queryBuilderElement}></div>
     </div>
-    <div class="query-builder" bind:this={queryBuilderElement}></div>
 </div>
 
 <style>
@@ -521,32 +741,36 @@
         padding: 5px 10px;
         font-size: 13px;
         line-height: 1;
-        margin-right:  5px;
+        margin-right: 5px;
     }
 
     .filter-item:hover {
         border: 1px solid rgb(126 183 241);
-        border-radius: 0 5px 5px 0;
         background-color: rgba(126, 183, 241, 0.1);
     }
 
-    .filter-action{
+    .filter-item.save {
+        background-color:  #85b75f40;
+        border-color: #85b75f;
+    }
+
+    .filter-item.save:hover {
+        background-color:  #85b75f12;
+    }
+
+    .filter-action {
         margin-bottom: 10px;
-        margin-left:  0;
-        margin-right:  0;
+        margin-left: 0;
+        margin-right: 0;
     }
 
-    ul {
-        padding-left: 20px;
-        margin-bottom: 20px;
+    .advanced-filters h5{
+        display: flex;
+        align-items: center;
     }
 
-    li label {
-        color: var(--primary-font-color);
-        padding-left: 0;
-    }
-
-    li label.active {
-        color: #06c;
+    .advanced-filters h5 input[type="checkbox"]{
+        margin-top: 0;
+        margin-right: 10px;
     }
 </style>

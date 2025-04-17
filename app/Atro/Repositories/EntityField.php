@@ -92,7 +92,13 @@ class EntityField extends ReferenceData
             'entityId'       => $entityName,
             'entityName'     => $this->translate($entityName, 'scopeNames'),
             'tooltipText'    => $this->translate($fieldName, 'tooltips', $entityName),
-            'multilangField' => $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName, 'multilangField'])
+            'multilangField' => $this->getMetadata()->get([
+                'entityDefs',
+                $entityName,
+                'fields',
+                $fieldName,
+                'multilangField'
+            ])
         ]);
     }
 
@@ -133,12 +139,22 @@ class EntityField extends ReferenceData
 
         $items = [];
         foreach ($entities as $entityName) {
+            $items[] = [
+                'id'         => "{$entityName}_id",
+                'code'       => 'id',
+                'name'       => 'ID',
+                'type'       => 'varchar',
+                'required'   => false,
+                'readOnly'   => true,
+                'entityId'   => $entityName,
+                'entityName' => $this->translate($entityName, 'scopeNames')
+            ];
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
                 if (is_array($types) && !in_array($fieldDefs['type'], $types)) {
                     continue;
                 }
 
-                if ($skipLingual && !empty($fieldDefs['multilangField'])){
+                if ($skipLingual && !empty($fieldDefs['multilangField'])) {
                     continue;
                 }
 

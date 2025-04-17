@@ -1,4 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-envelope"
+  "iconClass": "stacked_email"
 }

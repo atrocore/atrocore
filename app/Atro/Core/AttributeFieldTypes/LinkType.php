@@ -14,8 +14,10 @@ namespace Atro\Core\AttributeFieldTypes;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class LinkType extends AbstractFieldType
@@ -79,6 +81,23 @@ class LinkType extends AbstractFieldType
             }
 
             $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+        }
+    }
+
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+
+        if (!empty($attributeData['entityType'])) {
+            $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
+
+            $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
+            $referenceAlias = "{$alias}{$referenceTable}";
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier($referenceTable), $referenceAlias, "{$referenceAlias}.id={$alias}.reference_value AND {$referenceAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
+
+            $qb->addSelect("{$referenceAlias}.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
+            $qb->addSelect("{$referenceAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
         }
     }
 }

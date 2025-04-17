@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-hdd",
+  "iconClass": "storage",
   "relationshipPanels": {
     "folders": {
       "create": false,
