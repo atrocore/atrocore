@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import {onMount, tick} from "svelte";
     import {Metadata} from "../../../utils/Metadata";
     import {Storage} from "../../../utils/Storage";
     import Rule from "./interfaces/Rule";
@@ -11,7 +11,7 @@
     import {CollectionFactory} from "../../../utils/CollectionFactory";
 
     export let scope: string;
-    export let collection: any;
+    export let searchManager: any;
     export let createView: Function;
 
     export let mandatoryBoolFilter: string[] = [];
@@ -26,8 +26,8 @@
 
     let queryBuilderElement: HTMLElement
 
-    let model = new collection.model();
-    
+    let model = new searchManager.collection.model();
+
     let advancedFilterChecked = false;
 
     let savedSearchList: Array<any> = [];
@@ -87,6 +87,10 @@
         }
     }
 
+    function updateSearchManager(data: any) {
+        searchManager.set({...searchManager.get(), ...data});
+    }
+
     function camelCaseToHyphen(str: string) {
         return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
@@ -108,7 +112,7 @@
 
     function initQueryBuilderFilter() {
         const $queryBuilder = window.$(queryBuilderElement)
-        const rules = Storage.get('queryBuilderRules', scope) || [];
+        const rules = searchManager.getQueryBuilder() || [];
         const emptyAttribute = 'emptyAttributeRule';
 
         let filterPerGroups = {};
@@ -199,7 +203,9 @@
             try {
                 const rules = $queryBuilder.queryBuilder('getRules');
                 if (rules) {
-                    Storage.set('queryBuilderRules', scope, rules);
+                    updateSearchManager({
+                        queryBuilder: rules
+                    })
                 }
             } catch (err) {
             }
@@ -264,7 +270,7 @@
         });
 
 
-        const rules = Storage.get('queryBuilderRules', scope);
+        const rules = searchManager.getQueryBuilder();
 
         /**
          * Load attributes filters
@@ -315,33 +321,19 @@
 
 
     function resetFilter() {
-        Storage.set('queryBuilderRules', scope, []);
+        updateSearchManager({
+            queryBuilder: []
+        });
         window.$(queryBuilderElement).queryBuilder('reset')
     }
 
     function updateCollection() {
-        collection.reset();
+        searchManager.collection.reset();
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
-        let where = [];
-        if(advancedFilterChecked) {
-            where.push(Storage.get('queryBuilderRules', scope));
-        }
 
-        if (selectedFilterList.length || mandatoryBoolFilter.length) {
-            where.push({'type': 'bool', value: [...selectedFilterList, ...mandatoryBoolFilter]})
-        }
+        searchManager.collection.where = searchManager.getWhere();
 
-       let selectedSavedSearches = Storage.get('selectedSavedSearches', scope);
-
-        if(selectedSavedSearches && selectedSavedSearches.length) {
-            for (const selectedSavedSearch of selectedSavedSearches) {
-                where.push(selectedSavedSearch.data);
-            }
-        }
-
-        collection.where = where;
-
-        collection.fetch().then(() => window.Backbone.trigger('after:search', collection));
+        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
     }
 
     function pushAttributeFilter(attribute: any, callback: Function) {
@@ -417,27 +409,20 @@
 
     function handleGeneralFilterChecked(e, filter) {
         let isChecked = e.target.checked;
-        if (isChecked) {
-            selectedFilterList = [...selectedFilterList, filter]
-        } else {
-            selectedFilterList = [...selectedFilterList.filter(v => v !== filter)];
-        }
-
-        Storage.set('selectedFilterList', scope, selectedFilterList);
-
+        let bool = searchManager.getBool();
+        bool[filter] = isChecked;
+        updateSearchManager({bool})
         updateCollection()
     }
 
     function unsetAll() {
+        searchManager.reset();
         resetFilter();
-        selectedFilterList = [];
-        selectedSaveSearches = [];
-        Storage.clear('selectedFilterList', scope)
-        Storage.clear('selectedSavedSearches', scope)
+        tick();
     }
 
     function handleAdvancedFilterChecked() {
-        if(advancedFilterChecked) {
+        if (advancedFilterChecked) {
             let validation = window.$(queryBuilderElement).queryBuilder('validate');
             if (!validation) {
                 Notifier.notify(Language.translate('youHaveErrorsInFilter', 'messages'), 'error');
@@ -446,7 +431,10 @@
             }
         }
 
-        Storage.set('queryBuilderRulesApplied', scope, advancedFilterChecked ? 'apply' : 'no');
+        updateSearchManager({
+            queryBuilderApplied: advancedFilterChecked ? 'apply' : false
+        });
+
         updateCollection();
     }
 
@@ -460,8 +448,8 @@
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
 
         try {
-            const response = await fetch( id ? `/api/v1/SavedSearch/${id}` :  '/api/v1/SavedSearch', {
-                'method': id ? 'PUT': 'POST',
+            const response = await fetch(id ? `/api/v1/SavedSearch/${id}` : '/api/v1/SavedSearch', {
+                'method': id ? 'PUT' : 'POST',
                 'headers': {
                     'Content-Type': 'application/json',
                     'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
@@ -488,7 +476,7 @@
             return;
         }
 
-        if(editingSavedSearch !== null) {
+        if (editingSavedSearch !== null) {
             saveSaveSearch({
                 data: window.$(queryBuilderElement).queryBuilder('getRules')
             }, editingSavedSearch.id);
@@ -497,11 +485,11 @@
 
         createView('savePreset', 'views/modals/save-filters', {}, function (view) {
             view.render();
-            view.listenToOnce(view, 'save', (params) =>{
+            view.listenToOnce(view, 'save', (params) => {
                 saveSaveSearch({
                     entityType: scope,
                     name: params.name,
-                    data:  Storage.get('queryBuilderRules', scope),
+                    data: searchManager.getQueryBuilder(),
                     isPublic: params.isPublic
                 }).then(data => {
                     savedSearchList = [...savedSearchList, data];
@@ -512,7 +500,9 @@
     }
 
     function handleSelectedSaveSearch(e) {
-        Storage.set('selectedSavedSearches', scope, savedSearchList.filter(v => e.detail.selectedSavedSearchIds.includes(v.id)));
+        updateSearchManager({
+            savedFilters: savedSearchList.filter(v => e.detail.selectedSavedSearchIds.includes(v.id))
+        })
         updateCollection();
     }
 
@@ -522,21 +512,21 @@
             isPublic: item.isPublic
         }, function (view) {
             view.render();
-            view.listenToOnce(view, 'save', (params) =>{
+            view.listenToOnce(view, 'save', (params) => {
                 saveSaveSearch({
                     name: params.name,
                     isPublic: params.isPublic
                 }, item.id).then(data => {
                     savedSearchList = savedSearchList.map(item => {
-                       return item.id === data.id ?  data : item;
+                        return item.id === data.id ? data : item;
                     });
                 });
                 view.close();
             });
         });
     }
-    
-  async  function removeSaveSearch(item) {
+
+    async function removeSaveSearch(item) {
         const userData = UserData.get();
         if (!userData) {
             return;
@@ -545,7 +535,7 @@
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
 
         try {
-            const response = await fetch( `/api/v1/SavedSearch/${item.id}`,  {
+            const response = await fetch(`/api/v1/SavedSearch/${item.id}`, {
                 'method': 'DELETE',
                 'headers': {
                     'Content-Type': 'application/json',
@@ -567,12 +557,12 @@
     function editSaveSearchQuery(item) {
         prepareFilters(() => {
             const $queryBuilder = window.$(queryBuilderElement)
-            try{
-                oldAdvancedFilter = oldAdvancedFilter ??  Storage.get('queryBuilderRules', scope);
+            try {
+                oldAdvancedFilter = oldAdvancedFilter ?? searchManager.getQueryBuilder();
                 $queryBuilder.queryBuilder('setFilters', filters)
                 $queryBuilder.queryBuilder('setRules', item.data)
                 editingSavedSearch = item;
-            }catch (e) {
+            } catch (e) {
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt'), 'error')
             }
         });
@@ -609,11 +599,6 @@
             return !hiddenBoolFilterList.includes(item)
         });
 
-        selectedFilterList = Storage.get('selectedFilterList', scope) ?? [];
-
-        selectedFilterList = selectedFilterList.filter(function (item) {
-            return boolFilterList.includes(item)
-        });
 
 
         // load where params
@@ -652,7 +637,7 @@
             }
         }
 
-        advancedFilterChecked = Storage.get('queryBuilderRulesApplied', scope) === 'apply'
+        advancedFilterChecked = searchManager.isQueryBuilderApplied();
 
         // load Saved Search
         CollectionFactory.create('SavedSearch', (collection) => {
@@ -666,7 +651,7 @@
         });
 
         // load select saved search
-        selectedSaveSearches = Storage.get('selectedSavedSearches', scope) || [];
+        selectedSaveSearches = searchManager.getSavedFilters() || [];
 
         prepareFilters(() => {
             initQueryBuilderFilter();
@@ -681,22 +666,22 @@
             {Language.translate('Unset All')}
         </button>
     </div>
-   <div class="checkboxes-filter">
-       {#if boolFilterList?.length > 0}
-           <h5>{Language.translate('General Filters')}</h5>
-           <ul>
-               {#each boolFilterList as filter}
-                   <li class="checkbox">
-                       <label class:active={selectedFilterList.includes(filter)}>
-                           <input type="checkbox" checked={selectedFilterList.includes(filter)}
-                                  on:change={(e) => handleGeneralFilterChecked(e, filter)} name="{filter}">
-                           {Language.translate(filter, 'boolFilters', scope)}
-                       </label>
-                   </li>
-               {/each}
-           </ul>
-       {/if}
-   </div>
+    <div class="checkboxes-filter">
+        {#if boolFilterList?.length > 0}
+            <h5>{Language.translate('General Filters')}</h5>
+            <ul>
+                {#each boolFilterList as filter}
+                    <li class="checkbox">
+                        <label class:active={searchManager.getBool()[filter]}>
+                            <input type="checkbox" checked={searchManager.getBool()[filter]}
+                                   on:change={(e) => handleGeneralFilterChecked(e, filter)} name="{filter}">
+                            {Language.translate(filter, 'boolFilters', scope)}
+                        </label>
+                    </li>
+                {/each}
+            </ul>
+        {/if}
+    </div>
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
@@ -714,7 +699,7 @@
 
     <div class="advanced-filters">
         <h5>
-            <input type="checkbox" bind:checked={advancedFilterChecked} on:change={handleAdvancedFilterChecked} >
+            <input type="checkbox" bind:checked={advancedFilterChecked} on:change={handleAdvancedFilterChecked}>
             <span>{Language.translate('Advanced Filter')}</span></h5>
         <div class="row filter-action">
             <button class="filter-item" on:click={resetFilter}>
@@ -722,7 +707,7 @@
                 {Language.translate('Unset')}
             </button>
             {#if Acl.check('SavedSearch', 'create')}
-                <button class="filter-item save"  on:click={saveFilter}>
+                <button class="filter-item save" on:click={saveFilter}>
                     <span><svg class="icon"><use href="client/img/icons/icons.svg#save"></use></svg></span>
                     {Language.translate('Save')}
                 </button>
@@ -750,12 +735,12 @@
     }
 
     .filter-item.save {
-        background-color:  #85b75f40;
+        background-color: #85b75f40;
         border-color: #85b75f;
     }
 
     .filter-item.save:hover {
-        background-color:  #85b75f12;
+        background-color: #85b75f12;
     }
 
     .filter-action {
@@ -764,12 +749,12 @@
         margin-right: 0;
     }
 
-    .advanced-filters h5{
+    .advanced-filters h5 {
         display: flex;
         align-items: center;
     }
 
-    .advanced-filters h5 input[type="checkbox"]{
+    .advanced-filters h5 input[type="checkbox"] {
         margin-top: 0;
         margin-right: 10px;
     }
