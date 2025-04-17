@@ -331,7 +331,7 @@ Espo.define('views/main', ['view',  'search-manager'], function (Dep, SearchMana
                      searchManager.scope = this.scope;
                      searchManager.loadStored();
                 }
-                
+
                 new Svelte.RightSideView({
                     target:  $(`${this.options.el} .content-wrapper`).get(0),
                     props: {
