@@ -89,7 +89,7 @@ Espo.define('search-manager', [], function () {
             }
 
             if (!('savedFilters' in this.data)) {
-                this.data.savedFilters = {};
+                this.data.savedFilters = [];
             }
 
             if (!('queryBuilderApplied' in this.data)) {
