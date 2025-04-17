@@ -1,8 +1,12 @@
-import {writable} from 'svelte/store';
+import {writable, get} from 'svelte/store';
 
 const data = writable({});
 
 export const Language = {
+
+    getData(): any {
+        return get(data);
+    },
 
     setTranslations(newTranslations: any): void {
         data.set(newTranslations);

@@ -4,6 +4,7 @@
     import {Language} from "../../utils/Language";
     import Item from './interfaces/Item'
     import BaseSidebar from "./BaseSidebar.svelte";
+    import QueryBuilder from "./search-filter/QueryBuilder.svelte";
 
     export let scope: string;
     export let mode: string;
@@ -18,7 +19,11 @@
 
     export let hasStream: boolean = false;
 
+    export let collection;
+    export let createView;
+
     $: scopeKey = scope + mode;
+
 
     let isPin = true;
     let streamView: Object;
@@ -97,6 +102,16 @@
             loadSummary();
         }
 
+        if (['list','plate', 'kanban'].includes(mode)) {
+            items = [
+                ...items,
+                {
+                    name: "filter",
+                    label: Language.translate('filter')
+                }
+            ]
+        }
+
         if (hasStream) {
             items = [
                 ...items,
@@ -112,7 +127,7 @@
             setActiveItem(items.find(i => i.name === itemName));
         }
 
-        if(!activeItem) {
+        if (!activeItem) {
             setActiveItem(items[0]);
         }
     });
@@ -139,6 +154,10 @@
             <div class="layout-editor-container" class:hidden={activeItem?.name !== 'summary'}></div>
         </div>
 
+
+        <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
+            <QueryBuilder scope={scope} collection={collection} createView={createView} parentWidth="{currentWidth}"></QueryBuilder>
+        </div>
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
             <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">

@@ -710,13 +710,22 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         mode: 'edit',
                         foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                     }, view => {
+                        this.listenTo(view, 'after:render', () => {
+                            view.$el.find('[data-action="createLink"]').hide()
+                        })
+
                         this.listenTo(view, 'change', () => {
                             this.filterValue = model.get('valueIds');
+                            rule.data = {
+                                nameHash: model.get('valueNames')
+                            }
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
+
                     });
                     this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                        model.set('valueNames', rule.data?.nameHash);
                         model.set('valueIds', rule.value);
                     });
                 }
@@ -728,6 +737,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
+                optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'linked_with',
                     'not_linked_with',

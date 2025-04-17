@@ -331,6 +331,8 @@ Espo.define('views/main', 'view', function (Dep) {
                         model: this.model,
                         mode: this.getMode(),
                         hasStream: this.canLoadActivities(),
+                        collection: this.collection,
+                        createView: this.createView.bind(this),
                         loadSummary: () => {
                             this.createView('rightSideView', this.rightSideView, {
                                 el: this.options.el + ' .right-side-view .summary',
