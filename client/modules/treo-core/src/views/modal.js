@@ -39,6 +39,7 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                    const cssParams = {
                        overflow: 'auto'
                    };
+                   this.dialog.$el.css('paddingLeft', 0);
                    this.dialog.$el.css('paddingRight', 0);
                    if (!this.dialog.options.fullHeight && windowHeight < 512) {
                        cssParams.maxHeight = 'none';

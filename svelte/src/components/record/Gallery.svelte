@@ -184,6 +184,8 @@
 <style>
     .gallery-header {
         display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
         justify-content: space-between;
         align-items: baseline;
         min-height: 43px;
@@ -330,6 +332,18 @@
     }
 
     @media screen and (max-width: 768px) {
+        .gallery-header {
+            padding-top: 15px;
+        }
+
+        .gallery-header > .buttons-container {
+            flex-basis: 100%;
+        }
+
+        .gallery-wrapper {
+            margin-top: 0;
+        }
+
         .thumbs-wrapper {
             display: none;
         }
