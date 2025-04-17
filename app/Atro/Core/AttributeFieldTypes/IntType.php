@@ -69,6 +69,8 @@ class IntType extends AbstractFieldType
         if (isset($row['measure_id'])) {
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
             $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
+            $entity->entityDefs['fields'][$name]['detailViewLabel'] = $entity->entityDefs['fields'][$name]['label'];
+            $entity->entityDefs['fields'][$name]['label'] = "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate("{$this->type}Part");
 
             $entity->fields[$name . 'UnitId'] = [
                 'type'        => 'varchar',

@@ -1960,7 +1960,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         if (!defs.layoutDetailDisabled) {
                             let item = {
                                 name: name,
-                                customLabel: defs.label,
+                                customLabel: defs.detailViewLabel || defs.label,
                                 fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
                             }
                             if (defs.layoutDetailView) {
