@@ -15,6 +15,8 @@ import {ModelFactory} from "./utils/ModelFactory";
 import {Config} from "./utils/Config";
 import {Storage} from "./utils/Storage.ts";
 import {Acl} from "./utils/Acl.ts";
+import {CollectionFactory} from "./utils/CollectionFactory.js";
+
 
 
 import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
@@ -39,6 +41,7 @@ window.SvelteModelFactory = ModelFactory;
 window.SvelteConfig = Config;
 window.SvelteStorage = Storage;
 window.SvelteAcl = Acl;
+window.SvelteCollectionFactory = CollectionFactory;
 window.driver = driver;
 window.tippy = tippy;
 
