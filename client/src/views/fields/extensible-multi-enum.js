@@ -215,6 +215,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', scope),
                 type: 'string',
+                optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'array_any_of',
                     'array_none_of',

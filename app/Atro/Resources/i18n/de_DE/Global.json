@@ -357,9 +357,19 @@
     "sidebarUnpin": "Automatische Erweiterung des Panels ist inaktiv",
     "sidebarPin": "Automatische Erweiterung des Panels ist aktiv",
     "sidebarExpand": "Zum Erweitern anklicken",
-    "sidebarCollapse": "Zum Verkleinern anklicken"
+    "sidebarCollapse": "Zum Verkleinern anklicken",
+    "addAttribute": "Attribut hinzufügen",
+    "filterPlaceHolder": "Filter / Attribute / Feld",
+    "General Filters": "Allgemeine Filter",
+    "Attributes": "Attribute",
+    "Fields": "Felder",
+    "Advanced Filter": "Erweiterte Filter",
+    "Unset": "Nicht eingestellt",
+    "Unset All": "Alle zurücksetzen",
+    "Cancel Edit": "Bearbeiten abbrechen"
   },
   "messages": {
+    "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
     "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
     "confirmInheritAllFromParent": "Sind Sie sicher, dass Sie wollen, dass alle Elemente Feld- (und Attribut-) Werte sowie Beziehungen von Elementen des übergeordneten Datensatzes erben? Vorhandene Werte werden nicht ersetzt.",
@@ -455,7 +465,9 @@
     "dontHaveAccessInInstance": "Sie haben keinen Zugriff auf diesen Datensatz auf der Instanz",
     "selectNoMoreThan": "Nicht mehr als {count} Datensätze auswählen",
     "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus.",
-    "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits."
+    "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits.",
+    "youHaveErrorsInFilter": "Der Filter hat einige Fehler.",
+    "theSavedFilterMightBeCorrupt": "Der gespeicherte Filter könnte beschädigt sein."
   },
   "unit Length": {
     "mm": "mm",

@@ -60,6 +60,15 @@ Espo.define('views/modals/save-filters', ['views/modal', 'model'], function (Dep
             this.header = this.translate('Save Filters');
 
             var model = new Model();
+
+            if(this.options.name) {
+                model.set('name', this.options.name)
+            }
+
+            if(this.options.isPublic) {
+                model.set('isPublic', this.options.isPublic)
+            }
+
             this.createView('isPublic', 'views/fields/bool', {
                 el: this.options.el + ' .field[data-name="isPublic"]',
                 defs: {

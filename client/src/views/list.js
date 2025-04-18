@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], function (Dep, SearchManager) {
+Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!QueryBuilder'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -746,10 +746,16 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree'], functi
         },
 
         shouldSetupRightSideView() {
-            let streamAllowed = this.model
-                ? this.getAcl().checkModel(this.model, 'stream', true)
-                : this.getAcl().check(this.scope, 'stream');
-            return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed;
+            return this.shouldShowFilter() || this.canLoadActivities();
+        },
+
+        shouldShowFilter() {
+            if(this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
+                return false;
+            }
+
+            return ['list', 'kanban', 'plate'].includes(this.getMode()) && this.collection;
+
         }
     });
 });

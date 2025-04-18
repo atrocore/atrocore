@@ -391,9 +391,19 @@
     "sidebarUnpin": "Automatic panel expansion is inactive",
     "sidebarPin": "Automatic panel expansion is active",
     "sidebarExpand": "Click to expand",
-    "sidebarCollapse": "Click to collapse"
+    "sidebarCollapse": "Click to collapse",
+    "addAttribute": "Add attribute",
+    "filterPlaceHolder": "Filter / Attribute / Field",
+    "General Filters": "General Filters",
+    "Attributes": "Attributes",
+    "Fields": "Fields",
+    "Advanced Filter": "Advanced Filter",
+    "Unset": "Unset",
+    "Unset All": "Unset All",
+    "Cancel Edit": "Cancel Edit"
   },
   "messages": {
+    "queryHasErrors": "They are some errors on your query",
     "actionExecuted": "Action \"%s\" was successfully executed",
     "jobAdded": "Job was successfully added to Job Manager",
     "confirmInheritAllForChildren": "Are you sure you want all child items to inherit field (and attribute) values as well as relations from this parent item? Existing values will not be replaced.",
@@ -490,7 +500,9 @@
     "dontHaveAccessInInstance": "You don't have access to this record on instance",
     "selectNoMoreThan": "Select not more than {count} records",
     "fillEmptyFieldBeforeMerging": "Some empty fields are required, please fill them before merging.",
-    "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists."
+    "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists.",
+    "youHaveErrorsInFilter": "The filter have some errors.",
+    "theSavedFilterMightBeCorrupt": "The Saved Filter might be corrupt."
   },
   "boolFilters": {
     "onlyActive": "Active",
