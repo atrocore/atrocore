@@ -206,7 +206,7 @@ class OpenApiGenerator
                             "type"    => "boolean",
                             "example" => "true"
                         ]
-                    ]
+                    ],
                 ],
                 "responses"   => self::prepareResponses([
                     "type"       => "object",
