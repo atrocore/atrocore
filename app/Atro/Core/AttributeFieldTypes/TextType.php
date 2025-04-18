@@ -12,8 +12,10 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Container;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
@@ -21,6 +23,15 @@ class TextType extends AbstractFieldType
 {
     protected string $type = 'text';
     protected string $column = 'text_value';
+
+    protected Connection $conn;
+
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+
+        $this->conn = $container->get('connection');
+    }
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
@@ -136,7 +147,10 @@ class TextType extends AbstractFieldType
         }
 
         if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
+
             $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
+            $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
         }
     }
 }
