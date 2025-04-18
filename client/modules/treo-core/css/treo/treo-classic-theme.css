@@ -22805,7 +22805,25 @@ div.list-kanban > div > table .item .panel .form-group {
     border-radius: 3px;
 }
 
+.query-builder-container .checkboxes-filter > ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
 
+.query-builder-container .checkboxes-filter li label {
+    color: var(--primary-font-color);
+    padding-left: 0;
+}
+
+.query-builder-container .checkboxes-filter li label.active {
+    color: #06c;
+}
+
+.query-builder-container .checkbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 .text-gray {
     color: #999;

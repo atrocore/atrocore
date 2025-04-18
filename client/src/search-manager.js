@@ -46,9 +46,11 @@ Espo.define('search-manager', [], function () {
             textFilter: '',
             bool: {},
             advanced: {},
-            queryBuilder: {},
+            queryBuilder: [],
             primary: null,
-            pinned: {}
+            pinned: {},
+            savedFilters: [],
+            queryBuilderApplied: false
         };
 
         if (defaultData) {
@@ -74,7 +76,7 @@ Espo.define('search-manager', [], function () {
                 this.data.advanced = {};
             }
             if (!('queryBuilder' in this.data)) {
-                this.data.queryBuilder = {};
+                this.data.queryBuilder = [];
             }
             if (!('bool' in this.data)) {
                 this.data.bool = {};
@@ -85,11 +87,18 @@ Espo.define('search-manager', [], function () {
             if (!('pinned' in this.data)) {
                 this.data.pinned = {};
             }
+
+            if (!('savedFilters' in this.data)) {
+                this.data.savedFilters = [];
+            }
+
+            if (!('queryBuilderApplied' in this.data)) {
+                this.data.queryBuilderApplied = false;
+            }
         },
 
         getWhere: function () {
             var where = [];
-
             if (this.data.textFilter && this.data.textFilter != '') {
                 where.push({
                     type: 'textFilter',
@@ -188,6 +197,22 @@ Espo.define('search-manager', [], function () {
 
         get: function () {
             return this.data;
+        },
+
+        getQueryBuilder: function () {
+            return this.data.queryBuilder;
+        },
+
+        isQueryBuilderApplied: function () {
+            return this.data.queryBuilderApplied === 'apply';
+        },
+
+        getBool: function () {
+            return this.data.bool;
+        },
+
+        getSavedFilters: function () {
+            return this.data.savedFilters;
         },
 
         setAdvanced: function (advanced) {

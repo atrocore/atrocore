@@ -908,6 +908,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.listenTo(this.collection, 'sync', function () {
                 this.notify(false);
             }.bind(this));
+
             let where = this.searchManager.getWhere();
             where.forEach(item => {
                 if (item.type === 'bool') {

@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/main', 'view', function (Dep) {
+Espo.define('views/main', ['view',  'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -324,6 +324,14 @@ Espo.define('views/main', 'view', function (Dep) {
         setupRightSideView: function() {
             if(this.shouldSetupRightSideView()) {
                 let recordView = this.getMainRecord();
+                let searchManager = null;
+
+                if(this.getMode() === 'list' && this.collection) {
+                     searchManager = new SearchManager(this.collection, 'listFilter', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
+                     searchManager.scope = this.scope;
+                     searchManager.loadStored();
+                }
+
                 new Svelte.RightSideView({
                     target:  $(`${this.options.el} .content-wrapper`).get(0),
                     props: {
@@ -331,7 +339,7 @@ Espo.define('views/main', 'view', function (Dep) {
                         model: this.model,
                         mode: this.getMode(),
                         hasStream: this.canLoadActivities(),
-                        collection: this.collection,
+                        searchManager: searchManager,
                         createView: this.createView.bind(this),
                         loadSummary: () => {
                             this.createView('rightSideView', this.rightSideView, {

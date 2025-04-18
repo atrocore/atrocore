@@ -12,14 +12,10 @@
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let loadSummary: Function;
-
     export let loadActivities: Function;
-
     export let isCollapsed: boolean = false;
-
     export let hasStream: boolean = false;
-
-    export let collection;
+    export let searchManager;
     export let createView;
 
     $: scopeKey = scope + mode;
@@ -156,7 +152,7 @@
 
 
         <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
-            <QueryBuilder scope={scope} collection={collection} createView={createView} parentWidth="{currentWidth}"></QueryBuilder>
+            <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} parentWidth="{currentWidth}"></QueryBuilder>
         </div>
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
