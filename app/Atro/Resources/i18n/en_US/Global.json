@@ -502,7 +502,7 @@
     "fillEmptyFieldBeforeMerging": "Some empty fields are required, please fill them before merging.",
     "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists.",
     "youHaveErrorsInFilter": "The filter have some errors.",
-    "theSavedFilterMightBeCorrupt": "The Saved Filter might be corrupt."
+    "theSavedFilterMightBeCorrupt": "Format not supported, the Saved Filter might be corrupt."
   },
   "boolFilters": {
     "onlyActive": "Active",

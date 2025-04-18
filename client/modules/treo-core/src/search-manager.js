@@ -55,6 +55,8 @@ Espo.define('treo-core:search-manager', 'class-replace!treo-core:search-manager'
                 this.data.savedFilters.forEach(item => {
                     if(item?.data?.condition) {
                         where.push(item.data);
+                    }else{
+                       where = where.concat(this.getAdvancedWhere(item.data))
                     }
                 });
             }
@@ -62,33 +64,37 @@ Espo.define('treo-core:search-manager', 'class-replace!treo-core:search-manager'
             if (this.data.queryBuilder.condition && this.isQueryBuilderApplied()) {
                 where.push(this.data.queryBuilder);
             } else if (this.data.advanced) {
-                var groups = {};
-                for (var name in this.data.advanced) {
-                    var defs = this.data.advanced[name];
-                    if (!defs) {
-                        continue;
-                    }
-                    var clearedName = name.split('-')[0];
-                    var part = this.getWherePart(clearedName, defs);
-                    (groups[clearedName] = groups[clearedName] || []).push(part);
-                }
-                var finalPart = [];
-                for (var name in groups) {
-                    var group;
-                    if (groups[name].length > 1) {
-                        group = {
-                            type: 'or',
-                            value: groups[name]
-                        };
-                    } else {
-                        group = groups[name][0];
-                    }
-                    finalPart.push(group);
-                }
-                where = where.concat(finalPart);
+                where = where.concat(this.getAdvancedWhere(this.data.advanced))
             }
             return where;
         },
+
+         getAdvancedWhere(data){
+             var groups = {};
+             for (var name in data) {
+                 var defs = data[name];
+                 if (!defs) {
+                     continue;
+                 }
+                 var clearedName = name.split('-')[0];
+                 var part = this.getWherePart(clearedName, defs);
+                 (groups[clearedName] = groups[clearedName] || []).push(part);
+             }
+             var finalPart = [];
+             for (var name in groups) {
+                 var group;
+                 if (groups[name].length > 1) {
+                     group = {
+                         type: 'or',
+                         value: groups[name]
+                     };
+                 } else {
+                     group = groups[name][0];
+                 }
+                 finalPart.push(group);
+             }
+            return finalPart;
+         },
 
          getWherePart: function (name, defs) {
              var attribute = name;

@@ -2,17 +2,16 @@
 <div class="row search-row">
     <div class="form-group {{#if isModalDialog}}col-md-12 col-sm-12{{/if}}">
         <div class="input-group">
-            <div class="input-group-btn left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
-                <button type="button" class="btn btn-default dropdown-toggle filters-button {{#if filtersDisabled}}disabled filter-disabled{{/if}}" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
+            <div class="input-group-btn  left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
+                <button type="button" class="btn btn-default dropdown-toggle filters-button {{#if filtersDisabled}}disabled filter-disabled{{/if}}" title="Use the Right panel for filtering" data-toggle="dropdown" tabindex="-1">
                     <span class="filters-label"></span>
                     <span class="caret"></span>
                 </button>
+                {{#unless openQueryBuilder }}
                 <ul class="dropdown-menu pull-left filter-menu">
                     <li class="filter-menu-closer"></li>
                     <li><a class="preset" tabindex="-1" href="javascript:" data-name="" data-action="selectPreset"><div>{{translate 'All'}}</div></a></li>
-                    {{#each presetFilterList}}
-                    <li><a class="preset" tabindex="-1" href="javascript:" data-name="{{name}}" data-action="selectPreset"><div>{{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../../entityType}}{{/if}}</div></a></li>
-                    {{/each}}
+
                     <li class="divider preset-control hidden"></li>
 
 
@@ -52,6 +51,7 @@
                     <li class="checkbox{{#if hidden}} hidden{{/if}}"><label><input type="checkbox" data-role="boolFilterCheckbox" name="{{name}}" {{#ifPropEquals ../bool name true}}checked{{/ifPropEquals}}> {{translate name scope=../entityType category='boolFilters'}}</label></li>
                     {{/each}}
                 </ul>
+                {{/unless}}
             </div>
             {{#unless textFilterDisabled}}<input type="text" class="form-control text-filter" placeholder="{{translate 'typeAndPressEnter'}}" name="textFilter" value="{{textFilter}}" tabindex="1">{{/unless}}
             <div class="input-group-btn">
