@@ -746,7 +746,17 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!Qu
         },
 
         shouldSetupRightSideView() {
-            return true;
+
+            return this.canShowFilter() || this.canLoadActivities();
+        },
+
+        canShowFilter() {
+            if(this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
+                return false;
+            }
+
+            return ['list', 'kanban', 'plate'].includes(this.getMode()) && this.collection;
+
         }
     });
 });
